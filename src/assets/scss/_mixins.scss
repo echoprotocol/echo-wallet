@@ -1,0 +1,241 @@
+@mixin gradient($from: #000, $to: #fff){
+  background-color: $from;
+  background-image: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+  background-image: -webkit-linear-gradient(top, $from, $to);
+  background-image:    -moz-linear-gradient(top, $from, $to);
+  background-image:      -o-linear-gradient(top, $from, $to);
+  background-image:         linear-gradient(to bottom, $from, $to);
+}
+
+@mixin opacity($opacity: 0.5){
+  -webkit-opacity: $opacity;
+  -moz-opacity: $opacity;
+  opacity: $opacity;
+}
+
+@mixin box-shadow($arguments: 0 0 10px #666){
+  -webkit-box-shadow: $arguments;
+  box-shadow: $arguments;
+}
+
+@mixin text-shadow($arguments: 1px 1px 2px #000){
+  -webkit-text-shadow: $arguments;
+  -moz-text-shadow: $arguments;
+  text-shadow: $arguments;
+}
+
+@mixin box-sizing($type: border-box){
+  -webkit-box-sizing: $type;
+  -moz-box-sizing: $type;
+  box-sizing: $type;
+}
+
+@mixin border-radius($r: 3px){
+  -webkit-border-radius: $r;
+  -moz-border-radius: $r;
+  border-radius: $r;
+}
+
+@mixin column($count: 3, $gap: 1em){
+  -webkit-column-count: $count; -webkit-column-gap: $gap;
+  -moz-column-count: $count;    -moz-column-gap: $gap;
+  column-count: $count;         column-gap: $gap;
+}
+
+@mixin transition($arguments: all 0.2s ease){
+  -webkit-transition: $arguments;
+  -moz-transition: $arguments;
+  -o-transition: $arguments;
+  transition: $arguments;
+}
+
+@mixin transform($value){
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+@mixin translate ($x, $y:0) {
+  -webkit-transform:     translate($x, $y);
+  -moz-transform: 	     translate($x, $y);
+  -ms-transform: 		 translate($x, $y);
+  -o-transform: 		 translate($x, $y);
+}
+@mixin scale ($factor) {
+  -webkit-transform: scale($factor);
+  -moz-transform: 	 scale($factor);
+  -ms-transform: 		 scale($factor);
+  -o-transform: 		 scale($factor);
+}
+@mixin clearfix(){
+  &:before,
+  &:after{
+    content: " ";display: table;
+  }
+  &:after{
+    clear: both;
+  }
+}
+@mixin table_clearfix(){
+  display: table;
+  &:after{
+    content: '. @include ';
+    display: block;
+    word-spacing: 99in;
+    height: 0;
+    overflow: hidden;
+    font-size: 0.13em;
+    line-height: 0;
+  }
+}
+@mixin va_middle_out(){
+  position: relative;
+  line-height: 0;
+  font-size: 0;
+  &:after{
+    position: relative;
+    content: "";
+    height: 100%;
+    width: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+@mixin va_middle_in(){
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  width: 100%;
+  text-decoration: none;
+}
+@mixin justified(){
+  line-height: 0;
+  font-size: 0;
+  text-align: justify;
+  text-align-last: justify;
+  &:after{
+    width: 100%;
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    content: '';
+    display: inline-block;
+  }
+}
+
+@mixin user-sel-n(){
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@mixin ellipsis(){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin plhl-color($color){
+  &::-webkit-input-placeholder {color:$color;}
+  &::-moz-placeholder          {color:$color;}
+  &:-moz-placeholder           {color:$color;}
+  &:-ms-input-placeholder      {color:$color!important;}
+}
+
+@mixin plhl-txt-trfm($value){
+  &::-webkit-input-placeholder {text-transform:$value;}
+  &::-moz-placeholder          {text-transform:$value;}
+  &:-moz-placeholder           {text-transform:$value;}
+  &:-ms-input-placeholder      {text-transform:$value!important;}
+}
+
+@mixin img-retina($file-1x, $file-2x, $width-1x, $height-1x){
+  background-image: url("#{$file-1x}");
+
+  @media
+  only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (   min--moz-device-pixel-ratio: 2),
+  only screen and (     -o-min-device-pixel-ratio: 2/1),
+  only screen and (        min-device-pixel-ratio: 2),
+  only screen and (                min-resolution: 192dpi),
+  only screen and (                min-resolution: 2dppx) {
+    background-image: url("#{$file-2x}");
+    background-size: $width-1x $height-1x;
+  }
+}
+
+@mixin backface-visibility($visibility){
+  -webkit-backface-visibility: $visibility;
+  -moz-backface-visibility: $visibility;
+  backface-visibility: $visibility;
+}
+
+@mixin rotate($degrees){
+  -webkit-transform: rotate($degrees);
+  -ms-transform: rotate($degrees); // IE9+
+  transform: rotate($degrees);
+}
+
+@mixin sticky(){
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+}
+
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin abs-center() {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+@mixin vh() {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@mixin vv() {
+  opacity: 1;
+  visibility: visible;
+}
+
+@mixin MQ($canvas) {
+  @if $canvas == XS {
+    @media only screen and (max-width: $XS) { @content; }
+  }
+  @else if $canvas == S {
+    @media only screen and (max-width: $S) { @content; }
+  }
+  @else if $canvas == M {
+    @media only screen and (max-width: $M) { @content; }
+  }
+  @else if $canvas == L {
+    @media only screen and (max-width: $L) { @content; }
+  }
+}
+@mixin scroll($color1: #9fafc0, $color2: #f5f7f9) {
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $color1;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $color2;
+  }
+}
+@mixin user-select(){
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

@@ -1,0 +1,26 @@
+// Colors
+// -------------------------
+$white:					#fff;
+$black:					#000;
+$gray:					#a0a0a0;
+$c-accent:              #3db5bd;
+$c-accent2:             #11d6ff;
+$c-accent3:             #07aed0;
+$c-error:               #dd5d5d;
+$c-focus:               #96C8DA;
+
+$c-link:                $c-accent3;
+$c-link-hover:          darken($c-link, 5%);
+
+// Scaffolding
+// -------------------------
+$text-color:            #40424c;
+$text-color-muted:      #8a8a8a;
+$global-bg:             #f3f3f7;
+$bs-def:                0 2px 6px rgba(0, 0, 0, 0.1);
+$bs-def-inset:          inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+// Typography
+// -------------------------
+$ff-lato:  	     		'Lato', sans-serif;
+$ff-def:                 $ff-lato;

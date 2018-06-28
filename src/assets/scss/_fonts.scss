@@ -1,0 +1,358 @@
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?5x5mc8');
+    src:  url('../fonts/icomoon.eot?5x5mc8#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?5x5mc8') format('truetype'),
+    url('../fonts/icomoon.woff?5x5mc8') format('woff'),
+    url('../fonts/icomoon.svg?5x5mc8#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-decline:before {
+	content: "\e936";
+}
+.icon-mess2:before {
+	content: "\e933";
+}
+.icon-attach2:before {
+	content: "\e934";
+}
+.icon-arrow:before {
+	content: "\e935";
+}
+
+.icon-check2:before {
+	content: "\e932";
+}
+.icon-exclamation:before {
+    content: "\e931";
+}
+.icon-fullscreen:before {
+    content: "\e930";
+}
+.icon-align-right:before {
+    content: "\e926";
+}
+.icon-align-center:before {
+    content: "\e927";
+}
+.icon-align-left:before {
+    content: "\e928";
+}
+.icon-strikethrough:before {
+    content: "\e929";
+}
+.icon-underline:before {
+    content: "\e92a";
+}
+.icon-bold:before {
+    content: "\e92b";
+}
+.icon-italic:before {
+    content: "\e92c";
+}
+.icon-link:before {
+    content: "\e92d";
+}
+.icon-bulllist:before {
+    content: "\e92e";
+}
+.icon-justify:before {
+    content: "\e92f";
+}
+.icon-info:before {
+    content: "\e925";
+}
+.icon-copy:before {
+    content: "\e924";
+}
+.icon-view_publisher:before {
+    content: "\e905";
+}
+.icon-calendar:before {
+    content: "\e907";
+}
+.icon-hint:before {
+    content: "\e919";
+}
+.icon-bin:before {
+    content: "\e921";
+}
+.icon-edit:before {
+    content: "\e922";
+}
+.icon-img_placeholder:before {
+    content: "\e923";
+}
+.icon-active:before {
+    content: "\e900";
+}
+.icon-archive:before {
+    content: "\e901";
+}
+.icon-back_arrow:before {
+    content: "\e902";
+}
+.icon-moderation:before {
+    content: "\e903";
+}
+.icon-attach:before {
+    content: "\e904";
+}
+.icon-check:before {
+    content: "\e906";
+}
+.icon-send:before {
+    content: "\e908";
+}
+.icon-offer_create:before {
+    content: "\e909";
+}
+.icon-transaction:before {
+    content: "\e90a";
+}
+.icon-mess:before {
+    content: "\e90b";
+}
+.icon-mobile:before {
+    content: "\e90c";
+}
+.icon-offers:before {
+    content: "\e90d";
+}
+.icon-sales:before {
+    content: "\e90e";
+}
+.icon-search:before {
+    content: "\e90f";
+}
+.icon-statistic:before {
+    content: "\e910";
+}
+.icon-visitors:before {
+    content: "\e911";
+}
+.icon-wallet:before {
+    content: "\e912";
+}
+.icon-minus:before {
+    content: "\e913";
+}
+.icon-plus:before {
+    content: "\e914";
+}
+.icon-arrow_change:before {
+    content: "\e915";
+}
+.icon-paging_arrow:before {
+    content: "\e916";
+}
+.icon-top:before {
+    content: "\e917";
+}
+.icon-success:before {
+    content: "\e918";
+}
+.icon-deals:before {
+    content: "\e91a";
+}
+.icon-desktop:before {
+    content: "\e91b";
+}
+.icon-logout:before {
+    content: "\e91c";
+}
+.icon-close:before {
+    content: "\e91d";
+}
+.icon-dropdown:before {
+    content: "\e91e";
+}
+.icon-fb:before {
+    content: "\e91f";
+}
+.icon-google:before {
+    content: "\e920";
+}
+
+
+//mce
+.mce-ico {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &.mce-i-bold:before{
+        content: "\e92b";
+    }
+    &.mce-i-italic:before{
+        content: "\e92c";
+    }
+    &.mce-i-underline:before{
+        content: "\e92a";
+    }
+    &.mce-i-strikethrough:before{
+        content: "\e929";
+    }
+    &.mce-i-alignleft:before{
+        content: "\e928";
+    }
+    &.mce-i-aligncenter:before{
+        content: "\e927";
+    }
+    &.mce-i-alignright:before{
+        content: "\e926";
+    }
+    &.mce-i-alignjustify:before{
+        content: "\e92f";
+    }
+    &.mce-i-bullist:before{
+        content: "\e92e";
+    }
+    &.mce-i-link:before{
+        content: "\e92d";
+    }
+    &.mce-i-fullscreen:before{
+        content: "\e930";
+    }
+}
+//quilly
+.ql-formats{
+    button{
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'icomoon' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+    
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        
+        &:before{
+	        font-size: 16px;
+        }
+        &.ql-bold:before{
+            content: "\e92b";
+        }
+        &.ql-italic:before{
+            content: "\e92c";
+        }
+        &.ql-underline:before{
+            content: "\e92a";
+        }
+        &.ql-strike:before{
+            content: "\e929";
+        }
+        &.ql-list:before{
+            content: "\e92e";
+        }
+        &.ql-link:before{
+            content: "\e92d";
+        }
+        &.ql-fs:before{
+	        content: "\e930";
+        }
+    }
+	.ql-align{
+		.ql-picker-label, .ql-picker-item{
+			/* use !important to prevent issues with browser extensions that change fonts */
+			font-family: 'icomoon' !important;
+			speak: none;
+			font-style: normal;
+			font-weight: normal;
+			font-variant: normal;
+			text-transform: none;
+			line-height: 1;
+			
+			/* Better Font Rendering =========== */
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			&:before{
+				content: "\e928";
+				font-size: 16px;
+				line-height: 30px;
+			}
+			&[data-value="center"]:before{
+				content: "\e927";
+			}
+			&[data-value="right"]:before{
+				content: "\e926";
+			}
+			&[data-value="justify"]:before{
+				content: "\e92f";
+			}
+		}
+	}
+}
+//datepicker
+.react-datepicker__input-container{
+	&:after{
+		/* use !important to prevent issues with browser extensions that change fonts */
+		font-family: 'icomoon' !important;
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		
+		content: "\e907";
+	}
+}
+.react-datepicker__navigation{
+	&:before{
+		/* use !important to prevent issues with browser extensions that change fonts */
+		font-family: 'icomoon' !important;
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	&--previous{
+		&:before{
+			content: "\e916";
+		}
+	}
+	&--next{
+		&:before{
+			content: "\e916";
+		}
+	}
+}
