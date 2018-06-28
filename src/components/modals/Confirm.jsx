@@ -56,7 +56,7 @@ class ModalConfirm extends React.Component {
 				<div className="modal__content">
 					<span className="modal__title">{title}</span>
 					<div className="modal__txt">
-						<p>{text}</p>
+						<p>SOME TEXT</p>
 					</div>
 					<div className="modal__footer">
 						<a href="" onClick={(e) => this.onYes(e)} className="btn btn-def tiny">{btnYes}</a>

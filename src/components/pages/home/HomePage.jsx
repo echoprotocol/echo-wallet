@@ -1,14 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import ModalSignIn from '../../modals/SignIn';
 
 class HomePage extends React.Component {
+
 
 	render() {
 		return (
 			<div>
-				Home page
-				<br />
-				<Link to="/about">About page</Link>
+				Home page content 22323
+				<ModalSignIn
+					show={true}
+					onClose={() => this.updateState({ displayedModal: null })}
+					container={this}
+				/>
 			</div>
 		);
 	}
@@ -16,3 +20,7 @@ class HomePage extends React.Component {
 }
 
 export default HomePage;
+
+
+
+

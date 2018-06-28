@@ -8,8 +8,6 @@ class AboutPage extends React.Component {
 		return (
 			<div className="about_page">
 				About Page Content
-				<br />
-				<Link to="/">Back to home</Link>
 			</div>
 		);
 	}

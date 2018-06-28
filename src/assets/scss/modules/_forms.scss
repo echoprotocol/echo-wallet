@@ -1,0 +1,9 @@
+.user-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .field {
+        width: 100%;
+    }
+}

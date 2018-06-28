@@ -1,5 +1,4 @@
 import React from 'react';
-import testImage from '../../assets/images/test-image.png';
 
 class Footer extends React.PureComponent {
 
@@ -7,7 +6,7 @@ class Footer extends React.PureComponent {
 
 		return (
 			<div className="footer">
-				<img src={testImage} alt="" />
+				FOOTER
 			</div>
 		);
 	}
