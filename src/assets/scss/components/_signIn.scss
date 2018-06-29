@@ -1,0 +1,24 @@
+.form.user-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+    margin: auto;
+    .field {
+        width: 100%;
+    }
+    .button {
+        margin-top: 30px;
+        min-width: 160px;
+    }
+    h3 {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+}
+
+.sign-nav {
+    margin-top: 20px;
+    color: $gray;
+}

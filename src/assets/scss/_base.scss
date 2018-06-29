@@ -1,12 +1,3 @@
-*,
-*:before,
-*:after {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	word-wrap: break-word;
-	word-break: break-word;
-}
 input,a,button {
     &:focus {
        outline:none;
@@ -44,4 +35,16 @@ li {
 }
 .content {
 	flex: 1;
-  }
+	&.center-mode {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		div {
+			width: 100%;
+		}
+	}
+}
+
+.link.orange {
+	color: $orange;
+}

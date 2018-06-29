@@ -21,7 +21,8 @@ class App extends React.Component {
 		return (
 			<div className="wrapper">
 				<Header />
-				<div className="content">
+				{/* .center-mode needs only for signIn / signUp */}
+				<div className="content center-mode">
 					{children}
 				</div>
 				<Footer />

@@ -1,9 +1,8 @@
-.user-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.field-wrap {
+    width: 100%;
     .field {
-        width: 100%;
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 }

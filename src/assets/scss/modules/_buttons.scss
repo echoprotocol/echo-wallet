@@ -1,0 +1,31 @@
+$stripe-color: rgba(255,255,255,.7);
+$stripe-width: 10px;
+
+.load {
+    position: relative;
+    &:after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 4px;
+        content: "";
+        display: block;
+        background-image: linear-gradient(
+          -45deg, $stripe-color 25%, 
+          transparent 25%, 
+          transparent 50%, 
+          $stripe-color 50%, 
+          $stripe-color 75%, 
+          transparent 75%, 
+          transparent
+        );
+        background-size: $stripe-width $stripe-width;  
+        animation: loading-stripes .4s linear infinite;
+    }
+}
+
+@keyframes loading-stripes {
+    0% {background-position: 0px}
+    100% {background-position: $stripe-width}
+}
