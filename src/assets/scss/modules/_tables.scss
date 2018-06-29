@@ -1,0 +1,52 @@
+.table.table-activity {
+    border: 0;
+    border-radius: 0;
+    thead {
+        th {
+            background:0;
+            color: $gray;
+        }
+    }
+    td,th {
+        &:last-child{
+            width: 120px;
+            text-align: right;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: background-color .3s;
+            &:nth-child(2n) {
+                &:hover {
+                    background-color: $orange;
+                }
+            }
+            &:hover {
+                background-color: $orange;
+            }
+            td {
+                border-top: 0;
+                &:nth-child(2),
+                &:nth-child(3),
+                &:nth-child(4) {
+                    color: $blue;
+                    font-weight: 600;
+                }
+                &:nth-child(5),
+                &:nth-child(6) {
+                    color: $gray-dark;
+                    font-weight: 600;
+                }
+                &:last-child {
+                    
+                    color: $gray;
+                    span {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+
+}

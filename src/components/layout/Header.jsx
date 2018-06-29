@@ -6,12 +6,14 @@ class Header extends React.PureComponent {
 	render() {
 
 		return (
-			<div className="header" >
-				HEADER: 
-				<Link to="/sign-up">Sign Up page</Link>
-				<Link to="/sign-in">Sign In page</Link>
-				<Link to="/">Home page</Link>
-			</div>
+			<ul className="header" >
+				<li><Link to="/sign-in">Sign In</Link></li>
+				<li><Link to="/sign-up">Sign Up</Link></li>
+				<li><Link to="/">Activity</Link></li>
+				
+				
+				
+			</ul>
 		);
 	}
 
