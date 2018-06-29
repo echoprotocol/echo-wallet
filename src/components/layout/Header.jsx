@@ -8,7 +8,7 @@ class Header extends React.PureComponent {
 		return (
 			<div className="header" >
 				HEADER: 
-				<Link to="/about">About page</Link>
+				<Link to="/sign-up">Sign Up page</Link>
 				<Link to="/sign-in">Sign In page</Link>
 				<Link to="/">Home page</Link>
 			</div>

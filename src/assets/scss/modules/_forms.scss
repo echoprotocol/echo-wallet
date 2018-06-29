@@ -6,3 +6,126 @@
         }
     }
 }
+
+.form.user-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+    margin: auto;
+    .field {
+        width: 100%;
+    }
+    .button[type=submit] {
+        margin: 30px 0 0;
+        min-width: 160px;
+        min-height: 35px;
+        display: flex;
+        justify-content: center;
+        line-height: normal;
+        text-transform: uppercase;
+        font-size: .9em;
+        letter-spacing:.7px;
+    }
+    h3 {
+        font-size: 1.5em;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+}
+
+
+.check {
+    &-list {
+        margin-top: 25px;
+        .check {
+            &:not(:last-child) {
+                margin-bottom: 15px;
+            }
+        }
+    }
+    input {
+        display: none;
+        &:checked ~ .label {
+            .label-text {
+                color: $black;
+            }
+            &:before {
+                background-color: $black;
+                border: 2px solid $black;
+            }
+        }
+    }
+    .label {
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        &-text {
+            color: rgba($black,.7);
+            font-size: 1em;
+            transition: color .4s;
+        }
+        &:before {
+            text-align: center;
+            font-family: 'Icons';
+            display: block;
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            border: 2px solid $black;
+            margin-right: 15px;
+            content: "\f00c";
+            transition: border .4s, background-color .4s, color .4s;
+            font-weight: 300;
+            font-size: 12px;
+        }
+    }
+    &.orange {
+        input {
+            &:checked ~ .label {
+                &:before {
+                    background-color: $orange;
+                    border: 2px solid $orange;
+                }
+            }
+        }
+        .label {
+            &:before {
+                border: 2px solid $orange;
+            }
+        }
+    }
+}
+
+.form {
+    .field {
+        .error-message {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-right: 5px;
+            background-color: $err-red;
+            padding: 0 5px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            font-size: 12px;
+            color: $white;
+        }
+        .error {
+            position: relative;
+            .error-message {
+                display: flex;
+            }
+            .input {
+                border: 1px solid $err-red;
+                &:focus {
+                    border: 1px solid $err-red;
+                }
+            }
+        }
+    }
+
+}
