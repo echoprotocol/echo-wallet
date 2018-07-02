@@ -10,7 +10,9 @@ eslint:
   stage: lint
   script:
     - npm install
-    - npm run lint
+#    - npm run lint
+  tags:
+    - pp-projects
 
 build_dev:
   stage: deploy
