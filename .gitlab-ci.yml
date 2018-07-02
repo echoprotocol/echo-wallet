@@ -15,7 +15,7 @@ eslint:
 build_dev:
   stage: deploy
   script:
-    - cd /home/devuser/DevProjects/645.echo_desktop/desktop
+    - cd /home/devuser/DevProjects/645.echo_web/desktop
     - git pull origin development
     - npm install
     - npm run build-dev
@@ -29,7 +29,7 @@ build_dev:
 build_stage:
   stage: deploy
   script:
-    - cd /home/devuser/Projects/645.echo_desktop/desktop
+    - cd /home/devuser/Projects/645.echo_web/desktop
     - git pull origin stage
     - npm install
     - npm run build-stage
