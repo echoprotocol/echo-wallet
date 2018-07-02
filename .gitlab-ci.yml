@@ -1,23 +1,41 @@
-#stages:
-#  - lint
-#  - deploy
-#
-#eslint:
-#  stage: lint
-#  script:
-#    - npm i
-#    - npm run lint
-#
-#build_dev:
-#  stage: deploy
-#  script:
-#    - cd /var/www/Projects/i/web-ui
-#    - git pull
-#    - npm i
-#    - npm run build-dev
-#  only:
-#    - development
-#  environment:
-#    name: development
-#  tags:
-#    - pp-dev
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - lint
+  - deploy
+
+eslint:
+  stage: lint
+  script:
+    - npm install
+    - npm run lint
+
+build_dev:
+  stage: deploy
+  script:
+    - cd /home/devuser/DevProjects/645.echo_desktop/desktop
+    - git pull origin development
+    - npm install
+    - npm run build-dev
+  only:
+    - development
+  environment:
+    name: development
+  tags:
+    - pp-projects
+
+build_stage:
+  stage: deploy
+  script:
+    - cd /home/devuser/Projects/645.echo_desktop/desktop
+    - git pull origin stage
+    - npm install
+    - npm run build-stage
+  only:
+    - stage
+  environment:
+    name: stage
+  tags:
+    - pp-projects
