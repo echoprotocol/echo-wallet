@@ -8,6 +8,8 @@
         padding: 7px 10px; 
         font-weight: 500;
         background-color: #fff;
+        white-space: nowrap;
+        transition: border .3s;
         &.yellow {
             border-left: 2px solid $lbl-yellow;
             color: $lbl-yellow;
