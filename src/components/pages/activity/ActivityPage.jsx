@@ -1,10 +1,12 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react'
-class Activity extends React.Component {
+import { Table } from 'semantic-ui-react';
+
+export default class Activity extends React.Component {
+
 	render() {
 		return (
 			<div>
-				<Table  striped className='table-activity'>
+				<Table striped className="table-activity">
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell>Operation</Table.HeaderCell>
@@ -21,7 +23,7 @@ class Activity extends React.Component {
 					<Table.Body>
 						<Table.Row>
 							<Table.Cell>
-								<span className='label-operation yellow'>
+								<span className="label-operation yellow">
 									Place order
 								</span>
 							</Table.Cell>
@@ -30,12 +32,12 @@ class Activity extends React.Component {
 							<Table.Cell>4</Table.Cell>
 							<Table.Cell>5</Table.Cell>
 							<Table.Cell>6</Table.Cell>
-							<Table.Cell><span className='success'>Success</span></Table.Cell>
+							<Table.Cell><span className="success">Success</span></Table.Cell>
 							<Table.Cell>8</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>
-								<span className='label-operation red'>
+								<span className="label-operation red">
 									Cancel order
 								</span>
 							</Table.Cell>
@@ -44,12 +46,12 @@ class Activity extends React.Component {
 							<Table.Cell>4</Table.Cell>
 							<Table.Cell>5</Table.Cell>
 							<Table.Cell>6</Table.Cell>
-							<Table.Cell><span className='fall'>Fall</span></Table.Cell>
+							<Table.Cell><span className="fall">Fall</span></Table.Cell>
 							<Table.Cell>8</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>
-								<span className='label-operation green'>
+								<span className="label-operation green">
 									transfer
 								</span>
 							</Table.Cell>
@@ -58,10 +60,10 @@ class Activity extends React.Component {
 							<Table.Cell>4</Table.Cell>
 							<Table.Cell>5</Table.Cell>
 							<Table.Cell>6</Table.Cell>
-							<Table.Cell><span className='fall'>Fall</span></Table.Cell>
+							<Table.Cell><span className="fall">Fall</span></Table.Cell>
 							<Table.Cell>
-								<span class='date'>May 31, 2018</span>
-								<span class='time'>11:51:22 AM</span>
+								<span className="date">May 31, 2018</span>
+								<span className="time">11:51:22 AM</span>
 							</Table.Cell>
 						</Table.Row>
 					</Table.Body>
@@ -72,9 +74,3 @@ class Activity extends React.Component {
 	}
 
 }
-
-export default Activity;
-
-
-
-

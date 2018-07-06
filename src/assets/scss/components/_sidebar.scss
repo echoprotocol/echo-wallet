@@ -1,0 +1,90 @@
+.sidebar {
+    display: flex;
+    &.menu {
+        background-color: $bg-gray;
+    }
+    &-body {
+        flex: 1;
+    }
+    &-logo {
+        font-size: 30px;
+    }
+    &-header {
+        padding: 20px 20px 0;
+        display: flex;
+        justify-content: space-between;
+
+        .icon-close {
+            display: block;
+            cursor: pointer;
+            color: #c4c5ca;
+            transition: color .3s;
+            &:hover {
+                color: $link-gray;
+            }
+        }
+    }
+    &-body {
+        padding: 0;
+        margin: 90px 0 30px; 
+    }
+
+    &-footer {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        background-color: rgb(225, 225, 230);
+    }
+
+    &-nav {
+        li {
+            font-size: 16px;
+            color: $link-gray;
+            display: block;
+            transition: background-color .3s;
+            &.accordion {
+                padding: 2px 20px;
+                transition: padding .1s;
+            }
+            .sidebar-nav-link {
+                display: flex;
+                min-height: 40px;
+                padding: 8px 20px;
+                align-items: center;
+            }
+            &.opened {
+                background-color: rgb(221, 222, 228);
+                padding: 10px 20px;
+            }
+            .icon {
+                display: block;
+                width: 20px;
+                height: 20px;
+                text-align: center;
+                margin-right: 10px;
+                font-size: 20px;
+            }
+            a {
+                color: $link-gray;
+            }
+        }
+    }
+    .accordion .content {
+    display: none;
+    margin-left: -20px;
+    margin-right: -20px;
+    }
+    .accordeon-item {
+        height: 40px;
+        transition: background-color .3s,border .3s;
+        display: flex;
+        align-items: center;
+        padding-left: 46px;
+        border-left: 4px solid transparent;
+        &:hover {
+            background-color: rgb(197, 201, 210);
+            border-left: 4px solid $orange;
+        }
+    }
+}
