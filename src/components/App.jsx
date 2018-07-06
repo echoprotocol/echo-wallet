@@ -6,7 +6,7 @@ import SidebarMenu from './layout/SidebarMenu';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 
-import ModalConfirm from './modals/Confirm';
+import ModalUnblockWallet from './modals/UnblockWallet';
 
 class App extends React.Component {
 
@@ -30,7 +30,7 @@ class App extends React.Component {
 	renderModals() {
 		return (
 			<div>
-				<ModalConfirm />
+				<ModalUnblockWallet />
 			</div>
 		);
 	}
