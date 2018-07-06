@@ -5,17 +5,17 @@ class Footer extends React.PureComponent {
 	render() {
 
 		return (
-			<div className='footer'>
+			<div className="footer">
 				<ul>
 					<li>Bitshares.171205</li>
-					<li className='pipeline'>
+					<li className="pipeline">
 						Latency
-						<span className="pipeline-latency"> 419 MS </span> 
+						<span className="pipeline-latency"> 419 MS </span>
 						/ Block
-						<span className="pipeline-block"> #22577381</span> 
+						<span className="pipeline-block"> #22577381</span>
 					</li>
 					<li>
-						<span className='status green'>Connected</span>
+						<span className="status green">Connected</span>
 					</li>
 				</ul>
 			</div>

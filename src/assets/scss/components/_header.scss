@@ -1,9 +1,26 @@
 .header {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid $bd-gray;
-    li {
-        margin-right: 10px;
+    height: 50px;
+    padding: 0 20px;
+    background-color: rgb(247, 247, 247);
+    border-bottom: 1px solid rgb(247, 247, 247);
+    .page-title {
+        color: $link-gray;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .show-sidebar-btn {
+        color: $link-gray;
+        cursor: pointer;
+        transition: color .3s;
+        display: block;
+        margin-right: 20px;
+        .icon-menu {
+            line-height: 19px;
+        }
+        &:hover {
+            color: $black;
+        }
     }
 }

@@ -1,3 +1,10 @@
+// MAP: 
+// 1) PROXIMA
+// 2) ICONMOON FONTS
+
+
+// PROXIMA
+
 @font-face {
     font-family: proxima;
     src: url('../fonts/proxima/proximanova-light.otf') format('opentype');
@@ -28,3 +35,89 @@
     font-weight: 300;
     src: url('../fonts/proxima/proximanova-light.otf') format('opentype');
 }
+
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/iconmoon/icomoon.eot?h46e29');
+    src:  url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+      url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+      url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+      url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+  
+  [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-add:before {
+    content: "\e900";
+  }
+  .icon-back:before {
+    content: "\e901";
+  }
+  .icon-checked_1:before {
+    content: "\e902";
+    color: #7ad38d;
+  }
+  .icon-checked:before {
+    content: "\e903";
+  }
+  .icon-close:before {
+    content: "\e904";
+  }
+  .icon-copy:before {
+    content: "\e905";
+  }
+  .icon-dotted:before {
+    content: "\e906";
+  }
+  .icon-dropdown_arrow:before {
+    content: "\e907";
+  }
+  .icon-info:before {
+    content: "\e908";
+  }
+  .icon-menu_1:before {
+    content: "\e909";
+  }
+  .icon-menu_2:before {
+    content: "\e90a";
+  }
+  .icon-menu_3:before {
+    content: "\e90b";
+  }
+  .icon-menu_4:before {
+    content: "\e90c";
+  }
+  .icon-menu_5:before {
+    content: "\e90d";
+  }
+  .icon-menu:before {
+    content: "\e90e";
+  }
+  .icon-remove:before {
+    content: "\e90f";
+  }
+  .icon-send:before {
+    content: "\e910";
+  }
+  .icon-top_1:before {
+    content: "\e911";
+  }
+  .icon-hide:before {
+    content: "\e913";
+  }
+  
