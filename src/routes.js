@@ -12,7 +12,7 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					<Route exact path="/" component={Activity} />
+					<Route exact path="/activity" component={Activity} />
 					<Route exact path="/sign-up" component={SignUp} />
 					<Route exact path="/sign-in" component={SignIn} />
 				</div>

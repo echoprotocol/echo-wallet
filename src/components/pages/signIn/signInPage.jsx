@@ -1,8 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
+import { set } from '../../../actions/GlobalActions';
 
-export default class signIn extends React.Component {
+class signIn extends React.Component {
+
+	componentWillMount() {
+		this.props.set('headerVisibility', false);
+	}
 
 	render() {
 		return (
@@ -21,9 +28,7 @@ export default class signIn extends React.Component {
 							<input placeholder="Password or WIFI-key" />
 						</Form.Field>
 					</div>
-					{/* FOR BUTTON WHITOUT LOADING:
-                        <Button basic type="submit" color="orange">Log In</Button>
-                    */}
+					{/* <Button basic type="submit" color="orange">Log In</Button> */}
 					<Button type="submit" color="orange" className="load">Loading...</Button>
 					<span className="sign-nav">
                         Don’t have an account?
@@ -35,3 +40,14 @@ export default class signIn extends React.Component {
 	}
 
 }
+
+signIn.propTypes = {
+	set: PropTypes.func.isRequired,
+};
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		set: (field, value) => dispatch(set(field, value)),
+	}),
+)(signIn);

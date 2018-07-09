@@ -1,8 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Input, Form } from 'semantic-ui-react';
+import { set } from '../../../actions/GlobalActions';
 
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
+
+	componentWillMount() {
+		this.props.set('headerVisibility', false);
+	}
 
 	render() {
 
@@ -59,13 +66,14 @@ export default class SignUp extends React.Component {
 					</div>
 
 
-					<Button basic type="submit" className="disabled" color="orange">Ceate account</Button>
+					<Button basic type="submit" className="disabled" color="orange">Create account</Button>
 					{/* FOR BUTTON WHIT LOADING:
 						<Button type="submit" color="orange"  className="load">Loading...</Button>
 					*/}
 					<span className="sign-nav">
                         Have an account?
 						<Link className="link orange" to="/sign-in"> Login</Link>
+						<li><Link to="/activity">Activity</Link></li>
 					</span>
 				</Form>
 			</div>
@@ -73,3 +81,14 @@ export default class SignUp extends React.Component {
 	}
 
 }
+
+SignUp.propTypes = {
+	set: PropTypes.func.isRequired,
+};
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		set: (field, value) => dispatch(set(field, value)),
+	}),
+)(SignUp);

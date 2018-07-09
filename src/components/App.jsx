@@ -36,7 +36,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { children } = this.props;
+		const { children, headerVisibility } = this.props;
 		return (
 			<div className="global-wrapper">
 
@@ -44,7 +44,7 @@ class App extends React.Component {
 					<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
 					<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 						<Segment basic className="wrapper">
-							<Header onToggleSidebar={this.toggleSidebar} />
+							{headerVisibility ? <Header onToggleSidebar={this.toggleSidebar} /> : <div /> }
 							{/* .center-mode needs only for signIn / signUp / createWallet pages */}
 							<div className="content center-mode ">
 								{children}
@@ -63,9 +63,11 @@ class App extends React.Component {
 
 App.propTypes = {
 	children: PropTypes.element.isRequired,
+	headerVisibility: PropTypes.bool.isRequired,
 };
 
 export default connect((state) => ({
 	globalLoading: state.global.get('globalLoading'),
 	loading: state.global.get('loading'),
+	headerVisibility: state.global.get('headerVisibility'),
 }))(App);

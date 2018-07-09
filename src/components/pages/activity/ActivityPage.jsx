@@ -1,7 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { set } from '../../../actions/GlobalActions';
 
-export default class Activity extends React.Component {
+class Activity extends React.Component {
+
+	componentWillMount() {
+		this.props.set('title', 'Recent Activity');
+		this.props.set('headerVisibility', true);
+	}
 
 	render() {
 		return (
@@ -74,3 +82,14 @@ export default class Activity extends React.Component {
 	}
 
 }
+
+Activity.propTypes = {
+	set: PropTypes.func.isRequired,
+};
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		set: (field, value) => dispatch(set(field, value)),
+	}),
+)(Activity);
