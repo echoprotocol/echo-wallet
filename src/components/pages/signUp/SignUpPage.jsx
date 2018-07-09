@@ -73,7 +73,6 @@ class SignUp extends React.Component {
 					<span className="sign-nav">
                         Have an account?
 						<Link className="link orange" to="/sign-in"> Login</Link>
-						<li><Link to="/activity">Activity</Link></li>
 					</span>
 				</Form>
 			</div>

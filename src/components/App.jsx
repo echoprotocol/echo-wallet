@@ -44,7 +44,7 @@ class App extends React.Component {
 					<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
 					<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 						<Segment basic className="wrapper">
-							{headerVisibility ? <Header onToggleSidebar={this.toggleSidebar} /> : <div /> }
+							{headerVisibility && <Header onToggleSidebar={this.toggleSidebar} /> }
 							{/* .center-mode needs only for signIn / signUp / createWallet pages */}
 							<div className="content center-mode ">
 								{children}

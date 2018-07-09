@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class Header extends React.PureComponent {
@@ -14,11 +13,6 @@ class Header extends React.PureComponent {
 					<span className="icon-menu" />
 				</div>
 				<div className="page-title">{title}</div>
-				<ul className="header-temp">
-					<li><Link to="/sign-in">Sign In</Link></li>
-					<li><Link to="/sign-up">Sign Up</Link></li>
-					<li><Link to="/activity">Activity</Link></li>
-				</ul>
 			</div>
 		);
 	}
