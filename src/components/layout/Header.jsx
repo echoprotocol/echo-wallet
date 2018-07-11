@@ -1,22 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-export default class Header extends React.PureComponent {
+import { HEADER_TITLE } from '../../constants/GlobalConstants';
+
+class Header extends React.PureComponent {
+
+	getTitle() {
+		const { location } = this.props;
+
+		const item = HEADER_TITLE.find((title) => title.path === location.pathname);
+
+		return item ? item.title : '';
+	}
 
 	render() {
 
 		return (
-			<div className="header" >
+			<div className="header">
 				<div className="show-sidebar-btn" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0">
 					<span className="icon-menu" />
 				</div>
-				<div className="page-title"> Smart Contracts </div>
-				<ul className="header-temp">
-					<li><Link to="/sign-in">Sign In</Link></li>
-					<li><Link to="/sign-up">Sign Up</Link></li>
-					<li><Link to="/">Activity</Link></li>
-				</ul>
+				<div className="page-title">{this.getTitle()}</div>
 			</div>
 		);
 	}
@@ -24,5 +30,8 @@ export default class Header extends React.PureComponent {
 }
 
 Header.propTypes = {
+	location: PropTypes.object.isRequired,
 	onToggleSidebar: PropTypes.func.isRequired,
 };
+
+export default withRouter(connect()(Header));

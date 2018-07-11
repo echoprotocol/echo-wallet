@@ -58,7 +58,7 @@ export default class SidebarMenu extends React.Component {
 								<Accordion.Content active={activeIndex === 1} content={smartContracts} />
 							</Accordion>
 							<li>
-								<Link className="sidebar-nav-link" to="/">
+								<Link className="sidebar-nav-link" to="/activity" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar}>
 									<span className="icon icon-menu_3" />
                                     Recent Activity
 								</Link>
