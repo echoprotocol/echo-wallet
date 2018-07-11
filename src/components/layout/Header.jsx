@@ -9,7 +9,10 @@ class Header extends React.PureComponent {
 
 	getTitle() {
 		const { location } = this.props;
-		return HEADER_TITLE.filter((title) => title.path === location.pathname)[0].title;
+
+		const item = HEADER_TITLE.find((title) => title.path === location.pathname);
+
+		return item ? item.title : '';
 	}
 
 	render() {
