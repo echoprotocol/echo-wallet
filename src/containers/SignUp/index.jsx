@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Input, Form, Segment } from 'semantic-ui-react';
 
-import Footer from '../../components/layout/Footer';
+import Footer from '../../components/Footer/index';
 
 class SignUp extends React.Component {
 
@@ -28,7 +28,7 @@ class SignUp extends React.Component {
 									</div>
 								</Form.Field>
 								<Form.Field>
-									<label htmlFor="GeneretedPas">Genereted password</label>
+									<label htmlFor="GeneretedPas">Generated password</label>
 									<div className="ui action input">
 										<input id="GeneretedPas" className="ui input" placeholder="Genereted password" />
 										<button className="ui orange icon right button">
