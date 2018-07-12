@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import Footer from '../../components/Footer/index';
 
-class signIn extends React.Component {
+class SignIn extends React.Component {
 
 	render() {
 		return (
@@ -41,4 +41,4 @@ class signIn extends React.Component {
 
 }
 
-export default connect()(signIn);
+export default connect()(SignIn);
