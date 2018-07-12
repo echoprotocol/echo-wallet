@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ModalConfirm from '../components/modals/Confirm';
+import { ModalConfirm } from '../components/Modals';
 
 class App extends React.Component {
 

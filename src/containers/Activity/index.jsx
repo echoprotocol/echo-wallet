@@ -2,9 +2,9 @@ import React from 'react';
 import { Table, Segment, Sidebar } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import SidebarMenu from '../../components/layout/SidebarMenu';
-import Header from '../../components/layout/Header';
-import Footer from '../../components/layout/Footer';
+import SidebarMenu from '../../components/SideMenu/index';
+import Header from '../../components/Header/index';
+import Footer from '../../components/Footer/index';
 
 class Activity extends React.Component {
 

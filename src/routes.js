@@ -18,7 +18,7 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					{ /* TODO rm after home page will be preseтt */}
+					{ /* TODO rm after home page will be present */}
 					<Route exact path="/" render={() => (<Redirect to={ACTIVITY_PATH} />)} />
 
 					<Route exact path={ACTIVITY_PATH} component={Activity} />
