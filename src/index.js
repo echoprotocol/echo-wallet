@@ -1,3 +1,4 @@
+import thunk from 'redux-thunk';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
@@ -25,6 +26,7 @@ const store = createStore(
 		router: routerReducer,
 	}), {},
 	compose(
+		applyMiddleware(thunk),
 		applyMiddleware(middleware),
 		window.devToolsExtension ? window.devToolsExtension() : (f) => f,
 	),
