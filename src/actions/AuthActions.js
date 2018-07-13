@@ -3,6 +3,7 @@ import { key } from 'echojs-lib';
 import history from '../history';
 
 import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
+import { set as setKey } from './KeyChainActions';
 
 import { FORM_SIGN_UP } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
@@ -50,8 +51,12 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const result = await createWallet(accountName, generatedPassword);
-		console.log(result);
+		const { owner, active, memo } = await createWallet(accountName, generatedPassword);
+
+		dispatch(setKey(owner, accountName, generatedPassword, 'owner'));
+		dispatch(setKey(active, accountName, generatedPassword, 'active'));
+		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
+
 		history.push(INDEX_PATH);
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));

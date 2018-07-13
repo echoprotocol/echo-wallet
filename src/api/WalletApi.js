@@ -26,9 +26,9 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 );
 
 export const createWallet = async (account, password) => {
-	const { privateKey: ownerPrivateKey } = generateKeyFromPassword(account, 'owner', password);
-	const { privateKey: activePrivateKey } = generateKeyFromPassword(account, 'active', password);
-	const { privateKey: memoPrivateKey } = generateKeyFromPassword(account, 'memo', password);
+	const owner = generateKeyFromPassword(account, 'owner', password);
+	const active = generateKeyFromPassword(account, 'active', password);
+	const memo = generateKeyFromPassword(account, 'memo', password);
 
 	let response = await fetch(`${FAUCET_ADDRESS}/registration`, {
 		method: 'post',
@@ -39,9 +39,9 @@ export const createWallet = async (account, password) => {
 		},
 		body: JSON.stringify({
 			name: account,
-			owner_key: ownerPrivateKey.toPublicKey().toPublicKeyString(),
-			active_key: activePrivateKey.toPublicKey().toPublicKeyString(),
-			memo_key: memoPrivateKey.toPublicKey().toPublicKeyString(),
+			owner_key: owner.publicKey,
+			active_key: active.publicKey,
+			memo_key: memo.publicKey,
 		}),
 	});
 
@@ -51,8 +51,7 @@ export const createWallet = async (account, password) => {
 		throw response.errors.join();
 	}
 
-	// TODO set key in keychain
-	return response;
+	return { owner, active, memo };
 };
 
 export function unlockWallet(account, password) {
