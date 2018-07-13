@@ -1,8 +1,11 @@
 import { key } from 'echojs-lib';
 
+import history from '../history';
+
 import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
 
 import { FORM_SIGN_UP } from '../constants/FormConstants';
+import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
@@ -37,7 +40,7 @@ export const createAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.get('instance');
+		const instance = getState().echojs.getIn(['echojs', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, false);
 
 		if (accountNameError) {
@@ -47,7 +50,9 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		await createWallet(accountName, generatedPassword);
+		const result = await createWallet(accountName, generatedPassword);
+		console.log(result);
+		history.push(INDEX_PATH);
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
