@@ -1,12 +1,10 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-export default class Footer extends React.PureComponent {
+class Footer extends React.PureComponent {
 
-	constructor() {
-		super();
-		this.state = { connected: false };
-	}
 	render() {
 
 		const connected = (
@@ -15,9 +13,9 @@ export default class Footer extends React.PureComponent {
 					<li>Bitshares.171205</li>
 					<li className="pipeline">
                         Latency
-						<span className="pipeline-latency"> 419 MS </span>
+						<span className="pipeline-latency"> {this.props.latency} MS </span>
                         / Block
-						<span className="pipeline-block"> #22577381</span>
+						<span className="pipeline-block"> #{this.props.lastBlock}</span>
 					</li>
 					<li>
 						<span className="status green">Connected</span>
@@ -40,7 +38,7 @@ export default class Footer extends React.PureComponent {
 			</div>
 		);
 
-		if (this.state.connected) {
+		if (this.props.isConnect) {
 			return (
 				connected
 			);
@@ -51,3 +49,15 @@ export default class Footer extends React.PureComponent {
 	}
 
 }
+
+Footer.propTypes = {
+	lastBlock: PropTypes.any.isRequired,
+	isConnect: PropTypes.any.isRequired,
+	latency: PropTypes.any.isRequired,
+};
+
+export default connect((state) => ({
+	lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']) || '',
+	isConnect: state.echojs.getIn(['echojs', 'isConnected']),
+	latency: state.echojs.getIn(['echojs', 'latency']),
+}))(Footer);
