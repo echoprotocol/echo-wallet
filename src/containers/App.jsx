@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actions } from 'echojs-redux';
+import { actions as EchoJSActions } from 'echojs-redux';
 
 import { ModalConfirm } from '../components/Modals';
 
@@ -44,6 +44,6 @@ export default connect(
 		loading: state.global.get('loading'),
 	}),
 	(dispatch) => ({
-		connect: () => dispatch(actions.connect()),
+		connect: () => dispatch(EchoJSActions.connect()),
 	}),
 )(App);
