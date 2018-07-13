@@ -21,14 +21,6 @@ export default createModule({
 				return state;
 			},
 		},
-
-		remove: {
-			reducer: (state, { payload }) => {
-				state = state.setIn(['storage', payload.key], null);
-
-				return state;
-			},
-		},
 		reset: {
 			reducer: (state) => {
 				state = initialState;

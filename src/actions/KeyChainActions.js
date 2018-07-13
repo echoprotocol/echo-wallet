@@ -2,66 +2,55 @@ import KeyChainReducer from './../reducers/KeyChainReducer';
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 import { mods, EXPIRED_TIME } from '../constants/KeyChainConstants';
 
-export default class KeyChainlActions {
+export const reset = () => (dispatch) => {
+	dispatch(KeyChainReducer.actions.reset());
+	return Promise.resolve();
+};
 
-	static get(key) {
-		return (dispatch, getState) => new Promise((resolve) => {
-			const state = getState();
+export const setMode = (mode) => (dispatch) => {
+	dispatch(KeyChainReducer.actions.setMode(mode || 'lock'));
+	return Promise.resolve();
+};
 
-			return resolve(state.keychain.getIn(['storage', key]));
-		});
+export const get = (key) => (dispatch, getState) =>{
+	const state = getState();
+
+	return Promise.resolve(state.keychain.getIn(['storage', key]));
+};
+
+export const set = (key, credentials) => (dispatch, getState) =>  {
+	const state = getState();
+
+	const error =
+            validateAccountName(credentials.username) ||
+            validatePassword(credentials.password);
+	if (error) return Promise.reject(error);
+
+	const mode = state.keychain.getIn(['properties', 'mode']);
+
+	if (mode === mods.LOCK) return Promise.resolve(null);
+
+	const value = {
+		username: credentials.username,
+		wif: credentials.password,
+		pub: key,
+		role: credentials.role,
+	};
+
+	dispatch(KeyChainReducer.actions.set({ key, value }));
+
+	if (mode === mods.EXPIRED) {
+		let timeoutId = state.keychain.getIn(['properties', 'timeoutId']);
+
+		clearTimeout(timeoutId);
+
+		timeoutId = setTimeout(async () => {
+			await reset()(dispatch);
+			dispatch(KeyChainReducer.actions.setTimeout(null));
+		}, EXPIRED_TIME);
+
+		dispatch(KeyChainReducer.actions.setTimeout(timeoutId));
 	}
+	return Promise.resolve(null);
+};
 
-	static set(key, credentials) {
-		return (dispatch, getState) => new Promise((resolve, reject) => {
-			const state = getState();
-
-			const error =
-                validateAccountName(credentials.username) ||
-                validatePassword(credentials.password);
-			if (error) return reject(error);
-
-			const mode = state.keychain.getIn(['properties', 'mode']);
-
-			if (mode === mods.LOCK) return resolve(null);
-
-			const value = {
-				username: credentials.username,
-				wif: credentials.password,
-				pub: key,
-				role: credentials.role,
-			};
-
-			dispatch(KeyChainReducer.actions.set({ key, value }));
-
-			if (mode === mods.EXPIRED) {
-			    let timeoutId = state.keychain.getIn(['properties', 'timeoutId']);
-
-			    clearTimeout(timeoutId);
-
-				timeoutId = setTimeout(async () => {
-					await KeyChainlActions.reset()(dispatch);
-					dispatch(KeyChainlActions.actions.setTimeout(null));
-				}, EXPIRED_TIME);
-
-				dispatch(KeyChainlActions.actions.setTimeout(timeoutId));
-			}
-			return resolve(null);
-		});
-	}
-
-	static reset() {
-	    return (dispatch) => new Promise((resolve) => {
-			dispatch(KeyChainReducer.actions.reset());
-			return resolve();
-		});
-	}
-
-	static setMode(mode) {
-		return (dispatch) => new Promise((resolve) => {
-			dispatch(KeyChainReducer.actions.setMode(mode || 'lock'));
-			return resolve();
-		});
-	}
-
-}
