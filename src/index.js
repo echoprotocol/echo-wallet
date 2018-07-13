@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+
 import thunk from 'redux-thunk';
 import React from 'react';
 import ReactDOM from 'react-dom';
