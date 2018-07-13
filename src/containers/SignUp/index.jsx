@@ -1,21 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Form, Segment } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-
+import { Form, Segment } from 'semantic-ui-react';
 
 import Footer from '../../components/Footer/index';
 import FormComponent from './FormComponent';
 import CheckComponent from './CheckComponent';
+import ButtonComponent from './ButtonComponent';
 
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
-import { FORM_SIGN_UP } from '../../constants/FormConstants';
+
+import { generatePassword } from '../../actions/AuthActions';
 
 class SignUp extends React.Component {
 
+	componentWillMount() {
+		this.props.generatePassword();
+	}
+
 	render() {
-		const { accepted } = this.props;
 
 		return (
 			<Segment basic className="wrapper">
@@ -27,11 +31,7 @@ class SignUp extends React.Component {
 							</div>
 							<FormComponent />
 							<CheckComponent />
-
-							<Button basic type="submit" className={accepted ? '' : 'disabled'} color="orange">Create account</Button>
-							{/* FOR BUTTON WHIT LOADING:
-								<Button type="submit" color="orange"  className="load">Loading...</Button>
-							*/}
+							<ButtonComponent />
 							<span className="sign-nav">
 								Have an account?
 								<Link className="link orange" to={SIGN_IN_PATH}> Login</Link>
@@ -47,15 +47,13 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-	accepted: PropTypes.bool,
-};
-
-SignUp.defaultProps = {
-	accepted: false,
+	generatePassword: PropTypes.func.isRequired,
 };
 
 
-export default connect((state) => ({
-	accepted: state.form.getIn([FORM_SIGN_UP, 'accepted']),
-
-}))(SignUp);
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		generatePassword: () => dispatch(generatePassword()),
+	}),
+)(SignUp);

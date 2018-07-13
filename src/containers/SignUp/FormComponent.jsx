@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
@@ -34,7 +34,7 @@ class FormComponent extends React.Component {
 				<Form.Field>
 					<label htmlFor="generatedPassword">Generated password</label>
 					<div className="ui action input">
-						<input name="generatedPassword" className="ui input" placeholder="Genereted password" value={generatedPassword.value} onChange={(e) => this.onChange(e)} />
+						<input name="generatedPassword" className="ui input" placeholder="Genereted password" value={generatedPassword.value} readOnly />
 						<CopyToClipboard text={generatedPassword.value} className="ui orange icon right button">
 							<button className="ui orange icon right button">
 								<i aria-hidden="true" className="copy icon" />
@@ -44,7 +44,10 @@ class FormComponent extends React.Component {
 				</Form.Field>
 				<Form.Field>
 					<label htmlFor="confirmPassword">Confirm password</label>
-					<Input name="confirmPassword" placeholder="Confirm password" value={confirmPassword.value} onChange={(e) => this.onChange(e)} />
+					<div className={confirmPassword.error ? 'error' : ''}>
+						<input name="confirmPassword" className="ui input" placeholder="Confirm password" value={confirmPassword.value} onChange={(e) => this.onChange(e)} />
+						<span className="error-message">{confirmPassword.error}</span>
+					</div>
 				</Form.Field>
 			</div>
 		);
