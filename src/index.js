@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 
 import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
+import { echoJSRedux } from 'echojs-redux';
 
 import reducers from './reducers';
 import Routes from './routes'; // Or wherever you keep your reducers
@@ -24,6 +25,7 @@ const store = createStore(
 	combineReducers({
 		...reducers,
 		router: routerReducer,
+		echojs: echoJSRedux.reducer,
 	}), {},
 	compose(
 		applyMiddleware(thunk),
