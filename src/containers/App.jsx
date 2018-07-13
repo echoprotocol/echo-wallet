@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
