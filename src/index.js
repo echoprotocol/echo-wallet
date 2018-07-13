@@ -3,10 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
 import { Provider } from 'react-redux';
-
 import createHistory from 'history/createBrowserHistory';
 
 import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
+
+import 'babel-polyfill';
 
 import reducers from './reducers';
 import Routes from './routes'; // Or wherever you keep your reducers

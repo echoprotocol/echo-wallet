@@ -6,7 +6,7 @@ import { FORM_SIGN_UP } from '../constants/FormConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
-import { createWallet } from '../api/WalletApi';
+import { validateAccountExist, createWallet } from '../api/WalletApi';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -18,8 +18,8 @@ export const createAccount = ({
 	accountName,
 	generatedPassword,
 	confirmPassword,
-}) => (dispatch) => {
-	const accountNameError = validateAccountName(accountName);
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName);
 	let confirmPasswordError = validatePassword(confirmPassword);
 
 	if (generatedPassword !== confirmPassword) {
@@ -36,13 +36,22 @@ export const createAccount = ({
 		return;
 	}
 
-	dispatch(toggleLoading(FORM_SIGN_UP, true));
+	try {
+		const instance = getState().echojs.get('instance');
+		accountNameError = await validateAccountExist(instance, accountName, false);
 
-	createWallet(accountName, generatedPassword).then(() => {
-		dispatch(toggleLoading(FORM_SIGN_UP, false));
-	}).catch((err) => {
-		dispatch(toggleLoading(FORM_SIGN_UP, false));
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
+			return;
+		}
+
+		dispatch(toggleLoading(FORM_SIGN_UP, true));
+
+		await createWallet(accountName, generatedPassword);
+	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
-	});
+	} finally {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
+	}
 
 };

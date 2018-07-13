@@ -10,9 +10,13 @@ import { setFormValue } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
-	onChange(e) {
+	onChange(e, lowerCase) {
 		const field = e.target.name;
-		const { value } = e.target;
+		let { value } = e.target;
+
+		if (lowerCase) {
+			value = value.toLowerCase();
+		}
 
 		if (field) {
 			this.props.setFormValue(field, value);
@@ -27,7 +31,7 @@ class FormComponent extends React.Component {
 				<Form.Field>
 					<label htmlFor="accountName">Account name (public)</label>
 					<div className={accountName.error ? 'error' : ''}>
-						<input name="accountName" className="ui input" placeholder="Account name" value={accountName.value} onChange={(e) => this.onChange(e)} />
+						<input name="accountName" className="ui input" placeholder="Account name" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
 						<span className="error-message">{accountName.error}</span>
 					</div>
 				</Form.Field>
