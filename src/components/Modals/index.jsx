@@ -1,4 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import ModalConfirm from './ModalConfirm';
+import ModalUnlockAccount from './ModalUnlockAccount';
 
-export { ModalConfirm };
+export { ModalUnlockAccount };

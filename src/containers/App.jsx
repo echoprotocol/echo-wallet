@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { ModalConfirm } from '../components/Modals';
+import { ModalUnlockAccount } from '../components/modals';
 
 class App extends React.Component {
 
 	renderModals() {
 		return (
 			<div>
-				<ModalConfirm />
+				<ModalUnlockAccount />
 			</div>
 		);
 	}

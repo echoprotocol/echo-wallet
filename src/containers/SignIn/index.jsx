@@ -2,9 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form, Segment } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import Footer from '../../components/Footer/index';
+import { openUnlockModal } from '../../actions/ModalActions';
 
 class SignIn extends React.Component {
+
+	onSubmit(e) {
+		e.preventDefault();
+	}
+
+	lockAccount() {
+		this.props.openUnlockModal();
+	}
 
 	render() {
 		return (
@@ -25,12 +35,13 @@ class SignIn extends React.Component {
 									<input placeholder="Password or WIF-key" />
 								</Form.Field>
 							</div>
-							{/* <Button basic type="submit" color="orange">Log In</Button> */}
-							<Button type="submit" color="orange" className="load">Loading...</Button>
+							<Button basic type="submit" color="orange" onClick={(e) => this.onSubmit(e)}>Log In</Button>
+							{/* <Button type="submit" color="orange" className="load">Loading...</Button> */}
 							<span className="sign-nav">
 								Don’t have an account?
 								<Link className="link orange" to="/sign-up"> Sign Up</Link>
 							</span>
+							<Button basic type="button" color="red" onClick={() => this.lockAccount()}>Lock</Button>
 						</Form>
 					</div>
 				</div>
@@ -41,4 +52,11 @@ class SignIn extends React.Component {
 
 }
 
-export default connect()(SignIn);
+SignIn.propTypes = {
+	openUnlockModal: PropTypes.func.isRequired,
+
+};
+
+export default connect(() => ({}), (dispatch) => ({
+	openUnlockModal: () => dispatch(openUnlockModal()),
+}))(SignIn);
