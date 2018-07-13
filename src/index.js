@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+
 import thunk from 'redux-thunk';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -6,6 +9,7 @@ import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 
 import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
+import { echoJSRedux } from 'echojs-redux';
 
 import 'babel-polyfill';
 
@@ -25,6 +29,7 @@ const store = createStore(
 	combineReducers({
 		...reducers,
 		router: routerReducer,
+		echojs: echoJSRedux.reducer,
 	}), {},
 	compose(
 		applyMiddleware(thunk),
