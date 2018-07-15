@@ -27,9 +27,6 @@
   font-family: $font-family;
   background: #FFFFFF;
   font-weight: normal;
-  border: 1px solid $bd-gray;
-  -webkit-box-shadow: 0px 1px 2px 0 $bd-gray;
-          box-shadow: 0px 1px 2px 0 $bd-gray;
   border-radius: 0.28571429rem;
   min-height: 2.85714286em;
 }
@@ -513,14 +510,11 @@ Floated Menu / Item
 ---------------*/
 
 .ui.vertical.menu {
-  display: block;
+  display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  background: #FFFFFF;
-  -webkit-box-shadow: 0px 1px 2px 0 $bd-gray;
-          box-shadow: 0px 1px 2px 0 $bd-gray;
 }
 
 /*--- Item ---*/

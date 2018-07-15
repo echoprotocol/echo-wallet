@@ -11,31 +11,19 @@ eslint:
   script:
     - npm install
     - npm run lint
-
-build_dev:
-  stage: deploy
-  script:
-    - cd /home/devuser/DevProjects/645.echo_web/desktop
-    - git pull origin development
-    - npm install
-    - npm run build-dev
   only:
-    - development
-  environment:
-    name: development
+     - triggers
   tags:
     - pp-projects
 
-build_stage:
+deploy:
   stage: deploy
   script:
-    - cd /home/devuser/Projects/645.echo_web/desktop
-    - git pull origin stage
+    - cd /home/devuser/DevProjects/645.echo_web/desktop
+    - git pull origin master
     - npm install
-    - npm run build-stage
+    - npm run build-dev
   only:
-    - stage
-  environment:
-    name: stage
+    - master
   tags:
     - pp-projects

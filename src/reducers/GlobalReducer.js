@@ -6,7 +6,6 @@ export default createModule({
 	initialState: Map({
 		globalLoading: true,
 		loading: false,
-
 	}),
 	transformations: {
 		setGlobalLoading: {
@@ -19,6 +18,13 @@ export default createModule({
 		setLoading: {
 			reducer: (state, { payload }) => {
 				state = state.set('loading', !!payload);
+				return state;
+			},
+		},
+		set: {
+			reducer: (state, { payload }) => {
+				state = state.set(payload.field, payload.value);
+
 				return state;
 			},
 		},

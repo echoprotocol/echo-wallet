@@ -1,0 +1,17 @@
+.user {
+    &-info {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: $link-gray;
+        .icon-menu_5 {
+            display: block;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+    }
+    &-action {
+        color: $orange;
+    }
+
+}
