@@ -6,7 +6,6 @@
 		"start": "cross-env NODE_ENV=local webpack-dev-server --mode development --progress --colors --history-api-fallback --hot --inline",
 		"build": "cross-env NODE_ENV=production webpack --progress --display-error-details --colors --mode production",
 		"build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
-		"build-stage": "cross-env NODE_ENV=stage webpack --progress --display-error-details --colors --mode production",
 		"lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'"
 	},
 	"dependencies": {
@@ -29,7 +28,7 @@
 		"redux-thunk": "^2.3.0",
 		"semantic-ui-react": "^0.78.3",
 		"uglifyjs-webpack-plugin": "^1.2.2",
-		"echojs-redux": "0.0.1"
+		"echojs-redux": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-redux.git"
 	},
 	"devDependencies": {
 		"babel-loader": "^7.1.3",
