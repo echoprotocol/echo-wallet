@@ -76,8 +76,8 @@ module.exports = {
 	},
 	resolve: {
 		modules: [
-			path.resolve('src'),
 			'node_modules',
+			path.resolve('src'),
 		],
 		extensions: ['.js', '.jsx', '.json'],
 	},
@@ -86,4 +86,9 @@ module.exports = {
 		HTMLWebpackPluginConfig,
 		extractSass,
 	],
+	node: {
+		fs: 'empty',
+		net: 'empty',
+		tls: 'empty',
+	},
 };
