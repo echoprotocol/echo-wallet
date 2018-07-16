@@ -4,7 +4,8 @@ import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
-import { SIGN_IN_PATH, INDEX_PATH } from '../constants/RouterConstants';
+import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
+
 
 export const initAccount = (accountName) => (dispatch) => {
 	localStorage.setItem('current_account', accountName);
@@ -28,7 +29,9 @@ export const connection = () => async (dispatch) => {
 	const accountName = localStorage.getItem('current_account');
 
 	if (!accountName) {
-		history.push(SIGN_IN_PATH);
+		if (!AUTH_ROUTES.includes(history.location.pathname)) {
+			history.push(SIGN_IN_PATH);
+		}
 		return;
 	}
 
