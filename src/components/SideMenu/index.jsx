@@ -2,6 +2,9 @@ import React from 'react';
 import { Accordion, Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { logout } from '../../actions/GlobalActions';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -16,19 +19,25 @@ const smartContracts = [
 ];
 
 
-export default class SidebarMenu extends React.Component {
+class SidebarMenu extends React.Component {
 
 	constructor() {
 		super();
 		this.state = { activeIndex: -1 };
 		this.handleClick = this.handleClick.bind(this);
 	}
+
+	onLogout() {
+		this.props.logout();
+	}
+
 	handleClick(e, titleProps) {
 		const { index } = titleProps;
 		const { activeIndex } = this.state;
 		const newIndex = activeIndex === index ? -1 : index;
 		this.setState({ activeIndex: newIndex });
 	}
+
 	render() {
 		const { activeIndex } = this.state;
 		return (
@@ -75,8 +84,8 @@ export default class SidebarMenu extends React.Component {
 						<div className="user-info">
 							<span className="icon icon-menu_5" />
 							<div className="user">
-								<div className="user-name">valik_pruss456</div>
-								<div className="user-action">Logout</div>
+								<div className="user-name">{ this.props.accountName }</div>
+								<div className="user-action" role="button" onClick={(e) => this.onLogout(e)} onKeyPress={(e) => this.onLogout(e)} tabIndex="0">Logout</div>
 							</div>
 						</div>
 					</div>
@@ -90,9 +99,21 @@ export default class SidebarMenu extends React.Component {
 
 SidebarMenu.propTypes = {
 	visibleBar: PropTypes.bool,
+	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
+	logout: PropTypes.func.isRequired,
 };
 
 SidebarMenu.defaultProps = {
 	visibleBar: false,
+	accountName: '',
 };
+
+export default connect(
+	(state) => ({
+		accountName: state.echojs.getIn(['userData', 'account', 'name']),
+	}),
+	(dispatch) => ({
+		logout: () => dispatch(logout()),
+	}),
+)(SidebarMenu);
