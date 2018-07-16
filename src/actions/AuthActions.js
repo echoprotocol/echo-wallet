@@ -5,12 +5,12 @@ import history from '../history';
 import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
 import { set as setKey } from './KeyChainActions';
 
-import { FORM_SIGN_UP } from '../constants/FormConstants';
+import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
-import { validateAccountExist, createWallet } from '../api/WalletApi';
+import { validateAccountExist, createWallet, validateAccount } from '../api/WalletApi';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -46,7 +46,7 @@ export const createAccount = ({
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-			return;
+
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
@@ -57,11 +57,59 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
+		localStorage.setItem('accountName', accountName);
+
 		history.push(INDEX_PATH);
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
+	}
+
+};
+
+export const authUser = ({
+	accountName,
+	password,
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName);
+	const passwordError = validatePassword(password);
+
+	if (accountNameError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+		return;
+	}
+
+	if (passwordError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'password', passwordError));
+		return;
+	}
+
+	try {
+		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		accountNameError = await validateAccountExist(instance, accountName, true);
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+			return;
+		}
+
+		dispatch(toggleLoading(FORM_SIGN_IN, true));
+
+		const checkValidate = await validateAccount(accountName, password);
+
+		if (checkValidate) {
+			dispatch(setFormError(FORM_SIGN_IN, 'error', accountNameError));
+			return;
+		}
+
+		localStorage.setItem('accountName', accountName);
+
+		history.push(INDEX_PATH);
+	} catch (err) {
+		dispatch(setValue(FORM_SIGN_IN, 'error', err));
+	} finally {
+		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
 
 };

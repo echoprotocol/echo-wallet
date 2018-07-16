@@ -1,4 +1,5 @@
-import { PrivateKey } from 'echojs-lib';
+import { PrivateKey, FetchChain } from 'echojs-lib';
+
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
@@ -52,6 +53,51 @@ export const createWallet = async (account, password) => {
 	}
 
 	return { owner, active, memo };
+};
+
+export const validateAccount = async (account, password, roles = ['active', 'owner', 'memo']) => {
+
+	if (account) {
+		let fromWif;
+		let checkAllRoles = 0;
+		try {
+			fromWif = PrivateKey.fromWif(password);
+		} catch (err) { console.log('err'); }
+		const acc = await FetchChain('getAccount', account);
+		let key;
+		if (fromWif) {
+			key = {
+				privKey: fromWif,
+				pubKey: fromWif.toPublicKey().toString(),
+			};
+		}
+
+		roles.forEach((role) => {
+			if (!fromWif) {
+				key = generateKeyFromPassword(account, role, password);
+			}
+			if (acc) {
+				if (role === 'memo') {
+					if (acc.toJS().options.memo_key === key.publicKey) {
+						checkAllRoles += 1;
+					}
+				} else if (role === 'active') {
+					if (acc.toJS().active.key_auths[0][0] === key.publicKey) {
+						checkAllRoles += 1;
+					}
+				} else if (role === 'owner') {
+					if (acc.toJS().owner.key_auths[0][0] === key.publicKey) {
+						checkAllRoles += 1;
+					}
+				}
+			}
+			return false;
+		});
+		if (checkAllRoles === 3) {
+			return null;
+		}
+	}
+	return 'auth error, name or pass invalid';
 };
 
 export function unlockWallet(account, password) {
