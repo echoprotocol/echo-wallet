@@ -4,14 +4,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actions as EchoJSActions } from 'echojs-redux';
 
 import { ModalConfirm } from '../components/Modals';
+
+import { connection } from '../actions/GlobalActions';
 
 class App extends React.Component {
 
 	componentWillMount() {
-		this.props.connect();
+		this.props.connection();
 	}
 
 	renderModals() {
@@ -38,7 +39,7 @@ class App extends React.Component {
 
 App.propTypes = {
 	children: PropTypes.element.isRequired,
-	connect: PropTypes.func.isRequired,
+	connection: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -47,6 +48,6 @@ export default connect(
 		loading: state.global.get('loading'),
 	}),
 	(dispatch) => ({
-		connect: () => dispatch(EchoJSActions.connect()),
+		connection: () => dispatch(connection()),
 	}),
 )(App);

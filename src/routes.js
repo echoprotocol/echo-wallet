@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router';
+import { Route } from 'react-router';
 
 import {
 	SIGN_UP_PATH,
@@ -18,9 +18,6 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					{ /* TODO rm after home page will be present */}
-					<Route exact path="/" render={() => (<Redirect to={ACTIVITY_PATH} />)} />
-
 					<Route exact path={ACTIVITY_PATH} component={Activity} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
