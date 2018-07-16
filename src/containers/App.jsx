@@ -4,6 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Segment } from 'semantic-ui-react'; //   Dimmer, Loader
 import { actions as EchoJSActions } from 'echojs-redux';
 
 import { ModalConfirm } from '../components/Modals';
@@ -26,8 +27,12 @@ class App extends React.Component {
 		const { children } = this.props;
 		return (
 			<div className="global-wrapper">
-
-				{children}
+				<Segment>
+					{/* <Dimmer inverted active>
+						<Loader inverted content="" />
+					</Dimmer> */}
+					{children}
+				</Segment>
 
 				{this.renderModals()}
 			</div>
