@@ -96,7 +96,6 @@ export default connect(
 	(state) => ({
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
 		password: state.form.getIn([FORM_SIGN_IN, 'password']),
-		usedData: state.echojs.getIn(['userData', 'account']),
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
 	}),
 	(dispatch) => ({
