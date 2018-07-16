@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { ACTIVITY_PATH } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -8,3 +6,5 @@ export const HEADER_TITLE = [
 		title: 'Recent Activity',
 	},
 ];
+
+export const FAUCET_ADDRESS = 'https://echo-tmp-wallet.pixelplex.io/faucet';
