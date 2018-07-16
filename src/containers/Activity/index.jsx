@@ -42,7 +42,7 @@ class Activity extends React.Component {
 											<Table.HeaderCell>From</Table.HeaderCell>
 											<Table.HeaderCell>To</Table.HeaderCell>
 											<Table.HeaderCell>Value</Table.HeaderCell>
-											<Table.HeaderCell>Free</Table.HeaderCell>
+											<Table.HeaderCell>Fee</Table.HeaderCell>
 											<Table.HeaderCell>Status</Table.HeaderCell>
 											<Table.HeaderCell>Time (UTC)</Table.HeaderCell>
 										</Table.Row>
