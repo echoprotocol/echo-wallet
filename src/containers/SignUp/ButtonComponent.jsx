@@ -14,9 +14,9 @@ class ButtonComponent extends React.Component {
 		const { accountName, generatedPassword, confirmPassword } = this.props;
 
 		this.props.createAccount({
-			accountName: accountName.value,
-			generatedPassword: generatedPassword.value,
-			confirmPassword: confirmPassword.value,
+			accountName: accountName.value.trim(),
+			generatedPassword: generatedPassword.value.trim(),
+			confirmPassword: confirmPassword.value.trim(),
 		});
 	}
 
@@ -34,7 +34,7 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (<Button type="submit" color="orange" className="load">Loading...</Button>);
+		return (<Button type="submit" color="orange" className="load">Creating...</Button>);
 	}
 
 	renderSubmit() {
