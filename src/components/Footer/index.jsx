@@ -10,7 +10,7 @@ class Footer extends React.PureComponent {
 		const connected = (
 			<div className="footer">
 				<ul>
-					<li>Bitshares.171205</li>
+					<li>Echo.171205</li>
 					<li className="pipeline">
                         Latency
 						<span className="pipeline-latency"> {this.props.latency} MS </span>
@@ -38,14 +38,7 @@ class Footer extends React.PureComponent {
 			</div>
 		);
 
-		if (this.props.isConnect) {
-			return (
-				connected
-			);
-		}
-		return (
-			disconnected
-		);
+		return this.props.isConnect ? connected : disconnected;
 	}
 
 }

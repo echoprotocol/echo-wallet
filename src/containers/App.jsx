@@ -1,17 +1,16 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable import/extensions */
-
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actions as EchoJSActions } from 'echojs-redux';
+import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 
 import { ModalConfirm } from '../components/Modals';
+
+import { connection } from '../actions/GlobalActions';
 
 class App extends React.Component {
 
 	componentWillMount() {
-		this.props.connect();
+		this.props.connection();
 	}
 
 	renderModals() {
@@ -23,11 +22,17 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { children } = this.props;
+		const { globalLoading, children } = this.props;
 		return (
 			<div className="global-wrapper">
-
-				{children}
+				<Segment>
+					{
+						globalLoading ?
+							<Dimmer inverted active>
+								<Loader inverted content="" />
+							</Dimmer> : children
+					}
+				</Segment>
 
 				{this.renderModals()}
 			</div>
@@ -37,8 +42,9 @@ class App extends React.Component {
 }
 
 App.propTypes = {
+	globalLoading: PropTypes.bool.isRequired,
 	children: PropTypes.element.isRequired,
-	connect: PropTypes.func.isRequired,
+	connection: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -47,6 +53,6 @@ export default connect(
 		loading: state.global.get('loading'),
 	}),
 	(dispatch) => ({
-		connect: () => dispatch(EchoJSActions.connect()),
+		connection: () => dispatch(connection()),
 	}),
 )(App);

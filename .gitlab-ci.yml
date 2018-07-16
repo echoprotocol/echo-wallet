@@ -16,30 +16,14 @@ eslint:
   tags:
     - pp-projects
 
-build_dev:
+deploy:
   stage: deploy
   script:
     - cd /home/devuser/DevProjects/645.echo_web/desktop
-    - git pull origin development
+    - git pull origin master
     - npm install
     - npm run build-dev
   only:
-    - development
-  environment:
-    name: development
-  tags:
-    - pp-projects
-
-build_stage:
-  stage: deploy
-  script:
-    - cd /home/devuser/Projects/645.echo_web/desktop
-    - git pull origin stage
-    - npm install
-    - npm run build-stage
-  only:
-    - stage
-  environment:
-    name: stage
+    - master
   tags:
     - pp-projects
