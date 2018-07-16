@@ -81,11 +81,6 @@ module.exports = {
 		],
 		extensions: ['.js', '.jsx', '.json'],
 	},
-	node: {
-		fs: 'empty',
-		net: 'empty',
-		tls: 'empty',
-	},
 	plugins: [
 		new CleanWebpackPlugin(['dist']),
 		HTMLWebpackPluginConfig,

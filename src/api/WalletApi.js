@@ -11,6 +11,15 @@ export const generateKeyFromPassword = (accountName, role, password) => {
 	return { privateKey, publicKey };
 };
 
+export const getKeyFromWif = (wif) => {
+	try {
+		const privateKey = PrivateKey.fromWif(wif);
+		return privateKey;
+	} catch (err) {
+		return null;
+	}
+};
+
 export const validateAccountExist = (instance, accountName, shouldExist, limit = 50) => (
 	instance.dbApi().exec('lookup_accounts', [accountName, limit])
 		.then((result) => {
@@ -55,54 +64,48 @@ export const createWallet = async (account, password) => {
 	return { owner, active, memo };
 };
 
-export const validateAccount = async (account, password, roles = ['active', 'owner', 'memo']) => {
+export const unlockWallet = async (accountName, password, roles = ['active', 'owner', 'memo']) => {
 
-	if (account) {
-		let fromWif;
-		let checkAllRoles = 0;
-		try {
-			fromWif = PrivateKey.fromWif(password);
-		} catch (err) { console.log('err'); }
-		const acc = await FetchChain('getAccount', account);
-		let key;
-		if (fromWif) {
-			key = {
-				privKey: fromWif,
-				pubKey: fromWif.toPublicKey().toString(),
-			};
-		}
+	const keys = {};
+	const privateKey = getKeyFromWif(password);
+	let key;
 
-		roles.forEach((role) => {
-			if (!fromWif) {
-				key = generateKeyFromPassword(account, role, password);
-			}
-			if (acc) {
-				if (role === 'memo') {
-					if (acc.toJS().options.memo_key === key.publicKey) {
-						checkAllRoles += 1;
-					}
-				} else if (role === 'active') {
-					if (acc.toJS().active.key_auths[0][0] === key.publicKey) {
-						checkAllRoles += 1;
-					}
-				} else if (role === 'owner') {
-					if (acc.toJS().owner.key_auths[0][0] === key.publicKey) {
-						checkAllRoles += 1;
-					}
-				}
-			}
-			return false;
-		});
-		if (checkAllRoles === 3) {
-			return null;
-		}
+	if (privateKey) {
+		key = {
+			privateKey,
+			publicKey: privateKey.toPublicKey().toString(),
+		};
 	}
-	return 'auth error, name or pass invalid';
-};
 
-export function unlockWallet(account, password) {
+	let account = await FetchChain('getAccount', accountName);
 
-	return new Promise((resolve) => {
-		resolve(password);
+	if (!account) { return keys; }
+
+	account = account.toJS();
+	roles.forEach((role) => {
+		if (!privateKey) {
+			key = generateKeyFromPassword(accountName, role, password);
+		}
+
+		switch (role) {
+			case 'memo':
+				if (account.options.memo_key === key.publicKey) {
+					keys.memo = key;
+				}
+				break;
+			case 'active':
+				if (account.active.key_auths[0][0] === key.publicKey) {
+					keys.active = key;
+				}
+				break;
+			case 'owner':
+				if (account.owner.key_auths[0][0] === key.publicKey) {
+					keys.owner = key;
+				}
+				break;
+			default: break;
+		}
 	});
-}
+
+	return keys;
+};

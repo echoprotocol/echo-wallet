@@ -1,16 +1,14 @@
 import { key } from 'echojs-lib';
 
-import history from '../history';
-
 import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
 import { set as setKey } from './KeyChainActions';
+import { initAccount } from './GlobalActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
-import { validateAccountExist, createWallet, validateAccount } from '../api/WalletApi';
+import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -57,9 +55,8 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		localStorage.setItem('accountName', accountName);
+		dispatch(initAccount(accountName));
 
-		history.push(INDEX_PATH);
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -96,16 +93,27 @@ export const authUser = ({
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
 
-		const checkValidate = await validateAccount(accountName, password);
+		const { owner, active, memo } = await unlockWallet(accountName, password);
 
-		if (checkValidate) {
-			dispatch(setFormError(FORM_SIGN_IN, 'error', accountNameError));
+		if (!owner && !active && !memo) {
+			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
 			return;
 		}
 
-		localStorage.setItem('accountName', accountName);
+		if (owner) {
+			dispatch(setKey(owner, accountName, password, 'owner'));
+		}
 
-		history.push(INDEX_PATH);
+		if (active) {
+			dispatch(setKey(active, accountName, password, 'active'));
+		}
+
+		if (memo) {
+			dispatch(setKey(memo, accountName, password, 'memo'));
+		}
+
+		dispatch(initAccount(accountName));
+
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
