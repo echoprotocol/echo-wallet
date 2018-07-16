@@ -10,6 +10,8 @@
 	},
 	"dependencies": {
 		"autoprefixer": "^8.1.0",
+		"babel-polyfill": "^6.26.0",
+		"classnames": "^2.2.6",
 		"config": "^1.30.0",
 		"echojs-lib": "^0.1.0",
 		"echojs-redux": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-redux.git",
@@ -20,6 +22,7 @@
 		"lodash": "^4.17.10",
 		"prop-types": "^15.6.1",
 		"react": "^16.2.0",
+		"react-copy-to-clipboard": "^5.0.1",
 		"react-dom": "^16.2.0",
 		"react-hot-loader": "^4.0.0",
 		"react-redux": "^5.0.7",
