@@ -1,4 +1,5 @@
-import { PrivateKey } from 'echojs-lib';
+import { PrivateKey, FetchChain } from 'echojs-lib';
+
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
@@ -8,6 +9,15 @@ export const generateKeyFromPassword = (accountName, role, password) => {
 	const publicKey = privateKey.toPublicKey().toString();
 
 	return { privateKey, publicKey };
+};
+
+export const getKeyFromWif = (wif) => {
+	try {
+		const privateKey = PrivateKey.fromWif(wif);
+		return privateKey;
+	} catch (err) {
+		return null;
+	}
 };
 
 export const validateAccountExist = (instance, accountName, shouldExist, limit = 50) => (
@@ -54,9 +64,48 @@ export const createWallet = async (account, password) => {
 	return { owner, active, memo };
 };
 
-export function unlockWallet(account, password) {
+export const unlockWallet = async (accountName, password, roles = ['active', 'owner', 'memo']) => {
 
-	return new Promise((resolve) => {
-		resolve(password);
+	const keys = {};
+	const privateKey = getKeyFromWif(password);
+	let key;
+
+	if (privateKey) {
+		key = {
+			privateKey,
+			publicKey: privateKey.toPublicKey().toString(),
+		};
+	}
+
+	let account = await FetchChain('getAccount', accountName);
+
+	if (!account) { return keys; }
+
+	account = account.toJS();
+	roles.forEach((role) => {
+		if (!privateKey) {
+			key = generateKeyFromPassword(accountName, role, password);
+		}
+
+		switch (role) {
+			case 'memo':
+				if (account.options.memo_key === key.publicKey) {
+					keys.memo = key;
+				}
+				break;
+			case 'active':
+				if (account.active.key_auths[0][0] === key.publicKey) {
+					keys.active = key;
+				}
+				break;
+			case 'owner':
+				if (account.owner.key_auths[0][0] === key.publicKey) {
+					keys.owner = key;
+				}
+				break;
+			default: break;
+		}
 	});
-}
+
+	return keys;
+};
