@@ -42,58 +42,48 @@ class Activity extends React.Component {
 											<Table.HeaderCell>From</Table.HeaderCell>
 											<Table.HeaderCell>To</Table.HeaderCell>
 											<Table.HeaderCell>Value</Table.HeaderCell>
-											<Table.HeaderCell>Free</Table.HeaderCell>
+											<Table.HeaderCell>Fee</Table.HeaderCell>
 											<Table.HeaderCell>Status</Table.HeaderCell>
 											<Table.HeaderCell>Time (UTC)</Table.HeaderCell>
 										</Table.Row>
 									</Table.Header>
 
 									<Table.Body>
-										<Table.Row>
-											<Table.Cell>
-												<span className="label-operation yellow">
-									Place order
-												</span>
-											</Table.Cell>
-											<Table.Cell>2</Table.Cell>
-											<Table.Cell>3</Table.Cell>
-											<Table.Cell>4</Table.Cell>
-											<Table.Cell>5</Table.Cell>
-											<Table.Cell>6</Table.Cell>
-											<Table.Cell><span className="success">Success</span></Table.Cell>
-											<Table.Cell>8</Table.Cell>
-										</Table.Row>
-										<Table.Row>
-											<Table.Cell>
-												<span className="label-operation red">
-									Cancel order
-												</span>
-											</Table.Cell>
-											<Table.Cell>2</Table.Cell>
-											<Table.Cell>3</Table.Cell>
-											<Table.Cell>4</Table.Cell>
-											<Table.Cell>5</Table.Cell>
-											<Table.Cell>6</Table.Cell>
-											<Table.Cell><span className="fall">Fall</span></Table.Cell>
-											<Table.Cell>8</Table.Cell>
-										</Table.Row>
-										<Table.Row>
-											<Table.Cell>
-												<span className="label-operation green">
-									transfer
-												</span>
-											</Table.Cell>
-											<Table.Cell>2</Table.Cell>
-											<Table.Cell>3</Table.Cell>
-											<Table.Cell>4</Table.Cell>
-											<Table.Cell>5</Table.Cell>
-											<Table.Cell>6</Table.Cell>
-											<Table.Cell><span className="fall">Fall</span></Table.Cell>
-											<Table.Cell>
-												<span className="date">May 31, 2018</span>
-												<span className="time">11:51:22 AM</span>
-											</Table.Cell>
-										</Table.Row>
+										{
+											Array(23).fill().map((a, i) => {
+												const id = i;
+												return (
+													<Table.Row key={id}>
+														<Table.Cell>
+															{/*
+                                                        label-operation can be yellow (Place order)
+                                                        / red (Cancel order) / green (Transfer)
+                                                        */}
+															<span className="label-operation yellow">
+                                                                Place order
+															</span>
+														</Table.Cell>
+														<Table.Cell>#22577382</Table.Cell>
+														<Table.Cell>Awareed36</Table.Cell>
+														<Table.Cell>
+															<span className="ellips">
+                                                                StanDPowell123
+															</span>
+														</Table.Cell>
+														<Table.Cell>2.276365136 ETH</Table.Cell>
+														<Table.Cell>0.00006983</Table.Cell>
+														<Table.Cell>
+															{/* can be success (Success) / fall (Fall) */}
+															<span className="success">Success</span>
+														</Table.Cell>
+														<Table.Cell>
+															<span className="date">June 25, 2018</span>
+															<span className="time">17:01:24 AM</span>
+														</Table.Cell>
+													</Table.Row>
+												);
+											})
+										}
 									</Table.Body>
 								</Table>
 

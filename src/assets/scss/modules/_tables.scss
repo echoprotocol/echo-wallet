@@ -1,15 +1,78 @@
+$thead-height: 46px;
+
 .table.table-activity {
+    
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: calc(100vh - 100px);
+    overflow: auto;
+    @media (min-width: 1060px){
+        overflow-y: scroll;
+        margin: 46px 0 0 0;
+        height: calc(100vh - 146px);
+    }
     border: 0;
     border-radius: 0;
     thead {
+        @media (min-width: 1060px){
+            overflow-y: scroll;
+            position: fixed;
+        }
+        width: 100%;
+        @media (min-width: 1060px){
+            margin-top: -($thead-height);        
+        }
+        background-color: #fff;
         th {
             background:0;
             color: $gray;
         }
     }
-    td,th {
-        &:last-child{
-            width: 120px;
+
+    // WIDTH OF CELLS
+
+    th, td {
+        width: 10vw;
+        &:first-child {
+            min-width: 150px;
+        }
+        &:nth-child(2) {
+            min-width: 120px;
+        }
+        &:nth-child(3) {
+            width: 15vw;
+            min-width: 100px;
+        }
+        &:nth-child(4) {
+            width: 15vw;
+            min-width: 150px;
+            @media (max-width: 1200px){
+                .ellips {
+                    max-width: 150px;
+                }
+            }
+        }
+        &:nth-child(5) {
+            width: 20vw;
+            min-width: 200px;
+            @media (max-width: 1200px){
+                text-align: right;
+            }
+        }
+        &:nth-child(6) {
+            min-width: 120px;
+            @media (max-width: 1200px){
+                text-align: right;
+            }
+        }
+
+        &:nth-child(7){
+            min-width: 100px;
+            text-align: center;
+        }    
+        &:last-child {
+            min-width: 110px;
             text-align: right;
         }
     }
@@ -24,9 +87,34 @@
             }
             &:hover {
                 background-color: $orange;
+                .label-operation {
+                    border-right: 1px solid #fff;
+                    border-top: 1px solid #fff;
+                    border-bottom: 1px solid #fff;
+                }
+                td {
+                    &:nth-child(2),
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        color:#fff9b5;
+                    }
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:last-child,
+                    .success,
+                    .fall {
+                        color: #fff;
+                    }
+                    
+                }
             }
             td {
                 border-top: 0;
+                transition: color .3s;
+                .success,
+                .fall {
+                    transition: color .3s;
+                }
                 &:nth-child(2),
                 &:nth-child(3),
                 &:nth-child(4) {
@@ -39,7 +127,6 @@
                     font-weight: 600;
                 }
                 &:last-child {
-                    
                     color: $gray;
                     span {
                         display: block;
@@ -50,3 +137,9 @@
     }
 
 }
+.ellips {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}  
