@@ -28,9 +28,9 @@ class App extends React.Component {
 		return (
 			<div className="global-wrapper">
 				<Segment>
-					<Dimmer inverted active>
+					{/* <Dimmer inverted active>
 						<Loader inverted content="" />
-					</Dimmer>
+					</Dimmer> */}
 					{children}
 				</Segment>
 
