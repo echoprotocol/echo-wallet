@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react'; //   Dimmer, Loader
 import { actions as EchoJSActions } from 'echojs-redux';
 
 import { ModalConfirm } from '../components/Modals';
