@@ -16,7 +16,7 @@ class ModalUnlockWallet extends React.Component {
 
 		this.props.unlockUser({
 			accountName,
-			password: password.value,
+			password: String(password.value).trim(),
 		});
 	}
 
