@@ -1,9 +1,13 @@
-input,a,button {
+* {
     &:focus {
        outline:none;
     }
 }
- 
+
+* {
+	box-sizing: border-box;
+}
+
 body,ul,li {
     margin:0;
     padding:0;
