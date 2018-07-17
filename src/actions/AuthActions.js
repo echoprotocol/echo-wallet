@@ -1,12 +1,12 @@
 import { key } from 'echojs-lib';
 
-import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
+import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
+import { closeModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
-import { closeModal } from './ModalActions';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
@@ -124,7 +124,7 @@ export const authUser = ({
 
 };
 
-export const unlockUser = ({
+export const unlockAccount = ({
 	accountName,
 	password,
 }) => async (dispatch, getState) => {
@@ -171,6 +171,7 @@ export const unlockUser = ({
 		}
 
 		dispatch(closeModal(MODAL_UNLOCK));
+		dispatch(clearForm(FORM_UNLOCK_MODAL));
 
 	} catch (err) {
 		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));

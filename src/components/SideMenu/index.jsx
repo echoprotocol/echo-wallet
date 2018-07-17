@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
-import { openUnlockModal } from '../../actions/ModalActions';
+import { openModal } from '../../actions/ModalActions';
+
+import { MODAL_UNLOCK } from '../../constants/ModalConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -40,7 +42,7 @@ class SidebarMenu extends React.Component {
 	}
 
 	lockAccount() {
-		this.props.openUnlockModal();
+		this.props.openModal(MODAL_UNLOCK);
 	}
 
 	render() {
@@ -112,7 +114,7 @@ SidebarMenu.propTypes = {
 	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
-	openUnlockModal: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 };
 
 SidebarMenu.defaultProps = {
@@ -126,6 +128,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
-		openUnlockModal: () => dispatch(openUnlockModal()),
+		openModal: (value) => dispatch(openModal(value)),
 	}),
 )(SidebarMenu);
