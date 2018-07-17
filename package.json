@@ -9,7 +9,7 @@
 		"lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
     "package-prepare": "ELECTRON=TRUE npm run build-dev",
 		"package-osx": "electron-packager ./dist Echo --platform=darwin --out dist/ && electron-installer-dmg dist/Echo-darwin-x64/Echo.app/ dist/Echo",
-		"package-linux": "electron-packager ./dist Echo --platform=linux --out dist/ && electron-installer-redhat --src dist/Echo-linux-x64/  --dest ./ --arch x86_64"
+		"package-linux": "electron-packager ./dist Echo --platform linux --arch x64 --out ./dist/inst/ && electron-installer-redhat --src dist/inst/Echo-linux-x64/ --dest dist/installers/ --arch x86_64"
 	},
 	"dependencies": {
 		"autoprefixer": "^8.1.0",

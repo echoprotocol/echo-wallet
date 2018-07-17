@@ -37,6 +37,7 @@ build.macos:
     - npm run package-osx
   only:
     - web
+    - tags
   tags:
     - echo-mac
   artifacts:
@@ -53,5 +54,6 @@ build.linux:
     - npm run package-linux
   only:
     - web
+    - tags
   tags:
     - echo-linux
