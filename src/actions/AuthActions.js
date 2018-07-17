@@ -1,16 +1,14 @@
 import { key } from 'echojs-lib';
 
-import history from '../history';
-
 import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
 import { set as setKey } from './KeyChainActions';
+import { initAccount } from './GlobalActions';
 
-import { FORM_SIGN_UP } from '../constants/FormConstants';
-import { INDEX_PATH } from '../constants/RouterConstants';
+import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
-import { validateAccountExist, createWallet } from '../api/WalletApi';
+import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -57,11 +55,69 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		history.push(INDEX_PATH);
+		dispatch(initAccount(accountName));
+
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
+	}
+
+};
+
+export const authUser = ({
+	accountName,
+	password,
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName);
+	const passwordError = validatePassword(password);
+
+	if (accountNameError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+		return;
+	}
+
+	if (passwordError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'password', passwordError));
+		return;
+	}
+
+	try {
+		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		accountNameError = await validateAccountExist(instance, accountName, true);
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+			return;
+		}
+
+		dispatch(toggleLoading(FORM_SIGN_IN, true));
+
+		const { owner, active, memo } = await unlockWallet(accountName, password);
+
+		if (!owner && !active && !memo) {
+			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
+			return;
+		}
+
+		if (owner) {
+			dispatch(setKey(owner, accountName, password, 'owner'));
+		}
+
+		if (active) {
+			dispatch(setKey(active, accountName, password, 'active'));
+		}
+
+		if (memo) {
+			dispatch(setKey(memo, accountName, password, 'memo'));
+		}
+
+		dispatch(initAccount(accountName));
+
+	} catch (err) {
+		dispatch(setValue(FORM_SIGN_IN, 'error', err));
+	} finally {
+		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
 
 };
