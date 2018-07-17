@@ -12,17 +12,15 @@ import { setFormValue } from '../../actions/FormActions';
 class ModalUnlockWallet extends React.Component {
 
 	onSuccess() {
-		const { password } = this.props;
+		const { accountName, password } = this.props;
 
 		this.props.unlockUser({
+			accountName,
 			password: password.value,
 		});
 	}
 
 	onCancel() {
-		if (this.props.cancelCallback && typeof this.props.cancelCallback === 'function') {
-			this.props.cancelCallback();
-		}
 
 		this.props.closeModal();
 	}
@@ -95,31 +93,28 @@ class ModalUnlockWallet extends React.Component {
 ModalUnlockWallet.propTypes = {
 	show: PropTypes.bool,
 	disableBackgroundClick: PropTypes.bool,
-	successCallback: PropTypes.func,
-	cancelCallback: PropTypes.func,
 	closeModal: PropTypes.func,
 	password: PropTypes.object.isRequired,
 	unlockUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	accountName: PropTypes.string,
 };
 
 ModalUnlockWallet.defaultProps = {
 	show: false,
 	disableBackgroundClick: false,
 	loading: false,
-	successCallback: () => {},
-	cancelCallback: () => {},
 	closeModal: () => {},
+	accountName: '',
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
-		successCallback: state.modal.getIn([MODAL_UNLOCK, 'successCallback']),
-		cancelCallback: state.modal.getIn([MODAL_UNLOCK, 'cancelCallback']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
+		accountName: state.echojs.getIn(['userData', 'account', 'name']),
 	}),
 	(dispatch) => ({
 		unlockUser: (value) => dispatch(unlockUser(value)),

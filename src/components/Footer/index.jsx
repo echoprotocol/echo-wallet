@@ -2,20 +2,15 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { openUnlockModal } from '../../actions/ModalActions';
 
 class Footer extends React.PureComponent {
-
-	lockAccount() {
-		this.props.openUnlockModal();
-	}
 
 	render() {
 
 		const connected = (
 			<div className="footer">
 				<ul>
-					<li>Echo.171205  <Button basic type="button" color="grey" onClick={() => this.lockAccount()}>Unlock</Button></li>
+					<li>Echo.171205</li>
 					<li className="pipeline">
                         Latency
 						<span className="pipeline-latency"> {this.props.latency} MS </span>
@@ -52,7 +47,6 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any.isRequired,
 	isConnect: PropTypes.any.isRequired,
 	latency: PropTypes.any.isRequired,
-	openUnlockModal: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -61,7 +55,5 @@ export default connect(
 		isConnect: state.echojs.getIn(['echojs', 'isConnected']),
 		latency: state.echojs.getIn(['echojs', 'latency']),
 	}),
-	(dispatch) => ({
-		openUnlockModal: () => dispatch(openUnlockModal()),
-	}),
+	() => ({}),
 )(Footer);
