@@ -8,8 +8,8 @@
 		"build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
 		"lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
 		"package-prepare": "ELECTRON=TRUE npm run build-dev",
-		"package-osx": "electron-packager ./dist Echo --platform=darwin --out dist/ && electron-installer-dmg dist/Echo-darwin-x64/Echo.app/ dist/Echo",
-		"package-linux": "electron-packager ./dist Echo --platform linux --arch x64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/Echo-linux-x64/ --dest dist/installers/ --arch x86_64"
+		"package-osx": "electron-packager ./dist Echo --platform=darwin --out ./dist/inst/ && electron-installer-dmg dist/inst/Echo-darwin-x64/Echo.app/ dist/installers/Echo",
+		"package-linux": "electron-packager ./dist Echo --platform linux --arch amd64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/Echo-linux-amd64/ --dest dist/installers/ --arch amd64"
 	},
 	"dependencies": {
 		"autoprefixer": "^8.1.0",
@@ -48,7 +48,6 @@
 		"cross-env": "^5.1.4",
 		"css-loader": "^0.28.10",
 		"electron": "^2.0.5",
-		"electron-installer-debian": "^0.8.1",
 		"electron-installer-dmg": "^2.0.0",
 		"electron-packager": "^12.1.0",
 		"eslint": "^4.18.2",
