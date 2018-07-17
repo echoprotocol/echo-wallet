@@ -46,7 +46,7 @@ export const createAccount = ({
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-
+			return;
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
