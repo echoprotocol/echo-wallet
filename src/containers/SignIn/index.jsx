@@ -10,9 +10,13 @@ import Footer from '../../components/Footer/index';
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { authUser } from '../../actions/AuthActions';
-import { setFormValue } from '../../actions/FormActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
+
+	componentWillUnmount() {
+		this.props.clearForm();
+	}
 
 	onClick() {
 		const { accountName, password } = this.props;
@@ -93,6 +97,7 @@ SignIn.propTypes = {
 	password: PropTypes.object.isRequired,
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
 };
 
@@ -109,5 +114,6 @@ export default connect(
 	(dispatch) => ({
 		authUser: (value) => dispatch(authUser(value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
 	}),
 )(SignIn);
