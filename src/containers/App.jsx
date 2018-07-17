@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 
-// eslint-disable-next-line import/no-unresolved
-import { ModalUnlockAccount } from '../components/modals';
+import ModalUnlockWallet from '../components/Modals';
 
 import { connection } from '../actions/GlobalActions';
 
@@ -17,7 +16,7 @@ class App extends React.Component {
 	renderModals() {
 		return (
 			<div>
-				<ModalUnlockAccount />
+				<ModalUnlockWallet />
 			</div>
 		);
 	}
