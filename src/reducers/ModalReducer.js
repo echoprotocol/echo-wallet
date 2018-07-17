@@ -2,9 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import {
-	MODAL_UNLOCK,
-} from './../constants/ModalConstants';
+import { MODAL_UNLOCK } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
 	show: false,

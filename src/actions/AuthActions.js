@@ -4,11 +4,15 @@ import { setFormValue, setFormError, toggleLoading, setValue } from './FormActio
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 
-import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
+import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
+import { MODAL_UNLOCK } from '../constants/ModalConstants';
+import { closeModal } from './ModalActions';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
 import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
+
+import ModalReducer from './../reducers/ModalReducer';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -118,6 +122,49 @@ export const authUser = ({
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
+	}
+
+};
+
+export const unlockUser = ({
+	password,
+}) => async (dispatch) => {
+	const accountName = localStorage.getItem('current_account');
+	const passwordError = validatePassword(password);
+
+	if (passwordError) {
+		dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
+		return;
+	}
+
+	try {
+		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
+
+		const { owner, active, memo } = await unlockWallet(accountName, password);
+
+		if (!owner && !active && !memo) {
+			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
+			return;
+		}
+
+		if (owner) {
+			dispatch(setKey(owner, accountName, password, 'owner'));
+		}
+
+		if (active) {
+			dispatch(setKey(active, accountName, password, 'active'));
+		}
+
+		if (memo) {
+			dispatch(setKey(memo, accountName, password, 'memo'));
+		}
+
+		dispatch(closeModal(MODAL_UNLOCK));
+
+	} catch (err) {
+		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
+	} finally {
+		dispatch(toggleLoading(FORM_UNLOCK_MODAL, false));
 	}
 
 };

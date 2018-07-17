@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import Footer from '../../components/Footer/index';
-import { openUnlockModal } from '../../actions/ModalActions';
 
 
 import { authUser } from '../../actions/AuthActions';
@@ -14,11 +13,7 @@ import { setFormValue } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
 
-	lockAccount() {
-		this.props.openUnlockModal();
-	}
 	onClick() {
-
 		const { accountName, password } = this.props;
 
 		this.props.authUser({
@@ -74,7 +69,6 @@ class SignIn extends React.Component {
 								Don’t have an account?
 								<Link className="link orange" to="/sign-up"> Sign Up</Link>
 							</span>
-							<Button basic type="button" color="red" onClick={() => this.lockAccount()}>Lock</Button>
 						</Form>
 					</div>
 				</div>
@@ -86,7 +80,6 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
-	openUnlockModal: PropTypes.func.isRequired,
 	accountName: PropTypes.object.isRequired,
 	password: PropTypes.object.isRequired,
 	authUser: PropTypes.func.isRequired,
@@ -107,6 +100,5 @@ export default connect(
 	(dispatch) => ({
 		authUser: (value) => dispatch(authUser(value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
-		openUnlockModal: () => dispatch(openUnlockModal()),
 	}),
 )(SignIn);
