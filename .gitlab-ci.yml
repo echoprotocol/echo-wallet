@@ -4,6 +4,7 @@ cache:
 
 stages:
   - lint
+  - prepare
   - deploy
 
 eslint:
@@ -27,3 +28,36 @@ deploy:
     - master
   tags:
     - pp-projects
+
+build.macos:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-prepare
+    - npm run package-osx
+  only:
+    - web
+    - tags
+  tags:
+    - echo-mac
+  artifacts:
+     paths:
+     - dist/installers/Echo.dmg
+     expire_in: 1 week
+
+
+#build.linux:
+#  stage: deploy
+#  script:
+#    - npm install
+#    - npm run package-prepare
+#    - npm run package-linux
+#  only:
+#    - web
+#    - tags
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - dist/installers/echo_0.0.1_x86_64.deb
+#     expire_in: 1 week
