@@ -42,7 +42,7 @@ build.macos:
     - echo-mac
   artifacts:
      paths:
-     - dist/Echo.dmg
+     - dist/installers/Echo.dmg
      expire_in: 1 week
 
 
