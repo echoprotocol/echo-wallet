@@ -1,10 +1,11 @@
 import React from 'react';
-import { Accordion, Menu, Sidebar } from 'semantic-ui-react';
+import { Accordion, Menu, Sidebar, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
+import { openUnlockModal } from '../../actions/ModalActions';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -36,6 +37,10 @@ class SidebarMenu extends React.Component {
 		const { activeIndex } = this.state;
 		const newIndex = activeIndex === index ? -1 : index;
 		this.setState({ activeIndex: newIndex });
+	}
+
+	lockAccount() {
+		this.props.openUnlockModal();
 	}
 
 	render() {
@@ -78,6 +83,11 @@ class SidebarMenu extends React.Component {
                                     Voting
 								</Link>
 							</li>
+							<li>
+								<Button basic type="button" color="grey" onClick={() => this.lockAccount()}>
+									Unlock
+								</Button>
+							</li>
 						</ul>
 					</div>
 					<div className="sidebar-footer">
@@ -102,6 +112,7 @@ SidebarMenu.propTypes = {
 	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
+	openUnlockModal: PropTypes.func.isRequired,
 };
 
 SidebarMenu.defaultProps = {
@@ -115,5 +126,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
+		openUnlockModal: () => dispatch(openUnlockModal()),
 	}),
 )(SidebarMenu);

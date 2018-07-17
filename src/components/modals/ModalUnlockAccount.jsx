@@ -12,9 +12,10 @@ import { setFormValue } from '../../actions/FormActions';
 class ModalUnlockWallet extends React.Component {
 
 	onSuccess() {
-		const { password } = this.props;
+		const { accountName, password } = this.props;
 
 		this.props.unlockUser({
+			accountName,
 			password: password.value,
 		});
 	}
@@ -97,6 +98,7 @@ ModalUnlockWallet.propTypes = {
 	unlockUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	accountName: PropTypes.string,
 };
 
 ModalUnlockWallet.defaultProps = {
@@ -104,6 +106,7 @@ ModalUnlockWallet.defaultProps = {
 	disableBackgroundClick: false,
 	loading: false,
 	closeModal: () => {},
+	accountName: '',
 };
 
 export default connect(
@@ -111,6 +114,7 @@ export default connect(
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
+		accountName: state.echojs.getIn(['userData', 'account', 'name']),
 	}),
 	(dispatch) => ({
 		unlockUser: (value) => dispatch(unlockUser(value)),

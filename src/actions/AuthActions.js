@@ -12,8 +12,6 @@ import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
 import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
 
-import ModalReducer from './../reducers/ModalReducer';
-
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
 
@@ -127,10 +125,16 @@ export const authUser = ({
 };
 
 export const unlockUser = ({
+	accountName,
 	password,
-}) => async (dispatch) => {
-	const accountName = localStorage.getItem('current_account');
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName);
 	const passwordError = validatePassword(password);
+
+	if (accountNameError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+		return;
+	}
 
 	if (passwordError) {
 		dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
@@ -138,6 +142,13 @@ export const unlockUser = ({
 	}
 
 	try {
+		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		accountNameError = await validateAccountExist(instance, accountName, true);
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+			return;
+		}
 		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
 
 		const { owner, active, memo } = await unlockWallet(accountName, password);
