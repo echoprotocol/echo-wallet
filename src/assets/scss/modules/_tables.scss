@@ -9,71 +9,63 @@ $thead-height: 46px;
     overflow: auto;
     @media (min-width: 1060px){
         overflow-y: scroll;
+        overflow-x: hidden;
         margin: 46px 0 0 0;
         height: calc(100vh - 146px);
     }
     border: 0;
     border-radius: 0;
     thead {
+        width: 100%;
+        background-color: #fff;
         @media (min-width: 1060px){
             overflow-y: scroll;
             position: fixed;
-        }
-        width: 100%;
-        @media (min-width: 1060px){
+            overflow-x: hidden;
             margin-top: -($thead-height);        
+
         }
-        background-color: #fff;
         th {
             background:0;
             color: $gray;
+            padding: 0.92857143em 5px;
         }
     }
 
     // WIDTH OF CELLS
 
     th, td {
-        width: 10vw;
+       min-width: 10vw;
         &:first-child {
-            min-width: 150px;
+            min-width: 21vw;
+            padding-left:  0.92857143em;
         }
-        &:nth-child(2) {
-            min-width: 120px;
-        }
-        &:nth-child(3) {
-            width: 15vw;
-            min-width: 100px;
-        }
+        &:nth-child(2),
+        &:nth-child(3),
         &:nth-child(4) {
-            width: 15vw;
-            min-width: 150px;
-            @media (max-width: 1200px){
-                .ellips {
-                    max-width: 150px;
-                }
+            .ellips {
+                max-width: 12vw;
             }
+            min-width: 13vw;
         }
         &:nth-child(5) {
-            width: 20vw;
-            min-width: 200px;
+            min-width: 18vw;
+            .ellips {
+                max-width: 16.5vw;
+            }
             @media (max-width: 1200px){
                 text-align: right;
             }
         }
         &:nth-child(6) {
-            min-width: 120px;
             @media (max-width: 1200px){
-                text-align: right;
+                text-align: center;
             }
         }
-
-        &:nth-child(7){
-            min-width: 100px;
-            text-align: center;
-        }    
         &:last-child {
-            min-width: 110px;
+            min-width: 12vw;
             text-align: right;
+            padding-right:  1.7em;
         }
     }
 
@@ -99,7 +91,6 @@ $thead-height: 46px;
                         color:#fff9b5;
                     }
                     &:nth-child(5),
-                    &:nth-child(6),
                     &:last-child,
                     .success,
                     .fall {
@@ -111,6 +102,7 @@ $thead-height: 46px;
             td {
                 border-top: 0;
                 transition: color .3s;
+                padding: 0.82857143em 5px;
                 .success,
                 .fall {
                     transition: color .3s;
@@ -121,8 +113,7 @@ $thead-height: 46px;
                     color: $blue;
                     font-weight: 600;
                 }
-                &:nth-child(5),
-                &:nth-child(6) {
+                &:nth-child(5) {
                     color: $gray-dark;
                     font-weight: 600;
                 }

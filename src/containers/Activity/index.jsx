@@ -40,8 +40,7 @@ class Activity extends React.Component {
 						<Table.HeaderCell>To</Table.HeaderCell>
 						<Table.HeaderCell>Value</Table.HeaderCell>
 						<Table.HeaderCell>Fee</Table.HeaderCell>
-						<Table.HeaderCell>Status</Table.HeaderCell>
-						<Table.HeaderCell>Time (UTC)</Table.HeaderCell>
+						<Table.HeaderCell>Time</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 
@@ -61,19 +60,27 @@ class Activity extends React.Component {
 											{op.operation}
 										</span>
 									</Table.Cell>
-									<Table.Cell>#{op.block}</Table.Cell>
-									<Table.Cell>{op.from}</Table.Cell>
+									<Table.Cell>
+										<span className="ellips">
+                                            #{op.block}
+										</span>
+									</Table.Cell>
+									<Table.Cell>
+										<span className="ellips">
+											{op.from}
+										</span>
+									</Table.Cell>
 									<Table.Cell>
 										<span className="ellips">
 											{op.to}
 										</span>
 									</Table.Cell>
-									<Table.Cell>{op.value}</Table.Cell>
-									<Table.Cell>{op.fee}</Table.Cell>
 									<Table.Cell>
-										{/* can be success (Success) / fall (Fall) */}
-										<span className="success">{op.status}</span>
+										<span className="ellips">
+											{op.value}
+										</span>
 									</Table.Cell>
+									<Table.Cell>{op.fee}</Table.Cell>
 									<Table.Cell>
 										<span className="date">June 25, 2018</span>
 										<span className="time">17:01:24 AM</span>
