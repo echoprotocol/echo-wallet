@@ -6,9 +6,14 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
-import { setFormValue } from '../../actions/FormActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
+
+	componentWillUnmount() {
+		this.props.clearForm();
+	}
+
 
 	onChange(e, lowerCase) {
 		const field = e.target.name;
@@ -64,6 +69,7 @@ FormComponent.propTypes = {
 	generatedPassword: PropTypes.object.isRequired,
 	confirmPassword: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -74,5 +80,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_UP, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_SIGN_UP)),
 	}),
 )(FormComponent);
