@@ -37,3 +37,9 @@ export const connection = () => async (dispatch) => {
 
 	dispatch(initAccount(accountName));
 };
+
+
+export const logout = () => () => {
+	localStorage.removeItem('current_account');
+	history.push(SIGN_IN_PATH);
+};
