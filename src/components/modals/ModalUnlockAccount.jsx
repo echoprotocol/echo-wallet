@@ -20,9 +20,6 @@ class ModalUnlockWallet extends React.Component {
 	}
 
 	onCancel() {
-		if (this.props.cancelCallback && typeof this.props.cancelCallback === 'function') {
-			this.props.cancelCallback();
-		}
 
 		this.props.closeModal();
 	}
@@ -95,8 +92,6 @@ class ModalUnlockWallet extends React.Component {
 ModalUnlockWallet.propTypes = {
 	show: PropTypes.bool,
 	disableBackgroundClick: PropTypes.bool,
-	successCallback: PropTypes.func,
-	cancelCallback: PropTypes.func,
 	closeModal: PropTypes.func,
 	password: PropTypes.object.isRequired,
 	unlockUser: PropTypes.func.isRequired,
@@ -108,16 +103,12 @@ ModalUnlockWallet.defaultProps = {
 	show: false,
 	disableBackgroundClick: false,
 	loading: false,
-	successCallback: () => {},
-	cancelCallback: () => {},
 	closeModal: () => {},
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
-		successCallback: state.modal.getIn([MODAL_UNLOCK, 'successCallback']),
-		cancelCallback: state.modal.getIn([MODAL_UNLOCK, 'cancelCallback']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
 	}),

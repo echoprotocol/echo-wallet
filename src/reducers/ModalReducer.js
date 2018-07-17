@@ -16,8 +16,6 @@ export default createModule({
 			content: null,
 			btnTitleSuccess: null,
 			btnTitleCancel: null,
-			successCallback: () => {},
-			cancelCallback: () => {},
 		}),
 		currentOpens: [],
 	}),
