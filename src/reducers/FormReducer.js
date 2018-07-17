@@ -5,6 +5,7 @@ import _ from 'lodash';
 import {
 	FORM_SIGN_UP,
 	FORM_SIGN_IN,
+	FORM_UNLOCK_MODAL,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -38,6 +39,12 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 	}),
+	[FORM_UNLOCK_MODAL]: Map({
+		password: {
+			value: '',
+			error: null,
+		},
+	}),
 };
 
 export default createModule({
@@ -45,6 +52,7 @@ export default createModule({
 	initialState: Map({
 		[FORM_SIGN_UP]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP]),
 		[FORM_SIGN_IN]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_IN]),
+		[FORM_UNLOCK_MODAL]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_UNLOCK_MODAL]),
 	}),
 	transformations: {
 		set: {

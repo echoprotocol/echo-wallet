@@ -1,41 +1,14 @@
 import ModalReducer from './../reducers/ModalReducer';
+import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
-export default class ModalActions {
+export const openModal = (type) => (dispatch) => {
+	dispatch(ModalReducer.actions.open({ type }));
+};
 
-	/**
-	 *
-	 * @param {Object} params
-	 * @param {String} params.title
-	 * @param {String} params.text
-	 * @param {String} params.btnYes
-	 * @param {String} params.btnNo
-	 * @param {Function} params.callbackCancel
-	 * @param {Function} params.callbackYes
-	 * @return {function(*)}
-	 */
-	static showConfirm(params = {}) {
-		return (dispatch) => new Promise((resolve) => {
-			params.title = params.title || '';
-			params.text = params.text || '';
-			params.btnYes = params.btnYes || undefined;
-			params.btnNo = params.btnNo || undefined;
-			params.callbackYes = params.callbackYes || (() => {});
-			params.callbackCancel = params.callbackCancel || (() => {});
-			dispatch(ModalReducer.actions.showConfirm(params));
-			resolve();
-		});
-	}
+export const closeModal = (type) => (dispatch) => {
+	dispatch(ModalReducer.actions.close({ type }));
+};
 
-	/**
-	 *
-	 * @return {function(*)}
-	 */
-	static closeConfirm() {
-		return (dispatch) => new Promise((resolve) => {
-			dispatch(ModalReducer.actions.closeConfirm());
-			resolve();
-		});
-	}
-
-
-}
+export const openUnlockModal = () => (dispatch) => {
+	dispatch(openModal(MODAL_UNLOCK));
+};

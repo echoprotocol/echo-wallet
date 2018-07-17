@@ -15,7 +15,6 @@ import { setFormValue } from '../../actions/FormActions';
 class SignIn extends React.Component {
 
 	onClick() {
-
 		const { accountName, password } = this.props;
 
 		this.props.authUser({
