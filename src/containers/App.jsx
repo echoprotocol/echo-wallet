@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Dimmer, Loader, Segment } from 'semantic-ui-react';
 
-import { ModalConfirm } from '../components/Modals';
+import ModalUnlockWallet from '../components/Modals';
 
 import { connection } from '../actions/GlobalActions';
 
@@ -16,7 +16,7 @@ class App extends React.Component {
 	renderModals() {
 		return (
 			<div>
-				<ModalConfirm />
+				<ModalUnlockWallet />
 			</div>
 		);
 	}

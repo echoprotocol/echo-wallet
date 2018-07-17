@@ -4,7 +4,9 @@ import { setFormValue, setFormError, toggleLoading, setValue } from './FormActio
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 
-import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
+import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
+import { MODAL_UNLOCK } from '../constants/ModalConstants';
+import { closeModal } from './ModalActions';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
@@ -44,7 +46,7 @@ export const createAccount = ({
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-
+			return;
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
@@ -118,6 +120,62 @@ export const authUser = ({
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
+	}
+
+};
+
+export const unlockUser = ({
+	accountName,
+	password,
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName);
+	const passwordError = validatePassword(password);
+
+	if (accountNameError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+		return;
+	}
+
+	if (passwordError) {
+		dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
+		return;
+	}
+
+	try {
+		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		accountNameError = await validateAccountExist(instance, accountName, true);
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+			return;
+		}
+		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
+
+		const { owner, active, memo } = await unlockWallet(accountName, password);
+
+		if (!owner && !active && !memo) {
+			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
+			return;
+		}
+
+		if (owner) {
+			dispatch(setKey(owner, accountName, password, 'owner'));
+		}
+
+		if (active) {
+			dispatch(setKey(active, accountName, password, 'active'));
+		}
+
+		if (memo) {
+			dispatch(setKey(memo, accountName, password, 'memo'));
+		}
+
+		dispatch(closeModal(MODAL_UNLOCK));
+
+	} catch (err) {
+		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
+	} finally {
+		dispatch(toggleLoading(FORM_UNLOCK_MODAL, false));
 	}
 
 };

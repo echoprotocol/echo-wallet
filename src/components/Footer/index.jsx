@@ -49,8 +49,11 @@ Footer.propTypes = {
 	latency: PropTypes.any.isRequired,
 };
 
-export default connect((state) => ({
-	lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']) || '',
-	isConnect: state.echojs.getIn(['echojs', 'isConnected']),
-	latency: state.echojs.getIn(['echojs', 'latency']),
-}))(Footer);
+export default connect(
+	(state) => ({
+		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']) || '',
+		isConnect: state.echojs.getIn(['echojs', 'isConnected']),
+		latency: state.echojs.getIn(['echojs', 'latency']),
+	}),
+	() => ({}),
+)(Footer);
