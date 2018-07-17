@@ -57,3 +57,7 @@ build.linux:
     - tags
   tags:
     - echo-linux
+  artifacts:
+     paths:
+     - dist/installers/echo-0.0.1.x86_64.rpm
+     expire_in: 1 week
