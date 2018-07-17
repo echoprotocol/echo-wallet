@@ -84,9 +84,9 @@ class SidebarMenu extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Button basic type="button" color="grey" onClick={() => this.lockAccount()}>
-									Unlock
-								</Button>
+								<div className="sidebar-nav-link">
+									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.lockAccount()} />
+								</div>
 							</li>
 						</ul>
 					</div>

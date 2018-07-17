@@ -72,7 +72,7 @@ class ModalUnlockWallet extends React.Component {
 								<Form.Field>
 									<label htmlFor="Password">Password</label>
 									<div className={password.error ? 'error' : ''}>
-										<input placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+										<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
 										<span className="error-message">{password.error}</span>
 									</div>
 								</Form.Field>
