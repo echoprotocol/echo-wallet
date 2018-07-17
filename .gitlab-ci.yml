@@ -33,7 +33,7 @@ build.macos:
   stage: deploy
   script:
     - npm install
-    - npm run build-prepare
+    - npm run package-prepare
     - npm run package-osx
   only:
     - web
@@ -49,7 +49,7 @@ build.linux:
   stage: deploy
   script:
     - npm install
-    - npm run build-prepare
+    - npm run package-prepare
     - npm run package-linux
   only:
     - web
