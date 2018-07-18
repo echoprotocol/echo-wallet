@@ -24,3 +24,100 @@
         }
     }
 }
+
+.user-section {
+    margin-left: auto;
+    padding-left: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .logout {
+        color: $orange;
+        font-weight: 600;
+    }
+    .ui.dropdown {
+        .menu {
+            right: 0;
+            left: auto;
+            margin-top: 10px;
+            min-width: 300px;
+            border-radius: 0;
+
+            .balance {
+                margin-left: 30px;
+            }
+            & > .item {
+                padding: 0;
+                &:hover {
+                    background-color: transparent;
+                    .user-item {
+                        background-color: $orange;
+                        color: #fff;
+                        .balance {
+                            color: #fff;
+                        }
+                    }
+                }
+                .user-item,
+                .user-panel {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .user-item {
+                    color: $black;
+                    transition: background-color .4s, color .4s;
+                    padding: 0.78571429rem 1.14285714rem;
+
+                }
+                .user-panel {
+                    padding: 0.8571429rem 1.14285714rem;
+                    border-top: 1px solid $bd-gray;
+                }
+            }
+        }
+        
+        .dropdown.icon {
+            color: $link-gray;
+        }
+        .text {
+            color: $orange;
+            font-weight: 600;
+        }
+    }
+    .balance {
+        transition: color .4s;
+        color: $link-gray;
+        span {
+            &:nth-child(1) {
+                font-weight: 600;
+                margin-right: 5px;
+            }
+            &:nth-child(2) {
+                font-weight: 400;
+            }
+        }
+    }
+}
+
+.add-account {
+    color: $bd-gray;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    &:before {
+        font-family: 'icomoon';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1px;
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 1.3em;
+        content: "\e900";
+        margin-right: 7px;
+    }
+}
