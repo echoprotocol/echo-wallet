@@ -134,3 +134,32 @@ $thead-height: 46px;
     white-space: nowrap;
     overflow: hidden;
 }  
+
+.table-assets {
+    .thead, 
+    .tbody {
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        tr {
+            display: flex;
+        }
+        td {
+            min-width: 50%;
+        }
+    }
+    .thead {
+
+        td {
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+    }
+    .tbody {
+        border-bottom: 1px solid $bd-gray;
+    }
+}
