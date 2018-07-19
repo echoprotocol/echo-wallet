@@ -23,11 +23,17 @@
             color: $black;
         }
     }
+    .panel-right {
+        margin-left: auto;
+        padding-left: 50px;
+        display: flex;
+        align-items: center;
+    }
 }
 
+
 .user-section {
-    margin-left: auto;
-    padding-left: 50px;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
