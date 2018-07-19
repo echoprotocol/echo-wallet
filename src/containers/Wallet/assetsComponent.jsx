@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
 
@@ -10,18 +10,50 @@ class Assets extends React.Component {
 	render() {
 		return (
 			<div className="table-assets">
-				<Table className="thead" unstackable>
-					<Table.Body>
-						<Table.Row>
-							<Table.Cell>Block ID</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
-						</Table.Row>
-					</Table.Body>
-				</Table>
+				<div className="thead-wrap">
+					<Table className="thead" unstackable>
+						<Table.Body>
+							<Table.Row>
+								<Table.Cell>
+									<div className="table-title">Assets</div>
+									<div className="col-title">Assets</div>
+								</Table.Cell>
+								<Table.Cell>
+									<Button compact>Add Asset</Button>
+									<div className="col-title">Total amount</div>
+								</Table.Cell>
+							</Table.Row>
+						</Table.Body>
+					</Table>
+				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
 						<Table.Row>
-							<Table.Cell>Block ID</Table.Cell>
+							<Table.Cell>ECHO</Table.Cell>
+							<Table.Cell>8 186 877 940.0147</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>myEcho</Table.Cell>
+							<Table.Cell>Date</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>ethEcho</Table.Cell>
+							<Table.Cell>Date</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>myEcho</Table.Cell>
+							<Table.Cell>Date</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>myEcho ID</Table.Cell>
+							<Table.Cell>Date</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>myEcho</Table.Cell>
+							<Table.Cell>Date</Table.Cell>
+						</Table.Row>
+						<Table.Row>
+							<Table.Cell>myEcho</Table.Cell>
 							<Table.Cell>Date</Table.Cell>
 						</Table.Row>
 					</Table.Body>
