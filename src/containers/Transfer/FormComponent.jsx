@@ -1,14 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Button } from 'semantic-ui-react';
+import { Form, Input, Select, Dropdown, Button } from 'semantic-ui-react';
 
 class FormComponent extends React.Component {
 
 	render() {
-		const amountOptions = [
-			{ key: 'ECHO', text: 'ECHO', value: 'ECHO' },
-			{ key: 'ETC', text: 'ETC', value: 'ETC' },
-		];
 		const feeOptions = [
 			{ key: '0.000001 ECHO', text: '0.000001 ECHO', value: '0.000001 ECHO' },
 			{ key: '0.000001 ETC', text: '0.000001 ETC', value: '0.000001 ETC' },
@@ -43,8 +39,18 @@ class FormComponent extends React.Component {
 						</ul>
 					</label>
 					<Input type="text" placeholder="Amount" action>
-						<input />
-						<Select compact options={amountOptions} defaultValue="ECHO" />
+						<input className="amount" />
+						<Dropdown text="Filter" className="assets-tokens-dropdown">
+							<Dropdown.Menu>
+								<Dropdown.Header content="ASSETS" />
+								<Dropdown.Item>BTC</Dropdown.Item>
+								<Dropdown.Item>ETC</Dropdown.Item>
+								<Dropdown.Item>LTC</Dropdown.Item>
+								<Dropdown.Header content="TOKENS" />
+								<Dropdown.Item>sBIT</Dropdown.Item>
+								<Dropdown.Item>Playpoint</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown>
 					</Input>
 				</Form.Field>
 				<Form.Field>
