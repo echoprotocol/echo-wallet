@@ -1,0 +1,62 @@
+.list {
+    &-amount {
+        display: flex;
+        align-items: center;
+        color: $black;
+        text-transform: none;
+        font-weight: 400;
+        font-size: 1.1em;
+        li {
+            height: 10px;
+            display: flex;
+            align-items: center;
+            &:first-child {
+                padding-right: 9px;
+                margin-right: 10px;
+                border-right: 1px solid $bd-gray;
+            }
+            &:last-child {
+                span {
+                    margin-left: 4px;
+                    color: $orange;
+                    cursor: pointer;
+                }
+            }
+            .ui.selection.dropdown {
+                padding: 0;
+                min-height: auto;
+                min-width: auto;
+                border: 0;
+                display: flex;
+                align-items: center;
+                margin-left: 4px;
+                & > .text {
+                    color: $orange;
+                }
+                &.active {
+                    & > .text {
+                        color: $orange;
+                    }
+                    &:hover {
+                        box-shadow: none;
+                    }
+                }
+                .menu {
+                    width: max-content;
+                    right: 0;
+                    left: auto;
+                    border: 0;
+                }
+                & > .dropdown.icon {
+                    position: relative;
+                    line-height: 1;
+                    top: auto;
+                    bottom: auto;
+                    right: auto;
+                    margin: 0 0 0 5px;
+                    padding: 0;
+                }
+            }
+        }
+    }
+}

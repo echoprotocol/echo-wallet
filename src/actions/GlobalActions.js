@@ -12,7 +12,10 @@ export const initAccount = (accountName) => (dispatch) => {
 
 	dispatch(EchoJSActions.initAccount(accountName));
 
-	history.push(INDEX_PATH);
+	if (AUTH_ROUTES.includes(history.location.pathname)) {
+		history.push(INDEX_PATH);
+	}
+
 };
 
 export const connection = () => async (dispatch) => {

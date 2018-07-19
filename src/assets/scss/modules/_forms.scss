@@ -7,12 +7,14 @@
     }
 }
 
-.form.user-form {
+.form.user-form,
+.form.main-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     max-width: 500px;
+    width: 100%;
     margin: auto;
     .field {
         width: 100%;
@@ -124,6 +126,60 @@
                 &:focus {
                     border: 1px solid $err-red;
                 }
+            }
+        }
+    }
+}
+
+.main-form {
+    .visible.transition {
+        display: block !important;
+    }
+    .dropdown {
+        max-width: 150px;
+        &.icon {
+            color: $bd-gray;
+        }
+    }
+    .comment {
+        textarea {
+            min-height: 198px;
+            resize: none;  
+        }
+    }
+    label {
+        display: flex;
+    }
+    .action-wrap {
+        position: relative;
+        &.ui.input {
+            input {
+                padding-right: 30px;
+            }
+        }
+
+        .value-status {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            width: 25px;
+        }
+    }
+    .form-panel {
+        display: flex;
+        align-items: center;
+        margin: 30px 0 0;
+        .button[type=submit] {
+            margin: 0;
+        }
+        .total-sum {
+            span {
+                margin-left: 5px;
+                color: $orange;
             }
         }
     }
