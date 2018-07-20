@@ -28,33 +28,60 @@ class Assets extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
+						{/*
+                            IF ASSETS IS EMPTY":
+                            <Table.Row className="msg-empty">
+                                <Table.Cell>There is no Assets yet...</Table.Cell>
+                            </Table.Row>
+                        */}
 						<Table.Row>
 							<Table.Cell>ECHO</Table.Cell>
-							<Table.Cell>8 186 877 940.0147</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>ethEcho</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>myEcho ID</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 						<Table.Row>
 							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>Date</Table.Cell>
+							<Table.Cell>
+                                8 186 877 940.0147
+								<span className="icon-close" />
+							</Table.Cell>
 						</Table.Row>
 					</Table.Body>
 				</Table>
