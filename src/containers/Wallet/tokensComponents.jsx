@@ -1,11 +1,16 @@
 import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
-
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { MODAL_TOKENS } from '../../constants/ModalConstants';
+import { openModal } from '../../actions/ModalActions';
 
 
 class Tokens extends React.Component {
 
+	showTokensModal() {
+		this.props.openModal(MODAL_TOKENS);
+	}
 
 	render() {
 		return (
@@ -19,7 +24,7 @@ class Tokens extends React.Component {
 									<div className="col-title">Tokens</div>
 								</Table.Cell>
 								<Table.Cell>
-									<Button compact>Watch Tokens</Button>
+									<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
 									<div className="col-title">Total amount</div>
 								</Table.Cell>
 							</Table.Row>
@@ -91,6 +96,14 @@ class Tokens extends React.Component {
 
 }
 
+Tokens.propTypes = {
+	openModal: PropTypes.func.isRequired,
+};
 
-export default connect()(Tokens);
 
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		openModal: (value) => dispatch(openModal(value)),
+	}),
+)(Tokens);

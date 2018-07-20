@@ -1,15 +1,8 @@
 import React from 'react';
-import { Table, Button } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
+import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { MODAL_ADD_ASSETS } from '../../constants/ModalConstants';
-import { openModal } from '../../actions/ModalActions';
 
 class Assets extends React.Component {
-
-	showAssetsModal() {
-		this.props.openModal(MODAL_ADD_ASSETS);
-	}
 
 	render() {
 		return (
@@ -23,7 +16,7 @@ class Assets extends React.Component {
 									<div className="col-title">Assets</div>
 								</Table.Cell>
 								<Table.Cell>
-									<Button content="Add Asset" onClick={() => this.showAssetsModal()} compact />
+									{/* <Button content="Add Asset" compact /> */}
 									<div className="col-title">Total amount</div>
 								</Table.Cell>
 							</Table.Row>
@@ -94,15 +87,6 @@ class Assets extends React.Component {
 	}
 
 }
-Assets.propTypes = {
-	openModal: PropTypes.func.isRequired,
-};
 
-
-export default connect(
-	() => ({}),
-	(dispatch) => ({
-		openModal: (value) => dispatch(openModal(value)),
-	}),
-)(Assets);
+export default connect()(Assets);
 

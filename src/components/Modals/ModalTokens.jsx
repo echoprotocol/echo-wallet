@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { closeModal } from '../../actions/ModalActions';
+import { MODAL_TOKENS } from './../../constants/ModalConstants';
 
-import { MODAL_ADD_ASSETS } from './../../constants/ModalConstants';
-
-class ModalAddAssets extends React.Component {
+class ModalTokens extends React.Component {
 
 	onClose(e) {
 		e.preventDefault();
@@ -31,18 +30,18 @@ class ModalAddAssets extends React.Component {
 					<div className="modal-body">
 						<Form className="user-form">
 							<div className="form-info">
-								<h3>Add assets</h3>
+								<h3>Watch Token</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field>
-									<label htmlFor="assets">Asset name</label>
+									<label htmlFor="tokens">Token name</label>
 									<div className="">
-										<input type="text" placeholder="Asset name" name="assets" className="ui input" value="" />
+										<input type="text" placeholder="Token name" name="tokens" className="ui input" value="" />
 										<span className="error-message" />
 									</div>
 								</Form.Field>
 							</div>
-							<Button basic type="submit" color="orange">Add Asset</Button>
+							<Button basic type="submit" color="orange">Watch Token</Button>
 						</Form>
 					</div>
 				</div>
@@ -52,20 +51,20 @@ class ModalAddAssets extends React.Component {
 
 }
 
-ModalAddAssets.propTypes = {
+ModalTokens.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
 };
 
-ModalAddAssets.defaultProps = {
+ModalTokens.defaultProps = {
 	show: false,
 };
 
 export default connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_ADD_ASSETS, 'show']),
+		show: state.modal.getIn([MODAL_TOKENS, 'show']),
 	}),
 	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_ADD_ASSETS)),
+		closeModal: () => dispatch(closeModal(MODAL_TOKENS)),
 	}),
-)(ModalAddAssets);
+)(ModalTokens);
