@@ -16,7 +16,7 @@ class Tokens extends React.Component {
 							<Table.Row>
 								<Table.Cell>
 									<div className="table-title">Tokens</div>
-									<div className="col-title">Tokens</div>
+									<div className="col-title">Assets</div>
 								</Table.Cell>
 								<Table.Cell>
 									<Button compact>Watch Tokens</Button>
