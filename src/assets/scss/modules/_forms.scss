@@ -141,12 +141,12 @@
             color: $bd-gray;
         }
     }
-    .comment {
+    &.ui.form {
         textarea {
-            min-height: 198px;
             resize: none;  
         }
     }
+
     label {
         display: flex;
     }
@@ -174,7 +174,7 @@
         align-items: center;
         margin: 30px 0 0;
         .button[type=submit] {
-            margin: 0;
+            margin: 0 0 0 auto;
         }
         .total-sum {
             span {
