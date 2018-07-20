@@ -32,10 +32,10 @@ class Wallet extends React.Component {
 
 	renderContent() {
 		return (
-			<React.Fragment>
+			<div className="wallet-wrap">
 				<Assets />
 				<Tokens />
-			</React.Fragment>
+			</div>
 		);
 	}
 
