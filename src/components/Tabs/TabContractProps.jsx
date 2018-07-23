@@ -69,8 +69,6 @@ class TabContractProps extends React.Component {
 							<span className="row-title"> balanceOf </span>
 							<Input size="mini" placeholder="src (adress)" />
 						</div>
-						<div className="watchlist-row">
-						</div>
 					</Accordion.Title>
 					<Accordion.Content
 						className="watchlist-line"
