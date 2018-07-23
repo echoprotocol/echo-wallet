@@ -44,16 +44,23 @@ class Footer extends React.PureComponent {
 }
 
 Footer.propTypes = {
-	lastBlock: PropTypes.any.isRequired,
-	isConnect: PropTypes.any.isRequired,
-	latency: PropTypes.any.isRequired,
+	lastBlock: PropTypes.any,
+	isConnect: PropTypes.any,
+	latency: PropTypes.any,
 };
+
+Footer.defaultProps = {
+	lastBlock: '',
+	isConnect: false,
+	latency: '',
+};
+
 
 export default connect(
 	(state) => ({
-		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']) || '',
-		isConnect: state.echojs.getIn(['echojs', 'isConnected']),
-		latency: state.echojs.getIn(['echojs', 'latency']),
+		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
+		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		latency: state.echojs.getIn(['system', 'latency']),
 	}),
 	() => ({}),
 )(Footer);
