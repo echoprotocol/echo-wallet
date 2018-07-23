@@ -1,0 +1,32 @@
+.tub-full {
+    background-color: rgb(247, 247, 247);
+    .ui.tabular.menu {
+        border: 0;
+        max-width: 860px;
+        margin: auto;
+        .item {
+            border: 0;
+            background-color: rgb(222, 222, 222);
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+            &.active {
+                border-top-right-radius: 8px;
+                border-top-left-radius: 8px;
+                background-color: #fff;
+            }
+        }
+
+    }
+    .ui.tab {
+        background-color: #fff;
+        border: 0;
+    }
+    .tab-content {
+        max-width: 860px;
+        margin: auto;
+        padding: 25px 0; 
+    }
+}

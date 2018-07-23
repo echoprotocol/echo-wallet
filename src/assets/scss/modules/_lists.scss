@@ -1,0 +1,39 @@
+.watchlist {
+    &-line {
+        display: block;
+        &:not(:last-child) {
+            margin: 0 0 12px 0;
+        }
+    }
+    &-row {
+        display: flex;
+        align-items: center;
+        min-height: 30px;
+        span {
+            font-size: 1.1em;
+            color: $black;
+            letter-spacing: -.2px;           
+            &:not(:last-child) {
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .order + .arrow,
+    .type {
+        color: $gray;
+    }
+    .type {
+        font-style: italic;
+        margin-left: 2.5vw;
+    }
+    &.ui.styled.accordion {
+        box-shadow: none;
+        margin: 30px 0;
+        .title {
+            padding: 0;
+            border: 0;
+            font-weight: 400;
+        }
+    }
+}

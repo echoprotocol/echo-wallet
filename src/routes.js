@@ -6,6 +6,7 @@ import {
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
 	SMART_CONTRACTS_PATH,
+	VIEW_CONTRACTS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -13,6 +14,7 @@ import Activity from './containers/Activity';
 import SignUp from './containers/SignUp';
 import SignIn from './containers/SignIn';
 import SmartContracts from './containers/SmartContracts';
+import ViewContracts from './containers/ViewContracts';
 
 export default class Routes extends React.Component {
 
@@ -24,6 +26,7 @@ export default class Routes extends React.Component {
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
 					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
+					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
 
 				</div>
 			</App>
