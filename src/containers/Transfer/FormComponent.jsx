@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Dropdown, Button } from 'semantic-ui-react';
+import { Form, Input, Dropdown, Button } from 'semantic-ui-react';
 
 class FormComponent extends React.Component {
 
@@ -20,9 +20,12 @@ class FormComponent extends React.Component {
 				</Form.Field>
 				<Form.Field>
 					<label htmlFor="accountTo">To</label>
-					<Input type="text" placeholder="Account name" className="action-wrap">
+					{/* Input can be with class: error, loading */}
+					<Input type="text" placeholder="Account name" className="action-wrap ">
 						<input name="accountTo" />
-						<span className="icon-checked_1 value-status" />
+						{/* <span className="icon-checked_1 value-status" /> */}
+						{/* <span className="icon-error_input value-status" /> */}
+						<span className="error-message">some error text</span>
 					</Input>
 				</Form.Field>
 				<Form.Field>
@@ -30,17 +33,15 @@ class FormComponent extends React.Component {
                         Amount
 						<ul className="list-amount">
 							<li>
-                                Fee:
-								<Select options={feeOptions} defaultValue="0.000001 ECHO" floating />
-							</li>
-							<li>
                                 Available Balance: <span> 0.09298 ECHO</span>
 							</li>
 						</ul>
 					</label>
 					<Input type="text" placeholder="Amount" action>
-						<input className="amount" />
-						<Dropdown text="Filter" className="assets-tokens-dropdown">
+						<div className="amount-wrap">
+							<input className="amount" placeholder="Amount" />
+						</div>
+						<Dropdown text="ETC" className="assets-tokens-dropdown">
 							<Dropdown.Menu>
 								<Dropdown.Header content="ASSETS" />
 								<Dropdown.Item>BTC</Dropdown.Item>
@@ -52,6 +53,10 @@ class FormComponent extends React.Component {
 							</Dropdown.Menu>
 						</Dropdown>
 					</Input>
+				</Form.Field>
+				<Form.Field>
+					<label htmlFor="fee"> Fee </label>
+					<Dropdown selection defaultValue={feeOptions[0].text} options={feeOptions} />
 				</Form.Field>
 				<Form.Field>
 					<Form.Field label="Comment" className="comment" placeholder="Comment" control="textarea" />

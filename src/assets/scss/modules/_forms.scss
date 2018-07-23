@@ -136,7 +136,9 @@
         display: block !important;
     }
     .dropdown {
-        max-width: 150px;
+        &.assets-tokens-dropdown {
+            max-width: 150px;
+        }
         &.icon {
             color: $bd-gray;
         }
@@ -152,7 +154,37 @@
     }
     .action-wrap {
         position: relative;
+        transition: margin .3s;
+        &.loading {
+            &:after {
+                width: 14px;
+                height: 14px;
+                border: 2px solid $green;
+                border-top: 2px solid transparent;
+                right: 11px;
+                top: 0;
+                bottom: 0;
+                border-radius: 50%;
+                margin: auto;
+                content: "";
+                position: absolute;
+                -webkit-animation: rotating 1s linear infinite;
+                -moz-animation: rotating 1s linear infinite;
+                -ms-animation: rotating 1s linear infinite;
+                -o-animation: rotating 1s linear infinite;
+                animation: rotating 1s linear infinite;
+            }
+        }
         &.ui.input {
+            &.error {
+                margin-bottom: 10px;
+                input {
+                    border: 1px solid $err-red; 
+                }
+                .error-message {
+                    top: 99%;
+                }
+            }
             input {
                 padding-right: 30px;
             }
@@ -180,6 +212,41 @@
             span {
                 margin-left: 5px;
                 color: $orange;
+            }
+        }
+    }
+    .field-wrap {
+        .field {
+            .ui.input {
+                .amount {
+                    width: 100%;
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                    &-wrap {
+                        width: 100%;
+                        position: relative;
+                        display: flex;
+                        &:after {
+                            width: 1px;
+                            background: #fff;
+                            content: "";
+                            height: 10px;
+                            position: absolute;
+                            right: 0;
+                            top: 1px;
+                        }
+                        &:before {
+                            width: 1px;
+                            background: #fff;
+                            content: "";
+                            height: 10px;
+                            position: absolute;
+                            right: 0;
+                            bottom: 1px;
+                        }
+                    }
+
+                }
             }
         }
     }
