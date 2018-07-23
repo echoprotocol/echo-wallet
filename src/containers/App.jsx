@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Dimmer, Loader, Segment } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 
 import Modals from '../components/Modals';
 
 import { connection } from '../actions/GlobalActions';
+
+import Loading from '../components/Loading/index';
 
 class App extends React.Component {
 
@@ -20,9 +22,7 @@ class App extends React.Component {
 				<Segment>
 					{
 						globalLoading ?
-							<Dimmer inverted active>
-								<Loader inverted content="" />
-							</Dimmer> : children
+							<Loading /> : children
 					}
 				</Segment>
 
