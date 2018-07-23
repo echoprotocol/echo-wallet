@@ -1,2 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
-export const HISTORY_DATA = 'historyData';
+const HISTORY_DATA = 'historyData';
+
+export default HISTORY_DATA;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { formatHistory } from '../../actions/TableActions';
 
 import { formatAmount } from '../../helpers/OperationsHistoryHelper';
-import { HISTORY_DATA } from '../../constants/TableConstants';
+import HISTORY_DATA from '../../constants/TableConstants';
 
 class TableComponent extends React.Component {
 

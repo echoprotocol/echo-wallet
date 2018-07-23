@@ -2,7 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import { HISTORY_DATA } from '../constants/TableConstants';
+import HISTORY_DATA from '../constants/TableConstants';
 
 const DEFAULT_FIELDS = {
 	[HISTORY_DATA]: Map({
