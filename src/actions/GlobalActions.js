@@ -19,7 +19,7 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		await dispatch(EchoJSActions.connect());
+		await dispatch(EchoJSActions.connect('wss://node.testnet.bitshares.eu'));
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
 	} finally {

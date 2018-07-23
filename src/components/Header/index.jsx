@@ -3,9 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
+
+import { logout } from '../../actions/GlobalActions';
+
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 
+import { getBalancesAcc } from '../../helpers/TestBalance';
+
 class Header extends React.PureComponent {
+
+	onLogout() {
+		this.props.logout();
+	}
 
 	getTitle() {
 		const { location } = this.props;
@@ -16,6 +25,11 @@ class Header extends React.PureComponent {
 	}
 
 	render() {
+		if (this.props.account) {
+			console.log(this.props.account.toJS().balances);
+			// console.log(this.props.account.toJS().balances['1.3.0']);
+			// getBalancesAcc(this.props.account.toJS().balances['1.3.0']);
+		}
 		return (
 			<div className="header">
 				<div className="show-sidebar-btn" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0">
@@ -29,7 +43,7 @@ class Header extends React.PureComponent {
 							<span>0.000083</span>
 							<span>ECHO</span>
 						</div>
-						<Dropdown text="sdssdsds">
+						<Dropdown text={localStorage.getItem('current_account')}>
 							<Dropdown.Menu>
 								<Dropdown.Item>
 									<a className="user-item">
@@ -52,7 +66,7 @@ class Header extends React.PureComponent {
 								<Dropdown.Item>
 									<a className="user-panel">
 										<span className="add-account">Add account</span>
-										<span className="logout">Logout</span>
+										<span className="logout" role="button" onClick={(e) => this.onLogout(e)} onKeyPress={(e) => this.onLogout(e)} tabIndex="0">Logout</span>
 									</a>
 								</Dropdown.Item>
 							</Dropdown.Menu>
@@ -68,6 +82,19 @@ class Header extends React.PureComponent {
 Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	onToggleSidebar: PropTypes.func.isRequired,
+	account: PropTypes.any,
+	logout: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect()(Header));
+Header.defaultProps = {
+	account: null,
+};
+
+export default withRouter(connect(
+	(state) => ({
+		account: state.echojs.getIn(['userData', 'account']),
+	}),
+	(dispatch) => ({
+		logout: () => dispatch(logout()),
+	}),
+)(Header));
