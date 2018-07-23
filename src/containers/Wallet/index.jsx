@@ -8,8 +8,8 @@ import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
 
-import Assets from './assetsComponent';
-import Tokens from './tokensComponents';
+import Assets from './AssetsComponent';
+import Tokens from './TokensComponents';
 
 class Wallet extends React.Component {
 
