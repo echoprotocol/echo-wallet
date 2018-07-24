@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Segment, Sidebar } from 'semantic-ui-react';
 
@@ -48,11 +49,11 @@ class Activity extends React.Component {
 }
 
 TableComponent.propTypes = {
-	userId: PropTypes.any,
+	userId: PropTypes.string,
 };
 
 TableComponent.defaultProps = {
-	userId: null,
+	userId: '',
 };
 
 export default connect((state) => ({
