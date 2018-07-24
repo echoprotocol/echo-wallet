@@ -124,7 +124,7 @@ SidebarMenu.defaultProps = {
 
 export default connect(
 	(state) => ({
-		accountName: state.global.getIn(['currentlyUser', 'name']),
+		accountName: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),

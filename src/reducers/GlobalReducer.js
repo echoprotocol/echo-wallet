@@ -7,7 +7,7 @@ export default createModule({
 		globalLoading: true,
 		loading: false,
 		error: null,
-		currentlyUser: new Map(),
+		activeUser: new Map(),
 	}),
 	transformations: {
 		setGlobalLoading: {

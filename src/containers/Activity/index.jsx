@@ -57,5 +57,5 @@ TableComponent.defaultProps = {
 };
 
 export default connect((state) => ({
-	userId: state.global.getIn(['currentlyUser', 'id']),
+	userId: state.global.getIn(['activeUser', 'id']),
 }))(Activity);

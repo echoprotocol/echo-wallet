@@ -7,7 +7,7 @@ import history from '../history';
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
 
-export const fetchAccount = (accountName) => (dispatch) => {
+export const initAccount = (accountName) => (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
 	history.push(INDEX_PATH);
@@ -39,9 +39,9 @@ export const connection = () => async (dispatch) => {
 		return;
 	}
 
-	const value = await dispatch(fetchAccount(accountName));
+	const value = await dispatch(initAccount(accountName));
 
-	const field = 'currentlyUser';
+	const field = 'activeUser';
 
 	dispatch(GlobalReducer.actions.set({ field, value }));
 };
