@@ -16,7 +16,7 @@ export default createModule({
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
-				state = state.setIn([payload.form, payload.field], payload.value);
+				state = state.setIn([payload.table, payload.field], payload.value);
 
 				return state;
 			},
