@@ -8,9 +8,22 @@ import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 
-import { getBalancesAcc } from '../../helpers/TestBalance';
+import { setAccountBalances } from '../../actions/AccountActions';
 
-class Header extends React.PureComponent {
+class Header extends React.Component {
+
+	shouldComponentUpdate(nextProps) {
+		const { account: currentAccount } = this.props;
+		const { account: nextAccount } = nextProps;
+		if ((currentAccount !== nextAccount) && currentAccount) {
+			if ((this.props.account.toJS().balances['1.3.0'] !== nextProps.account.toJS().balances['1.3.0'])
+				|| !this.props.balances) {
+				this.props.setAccountBalances(Object.keys(this.props.account.toJS().balances)[0]);
+			}
+			return true; // перенести внутрь 2-го условия
+		}
+		return false;
+	}
 
 	onLogout() {
 		this.props.logout();
@@ -25,11 +38,6 @@ class Header extends React.PureComponent {
 	}
 
 	render() {
-		if (this.props.account) {
-			console.log(this.props.account.toJS().balances);
-			// console.log(this.props.account.toJS().balances['1.3.0']);
-			// getBalancesAcc(this.props.account.toJS().balances['1.3.0']);
-		}
 		return (
 			<div className="header">
 				<div className="show-sidebar-btn" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0">
@@ -40,7 +48,9 @@ class Header extends React.PureComponent {
 					<Button color="blue" size="small">Send</Button>
 					<div className="user-section">
 						<div className="balance">
-							<span>0.000083</span>
+							<span>
+								{this.props.balances && this.props.balances.length ? this.props.balances : 0}
+							</span>
 							<span>ECHO</span>
 						</div>
 						<Dropdown text={localStorage.getItem('current_account')}>
@@ -81,20 +91,28 @@ class Header extends React.PureComponent {
 
 Header.propTypes = {
 	location: PropTypes.object.isRequired,
+	balances: PropTypes.any,
+	symbol: PropTypes.any,
 	onToggleSidebar: PropTypes.func.isRequired,
 	account: PropTypes.any,
 	logout: PropTypes.func.isRequired,
+	setAccountBalances: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	account: null,
+	balances: null,
+	symbol: null,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		account: state.echojs.getIn(['userData', 'account']),
+		balances: state.account.getIn(['account', 'balances']),
+		symbol: state.account.getIn(['account', 'symbol']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
+		setAccountBalances: (value) => dispatch(setAccountBalances(value)),
 	}),
 )(Header));
