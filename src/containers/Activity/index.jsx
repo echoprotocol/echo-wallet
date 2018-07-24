@@ -1,14 +1,13 @@
 import React from 'react';
-import { Table, Segment, Sidebar, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment, Sidebar } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
 
-import formatOperation from '../../helpers/OperationsHistoryHelper';
+import TableComponent from './TableComponent';
 
 class Activity extends React.Component {
 
@@ -29,79 +28,6 @@ class Activity extends React.Component {
 		}
 	}
 
-	renderTable() {
-		return (
-			<Table striped className="table-activity">
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell>Operation</Table.HeaderCell>
-						<Table.HeaderCell>Block</Table.HeaderCell>
-						<Table.HeaderCell>From</Table.HeaderCell>
-						<Table.HeaderCell>To</Table.HeaderCell>
-						<Table.HeaderCell>Value</Table.HeaderCell>
-						<Table.HeaderCell>Fee</Table.HeaderCell>
-						<Table.HeaderCell>Time</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-
-				<Table.Body>
-					{
-						this.props.history.map((h, i) => {
-							const id = i;
-							const op = formatOperation(h);
-							return (
-								<Table.Row key={id}>
-									<Table.Cell>
-										{/*
-										 label-operation can be yellow (Place order)
-										 / red (Cancel order) / green (Transfer)
-										 */}
-										<span className="label-operation green">
-											{op.operation}
-										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<span className="ellips">
-                                            #{op.block}
-										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<span className="ellips">
-											{op.from}
-										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<span className="ellips">
-											{op.to}
-										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<span className="ellips">
-											{op.value}
-										</span>
-									</Table.Cell>
-									<Table.Cell>{op.fee}</Table.Cell>
-									<Table.Cell>
-										<span className="date">June 25, 2018</span>
-										<span className="time">17:01:24 AM</span>
-									</Table.Cell>
-								</Table.Row>
-							);
-						})
-					}
-				</Table.Body>
-			</Table>
-		);
-	}
-
-	renderLoading() {
-		return (
-			<Dimmer inverted active>
-				<Loader inverted content="" />
-			</Dimmer>
-		);
-	}
-
 	render() {
 		return (
 			<Sidebar.Pushable as={Segment}>
@@ -109,15 +35,7 @@ class Activity extends React.Component {
 				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
-						<div className="content center-mode ">
-							{
-								!this.props.history ?
-									this.renderLoading() :
-									<div>
-										{this.renderTable()}
-									</div>
-							}
-						</div>
+						<TableComponent />
 						<Footer />
 					</Segment>
 				</Sidebar.Pusher>
@@ -127,15 +45,5 @@ class Activity extends React.Component {
 
 }
 
-Activity.propTypes = {
-	history: PropTypes.any,
-};
 
-Activity.defaultProps = {
-	history: null,
-};
-
-
-export default connect((state) => ({
-	history: state.echojs.getIn(['userData', 'account', 'history']),
-}))(Activity);
+export default connect()(Activity);
