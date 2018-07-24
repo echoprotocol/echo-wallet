@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TabContractProps from '../../components/Tabs/TabContractProps';
+import TabCallContracts from '../../components/Tabs/TabCallContracts';
+
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
@@ -39,7 +41,7 @@ class ViewContracts extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: 'Ставки сотрудников',
+				menuItem: 'View properties',
 				render: () => (
 					<Tab.Pane>
 						<TabContractProps />
@@ -47,10 +49,10 @@ class ViewContracts extends React.Component {
 				),
 			},
 			{
-				menuItem: 'Затраты компании',
+				menuItem: 'call contracts',
 				render: () => (
 					<Tab.Pane>
-						<TabContractProps />
+						<TabCallContracts />
 					</Tab.Pane>
 				),
 			},
@@ -72,7 +74,7 @@ class ViewContracts extends React.Component {
 								this.renderLoading()
 							) : (
 								<div>
-									<Tab menu={{ color: 'orange', tabular: true }} className="tub-full" panes={panes} />
+									<Tab menu={{ tabular: true }} className="tub-full" panes={panes} />
 								</div>
 							)}
 						</div>

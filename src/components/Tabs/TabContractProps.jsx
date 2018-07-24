@@ -1,28 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Accordion, Input } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 
 class TabContractProps extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { activeIndex: 0 };
-		this.handleClick = this.handleClick.bind(this);
-	}
-
-	handleClick(e, titleProps) {
-		const { index } = titleProps;
-		const { activeIndex } = this.state;
-		const newIndex = activeIndex === index ? -1 : index;
-
-		this.setState({ activeIndex: newIndex });
-	}
 	render() {
-		const { activeIndex } = this.state;
 		return (
 			<div className="tab-content">
 				<Button icon="trash" content="remove from watchlist" />
-				<Accordion className="watchlist" fluid styled>
+				<div className="watchlist">
 					<div className="watchlist-line">
 						<div className="watchlist-row">
 							<span className="order">1. </span>
@@ -57,41 +43,93 @@ class TabContractProps extends React.Component {
 							<span className="type"> unit256 </span>
 						</div>
 					</div>
-					<Accordion.Title
-						active={activeIndex === 0}
-						className="watchlist-line"
-						index={0}
-						onClick={this.handleClick}
-					>
+					<div className="watchlist-line">
 						<div className="watchlist-row">
 							<span className="order">4. </span>
 							<span className="arrow"> {'>'} </span>
 							<span className="row-title"> balanceOf </span>
-							<Input size="mini" placeholder="src (adress)" />
+							<Input size="mini" placeholder="src (address)" />
+							<Button size="mini" content="query" />
 						</div>
-					</Accordion.Title>
-					<Accordion.Content
-						className="watchlist-line"
-						active={activeIndex === 0}
-					>
-                        0
-					</Accordion.Content>
+						<div className="watchlist-row--h">
+							<span className="icon-dotted" />
+							<span className="type"> unit256 </span>
+						</div>
+						<div className="watchlist-embed">
+							<div>
+                                [ <strong>Balance of </strong>
+                                  method Response ]
 
-					<Accordion.Title
-						className="watchlist-line"
-						active={activeIndex === 1}
-						index={1}
-						onClick={this.handleClick}
-					>
-                        title 1
-					</Accordion.Title>
-					<Accordion.Content
-						className="watchlist-line"
-						active={activeIndex === 1}
-					>
-                        1
-					</Accordion.Content>
-				</Accordion>
+							</div>
+							<div>
+								<span className="type"> unit256 </span>
+								<span className="colon">:</span>
+								<span className="value"> 0 </span>
+							</div>
+						</div>
+					</div>
+
+					<div className="watchlist-line">
+						<div className="watchlist-row">
+							<span className="order">5. </span>
+							<span className="arrow"> {'>'} </span>
+							<span className="row-title"> stopped </span>
+							<span className="arrow"> → </span>
+							<span className="value"> True </span>
+							<span className="type"> bool </span>
+						</div>
+					</div>
+					<div className="watchlist-line">
+						<div className="watchlist-row">
+							<span className="order">6. </span>
+							<span className="arrow"> {'>'} </span>
+							<span className="row-title"> owner </span>
+							<span className="arrow"> → </span>
+							<span className="value"> 0xd0a6e6c54dbc68db5db3a091b171a77407ff7ccf </span>
+							<span className="type"> address </span>
+						</div>
+					</div>
+					<div className="watchlist-line">
+						<div className="watchlist-row">
+							<span className="order">7. </span>
+							<span className="arrow"> {'>'} </span>
+							<span className="row-title"> symbol </span>
+							<span className="arrow"> → </span>
+							<span className="value"> 0x454f530000000000000000000000000000000000000000000000000000000000 </span>
+							<span className="type"> bytes32 </span>
+						</div>
+					</div>
+					<div className="watchlist-line">
+						<div className="watchlist-row">
+							<span className="order">8. </span>
+							<span className="arrow"> {'>'} </span>
+							<span className="row-title"> authority </span>
+							<span className="arrow"> → </span>
+							<span className="value"> 0x0000000000000000000000000000000000000000 </span>
+							<span className="type"> address </span>
+						</div>
+					</div>
+					<div className="watchlist-line">
+						<div className="watchlist-row">
+							<div className="watchlist-col">
+								<span className="order">11. </span>
+								<span className="arrow"> {'>'} </span>
+							</div>
+							<div className="watchlist-col">
+								<span className="item row-title"> allowance </span>
+								<span className="arrow item"> → </span>
+								<Input className="item" size="mini" placeholder="src (address)" />
+								<span className="item comma">,</span>
+								<Input className="item" size="mini" placeholder="guy (unit256)" />
+								<Button className="item" size="mini" content="query" />
+							</div>
+						</div>
+						<div className="watchlist-row--h">
+							<span className="icon-dotted" />
+							<span className="type"> unit256 </span>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}

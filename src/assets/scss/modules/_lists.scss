@@ -1,4 +1,5 @@
 .watchlist {
+    margin: 30px 0;
     &-line {
         display: block;
         &:not(:last-child) {
@@ -8,32 +9,89 @@
     &-row {
         display: flex;
         align-items: center;
-        min-height: 30px;
+        &--h {
+            display: flex;
+        }
         span {
             font-size: 1.1em;
             color: $black;
             letter-spacing: -.2px;           
             &:not(:last-child) {
-                margin-right: 5px;
+                &:not(.comma) {
+                    margin-right: 5px;
+                }
             }
+        }
+        .type {
+            margin-left: 10px;
+        }
+        .input.mini.ui {
+            input {
+                height: 26px;
+                font-size: 14px;
+                min-width: 300px;
+            }
+        }
+        .button.mini.ui {
+            height: 26px;
+            font-size: 12px;
+            line-height: 10px;
+            margin-left: 10px;
+        }
+    }
+    &-embed {
+        padding: 10px 30px 0;
+    }
+    &-col {
+        &:first-child {
+            display: flex;
+            height: 27px;
+            align-items: center;
+            margin: 0 5px 0 0;
+            align-self: flex-start;
+        }
+        &:last-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-top: -10px;
+            .item {
+                margin-top: 10px;
+                display: inline-block;
+                min-height: 24px;
+            }
+        }
+
+    }
+    .icon-dotted {
+        color: $gray;
+        font-size: 18px;
+        margin: 2.5px 5px 0 5px;
+        display: inline-block;
+
+        & + .type {
+            margin-top: 10px;
+            display: inline-block;
         }
     }
 
+    .comma {
+        margin: 0 10px 0 2px;
+    }
+
+    .row-title {
+        & + .input.mini.ui {
+            margin-left: 10px;
+        }
+    }
+    .order {
+        min-width: 14px;
+    }
     .order + .arrow,
     .type {
         color: $gray;
     }
     .type {
         font-style: italic;
-        margin-left: 2.5vw;
-    }
-    &.ui.styled.accordion {
-        box-shadow: none;
-        margin: 30px 0;
-        .title {
-            padding: 0;
-            border: 0;
-            font-weight: 400;
-        }
     }
 }
