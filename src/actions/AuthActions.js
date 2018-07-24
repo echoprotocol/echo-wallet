@@ -41,7 +41,7 @@ export const createAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, false);
 
 		if (accountNameError) {
@@ -57,10 +57,9 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		const user = await dispatch(fetchAccount(accountName));
+		const value = await dispatch(fetchAccount(accountName));
 
-		const field = 'currentlyUserId';
-		const value = user.get('id');
+		const field = 'currentlyUser';
 
 		dispatch(setGlobal({ field, value }));
 
@@ -90,7 +89,7 @@ export const authUser = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
@@ -119,10 +118,9 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		const user = await dispatch(fetchAccount(accountName));
+		const value = await dispatch(fetchAccount(accountName));
 
-		const field = 'currentlyUserId';
-		const value = user.get('id');
+		const field = 'currentlyUser';
 
 		dispatch(setGlobal({ field, value }));
 
@@ -152,7 +150,7 @@ export const unlockAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {

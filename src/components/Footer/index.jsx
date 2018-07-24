@@ -13,7 +13,7 @@ class Footer extends React.PureComponent {
 					<li>Echo.171205</li>
 					<li className="pipeline">
                         Latency
-						<span className="pipeline-latency"> {this.props.latency} MS </span>
+						<span className="pipeline-latency"> {this.props.latency} ms </span>
                         / Block
 						<span className="pipeline-block"> #{this.props.lastBlock}</span>
 					</li>
@@ -58,9 +58,9 @@ Footer.defaultProps = {
 
 export default connect(
 	(state) => ({
+		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
-		latency: state.echojs.getIn(['system', 'latency']),
 	}),
 	() => ({}),
 )(Footer);

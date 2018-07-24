@@ -3,6 +3,8 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
 
+import PropTypes from 'prop-types';
+
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
@@ -35,7 +37,7 @@ class Activity extends React.Component {
 				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
-						<TableComponent />
+						<TableComponent curentUserId={this.props.userId} />
 						<Footer />
 					</Segment>
 				</Sidebar.Pusher>
@@ -45,5 +47,14 @@ class Activity extends React.Component {
 
 }
 
+TableComponent.propTypes = {
+	userId: PropTypes.any,
+};
 
-export default connect()(Activity);
+TableComponent.defaultProps = {
+	userId: null,
+};
+
+export default connect((state) => ({
+	userId: state.global.getIn(['currentlyUser', 'id']),
+}))(Activity);

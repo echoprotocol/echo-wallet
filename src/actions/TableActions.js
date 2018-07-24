@@ -7,6 +7,6 @@ export const setValue = (table, field, value) => (dispatch) => {
 };
 
 export const formatHistory = (history) => async (dispatch) => {
-	const operations = await Promise.all(history.map((h) => formatOperation(h)));
+	const operations = await Promise.all(history.toJS().map((h) => dispatch(formatOperation(h))));
 	dispatch(setValue(HISTORY_DATA, 'history', operations));
 };

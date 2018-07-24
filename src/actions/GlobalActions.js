@@ -10,9 +10,13 @@ import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConsta
 export const fetchAccount = (accountName) => (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-	dispatch(EchoJSActions.fetch(accountName));
-
 	history.push(INDEX_PATH);
+
+	return dispatch(EchoJSActions.fetch(accountName));
+};
+
+export const setGlobal = (field, value) => async (dispatch) => {
+	dispatch(GlobalReducer.actions.set({ field, value }));
 };
 
 export const connection = () => async (dispatch) => {
@@ -35,13 +39,12 @@ export const connection = () => async (dispatch) => {
 		return;
 	}
 
-	dispatch(fetchAccount(accountName));
-};
+	const value = await dispatch(fetchAccount(accountName));
 
-export const setGlobal = (field, value) => async (dispatch) => {
+	const field = 'currentlyUser';
+
 	dispatch(GlobalReducer.actions.set({ field, value }));
 };
-
 
 export const logout = () => () => {
 	localStorage.removeItem('current_account');

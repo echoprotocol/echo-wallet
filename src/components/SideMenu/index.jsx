@@ -124,7 +124,7 @@ SidebarMenu.defaultProps = {
 
 export default connect(
 	(state) => ({
-		accountName: state.echojs.getIn(['data', 'accounts', state.global.currentlyUserId, 'name']),
+		accountName: state.global.getIn(['currentlyUser', 'name']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
