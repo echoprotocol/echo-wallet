@@ -51,7 +51,7 @@ class Header extends React.Component {
 							<span>
 								{this.props.balances && this.props.balances.length ? this.props.balances : 0}
 							</span>
-							<span>ECHO</span>
+							<span>{this.props.symbol}</span>
 						</div>
 						<Dropdown text={localStorage.getItem('current_account')}>
 							<Dropdown.Menu>
