@@ -94,21 +94,18 @@ Header.propTypes = {
 	asset: PropTypes.object.isRequired,
 	onToggleSidebar: PropTypes.func.isRequired,
 	account: PropTypes.any,
-	dataAssets: PropTypes.any,
 	logout: PropTypes.func.isRequired,
 	setAccountBalances: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	account: null,
-	dataAssets: null,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		account: state.global.getIn(['activeUser']),
 		asset: state.asset.getIn(['asset']),
-		dataAssets: state.echojs.getIn(['data', 'assets']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
