@@ -2,7 +2,6 @@ import React from 'react';
 import { Segment, Sidebar, Dimmer, Loader } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
@@ -11,7 +10,7 @@ import Footer from '../../components/Footer/index';
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
 
-class Wallet extends React.Component {
+class Balances extends React.Component {
 
 	constructor() {
 		super();
@@ -55,16 +54,11 @@ class Wallet extends React.Component {
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
 						<div className="content">
-							{/*
-								!this.props.tokens ?
-									this.renderLoading() :
-									<div>
-										{this.renderContent()}
-									</div>
-							*/}
 							<div>
-								{this.props.tokens}
-								{this.renderContent()}
+								<div className="wallet-wrap">
+									<Assets />
+									<Tokens />
+								</div>
 							</div>
 						</div>
 						<Footer />
@@ -76,18 +70,9 @@ class Wallet extends React.Component {
 
 }
 
-Wallet.propTypes = {
-	tokens: PropTypes.any,
-};
-
-Wallet.defaultProps = {
-	tokens: null,
-};
-
-
 export default connect(
 	(state) => ({
 		tokens: state.global.get('tokens'),
 	}),
 	() => ({}),
-)(Wallet);
+)(Balances);
