@@ -1,4 +1,5 @@
-import { PrivateKey, FetchChain } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
+import { EchoJSActions } from 'echojs-redux';
 
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
@@ -77,7 +78,7 @@ export const unlockWallet = async (accountName, password, roles = ['active', 'ow
 		};
 	}
 
-	let account = await FetchChain('getAccount', accountName);
+	let account = await EchoJSActions.fetch(accountName);
 
 	if (!account) { return keys; }
 

@@ -1,4 +1,4 @@
-import { actions as EchoJSActions } from 'echojs-redux';
+import { EchoJSActions } from 'echojs-redux';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -7,12 +7,14 @@ import history from '../history';
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
 
-export const initAccount = (accountName) => (dispatch) => {
+export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-	dispatch(EchoJSActions.initAccount(accountName));
-
 	history.push(INDEX_PATH);
+
+	const value = await dispatch(EchoJSActions.fetch(accountName));
+
+	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
 };
 
 export const connection = () => async (dispatch) => {
@@ -37,7 +39,6 @@ export const connection = () => async (dispatch) => {
 
 	dispatch(initAccount(accountName));
 };
-
 
 export const logout = () => () => {
 	localStorage.removeItem('current_account');
