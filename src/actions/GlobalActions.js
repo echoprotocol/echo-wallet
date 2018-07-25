@@ -7,18 +7,17 @@ import history from '../history';
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
 
-export const initAccount = (accountName) => (dispatch) => {
+export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-    if (AUTH_ROUTES.includes(history.location.pathname)) {
-        history.push(INDEX_PATH);
-    }
+	if (AUTH_ROUTES.includes(history.location.pathname)) {
+		history.push(INDEX_PATH);
+	}
 
+	const value = await dispatch(EchoJSActions.fetch(accountName));
 
-    return dispatch(EchoJSActions.fetch(accountName));
-};
+	const field = 'activeUser';
 
-export const setGlobal = (field, value) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.set({ field, value }));
 };
 
@@ -42,11 +41,7 @@ export const connection = () => async (dispatch) => {
 		return;
 	}
 
-	const value = await dispatch(initAccount(accountName));
-
-	const field = 'activeUser';
-
-	dispatch(GlobalReducer.actions.set({ field, value }));
+	await dispatch(initAccount(accountName));
 };
 
 export const logout = () => () => {

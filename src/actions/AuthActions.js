@@ -3,7 +3,7 @@ import { key } from 'echojs-lib';
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
-import { setGlobal, initAccount } from './GlobalActions';
+import { initAccount } from './GlobalActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
@@ -57,12 +57,7 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		const value = await dispatch(initAccount(accountName));
-
-		const field = 'activeUser';
-
-		dispatch(setGlobal({ field, value }));
-
+		await dispatch(initAccount(accountName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -118,12 +113,7 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		const value = await dispatch(initAccount(accountName));
-
-		const field = 'activeUser';
-
-		dispatch(setGlobal({ field, value }));
-
+		await dispatch(initAccount(accountName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
