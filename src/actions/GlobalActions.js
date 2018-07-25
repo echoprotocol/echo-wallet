@@ -6,6 +6,7 @@ import history from '../history';
 
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
+import { initBalances } from '../actions/BalanceActions';
 
 export const initAccount = (accountName) => (dispatch) => {
 	localStorage.setItem('current_account', accountName);
@@ -36,6 +37,8 @@ export const connection = () => async (dispatch) => {
 		}
 		return;
 	}
+
+	dispatch(initBalances(accountName));
 
 	dispatch(initAccount(accountName));
 };

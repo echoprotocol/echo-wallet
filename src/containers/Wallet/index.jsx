@@ -55,13 +55,17 @@ class Wallet extends React.Component {
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
 						<div className="content">
-							{
-								!this.props.history ?
+							{/*
+								!this.props.tokens ?
 									this.renderLoading() :
 									<div>
 										{this.renderContent()}
 									</div>
-							}
+							*/}
+							<div>
+								{this.props.tokens}
+								{this.renderContent()}
+							</div>
 						</div>
 						<Footer />
 					</Segment>
@@ -73,14 +77,17 @@ class Wallet extends React.Component {
 }
 
 Wallet.propTypes = {
-	history: PropTypes.any,
+	tokens: PropTypes.any,
 };
 
 Wallet.defaultProps = {
-	history: null,
+	tokens: null,
 };
 
 
-export default connect((state) => ({
-	history: state.echojs.getIn(['userData', 'account', 'history']),
-}))(Wallet);
+export default connect(
+	(state) => ({
+		tokens: state.global.get('tokens'),
+	}),
+	() => ({}),
+)(Wallet);
