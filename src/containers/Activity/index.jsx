@@ -37,7 +37,7 @@ class Activity extends React.Component {
 				<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
 				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 					<Segment basic className="wrapper">
-						<Header onToggleSidebar={this.toggleSidebar} />
+						<Header onToggleSidebar={this.toggleSidebar} curentUserId={this.props.userId} />
 						<TableComponent curentUserId={this.props.userId} />
 						<Footer />
 					</Segment>

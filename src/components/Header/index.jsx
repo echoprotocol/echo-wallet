@@ -3,27 +3,27 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
+import { EchoJSActions } from 'echojs-redux';
 
 import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 
-import { setAccountBalances } from '../../actions/AccountActions';
-
 import { formatAmount } from '../../helpers/HistoryHelper';
 
 class Header extends React.Component {
 
-	shouldComponentUpdate(nextProps) {
-		const { account: currentAccount } = this.props;
-		const { account: nextAccount } = nextProps;
-		if ((currentAccount !== nextAccount) && currentAccount) {
-			this.props.setAccountBalances(Object.entries(nextAccount.toJS().balances).filter((id) => id[0] === '1.3.0')[0]);
-			return true;
-		} else if (this.props.asset !== nextProps.asset) {
-			return true;
+	constructor() {
+		super();
+		this.currentBalance = null;
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.balances) {
+			this.props.fetch('1.3.0');
+			this.props.fetch(nextProps.balances.get('1.3.0'));
+			this.currentBalance = nextProps.balances.get('1.3.0');
 		}
-		return false;
 	}
 
 	onLogout() {
@@ -50,7 +50,16 @@ class Header extends React.Component {
 					<div className="user-section">
 						<div className="balance">
 							<span>
-								{formatAmount(this.props.asset.get('balance'), this.props.asset.get('precision'), this.props.asset.get('symbol'))}
+								{
+									Object.keys(this.props.data.objects).length
+									&& Object.keys(this.props.data.assets).length
+									&& this.currentBalance ?
+										formatAmount(
+											this.props.data.objects[this.currentBalance].balance,
+											this.props.data.assets['1.3.0'].precision,
+											this.props.data.assets['1.3.0'].symbol,
+										) : '0 ECHO'
+								}
 							</span>
 						</div>
 						<Dropdown text={localStorage.getItem('current_account')}>
@@ -91,24 +100,25 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	location: PropTypes.object.isRequired,
-	asset: PropTypes.object.isRequired,
-	onToggleSidebar: PropTypes.func.isRequired,
-	account: PropTypes.any,
+	balances: PropTypes.any,
+	data: PropTypes.any,
 	logout: PropTypes.func.isRequired,
-	setAccountBalances: PropTypes.func.isRequired,
+	fetch: PropTypes.func.isRequired,
+	onToggleSidebar: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
-	account: null,
+	balances: null,
+	data: null,
 };
 
 export default withRouter(connect(
-	(state) => ({
-		account: state.global.getIn(['activeUser']),
-		asset: state.asset.getIn(['asset']),
+	(state, ownProps) => ({
+		balances: state.echojs.getIn(['data', 'accounts', ownProps.curentUserId, 'balances']),
+		data: state.echojs.getIn(['data']).toJS(),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
-		setAccountBalances: (value) => dispatch(setAccountBalances(value)),
+		fetch: (id) => dispatch(EchoJSActions.fetch(id)),
 	}),
 )(Header));
