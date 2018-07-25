@@ -3,6 +3,7 @@ import { key } from 'echojs-lib';
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
+import { initAccount } from './GlobalActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
