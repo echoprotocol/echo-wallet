@@ -14,9 +14,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 
 	const value = await dispatch(EchoJSActions.fetch(accountName));
 
-	const field = 'activeUser';
-
-	dispatch(GlobalReducer.actions.set({ field, value }));
+	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
 };
 
 export const connection = () => async (dispatch) => {
@@ -39,7 +37,7 @@ export const connection = () => async (dispatch) => {
 		return;
 	}
 
-	await dispatch(initAccount(accountName));
+	dispatch(initAccount(accountName));
 };
 
 export const logout = () => () => {
