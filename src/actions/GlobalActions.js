@@ -10,9 +10,12 @@ import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConsta
 export const initAccount = (accountName) => (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-	history.push(INDEX_PATH);
+    if (AUTH_ROUTES.includes(history.location.pathname)) {
+        history.push(INDEX_PATH);
+    }
 
-	return dispatch(EchoJSActions.fetch(accountName));
+
+    return dispatch(EchoJSActions.fetch(accountName));
 };
 
 export const setGlobal = (field, value) => async (dispatch) => {
