@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Sidebar, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment, Sidebar } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
 
@@ -29,23 +29,6 @@ class Balances extends React.Component {
 		}
 	}
 
-	renderContent() {
-		return (
-			<div className="wallet-wrap">
-				<Assets />
-				<Tokens />
-			</div>
-		);
-	}
-
-	renderLoading() {
-		return (
-			<Dimmer inverted active>
-				<Loader inverted content="" />
-			</Dimmer>
-		);
-	}
-
 	render() {
 		return (
 			<Sidebar.Pushable as={Segment}>
@@ -71,8 +54,6 @@ class Balances extends React.Component {
 }
 
 export default connect(
-	(state) => ({
-		tokens: state.global.get('tokens'),
-	}),
+	() => ({}),
 	() => ({}),
 )(Balances);
