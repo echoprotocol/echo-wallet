@@ -10,17 +10,18 @@ import { HEADER_TITLE } from '../../constants/GlobalConstants';
 
 import { setAccountBalances } from '../../actions/AccountActions';
 
+import { formatAmount } from '../../helpers/HistoryHelper';
+
 class Header extends React.Component {
 
 	shouldComponentUpdate(nextProps) {
 		const { account: currentAccount } = this.props;
 		const { account: nextAccount } = nextProps;
 		if ((currentAccount !== nextAccount) && currentAccount) {
-			if ((this.props.account.toJS().balances['1.3.0'] !== nextProps.account.toJS().balances['1.3.0'])
-				|| !this.props.balances) {
-				this.props.setAccountBalances(Object.keys(this.props.account.toJS().balances)[0]);
-			}
-			return true; // перенести внутрь 2-го условия
+			this.props.setAccountBalances(Object.entries(nextAccount.toJS().balances).filter((id) => id[0] === '1.3.0')[0]);
+			return true;
+		} else if (this.props.asset !== nextProps.asset) {
+			return true;
 		}
 		return false;
 	}
@@ -49,9 +50,8 @@ class Header extends React.Component {
 					<div className="user-section">
 						<div className="balance">
 							<span>
-								{this.props.balances && this.props.balances.length ? this.props.balances : 0}
+								{formatAmount(this.props.asset.get('balance'), this.props.asset.get('precision'), this.props.asset.get('symbol'))}
 							</span>
-							<span>{this.props.symbol}</span>
 						</div>
 						<Dropdown text={localStorage.getItem('current_account')}>
 							<Dropdown.Menu>
@@ -91,25 +91,24 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	location: PropTypes.object.isRequired,
-	balances: PropTypes.any,
-	symbol: PropTypes.any,
+	asset: PropTypes.object.isRequired,
 	onToggleSidebar: PropTypes.func.isRequired,
 	account: PropTypes.any,
+	dataAssets: PropTypes.any,
 	logout: PropTypes.func.isRequired,
 	setAccountBalances: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	account: null,
-	balances: null,
-	symbol: null,
+	dataAssets: null,
 };
 
 export default withRouter(connect(
 	(state) => ({
-		account: state.echojs.getIn(['userData', 'account']),
-		balances: state.account.getIn(['account', 'balances']),
-		symbol: state.account.getIn(['account', 'symbol']),
+		account: state.global.getIn(['activeUser']),
+		asset: state.asset.getIn(['asset']),
+		dataAssets: state.echojs.getIn(['data', 'assets']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),

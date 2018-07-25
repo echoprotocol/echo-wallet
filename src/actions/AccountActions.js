@@ -1,12 +1,15 @@
-import { FetchChain } from 'echojs-lib';
+import { EchoJSActions } from 'echojs-redux';
 
-import TableReducer from '../reducers/AccountReducer';
+import AccountReducer from '../reducers/AssetReducer';
 
-export const setValue = (account, field, value) => (dispatch) => {
-	dispatch(TableReducer.actions.set({ account, field, value }));
+export const setValue = (asset, field, value) => (dispatch) => {
+	dispatch(AccountReducer.actions.set({ asset, field, value }));
 };
 
 export const setAccountBalances = (id) => async (dispatch) => {
-	const balances = (await FetchChain('getBalanceObjects', id)).toJS();
-	dispatch(setValue('account', 'balances', balances));
+	const balances = (await dispatch(EchoJSActions.fetch(id[1]))).toJS().balance;
+	const asset = (await dispatch(EchoJSActions.fetch(id[0]))).toJS();
+	dispatch(setValue('asset', 'balance', balances));
+	dispatch(setValue('asset', 'symbol', asset.symbol));
+	dispatch(setValue('asset', 'precision', asset.precision));
 };
