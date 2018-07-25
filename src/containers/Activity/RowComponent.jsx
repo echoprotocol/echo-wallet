@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { formatAmount } from '../../helpers/HistoryHelper';
+import formatAmount from '../../helpers/HistoryHelper';
 
 class RowComponent extends React.Component {
 
