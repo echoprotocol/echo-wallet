@@ -1,4 +1,5 @@
-import { actions as EchoJSActions } from 'echojs-redux';
+import { EchoJSActions } from 'echojs-redux';
+import { Map } from 'immutable';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -8,14 +9,20 @@ import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConsta
 
 import { initBalances } from '../actions/BalanceActions';
 
-export const initAccount = (accountName) => (dispatch) => {
+export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-	dispatch(EchoJSActions.initAccount(accountName));
+	const user = await dispatch(EchoJSActions.fetch(accountName));
+
+	const value = new Map({ name: user.get('name'), id: user.get('id') });
+
+	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
 
 	if (AUTH_ROUTES.includes(history.location.pathname)) {
 		history.push(INDEX_PATH);
 	}
+
+	history.push(INDEX_PATH);
 };
 
 export const connection = () => async (dispatch) => {
@@ -42,7 +49,6 @@ export const connection = () => async (dispatch) => {
 
 	dispatch(initAccount(accountName));
 };
-
 
 export const logout = () => () => {
 	localStorage.removeItem('current_account');

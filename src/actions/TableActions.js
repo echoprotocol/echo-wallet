@@ -1,4 +1,4 @@
-import { formatOperation } from '../helpers/HistoryHelper';
+import transformHistory from './HistoryActions';
 import TableReducer from '../reducers/TableReducer';
 import HISTORY_DATA from '../constants/TableConstants';
 
@@ -7,6 +7,6 @@ export const setValue = (table, field, value) => (dispatch) => {
 };
 
 export const formatHistory = (history) => async (dispatch) => {
-	const operations = await Promise.all(history.map((h) => formatOperation(h)));
+	const operations = await Promise.all(dispatch(transformHistory(history)));
 	dispatch(setValue(HISTORY_DATA, 'history', operations));
 };
