@@ -12,6 +12,26 @@ class Tokens extends React.Component {
 		this.props.openModal(MODAL_TOKENS);
 	}
 
+	renderEmpty() {
+		return (
+			<Table.Row className="msg-empty">
+				<Table.Cell>There is no Tokens yet...</Table.Cell>
+			</Table.Row>
+		);
+	}
+
+	renderList() {
+		return this.props.tokens.map((token) => (
+			<Table.Row>
+				<Table.Cell>{token.name}</Table.Cell>
+				<Table.Cell>
+					{token.balance}
+					<span className="icon-close" />
+				</Table.Cell>
+			</Table.Row>
+		));
+	}
+
 	render() {
 		return (
 			<div className="table-tokens">
@@ -33,61 +53,7 @@ class Tokens extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
-						{/*
-                            IF TOKENS IS EMPTY":
-                            <Table.Row className="msg-empty">
-                                <Table.Cell>There is no Tokens yet...</Table.Cell>
-                            </Table.Row>
-                        */}
-						<Table.Row>
-							<Table.Cell>ECHO</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>ethEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho ID</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
+						{ !this.props.tokens ? this.renderEmpty() : this.renderList() }
 					</Table.Body>
 				</Table>
 			</div>
@@ -97,12 +63,19 @@ class Tokens extends React.Component {
 }
 
 Tokens.propTypes = {
+	tokens: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
+};
+
+Tokens.defaultProps = {
+	tokens: null,
 };
 
 
 export default connect(
-	() => ({}),
+	(state) => ({
+		tokens: state.global.get('tokens'),
+	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 	}),
