@@ -1,4 +1,5 @@
 import { EchoJSActions } from 'echojs-redux';
+import { Map } from 'immutable';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -14,11 +15,11 @@ export const initAccount = (accountName) => async (dispatch) => {
 		history.push(INDEX_PATH);
 	}
 
-	const value = await dispatch(EchoJSActions.fetch(accountName));
+	const user = await dispatch(EchoJSActions.fetch(accountName));
 
-	const field = 'activeUser';
+	const value = new Map({ name: user.get('name'), id: user.get('id') });
 
-	dispatch(GlobalReducer.actions.set({ field, value }));
+	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
 };
 
 export const connection = () => async (dispatch) => {
@@ -41,7 +42,7 @@ export const connection = () => async (dispatch) => {
 		return;
 	}
 
-	await dispatch(initAccount(accountName));
+	dispatch(initAccount(accountName));
 };
 
 export const logout = () => () => {
