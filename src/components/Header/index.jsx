@@ -42,8 +42,8 @@ class Header extends React.Component {
 								}
 							</span>
 						</div>
-						<Dropdown text={localStorage.getItem('current_account')}>
-							<Dropdown.Menu>
+						<Dropdown text={localStorage.getItem('current_account')} disabled>
+							{/* <Dropdown.Menu>
 								<Dropdown.Item>
 									<a className="user-item">
 										<span>user 1</span>
@@ -65,10 +65,18 @@ class Header extends React.Component {
 								<Dropdown.Item>
 									<a className="user-panel">
 										<span className="add-account">Add account</span>
-										<span className="logout" role="button" onClick={(e) => this.onLogout(e)} onKeyPress={(e) => this.onLogout(e)} tabIndex="0">Logout</span>
+										<span
+											className="logout"
+											role="button"
+											onClick={(e) => this.onLogout(e)}
+											onKeyPress={(e) => this.onLogout(e)}
+											tabIndex="0"
+										>
+											Logout
+										</span>
 									</a>
 								</Dropdown.Item>
-							</Dropdown.Menu>
+							</Dropdown.Menu> */}
 						</Dropdown>
 					</div>
 				</div>

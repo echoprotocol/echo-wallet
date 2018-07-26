@@ -51,7 +51,10 @@ class Assets extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
-						{ !this.props.assets ? this.renderEmpty() : this.renderList() }
+						{
+							!this.props.assets || !this.props.assets.size ?
+								this.renderEmpty() : this.renderList()
+						}
 					</Table.Body>
 				</Table>
 			</div>
@@ -71,4 +74,3 @@ Assets.defaultProps = {
 export default connect((state) => ({
 	assets: state.balance.get('assets'),
 }))(Assets);
-
