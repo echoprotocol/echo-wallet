@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../../actions/ModalActions';
 import { resetTransactionValues } from '../../../actions/TransactionBuilderActions';
 import { clearForm } from '../../../actions/FormActions';
+import { setDetailsForm } from '../../../actions/DetailsActions';
 
 import { MODAL_DETAILS } from './../../../constants/ModalConstants';
 import { FORM_TRANSACTION_DETAILS } from './../../../constants/FormConstants';
@@ -14,6 +15,24 @@ import InputRow from './InputRow';
 import TextAreaRow from './TextAreaRow';
 
 class ModalDetails extends React.Component {
+
+	shouldComponentUpdate(nextProps) {
+
+		const { options: currentOptions } = this.props;
+		const { options: nextOptions } = nextProps;
+
+		const { formatedOptions: nextFormatOption } = this.props;
+		const { formatedOptions: currentFormatOption } = nextProps;
+		console.log(nextFormatOption, currentFormatOption)
+		console.log(nextFormatOption.toJS(), currentFormatOption.toJS())
+		if (currentOptions !== nextOptions) {
+			this.props.formatOptions(nextProps.options);
+			return true;
+		} else if (nextFormatOption !== currentFormatOption) {
+			return true;
+		}
+		return false;
+	}
 
 	onClose() {
 		this.props.closeModal();
@@ -27,7 +46,7 @@ class ModalDetails extends React.Component {
 
 	render() {
 		const { show } = this.props;
-		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000000000000000000000000000000000000000000815250602601905060405180910390bb600090805190602001906100ce9291906100d1565b50565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061011257805160ff1916838001178555610140565b82800160010185558215610140579182015b8281111561013f578251825591602001919060010190610124565b5b50905061014d9190610151565b5090565b61017391905b8082111561016f576000816000905550600101610157565b5090565b905600a165627a7a72305820f15a07ca60484fc3690bf46c388f8330643974e18925d812c5a73ba93e5c9e400029'
+		const bytecode = '000';
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -66,6 +85,9 @@ ModalDetails.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	clearDetails: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	options: PropTypes.object.isRequired,
+    formatedOptions: PropTypes.object.isRequired,
+    formatOptions: PropTypes.func.isRequired,
 };
 
 ModalDetails.defaultProps = {
@@ -75,10 +97,13 @@ ModalDetails.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_DETAILS, 'show']),
+		formatedOptions: state.form.get(FORM_TRANSACTION_DETAILS),
+		options: state.buildtransaction,
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_DETAILS)),
 		clearDetails: () => dispatch(resetTransactionValues()),
 		clearForm: () => dispatch(clearForm(FORM_TRANSACTION_DETAILS)),
+        formatOptions: (value) => dispatch(setDetailsForm(value)),
 	}),
 )(ModalDetails);

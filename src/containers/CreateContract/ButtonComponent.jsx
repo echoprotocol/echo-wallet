@@ -7,8 +7,13 @@ import classnames from 'classnames';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
 import { createContract } from '../../actions/ContractAction';
+import { clearForm } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
+
+	componentDidMount() {
+		this.props.clearForm();
+	}
 
 	onClick() {
 		const { bytecode } = this.props;
@@ -55,6 +60,7 @@ ButtonComponent.propTypes = {
 	loading: PropTypes.bool,
 	bytecode: PropTypes.object.isRequired,
 	createContract: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -71,5 +77,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		createContract: (value) => dispatch(createContract(value)),
+		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 	}),
 )(ButtonComponent);
