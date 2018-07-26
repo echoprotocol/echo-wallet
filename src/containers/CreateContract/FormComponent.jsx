@@ -5,7 +5,7 @@ import { Form } from 'semantic-ui-react';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
-import { setFormValue, clearForm } from '../../actions/FormActions';
+import { setFormValue } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
@@ -31,12 +31,10 @@ class FormComponent extends React.Component {
 					<h3>Create Smart Contract</h3>
 				</div>
 				<Form.Field>
-					{/*<Form.Field label="ByteCode" className="ui" placeholder="Byte Code" control="textarea"/>*/}
 					<Form.Field
 						label="ByteCode"
 						placeholder="Byte Code"
 						control="textarea"
-						className="ui"
 						name="bytecode"
 						value={bytecode.value}
 						onChange={(e) => this.onChange(e, true)}
@@ -52,8 +50,7 @@ class FormComponent extends React.Component {
 
 FormComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
-    setFormValue: PropTypes.func.isRequired,
-    clearForm: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -62,6 +59,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
-		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 	}),
 )(FormComponent);

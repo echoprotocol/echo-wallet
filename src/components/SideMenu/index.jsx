@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
 
-import { MODAL_UNLOCK } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS } from '../../constants/ModalConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -41,8 +41,8 @@ class SidebarMenu extends React.Component {
 		this.setState({ activeIndex: newIndex });
 	}
 
-	lockAccount() {
-		this.props.openModal(MODAL_UNLOCK);
+	openModal(modal) {
+		this.props.openModal(modal);
 	}
 
 	render() {
@@ -87,7 +87,12 @@ class SidebarMenu extends React.Component {
 							</li>
 							<li>
 								<div className="sidebar-nav-link">
-									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.lockAccount()} />
+									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.openModal(MODAL_UNLOCK)} />
+								</div>
+							</li>
+							<li>
+								<div className="sidebar-nav-link">
+									<Button content="Details" size="tiny" color="grey" onClick={() => this.openModal(MODAL_DETAILS)} />
 								</div>
 							</li>
 						</ul>

@@ -14,7 +14,9 @@
                 span {
                     margin-left: 4px;
                     color: $orange;
-                    cursor: pointer;
+                    &.dropdown {
+                        cursor: pointer;
+                    }
                 }
             }
         }

@@ -145,7 +145,7 @@
     }
     &.ui.form {
         textarea {
-            resize: none;  
+            resize: none;
         }
     }
 
@@ -179,7 +179,7 @@
             &.error {
                 margin-bottom: 10px;
                 input {
-                    border: 1px solid $err-red; 
+                    border: 1px solid $err-red;
                 }
                 .error-message {
                     top: 99%;
@@ -207,6 +207,9 @@
         margin: 30px 0 0;
         .button[type=submit] {
             margin: 0 0 0 auto;
+            &:not(:last-child) {
+                margin-right: 20px;
+            }
         }
         .total-sum {
             span {

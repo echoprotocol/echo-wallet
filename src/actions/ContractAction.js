@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { setTransaction } from './TransactionBuilderActions';
+import { Map } from 'immutable';
+
+import { setTransactionValue, resetTransactionValues } from './TransactionBuilderActions';
 
 
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
@@ -17,6 +19,8 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
 	if (!pubKey) return;
 
+	dispatch(resetTransactionValues());
+
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
@@ -31,14 +35,17 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		save_wallet: true,
 	};
 
+
+	dispatch(setTransactionValue('transaction', new Map(options)));
+
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		options.privateKey = privateKey;
+		dispatch(setTransactionValue('privateKey', privateKey));
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
-	dispatch(setTransaction(options));
+	dispatch(setTransactionValue('onBuild', true));
 	// account
 	// const tr = new TransactionBuilder();
 

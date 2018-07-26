@@ -8,6 +8,7 @@ import {
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
 	BALANCES_PATH,
+
 } from './constants/RouterConstants';
 
 import App from './containers/App';

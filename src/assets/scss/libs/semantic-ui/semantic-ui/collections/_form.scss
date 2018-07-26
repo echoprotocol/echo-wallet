@@ -135,7 +135,7 @@
   transition: color 0.1s ease, border-color 0.1s ease;
   font-size: 1em;
   line-height: 1.2857;
-  resize: vertical;
+  resize: none;
 }
 .ui.form textarea:not([rows]) {
   height: 12em;
@@ -332,26 +332,6 @@
 .ui.form :focus::-moz-placeholder {
   color: rgba(115, 115, 115, 0.87);
 }
-
-/* Error Placeholder */
-// .ui.form .error ::-webkit-input-placeholder {
-//   color: #e7bdbc;
-// }
-// .ui.form .error :-ms-input-placeholder {
-//   color: #e7bdbc !important;
-// }
-// .ui.form .error ::-moz-placeholder {
-//   color: #e7bdbc;
-// }
-// .ui.form .error :focus::-webkit-input-placeholder {
-//   color: #da9796;
-// }
-// .ui.form .error :focus:-ms-input-placeholder {
-//   color: #da9796 !important;
-// }
-// .ui.form .error :focus::-moz-placeholder {
-//   color: #da9796;
-// }
 
 /*--------------------
         Focus
@@ -590,20 +570,11 @@
        Disabled
 ---------------------*/
 
-.ui.form .disabled.fields .field,
-.ui.form .disabled.field,
-.ui.form .field :disabled {
-  pointer-events: none;
-  opacity: 0.45;
-}
 .ui.form .field :disabled {
     opacity: 1;
     background-color: rgba($bg-gray,.5);
 }
-.ui.form .field.disabled > label,
-.ui.form .fields.disabled > label {
-  opacity: 0.45;
-}
+
 .ui.form .field.disabled :disabled {
   opacity: 1;
 }

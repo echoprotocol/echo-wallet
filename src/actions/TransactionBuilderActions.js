@@ -1,12 +1,12 @@
 import BuildTransactionReducer from '../reducers/BuildTransactionReducer';
 
-export const setValue = (field, value) => (dispatch) => {
+export const setTransactionValue = (field, value) => (dispatch) => {
 	dispatch(BuildTransactionReducer.actions.set({ field, value }));
 };
 
-export const setTransaction = (value) => (dispatch) => {
-	dispatch(BuildTransactionReducer.actions.set({ value }));
+export const setInTransactionValue = (fields, value) => (dispatch) => {
+	dispatch(BuildTransactionReducer.actions.setIn({ fields, value }));
 };
-export const reset = () => (dispatch) => {
+export const resetTransactionValues = () => (dispatch) => {
 	dispatch(BuildTransactionReducer.actions.reset());
 };

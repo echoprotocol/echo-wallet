@@ -1,9 +1,16 @@
 import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 
+const DEFAULT_FIELDS = Map({
+	transaction: new Map({}),
+	operation: '',
+	privateKey: '',
+	onBuild: false,
+});
+
 export default createModule({
 	name: 'buildtransaction',
-	initialState: Map({}),
+	initialState: DEFAULT_FIELDS,
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
@@ -12,16 +19,16 @@ export default createModule({
 				return state;
 			},
 		},
-		setTransaction: {
+		setIn: {
 			reducer: (state, { payload }) => {
-				state = new Map(payload.value);
+				state = state.setIn(payload.fields, payload.value);
 
 				return state;
 			},
 		},
 		reset: {
 			reducer: (state) => {
-				state = new Map({});
+				state = DEFAULT_FIELDS;
 
 				return state;
 			},
