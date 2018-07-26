@@ -6,15 +6,21 @@ import history from '../history';
 
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
+import { initBalances } from '../actions/BalanceActions';
 
 export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
 
-	history.push(INDEX_PATH);
+	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
-	const value = await dispatch(EchoJSActions.fetch(accountName));
+	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
-	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
+	if (AUTH_ROUTES.includes(history.location.pathname)) {
+		history.push(INDEX_PATH);
+	}
+
+	dispatch(initBalances(id));
+
 };
 
 export const connection = () => async (dispatch) => {
