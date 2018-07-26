@@ -26,7 +26,7 @@
   will-change: transform;
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
-  visibility: hidden;
+//   visibility: hidden;
   -webkit-overflow-scrolling: touch;
   height: 100% !important;
   max-height: 100%;
@@ -49,8 +49,8 @@
 .ui.left.sidebar {
   right: auto;
   left: 0px;
-  -webkit-transform: translate3d(-100%, 0, 0);
-          transform: translate3d(-100%, 0, 0);
+//   -webkit-transform: translate3d(-100%, 0, 0);
+//           transform: translate3d(-100%, 0, 0);
 }
 .ui.right.sidebar {
   right: 0px !important;
@@ -340,8 +340,9 @@ body.pushable > .pusher {
 
 /* Initial */
 .ui.left.overlay.sidebar {
-  -webkit-transform: translate3d(-100%, 0%, 0);
-          transform: translate3d(-100%, 0%, 0);
+//   -webkit-transform: translate3d(-100%, 0%, 0);
+//           transform: translate3d(-100%, 0%, 0);
+    width: 150px;
 }
 .ui.right.overlay.sidebar {
   -webkit-transform: translate3d(100%, 0%, 0);
@@ -359,16 +360,19 @@ body.pushable > .pusher {
 /* Animation */
 .animating.ui.overlay.sidebar,
 .ui.visible.overlay.sidebar {
-  -webkit-transition: -webkit-transform 500ms ease;
-  transition: -webkit-transform 500ms ease;
-  transition: transform 500ms ease;
-  transition: transform 500ms ease, -webkit-transform 500ms ease;
+//   -webkit-transition: -webkit-transform 500ms ease;
+//   transition: -webkit-transform 500ms ease;
+//   transition: transform 500ms ease;
+//   transition: transform 500ms ease, -webkit-transform 500ms ease;
+    transition: width 500ms ease;
+
 }
 
 /* End - Sidebar */
 .ui.visible.left.overlay.sidebar {
-  -webkit-transform: translate3d(0%, 0%, 0);
-          transform: translate3d(0%, 0%, 0);
+//   -webkit-transform: translate3d(0%, 0%, 0);
+//           transform: translate3d(0%, 0%, 0);
+    width: 350px;
 }
 .ui.visible.right.overlay.sidebar {
   -webkit-transform: translate3d(0%, 0%, 0);

@@ -61,28 +61,30 @@ class SidebarMenu extends React.Component {
 							<li>
 								<Link className="sidebar-nav-link" to="/">
 									<span className="icon icon-menu_1" />
-                                    Create Payment
+									<span className="sidebar-nav-text">Create Payment</span>
 								</Link>
 							</li>
 							<Accordion as="li" className={`accordion-smart-contract ${this.state.activeIndex === (-1) ? '' : 'opened'}`}>
 								<Accordion.Title
 									active={activeIndex === 1}
-									content="Smart Contract"
 									index={1}
 									onClick={this.handleClick}
-								/>
+								>
+									<span className="icon icon-menu_2" />
+									<span className="sidebar-nav-text">Smart Contract</span>
+								</Accordion.Title>
 								<Accordion.Content active={activeIndex === 1} content={smartContracts} />
 							</Accordion>
 							<li>
 								<Link className="sidebar-nav-link" to="/activity" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar}>
 									<span className="icon icon-menu_3" />
-                                    Recent Activity
+									<span className="sidebar-nav-text">Recent Activity</span>
 								</Link>
 							</li>
 							<li>
 								<Link className="sidebar-nav-link" to="/">
 									<span className="icon icon-menu_4" />
-                                    Voting
+									<span className="sidebar-nav-text">Voting</span>
 								</Link>
 							</li>
 							<li>

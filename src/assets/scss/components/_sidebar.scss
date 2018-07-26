@@ -52,6 +52,8 @@
                 min-height: 40px;
                 padding: 8px 20px;
                 align-items: center;
+                justify-content: center;
+                white-space: nowrap;
             }
             &.opened {
                 background-color: rgb(221, 222, 228);
@@ -85,6 +87,32 @@
         &:hover {
             background-color: rgb(197, 201, 210);
             border-left: 4px solid $orange;
+        }
+    }
+    
+}
+
+
+// FOR ANIMATION 
+
+.sidebar {
+    &-nav {
+        .ui.accordion {
+            .title {
+                display: flex;
+                justify-content: center;
+                white-space: nowrap;
+            }
+        }   
+        &-text {
+            display: none;
+            margin-right: auto;
+        }
+    }
+    &.visible {
+        .sidebar-nav-text {
+            display: flex;
+            animation: fadeIn 1s;
         }
     }
 }
