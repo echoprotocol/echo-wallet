@@ -34,7 +34,7 @@
 .animating.transition {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  visibility: visible !important;
+  visibility: visible;
 }
 
 /* Loading */
@@ -52,12 +52,15 @@
 
 /* Visible */
 .visible.transition {
-  display: flex !important;
+  display: flex;
   visibility: visible !important;
-  
+  &.menu {
+      display: block;
+  }
 /*  backface-visibility: @backfaceVisibility;
   transform: @use3DAcceleration;*/
 }
+
 /* Disabled */
 .disabled.transition {
   -webkit-animation-play-state: paused;

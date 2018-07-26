@@ -3,6 +3,7 @@ import globalReducer from './GlobalReducer';
 import formReducer from './FormReducer';
 import keyChainReducer from './KeyChainReducer';
 import tableReducer from './TableReducer';
+import balanceReducer from './BalanceReducer';
 
 export default {
 	modal: modalReducer.reducer,
@@ -10,4 +11,5 @@ export default {
 	form: formReducer.reducer,
 	keychain: keyChainReducer.reducer,
 	table: tableReducer.reducer,
+	balance: balanceReducer.reducer,
 };
