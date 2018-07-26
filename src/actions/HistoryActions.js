@@ -5,7 +5,7 @@ import operations from '../constants/Operations';
 
 const formatOperation = (operationData) => async (dispatch) => {
 	const operation = operationData.op[1];
-
+	const operationResult = operationData.result;
 	const feeAsset = (await dispatch(EchoJSActions.fetch(operation.fee.asset_id))).toJS();
 	const timestampBlock = (await dispatch(EchoJSActions.fetch(operationData.block_num))).timestamp;
 	const currentAccount = localStorage.getItem('current_account');
@@ -74,7 +74,11 @@ const formatOperation = (operationData) => async (dispatch) => {
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.pays.asset_id))).toJS();
 			result.operation = operations.fill_order;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.account_id))).toJS().name;
-			result.subject = (await dispatch(EchoJSActions.fetch(operation.order_id))).toJS().name;
+			try {
+				result.subject = (await dispatch(EchoJSActions.fetch(operation.order_id))).toJS().name;
+			} catch (err) {
+				result.subject = 'NOT AVAILABLE';
+			}
 			result.value = {
 				amount: operation.pays.amount,
 				precision: amountAsset.precision,
@@ -386,7 +390,10 @@ const formatOperation = (operationData) => async (dispatch) => {
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.asset_id))).toJS();
 			result.operation = operations.contract;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.registrar))).toJS().name;
-			result.subject = (await dispatch(EchoJSActions.fetch(operation.receiver))).toJS().name;
+			try {
+				result.subject = (await dispatch(EchoJSActions.fetch(operation.receiver))).toJS().name;
+			} catch (err) {
+			}
 			result.value = {
 				amount: operation.value,
 				precision: amountAsset.precision,
