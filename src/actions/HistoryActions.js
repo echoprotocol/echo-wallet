@@ -27,6 +27,7 @@ const formatOperation = (operationData) => async (dispatch) => {
 			time: moment(timestampBlock).format('h:mm:ss A'),
 		},
 		operationColor: '',
+		isCreateContract: false,
 	};
 	result.fee = {
 		amount: operation.fee.amount || '',
@@ -386,9 +387,9 @@ const formatOperation = (operationData) => async (dispatch) => {
 			};
 			break;
 		}
-		case operations.contract: {
+		case operations.create_contract: {
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.asset_id))).toJS();
-			result.operation = operations.contract;
+			result.operation = operations.create_contract;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.registrar))).toJS().name;
 			[, result.subject] = operationResult;
 			result.value = {
@@ -396,6 +397,7 @@ const formatOperation = (operationData) => async (dispatch) => {
 				precision: amountAsset.precision,
 				symbol: amountAsset.symbol,
 			};
+			result.isCreateContract = true;
 			break;
 		}
 		case operations.contract_transfer: {
