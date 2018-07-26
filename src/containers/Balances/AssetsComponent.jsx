@@ -1,8 +1,34 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import formatAmount from '../../helpers/HistoryHelper';
+
 class Assets extends React.Component {
+
+	renderEmpty() {
+		return (
+			<Table.Row className="msg-empty">
+				<Table.Cell>There is no Assets yet...</Table.Cell>
+			</Table.Row>
+		);
+	}
+
+	renderList() {
+		return this.props.assets.map((asset, i) => {
+			const id = i;
+			return (
+				<Table.Row key={id}>
+					<Table.Cell>{asset.symbol}</Table.Cell>
+					<Table.Cell>
+						{formatAmount(asset.balance, asset.precision, '')}
+						<span className="icon-close" />
+					</Table.Cell>
+				</Table.Row>
+			);
+		});
+	}
 
 	render() {
 		return (
@@ -25,61 +51,7 @@ class Assets extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
-						{/*
-                            IF ASSETS IS EMPTY":
-                            <Table.Row className="msg-empty">
-                                <Table.Cell>There is no Assets yet...</Table.Cell>
-                            </Table.Row>
-                        */}
-						<Table.Row>
-							<Table.Cell>ECHO</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>ethEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho ID</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
-						<Table.Row>
-							<Table.Cell>myEcho</Table.Cell>
-							<Table.Cell>
-                                8 186 877 940.0147
-								<span className="icon-close" />
-							</Table.Cell>
-						</Table.Row>
+						{ !this.props.assets ? this.renderEmpty() : this.renderList() }
 					</Table.Body>
 				</Table>
 			</div>
@@ -88,5 +60,15 @@ class Assets extends React.Component {
 
 }
 
-export default connect()(Assets);
+Assets.propTypes = {
+	assets: PropTypes.any,
+};
+
+Assets.defaultProps = {
+	assets: null,
+};
+
+export default connect((state) => ({
+	assets: state.balance.get('assets'),
+}))(Assets);
 

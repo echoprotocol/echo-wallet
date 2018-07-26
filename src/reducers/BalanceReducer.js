@@ -5,6 +5,7 @@ export default createModule({
 	name: 'balance',
 	initialState: Map({
 		tokens: Map({}),
+		assets: Map({}),
 	}),
 	transformations: {
 		set: {
