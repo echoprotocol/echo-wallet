@@ -62,6 +62,15 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
+  .icon-contractAdd:before {
+    content: "\e912";
+  }
+  .icon-contractSearch:before {
+    content: "\e914";
+  }
+  .icon-contractCopy:before {
+    content: "\e915";
+  }
   .icon-add:before {
     content: "\e900";
   }

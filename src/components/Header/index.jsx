@@ -28,9 +28,6 @@ class Header extends React.Component {
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 		return (
 			<div className="header">
-				<div className="show-sidebar-btn" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0">
-					<span className="icon-menu" />
-				</div>
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button color="blue" size="small">Send</Button>
@@ -90,7 +87,6 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	assets: PropTypes.any,
 	logout: PropTypes.func.isRequired,
-	onToggleSidebar: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {

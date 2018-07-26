@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Menu, Sidebar, Button } from 'semantic-ui-react';
+import { Accordion, Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -8,19 +8,6 @@ import { logout } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
 
 import { MODAL_UNLOCK } from '../../constants/ModalConstants';
-
-const smartContracts = [
-	<div key="0" className="accordeon-item">
-		<Link className="sidebar-nav-sublink" to="/">Create Smart Contract</Link>
-	</div>,
-	<div key="1" className="accordeon-item">
-		<Link className="sidebar-nav-sublink" to="/">View Smart Contracts</Link>
-	</div>,
-	<div key="2" className="accordeon-item">
-		<Link className="sidebar-nav-sublink" to="/">Added Smart Contracts</Link>
-	</div>,
-];
-
 
 class SidebarMenu extends React.Component {
 
@@ -49,12 +36,30 @@ class SidebarMenu extends React.Component {
 		const { activeIndex } = this.state;
 		return (
 			<div>
-				<Sidebar as={Menu} animation="overlay" vertical visible={this.props.visibleBar} width="wide">
+				<Sidebar as={Menu} animation="overlay" vertical visible={this.props.visibleBar}>
 					<div className="sidebar-header">
-						<div className="sidebar-logo">echo</div>
-						<div className="sidebar-close">
-							<span className="icon-close" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0" />
-						</div>
+						{
+							this.props.visibleBar ?
+								<React.Fragment>
+									<div className="sidebar-logo">echo</div>
+									<div className="sidebar-close">
+										<span
+											className="icon-close"
+											onClick={this.props.onToggleSidebar}
+											onKeyPress={this.props.onToggleSidebar}
+											role="button"
+											tabIndex="0"
+										/>
+									</div>
+								</React.Fragment> :
+								<span
+									className="icon-menu"
+									onClick={this.props.onToggleSidebar}
+									onKeyPress={this.props.onToggleSidebar}
+									role="button"
+									tabIndex="0"
+								/>
+						}
 					</div>
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
@@ -73,10 +78,35 @@ class SidebarMenu extends React.Component {
 									<span className="icon icon-menu_2" />
 									<span className="sidebar-nav-text">Smart Contract</span>
 								</Accordion.Title>
-								<Accordion.Content active={activeIndex === 1} content={smartContracts} />
+								<Accordion.Content active={activeIndex === 1}>
+									<div key="0" className="accordeon-item">
+										<Link className="sidebar-nav-sublink" to="/">
+											{ this.props.visibleBar ?
+												'Create Smart Contract' :
+												<span className="icon icon-contractAdd" />
+											}
+										</Link>
+									</div>
+									<div key="1" className="accordeon-item">
+										<Link className="sidebar-nav-sublink" to="/">
+											{ this.props.visibleBar ?
+												'View Smart Contracts' :
+												<span className="icon icon-contractSearch" />
+											}
+										</Link>
+									</div>
+									<div key="2" className="accordeon-item">
+										<Link className="sidebar-nav-sublink" to="/">
+											{ this.props.visibleBar ?
+												'Added Smart Contracts' :
+												<span className="icon icon-contractCopy" />
+											}
+										</Link>
+									</div>
+								</Accordion.Content>
 							</Accordion>
 							<li>
-								<Link className="sidebar-nav-link" to="/activity" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar}>
+								<Link className="sidebar-nav-link" to="/activity">
 									<span className="icon icon-menu_3" />
 									<span className="sidebar-nav-text">Recent Activity</span>
 								</Link>
@@ -87,21 +117,17 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Voting</span>
 								</Link>
 							</li>
-							<li>
+							{/* <li>
 								<div className="sidebar-nav-link">
-									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.lockAccount()} />
+                                    <Button
+                                        content="Unlock"
+                                        size="mini"
+                                        color="grey"
+                                        onClick={() => this.lockAccount()}
+                                    />
 								</div>
-							</li>
+							</li> */}
 						</ul>
-					</div>
-					<div className="sidebar-footer">
-						<div className="user-info">
-							<span className="icon icon-menu_5" />
-							<div className="user">
-								<div className="user-name">{ this.props.accountName }</div>
-								<div className="user-action" role="button" onClick={(e) => this.onLogout(e)} onKeyPress={(e) => this.onLogout(e)} tabIndex="0">Logout</div>
-							</div>
-						</div>
 					</div>
 
 				</Sidebar>
@@ -113,7 +139,6 @@ class SidebarMenu extends React.Component {
 
 SidebarMenu.propTypes = {
 	visibleBar: PropTypes.bool,
-	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
@@ -121,7 +146,6 @@ SidebarMenu.propTypes = {
 
 SidebarMenu.defaultProps = {
 	visibleBar: false,
-	accountName: '',
 };
 
 export default connect(
