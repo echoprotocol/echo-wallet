@@ -1,5 +1,4 @@
 import { EchoJSActions } from 'echojs-redux';
-import { Map } from 'immutable';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -7,19 +6,21 @@ import history from '../history';
 
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
+import { initBalances } from '../actions/BalanceActions';
 
 export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
+
+	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
+
+	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
 	if (AUTH_ROUTES.includes(history.location.pathname)) {
 		history.push(INDEX_PATH);
 	}
 
-	const user = await dispatch(EchoJSActions.fetch(accountName));
+	dispatch(initBalances(id));
 
-	const value = new Map({ name: user.get('name'), id: user.get('id') });
-
-	dispatch(GlobalReducer.actions.set({ field: 'activeUser', value }));
 };
 
 export const connection = () => async (dispatch) => {
