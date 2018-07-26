@@ -419,9 +419,9 @@
 }
 .ui.blue.message {
   background-color: #DFF0FF;
-  color: #2185D0;
-  -webkit-box-shadow: 0px 0px 0px 1px #2185D0 inset, 0px 0px 0px 0px rgba(0, 0, 0, 0);
-          box-shadow: 0px 0px 0px 1px #2185D0 inset, 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  color: $blue-light;
+  -webkit-box-shadow: 0px 0px 0px 1px $blue-light inset, 0px 0px 0px 0px rgba(0, 0, 0, 0);
+          box-shadow: 0px 0px 0px 1px $blue-light inset, 0px 0px 0px 0px rgba(0, 0, 0, 0);
 }
 .ui.blue.message .header {
   color: #1e77ba;
