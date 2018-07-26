@@ -43,6 +43,6 @@ export default {
 	transfer_from_blind: 41,
 	asset_settle_cancel: 42,
 	asset_claim_fees: 43,
-	contract: 44,
+	contract: 47,
 	contract_transfer: 45,
 };
