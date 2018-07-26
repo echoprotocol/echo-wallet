@@ -14,17 +14,12 @@ class ButtonComponent extends React.Component {
 		const { bytecode } = this.props;
 
 		this.props.createContract({
-            bytecode: bytecode.value.trim(),
+			bytecode: bytecode.value.trim(),
 		});
 	}
 
 	isDisabledSubmit() {
-		const {
-			accepted,
-			accountName,
-			generatedPassword,
-			confirmPassword,
-		} = this.props;
+		const { bytecode, accepted } = this.props;
 
 		return (!accountName.value || accountName.error) ||
 			(!generatedPassword.value || generatedPassword.error) ||
@@ -61,7 +56,7 @@ ButtonComponent.propTypes = {
 	accepted: PropTypes.bool,
 	loading: PropTypes.bool,
 	bytecode: PropTypes.object.isRequired,
-    createContract: PropTypes.func.isRequired,
+	createContract: PropTypes.func.isRequired,
 };
 
 ButtonComponent.defaultProps = {
