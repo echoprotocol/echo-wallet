@@ -6,8 +6,8 @@ import { closeModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 
-import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
-import { MODAL_UNLOCK } from '../constants/ModalConstants';
+import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL, FORM_TRANSACTION_DETAILS } from '../constants/FormConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
@@ -95,7 +95,9 @@ export const authUser = ({
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
 
-		const { owner, active, memo } = await unlockWallet(accountName, password);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+
+		const { owner, active, memo } = await unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
@@ -150,7 +152,7 @@ export const unlockAccount = ({
 		}
 		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
 
-		const account = await EchoJSActions.fetch(accountName);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
 
 		const { owner, active, memo } = await unlockWallet(account, password);
 
@@ -170,6 +172,8 @@ export const unlockAccount = ({
 		if (memo) {
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
+
+
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));

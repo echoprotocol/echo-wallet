@@ -21,9 +21,7 @@ class ButtonComponent extends React.Component {
 	isDisabledSubmit() {
 		const { bytecode, accepted } = this.props;
 
-		return (!accountName.value || accountName.error) ||
-			(!generatedPassword.value || generatedPassword.error) ||
-			(!confirmPassword.value || confirmPassword.error) || !accepted;
+		return (!bytecode.value || bytecode.error);
 	}
 
 	renderLoading() {
@@ -39,7 +37,7 @@ class ButtonComponent extends React.Component {
 				className={classnames({ disabled: this.isDisabledSubmit() })}
 				onClick={(e) => this.onClick(e)}
 			>
-				Create account
+				Create contract
 			</Button>
 		);
 	}

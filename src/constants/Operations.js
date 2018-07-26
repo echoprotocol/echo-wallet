@@ -45,4 +45,5 @@ export default {
 	asset_claim_fees: 43,
 	contract: 44,
 	contract_transfer: 45,
+	create_contract: 47,
 };

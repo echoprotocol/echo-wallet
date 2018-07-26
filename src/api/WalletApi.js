@@ -76,8 +76,6 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 		};
 	}
 
-	console.log(key)
-
 	if (!account) { return keys; }
 
 	account = account.toJS();

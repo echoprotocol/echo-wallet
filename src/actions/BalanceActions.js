@@ -1,3 +1,4 @@
+import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 import { getBalance } from '../api/ContractApi';
 import BalanceReducer from '../reducers/BalanceReducer';
@@ -15,19 +16,21 @@ export const initBalances = (accountId) => async (dispatch) => {
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
 	if (tokens && tokens[accountId]) {
-		const balances = Object.keys(tokens[accountId]).map(async (tokenName) => {
+		let balances = Object.keys(tokens[accountId]).map(async (tokenName) => {
 			const balance = await getBalance(tokens[accountId][tokenName], accountId);
 			return { name: tokenName, balance };
 		});
 
+		balances = await Promise.all(balances);
+
 		dispatch(BalanceReducer.actions.set({
 			field: 'tokens',
-			value: await Promise.all(balances),
+			value: new List(balances),
 		}));
 	}
 
 	if (Object.keys(assets).length) {
-		const balances = Object.entries(assets).map(async (asset) => {
+		let balances = Object.entries(assets).map(async (asset) => {
 			const balance = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
 			const tempAsset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
 			return {
@@ -37,9 +40,11 @@ export const initBalances = (accountId) => async (dispatch) => {
 			};
 		});
 
+		balances = await Promise.all(balances);
+
 		dispatch(BalanceReducer.actions.set({
 			field: 'assets',
-			value: await Promise.all(balances),
+			value: new List(balances),
 		}));
 	}
 };
