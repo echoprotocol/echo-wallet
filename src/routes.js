@@ -6,6 +6,7 @@ import {
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
 	BALANCES_PATH,
+	TRANSFER_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -13,6 +14,7 @@ import Activity from './containers/Activity';
 import SignUp from './containers/SignUp';
 import SignIn from './containers/SignIn';
 import Balances from './containers/Balances';
+import Transfer from './containers/Transfer';
 
 
 export default class Routes extends React.Component {
@@ -25,6 +27,7 @@ export default class Routes extends React.Component {
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
 					<Route exact path={BALANCES_PATH} component={Balances} />
+					<Route exact path={TRANSFER_PATH} component={Transfer} />
 				</div>
 			</App>
 		);

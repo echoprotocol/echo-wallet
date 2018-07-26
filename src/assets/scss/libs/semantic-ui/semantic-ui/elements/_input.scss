@@ -417,7 +417,10 @@
 .ui.action.input:not([class*="left action"]) > input {
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
-  border-right-color: transparent !important;
+  border-right-color: transparent;
+  &.amount {
+    border-right-color: $bd-gray;
+  }
 }
 .ui.action.input:not([class*="left action"]) > .dropdown:not(:first-child),
 .ui.action.input:not([class*="left action"]) > .button:not(:first-child),
