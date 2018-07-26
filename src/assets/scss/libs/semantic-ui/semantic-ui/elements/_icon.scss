@@ -301,14 +301,14 @@ i.inverted.circular.teal.icon {
 
 /* Blue */
 i.blue.icon {
-  color: #2185D0 !important;
+  color: $blue-light !important;
 }
 i.inverted.blue.icon {
   color: #54C8FF !important;
 }
 i.inverted.bordered.blue.icon,
 i.inverted.circular.blue.icon {
-  background-color: #2185D0 !important;
+  background-color: $blue-light !important;
   color: #FFFFFF !important;
 }
 

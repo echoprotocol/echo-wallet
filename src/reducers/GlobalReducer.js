@@ -33,5 +33,14 @@ export default createModule({
 				return state;
 			},
 		},
+		setIn: {
+			reducer: (state, { payload }) => {
+				Object.keys(payload.params).forEach((field) => {
+					state = state.setIn([payload.field, field], payload.params[field]);
+				});
+
+				return state;
+			},
+		},
 	},
 });
