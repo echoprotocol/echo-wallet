@@ -1,6 +1,4 @@
 import { PrivateKey } from 'echojs-lib';
-import { EchoJSActions } from 'echojs-redux';
-
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
