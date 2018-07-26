@@ -207,6 +207,9 @@
         margin: 30px 0 0;
         .button[type=submit] {
             margin: 0 0 0 auto;
+            &:not(:last-child) {
+                margin-right: 20px;
+            }
         }
         .total-sum {
             span {
