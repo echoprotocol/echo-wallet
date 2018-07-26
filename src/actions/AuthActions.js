@@ -1,4 +1,5 @@
 import { key } from 'echojs-lib';
+import { EchoJSActions } from 'echojs-redux';
 
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal } from './ModalActions';
@@ -94,7 +95,9 @@ export const authUser = ({
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
 
-		const { owner, active, memo } = await unlockWallet(accountName, password);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+
+		const { owner, active, memo } = await unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
@@ -149,7 +152,9 @@ export const unlockAccount = ({
 		}
 		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
 
-		const { owner, active, memo } = await unlockWallet(accountName, password);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+
+		const { owner, active, memo } = await unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
