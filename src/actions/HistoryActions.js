@@ -390,10 +390,7 @@ const formatOperation = (operationData) => async (dispatch) => {
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.asset_id))).toJS();
 			result.operation = operations.contract;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.registrar))).toJS().name;
-			try {
-				result.subject = (await dispatch(EchoJSActions.fetch(operation.receiver))).toJS().name;
-			} catch (err) {
-			}
+			[, result.subject] = operationResult;
 			result.value = {
 				amount: operation.value,
 				precision: amountAsset.precision,
