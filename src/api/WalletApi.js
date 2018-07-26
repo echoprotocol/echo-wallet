@@ -1,5 +1,4 @@
-import { PrivateKey, FetchChain } from 'echojs-lib';
-
+import { PrivateKey } from 'echojs-lib';
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
@@ -64,7 +63,7 @@ export const createWallet = async (account, password) => {
 	return { owner, active, memo };
 };
 
-export const unlockWallet = async (accountName, password, roles = ['active', 'owner', 'memo']) => {
+export const unlockWallet = async (account, password, roles = ['active', 'owner', 'memo']) => {
 
 	const keys = {};
 	const privateKey = getKeyFromWif(password);
@@ -77,14 +76,12 @@ export const unlockWallet = async (accountName, password, roles = ['active', 'ow
 		};
 	}
 
-	let account = await FetchChain('getAccount', accountName);
-
 	if (!account) { return keys; }
 
 	account = account.toJS();
 	roles.forEach((role) => {
 		if (!privateKey) {
-			key = generateKeyFromPassword(accountName, role, password);
+			key = generateKeyFromPassword(account.name, role, password);
 		}
 
 		switch (role) {

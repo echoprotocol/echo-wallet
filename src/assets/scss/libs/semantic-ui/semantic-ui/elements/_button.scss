@@ -20,12 +20,12 @@
   outline: none;
   border: none;
   vertical-align: baseline;
-  background: #E0E1E2 none;
-  color: rgba(0, 0, 0, 0.6);
+  background: rgb(174, 180, 192) none;
+  color: rgba(255, 255, 255, 1);
   font-family: $font-family;
   margin: 0em 0.25em 0em 0em;
   padding: 0.78571429em 1.5em 0.78571429em;
-  text-transform: none;
+  text-transform: uppercase;
   text-shadow: none;
   font-weight: bold;
   line-height: 1em;
@@ -62,7 +62,7 @@
   background-image: none;
   -webkit-box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
           box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
-  color: rgba(0, 0, 0, 0.8);
+
 }
 .ui.button:hover .icon {
   opacity: 0.85;
@@ -74,7 +74,6 @@
 
 .ui.button:focus {
   background-color: #CACBCD;
-  color: rgba(0, 0, 0, 0.8);
   background-image: '' !important;
   -webkit-box-shadow: '' !important;
           box-shadow: '' !important;
@@ -91,7 +90,6 @@
 .ui.active.button:active {
   background-color: #BABBBC;
   background-image: '';
-  color: rgba(0, 0, 0, 0.9);
   -webkit-box-shadow: 0px 0px 0px 1px transparent inset, none;
           box-shadow: 0px 0px 0px 1px transparent inset, none;
 }
@@ -696,7 +694,7 @@
 .ui.buttons .button,
 .ui.buttons .or,
 .ui.button {
-  font-size: 1rem;
+  font-size: .85rem;
 }
 .ui.large.buttons .button,
 .ui.large.buttons .or,
@@ -744,7 +742,7 @@
   color: rgba(0, 0, 0, 0.6) !important;
   font-weight: normal;
   border-radius: 0.28571429rem;
-  text-transform: none;
+  text-transform: uppercase;
   text-shadow: none !important;
   -webkit-box-shadow: 0px 0px 0px 1px $bd-gray inset;
           box-shadow: 0px 0px 0px 1px $bd-gray inset;
@@ -1732,7 +1730,7 @@
 
 .ui.blue.buttons .button,
 .ui.blue.button {
-  background-color: #2185D0;
+  background-color: $blue-light;
   color: #FFFFFF;
   text-shadow: none;
   background-image: none;
@@ -1771,9 +1769,9 @@
 /* Basic */
 .ui.basic.blue.buttons .button,
 .ui.basic.blue.button {
-  -webkit-box-shadow: 0px 0px 0px 1px #2185D0 inset !important;
-          box-shadow: 0px 0px 0px 1px #2185D0 inset !important;
-  color: #2185D0 !important;
+  -webkit-box-shadow: 0px 0px 0px 1px $blue-light inset !important;
+          box-shadow: 0px 0px 0px 1px $blue-light inset !important;
+  color: $blue-light !important;
 }
 .ui.basic.blue.buttons .button:hover,
 .ui.basic.blue.button:hover {
@@ -3267,7 +3265,7 @@
 
 .ui.primary.buttons .button,
 .ui.primary.button {
-  background-color: #2185D0;
+  background-color: $blue-light;
   color: #FFFFFF;
   text-shadow: none;
   background-image: none;
@@ -3306,9 +3304,9 @@
 /* Basic */
 .ui.basic.primary.buttons .button,
 .ui.basic.primary.button {
-  -webkit-box-shadow: 0px 0px 0px 1px #2185D0 inset !important;
-          box-shadow: 0px 0px 0px 1px #2185D0 inset !important;
-  color: #2185D0 !important;
+  -webkit-box-shadow: 0px 0px 0px 1px $blue-light inset !important;
+          box-shadow: 0px 0px 0px 1px $blue-light inset !important;
+  color: $blue-light !important;
 }
 .ui.basic.primary.buttons .button:hover,
 .ui.basic.primary.button:hover {

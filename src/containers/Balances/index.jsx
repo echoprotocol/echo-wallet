@@ -3,15 +3,14 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
 
-import PropTypes from 'prop-types';
-
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
 
-import TableComponent from './TableComponent';
+import Assets from './AssetsComponent';
+import Tokens from './TokensComponents';
 
-class Activity extends React.Component {
+class Balances extends React.Component {
 
 	constructor() {
 		super();
@@ -36,8 +35,15 @@ class Activity extends React.Component {
 				<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
 				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
 					<Segment basic className="wrapper">
-						<Header onToggleSidebar={this.toggleSidebar} curentUserId={this.props.userId} />
-						<TableComponent curentUserId={this.props.userId} />
+						<Header onToggleSidebar={this.toggleSidebar} />
+						<div className="content">
+							<div>
+								<div className="wallet-wrap">
+									<Assets />
+									<Tokens />
+								</div>
+							</div>
+						</div>
 						<Footer />
 					</Segment>
 				</Sidebar.Pusher>
@@ -47,14 +53,7 @@ class Activity extends React.Component {
 
 }
 
-Activity.propTypes = {
-	userId: PropTypes.string,
-};
-
-Activity.defaultProps = {
-	userId: '',
-};
-
-export default connect((state) => ({
-	userId: state.global.getIn(['activeUser', 'id']),
-}))(Activity);
+export default connect(
+	() => ({}),
+	() => ({}),
+)(Balances);
