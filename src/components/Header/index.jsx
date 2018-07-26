@@ -38,7 +38,7 @@ class Header extends React.Component {
 						<div className="balance">
 							<span>
 								{
-									Array.isArray(this.props.assets) ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
+									this.props.assets && this.props.assets.size ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
 								}
 							</span>
 						</div>

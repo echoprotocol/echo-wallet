@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
-import { getBalance } from '../api/ContractApi';
+import { getTokenBalance } from '../api/ContractApi';
 import BalanceReducer from '../reducers/BalanceReducer';
 
 export const initBalances = (accountId) => async (dispatch) => {
@@ -17,8 +17,9 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	if (tokens && tokens[accountId]) {
 		let balances = Object.keys(tokens[accountId]).map(async (tokenName) => {
-			const balance = await getBalance(tokens[accountId][tokenName], accountId);
-			return { name: tokenName, balance };
+			const balance = await getTokenBalance(tokens[accountId][tokenName], accountId);
+			const precision = 18; // TODO get precision
+			return { symbol: tokenName, precision, balance };
 		});
 
 		balances = await Promise.all(balances);

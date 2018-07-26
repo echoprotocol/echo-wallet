@@ -12,15 +12,15 @@ const getHash = (str) => keccak256(str);
 //	end
 
 
-export const getBalance = async (accountId, contractId) => {
+export const getTokenBalance = async (accountId, contractId) => {
 
 	const result = await getContractProp(contractId, accountId, getHash('balanceOf(address)').substr(0, 8));
 
 	return result;
 };
 
-export const getToken = async (accountId, contractId) => {
-	const result = await getContractProp(contractId, accountId, getHash('name').substr(0, 8));
+export const getTokenSymbol = async (accountId, contractId) => {
+	const result = await getContractProp(contractId, accountId, getHash('symbol').substr(0, 8));
 
 	return result;
 };

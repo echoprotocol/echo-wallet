@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Form, Segment, Sidebar } from 'semantic-ui-react';
 
 import Header from '../../components/Header/index';
@@ -47,4 +46,4 @@ class Transfer extends React.Component {
 
 }
 
-export default connect()(Transfer);
+export default Transfer;

@@ -1,71 +1,72 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Input, Dropdown, Button } from 'semantic-ui-react';
+import classnames from 'classnames';
+
+import { FORM_TRANSFER } from '../../constants/FormConstants';
+import formatAmount from '../../helpers/HistoryHelper';
+import { setFormValue, clearForm } from '../../actions/FormActions';
+
+import AmountField from './AmountField';
 
 class FormComponent extends React.Component {
 
+	onComment() {
+
+	}
+
 	render() {
-		const feeOptions = [
-			{ key: '0.000001 ECHO', text: '0.000001 ECHO', value: '0.000001 ECHO' },
-			{ key: '0.000001 ETC', text: '0.000001 ETC', value: '0.000001 ETC' },
-		];
+		const {
+			accountName, assets, to, comment, fee,
+		} = this.props;
+
+		const feeValue = fee.value ? formatAmount(fee.value, fee.currency.precision, fee.currency.symbol) : '';
+
+		const feeOptions = assets.map(({ balance, precision, symbol }) => ({
+			key: symbol,
+			value: balance,
+			text: formatAmount(balance, precision, symbol),
+		}));
+
 		return (
 			<div className="field-wrap">
 				<Form.Field>
 					<label htmlFor="accountFrom">From</label>
 					<div className="ui">
-						<input name="accountFrom" className="ui input" disabled placeholder="Account name" value="user-name" />
+						<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
 						<span className="error-message" />
 					</div>
 				</Form.Field>
 				<Form.Field>
 					<label htmlFor="accountTo">To</label>
-					{/* Input can be with class: error, loading */}
-					<Input type="text" placeholder="Account name" className="action-wrap ">
+					<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading, error: to.error })}>
 						<input name="accountTo" />
-						{/* <span className="icon-checked_1 value-status" /> */}
-						{/* <span className="icon-error_input value-status" /> */}
-						<span className="error-message">some error text</span>
+						{ to.checked ? <span className="icon-checked_1 value-status" /> : null }
+						{ to.error ? <span className="icon-error_input value-status" /> : null }
+						<span className="error-message">{to.error}</span>
 					</Input>
 				</Form.Field>
-				<Form.Field>
-					<label htmlFor="amount">
-                        Amount
-						<ul className="list-amount">
-							<li>
-                                Available Balance: <span> 0.09298 ECHO</span>
-							</li>
-						</ul>
-					</label>
-					<Input type="text" placeholder="Amount" action>
-						<div className="amount-wrap">
-							<input className="amount" placeholder="Amount" />
-						</div>
-						<Dropdown text="ETC" className="assets-tokens-dropdown">
-							<Dropdown.Menu>
-								<Dropdown.Header content="ASSETS" />
-								<Dropdown.Item>BTC</Dropdown.Item>
-								<Dropdown.Item>ETC</Dropdown.Item>
-								<Dropdown.Item>LTC</Dropdown.Item>
-								<Dropdown.Header content="TOKENS" />
-								<Dropdown.Item>sBIT</Dropdown.Item>
-								<Dropdown.Item>Playpoint</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown>
-					</Input>
-				</Form.Field>
+				<AmountField />
 				<Form.Field>
 					<label htmlFor="fee"> Fee </label>
-					<Dropdown selection defaultValue={feeOptions[0].text} options={feeOptions} />
+					<Dropdown selection options={feeOptions} value={feeValue} />
 				</Form.Field>
 				<Form.Field>
-					<Form.Field label="Comment" className="comment" placeholder="Comment" control="textarea" />
+					<Form.Field
+						label="Comment"
+						className="comment"
+						placeholder="Comment"
+						control="textarea"
+						value={comment.value}
+						onChange={(e) => this.onComment(e)}
+					/>
 				</Form.Field>
 				<div className="form-panel">
-					<div className="total-sum">
+					{/* <div className="total-sum">
                         Total Transaction Sum:
 						<span>0.0009287 BTC</span>
-					</div>
+					</div> */}
 					<Button basic type="submit" color="orange">Send</Button>
 				</div>
 			</div>
@@ -74,4 +75,28 @@ class FormComponent extends React.Component {
 
 }
 
-export default connect()(FormComponent);
+FormComponent.propTypes = {
+	accountName: PropTypes.string.isRequired,
+	assets: PropTypes.any.isRequired,
+	to: PropTypes.any.isRequired,
+	// amount: PropTypes.any.isRequired,
+	fee: PropTypes.any.isRequired,
+	comment: PropTypes.any.isRequired,
+	// setFormValue: PropTypes.func.isRequired,
+	// clearForm: PropTypes.func.isRequired,
+};
+
+export default connect(
+	(state) => ({
+		accountName: state.global.getIn(['activeUser', 'name']),
+		assets: state.balance.get('assets').toArray(),
+		to: state.form.getIn([FORM_TRANSFER, 'to']),
+		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
+		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
+		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
+	}),
+	(dispatch) => ({
+		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
+	}),
+)(FormComponent);
