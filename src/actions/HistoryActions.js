@@ -27,6 +27,7 @@ const formatOperation = (operationData) => async (dispatch) => {
 			time: moment(timestampBlock).format('h:mm:ss A'),
 		},
 		operationColor: '',
+		isCreateContract: false,
 	};
 	result.fee = {
 		amount: operation.fee.amount || '',
@@ -391,6 +392,7 @@ const formatOperation = (operationData) => async (dispatch) => {
 				precision: amountAsset.precision,
 				symbol: amountAsset.symbol,
 			};
+			result.isCreateContract = true;
 			break;
 		}
 		case operations.contract_transfer: {
