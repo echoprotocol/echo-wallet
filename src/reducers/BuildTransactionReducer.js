@@ -4,7 +4,7 @@ import { Map } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	transaction: new Map({}),
 	operation: '',
-	privateKey: '',
+	privateKey: null,
 	onBuild: false,
 });
 

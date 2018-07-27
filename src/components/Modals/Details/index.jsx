@@ -7,12 +7,14 @@ import { closeModal } from '../../../actions/ModalActions';
 import { resetTransactionValues } from '../../../actions/TransactionBuilderActions';
 import { clearForm } from '../../../actions/FormActions';
 import { setDetailsForm } from '../../../actions/DetailsActions';
+import { makeRequest } from '../../../actions/ContractAction';
 
 import { MODAL_DETAILS } from './../../../constants/ModalConstants';
 import { FORM_TRANSACTION_DETAILS } from './../../../constants/FormConstants';
 
 import InputRow from './InputRow';
 import TextAreaRow from './TextAreaRow';
+import Loading from '../../Loading';
 
 class ModalDetails extends React.Component {
 
@@ -21,14 +23,15 @@ class ModalDetails extends React.Component {
 		const { options: currentOptions } = this.props;
 		const { options: nextOptions } = nextProps;
 
-		const { formatedOptions: nextFormatOption } = this.props;
-		const { formatedOptions: currentFormatOption } = nextProps;
-		console.log(nextFormatOption, currentFormatOption)
-		console.log(nextFormatOption.toJS(), currentFormatOption.toJS())
+		const { formatedOptions: currentFormatOption } = this.props;
+		const { formatedOptions: nextFormatOption } = nextProps;
+
 		if (currentOptions !== nextOptions) {
-			this.props.formatOptions(nextProps.options);
+			this.props.transformOptions(nextProps.options);
 			return true;
 		} else if (nextFormatOption !== currentFormatOption) {
+			return true;
+		} else if (nextProps.show) {
 			return true;
 		}
 		return false;
@@ -41,12 +44,17 @@ class ModalDetails extends React.Component {
 	}
 
 	onConfirm() {
-
+		if (!this.props.onBuild) {
+			this.onClose();
+		} else {
+			this.props.makeRequest(this.props.options);
+			this.props.closeModal();
+			this.props.clearForm();
+		}
 	}
 
-	render() {
-		const { show } = this.props;
-		const bytecode = '000';
+	renderDetails() {
+		const { show, formatedOptions } = this.props;
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -64,8 +72,22 @@ class ModalDetails extends React.Component {
 								<h3>Confirm transaction</h3>
 							</div>
 							<div className="field-wrap">
-								<TextAreaRow label="Byte code" data={bytecode} />
-								<InputRow label="Fee" data="100" />
+								{
+									Object.keys(formatedOptions).map((k, i) => {
+										if (k === 'loading' || k === 'error') return undefined;
+										const id = i;
+										const data = String(formatedOptions[k].value.data) || '';
+										if (formatedOptions[k].value.field === 'area') {
+											return (
+												<TextAreaRow key={id} label={k} data={data} />
+											);
+										}
+										return (
+											<InputRow key={id} label={k} data={data} />
+										);
+									})
+								}
+
 							</div>
 							<div className="form-panel">
 								<Button basic type="submit" color="gray" onClick={() => this.onClose()}>Cancel</Button>
@@ -78,6 +100,17 @@ class ModalDetails extends React.Component {
 		);
 	}
 
+	render() {
+		const { formatedOptions } = this.props;
+		return (
+			<React.Fragment>
+				{
+					formatedOptions ? this.renderDetails() : <Loading />
+				}
+			</React.Fragment>
+		);
+	}
+
 }
 
 ModalDetails.propTypes = {
@@ -86,8 +119,10 @@ ModalDetails.propTypes = {
 	clearDetails: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	options: PropTypes.object.isRequired,
-    formatedOptions: PropTypes.object.isRequired,
-    formatOptions: PropTypes.func.isRequired,
+	onBuild: PropTypes.bool.isRequired,
+	formatedOptions: PropTypes.object.isRequired,
+	transformOptions: PropTypes.func.isRequired,
+	makeRequest: PropTypes.func.isRequired,
 };
 
 ModalDetails.defaultProps = {
@@ -97,13 +132,15 @@ ModalDetails.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_DETAILS, 'show']),
-		formatedOptions: state.form.get(FORM_TRANSACTION_DETAILS),
+		formatedOptions: state.form.get(FORM_TRANSACTION_DETAILS).toJS(),
+		onBuild: state.buildtransaction.get('onBuild'),
 		options: state.buildtransaction,
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_DETAILS)),
 		clearDetails: () => dispatch(resetTransactionValues()),
 		clearForm: () => dispatch(clearForm(FORM_TRANSACTION_DETAILS)),
-        formatOptions: (value) => dispatch(setDetailsForm(value)),
+		transformOptions: (value) => dispatch(setDetailsForm(value)),
+		makeRequest: (value) => dispatch(makeRequest(value)),
 	}),
 )(ModalDetails);

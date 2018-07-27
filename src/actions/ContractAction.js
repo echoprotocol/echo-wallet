@@ -1,12 +1,14 @@
 /* eslint-disable import/prefer-default-export */
 import { Map } from 'immutable';
 
+import { openModal, closeModal } from './ModalActions';
+import { clearForm } from './FormActions';
 import { setTransactionValue, resetTransactionValues } from './TransactionBuilderActions';
 
+import { buildAndMakeRequest } from '../api/ContractApi';
 
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
-
-import { openModal } from './ModalActions';
+import { FORM_TRANSACTION_DETAILS } from '../constants/FormConstants';
 
 export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
@@ -24,19 +26,17 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
-		operation: 'create_contract',
-		registrar_account: activeUserName,
+		registrar_account: activeUserId,
 		asset_type: '1.3.0',
 		code: bytecode,
 		value: 0,
 		gasPrice: 0,
 		gas: 100000,
-		broadcast: true,
-		save_wallet: true,
 	};
 
 
 	dispatch(setTransactionValue('transaction', new Map(options)));
+	dispatch(setTransactionValue('operation', 'create_contract'));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
@@ -46,12 +46,12 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	}
 
 	dispatch(setTransactionValue('onBuild', true));
-	// account
-	// const tr = new TransactionBuilder();
+};
 
-	// tr.add_type_operation('create_contract', options);
-	// // tr.set_required_fees();
-	// tr.add_signer();
-	// tr.sign();
-	// tr.broadcast();
+export const makeRequest = (details) => (dispatch) => {
+	details = details.toJS();
+	const { operation, privateKey, transaction } = details;
+	buildAndMakeRequest(operation, transaction, privateKey);
+	dispatch(closeModal(MODAL_DETAILS));
+	dispatch(clearForm(FORM_TRANSACTION_DETAILS));
 };

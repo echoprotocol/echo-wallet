@@ -176,9 +176,8 @@ export const unlockAccount = ({
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));
-
 		if (getState().buildtransaction.get('onBuild') && !getState().buildtransaction.get('privateKey')) {
-			dispatch(setTransactionValue({ field: 'privateKey', value: active.privateKey }));
+			dispatch(setTransactionValue('privateKey', active.privateKey));
 			dispatch(openModal(MODAL_DETAILS));
 		}
 

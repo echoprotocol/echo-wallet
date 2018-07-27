@@ -6,31 +6,32 @@ import { setFormValue } from '../actions/FormActions';
 const formatDetails = (options) => {
 	const result = {};
 	// TODO add fee
-	switch (options.operation) {
+	const operationNumber = operations[options.operation];
+	switch (operationNumber) {
 		case operations.create_contract: {
 			result.operation = {
 				field: 'input',
-				value: operations.create_contract,
+				data: options.create_contract,
 			};
 			result.from = {
 				field: 'input',
-				value: operations.registrar_account,
+				data: options.registrar_account,
 			};
 			result.code = {
 				field: 'area',
-				value: operations.code,
+				data: options.code,
 			};
 			result.asset_type = {
 				field: 'input',
-				value: operations.asset_type,
+				data: options.asset_type,
 			};
 			result.gas = {
 				field: 'input',
-				value: operations.gas,
+				data: options.gas,
 			};
 			result.gasPrice = {
 				field: 'input',
-				value: operations.gasPrice,
+				data: options.gasPrice,
 			};
 			break;
 		}
@@ -38,7 +39,7 @@ const formatDetails = (options) => {
 			return {};
 	}
 
-	result.operation = Object.keys(operations).find((i) => operations[i] === result.operation);
+	result.operation.data = Object.keys(operations).find((i) => operations[i] === operationNumber);
 
 	return result;
 };

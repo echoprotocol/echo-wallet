@@ -25,3 +25,18 @@ export const getToken = async (accountId, contractId) => {
 
 	return result;
 };
+
+export const buildAndMakeRequest = async (operation, options, privateKey = null) => {
+	const tr = new TransactionBuilder();
+
+	tr.add_type_operation('contract', options);
+	await tr.set_required_fees();
+	await tr.finalize();
+	if (privateKey) {
+		tr.add_signer(privateKey);
+		tr.sign();
+	}
+	console.log(await tr.broadcast(() => {
+		console.log('brodcust done!!!!');
+	}));
+};

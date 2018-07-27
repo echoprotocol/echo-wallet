@@ -1,5 +1,7 @@
 export default {
-	transfer: 0,
+	transfer: {
+		value: 0
+	},
 	limit_order_create: 1,
 	limit_order_cancel: 2,
 	call_order_update: 3,
