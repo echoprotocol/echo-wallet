@@ -385,11 +385,11 @@ const formatOperation = (operationData) => async (dispatch, getState) => {
 			};
 			break;
 		}
-		case operations.contract.value: {
+		case operations.create_contract.value: {
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.asset_id))).toJS();
-			result.operation = operations.contract.name;
+			result.operation = operations.create_contract.name;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.registrar))).toJS().name;
-			result.subject = (await dispatch(EchoJSActions.fetch(operation.receiver))).toJS().name;
+			[, result.subject] = operationData.result;
 			result.value = {
 				amount: operation.value,
 				precision: amountAsset.precision,
