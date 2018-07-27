@@ -27,7 +27,6 @@ const formatOperation = (operationData) => async (dispatch) => {
 			time: moment(timestampBlock).format('h:mm:ss A'),
 		},
 		operationColor: '',
-		isCreateContract: false,
 	};
 	result.fee = {
 		amount: operation.fee.amount || '',
@@ -72,14 +71,11 @@ const formatOperation = (operationData) => async (dispatch) => {
 			result.from = (await dispatch(EchoJSActions.fetch(operation.funding_account))).toJS().name;
 			break;
 		case operations.fill_order: {
+			console.log(operation);
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.pays.asset_id))).toJS();
 			result.operation = operations.fill_order;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.account_id))).toJS().name;
-			try {
-				result.subject = (await dispatch(EchoJSActions.fetch(operation.order_id))).toJS().name;
-			} catch (err) {
-				result.subject = 'NOT AVAILABLE';
-			}
+			console.log(await dispatch(EchoJSActions.fetch(operation.order_id)));
 			result.value = {
 				amount: operation.pays.amount,
 				precision: amountAsset.precision,
@@ -397,7 +393,6 @@ const formatOperation = (operationData) => async (dispatch) => {
 				precision: amountAsset.precision,
 				symbol: amountAsset.symbol,
 			};
-			result.isCreateContract = true;
 			break;
 		}
 		case operations.contract_transfer: {

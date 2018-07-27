@@ -28,7 +28,7 @@ class RowComponent extends React.Component {
 					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className={rowData.isCreateContract ? 'ellips create' : 'ellips'}>
+					<span className={rowData.operation === 'Contract operation' ? 'ellips create' : 'ellips'}>
 						{rowData.subject}
 					</span>
 				</Table.Cell>
