@@ -15,8 +15,13 @@ class TableComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		const { history: currentHistory } = this.props;
 		const { history: nextHistory } = nextProps;
+
+		const { tableHistory: nextTableHistory } = this.props;
+		const { tableHistory: currentTableHistory } = nextProps;
 		if (currentHistory !== nextHistory) {
 			this.props.formatHistory(nextProps.history);
+			return true;
+		} else if (currentTableHistory !== nextTableHistory) {
 			return true;
 		}
 		return false;
@@ -36,6 +41,7 @@ class TableComponent extends React.Component {
 						<Table.HeaderCell>Time</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
+
 
 				<Table.Body>
 					{
@@ -76,10 +82,10 @@ TableComponent.defaultProps = {
 	tableHistory: null,
 };
 
-
 export default connect(
-	(state) => ({
-		history: state.echojs.getIn(['userData', 'account', 'history']),
+	(state, ownProps) => ({
+		history: state.echojs.getIn(['data', 'accounts', ownProps.curentUserId, 'history']),
+		accounts: state.echojs.getIn(['data', 'accounts']),
 		tableHistory: state.table.getIn([HISTORY_DATA, 'history']),
 	}),
 	(dispatch) => ({

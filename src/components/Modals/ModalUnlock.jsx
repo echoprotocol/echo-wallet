@@ -115,7 +115,7 @@ export default connect(
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
-		accountName: state.echojs.getIn(['userData', 'account', 'name']),
+		accountName: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
 		unlockAccount: (value) => dispatch(unlockAccount(value)),

@@ -1,4 +1,5 @@
 import { key } from 'echojs-lib';
+import { EchoJSActions } from 'echojs-redux';
 
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal } from './ModalActions';
@@ -41,7 +42,7 @@ export const createAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, false);
 
 		if (accountNameError) {
@@ -58,7 +59,6 @@ export const createAccount = ({
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
 		dispatch(initAccount(accountName));
-
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -85,7 +85,7 @@ export const authUser = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
@@ -95,7 +95,9 @@ export const authUser = ({
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
 
-		const { owner, active, memo } = await unlockWallet(accountName, password);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+
+		const { owner, active, memo } = await unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
@@ -115,7 +117,6 @@ export const authUser = ({
 		}
 
 		dispatch(initAccount(accountName));
-
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
@@ -142,7 +143,7 @@ export const unlockAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['echojs', 'instance']);
+		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
@@ -151,7 +152,9 @@ export const unlockAccount = ({
 		}
 		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
 
-		const { owner, active, memo } = await unlockWallet(accountName, password);
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+
+		const { owner, active, memo } = await unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));

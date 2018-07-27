@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { formatAmount } from '../../helpers/HistoryHelper';
+import formatAmount from '../../helpers/HistoryHelper';
 
 class RowComponent extends React.Component {
 
@@ -28,7 +28,7 @@ class RowComponent extends React.Component {
 					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
+					<span className={rowData.operation === 'Contract' ? 'ellips create' : 'ellips'}>
 						{rowData.subject}
 					</span>
 				</Table.Cell>
