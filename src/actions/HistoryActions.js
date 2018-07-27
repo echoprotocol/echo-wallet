@@ -71,11 +71,9 @@ const formatOperation = (operationData) => async (dispatch) => {
 			result.from = (await dispatch(EchoJSActions.fetch(operation.funding_account))).toJS().name;
 			break;
 		case operations.fill_order: {
-			console.log(operation);
 			const amountAsset = (await dispatch(EchoJSActions.fetch(operation.pays.asset_id))).toJS();
 			result.operation = operations.fill_order;
 			result.from = (await dispatch(EchoJSActions.fetch(operation.account_id))).toJS().name;
-			console.log(await dispatch(EchoJSActions.fetch(operation.order_id)));
 			result.value = {
 				amount: operation.pays.amount,
 				precision: amountAsset.precision,
