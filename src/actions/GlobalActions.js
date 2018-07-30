@@ -50,3 +50,11 @@ export const logout = () => () => {
 	localStorage.removeItem('current_account');
 	history.push(SIGN_IN_PATH);
 };
+
+export const toggleBar = (value) => (dispatch) => {
+	dispatch(GlobalReducer.actions.toggleBar({ value }));
+};
+
+export const hideBar = () => (dispatch) => {
+	dispatch(GlobalReducer.actions.hideBar({ }));
+};

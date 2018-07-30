@@ -11,6 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
+		visibleBar: false,
 	}),
 	transformations: {
 		setGlobalLoading: {
@@ -41,6 +42,12 @@ export default createModule({
 
 				return state;
 			},
+		},
+		toggleBar: {
+			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
+		},
+		hideBar: {
+			reducer: (state) => state.set('visibleBar', false),
 		},
 	},
 });

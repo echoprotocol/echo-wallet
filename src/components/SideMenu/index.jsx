@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logout } from '../../actions/GlobalActions';
+import { toggleBar } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
-
 import { MODAL_UNLOCK } from '../../constants/ModalConstants';
 
 class SidebarMenu extends React.Component {
@@ -15,10 +14,6 @@ class SidebarMenu extends React.Component {
 		super();
 		this.state = { activeIndex: -1 };
 		this.handleClick = this.handleClick.bind(this);
-	}
-
-	onLogout() {
-		this.props.logout();
 	}
 
 	handleClick(e, titleProps) {
@@ -45,8 +40,8 @@ class SidebarMenu extends React.Component {
 									<div className="sidebar-close">
 										<span
 											className="icon-close"
-											onClick={this.props.onToggleSidebar}
-											onKeyPress={this.props.onToggleSidebar}
+											onKeyPress={() => this.props.toggleBar(this.props.visibleBar)}
+											onClick={() => this.props.toggleBar(this.props.visibleBar)}
 											role="button"
 											tabIndex="0"
 										/>
@@ -54,8 +49,8 @@ class SidebarMenu extends React.Component {
 								</React.Fragment> :
 								<span
 									className="icon-menu"
-									onClick={this.props.onToggleSidebar}
-									onKeyPress={this.props.onToggleSidebar}
+									onKeyPress={() => this.props.toggleBar(this.props.visibleBar)}
+									onClick={() => this.props.toggleBar(this.props.visibleBar)}
 									role="button"
 									tabIndex="0"
 								/>
@@ -64,7 +59,7 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
 							<li>
-								<Link className="sidebar-nav-link" to="/">
+								<Link className="sidebar-nav-link" to="/balances">
 									<span className="icon icon-menu_1" />
 									<span className="sidebar-nav-text">Create Payment</span>
 								</Link>
@@ -138,22 +133,17 @@ class SidebarMenu extends React.Component {
 }
 
 SidebarMenu.propTypes = {
-	visibleBar: PropTypes.bool,
-	onToggleSidebar: PropTypes.func.isRequired,
-	logout: PropTypes.func.isRequired,
+	visibleBar: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
-};
-
-SidebarMenu.defaultProps = {
-	visibleBar: false,
+	toggleBar: PropTypes.func.isRequired,
 };
 
 export default connect(
 	(state) => ({
-		accountName: state.global.getIn(['activeUser', 'name']),
+		visibleBar: state.global.get('visibleBar'),
 	}),
 	(dispatch) => ({
-		logout: () => dispatch(logout()),
 		openModal: (value) => dispatch(openModal(value)),
+		toggleBar: (value) => dispatch(toggleBar(value)),
 	}),
 )(SidebarMenu);
