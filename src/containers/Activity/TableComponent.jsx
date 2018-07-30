@@ -42,6 +42,7 @@ class TableComponent extends React.Component {
 					</Table.Row>
 				</Table.Header>
 
+
 				<Table.Body>
 					{
 						this.props.tableHistory.map((h, i) => {

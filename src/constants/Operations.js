@@ -1,48 +1,186 @@
 export default {
-	transfer: 0,
-	limit_order_create: 1,
-	limit_order_cancel: 2,
-	call_order_update: 3,
-	fill_order: 4,
-	account_create: 5,
-	account_update: 6,
-	account_whitelist: 7,
-	account_upgrade: 8,
-	account_transfer: 9,
-	asset_create: 10,
-	asset_update: 11,
-	asset_update_bitasset: 12,
-	asset_update_feed_producers: 13,
-	asset_issue: 14,
-	asset_reserve: 15,
-	asset_fund_fee_pool: 16,
-	asset_settle: 17,
-	asset_global_settle: 18,
-	asset_publish_feed: 19,
-	witness_create: 20,
-	witness_update: 21,
-	proposal_create: 22,
-	proposal_update: 23,
-	proposal_delete: 24,
-	withdraw_permission_create: 25,
-	withdraw_permission_update: 26,
-	withdraw_permission_claim: 27,
-	withdraw_permission_delete: 28,
-	committee_member_create: 29,
-	committee_member_update: 30,
-	committee_member_update_global_parameters: 31,
-	vesting_balance_create: 32,
-	vesting_balance_withdraw: 33,
-	worker_create: 34,
-	custom: 35,
-	assert: 36,
-	balance_claim: 37,
-	override_transfer: 38,
-	transfer_to_blind: 39,
-	blind_transfer: 40,
-	transfer_from_blind: 41,
-	asset_settle_cancel: 42,
-	asset_claim_fees: 43,
-	contract: 44,
-	contract_transfer: 45,
+	transfer: {
+		value: 0,
+		name: 'Transfer',
+	},
+	limit_order_create: {
+		value: 1,
+		name: 'Place order',
+	},
+	limit_order_cancel: {
+		value: 2,
+		name: 'Cancel order',
+	},
+	call_order_update: {
+		value: 3,
+		name: 'Update margin',
+	},
+	fill_order: {
+		value: 4,
+		name: 'Fill order',
+	},
+	account_create: {
+		value: 5,
+		name: 'Create account',
+	},
+	account_update: {
+		value: 6,
+		name: 'Update account',
+	},
+	account_whitelist: {
+		value: 7,
+		name: 'Account whitelist',
+	},
+	account_upgrade: {
+		value: 8,
+		name: 'Upgrade Account',
+	},
+	account_transfer: {
+		value: 9,
+		name: 'Transfer Account',
+	},
+	asset_create: {
+		value: 10,
+		name: 'Create asset',
+	},
+	asset_update: {
+		value: 11,
+		name: 'Update asset',
+	},
+	asset_update_bitasset: {
+		value: 12,
+		name: 'Update SmartCoin',
+	},
+	asset_update_feed_producers: {
+		value: 13,
+		name: 'Update asset feed producers',
+	},
+	asset_issue: {
+		value: 14,
+		name: 'Issue asset',
+	},
+	asset_reserve: {
+		value: 15,
+		name: 'Burn asset',
+	},
+	asset_fund_fee_pool: {
+		value: 16,
+		name: 'Fund asset fee pool',
+	},
+	asset_settle: {
+		value: 17,
+		name: 'Asset settlement',
+	},
+	asset_global_settle: {
+		value: 18,
+		name: 'Global asset settlement',
+	},
+	asset_publish_feed: {
+		value: 19,
+		name: 'Publish feed',
+	},
+	witness_create: {
+		value: 20,
+		name: 'Create witness',
+	},
+	witness_update: {
+		value: 21,
+		name: 'Update witness',
+	},
+	proposal_create: {
+		value: 22,
+		name: 'Create proposal',
+	},
+	proposal_update: {
+		value: 23,
+		name: 'Update proposal',
+	},
+	proposal_delete: {
+		value: 24,
+		name: 'Delete proposal',
+	},
+	withdraw_permission_create: {
+		value: 25,
+		name: 'Create withdrawal permission',
+	},
+	withdraw_permission_update: {
+		value: 26,
+		name: 'Update withdrawal permission',
+	},
+	withdraw_permission_claim: {
+		value: 27,
+		name: 'Claim withdrawal permission',
+	},
+	withdraw_permission_delete: {
+		value: 28,
+		name: 'Delete withdrawal permission',
+	},
+	committee_member_create: {
+		value: 29,
+		name: 'Create committee member',
+	},
+	committee_member_update: {
+		value: 30,
+		name: 'Update committee member',
+	},
+	committee_member_update_global_parameters: {
+		value: 31,
+		name: 'Global parameters update',
+	},
+	vesting_balance_create: {
+		value: 32,
+		name: 'Create vesting balance',
+	},
+	vesting_balance_withdraw: {
+		value: 33,
+		name: 'Withdraw vesting balance',
+	},
+	worker_create: {
+		value: 34,
+		name: 'Create worker',
+	},
+	custom: {
+		value: 35,
+		name: 'Custom',
+	},
+	assert: {
+		value: 36,
+		name: 'Assert operation',
+	},
+	balance_claim: {
+		value: 37,
+		name: 'Claim balance',
+	},
+	override_transfer: {
+		value: 38,
+		name: 'Override transfer',
+	},
+	transfer_to_blind: {
+		value: 39,
+		name: 'Transfer to blinded account',
+	},
+	blind_transfer: {
+		value: 40,
+		name: 'Blinded transfer',
+	},
+	transfer_from_blind: {
+		value: 41,
+		name: 'Transfer from blinded account',
+	},
+	asset_settle_cancel: {
+		value: 42,
+		name: 'Cancel asset settlement',
+	},
+	asset_claim_fees: {
+		value: 43,
+		name: 'Claim asset fees',
+	},
+	create_contract: {
+		value: 47,
+		name: 'Contract',
+	},
+	contract_transfer: {
+		value: 45,
+		name: 'Contract transfer',
+	},
 };

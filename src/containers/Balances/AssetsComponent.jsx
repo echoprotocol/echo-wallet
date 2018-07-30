@@ -23,7 +23,6 @@ class Assets extends React.Component {
 					<Table.Cell>{asset.symbol}</Table.Cell>
 					<Table.Cell>
 						{formatAmount(asset.balance, asset.precision, '')}
-						<span className="icon-close" />
 					</Table.Cell>
 				</Table.Row>
 			);
