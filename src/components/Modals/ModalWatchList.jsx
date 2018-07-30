@@ -63,7 +63,6 @@ ModalWatchList.defaultProps = {
 
 export default connect(
 	(state) => {
-		console.log(state);
 		return { show: state.modal.getIn([MODAL_WATCH_LIST, 'show']) };
 	},
 	(dispatch) => ({

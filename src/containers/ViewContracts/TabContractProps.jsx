@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Input } from 'semantic-ui-react';
+// import InputRequest from './InputComponent';
 
 class TabContractProps extends React.Component {
 

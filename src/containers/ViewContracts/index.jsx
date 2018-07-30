@@ -4,8 +4,8 @@ import { Segment, Sidebar, Dimmer, Loader, Tab } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import TabContractProps from '../../components/Tabs/TabContractProps';
-import TabCallContracts from '../../components/Tabs/TabCallContracts';
+import TabContractProps from './TabContractProps';
+import TabCallContracts from './TabCallContracts';
 
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
@@ -70,13 +70,9 @@ class ViewContracts extends React.Component {
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
 						<div className="content">
-							{!this.props.history ? (
-								this.renderLoading()
-							) : (
-								<div>
-									<Tab menu={{ tabular: true }} className="tub-full" panes={panes} />
-								</div>
-							)}
+							<div>
+								<Tab menu={{ tabular: true }} className="tub-full" panes={panes} />
+							</div>
 						</div>
 						<Footer />
 					</Segment>
@@ -87,14 +83,4 @@ class ViewContracts extends React.Component {
 
 }
 
-ViewContracts.propTypes = {
-	history: PropTypes.any,
-};
-
-ViewContracts.defaultProps = {
-	history: null,
-};
-
-export default connect((state) => ({
-	history: state.echojs.getIn(['userData', 'account', 'history']),
-}))(ViewContracts);
+export default connect()(ViewContracts);

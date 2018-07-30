@@ -47,15 +47,11 @@ class SmartContracts extends React.Component {
 							return (
 								<Table.Row key={id}>
 									<Table.Cell>
-										<span className="ellips">
-											{' '}
-                                            1.16.124{' '}
-										</span>
+										<span className="ellips"> 1.16.124</span>
 									</Table.Cell>
 									<Table.Cell>
 										<span className="ellips">
-											{' '}
-                                            0x78e43503bb1474c32718d0x78e43503{' '}
+											0x78e43503bb1474c32718d0x78e43503
 										</span>
 									</Table.Cell>
 								</Table.Row>
@@ -88,14 +84,10 @@ class SmartContracts extends React.Component {
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
 						<div className="content center-mode ">
-							{!this.props.history ? (
-								this.renderLoading()
-							) : (
-								<div>{this.renderTable()}</div>
-							)}
+							{this.renderTable()}
 						</div>
 						<div className="btn-list" >
-							<Button content="watch contract" color="gray" />
+							<Button content="watch contract" color="grey" />
 							<Button content="create new contract" color="orange" />
 						</div>
 						<Footer />
