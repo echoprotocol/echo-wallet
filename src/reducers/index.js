@@ -13,5 +13,5 @@ export default {
 	keychain: keyChainReducer.reducer,
 	table: tableReducer.reducer,
 	balance: balanceReducer.reducer,
-    buildtransaction: buildTransactionReducer.reducer,
+	buildtransaction: buildTransactionReducer.reducer,
 };
