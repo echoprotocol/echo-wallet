@@ -26,12 +26,12 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
-		registrar_account: activeUserId,
-		asset_type: '1.3.0',
-		code: bytecode,
+		registrar: activeUserId,
+		asset_id: '1.3.0',
 		value: 0,
 		gasPrice: 0,
 		gas: 100000,
+		code: bytecode,
 	};
 
 

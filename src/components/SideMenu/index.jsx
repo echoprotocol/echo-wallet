@@ -1,13 +1,10 @@
 import React from 'react';
-import { Accordion, Menu, Sidebar, Button } from 'semantic-ui-react';
+import { Accordion, Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
-import { openModal } from '../../actions/ModalActions';
-
-import { MODAL_UNLOCK, MODAL_DETAILS } from '../../constants/ModalConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -39,10 +36,6 @@ class SidebarMenu extends React.Component {
 		const { activeIndex } = this.state;
 		const newIndex = activeIndex === index ? -1 : index;
 		this.setState({ activeIndex: newIndex });
-	}
-
-	openModal(modal) {
-		this.props.openModal(modal);
 	}
 
 	render() {
@@ -85,16 +78,6 @@ class SidebarMenu extends React.Component {
                                     Voting
 								</Link>
 							</li>
-							<li>
-								<div className="sidebar-nav-link">
-									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.openModal(MODAL_UNLOCK)} />
-								</div>
-							</li>
-							<li>
-								<div className="sidebar-nav-link">
-									<Button content="Details" size="tiny" color="grey" onClick={() => this.openModal(MODAL_DETAILS)} />
-								</div>
-							</li>
 						</ul>
 					</div>
 					<div className="sidebar-footer">
@@ -119,7 +102,6 @@ SidebarMenu.propTypes = {
 	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
-	openModal: PropTypes.func.isRequired,
 };
 
 SidebarMenu.defaultProps = {
@@ -133,6 +115,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
-		openModal: (value) => dispatch(openModal(value)),
 	}),
 )(SidebarMenu);

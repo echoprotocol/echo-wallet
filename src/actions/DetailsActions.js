@@ -15,7 +15,7 @@ const formatDetails = (options) => {
 			};
 			result.from = {
 				field: 'input',
-				data: options.registrar_account,
+				data: options.registrar,
 			};
 			result.code = {
 				field: 'area',
@@ -23,7 +23,7 @@ const formatDetails = (options) => {
 			};
 			result.asset_type = {
 				field: 'input',
-				data: options.asset_type,
+				data: options.asset_id,
 			};
 			result.gas = {
 				field: 'input',
