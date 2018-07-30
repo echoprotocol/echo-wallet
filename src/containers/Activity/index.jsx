@@ -52,6 +52,6 @@ export default connect(
 		userId: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
-		hideBar: (value) => dispatch(hideBar()),
+		hideBar: () => dispatch(hideBar()),
 	}),
 )(Activity);
