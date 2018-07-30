@@ -88,7 +88,7 @@ class ModalDetails extends React.Component {
 
 							</div>
 							<div className="form-panel">
-								<Button basic type="submit" color="gray" onClick={() => this.onClose()}>Cancel</Button>
+								<Button basic type="submit" color="grey" onClick={() => this.onClose()}>Cancel</Button>
 								<Button basic type="submit" color="orange" onClick={() => this.onConfirm()}>Confirm</Button>
 							</div>
 						</Form>
