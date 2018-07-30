@@ -9,6 +9,12 @@ import { setValue, setFormValue } from '../../actions/FormActions';
 
 class AmountField extends React.Component {
 
+	componentDidUpdate() {
+		if (this.props.assets.length && !this.props.currency) {
+			this.props.setValue('currency', this.props.assets[0]);
+		}
+	}
+
 	onChangeAmount(e) {
 		const { name: field, value } = e.target;
 
@@ -91,16 +97,17 @@ class AmountField extends React.Component {
 
 AmountField.propTypes = {
 	currency: PropTypes.object,
+	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
-	fee: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 };
 
 AmountField.defaultProps = {
 	currency: null,
+	fee: null,
 };
 
 export default connect(

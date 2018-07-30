@@ -2,10 +2,9 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	transaction: new Map({}),
+	options: null,
 	operation: '',
 	privateKey: null,
-	onBuild: false,
 });
 
 export default createModule({
@@ -29,6 +28,14 @@ export default createModule({
 		reset: {
 			reducer: (state) => {
 				state = DEFAULT_FIELDS;
+
+				return state;
+			},
+		},
+		setOperation: {
+			reducer: (state, { payload }) => {
+				state = state.set('operation', payload.operation);
+				state = state.set('options', new Map(payload.options));
 
 				return state;
 			},

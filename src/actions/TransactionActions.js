@@ -1,31 +1,29 @@
 import BN from 'bignumber.js';
 import { EchoJSActions } from 'echojs-redux';
-import { Map } from 'immutable';
+
+import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER, FORM_TRANSACTION_DETAILS } from '../constants/FormConstants';
+import { FORM_TRANSFER } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
+import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
-import { toggleLoading, setFormError, setValue, setIn, clearForm } from './FormActions';
+import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction } from '../api/TransactionApi';
-import { buildAndMakeRequest } from '../api/ContractApi'; //	/////
+import { buildAndSendTransaction, getMemo } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
-export const setTransactionValue = (field, value) => (dispatch) => {
-	dispatch(TransactionReducer.actions.set({ field, value }));
+export const resetTransaction = () => (dispatch) => {
+	dispatch(TransactionReducer.actions.reset());
 };
 
-export const setInTransactionValue = (fields, value) => (dispatch) => {
-	dispatch(TransactionReducer.actions.setIn({ fields, value }));
-};
-export const resetTransactionValues = () => (dispatch) => {
-	dispatch(TransactionReducer.actions.reset());
+export const setField = (field, value) => (dispatch) => {
+	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
 export const getFee = (type, assetId = '1.3.0') => (dispatch, getState) => {
@@ -104,7 +102,8 @@ export const transfer = () => async (dispatch, getState) => {
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
-	const toAccountId = (await dispatch(EchoJSActions.fetch(to))).toJS().id;
+	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
+	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
 	//	TODO check transfer token or asset
 
@@ -114,15 +113,33 @@ export const transfer = () => async (dispatch, getState) => {
 			asset_id: fee.asset.id,
 		},
 		from: fromAccountId,
-		to: toAccountId,
-		amount: { amount: amount.value, asset_id: currency.id },
+		to: toAccount.id,
+		amount: {
+			amount: amount.value * (10 ** currency.precision),
+			asset_id: currency.id,
+		},
 	};
 
 	if (comment.value) {
-		// TODO hendle memo
+		options.memo = comment.value;
 	}
 
-	buildAndSendTransaction('transfer', options);
+	const pubKey = fromAccount.active.key_auths[0][0];
+	if (!pubKey) return;
+
+	dispatch(resetTransaction());
+
+	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options }));
+
+	if (!privateKey) {
+		dispatch(openModal(MODAL_UNLOCK));
+	} else {
+		dispatch(setField('privateKey', privateKey));
+		dispatch(openModal(MODAL_DETAILS));
+	}
+
 };
 
 export const createContract = ({ bytecode }) => async (dispatch, getState) => {
@@ -136,7 +153,7 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
 	if (!pubKey) return;
 
-	dispatch(resetTransactionValues());
+	dispatch(resetTransaction());
 
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
@@ -149,24 +166,32 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		code: bytecode,
 	};
 
-	dispatch(setTransactionValue('transaction', new Map(options)));
-	dispatch(setTransactionValue('operation', 'contract'));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		dispatch(setTransactionValue('privateKey', privateKey));
+		dispatch(setField('privateKey', privateKey));
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
-	dispatch(setTransactionValue('onBuild', true));
 };
 
-export const makeRequest = (details) => (dispatch) => {
-	details = details.toJS();
-	const { operation, privateKey, transaction } = details;
-	buildAndMakeRequest(operation, transaction, privateKey);
+export const sendTransaction = () => async (dispatch, getState) => {
+	const { operation, privateKey, options } = getState().transaction.toJS();
+
+	if (options.memo) {
+		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
+		const toAccount = (await dispatch(EchoJSActions.fetch(options.to))).toJS();
+
+		options.memo = getMemo(fromAccount, toAccount, options.memo, privateKey);
+	}
+
+	buildAndSendTransaction(operation, options, privateKey);
+
 	dispatch(closeModal(MODAL_DETAILS));
-	dispatch(clearForm(FORM_TRANSACTION_DETAILS));
-	dispatch(resetTransactionValues());
+
+	history.push(INDEX_PATH);
+
+	dispatch(resetTransaction());
 };

@@ -26,7 +26,7 @@ class FormComponent extends React.Component {
 	}
 
 	render() {
-		const { account, comment, loading } = this.props;
+		const { account, comment } = this.props;
 
 		return (
 			<div className="field-wrap">
@@ -57,11 +57,7 @@ class FormComponent extends React.Component {
 							<span>0.0009287 BTC</span>
 						</div>
 					*/}
-					{
-						loading ?
-							<Button type="submit" color="orange" className="load">Loading...</Button> :
-							<Button basic type="submit" color="orange" onClick={(e) => this.onSend(e)}>Send</Button>
-					}
+					<Button basic type="submit" color="orange" onClick={(e) => this.onSend(e)}>Send</Button>
 				</div>
 			</div>
 		);
@@ -70,7 +66,6 @@ class FormComponent extends React.Component {
 }
 
 FormComponent.propTypes = {
-	loading: PropTypes.bool,
 	account: PropTypes.object.isRequired,
 	comment: PropTypes.any.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -78,16 +73,10 @@ FormComponent.propTypes = {
 	transfer: PropTypes.func.isRequired,
 };
 
-FormComponent.defaultProps = {
-	loading: false,
-};
-
-
 export default connect(
 	(state) => ({
 		account: state.global.getIn(['activeUser']).toJS(),
 		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
-		loading: state.form.getIn([FORM_TRANSFER, 'loading']),
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),

@@ -8,7 +8,6 @@ import {
 	FORM_UNLOCK_MODAL,
 	FORM_TRANSFER,
 	FORM_CREATE_CONTRACT,
-	FORM_TRANSACTION_DETAILS,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -77,7 +76,6 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		accepted: false,
 	}),
-	[FORM_TRANSACTION_DETAILS]: Map({}),
 };
 
 export default createModule({
@@ -89,8 +87,6 @@ export default createModule({
 		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
 		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
-		[FORM_TRANSACTION_DETAILS]: _.cloneDeep(DEFAULT_FIELDS)
-			.merge(DEFAULT_FORM_FIELDS[FORM_TRANSACTION_DETAILS]),
 	}),
 	transformations: {
 		set: {

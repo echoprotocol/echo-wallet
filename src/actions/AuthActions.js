@@ -5,7 +5,7 @@ import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from '
 import { closeModal, openModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
-import { setTransactionValue } from './TransactionActions';
+import { setField } from './TransactionActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
@@ -176,8 +176,10 @@ export const unlockAccount = ({
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));
-		if (getState().buildtransaction.get('onBuild') && !getState().buildtransaction.get('privateKey')) {
-			dispatch(setTransactionValue('privateKey', active.privateKey));
+
+		const { options, privateKey } = getState().transaction.toJS();
+		if (options && !privateKey) {
+			dispatch(setField('privateKey', active.privateKey));
 			dispatch(openModal(MODAL_DETAILS));
 		}
 
