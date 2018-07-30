@@ -60,7 +60,7 @@ const DEFAULT_FORM_FIELDS = {
 		currency: null,
 		fee: {
 			value: '',
-			currency: null,
+			asset: null,
 			error: null,
 		},
 		comment: {
@@ -89,8 +89,12 @@ export default createModule({
 
 		setIn: {
 			reducer: (state, { payload }) => {
-				const form = _.cloneDeep(state.get(payload.form));
-				state = state.set(payload.form, form.merge(payload.params));
+				const field = state.getIn([payload.form, payload.field]);
+
+				state = state.setIn([payload.form, payload.field], {
+					...field,
+					...payload.params,
+				});
 
 				return state;
 			},

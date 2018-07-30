@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
 
+import formatAmount from '../../helpers/HistoryHelper';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { setValue, setFormValue } from '../../actions/FormActions';
-import formatAmount from '../../helpers/HistoryHelper';
 
 class AmountField extends React.Component {
 
@@ -18,11 +18,23 @@ class AmountField extends React.Component {
 	}
 
 	setAvailableAmount(currency) {
-		this.props.setFormValue('amount', currency.balance / (10 ** currency.precision));
+		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
 	setCurrency(currency) {
 		this.props.setValue('currency', currency);
+	}
+
+	getAvailableAmount(currency) {
+		if (!currency) {
+			return 0;
+		}
+
+		if (this.props.fee.asset && this.props.fee.asset.id !== currency.id) {
+			return currency.balance;
+		}
+
+		return currency.balance - this.props.fee.value;
 	}
 
 	renderList(type) {
@@ -55,9 +67,7 @@ class AmountField extends React.Component {
 						<li>
 							Available Balance:
 							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
-								{ currency ?
-									formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO'
-								}
+								{ currency ? formatAmount(this.getAvailableAmount(currency), currency.precision, currency.symbol) : '0 ECHO' }
 							</span>
 						</li>
 					</ul>
@@ -80,10 +90,11 @@ class AmountField extends React.Component {
 }
 
 AmountField.propTypes = {
-	currency: PropTypes.any,
+	currency: PropTypes.object,
 	assets: PropTypes.any.isRequired,
 	tokens: PropTypes.any.isRequired,
-	amount: PropTypes.any.isRequired,
+	amount: PropTypes.object.isRequired,
+	fee: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 };
@@ -98,6 +109,7 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
+		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
 	}),
 	(dispatch) => ({
 		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),

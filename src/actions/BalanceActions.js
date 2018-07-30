@@ -32,13 +32,9 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	if (Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
-			const balance = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
-			const tempAsset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
-			return {
-				balance: balance.balance,
-				precision: tempAsset.precision,
-				symbol: tempAsset.symbol,
-			};
+			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
+			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
+			return { balance: stats.balance, ...asset };
 		});
 
 		balances = await Promise.all(balances);
