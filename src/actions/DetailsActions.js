@@ -5,14 +5,6 @@ import { setFormValue } from '../actions/FormActions';
 
 const formatDetails = (options) => {
 	const result = {};
-	/*
-		TODO add fee from Transaction Builder object or somewhere
-		const tr = new TransactionBuilder();
-		...
-		await tr.set_required_fees()
- 		const fee_asset = tr.operations[0][1].fee.asset_id
- 		const fee_amount = tr.operations[0][1].fee.amount
-	*/
 	const operationNumber = operations[options.operation].value;
 	switch (operationNumber) {
 		case operations.contract.value: {
