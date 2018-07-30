@@ -4,7 +4,7 @@ import formReducer from './FormReducer';
 import keyChainReducer from './KeyChainReducer';
 import tableReducer from './TableReducer';
 import balanceReducer from './BalanceReducer';
-import buildTransactionReducer from './BuildTransactionReducer';
+import transactionReducer from './TransactionReducer';
 
 export default {
 	modal: modalReducer.reducer,
@@ -13,5 +13,5 @@ export default {
 	keychain: keyChainReducer.reducer,
 	table: tableReducer.reducer,
 	balance: balanceReducer.reducer,
-	buildtransaction: buildTransactionReducer.reducer,
+	transaction: transactionReducer.reducer,
 };

@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { closeModal } from '../../../actions/ModalActions';
-import { resetTransactionValues } from '../../../actions/TransactionBuilderActions';
 import { clearForm } from '../../../actions/FormActions';
 import { setDetailsForm } from '../../../actions/DetailsActions';
-import { makeRequest } from '../../../actions/ContractAction';
+import { makeRequest, resetTransactionValues } from '../../../actions/TransactionActions';
 
 import { MODAL_DETAILS } from './../../../constants/ModalConstants';
 import { FORM_TRANSACTION_DETAILS } from './../../../constants/FormConstants';
@@ -131,8 +130,8 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_DETAILS, 'show']),
 		formatedOptions: state.form.get(FORM_TRANSACTION_DETAILS).toJS(),
-		onBuild: state.buildtransaction.get('onBuild'),
-		options: state.buildtransaction,
+		onBuild: state.transaction.get('onBuild'),
+		options: state.transaction,
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_DETAILS)),

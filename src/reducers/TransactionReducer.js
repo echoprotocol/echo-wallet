@@ -9,7 +9,7 @@ const DEFAULT_FIELDS = Map({
 });
 
 export default createModule({
-	name: 'buildtransaction',
+	name: 'transaction',
 	initialState: DEFAULT_FIELDS,
 	transformations: {
 		set: {

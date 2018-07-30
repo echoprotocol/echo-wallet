@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
-import { createContract } from '../../actions/ContractAction';
+import { createContract } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {

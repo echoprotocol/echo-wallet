@@ -5,7 +5,7 @@ import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from '
 import { closeModal, openModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
-import { setTransactionValue } from './TransactionBuilderActions';
+import { setTransactionValue } from './TransactionActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
