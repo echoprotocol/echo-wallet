@@ -34,9 +34,8 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		code: bytecode,
 	};
 
-
 	dispatch(setTransactionValue('transaction', new Map(options)));
-	dispatch(setTransactionValue('operation', 'create_contract'));
+	dispatch(setTransactionValue('operation', 'contract'));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
@@ -54,4 +53,5 @@ export const makeRequest = (details) => (dispatch) => {
 	buildAndMakeRequest(operation, transaction, privateKey);
 	dispatch(closeModal(MODAL_DETAILS));
 	dispatch(clearForm(FORM_TRANSACTION_DETAILS));
+	dispatch(resetTransactionValues());
 };

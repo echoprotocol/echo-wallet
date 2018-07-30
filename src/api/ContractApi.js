@@ -2,6 +2,10 @@ import { Apis } from 'echojs-ws';
 import { TransactionBuilder } from 'echojs-lib';
 import { keccak256 } from 'js-sha3';
 
+import history from '../history';
+
+import { INDEX_PATH } from '../constants/RouterConstants';
+
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
 const getContractProp = (contract, account, method) => Apis.instance().dbApi().exec(
@@ -29,14 +33,22 @@ export const getToken = async (accountId, contractId) => {
 export const buildAndMakeRequest = async (operation, options, privateKey = null) => {
 	const tr = new TransactionBuilder();
 
-	tr.add_type_operation('contract', options);
+	tr.add_type_operation(operation, options);
 	await tr.set_required_fees();
 	await tr.finalize();
 	if (privateKey) {
 		tr.add_signer(privateKey);
 		tr.sign();
 	}
-	console.log(await tr.broadcast(() => {
-		console.log('brodcust done!!!!');
-	}));
+	const error = await tr.broadcast(() => {
+		history.push(INDEX_PATH);
+
+		// TODO call notification action
+	});
+
+	if (error) {
+		// TODO call notification action with error.message
+	}
+
 };
+

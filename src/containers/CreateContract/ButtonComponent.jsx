@@ -24,7 +24,7 @@ class ButtonComponent extends React.Component {
 	}
 
 	isDisabledSubmit() {
-		const { bytecode, accepted } = this.props;
+		const { bytecode } = this.props;
 
 		return (!bytecode.value || bytecode.error);
 	}
@@ -56,7 +56,6 @@ class ButtonComponent extends React.Component {
 }
 
 ButtonComponent.propTypes = {
-	accepted: PropTypes.bool,
 	loading: PropTypes.bool,
 	bytecode: PropTypes.object.isRequired,
 	createContract: PropTypes.func.isRequired,
@@ -64,14 +63,12 @@ ButtonComponent.propTypes = {
 };
 
 ButtonComponent.defaultProps = {
-	accepted: false,
 	loading: false,
 };
 
 
 export default connect(
 	(state) => ({
-		accepted: state.form.getIn([FORM_CREATE_CONTRACT, 'accepted']),
 		loading: state.form.getIn([FORM_CREATE_CONTRACT, 'loading']),
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
 	}),

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Accordion, Menu, Sidebar } from 'semantic-ui-react';
+import { Accordion, Menu, Sidebar, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
+
+import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -73,9 +75,8 @@ class SidebarMenu extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to="/">
-									<span className="icon icon-menu_4" />
-                                    Voting
+								<Link className="sidebar-nav-link" to={CREATE_CONTRACT_PATH}>
+									<Button content="Create account" size="tiny" color="grey" />
 								</Link>
 							</li>
 						</ul>

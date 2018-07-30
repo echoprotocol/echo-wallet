@@ -40,8 +40,6 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e, true)}
 					/>
 				</Form.Field>
-				{/* <div className="form-panel"> */}
-				{/* </div> */}
 			</div>
 		);
 	}

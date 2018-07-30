@@ -26,10 +26,10 @@ class ModalDetails extends React.Component {
 		const { formatedOptions: currentFormatOption } = this.props;
 		const { formatedOptions: nextFormatOption } = nextProps;
 
-		if (currentOptions !== nextOptions) {
+		if (nextOptions && (currentOptions !== nextOptions)) {
 			this.props.transformOptions(nextProps.options);
 			return true;
-		} else if (nextFormatOption !== currentFormatOption) {
+		} else if (nextFormatOption && (nextFormatOption !== currentFormatOption)) {
 			return true;
 		} else if (nextProps.show) {
 			return true;
@@ -48,8 +48,6 @@ class ModalDetails extends React.Component {
 			this.onClose();
 		} else {
 			this.props.makeRequest(this.props.options);
-			this.props.closeModal();
-			this.props.clearForm();
 		}
 	}
 
