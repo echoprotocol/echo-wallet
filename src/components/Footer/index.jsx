@@ -10,7 +10,7 @@ class Footer extends React.PureComponent {
 		const connected = (
 			<div className="footer">
 				<ul>
-					<li>Echo.171205</li>
+					<li>Echo.0.1.0</li>
 					<li className="pipeline">
                         Latency
 						<span className="pipeline-latency"> {this.props.latency} ms </span>
