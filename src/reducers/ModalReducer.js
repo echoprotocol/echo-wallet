@@ -2,7 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS } from './../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS, MODAL_WATCH_LIST } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
 	show: false,
@@ -10,7 +10,21 @@ const DEFAULT_FIELDS = Map({
 
 const DEFAULT_MODAL_FIELDS = {
 	[MODAL_TOKENS]: Map({
-		address: '',
+		address: {
+			value: '',
+			error: null,
+		},
+		error: null,
+	}),
+	[MODAL_WATCH_LIST]: Map({
+		address: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
 		error: null,
 	}),
 };
@@ -26,23 +40,51 @@ export default createModule({
 		}),
 		[MODAL_DETAILS]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_TOKENS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_TOKENS]),
+		[MODAL_WATCH_LIST]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_WATCH_LIST]),
 	}),
 	transformations: {
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
+
 				return state;
 			},
 		},
 		close: {
 			reducer: (state, { payload }) => {
-				state = state.set(payload.type, DEFAULT_MODAL_FIELDS[payload.type]);
+				const initialState = _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[payload.type]);
+				state = state.set(payload.type, initialState);
 				return state;
 			},
 		},
-		setParam: {
+		setParamValue: {
 			reducer: (state, { payload }) => {
-				state = state.setIn([payload.type, payload.param], payload.value);
+				state = state.setIn([payload.type, 'error'], null);
+
+				const param = state.getIn([payload.type, payload.param]);
+
+				state = state.setIn([payload.type, payload.param], Object.assign({}, param, {
+					value: payload.value,
+					error: null,
+				}));
+				return state;
+			},
+		},
+		setParamError: {
+			reducer: (state, { payload }) => {
+				const param = state.getIn([payload.type, payload.param]);
+
+				state = state.setIn([payload.type, payload.param], Object.assign({}, param, {
+					value: param.value,
+					error: payload.error,
+				}));
+
+				return state;
+			},
+		},
+		setError: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.type, 'error'], payload.error);
 				return state;
 			},
 		},

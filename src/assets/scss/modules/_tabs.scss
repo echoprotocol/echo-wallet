@@ -1,0 +1,41 @@
+.tub-full {
+    background-color: rgb(247, 247, 247);
+    .ui.tabular.menu {
+        border: 0;
+        max-width: 860px;
+        padding: 0 20px;
+        margin: auto;
+        .item {
+            border: 0;
+            background-color: rgb(222, 222, 222);
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
+            font-size: .75rem;
+            font-weight: 600;
+            line-height: 0px;
+            margin: 0 0 -3px;
+            color: $gray;
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+            &.active {
+                color: $orange;
+                line-height: 0px;
+                border-top-right-radius: 8px;
+                border-top-left-radius: 8px;
+                background-color: #fff;
+            }
+        }
+
+    }
+    .ui.tab {
+        background-color: #fff;
+        border: 0;
+    }
+    .tab-content {
+        max-width: 860px;
+        margin: auto;
+        padding: 25px 20px; 
+        overflow: auto;
+    }
+}

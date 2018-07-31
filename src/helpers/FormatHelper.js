@@ -21,4 +21,4 @@ export const getTransactionDetails = (operationType, options) => {
 	return result;
 };
 
-export default {};
+export const getContractId = (address) => parseInt(address.substr(-32), 16);

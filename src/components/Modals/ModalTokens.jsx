@@ -20,11 +20,11 @@ class ModalTokens extends React.Component {
 	}
 
 	onClick() {
-		this.props.addToken(this.props.address.trim());
+		this.props.addToken(this.props.address.value.trim());
 	}
 
 	render() {
-		const { show, address, error } = this.props;
+		const { show, address } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -46,16 +46,16 @@ class ModalTokens extends React.Component {
 							<div className="field-wrap">
 								<Form.Field>
 									<label htmlFor="tokens">Token name</label>
-									<div className={classnames({ error })}>
+									<div className={classnames({ error: address.error })}>
 										<input
 											type="text"
 											placeholder="Contract Address"
 											name="address"
 											className="ui input"
-											value={address}
+											value={address.value}
 											onInput={(e) => this.onInput(e)}
 										/>
-										<span className="error-message">{error}</span>
+										<span className="error-message">{address.error}</span>
 									</div>
 								</Form.Field>
 							</div>
@@ -71,8 +71,7 @@ class ModalTokens extends React.Component {
 
 ModalTokens.propTypes = {
 	show: PropTypes.bool,
-	address: PropTypes.string,
-	error: PropTypes.any,
+	address: PropTypes.object.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	setParamValue: PropTypes.func.isRequired,
 	addToken: PropTypes.func.isRequired,
@@ -80,8 +79,6 @@ ModalTokens.propTypes = {
 
 ModalTokens.defaultProps = {
 	show: false,
-	address: '',
-	error: null,
 };
 
 export default connect(

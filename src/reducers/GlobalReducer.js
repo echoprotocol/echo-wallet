@@ -12,6 +12,7 @@ export default createModule({
 			name: '',
 		}),
 		visibleBar: false,
+		contracts: new Map({}),
 	}),
 	transformations: {
 		setGlobalLoading: {
@@ -43,11 +44,19 @@ export default createModule({
 				return state;
 			},
 		},
+
 		toggleBar: {
 			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
 		},
 		hideBar: {
 			reducer: (state) => state.set('visibleBar', false),
+		},
+		push: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.field, payload.param], payload.value);
+
+				return state;
+			},
 		},
 	},
 });

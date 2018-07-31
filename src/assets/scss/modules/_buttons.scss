@@ -39,3 +39,10 @@ $stripe-width: 10px;
 
     }
 }
+
+.btn-list {
+    padding: 20px;
+    .ui.button {
+        margin: 0 10px 0 0;
+    }
+}

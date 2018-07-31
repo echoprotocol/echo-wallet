@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
-import { TRANSFER_PATH } from '../../constants/RouterConstants';
+import { TRANSFER_PATH, BALANCES_PATH } from '../../constants/RouterConstants';
 
 import formatAmount from '../../helpers/HistoryHelper';
 
@@ -39,13 +40,13 @@ class Header extends React.Component {
 				<div className="panel-right">
 					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>
 					<div className="user-section">
-						<div className="balance">
+						<Link className="balance" to={BALANCES_PATH}>
 							<span>
 								{
 									this.props.assets && this.props.assets.size ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
 								}
 							</span>
-						</div>
+						</Link>
 						<Dropdown text={localStorage.getItem('current_account')} disabled>
 							{/* <Dropdown.Menu>
 								<Dropdown.Item>
