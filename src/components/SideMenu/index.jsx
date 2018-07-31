@@ -5,9 +5,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
-import { openModal } from '../../actions/ModalActions';
 
-import { MODAL_UNLOCK } from '../../constants/ModalConstants';
+import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -39,10 +38,6 @@ class SidebarMenu extends React.Component {
 		const { activeIndex } = this.state;
 		const newIndex = activeIndex === index ? -1 : index;
 		this.setState({ activeIndex: newIndex });
-	}
-
-	lockAccount() {
-		this.props.openModal(MODAL_UNLOCK);
 	}
 
 	render() {
@@ -80,15 +75,9 @@ class SidebarMenu extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to="/">
-									<span className="icon icon-menu_4" />
-                                    Voting
+								<Link className="sidebar-nav-link" to={CREATE_CONTRACT_PATH}>
+									<Button content="Create account" size="tiny" color="grey" />
 								</Link>
-							</li>
-							<li>
-								<div className="sidebar-nav-link">
-									<Button content="Unlock" size="tiny" color="grey" onClick={() => this.lockAccount()} />
-								</div>
 							</li>
 						</ul>
 					</div>
@@ -114,7 +103,6 @@ SidebarMenu.propTypes = {
 	accountName: PropTypes.string,
 	onToggleSidebar: PropTypes.func.isRequired,
 	logout: PropTypes.func.isRequired,
-	openModal: PropTypes.func.isRequired,
 };
 
 SidebarMenu.defaultProps = {
@@ -128,6 +116,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
-		openModal: (value) => dispatch(openModal(value)),
 	}),
 )(SidebarMenu);

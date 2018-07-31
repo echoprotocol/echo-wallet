@@ -37,7 +37,7 @@
 
 .ui.form .field {
   clear: both;
-  margin: 0em 0em 1em;
+  margin: 0em 0em 1.5em;
 }
 .ui.form .field:last-child,
 .ui.form .fields:last-child .field {
@@ -53,7 +53,8 @@
 ---------------------*/
 
 .ui.form .field > label {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   margin: 0em 0em 0.28571429rem 0em;
   color: $gray;
   font-size: 0.75857143em;
@@ -108,7 +109,7 @@
   padding: 0.67857143em 1em;
   font-size: 1em;
   background: #FFFFFF;
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  border: 1px solid $bd-gray;
   color: rgba(0, 0, 0, 0.87);
   border-radius: 0.28571429rem;
   -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
@@ -134,7 +135,7 @@
   transition: color 0.1s ease, border-color 0.1s ease;
   font-size: 1em;
   line-height: 1.2857;
-  resize: vertical;
+  resize: none;
 }
 .ui.form textarea:not([rows]) {
   height: 12em;
@@ -331,26 +332,6 @@
 .ui.form :focus::-moz-placeholder {
   color: rgba(115, 115, 115, 0.87);
 }
-
-/* Error Placeholder */
-// .ui.form .error ::-webkit-input-placeholder {
-//   color: #e7bdbc;
-// }
-// .ui.form .error :-ms-input-placeholder {
-//   color: #e7bdbc !important;
-// }
-// .ui.form .error ::-moz-placeholder {
-//   color: #e7bdbc;
-// }
-// .ui.form .error :focus::-webkit-input-placeholder {
-//   color: #da9796;
-// }
-// .ui.form .error :focus:-ms-input-placeholder {
-//   color: #da9796 !important;
-// }
-// .ui.form .error :focus::-moz-placeholder {
-//   color: #da9796;
-// }
 
 /*--------------------
         Focus
@@ -589,16 +570,11 @@
        Disabled
 ---------------------*/
 
-.ui.form .disabled.fields .field,
-.ui.form .disabled.field,
 .ui.form .field :disabled {
-  pointer-events: none;
-  opacity: 0.45;
+    opacity: 1;
+    background-color: rgba($bg-gray,.5);
 }
-.ui.form .field.disabled > label,
-.ui.form .fields.disabled > label {
-  opacity: 0.45;
-}
+
 .ui.form .field.disabled :disabled {
   opacity: 1;
 }
