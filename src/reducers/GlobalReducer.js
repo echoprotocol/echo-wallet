@@ -11,6 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
+		visibleBar: false,
 		contracts: new Map({}),
 	}),
 	transformations: {
@@ -42,6 +43,13 @@ export default createModule({
 
 				return state;
 			},
+		},
+
+		toggleBar: {
+			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
+		},
+		hideBar: {
+			reducer: (state) => state.set('visibleBar', false),
 		},
 		push: {
 			reducer: (state, { payload }) => {

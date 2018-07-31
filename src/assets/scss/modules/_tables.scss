@@ -37,7 +37,7 @@ $thead-height: 46px;
     th, td {
        min-width: 10vw;
         &:first-child {
-            min-width: 21vw;
+            min-width: calc(21vw - 30px);
             padding-left:  0.92857143em;
         }
         &:nth-child(2),
@@ -49,7 +49,7 @@ $thead-height: 46px;
             min-width: 13vw;
         }
         &:nth-child(5) {
-            min-width: 18vw;
+            min-width: calc(18vw - 30px);
             .ellips {
                 max-width: 16.5vw;
             }
@@ -91,6 +91,9 @@ $thead-height: 46px;
                         color:#fff9b5;
                     }
                     &:nth-child(5),
+                    &:nth-child(6) {
+                        color: #fff;
+                    }
                     &:last-child,
                     .success,
                     .fall {

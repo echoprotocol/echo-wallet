@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Form, Segment, Sidebar } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
 import SidebarMenu from '../../components/SideMenu/index';
 import FormComponent from './FormComponent';
+import { hideBar } from '../../actions/GlobalActions';
 
 class Transfer extends React.Component {
 
@@ -28,8 +31,11 @@ class Transfer extends React.Component {
 
 		return (
 			<Sidebar.Pushable as={Segment}>
-				<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
-				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
+				<SidebarMenu />
+				<Sidebar.Pusher
+					dimmed={this.props.visibleBar}
+					onClick={() => this.props.hideBar()}
+				>
 					<Segment basic className="wrapper">
 						<Header onToggleSidebar={this.toggleSidebar} />
 						<div className="content center-mode ">
@@ -46,4 +52,16 @@ class Transfer extends React.Component {
 
 }
 
-export default Transfer;
+Transfer.propTypes = {
+	visibleBar: PropTypes.bool.isRequired,
+	hideBar: PropTypes.func.isRequired,
+};
+
+export default connect(
+	(state) => ({
+		visibleBar: state.global.get('visibleBar'),
+	}),
+	(dispatch) => ({
+		hideBar: () => dispatch(hideBar()),
+	}),
+)(Transfer);
