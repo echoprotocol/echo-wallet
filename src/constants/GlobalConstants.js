@@ -1,4 +1,11 @@
-import { ACTIVITY_PATH, BALANCES_PATH, TRANSFER_PATH } from './RouterConstants';
+import {
+	ACTIVITY_PATH,
+	BALANCES_PATH,
+	TRANSFER_PATH,
+	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
+	VIEW_CONTRACTS_PATH,
+} from './RouterConstants';
 
 export const HEADER_TITLE = [
 	{
@@ -12,6 +19,18 @@ export const HEADER_TITLE = [
 	{
 		path: TRANSFER_PATH,
 		title: 'Send',
+	},
+	{
+		path: CREATE_CONTRACT_PATH,
+		title: 'Create Contract',
+	},
+	{
+		path: SMART_CONTRACTS_PATH,
+		title: 'Smart Contracts',
+	},
+	{
+		path: VIEW_CONTRACTS_PATH,
+		title: 'Smart Contract Details',
 	},
 ];
 

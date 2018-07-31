@@ -108,12 +108,12 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Recent Activity</span>
 								</Link>
 							</li>
-							<li>
+							{/* <li>
 								<Link className="sidebar-nav-link" to="/">
 									<span className="icon icon-menu_4" />
 									<span className="sidebar-nav-text">Voting</span>
 								</Link>
-							</li>
+							</li> */}
 
 						</ul>
 					</div>
