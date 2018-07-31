@@ -24,7 +24,6 @@ export const initBalances = (accountId) => async (dispatch) => {
 	 */
 	const tokens = localStorage.getItem('tokens');
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
-	console.log(1);
 
 	// const contractResult = (await getContractConstant('1.17.43')).exec_res.new_address;
 	// console.log(contractResult);

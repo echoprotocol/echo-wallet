@@ -180,5 +180,12 @@ export default createModule({
 				return state;
 			},
 		},
+		setInside: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.form].concat(payload.fields), payload.value);
+
+				return state;
+			},
+		},
 	},
 });

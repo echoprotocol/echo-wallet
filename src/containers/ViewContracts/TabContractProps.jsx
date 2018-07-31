@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { keccak256 } from 'js-sha3';
 
 import formatAbi from '../../actions/AbiActions';
 
@@ -12,34 +11,52 @@ import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
 class TabContractProps extends React.Component {
 
-	render() {
+	componentWillMount() {
+		const contract = localStorage.getItem('contract');
+		this.props.formatAbi(contract, true);
+	}
 
-		console.log(this.getHash('balanceOf(address)'));
+	render() {
+		const constants = [
+			{
+				constant: true,
+				inputs: [],
+				name: 'name',
+				outputs: [
+					{
+						name: '',
+						type: 'string',
+					},
+				],
+				payable: false,
+				type: 'function',
+			},
+		];
 
 		return (
 			<div className="tab-content">
 				<Button icon="trash" content="remove from watchlist" />
 				<div className="watchlist">
-					{/* { */}
-					{/* this.props.constants.map((constant, i) => { */}
-					{/* const id = i; */}
-					{/* return ( */}
-					{/* <div className="watchlist-line" key={id}> */}
-					{/* <div className="watchlist-row"> */}
-					{/* <span className="order">{id}. </span> */}
-					{/* <span className="arrow"> {'>'} </span> */}
-					{/* <span className="row-title"> {constant.name} </span> */}
-					{/* <span className="arrow"> → </span> */}
+					{
+						constants.map((constant, i) => {
+							const id = i;
+							return (
+								<div className="watchlist-line" key={id}>
+									<div className="watchlist-row">
+										<span className="order">{id}. </span>
+										<span className="arrow"> {'>'} </span>
+										<span className="row-title"> {constant.name} </span>
+										<span className="arrow"> → </span>
 
-					{/* <span className="value"> */}
-					{/* 123 */}
-					{/* </span> */}
-					{/* <span className="type"> bytes32 </span> */}
-					{/* </div> */}
-					{/* </div> */}
-					{/* ); */}
-					{/* }) */}
-					{/* } */}
+										<span className="value">
+											123
+										</span>
+										<span className="type"> bytes32 </span>
+									</div>
+								</div>
+							);
+						})
+					}
 					<div className="watchlist-line">
 						<div className="watchlist-row">
 							<span className="order">1. </span>
@@ -181,6 +198,6 @@ export default connect(
 		constants: state.form.getIn([FORM_CONTRACT_CONSTANT, 'constants']),
 	}),
 	(dispatch) => ({
-		formatAbi: (id) => dispatch(formatAbi(id)),
+		formatAbi: (id, isConst) => dispatch(formatAbi(id, isConst)),
 	}),
 )(TabContractProps);
