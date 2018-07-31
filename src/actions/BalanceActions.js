@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
-import { getBalance } from '../api/ContractApi';
+import { getBalance, getConstant, getContractConstant } from '../api/ContractApi';
 import BalanceReducer from '../reducers/BalanceReducer';
 
 export const initBalances = (accountId) => async (dispatch) => {
@@ -14,6 +14,13 @@ export const initBalances = (accountId) => async (dispatch) => {
 	 */
 	const tokens = localStorage.getItem('tokens');
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
+	console.log(1);
+
+	const contractResult = (await getContractConstant('1.17.43')).exec_res.new_address;
+	console.log(contractResult);
+	console.log(`1.17.${parseInt(contractResult, 16)}`);
+	// const constant = await getConstant('1.17.43', accountId);
+	// console.log(constant);
 
 	if (tokens && tokens[accountId]) {
 		let balances = Object.keys(tokens[accountId]).map(async (tokenName) => {

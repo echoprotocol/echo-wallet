@@ -8,9 +8,28 @@ const getContractProp = (contract, account, method) => Apis.instance().dbApi().e
 	[contract, account, '1.3.0', method],
 );
 
+const getContractResult = (contract) => Apis.instance().dbApi().exec(
+	'get_contract_result',
+	[contract],
+);
+
 const getHash = (str) => keccak256(str);
 //	end
 
+
+export const getConstant = async (contractId, accountId) => {
+
+	const result = await getContractProp(contractId, accountId, getHash('name').substr(0, 8));
+
+	return result;
+};
+
+export const getContractConstant = async (contractId) => {
+
+	const result = await getContractResult(contractId);
+
+	return result;
+};
 
 export const getBalance = async (accountId, contractId) => {
 

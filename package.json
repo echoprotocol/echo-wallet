@@ -12,14 +12,15 @@
         "package-linux": "electron-packager ./dist Echo --platform linux --arch amd64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/Echo-linux-amd64/ --dest dist/installers/ --arch amd64"
     },
     "dependencies": {
+        "abi-decoder": "^1.1.0",
         "accounting": "^0.4.1",
         "autoprefixer": "^8.1.0",
         "babel-polyfill": "^6.26.0",
         "classnames": "^2.2.6",
         "config": "^1.31.0",
-        "echojs-ws": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-ws.git",
         "echojs-lib": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-lib.git",
         "echojs-redux": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-redux.git",
+        "echojs-ws": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-ws.git",
         "file-loader": "^1.1.11",
         "history": "^4.7.2",
         "immutable": "^3.8.2",

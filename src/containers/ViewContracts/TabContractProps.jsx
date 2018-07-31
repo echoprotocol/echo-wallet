@@ -1,15 +1,52 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Input } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { keccak256 } from 'js-sha3';
+
+import formatAbi from '../../actions/AbiActions';
+
 // import InputRequest from './InputComponent';
+
+import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
 class TabContractProps extends React.Component {
 
+// 1.17.40
+	// componentWillMount() {
+	// 	const contractId = localStorage.getItem('contractId');
+	// 	this.props.formatAbi(contractId, true);
+	// }
+	getHash(str) { return keccak256(str); }
+
 	render() {
+
+		console.log(this.getHash('balanceOf(address)'));
+
 		return (
 			<div className="tab-content">
 				<Button icon="trash" content="remove from watchlist" />
 				<div className="watchlist">
+					{/* { */}
+					{/* this.props.constants.map((constant, i) => { */}
+					{/* const id = i; */}
+					{/* return ( */}
+					{/* <div className="watchlist-line" key={id}> */}
+					{/* <div className="watchlist-row"> */}
+					{/* <span className="order">{id}. </span> */}
+					{/* <span className="arrow"> {'>'} </span> */}
+					{/* <span className="row-title"> {constant.name} </span> */}
+					{/* <span className="arrow"> → </span> */}
+
+					{/* <span className="value"> */}
+					{/* 123 */}
+					{/* </span> */}
+					{/* <span className="type"> bytes32 </span> */}
+					{/* </div> */}
+					{/* </div> */}
+					{/* ); */}
+					{/* }) */}
+					{/* } */}
 					<div className="watchlist-line">
 						<div className="watchlist-row">
 							<span className="order">1. </span>
@@ -137,4 +174,20 @@ class TabContractProps extends React.Component {
 
 }
 
-export default connect()(TabContractProps);
+TabContractProps.propTypes = {
+	constants: PropTypes.any,
+	formatAbi: PropTypes.func.isRequired,
+};
+
+TabContractProps.defaultProps = {
+	constants: '',
+};
+
+export default connect(
+	(state) => ({
+		constants: state.form.getIn([FORM_CONTRACT_CONSTANT, 'constants']),
+	}),
+	(dispatch) => ({
+		formatAbi: (id) => dispatch(formatAbi(id)),
+	}),
+)(TabContractProps);

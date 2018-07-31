@@ -48,10 +48,10 @@ const DEFAULT_FORM_FIELDS = {
 		},
 	}),
 	[FORM_CONTRACT_CONSTANT]: Map({
-		constant: List(),
+		constants: List(),
 	}),
 	[FORM_CONTRACT_FUNCTION]: Map({
-		constant: List(),
+		functions: List(),
 	}),
 };
 
