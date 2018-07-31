@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Menu, Sidebar, Button } from 'semantic-ui-react';
+import {Accordion, Button, Menu, Sidebar} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,16 +7,21 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/GlobalActions';
 
 import { MODAL_UNLOCK, MODAL_WATCH_LIST } from '../../constants/ModalConstants';
-import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 import { openModal } from '../../actions/ModalActions';
+import {
+	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
+	TRANSFER_PATH,
+	ACTIVITY_PATH,
+} from '../../constants/RouterConstants';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
-		<Link className="sidebar-nav-sublink" to="/">Create Smart Contract</Link>
+		<Link className="sidebar-nav-sublink" to={CREATE_CONTRACT_PATH}>Create Smart Contract</Link>
 	</div>,
 	<div key="1" className="accordeon-item">
-		<Link className="sidebar-nav-sublink" to="/">View Smart Contracts</Link>
+		<Link className="sidebar-nav-sublink" to={SMART_CONTRACTS_PATH}>View Smart Contracts</Link>
 	</div>,
 	<div key="2" className="accordeon-item">
 		<Link className="sidebar-nav-sublink" to="/">Added Smart Contracts</Link>
@@ -49,6 +54,7 @@ class SidebarMenu extends React.Component {
 	showWatchList() {
 		this.props.openModal(MODAL_WATCH_LIST);
 	}
+
 	render() {
 		const { activeIndex } = this.state;
 		return (
@@ -63,7 +69,7 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
 							<li>
-								<Link className="sidebar-nav-link" to="/">
+								<Link className="sidebar-nav-link" to={TRANSFER_PATH}>
 									<span className="icon icon-menu_1" />
                                     Create Payment
 								</Link>
@@ -78,7 +84,7 @@ class SidebarMenu extends React.Component {
 								<Accordion.Content active={activeIndex === 1} content={smartContracts} />
 							</Accordion>
 							<li>
-								<Link className="sidebar-nav-link" to="/activity" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar}>
+								<Link className="sidebar-nav-link" to={ACTIVITY_PATH} onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar}>
 									<span className="icon icon-menu_3" />
                                     Recent Activity
 								</Link>

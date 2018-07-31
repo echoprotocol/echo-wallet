@@ -13,7 +13,8 @@ const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 
 	// const abi = getState().global.getIn(['activeUser', 'contracts', contractId]);
 	const abi = erc20abi;
-	const accountId = getState().global.getIn(['activeUser', 'id']);
+	// const accountId = getState().global.getIn(['activeUser', 'id']);
+	const accountId = '1.2.20';
 
 	if (isConst) {
 		let constants = abi.filter((value) => value.constant && value.name);
@@ -32,6 +33,8 @@ const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 				configurable: true,
 			});
 		});
+		constants = await Promise.all(constants);
+		console.log(constants);
 		dispatch(setValue(FORM_CONTRACT_CONSTANT, 'constants', new List(constants)));
 	} else {
 		const functions = abi.filter((value) => !value.constant && value.name);

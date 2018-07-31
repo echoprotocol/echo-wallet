@@ -20,8 +20,8 @@
   outline: none;
   border: none;
   vertical-align: baseline;
-  background: rgb(174, 180, 192) none;
-  color: rgba(255, 255, 255, 1);
+  background: $gray none;
+  color: #fff;
   font-family: $font-family;
   margin: 0em 0.25em 0em 0em;
   padding: 0.78571429em 1.5em 0.78571429em;
@@ -3680,4 +3680,3 @@
 /*******************************
          Site Overrides
 *******************************/
-

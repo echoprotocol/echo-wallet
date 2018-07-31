@@ -5,11 +5,11 @@ import {
 	SIGN_UP_PATH,
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
-	SMART_CONTRACTS_PATH,
-	VIEW_CONTRACTS_PATH,
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
+	VIEW_CONTRACTS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -31,11 +31,11 @@ export default class Routes extends React.Component {
 					<Route exact path={ACTIVITY_PATH} component={Activity} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
-					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
-					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
 					<Route exact path={BALANCES_PATH} component={Balances} />
 					<Route exact path={TRANSFER_PATH} component={Transfer} />
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
+					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
+					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
 				</div>
 			</App>
 		);

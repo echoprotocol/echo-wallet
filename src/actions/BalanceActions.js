@@ -4,12 +4,12 @@ import { EchoJSActions } from 'echojs-redux';
 import {
 	getContractId,
 	getTokenBalance,
-	getTokenContract,
+	getContract,
 	getTokenSymbol,
 } from '../api/ContractApi';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
-import { setParamValue, closeModal } from './ModalActions';
+import { setError, setParamError, closeModal } from './ModalActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -22,7 +22,9 @@ export const initBalances = (accountId) => async (dispatch) => {
 	 *  	}
 	 *  }
 	 */
-	const tokens = localStorage.getItem('tokens');
+	let tokens = localStorage.getItem('tokens');
+	tokens = tokens ? JSON.parse(tokens) : {};
+
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
 	// const contractResult = (await getContractConstant('1.17.43')).exec_res.new_address;
@@ -68,29 +70,29 @@ export const addToken = (address) => async (dispatch, getState) => {
 	const contractId = `1.16.${getContractId(address)}`;
 
 	try {
-		const contract = await getTokenContract(instance, contractId);
+		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
-			dispatch(setParamValue(MODAL_TOKENS, 'error', 'Invalid contract address'));
+			dispatch(setParamError(MODAL_TOKENS, 'address', 'Invalid contract address'));
 			return;
 		}
 
 		const symbol = await getTokenSymbol(instance, accountId, contractId);
 
 		if (!symbol) {
-			dispatch(setParamValue(MODAL_TOKENS, 'error', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'address', 'Invalid token contract'));
 			return;
 		}
 
 		let tokens = localStorage.getItem('tokens');
+		tokens = tokens ? JSON.parse(tokens) : {};
 
-		if (!tokens) {
-			tokens = {};
+		if (!tokens[accountId]) {
 			tokens[accountId] = {};
 		}
 
 		tokens[accountId][symbol] = contractId;
-		localStorage.setItem('tokens', tokens);
+		localStorage.setItem('tokens', JSON.stringify(tokens));
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
 		const precision = 18; // TODO get precision
@@ -101,7 +103,7 @@ export const addToken = (address) => async (dispatch, getState) => {
 
 		dispatch(closeModal(MODAL_TOKENS));
 	} catch (err) {
-		dispatch(setParamValue(MODAL_TOKENS, 'error', err));
+		dispatch(setError(MODAL_TOKENS, 'error', err));
 	}
 
 };

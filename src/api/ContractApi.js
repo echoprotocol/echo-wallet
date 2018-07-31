@@ -12,7 +12,7 @@ const getNewAddress = (instance, contract) => instance.dbApi().exec(
 	[contract],
 );
 
-const getContract = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
+const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 
 const getHash = (str) => keccak256(str);
 
@@ -33,17 +33,18 @@ export const getTokenSymbol = (instance, accountId, contractId) => getContractPr
 	accountId,
 	getHash('symbol').substr(0, 8),
 );
-
-export const getTokenContract = (instance, contractId) => getContract(instance, contractId);
-
-export const getContractConstant = (instance, accountId, contractId, method) => getContractProp(
-	instance,
-	contractId,
-	accountId,
-	getHash(method).substr(0, 8),
-);
+export const getContractConstant = (instance, accountId, contractId, method) => {
+	console.log(accountId, contractId, method);
+	return getContractProp(
+		instance,
+		contractId,
+		accountId,
+		getHash(method).substr(0, 8),
+	);
+};
 
 export const getAddress = (instance, contractId) => getNewAddress(
 	instance,
 	contractId,
 );
+export const getContract = (instance, contractId) => getContractInfo(instance, contractId);

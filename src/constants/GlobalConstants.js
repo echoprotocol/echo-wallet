@@ -1,4 +1,4 @@
-import { ACTIVITY_PATH, BALANCES_PATH } from './RouterConstants';
+import { ACTIVITY_PATH, BALANCES_PATH, TRANSFER_PATH } from './RouterConstants';
 
 export const HEADER_TITLE = [
 	{
@@ -8,6 +8,10 @@ export const HEADER_TITLE = [
 	{
 		path: BALANCES_PATH,
 		title: 'Wallet',
+	},
+	{
+		path: TRANSFER_PATH,
+		title: 'Send',
 	},
 ];
 
