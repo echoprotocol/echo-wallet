@@ -11,7 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
-		contracts: null,
+		contracts: new Map({}),
 	}),
 	transformations: {
 		setGlobalLoading: {
@@ -39,6 +39,13 @@ export default createModule({
 				Object.keys(payload.params).forEach((field) => {
 					state = state.setIn([payload.field, field], payload.params[field]);
 				});
+
+				return state;
+			},
+		},
+		push: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.field, payload.param], payload.value);
 
 				return state;
 			},

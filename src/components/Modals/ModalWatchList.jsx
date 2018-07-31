@@ -23,7 +23,7 @@ class ModalWatchList extends React.Component {
 	onClick() {
 		const { address, abi } = this.props;
 
-		this.props.addContract(address.trim(), abi.trim());
+		this.props.addContract(address.value.trim(), abi.value.trim());
 	}
 
 	render() {
@@ -49,14 +49,14 @@ class ModalWatchList extends React.Component {
 								<Form.Field>
 									<label htmlFor="Address">Address</label>
 									<div className={classnames({ error: address.error })}>
-										<input type="text" placeholder="Contract address" name="address" className="ui input" value={address.value} />
+										<input type="text" placeholder="Contract address" name="address" className="ui input" value={address.value} onInput={(e) => this.onInput(e)} />
 										<span className="error-message">{address.error}</span>
 									</div>
 								</Form.Field>
 								<Form.Field>
 									<label htmlFor="Abi">ABI</label>
 									<div className={classnames({ error: abi.error })}>
-										<input type="text" placeholder="Contract ABI" name="abi" className="ui input" value={abi.value} />
+										<textarea type="text" placeholder="Contract ABI" name="abi" className="ui input" value={abi.value} onInput={(e) => this.onInput(e)} />
 										<span className="error-message">{abi.error}</span>
 									</div>
 								</Form.Field>
@@ -73,8 +73,8 @@ class ModalWatchList extends React.Component {
 
 ModalWatchList.propTypes = {
 	show: PropTypes.bool,
-	address: PropTypes.string,
-	abi: PropTypes.string,
+	address: PropTypes.object.isRequired,
+	abi: PropTypes.object.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	setParamValue: PropTypes.func.isRequired,
 	addContract: PropTypes.func.isRequired,
@@ -82,14 +82,13 @@ ModalWatchList.propTypes = {
 
 ModalWatchList.defaultProps = {
 	show: false,
-	address: '',
-	abi: '',
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_WATCH_LIST, 'show']),
 		address: state.modal.getIn([MODAL_WATCH_LIST, 'address']),
+		abi: state.modal.getIn([MODAL_WATCH_LIST, 'abi']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_WATCH_LIST)),

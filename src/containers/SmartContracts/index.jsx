@@ -4,6 +4,10 @@ import { Table, Segment, Sidebar, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import history from '../../history';
+
+import { getContractId } from '../../helpers/FormatHelper';
+
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
@@ -12,6 +16,7 @@ import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
 import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 import { openModal } from '../../actions/ModalActions';
+import { loadContracts } from '../../actions/ContractActions';
 
 class SmartContracts extends React.Component {
 
@@ -22,8 +27,16 @@ class SmartContracts extends React.Component {
 		this.sidebarHide = this.sidebarHide.bind(this);
 	}
 
+	componentWillMount() {
+		this.props.loadContracts();
+	}
+
 	onModal(modal) {
 		this.props.openModal(modal);
+	}
+
+	onLink(link) {
+		history.push(link);
 	}
 
 	toggleSidebar() {
@@ -36,63 +49,20 @@ class SmartContracts extends React.Component {
 		}
 	}
 
-	renderRow([address, abi], key) {
+	renderRow([address], key) {
 		return (
 			<Table.Row key={key}>
 				<Table.Cell>
 					<span className="ellips">
-						{' '}
-						1.16.124{' '}
+						{` 1.16.${getContractId(address)} `}
 					</span>
 				</Table.Cell>
 				<Table.Cell>
 					<span className="ellips">
-						{' '}
-						0x78e43503bb1474c32718d0x78e43503{' '}
+						{` ${address} `}
 					</span>
 				</Table.Cell>
 			</Table.Row>
-		);
-	}
-
-	renderTable() {
-		const { contracts } = this.props;
-
-		return (
-			<Table striped className="table-smart-contract">
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell>Contract ID</Table.HeaderCell>
-						<Table.HeaderCell>
-                            Watched Contract Address
-						</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-
-				<Table.Body>
-					{Array(10)
-						.fill()
-						.map((a, i) => {
-							const id = i;
-							return (
-								<Table.Row key={id}>
-									<Table.Cell>
-										<span className="ellips">
-											{' '}
-                                            1.16.124{' '}
-										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<span className="ellips">
-											{' '}
-                                            0x78e43503bb1474c32718d0x78e43503{' '}
-										</span>
-									</Table.Cell>
-								</Table.Row>
-							);
-						})}
-				</Table.Body>
-			</Table>
 		);
 	}
 
@@ -118,15 +88,16 @@ class SmartContracts extends React.Component {
 										<Table.Row>
 											<Table.HeaderCell>Contract ID</Table.HeaderCell>
 											<Table.HeaderCell>
-					                            Watched Contract Address
+												Watched Contract Address
 											</Table.HeaderCell>
 										</Table.Row>
 									</Table.Header>
 
 									<Table.Body>
 										{
-											contracts ?
-												Object.entries(contracts).map((contract, i) => this.renderRow(contract, i)) :
+											contracts.size ?
+												Object.entries(contracts.toJS())
+													.map((contract, i) => this.renderRow(contract, i)) :
 												<Table.Row className="msg-empty">
 													<Table.Cell>There is no contracts yet...</Table.Cell>
 												</Table.Row>
@@ -151,6 +122,7 @@ class SmartContracts extends React.Component {
 SmartContracts.propTypes = {
 	contracts: PropTypes.any,
 	openModal: PropTypes.func.isRequired,
+	loadContracts: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {
@@ -163,5 +135,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
+		loadContracts: () => dispatch(loadContracts()),
 	}),
 )(SmartContracts);
