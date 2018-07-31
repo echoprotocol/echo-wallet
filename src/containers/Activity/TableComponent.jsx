@@ -83,8 +83,8 @@ TableComponent.defaultProps = {
 };
 
 export default connect(
-	(state, ownProps) => ({
-		history: state.echojs.getIn(['data', 'accounts', ownProps.curentUserId, 'history']),
+	(state) => ({
+		history: state.echojs.getIn(['data', 'accounts', state.global.getIn(['activeUser', 'id']), 'history']),
 		accounts: state.echojs.getIn(['data', 'accounts']),
 		tableHistory: state.table.getIn([HISTORY_DATA, 'history']),
 	}),

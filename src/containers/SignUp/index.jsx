@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Form, Segment } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
-import Footer from '../../components/Footer/index';
 import FormComponent from './FormComponent';
 import CheckComponent from './CheckComponent';
 import ButtonComponent from './ButtonComponent';
@@ -22,25 +21,20 @@ class SignUp extends React.Component {
 	render() {
 
 		return (
-			<Segment basic className="wrapper">
-				<div className="content center-mode">
-					<div>
-						<Form className="user-form">
-							<div className="form-info">
-								<h3>Welcome to Echo</h3>
-							</div>
-							<FormComponent />
-							<CheckComponent />
-							<ButtonComponent />
-							<span className="sign-nav">
-								Have an account?
-								<Link className="link orange" to={SIGN_IN_PATH}> Login</Link>
-							</span>
-						</Form>
+			<div>
+				<Form className="user-form">
+					<div className="form-info">
+						<h3>Welcome to Echo</h3>
 					</div>
-				</div>
-				<Footer />
-			</Segment>
+					<FormComponent />
+					<CheckComponent />
+					<ButtonComponent />
+					<span className="sign-nav">
+						Have an account?
+						<Link className="link orange" to={SIGN_IN_PATH}> Login</Link>
+					</span>
+				</Form>
+			</div>
 		);
 	}
 

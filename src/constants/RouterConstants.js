@@ -9,3 +9,9 @@ export const VIEW_CONTRACTS_PATH = '/view-contracts';
 export const INDEX_PATH = ACTIVITY_PATH;
 
 export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH];
+export const CENTER_MODE_ROUTES = [
+	SIGN_UP_PATH,
+	SIGN_IN_PATH,
+	CREATE_CONTRACT_PATH,
+	TRANSFER_PATH,
+];
