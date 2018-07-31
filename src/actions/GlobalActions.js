@@ -20,7 +20,6 @@ export const initAccount = (accountName) => async (dispatch) => {
 	}
 
 	dispatch(initBalances(id));
-
 };
 
 export const connection = () => async (dispatch) => {

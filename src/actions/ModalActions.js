@@ -9,5 +9,12 @@ export const closeModal = (type) => (dispatch) => {
 };
 
 export const setParamValue = (type, param, value) => (dispatch) => {
-	dispatch(ModalReducer.actions.setParam({ type, param, value }));
+	dispatch(ModalReducer.actions.setParamValue({ type, param, value }));
+};
+
+export const setParamError = (type, param, error) => (dispatch) => {
+	dispatch(ModalReducer.actions.setParamError({ type, param, error }));
+};
+export const setError = (type, error) => (dispatch) => {
+	dispatch(ModalReducer.actions.setError({ type, error }));
 };
