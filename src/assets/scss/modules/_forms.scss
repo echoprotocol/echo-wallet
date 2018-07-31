@@ -19,7 +19,8 @@
     .field {
         width: 100%;
     }
-    .button[type=submit] {
+    .button[type=submit],
+    .button[type=button], {
         margin: 30px 0 0;
         min-width: 160px;
         min-height: 35px;
@@ -205,7 +206,8 @@
         display: flex;
         align-items: center;
         margin: 30px 0 0;
-        .button[type=submit] {
+        .button[type=submit],
+        .button[type=button], {
             margin: 0 0 0 auto;
             &:not(:last-child) {
                 margin-right: 20px;
