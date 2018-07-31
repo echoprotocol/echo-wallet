@@ -8,6 +8,8 @@ import {
 	FORM_UNLOCK_MODAL,
 	FORM_CONTRACT_CONSTANT,
 	FORM_CONTRACT_FUNCTION,
+	FORM_TRANSFER,
+	FORM_CREATE_CONTRACT,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -53,6 +55,35 @@ const DEFAULT_FORM_FIELDS = {
 	[FORM_CONTRACT_FUNCTION]: Map({
 		functions: List(),
 	}),
+	[FORM_TRANSFER]: Map({
+		to: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+		comment: {
+			value: '',
+			error: null,
+		},
+	}),
+	[FORM_CREATE_CONTRACT]: Map({
+		bytecode: {
+			value: '',
+			error: null,
+		},
+		accepted: false,
+	}),
 };
 
 export default createModule({
@@ -65,6 +96,9 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_CONTRACT_CONSTANT]),
 		[FORM_CONTRACT_FUNCTION]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CONTRACT_FUNCTION]),
+		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
+		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
 	}),
 	transformations: {
 		set: {
@@ -77,8 +111,11 @@ export default createModule({
 
 		setIn: {
 			reducer: (state, { payload }) => {
-				Object.keys(payload.params).forEach((field) => {
-					state = state.setIn([payload.form, field], payload.params[field]);
+				const field = state.getIn([payload.form, payload.field]);
+
+				state = state.setIn([payload.form, payload.field], {
+					...field,
+					...payload.params,
 				});
 
 				return state;

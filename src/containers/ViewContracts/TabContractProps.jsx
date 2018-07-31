@@ -12,13 +12,6 @@ import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
 class TabContractProps extends React.Component {
 
-// 1.17.40
-	// componentWillMount() {
-	// 	const contractId = localStorage.getItem('contractId');
-	// 	this.props.formatAbi(contractId, true);
-	// }
-	getHash(str) { return keccak256(str); }
-
 	render() {
 
 		console.log(this.getHash('balanceOf(address)'));

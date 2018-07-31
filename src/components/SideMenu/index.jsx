@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../actions/GlobalActions';
-import { openModal } from '../../actions/ModalActions';
 
 import { MODAL_UNLOCK, MODAL_WATCH_LIST } from '../../constants/ModalConstants';
+import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
+import { openModal } from '../../actions/ModalActions';
 
 const smartContracts = [
 	<div key="0" className="accordeon-item">
@@ -48,7 +49,6 @@ class SidebarMenu extends React.Component {
 	showWatchList() {
 		this.props.openModal(MODAL_WATCH_LIST);
 	}
-
 	render() {
 		const { activeIndex } = this.state;
 		return (
@@ -84,9 +84,8 @@ class SidebarMenu extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to="/">
-									<span className="icon icon-menu_4" />
-                                    Voting
+								<Link className="sidebar-nav-link" to={CREATE_CONTRACT_PATH}>
+									<Button content="Create account" size="tiny" color="grey" />
 								</Link>
 							</li>
 							<li>

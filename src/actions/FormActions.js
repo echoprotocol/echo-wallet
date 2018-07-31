@@ -75,3 +75,14 @@ export const clearForm = (form) => (dispatch) => {
 export const clearByField = (form, field) => (dispatch) => {
 	dispatch(FormReducer.actions.clearByField({ form, field }));
 };
+
+/**
+ * Set multiple params by field
+ * @param {String} form
+ * @param {String} field
+ * @param {Object} params
+ * @returns {Function}
+ */
+export const setIn = (form, field, params) => (dispatch) => {
+	dispatch(FormReducer.actions.setIn({ form, field, params }));
+};
