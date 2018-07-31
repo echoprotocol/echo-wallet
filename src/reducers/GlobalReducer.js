@@ -11,6 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
+		contracts: null,
 	}),
 	transformations: {
 		setGlobalLoading: {

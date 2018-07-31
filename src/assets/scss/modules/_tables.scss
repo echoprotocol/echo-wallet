@@ -1,7 +1,7 @@
 $thead-height: 46px;
 
 .table.table-activity {
-    
+
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -22,7 +22,7 @@ $thead-height: 46px;
             overflow-y: scroll;
             position: fixed;
             overflow-x: hidden;
-            margin-top: -($thead-height);        
+            margin-top: -($thead-height);
 
         }
         th {
@@ -96,7 +96,7 @@ $thead-height: 46px;
                     .fall {
                         color: #fff;
                     }
-                    
+
                 }
             }
             td {
@@ -129,7 +129,7 @@ $thead-height: 46px;
 }
 
 .table.table-smart-contract {
-    
+
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -148,7 +148,7 @@ $thead-height: 46px;
         @media (min-width: 1060px){
             position: fixed;
             overflow-x: hidden;
-            margin-top: -($thead-height);        
+            margin-top: -($thead-height);
 
         }
         th {
@@ -210,14 +210,14 @@ $thead-height: 46px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-} 
+}
 @media (max-width: 1200px){
     .wallet-wrap {
         .table-assets,
         .table-tokens {
             .thead,
             .tbody {
-                border-right: 0 !important; 
+                border-right: 0 !important;
             }
         }
     }
@@ -226,7 +226,7 @@ $thead-height: 46px;
 .table-tokens {
     width: 100%;
     max-width: 600px;
-    .thead, 
+    .thead,
     .tbody {
         display: flex;
         flex-direction: column;
@@ -310,7 +310,7 @@ $thead-height: 46px;
                 }
                 &:last-child {
                     justify-content: flex-end;
-                    color: $gray;        
+                    color: $gray;
                 }
             }
             &.msg-empty {

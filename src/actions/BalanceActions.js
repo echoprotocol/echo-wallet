@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import {
 	getContractId,
 	getTokenBalance,
-	getTokenContract,
+	getContract,
 	getTokenSymbol,
 } from '../api/ContractApi';
 
@@ -62,7 +62,7 @@ export const addToken = (address) => async (dispatch, getState) => {
 	const contractId = `1.16.${getContractId(address)}`;
 
 	try {
-		const contract = await getTokenContract(instance, contractId);
+		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
 			dispatch(setParamValue(MODAL_TOKENS, 'error', 'Invalid contract address'));
