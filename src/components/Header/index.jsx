@@ -7,6 +7,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
+import { TRANSFER_PATH } from '../../constants/RouterConstants';
 
 import formatAmount from '../../helpers/HistoryHelper';
 
@@ -14,6 +15,12 @@ class Header extends React.Component {
 
 	onLogout() {
 		this.props.logout();
+	}
+
+	onSend(e) {
+		e.preventDefault();
+
+		this.props.history.push(TRANSFER_PATH);
 	}
 
 	getTitle() {
@@ -30,12 +37,12 @@ class Header extends React.Component {
 			<div className="header">
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
-					<Button color="blue" size="small">Send</Button>
+					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>
 					<div className="user-section">
 						<div className="balance">
 							<span>
 								{
-									Array.isArray(this.props.assets) ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
+									this.props.assets && this.props.assets.size ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
 								}
 							</span>
 						</div>
@@ -85,6 +92,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	location: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	assets: PropTypes.any,
 	logout: PropTypes.func.isRequired,
 };

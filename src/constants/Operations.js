@@ -175,12 +175,12 @@ export default {
 		value: 43,
 		name: 'Claim asset fees',
 	},
-	create_contract: {
-		value: 47,
-		name: 'Contract',
-	},
 	contract_transfer: {
 		value: 45,
 		name: 'Contract transfer',
+	},
+	contract: {
+		value: 47,
+		name: 'Contract',
 	},
 };

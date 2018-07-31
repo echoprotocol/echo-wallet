@@ -6,6 +6,8 @@ import {
 	FORM_SIGN_UP,
 	FORM_SIGN_IN,
 	FORM_UNLOCK_MODAL,
+	FORM_TRANSFER,
+	FORM_CREATE_CONTRACT,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -45,6 +47,35 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 	}),
+	[FORM_TRANSFER]: Map({
+		to: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+		comment: {
+			value: '',
+			error: null,
+		},
+	}),
+	[FORM_CREATE_CONTRACT]: Map({
+		bytecode: {
+			value: '',
+			error: null,
+		},
+		accepted: false,
+	}),
 };
 
 export default createModule({
@@ -53,6 +84,9 @@ export default createModule({
 		[FORM_SIGN_UP]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP]),
 		[FORM_SIGN_IN]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_IN]),
 		[FORM_UNLOCK_MODAL]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_UNLOCK_MODAL]),
+		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
+		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
 	}),
 	transformations: {
 		set: {
@@ -65,8 +99,11 @@ export default createModule({
 
 		setIn: {
 			reducer: (state, { payload }) => {
-				Object.keys(payload.params).forEach((field) => {
-					state = state.setIn([payload.form, field], payload.params[field]);
+				const field = state.getIn([payload.form, payload.field]);
+
+				state = state.setIn([payload.form, payload.field], {
+					...field,
+					...payload.params,
 				});
 
 				return state;

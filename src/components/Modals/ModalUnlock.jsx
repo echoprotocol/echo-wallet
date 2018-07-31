@@ -67,7 +67,7 @@ class ModalUnlockWallet extends React.Component {
 					<div className="modal-body">
 						<Form className="user-form">
 							<div className="form-info">
-								<h3>Welcome to Echo</h3>
+								<h3>Unlock Wallet</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field>

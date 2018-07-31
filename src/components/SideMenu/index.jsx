@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+
 import { toggleBar } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
-import { MODAL_UNLOCK } from '../../constants/ModalConstants';
+// import { MODAL_UNLOCK } from '../../constants/ModalConstants';
+// import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 class SidebarMenu extends React.Component {
 
@@ -21,10 +23,6 @@ class SidebarMenu extends React.Component {
 		const { activeIndex } = this.state;
 		const newIndex = activeIndex === index ? -1 : index;
 		this.setState({ activeIndex: newIndex });
-	}
-
-	lockAccount() {
-		this.props.openModal(MODAL_UNLOCK);
 	}
 
 	render() {
@@ -59,7 +57,7 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
 							<li>
-								<Link className="sidebar-nav-link" to="/balances">
+								<Link className="sidebar-nav-link" to="/transfer">
 									<span className="icon icon-menu_1" />
 									<span className="sidebar-nav-text">Create Payment</span>
 								</Link>
@@ -75,7 +73,7 @@ class SidebarMenu extends React.Component {
 								</Accordion.Title>
 								<Accordion.Content active={activeIndex === 1}>
 									<div key="0" className="accordeon-item">
-										<Link className="sidebar-nav-sublink" to="/">
+										<Link className="sidebar-nav-sublink" to="/create-contract">
 											{ this.props.visibleBar ?
 												'Create Smart Contract' :
 												<span className="icon icon-contractAdd" />
@@ -107,6 +105,7 @@ class SidebarMenu extends React.Component {
 								</Link>
 							</li>
 							<li>
+
 								<Link className="sidebar-nav-link" to="/">
 									<span className="icon icon-menu_4" />
 									<span className="sidebar-nav-text">Voting</span>
@@ -121,7 +120,12 @@ class SidebarMenu extends React.Component {
                                         onClick={() => this.lockAccount()}
                                     />
 								</div>
-							</li> */}
+							</li>
+
+							<Link className="sidebar-nav-link" to={CREATE_CONTRACT_PATH}>
+								<Button content="Create account" size="tiny" color="grey" />
+                            </Link>
+                            */}
 						</ul>
 					</div>
 
@@ -133,9 +137,11 @@ class SidebarMenu extends React.Component {
 }
 
 SidebarMenu.propTypes = {
+
 	visibleBar: PropTypes.bool.isRequired,
-	openModal: PropTypes.func.isRequired,
+	// openModal: PropTypes.func.isRequired,
 	toggleBar: PropTypes.func.isRequired,
+	// accountName: PropTypes.string,
 };
 
 export default connect(
