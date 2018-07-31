@@ -159,45 +159,63 @@ $thead-height: 46px;
     }
 
     // WIDTH OF CELLS
-
-    th, td {
-        &:first-child {
-            min-width: 25vw;
-            padding-left:  20px;
+    tr {
+        &:not(.msg-empty) {
+            th, td {
+                &:first-child {
+                    min-width: 25vw;
+                    padding-left:  20px;
+                }
+        
+                &:last-child {
+                    min-width: calc(75vw - 1px);
+                    padding-right:  20px;
+                }
+            }
         }
-
-        &:last-child {
-            min-width: calc(75vw - 1px);
-            padding-right:  20px;
+        &.msg-empty {
+            padding: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            td {
+                color: #aeb4c0;
+                font-weight: 600;
+                border: 0;
+            }
         }
     }
+
 
     tbody {
         tr {
             transition: background-color .3s;
-            &:nth-child(2n) {
-                &:hover {
-                    background-color: $orange;
-                }
-            }
-            &:hover {
-                background-color: $orange;
-                td {
-                    color: #fff;
-                    &:last-child {
-                        color: #fff9b5;
+            &:not(.msg-empty) {
+                &:nth-child(2n) {
+                    &:hover {
+                        background-color: $orange;
                     }
                 }
-            }
-            td {
-                border-top: 0;
-                transition: color .3s;
-                padding: 0.82857143em 5px;
-                color: $black;
-                &:last-child {
-                    color: $blue;
-                    span {
-                        display: block;
+                &:hover {
+                    background-color: $orange;
+                    td {
+                        color: #fff;
+                        &:last-child {
+                            color: #fff9b5;
+                        }
+                    }
+                }
+                td {
+                    border-top: 0;
+                    transition: color .3s;
+                    padding: 0.82857143em 5px;
+                    color: $black;
+                    &:last-child {
+                        color: $blue;
+                        span {
+                            display: block;
+                        }
                     }
                 }
             }
