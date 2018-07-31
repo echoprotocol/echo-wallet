@@ -162,7 +162,7 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		asset_id: '1.3.0',
 		value: 0,
 		gasPrice: 0,
-		gas: 100000,
+		gas: 4700000,
 		code: bytecode,
 	};
 

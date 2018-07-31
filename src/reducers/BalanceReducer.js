@@ -15,5 +15,14 @@ export default createModule({
 				return state;
 			},
 		},
+
+		push: {
+			reducer: (state, { payload }) => {
+				const field = state.get(payload.field);
+				state = state.set(payload.field, field.push(payload.value));
+
+				return state;
+			},
+		},
 	},
 });

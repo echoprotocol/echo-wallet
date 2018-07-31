@@ -2,9 +2,11 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_TOKENS } from './../../constants/ModalConstants';
+import { MODAL_TOKENS } from '../../constants/ModalConstants';
+import { setParamValue, closeModal } from '../../actions/ModalActions';
+import { addToken } from '../../actions/BalanceActions';
 
 class ModalTokens extends React.Component {
 
@@ -13,8 +15,17 @@ class ModalTokens extends React.Component {
 		this.props.closeModal();
 	}
 
+	onInput(e) {
+		this.props.setParamValue('address', e.target.value);
+	}
+
+	onClick() {
+		this.props.addToken(this.props.address.trim());
+	}
+
 	render() {
-		const { show } = this.props;
+		const { show, address, error } = this.props;
+
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -35,13 +46,20 @@ class ModalTokens extends React.Component {
 							<div className="field-wrap">
 								<Form.Field>
 									<label htmlFor="tokens">Token name</label>
-									<div className="">
-										<input type="text" placeholder="Token name" name="tokens" className="ui input" value="" />
-										<span className="error-message" />
+									<div className={classnames({ error })}>
+										<input
+											type="text"
+											placeholder="Contract Address"
+											name="address"
+											className="ui input"
+											value={address}
+											onInput={(e) => this.onInput(e)}
+										/>
+										<span className="error-message">{error}</span>
 									</div>
 								</Form.Field>
 							</div>
-							<Button basic type="submit" color="orange">Watch Token</Button>
+							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Watch Token</Button>
 						</Form>
 					</div>
 				</div>
@@ -53,18 +71,28 @@ class ModalTokens extends React.Component {
 
 ModalTokens.propTypes = {
 	show: PropTypes.bool,
+	address: PropTypes.string,
+	error: PropTypes.any,
 	closeModal: PropTypes.func.isRequired,
+	setParamValue: PropTypes.func.isRequired,
+	addToken: PropTypes.func.isRequired,
 };
 
 ModalTokens.defaultProps = {
 	show: false,
+	address: '',
+	error: null,
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TOKENS, 'show']),
+		address: state.modal.getIn([MODAL_TOKENS, 'address']),
+		error: state.modal.getIn([MODAL_TOKENS, 'error']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TOKENS)),
+		setParamValue: (param, value) => dispatch(setParamValue(MODAL_TOKENS, param, value)),
+		addToken: (value) => dispatch(addToken(value)),
 	}),
 )(ModalTokens);
