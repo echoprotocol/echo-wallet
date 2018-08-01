@@ -12,18 +12,8 @@ import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
 import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 import { openModal } from '../../actions/ModalActions';
-import { loadContracts } from '../../actions/ContractActions';
 
 class SmartContracts extends React.Component {
-
-	constructor(props) {
-		super(props);
-		this.props.loadContracts();
-	}
-
-	componentDidMount() {
-		this.props.loadContracts();
-	}
 
 	onModal(modal) {
 		this.props.openModal(modal);
@@ -89,7 +79,6 @@ class SmartContracts extends React.Component {
 SmartContracts.propTypes = {
 	contracts: PropTypes.any,
 	openModal: PropTypes.func.isRequired,
-	loadContracts: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {
@@ -102,6 +91,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
-		loadContracts: () => dispatch(loadContracts()),
 	}),
 )(SmartContracts);
