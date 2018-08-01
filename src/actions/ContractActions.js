@@ -10,9 +10,7 @@ import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-export const loadContracts = () => (dispatch, getState) => {
-	const accountId = getState().global.getIn(['activeUser', 'id']);
-
+export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
 
 	contracts = contracts ? JSON.parse(contracts) : {};
