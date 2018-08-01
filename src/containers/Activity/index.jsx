@@ -12,22 +12,27 @@ import RowComponent from './RowComponent';
 
 class Activity extends React.Component {
 
-	shouldComponentUpdate(nextProps) {
-		const { history: currentHistory } = this.props;
-		const { history: nextHistory } = nextProps;
+	componentDidUpdate(prevProps) {
+		const account = this.props.account ? this.props.account.toJS() : null;
+		const oldAccount = prevProps.account ? prevProps.account.toJS() : null;
 
-		const { tableHistory: nextTableHistory } = this.props;
-		const { tableHistory: currentTableHistory } = nextProps;
-		if (currentHistory !== nextHistory) {
-			this.props.formatHistory(nextProps.history);
-			return true;
-		} else if (currentTableHistory !== nextTableHistory) {
-			return true;
+		if (!account || !account.history) {
+			return;
 		}
-		return false;
+
+		if (!oldAccount || !oldAccount.history) {
+			this.props.formatHistory(account.history);
+			return;
+		}
+
+		if (oldAccount.history.length !== account.history.length) {
+			this.props.formatHistory(account.history);
+		}
 	}
 
 	renderTable() {
+		const { history } = this.props;
+
 		return (
 			<Table striped className="table-activity">
 				<Table.Header>
@@ -41,17 +46,8 @@ class Activity extends React.Component {
 						<Table.HeaderCell>Time</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
-
-
 				<Table.Body>
-					{
-						this.props.tableHistory.map((h, i) => {
-							const id = i;
-							return (
-								<RowComponent key={id} id={id} rowData={h} />
-							);
-						})
-					}
+					{ history.map((i) => (<RowComponent key={i.id} data={i} />)) }
 				</Table.Body>
 			</Table>
 		);
@@ -60,11 +56,7 @@ class Activity extends React.Component {
 	render() {
 		return (
 			<div className="content">
-				{
-					this.props.tableHistory ?
-						this.renderTable() :
-						<Loading />
-				}
+				{ this.props.history ? this.renderTable() : <Loading /> }
 			</div>
 		);
 	}
@@ -73,21 +65,23 @@ class Activity extends React.Component {
 
 Activity.propTypes = {
 	history: PropTypes.any,
-	tableHistory: PropTypes.any,
+	account: PropTypes.any,
 	formatHistory: PropTypes.func.isRequired,
 };
 
 Activity.defaultProps = {
+	account: null,
 	history: null,
-	tableHistory: null,
 };
 
 export default connect(
-	(state) => ({
-		history: state.echojs.getIn(['data', 'accounts', state.global.getIn(['activeUser', 'id']), 'history']),
-		accounts: state.echojs.getIn(['data', 'accounts']),
-		tableHistory: state.table.getIn([HISTORY_DATA, 'history']),
-	}),
+	(state) => {
+		const accountId = state.global.getIn(['activeUser', 'id']);
+		const account = state.echojs.getIn(['data', 'accounts', accountId]);
+		const history = state.table.getIn([HISTORY_DATA, 'history']);
+
+		return { account, history };
+	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
 	}),
