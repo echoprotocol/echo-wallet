@@ -36,11 +36,17 @@ class AmountField extends React.Component {
 			return 0;
 		}
 
-		if (this.props.fee.asset && this.props.fee.asset.id !== currency.id) {
+		const { fee } = this.props;
+
+		if (!fee) {
+			return 0;
+		}
+
+		if (fee.asset && fee.asset.id !== currency.id) {
 			return currency.balance;
 		}
 
-		return currency.balance - this.props.fee.value;
+		return currency.balance - fee.value;
 	}
 
 	renderList(type) {

@@ -16,14 +16,12 @@ import { loadContracts } from '../../actions/ContractActions';
 
 class SmartContracts extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { visibleBar: false };
-		this.toggleSidebar = this.toggleSidebar.bind(this);
-		this.sidebarHide = this.sidebarHide.bind(this);
+	constructor(props) {
+		super(props);
+		this.props.loadContracts();
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.props.loadContracts();
 	}
 
@@ -33,16 +31,6 @@ class SmartContracts extends React.Component {
 
 	onLink(link) {
 		history.push(link);
-	}
-
-	toggleSidebar() {
-		this.setState({ visibleBar: !this.state.visibleBar });
-	}
-
-	sidebarHide() {
-		if (this.state.visibleBar) {
-			this.setState({ visibleBar: false });
-		}
 	}
 
 	renderRow([address], key) {

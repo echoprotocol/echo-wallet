@@ -14,7 +14,7 @@ import { generatePassword } from '../../actions/AuthActions';
 
 class SignUp extends React.Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		this.props.generatePassword();
 	}
 

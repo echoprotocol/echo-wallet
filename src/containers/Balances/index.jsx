@@ -7,11 +7,9 @@ class Balances extends React.Component {
 
 	render() {
 		return (
-			<div>
-				<div className="wallet-wrap">
-					<Assets />
-					<Tokens />
-				</div>
+			<div className="wallet-wrap">
+				<Assets />
+				<Tokens />
 			</div>
 		);
 	}

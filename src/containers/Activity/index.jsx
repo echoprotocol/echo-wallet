@@ -12,6 +12,14 @@ import RowComponent from './RowComponent';
 
 class Activity extends React.Component {
 
+	componentDidMount() {
+		const account = this.props.account ? this.props.account.toJS() : null;
+
+		if (account && account.history) {
+			this.props.formatHistory(account.history);
+		}
+	}
+
 	componentDidUpdate(prevProps) {
 		const account = this.props.account ? this.props.account.toJS() : null;
 		const oldAccount = prevProps.account ? prevProps.account.toJS() : null;
@@ -54,11 +62,7 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		return (
-			<div className="content">
-				{ this.props.history ? this.renderTable() : <Loading /> }
-			</div>
-		);
+		return this.props.history ? this.renderTable() : <Loading />;
 	}
 
 }

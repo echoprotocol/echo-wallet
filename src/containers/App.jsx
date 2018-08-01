@@ -17,7 +17,7 @@ import { AUTH_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
 
 class App extends React.Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		this.props.connection();
 	}
 
