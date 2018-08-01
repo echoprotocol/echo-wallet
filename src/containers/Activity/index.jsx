@@ -38,6 +38,10 @@ class Activity extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+
+	}
+
 	renderTable() {
 		const { history } = this.props;
 
