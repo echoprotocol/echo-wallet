@@ -2,12 +2,13 @@ import { key } from 'echojs-lib';
 import { EchoJSActions } from 'echojs-redux';
 
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
-import { closeModal } from './ModalActions';
+import { closeModal, openModal } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
+import { setField } from './TransactionActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
-import { MODAL_UNLOCK } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
 
@@ -175,6 +176,12 @@ export const unlockAccount = ({
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));
+
+		const { options, privateKey } = getState().transaction.toJS();
+		if (options && !privateKey) {
+			dispatch(setField('privateKey', active.privateKey));
+			dispatch(openModal(MODAL_DETAILS));
+		}
 
 	} catch (err) {
 		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));

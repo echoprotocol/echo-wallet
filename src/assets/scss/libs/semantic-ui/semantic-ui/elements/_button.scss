@@ -20,14 +20,14 @@
   outline: none;
   border: none;
   vertical-align: baseline;
-  background: rgb(174, 180, 192) none;
-  color: rgba(255, 255, 255, 1);
+  background: $gray none;
+  color: #fff;
   font-family: $font-family;
   margin: 0em 0.25em 0em 0em;
   padding: 0.78571429em 1.5em 0.78571429em;
   text-transform: uppercase;
   text-shadow: none;
-  font-weight: bold;
+  font-weight: 400;
   line-height: 1em;
   font-style: normal;
   text-align: center;
@@ -739,7 +739,7 @@
 .ui.basic.buttons .button,
 .ui.basic.button {
   background: transparent none !important;
-  color: rgba(0, 0, 0, 0.6) !important;
+  color: rgba(186, 188, 203, 1);
   font-weight: normal;
   border-radius: 0.28571429rem;
   text-transform: uppercase;
@@ -759,21 +759,18 @@
 .ui.basic.buttons .button:hover,
 .ui.basic.button:hover {
   background: #FFFFFF !important;
-  color: rgba(0, 0, 0, 0.8) !important;
   -webkit-box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
           box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
 }
 .ui.basic.buttons .button:focus,
 .ui.basic.button:focus {
   background: #FFFFFF !important;
-  color: rgba(0, 0, 0, 0.8) !important;
   -webkit-box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
           box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
 }
 .ui.basic.buttons .button:active,
 .ui.basic.button:active {
   background: #F8F8F8 !important;
-  color: rgba(0, 0, 0, 0.9) !important;
   -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 4px 0px $bd-gray inset;
           box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 4px 0px $bd-gray inset;
 }
@@ -1516,7 +1513,7 @@
 .ui.inverted.grey.button:active {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
-  color: rgba(0, 0, 0, 0.6);
+  color: #fff;
 }
 .ui.inverted.grey.buttons .button:hover,
 .ui.inverted.grey.button:hover {
@@ -2053,7 +2050,7 @@
 }
 .ui.orange.buttons .button:focus,
 .ui.orange.button:focus {
-  background-color: #e55b00;
+  background-color: $orange;
   color: #FFFFFF;
   text-shadow: none;
 }
@@ -3683,4 +3680,3 @@
 /*******************************
          Site Overrides
 *******************************/
-

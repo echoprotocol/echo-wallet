@@ -59,7 +59,7 @@ class TableComponent extends React.Component {
 
 	render() {
 		return (
-			<div className="content center-mode ">
+			<div className="content">
 				{
 					this.props.tableHistory ?
 						this.renderTable() :

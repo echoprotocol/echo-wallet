@@ -20,7 +20,6 @@ export const initAccount = (accountName) => async (dispatch) => {
 	}
 
 	dispatch(initBalances(id));
-
 };
 
 export const connection = () => async (dispatch) => {
@@ -49,4 +48,12 @@ export const connection = () => async (dispatch) => {
 export const logout = () => () => {
 	localStorage.removeItem('current_account');
 	history.push(SIGN_IN_PATH);
+};
+
+export const toggleBar = (value) => (dispatch) => {
+	dispatch(GlobalReducer.actions.toggleBar({ value }));
+};
+
+export const hideBar = () => (dispatch) => {
+	dispatch(GlobalReducer.actions.hideBar({ }));
 };

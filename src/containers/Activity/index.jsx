@@ -1,42 +1,31 @@
 import React from 'react';
 import { Segment, Sidebar } from 'semantic-ui-react';
-
 import { connect } from 'react-redux';
-
 import PropTypes from 'prop-types';
 
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
-
 import TableComponent from './TableComponent';
+
+import { hideBar } from '../../actions/GlobalActions';
+
 
 class Activity extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { visibleBar: false };
-		this.toggleSidebar = this.toggleSidebar.bind(this);
-		this.sidebarHide = this.sidebarHide.bind(this);
+	componentWillMount() {
+		this.props.hideBar(this.props.visibleBar);
 	}
-
-	toggleSidebar() {
-		this.setState({ visibleBar: !this.state.visibleBar });
-	}
-
-	sidebarHide() {
-		if (this.state.visibleBar) {
-			this.setState({ visibleBar: false });
-		}
-	}
-
 	render() {
 		return (
 			<Sidebar.Pushable as={Segment}>
-				<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
-				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
+				<SidebarMenu />
+				<Sidebar.Pusher
+					dimmed={this.props.visibleBar}
+					onClick={() => this.props.hideBar()}
+				>
 					<Segment basic className="wrapper">
-						<Header onToggleSidebar={this.toggleSidebar} curentUserId={this.props.userId} />
+						<Header curentUserId={this.props.userId} />
 						<TableComponent curentUserId={this.props.userId} />
 						<Footer />
 					</Segment>
@@ -49,12 +38,20 @@ class Activity extends React.Component {
 
 Activity.propTypes = {
 	userId: PropTypes.string,
+	visibleBar: PropTypes.bool.isRequired,
+	hideBar: PropTypes.func.isRequired,
 };
 
 Activity.defaultProps = {
 	userId: '',
 };
 
-export default connect((state) => ({
-	userId: state.global.getIn(['activeUser', 'id']),
-}))(Activity);
+export default connect(
+	(state) => ({
+		visibleBar: state.global.get('visibleBar'),
+		userId: state.global.getIn(['activeUser', 'id']),
+	}),
+	(dispatch) => ({
+		hideBar: () => dispatch(hideBar()),
+	}),
+)(Activity);
