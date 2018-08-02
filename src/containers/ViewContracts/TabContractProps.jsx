@@ -11,10 +11,11 @@ import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
 class TabContractProps extends React.Component {
 
-	componentWillMount() {
-		console.log(this.props.accountId);
-		const contract = localStorage.getItem('contract');
-		this.props.formatAbi(contract, true);
+	componentWillReceiveProps(nextProps) {
+		if ((this.props.accountId !== nextProps.accountId) && nextProps.accountId) {
+			const contract = '1.16.0';
+			this.props.formatAbi(contract, true);
+		}
 	}
 
 	render() {

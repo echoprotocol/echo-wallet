@@ -27,12 +27,6 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
-	// const contractResult = (await getContractConstant('1.17.43')).exec_res.new_address;
-	// console.log(contractResult);
-	// console.log(`1.17.${parseInt(contractResult, 16)}`);
-	// const constant = await getConstant('1.17.43', accountId);
-	// console.log(constant);
-
 	if (tokens && tokens[accountId]) {
 		let balances = Object.keys(tokens[accountId]).map(async (symbol) => {
 			const balance = await getTokenBalance(accountId, tokens[accountId][symbol]);
