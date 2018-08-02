@@ -2,40 +2,31 @@ import React from 'react';
 import { Segment, Sidebar } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import SidebarMenu from '../../components/SideMenu/index';
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
-
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
 
+import { hideBar } from '../../actions/GlobalActions';
+
 class Balances extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { visibleBar: false };
-		this.toggleSidebar = this.toggleSidebar.bind(this);
-		this.sidebarHide = this.sidebarHide.bind(this);
+	componentWillMount() {
+		this.props.hideBar();
 	}
-
-	toggleSidebar() {
-		this.setState({ visibleBar: !this.state.visibleBar });
-	}
-
-	sidebarHide() {
-		if (this.state.visibleBar) {
-			this.setState({ visibleBar: false });
-		}
-	}
-
 	render() {
 		return (
 			<Sidebar.Pushable as={Segment}>
-				<SidebarMenu visibleBar={this.state.visibleBar} onToggleSidebar={this.toggleSidebar} />
-				<Sidebar.Pusher onClick={this.sidebarHide} dimmed={this.state.visibleBar}>
+				<SidebarMenu />
+				<Sidebar.Pusher
+					dimmed={this.props.visibleBar}
+					onClick={() => this.props.hideBar(this.props.visibleBar)}
+				>
 					<Segment basic className="wrapper">
-						<Header onToggleSidebar={this.toggleSidebar} />
+						<Header />
 						<div className="content">
 							<div>
 								<div className="wallet-wrap">
@@ -53,7 +44,17 @@ class Balances extends React.Component {
 
 }
 
+
+Balances.propTypes = {
+	visibleBar: PropTypes.bool.isRequired,
+	hideBar: PropTypes.func.isRequired,
+};
+
 export default connect(
-	() => ({}),
-	() => ({}),
+	(state) => ({
+		visibleBar: state.global.get('visibleBar'),
+	}),
+	(dispatch) => ({
+		hideBar: () => dispatch(hideBar()),
+	}),
 )(Balances);

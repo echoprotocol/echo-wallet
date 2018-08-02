@@ -16,7 +16,6 @@ import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
 import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
 
 import { openModal } from '../../actions/ModalActions';
-import { loadContracts } from '../../actions/ContractActions';
 
 class SmartContracts extends React.Component {
 
@@ -25,10 +24,6 @@ class SmartContracts extends React.Component {
 		this.state = { visibleBar: false };
 		this.toggleSidebar = this.toggleSidebar.bind(this);
 		this.sidebarHide = this.sidebarHide.bind(this);
-	}
-
-	componentWillMount() {
-		this.props.loadContracts();
 	}
 
 	onModal(modal) {
@@ -122,7 +117,6 @@ class SmartContracts extends React.Component {
 SmartContracts.propTypes = {
 	contracts: PropTypes.any,
 	openModal: PropTypes.func.isRequired,
-	loadContracts: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {
@@ -135,6 +129,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
-		loadContracts: () => dispatch(loadContracts()),
 	}),
 )(SmartContracts);

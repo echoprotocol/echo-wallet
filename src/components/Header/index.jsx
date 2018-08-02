@@ -34,34 +34,31 @@ class Header extends React.Component {
 
 	render() {
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
+
+		const balance = asset ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO';
+
 		return (
 			<div className="header">
-				<div className="show-sidebar-btn" onClick={this.props.onToggleSidebar} onKeyPress={this.props.onToggleSidebar} role="button" tabIndex="0">
-					<span className="icon-menu" />
-				</div>
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>
 					<div className="user-section">
 						<Link className="balance" to={BALANCES_PATH}>
 							<span>
-								{
-									this.props.assets && this.props.assets.size ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO'
-								}
+								{balance}
 							</span>
 						</Link>
-						<Dropdown text={localStorage.getItem('current_account')} disabled>
-							{/* <Dropdown.Menu>
+						<Dropdown text={localStorage.getItem('current_account')}>
+							<Dropdown.Menu>
 								<Dropdown.Item>
 									<a className="user-item">
-										<span>user 1</span>
+										<span>{localStorage.getItem('current_account')}</span>
 										<div className="balance">
-											<span>0.000083</span>
-											<span>ECHO</span>
+											<span>{balance}</span>
 										</div>
 									</a>
 								</Dropdown.Item>
-								<Dropdown.Item>
+								{/* <Dropdown.Item>
 									<a className="user-item">
 										<span>user 2</span>
 										<div className="balance">
@@ -69,22 +66,20 @@ class Header extends React.Component {
 											<span>ECHO</span>
 										</div>
 									</a>
-								</Dropdown.Item>
+								</Dropdown.Item> */}
 								<Dropdown.Item>
-									<a className="user-panel">
-										<span className="add-account">Add account</span>
-										<span
-											className="logout"
-											role="button"
-											onClick={(e) => this.onLogout(e)}
-											onKeyPress={(e) => this.onLogout(e)}
-											tabIndex="0"
-										>
-											Logout
-										</span>
+									<a
+										className="user-panel"
+										role="button"
+										onClick={(e) => this.onLogout(e)}
+										onKeyPress={(e) => this.onLogout(e)}
+										tabIndex="0"
+									>
+										{/* <span className="add-account">Add account</span> */}
+										<span className="logout">Logout</span>
 									</a>
 								</Dropdown.Item>
-							</Dropdown.Menu> */}
+							</Dropdown.Menu>
 						</Dropdown>
 					</div>
 				</div>
@@ -99,7 +94,6 @@ Header.propTypes = {
 	history: PropTypes.object.isRequired,
 	assets: PropTypes.any,
 	logout: PropTypes.func.isRequired,
-	onToggleSidebar: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {

@@ -6,6 +6,7 @@ import tableReducer from './TableReducer';
 import balanceReducer from './BalanceReducer';
 import transactionReducer from './TransactionReducer';
 
+
 export default {
 	modal: modalReducer.reducer,
 	global: globalReducer.reducer,

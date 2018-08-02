@@ -48,7 +48,7 @@ export const initBalances = (accountId) => async (dispatch) => {
 		}));
 	}
 
-	if (Object.keys(assets).length) {
+	if (assets && Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
 			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
 			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();

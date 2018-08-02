@@ -41,7 +41,7 @@ class ModalTokens extends React.Component {
 					<div className="modal-body">
 						<Form className="user-form">
 							<div className="form-info">
-								<h3>Watch Token</h3>
+								<h3>Watch Tokens</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field>
