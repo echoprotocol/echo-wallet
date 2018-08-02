@@ -1,5 +1,5 @@
 import {
-	ACTIVITY_PATH,
+	INDEX_PATH,
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
@@ -9,7 +9,7 @@ import {
 
 export const HEADER_TITLE = [
 	{
-		path: ACTIVITY_PATH,
+		path: INDEX_PATH,
 		title: 'Recent Activity',
 	},
 	{
