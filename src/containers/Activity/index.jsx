@@ -33,7 +33,7 @@ class Activity extends React.Component {
 			return;
 		}
 
-		if (oldAccount.history.length !== account.history.length) {
+		if (oldAccount.history[0].id !== account.history[0].id) {
 			this.props.formatHistory(account.history);
 		}
 	}
