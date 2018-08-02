@@ -34,7 +34,6 @@ export const getTokenSymbol = (instance, accountId, contractId) => getContractPr
 	getHash('symbol').substr(0, 8),
 );
 export const getContractConstant = (instance, accountId, contractId, method) => {
-	console.log(accountId, contractId, method);
 	return getContractProp(
 		instance,
 		contractId,

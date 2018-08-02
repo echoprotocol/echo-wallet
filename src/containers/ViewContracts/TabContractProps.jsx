@@ -11,10 +11,12 @@ import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
 class TabContractProps extends React.Component {
 
-	componentWillMount() {
-		console.log(this.props.accountId);
-		const contract = localStorage.getItem('contract');
-		this.props.formatAbi(contract, true);
+	componentWillReceiveProps(nextProps) {
+		if ((nextProps.accountId !== this.props.accountId) && nextProps.accountId) {
+			console.log(nextProps.accountId);
+			const contract = localStorage.getItem('contract');
+			this.props.formatAbi(contract, true);
+		}
 	}
 
 	render() {
@@ -50,7 +52,7 @@ class TabContractProps extends React.Component {
 										<span className="arrow"> → </span>
 
 										<span className="value">
-											123
+											1234
 										</span>
 										<span className="type"> bytes32 </span>
 									</div>
@@ -67,13 +69,12 @@ class TabContractProps extends React.Component {
 
 TabContractProps.propTypes = {
 	constants: PropTypes.any,
-	accountId: PropTypes.any,
+	accountId: PropTypes.string.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 };
 
 TabContractProps.defaultProps = {
 	constants: '',
-	accountId: '',
 };
 
 export default connect(
