@@ -14,6 +14,7 @@ const formatOperation = (operationData) => async (dispatch, getState) => {
 	const changeTimeParameter = moment(timestampBlock).get('minute') + moment().utcOffset();
 
 	const result = {
+		id: operationData.id,
 		operation: '',
 		block: '',
 		from: '',
@@ -418,4 +419,4 @@ const formatOperation = (operationData) => async (dispatch, getState) => {
 	return result;
 };
 
-export default (history) => (dispatch) => history.toJS().map((h) => dispatch(formatOperation(h)));
+export default (history) => (dispatch) => history.map((h) => dispatch(formatOperation(h)));

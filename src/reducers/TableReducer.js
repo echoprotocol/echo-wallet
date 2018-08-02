@@ -22,5 +22,12 @@ export default createModule({
 			},
 		},
 
+		clear: {
+			reducer: (state, { payload }) => {
+				state = state.set([payload.table], DEFAULT_FIELDS[payload.table]);
+
+				return state;
+			},
+		},
 	},
 });

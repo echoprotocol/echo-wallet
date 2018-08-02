@@ -9,7 +9,7 @@ import {
 	CREATE_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
 	TRANSFER_PATH,
-	ACTIVITY_PATH,
+	INDEX_PATH,
 } from '../../constants/RouterConstants';
 
 class SidebarMenu extends React.Component {
@@ -103,7 +103,7 @@ class SidebarMenu extends React.Component {
 							</Accordion>
 							<li>
 
-								<Link className="sidebar-nav-link" to={ACTIVITY_PATH}>
+								<Link className="sidebar-nav-link" to={INDEX_PATH}>
 									<span className="icon icon-menu_3" />
 									<span className="sidebar-nav-text">Recent Activity</span>
 								</Link>
