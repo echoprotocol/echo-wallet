@@ -6,7 +6,7 @@ import history from '../history';
 
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 
-import { initBalances } from '../actions/BalanceActions';
+import { initBalances, getBlock } from '../actions/BalanceActions';
 import { loadContracts } from '../actions/ContractActions';
 
 export const initAccount = (accountName) => async (dispatch) => {
@@ -28,7 +28,7 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		await dispatch(EchoJSActions.connect());
+		await dispatch(EchoJSActions.connect(undefined, getBlock));
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
 	} finally {

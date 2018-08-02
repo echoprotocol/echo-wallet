@@ -6,6 +6,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { logout } from '../../actions/GlobalActions';
+import { parseAssetsBalances } from '../../actions/BalanceActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import { TRANSFER_PATH, BALANCES_PATH } from '../../constants/RouterConstants';
@@ -13,6 +14,25 @@ import { TRANSFER_PATH, BALANCES_PATH } from '../../constants/RouterConstants';
 import formatAmount from '../../helpers/HistoryHelper';
 
 class Header extends React.Component {
+
+	componentDidUpdate(prevProps) {
+        const account = this.props.account ? this.props.account.toJS() : null;
+        const oldAccount = prevProps.account ? prevProps.account.toJS() : null;
+
+
+        if (!account || !account.balances || !this.props.statistic) {
+            return;
+        }
+
+        if (!oldAccount || !oldAccount.balances) {
+            this.props.formatAssetsBalances(account.balances);
+            return;
+        }
+
+        if (!this.props.statistic.equals(prevProps.statistic)) {
+            this.props.formatAssetsBalances(account.balances);
+        }
+	}
 
 	onLogout() {
 		this.props.logout();
@@ -93,18 +113,33 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	assets: PropTypes.any,
+	statistic: PropTypes.any,
+    account: PropTypes.any,
 	logout: PropTypes.func.isRequired,
+	formatAssetsBalances: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	assets: null,
+	statistic: null,
+    account: null,
 };
 
 export default withRouter(connect(
-	(state) => ({
-		assets: state.balance.get('assets'),
-	}),
+	(state) => {
+		const assets = state.balance.get('assets');
+		const accountId = state.global.getIn(['activeUser', 'id']);
+		const account = state.echojs.getIn(['data', 'accounts', accountId]);
+		let statistic = null;
+		if (account) {
+			const statisticId = account.getIn(['balances', '1.3.0']);
+			statistic = state.echojs.getIn(['data', 'objects', statisticId]);
+		}
+
+		return { account, assets, statistic };
+	},
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
+		formatAssetsBalances: (value) => dispatch(parseAssetsBalances(value)),
 	}),
 )(Header));

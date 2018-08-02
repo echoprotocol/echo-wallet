@@ -9,7 +9,7 @@ const getContractProp = (instance, contract, account, method) => instance.dbApi(
 
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 
-const getHash = (str) => keccak256(str);
+export const getHash = (str) => keccak256(str);
 
 //	end
 
