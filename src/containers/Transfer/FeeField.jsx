@@ -11,14 +11,15 @@ import { getFee } from '../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		this.props.loadGlobalObject();
 	}
 
 	componentDidUpdate() {
-		if (this.props.assets.length && !this.props.fee.value) {
-			const fee = this.props.getFee(this.props.assets[0].id);
-			this.props.setValue('fee', fee);
+		const { assets, fee } = this.props;
+		if ((assets && assets.length) && (fee && !fee.value)) {
+			const value = this.props.getFee(assets[0].id);
+			this.props.setValue('fee', value);
 		}
 	}
 
@@ -44,7 +45,7 @@ class FeeComponent extends React.Component {
 	getText(options) {
 		const { fee } = this.props;
 
-		if (fee.value) {
+		if (fee && fee.value) {
 			return formatAmount(fee.value, fee.asset.precision, fee.asset.symbol);
 		}
 
@@ -66,11 +67,16 @@ class FeeComponent extends React.Component {
 }
 
 FeeComponent.propTypes = {
-	assets: PropTypes.any.isRequired,
-	fee: PropTypes.any.isRequired,
+	assets: PropTypes.any,
+	fee: PropTypes.any,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	loadGlobalObject: PropTypes.func.isRequired,
+};
+
+FeeComponent.defaultProps = {
+	fee: null,
+	assets: null,
 };
 
 export default connect(

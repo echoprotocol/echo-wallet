@@ -34,7 +34,7 @@ class ToAccountComponent extends React.Component {
 		this.setState({
 			timeout: setTimeout(() => {
 				this.props.checkAccount(this.props.to.value);
-			}, 3 * 1000),
+			}, 300),
 		});
 	}
 

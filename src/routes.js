@@ -2,9 +2,9 @@ import React from 'react';
 import { Route } from 'react-router';
 
 import {
+	INDEX_PATH,
 	SIGN_UP_PATH,
 	SIGN_IN_PATH,
-	ACTIVITY_PATH,
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
@@ -28,7 +28,7 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					<Route exact path={ACTIVITY_PATH} component={Activity} />
+					<Route exact path={INDEX_PATH} component={Activity} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
 					<Route exact path={BALANCES_PATH} component={Balances} />
