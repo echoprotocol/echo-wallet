@@ -92,7 +92,7 @@ class AmountField extends React.Component {
 						<li>
 							Available Balance:
 							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
-								{ currency ? formatAmount(this.getAvailableAmount(currency), currency.precision, currency.symbol) : '0 ECHO' }
+								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO' }
 							</span>
 						</li>
 					</ul>

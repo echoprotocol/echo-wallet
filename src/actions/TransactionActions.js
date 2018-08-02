@@ -14,7 +14,7 @@ import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 import { validateAccountName } from '../helpers/AuthHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, getMemo } from '../api/TransactionApi';
+import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
@@ -42,13 +42,17 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0') => (dispatch, getState) => {
+export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
+
+	if (memo) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, memo));
+	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
 
