@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 import formatAmount from '../../helpers/HistoryHelper';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -16,11 +17,23 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
-		const { name: field, value } = e.target;
+		const { currency } = this.props;
 
-		if (field) {
-			this.props.setFormValue(field, value);
+		const value = e.target.value.trim();
+
+		if (!Math.floor(value * (10 ** currency.precision))) {
+			this.props.setValue(
+				'amount',
+				{
+					error: `Amount should be more than ${1 / (10 ** currency.precision)}`,
+					value,
+				},
+			);
+
+			return;
 		}
+
+		this.props.setFormValue(e.target.name, value);
 	}
 
 	setAvailableAmount(currency) {
@@ -85,8 +98,9 @@ class AmountField extends React.Component {
 					</ul>
 				</label>
 				<Input type="text" placeholder="Amount" action>
-					<div className="amount-wrap">
+					<div className={classnames('amount-wrap', { error: amount.error })}>
 						<input className="amount" placeholder="Amount" value={amount.value} name="amount" onChange={(e) => this.onChangeAmount(e)} />
+						<span className="error-message">{amount.error}</span>
 					</div>
 					<Dropdown text={currency ? currency.symbol : ''} className="assets-tokens-dropdown">
 						<Dropdown.Menu>
