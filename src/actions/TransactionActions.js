@@ -97,7 +97,25 @@ export const transfer = () => async (dispatch, getState) => {
 		to, amount, currency, fee, comment,
 	} = getState().form.get(FORM_TRANSFER).toJS();
 
-	//	TODO check account balance
+	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+		return;
+	}
+
+	if (currency.id === fee.asset.id) {
+		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
+
+		if (total.gt(currency.balance)) {
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			return;
+		}
+	} else {
+		const asset = getState().balances.get('assets').toArray().find((i) => i.id === fee.asset.id);
+		if (new BN(fee.value).gt(asset.balance)) {
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			return;
+		}
+	}
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 
