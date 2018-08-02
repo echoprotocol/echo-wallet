@@ -26,6 +26,22 @@ export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
+export const fetchFee = (type) => async (dispatch) => {
+	const globalObject = await dispatch(EchoJSActions.fetch('2.0.0'));
+	const asset = await dispatch(EchoJSActions.fetch('1.3.0'));
+
+	const value = globalObject.getIn([
+		'parameters',
+		'current_fees',
+		'parameters',
+		operations[type].value,
+		1,
+		'fee',
+	]);
+
+	return { value, asset: asset.toJS() };
+};
+
 export const getFee = (type, assetId = '1.3.0') => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 
@@ -97,6 +113,10 @@ export const transfer = () => async (dispatch, getState) => {
 		to, amount, currency, fee, comment,
 	} = getState().form.get(FORM_TRANSFER).toJS();
 
+	if (to.error || amount.error || fee.error || comment.error) {
+		return;
+	}
+
 	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
@@ -138,8 +158,16 @@ export const transfer = () => async (dispatch, getState) => {
 		},
 	};
 
+	const showOptions = {
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		from: fromAccount.name,
+		to: toAccount.name,
+		amount: `${amount.value} ${currency.symbol}`,
+	};
+
 	if (comment.value) {
 		options.memo = comment.value;
+		showOptions.comment = comment.value;
 	}
 
 	const pubKey = fromAccount.active.key_auths[0][0];
@@ -149,7 +177,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options, showOptions }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
@@ -184,7 +212,15 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		code: bytecode,
 	};
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options }));
+	const fee = await dispatch(fetchFee('contract'));
+
+	const showOptions = {
+		from: activeUserName,
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		code: bytecode,
+	};
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
