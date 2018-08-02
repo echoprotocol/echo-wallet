@@ -21,7 +21,7 @@ class AmountField extends React.Component {
 
 		const value = e.target.value.trim();
 
-		if (!Math.floor(value * (10 ** currency.precision))) {
+		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
 			this.props.setValue(
 				'amount',
 				{
