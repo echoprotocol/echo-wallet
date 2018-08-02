@@ -56,6 +56,7 @@ class FeeComponent extends React.Component {
 		const options = this.getOptions();
 		const text = this.getText(options);
 
+		// TODO add styles for fee error
 		return (
 			<Form.Field>
 				<label htmlFor="fee"> Fee </label>
