@@ -7,6 +7,7 @@
   padding: 0;
   cursor: pointer;
   display: flex;
+  align-self: flex-start;
   &:before {
         content: "\e904";
         font-family: 'icomoon' !important;
@@ -21,6 +22,7 @@
         transition: color .3s;
         color: rgba(#fff,.6);
         width: 4px;
+        margin-top: 4px;
   }
 
   &:hover, &:focus {

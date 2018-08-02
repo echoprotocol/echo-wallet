@@ -1,9 +1,8 @@
 .#{$rt-namespace}__toast {
     position: relative;
-    min-height: $rt-toast-min-height;
     box-sizing: border-box;
     margin-bottom: 1rem;
-    padding: 8px 15px;
+    padding: 15px 15px;
     border-radius: 1px;
     box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .1), 0 2px 15px 0 rgba(0, 0, 0, .05);
     display: flex;
@@ -34,8 +33,11 @@
         background: $rt-color-error;
     }
     &-body {
-        margin: auto 40px auto 0;
+        margin: 0 40px 0 0;
         flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
 
     }
 }
@@ -49,21 +51,31 @@
 // CUSTOM
 .Toastify {
     .toast {
+        &-icon {
+            margin-top: 2px;
+        }
         &-icon + .toast-text {
             margin-left: 10px;
         }
         &-loading + .toast-text {
             margin-left: 10px;
         }
+        &-text {
+            max-width: 300px;
+            display: block;
+            margin-right: auto;
+        }
     }
    .ui {
        &.loading.button.toast-loading {
         padding: 0;
-        margin-right: 5px;
-        margin-left: 5px;
+        margin: 5px;
        }
        &.button.black {
-           margin: 0 0 0 15px;
+           margin: -6px 0 0 15px;
+       }
+       &.loading.button {
+           min-height: .7em;
        }
    }
     
