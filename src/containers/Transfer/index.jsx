@@ -10,6 +10,11 @@ import { transfer } from '../../actions/TransactionActions';
 import ToAccountField from './ToAccountField';
 import AmountField from './AmountField';
 import FeeField from './FeeField';
+import ToastActions from '../../actions/ToastActions';
+import ToastSuccess from '../../components/Toast/ToastSuccess';
+import ToastError from '../../components/Toast/ToastError';
+import ToastInfo from '../../components/Toast/ToastInfo';
+
 
 class Transfer extends React.Component {
 
@@ -22,6 +27,9 @@ class Transfer extends React.Component {
 	}
 
 	onSend() {
+		ToastActions.toastInfo(ToastInfo);
+		ToastActions.toastSuccess(ToastSuccess);
+		ToastActions.toastError(ToastError);
 		this.props.transfer();
 	}
 
