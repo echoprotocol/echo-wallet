@@ -20,7 +20,7 @@ class ToastActionsClass {
 	 */
 	toastInfo(text) {
 		toast.info(text, {
-			autoClose: 883000,
+			autoClose: 3000,
 			position: 'bottom-right',
 			hideProgressBar: true,
 		});
