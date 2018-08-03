@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Checkbox } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -35,15 +35,20 @@ class ButtonComponent extends React.Component {
 
 	renderSubmit() {
 		return (
-			<Button
-				basic
-				type="submit"
-				color="orange"
-				className={classnames({ disabled: this.isDisabledSubmit() })}
-				onClick={(e) => this.onClick(e)}
-			>
+			<div>
+				<Checkbox>
+					Create contract
+				</Checkbox>
+				<Button
+					basic
+					type="submit"
+					color="orange"
+					className={classnames({ disabled: this.isDisabledSubmit() })}
+					onClick={(e) => this.onClick(e)}
+				>
 				Create contract
-			</Button>
+				</Button>
+			</div>
 		);
 	}
 
