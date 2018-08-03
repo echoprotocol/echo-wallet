@@ -4,7 +4,7 @@ import { Map } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	options: null,
 	operation: '',
-	privateKey: null,
+	keys: null,
 	showOptions: null,
 });
 

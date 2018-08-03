@@ -80,7 +80,7 @@ export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getSt
 		fee = price.times(fee);
 	}
 
-	return { value: String(fee), asset: feeAsset };
+	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
@@ -134,7 +134,7 @@ export const transfer = () => async (dispatch, getState) => {
 			return;
 		}
 	} else {
-		const asset = getState().balances.get('assets').toArray().find((i) => i.id === fee.asset.id);
+		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
@@ -174,19 +174,25 @@ export const transfer = () => async (dispatch, getState) => {
 		showOptions.comment = comment.value;
 	}
 
-	const pubKey = fromAccount.active.key_auths[0][0];
-	if (!pubKey) return;
+	const activePubKey = fromAccount.active.key_auths[0][0];
+	const memoPubKey = fromAccount.options.memo_key;
+	if (!activePubKey || !memoPubKey) return;
 
 	dispatch(resetTransaction());
 
-	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+	const activePrivateKey = getState().keychain.getIn([activePubKey, 'privateKey']);
+	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options, showOptions }));
 
-	if (!privateKey) {
+	if (!activePrivateKey || !memoPrivateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		dispatch(setField('privateKey', privateKey));
+		dispatch(setField('keys', {
+			active: activePrivateKey,
+			memo: memoPrivateKey,
+		}));
+
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
@@ -229,23 +235,23 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		dispatch(setField('privateKey', privateKey));
+		dispatch(setField('keys', { active: privateKey }));
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
 };
 
 export const sendTransaction = () => async (dispatch, getState) => {
-	const { operation, privateKey, options } = getState().transaction.toJS();
+	const { operation, keys, options } = getState().transaction.toJS();
 
 	if (options.memo) {
 		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
 		const toAccount = (await dispatch(EchoJSActions.fetch(options.to))).toJS();
 
-		options.memo = getMemo(fromAccount, toAccount, options.memo, privateKey);
+		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, privateKey);
+	buildAndSendTransaction(operation, options, keys.active);
 
 	dispatch(closeModal(MODAL_DETAILS));
 

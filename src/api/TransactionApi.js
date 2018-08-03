@@ -2,11 +2,9 @@ import { TransactionBuilder, TransactionHelper, Aes, PrivateKey, ops } from 'ech
 
 export const buildAndSendTransaction = async (operation, options, privateKey) => {
 	const tr = new TransactionBuilder();
-
 	tr.add_type_operation(operation, options);
 
 	await tr.set_required_fees();
-
 	tr.add_signer(privateKey);
 
 	return tr.broadcast();
@@ -28,13 +26,13 @@ export const getMemo = (fromAccount, toAccount, memo, privateKey) => {
 	};
 };
 
-export const getMemoFee = (globalObject, memo, privateKey = '5KikQ23YhcM7jdfHbFBQg1G7Do5y6SgD9sdBZq7BqQWXmNH7gqo') => {
+export const getMemoFee = (globalObject, memo, privateKey = '5KGG3tFb5F4h3aiUSKNnKeDcNbL5y1ZVXQXVqpWVMYhW82zBrNb') => {
 	const nonce = TransactionHelper.unique_nonce_uint64();
 	const pKey = PrivateKey.fromWif(privateKey);
-	const memoFromKey = 'BTS6B1taKXkDojuC1qECjvC7g186d8AdeGtz8wnqWAsoRGC6RY8Rp';
-	const memoToKey = 'BTS8eLeqSZZtB1YHdw7KjQxRSRmaKAseCxhUSqaLxUdqvdGpp6nck';
+	const memoFromKey = 'ECHO7WBUN97NJfSXbDVDqLDQDKu8FasTb7YBdpbWoJF3RYo6qYY6aX';
+	const memoToKey = 'ECHO7WBUN97NJfSXbDVDqLDQDKu8FasTb7YBdpbWoJF3RYo6qYY6aX';
 
-	const message = Aes.encrypt_with_checksum(pKey, memoToKey, nonce, memo);
+	const message = Aes.encryptWithChecksum(pKey, memoToKey, nonce, memo);
 
 	const memoObject = {
 		from: memoFromKey,

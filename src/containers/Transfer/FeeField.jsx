@@ -15,6 +15,17 @@ class FeeComponent extends React.Component {
 		this.props.loadGlobalObject();
 	}
 
+	shouldComponentUpdate(nextProps) {
+		const { fee } = this.props;
+		const nextFee = nextProps.fee;
+
+		if (fee && nextFee.value === fee.value && (fee.asset && nextFee.asset.id === fee.asset.id)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	componentDidUpdate() {
 		const { assets, fee, comment } = this.props;
 		if ((assets && assets.length) && (fee && !fee.value)) {

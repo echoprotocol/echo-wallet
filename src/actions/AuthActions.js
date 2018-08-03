@@ -177,9 +177,14 @@ export const unlockAccount = ({
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));
 
-		const { options, privateKey } = getState().transaction.toJS();
-		if (options && !privateKey) {
-			dispatch(setField('privateKey', active.privateKey));
+		const { options, keys } = getState().transaction.toJS();
+		if (options && !keys) {
+			dispatch(setField('keys', {
+				owner: owner.privateKey,
+				active: active.privateKey,
+				memo: memo.privateKey,
+			}));
+
 			dispatch(openModal(MODAL_DETAILS));
 		}
 
