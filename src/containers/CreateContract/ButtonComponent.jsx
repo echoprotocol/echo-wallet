@@ -11,6 +11,11 @@ import { clearForm } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
+	constructor() {
+		super();
+		this.state = { checked: false };
+	}
+
 	componentDidMount() {
 		this.props.clearForm();
 	}
@@ -20,6 +25,12 @@ class ButtonComponent extends React.Component {
 
 		this.props.createContract({
 			bytecode: bytecode.value.trim(),
+		});
+	}
+
+	onToggle() {
+		this.setState({
+			checked: !this.state.checked,
 		});
 	}
 
@@ -36,9 +47,11 @@ class ButtonComponent extends React.Component {
 	renderSubmit() {
 		return (
 			<div>
-				<Checkbox>
-					Create contract
-				</Checkbox>
+				<Checkbox
+					label="Add to watch list"
+					onClick={() => this.onToggle()}
+					checked={this.state.checked}
+				/>
 				<Button
 					basic
 					type="submit"
