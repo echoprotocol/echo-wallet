@@ -4,6 +4,10 @@ import { getHash } from '../api/ContractApi';
 export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
 
 export const formatFullMethod = (method, args) => {
+	if (!args || !args.length) {
+		return 'Error. Input args pls';
+	}
+
 	const argsString = args.map((arg) => {
 		let newArg = '';
 		if (ChainValidation.is_object_id(arg)) {

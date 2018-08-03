@@ -1,11 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Input } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import formatAbi from '../../actions/AbiActions';
-
-// import InputRequest from './InputComponent';
 
 import { FORM_CONTRACT_CONSTANT } from '../../constants/FormConstants';
 
@@ -67,13 +65,11 @@ class TabContractProps extends React.Component {
 }
 
 TabContractProps.propTypes = {
-	constants: PropTypes.any,
 	accountId: PropTypes.any,
 	formatAbi: PropTypes.func.isRequired,
 };
 
 TabContractProps.defaultProps = {
-	constants: '',
 	accountId: '',
 };
 

@@ -28,9 +28,6 @@ import erc20abi from '../../config/erc20.abi.test1.json';
  */
 
 export const contractQuery = (method, args, options) => async (dispatch, getState) => {
-	if (!args || !args.length) {
-		return 'Error. Input args pls';
-	}
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const valueBalanceOf =
 		await getContractConstant(
