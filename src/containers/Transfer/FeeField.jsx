@@ -16,22 +16,17 @@ class FeeComponent extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const { fee } = this.props;
-		const nextFee = nextProps.fee;
+		const { fee, comment } = this.props;
 
-		if (fee && nextFee.value === fee.value && (fee.asset && nextFee.asset.id === fee.asset.id)) {
-			return false;
-		}
+		if (!fee.asset && nextProps.assets) { return true; }
 
-		return true;
-	}
+		if (fee.value !== nextProps.fee.value) { return true; }
 
-	componentDidUpdate() {
-		const { assets, fee, comment } = this.props;
-		if ((assets && assets.length) && (fee && !fee.value)) {
-			const value = this.props.getFee(assets[0].id, comment.value);
-			this.props.setValue('fee', value);
-		}
+		if (fee.asset.id && nextProps.fee.asset.id) { return true; }
+
+		if (comment.value !== nextProps.comment.value) { return true; }
+
+		return false;
 	}
 
 	onFee(fee) {

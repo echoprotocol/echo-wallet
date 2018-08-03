@@ -4,27 +4,22 @@ import { connect } from 'react-redux';
 import { Form, Button } from 'semantic-ui-react';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { setFormValue, clearForm } from '../../actions/FormActions';
-import { transfer, getFee } from '../../actions/TransactionActions';
+import { clearForm } from '../../actions/FormActions';
+import { transfer } from '../../actions/TransactionActions';
 
 import ToAccountField from './ToAccountField';
 import AmountField from './AmountField';
 import FeeField from './FeeField';
+import CommentField from './CommentField';
 
 class Transfer extends React.Component {
 
-	componentWillUnmount() {
-		this.props.clearForm();
+	shouldComponentUpdate(nextProps) {
+		return nextProps.accountName !== this.props.accountName;
 	}
 
-	onComment(e) {
-		e.preventDefault();
-		const comment = e.target.value;
-		this.props.setFormValue('comment', comment);
-		const { fee, assets } = this.props;
-
-		const { value } = this.props.getFee(fee.asset ? fee.asset.id : assets[0].id, comment);
-		this.props.setFormValue('fee', value);
+	componentWillUnmount() {
+		this.props.clearForm();
 	}
 
 	onSend() {
@@ -32,7 +27,7 @@ class Transfer extends React.Component {
 	}
 
 	render() {
-		const { account, comment } = this.props;
+		const { accountName } = this.props;
 
 		return (
 			<Form className="main-form">
@@ -40,23 +35,14 @@ class Transfer extends React.Component {
 					<Form.Field>
 						<label htmlFor="accountFrom">From</label>
 						<div className="ui">
-							<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={account.name} />
+							<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
 							<span className="error-message" />
 						</div>
 					</Form.Field>
 					<ToAccountField />
 					<AmountField />
 					<FeeField />
-					<Form.Field>
-						<Form.Field
-							label="Comment"
-							className="comment"
-							placeholder="Comment"
-							control="textarea"
-							value={comment.value}
-							onInput={(e) => this.onComment(e)}
-						/>
-					</Form.Field>
+					<CommentField />
 					<div className="form-panel">
 						{/*
 							<div className="total-sum">
@@ -74,33 +60,17 @@ class Transfer extends React.Component {
 }
 
 Transfer.propTypes = {
-	fee: PropTypes.object,
-	assets: PropTypes.array,
-	account: PropTypes.object.isRequired,
-	comment: PropTypes.any.isRequired,
-	setFormValue: PropTypes.func.isRequired,
+	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
-	getFee: PropTypes.func.isRequired,
-};
-
-
-Transfer.defaultProps = {
-	fee: null,
-	assets: null,
 };
 
 export default connect(
 	(state) => ({
-		account: state.global.getIn(['activeUser']).toJS(),
-		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
-		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
-		assets: state.balance.get('assets').toArray(),
+		accountName: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
 		transfer: (params) => dispatch(transfer(params)),
-		getFee: (value, comment) => dispatch(getFee('transfer', value, comment)),
 	}),
 )(Transfer);

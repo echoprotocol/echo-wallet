@@ -113,9 +113,12 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 };
 
 export const transfer = () => async (dispatch, getState) => {
+	const form = getState().form.get(FORM_TRANSFER).toJS();
+
 	const {
-		to, amount, currency, fee, comment,
-	} = getState().form.get(FORM_TRANSFER).toJS();
+		to, amount, currency, comment,
+	} = form;
+	let { fee } = form;
 
 	if (to.error || amount.error || fee.error || comment.error) {
 		return;
@@ -124,6 +127,10 @@ export const transfer = () => async (dispatch, getState) => {
 	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
+	}
+
+	if (!fee.value || !fee.asset) {
+		fee = dispatch(getFee('transfer', '1.3.0', comment.value));
 	}
 
 	if (currency.id === fee.asset.id) {
