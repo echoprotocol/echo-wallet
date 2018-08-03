@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import formatAmount from '../../helpers/HistoryHelper';
-import { parseAssetsBalances } from '../../actions/BalanceActions';
+import { getAssetsBalances } from '../../actions/BalanceActions';
 
 class Assets extends React.Component {
 
@@ -110,6 +110,6 @@ export default connect(
 		return { account, assets, statistics };
 	},
 	(dispatch) => ({
-		formatAssetsBalances: (value) => dispatch(parseAssetsBalances(value)),
+		formatAssetsBalances: (value) => dispatch(getAssetsBalances(value)),
 	}),
 )(Assets);

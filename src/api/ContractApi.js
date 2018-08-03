@@ -2,9 +2,9 @@ import { keccak256 } from 'js-sha3';
 
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
-const getContractProp = (instance, contract, account, method) => instance.dbApi().exec(
+const getContractProp = (instance, contract, account, code) => instance.dbApi().exec(
 	'call_contract_no_changing_state',
-	[contract, account, '1.3.0', method],
+	[contract, account, '1.3.0', code],
 );
 
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);

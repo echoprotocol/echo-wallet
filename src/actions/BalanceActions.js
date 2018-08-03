@@ -8,12 +8,14 @@ import {
 	getTokenSymbol,
 } from '../api/ContractApi';
 
+import { checkBlockTransaction, checkTransactionResult } from '../helpers/TokenHelper';
+
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
-export const parseAssetsBalances = (assets) => async (dispatch) => {
+export const getAssetsBalances = (assets) => async (dispatch) => {
 
 	if (assets && Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
@@ -31,23 +33,27 @@ export const parseAssetsBalances = (assets) => async (dispatch) => {
 	}
 };
 
-export const initBalances = (accountId) => async (dispatch) => {
+export const getTokenBalances = (accountId) => async (dispatch) => {
+
 	/**
-	 *  Tokens structure
-	 *  tokens: {
+     *  Tokens structure
+     *  tokens: {
 	 *  	[accountId]: {
 	 *  		[tokenSymbol]: [contractId]
 	 *  	}
 	 *  }
-	 */
+     */
 	let tokens = localStorage.getItem('tokens');
 	tokens = tokens ? JSON.parse(tokens) : {};
 
 	if (tokens && tokens[accountId]) {
 		let balances = Object.keys(tokens[accountId]).map(async (symbol) => {
-			const balance = await getTokenBalance(accountId, tokens[accountId][symbol]);
+			const contractId = tokens[accountId][symbol];
+			const balance = await getTokenBalance(accountId, contractId);
 			const precision = 18; // TODO get precision
-			return { symbol, precision, balance };
+			return {
+				symbol, precision, balance, contractId,
+			};
 		});
 
 		balances = await Promise.all(balances);
@@ -57,16 +63,43 @@ export const initBalances = (accountId) => async (dispatch) => {
 			value: new List(balances),
 		}));
 	}
+};
+
+export const updateTokenBalances = () => async (dispatch, getState) => {
+
+	const tokens = getState().balance.get('tokens');
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	if (!tokens.size || !accountId) return;
+
+	let balances = tokens.map(async (value) => {
+		const balance = await getTokenBalance(accountId, value.symbol);
+		const precision = 18; // TODO get precision
+		return { symbol: value.symbol, precision, balance };
+	});
+
+	balances = await Promise.all(balances);
+
+	dispatch(BalanceReducer.actions.set({
+		field: 'tokens',
+		value: new List(balances),
+	}));
+};
+
+export const initBalances = (accountId) => async (dispatch) => {
+
+	await await dispatch(getTokenBalances(accountId));
 
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
-	await dispatch(parseAssetsBalances(assets));
+	await dispatch(getAssetsBalances(assets));
 };
 
 export const addToken = (address) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const contractId = `1.16.${getContractId(address)}`;
+	// const contractId = `1.16.${getContractId(address)}`;
+	const contractId = `1.16.${address}`;
 
 	try {
 		const contract = await getContract(instance, contractId);
@@ -97,7 +130,9 @@ export const addToken = (address) => async (dispatch, getState) => {
 		const precision = 18; // TODO get precision
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
-			value: { symbol, precision, balance },
+			value: {
+				symbol, precision, balance, contractId,
+			},
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
@@ -108,9 +143,35 @@ export const addToken = (address) => async (dispatch, getState) => {
 };
 
 export const getBlock = (block) => async (dispatch, getState) => {
-	const transactions = block.transactions;
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	if (!accountId) return;
+
+	const tokens = getState().balance.get('tokens');
+
+	if (!tokens.size) return;
+
+	// console.log(await getState().echojs.getIn(['system', 'instance']).dbApi().exec(
+	// 	'call_contract_no_changing_state',
+	// 	['1.16.9', '1.2.26', '1.3.0', getHash('balanceOf(address)').substr(0, 8).concat('0000000000000000000000000000000000000000000000000000000000000019')],
+	// ));
+	const { transactions } = block;
 	if (!transactions.length) return;
 
+	let isNeedUpdate = false;
+	transactions.some((tr) => {
+		isNeedUpdate = tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens));
+		if (isNeedUpdate) return true;
+		isNeedUpdate = tr.operation_results.some(async (r) => {
+			const operationResult = r[1];
+			const result = (await getState()
+				.echojs.getIn(['system', 'instance'])
+				.dbApi().exec('get_contract_result', [operationResult]));
+			return checkTransactionResult(accountId, result);
+		});
 
+		return isNeedUpdate;
+	});
+	if (isNeedUpdate) await dispatch(updateTokenBalances());
 };
-
