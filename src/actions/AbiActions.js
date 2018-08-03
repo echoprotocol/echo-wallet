@@ -7,9 +7,7 @@ import {
 
 import { getContractConstant, getContractId, getAddress } from '../api/ContractApi';
 
-import { formatFullMethod, formatSignature } from '../helpers/AbiHelper';
-
-import erc20abi from '../../config/erc20.abi.test1.json';
+import { reformatMethod, formatSignature } from '../helpers/AbiHelper';
 
 
 /**
@@ -34,7 +32,7 @@ export const contractQuery = (method, args, options) => async (dispatch, getStat
 			instance,
 			options.accountId,
 			options.contractId,
-			formatFullMethod(method, args),
+			reformatMethod(method, args),
 		);
 	dispatch(setValue(FORM_CONTRACT_CONSTANT, 'queue', valueBalanceOf));
 };
@@ -42,7 +40,7 @@ export const contractQuery = (method, args, options) => async (dispatch, getStat
 export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
-	const abi = erc20abi;
+	const abi = localStorage.getItem(contractId);
 
 	const address = (await getAddress(instance, '1.17.0')).exec_res.new_address;
 	contractId = `1.16.${getContractId(address)}`;
