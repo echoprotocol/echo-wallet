@@ -1,67 +1,76 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Form, Segment, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Form, Button } from 'semantic-ui-react';
 
-import Header from '../../components/Header/index';
-import Footer from '../../components/Footer/index';
-import SidebarMenu from '../../components/SideMenu/index';
-import FormComponent from './FormComponent';
-import { hideBar } from '../../actions/GlobalActions';
+import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { clearForm } from '../../actions/FormActions';
+import { transfer } from '../../actions/TransactionActions';
+
+import ToAccountField from './ToAccountField';
+import AmountField from './AmountField';
+import FeeField from './FeeField';
+import CommentField from './CommentField';
 
 class Transfer extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { visibleBar: false };
-		this.toggleSidebar = this.toggleSidebar.bind(this);
-		this.sidebarHide = this.sidebarHide.bind(this);
+	shouldComponentUpdate(nextProps) {
+		return nextProps.accountName !== this.props.accountName;
 	}
 
-	toggleSidebar() {
-		this.setState({ visibleBar: !this.state.visibleBar });
+	componentWillUnmount() {
+		this.props.clearForm();
 	}
 
-	sidebarHide() {
-		if (this.state.visibleBar) {
-			this.setState({ visibleBar: false });
-		}
+	onSend() {
+		this.props.transfer();
 	}
+
 	render() {
+		const { accountName } = this.props;
 
 		return (
-			<Sidebar.Pushable as={Segment}>
-				<SidebarMenu />
-				<Sidebar.Pusher
-					dimmed={this.props.visibleBar}
-					onClick={() => this.props.hideBar()}
-				>
-					<Segment basic className="wrapper">
-						<Header onToggleSidebar={this.toggleSidebar} />
-						<div className="content center-mode ">
-							<Form className="main-form">
-								<FormComponent />
-							</Form>
+			<Form className="main-form">
+				<div className="field-wrap">
+					<Form.Field>
+						<label htmlFor="accountFrom">From</label>
+						<div className="ui">
+							<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
+							<span className="error-message" />
 						</div>
-						<Footer />
-					</Segment>
-				</Sidebar.Pusher>
-			</Sidebar.Pushable>
+					</Form.Field>
+					<ToAccountField />
+					<AmountField />
+					<FeeField />
+					<CommentField />
+					<div className="form-panel">
+						{/*
+							<div className="total-sum">
+		                        Total Transaction Sum:
+								<span>0.0009287 BTC</span>
+							</div>
+						*/}
+						<Button basic type="submit" color="orange" onClick={(e) => this.onSend(e)}>Send</Button>
+					</div>
+				</div>
+			</Form>
 		);
 	}
 
 }
 
 Transfer.propTypes = {
-	visibleBar: PropTypes.bool.isRequired,
-	hideBar: PropTypes.func.isRequired,
+	accountName: PropTypes.string.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	transfer: PropTypes.func.isRequired,
 };
 
 export default connect(
 	(state) => ({
-		visibleBar: state.global.get('visibleBar'),
+		accountName: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
-		hideBar: () => dispatch(hideBar()),
+		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
+		transfer: (params) => dispatch(transfer(params)),
 	}),
 )(Transfer);

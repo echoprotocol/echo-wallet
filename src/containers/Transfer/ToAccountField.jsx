@@ -24,17 +24,19 @@ class ToAccountComponent extends React.Component {
 			clearTimeout(this.state.timeout);
 		}
 
+		const value = e.target.value.toLowerCase().trim();
+
 		this.props.setIn('to', {
 			loading: true,
-			value: e.target.value.toLowerCase().trim(),
-			error: null,
+			error: this.props.fromAccount === value ? 'You can not send funds to yourself' : null,
 			checked: false,
+			value,
 		});
 
 		this.setState({
 			timeout: setTimeout(() => {
 				this.props.checkAccount(this.props.to.value);
-			}, 3 * 1000),
+			}, 300),
 		});
 	}
 
@@ -44,9 +46,9 @@ class ToAccountComponent extends React.Component {
 		return (
 			<Form.Field>
 				<label htmlFor="accountTo">To</label>
-				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading, error: to.error })}>
+				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error, error: to.error })}>
 					<input name="accountTo" value={to.value} onInput={(e) => this.onInput(e)} />
-					{ to.checked ? <span className="icon-checked_1 value-status" /> : null }
+					{ to.checked && !to.error ? <span className="icon-checked_1 value-status" /> : null }
 					{ to.error ? <span className="icon-error_input value-status" /> : null }
 					<span className="error-message">{to.error}</span>
 				</Input>
@@ -57,6 +59,7 @@ class ToAccountComponent extends React.Component {
 }
 
 ToAccountComponent.propTypes = {
+	fromAccount: PropTypes.any.isRequired,
 	to: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
@@ -64,6 +67,7 @@ ToAccountComponent.propTypes = {
 
 export default connect(
 	(state) => ({
+		fromAccount: state.global.getIn(['activeUser', 'name']),
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
 	}),
 	(dispatch) => ({
