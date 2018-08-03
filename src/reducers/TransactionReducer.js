@@ -4,7 +4,8 @@ import { Map } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	options: null,
 	operation: '',
-	privateKey: null,
+	keys: null,
+	showOptions: null,
 });
 
 export default createModule({
@@ -36,6 +37,7 @@ export default createModule({
 			reducer: (state, { payload }) => {
 				state = state.set('operation', payload.operation);
 				state = state.set('options', new Map(payload.options));
+				state = state.set('showOptions', new Map(payload.showOptions));
 
 				return state;
 			},
