@@ -3,7 +3,7 @@ import { getHash } from '../api/ContractApi';
 
 export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
 
-export const reformatMethod = (method, args) => {
+export const getMethod = (method, args) => {
 	if (!args || !args.length) {
 		return 'Error. Input args pls';
 	}

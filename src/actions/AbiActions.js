@@ -7,8 +7,7 @@ import {
 
 import { getContractConstant, getContractId, getAddress } from '../api/ContractApi';
 
-import { reformatMethod, formatSignature } from '../helpers/AbiHelper';
-
+import { getMethod, formatSignature } from '../helpers/AbiHelper';
 
 /**
  * parameters
@@ -32,7 +31,7 @@ export const contractQuery = (method, args, options) => async (dispatch, getStat
 			instance,
 			options.accountId,
 			options.contractId,
-			reformatMethod(method, args),
+			getMethod(method, args),
 		);
 	dispatch(setValue(FORM_CONTRACT_CONSTANT, 'queue', valueBalanceOf));
 };
@@ -40,12 +39,12 @@ export const contractQuery = (method, args, options) => async (dispatch, getStat
 export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
-	const abi = localStorage.getItem(contractId);
 
-	const address = (await getAddress(instance, '1.17.0')).exec_res.new_address;
+	const address = (await getAddress(instance, contractId)).exec_res.new_address;
 	contractId = `1.16.${getContractId(address)}`;
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const abi = localStorage.getItem('contracts')[accountId][contractId];
 
 	if (isConst) {
 		let constants = abi.filter((value) =>
@@ -62,10 +61,12 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 				configurable: true,
 			});
 		});
+
 		constants = await Promise.all(constants);
+
 		dispatch(setValue(FORM_CONTRACT_CONSTANT, 'constants', new List(constants)));
 	} else {
-		const functions = abi.filter((value) => !value.constant && value.name);
+		const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
 
 		dispatch(setValue(FORM_CONTRACT_FUNCTION, 'functions', new List(functions)));
 	}
