@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_TRANSFER, FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
@@ -12,6 +12,7 @@ import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
+import { validateCode } from '../helpers/TransactionHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
@@ -215,6 +216,14 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
 
 	if (!pubKey) return;
+
+	const error = validateCode(bytecode);
+	console.log(error)
+
+	if (error) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
+		return;
+	}
 
 	dispatch(resetTransaction());
 
