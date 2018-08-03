@@ -40,7 +40,8 @@
         "redux-modules": "^1.1.0",
         "redux-thunk": "^2.3.0",
         "semantic-ui-react": "^0.78.3",
-        "uglifyjs-webpack-plugin": "^1.2.2"
+        "uglifyjs-webpack-plugin": "^1.2.2",
+        "utf8": "^3.0.0"
     },
     "devDependencies": {
         "babel-loader": "^7.1.3",

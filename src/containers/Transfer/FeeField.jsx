@@ -16,7 +16,7 @@ class FeeComponent extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const { fee, comment } = this.props;
+		const { fee, comment, currency } = this.props;
 
 		if (!fee.asset && nextProps.assets) { return true; }
 
@@ -26,6 +26,8 @@ class FeeComponent extends React.Component {
 
 		if (comment.value !== nextProps.comment.value) { return true; }
 
+		if (currency && currency.type !== nextProps.currency.type) { return true; }
+
 		return false;
 	}
 
@@ -34,8 +36,14 @@ class FeeComponent extends React.Component {
 	}
 
 	getOptions() {
-		const options = this.props.assets.map(({ id, precision, symbol }) => {
-			const fee = this.props.getFee(id, this.props.comment.value);
+		const options = this.props.assets.map(({
+			id, precision, symbol, type,
+		}) => {
+			const fee = this.props.getFee(
+				type === 'tokens' ? 'contract' : 'transfer',
+				id,
+				this.props.comment.value,
+			);
 
 			return {
 				key: symbol,
@@ -76,6 +84,7 @@ class FeeComponent extends React.Component {
 FeeComponent.propTypes = {
 	assets: PropTypes.any,
 	fee: PropTypes.any,
+	currency: PropTypes.any,
 	comment: PropTypes.any.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
@@ -85,6 +94,7 @@ FeeComponent.propTypes = {
 FeeComponent.defaultProps = {
 	fee: null,
 	assets: null,
+	currency: null,
 };
 
 export default connect(
@@ -92,10 +102,11 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
 		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
+		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 	}),
 	(dispatch) => ({
 		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
 		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
-		getFee: (value, comment) => dispatch(getFee('transfer', value, comment)),
+		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
 	}),
 )(FeeComponent);

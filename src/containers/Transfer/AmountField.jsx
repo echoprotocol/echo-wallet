@@ -40,8 +40,8 @@ class AmountField extends React.Component {
 		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
-	setCurrency(currency) {
-		this.props.setValue('currency', currency);
+	setCurrency(currency, type) {
+		this.props.setValue('currency', { ...currency, type });
 	}
 
 	getAvailableAmount(currency) {
@@ -70,7 +70,7 @@ class AmountField extends React.Component {
 		return this.props[type].reduce((arr, a, i) => {
 			const id = i;
 			arr.push((
-				<Dropdown.Item key={id} onClick={(e) => this.setCurrency(a, e)}>
+				<Dropdown.Item key={id} onClick={(e) => this.setCurrency(a, type, e)}>
 					{a.symbol}
 				</Dropdown.Item>
 			));
