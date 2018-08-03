@@ -51,6 +51,7 @@ const DEFAULT_FORM_FIELDS = {
 	}),
 	[FORM_CONTRACT_CONSTANT]: Map({
 		constants: List(),
+		queue: List(),
 	}),
 	[FORM_CONTRACT_FUNCTION]: Map({
 		functions: List(),

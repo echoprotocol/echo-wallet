@@ -1,5 +1,4 @@
 import { List } from 'immutable';
-import * as abiDecoder from 'abi-decoder';
 import { setValue } from './FormActions';
 import {
 	FORM_CONTRACT_CONSTANT,
@@ -8,38 +7,59 @@ import {
 
 import { getContractConstant, getContractId, getAddress } from '../api/ContractApi';
 
+import { formatFullMethod, formatSignature } from '../helpers/AbiHelper';
+
 import erc20abi from '../../config/erc20.abi.test1.json';
 
-const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
+
+/**
+ * parameters
+ * method: {
+ *     name,
+ *     inputs: ARRAY: {
+ *         type
+ *     }
+ * },
+ * args: ARRAY,
+ * options: {
+ *     accountId,
+ *     contractId,
+ * },
+ */
+
+export const contractQuery = (method, args, options) => async (dispatch, getState) => {
+	if (!args || !args.length) {
+		return 'Error. Input args pls';
+	}
+	const instance = getState().echojs.getIn(['system', 'instance']);
+	const valueBalanceOf =
+		await getContractConstant(
+			instance,
+			options.accountId,
+			options.contractId,
+			formatFullMethod(method, args),
+		);
+	dispatch(setValue(FORM_CONTRACT_CONSTANT, 'queue', valueBalanceOf));
+};
+
+export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
-
-	// const abi = getState().global.getIn(['activeUser', 'contracts', contractId]);
-	abiDecoder.addABI(erc20abi);
-	const newAbi = abiDecoder.getMethodIDs();
+	const abi = erc20abi;
 
 	const address = (await getAddress(instance, '1.17.0')).exec_res.new_address;
-
 	contractId = `1.16.${getContractId(address)}`;
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	let accountNum = 22;
-	accountNum = accountNum.toString(16);
-	accountNum += '00000000000000000000000000000000000000';
 
 	if (isConst) {
-		let constants = Object.entries(newAbi).filter((value) =>
-			value[1].constant && value[1].name && !value[1].inputs.length);
-		let balanceOf = Object.entries(newAbi).filter((value) => value[1].constant && value[1].name === 'balanceOf')[0][0];
-		balanceOf += `(${accountNum})`;
-		const valueBalanceOf =
-            await getContractConstant(instance, accountId, contractId, balanceOf);
-		console.log(balanceOf, valueBalanceOf);
+		let constants = abi.filter((value) =>
+			value.constant && value.name && !value.inputs.length);
 
 		constants = constants.map(async (constant) => {
+			const method = formatSignature(constant);
 			const constantValue =
-				await getContractConstant(instance, accountId, contractId, constant[0]);
-			console.log(constant[1].name, constant[0], constantValue);
+				await getContractConstant(instance, accountId, contractId, method);
 			return Object.defineProperty(constant, 'constantValue', {
 				value: constantValue,
 				writable: true,
@@ -55,5 +75,3 @@ const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
 		dispatch(setValue(FORM_CONTRACT_FUNCTION, 'functions', new List(functions)));
 	}
 };
-
-export default formatAbi;
