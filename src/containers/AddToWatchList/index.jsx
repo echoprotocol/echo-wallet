@@ -18,7 +18,7 @@ class AddToWatchList extends React.Component {
 								placeholder="Name"
 								name="Name"
 								className="ui input"
-								value="Name.value"
+								defaultValue="Name.value"
 							/>
 							<span className="error-message">Name.error</span>
 						</div>
@@ -31,7 +31,7 @@ class AddToWatchList extends React.Component {
 								placeholder="Contract ID"
 								name="ID"
 								className="ui input"
-								value="ID.value"
+								defaultValue="ID.value"
 							/>
 							<span className="error-message">ID.error</span>
 						</div>
@@ -44,7 +44,7 @@ class AddToWatchList extends React.Component {
 								placeholder="Contract ABI"
 								name="abi"
 								className="ui input"
-								value="abi.value"
+								defaultValue="abi.value"
 							/>
 							<span className="error-message">abi.error</span>
 						</div>
