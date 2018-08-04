@@ -9,6 +9,11 @@ import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 import { createContract } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
 
+import ToastActions from '../../actions/ToastActions';
+import ToastSuccess from '../../components/Toast/ToastSuccess';
+import ToastError from '../../components/Toast/ToastError';
+import ToastInfo from '../../components/Toast/ToastInfo';
+
 class ButtonComponent extends React.Component {
 
 	constructor() {
@@ -21,6 +26,10 @@ class ButtonComponent extends React.Component {
 	}
 
 	onClick() {
+		ToastActions.toastInfo(ToastInfo);
+		ToastActions.toastSuccess(ToastSuccess);
+		ToastActions.toastError(ToastError);
+
 		const { bytecode } = this.props;
 
 		this.props.createContract({
