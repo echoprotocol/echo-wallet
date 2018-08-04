@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
+import formatAmount from '../../helpers/HistoryHelper';
 
 
 class Tokens extends React.Component {
@@ -21,11 +22,13 @@ class Tokens extends React.Component {
 	}
 
 	renderList() {
-		return this.props.tokens.map((token) => (
-			<Table.Row>
-				<Table.Cell>{token.name}</Table.Cell>
+		return this.props.tokens.map(({
+			id, symbol, precision, balance,
+		}) => (
+			<Table.Row key={id}>
+				<Table.Cell>{symbol}</Table.Cell>
 				<Table.Cell>
-					{token.balance}
+					{formatAmount(balance, precision, '')}
 					<span className="icon-close" />
 				</Table.Cell>
 			</Table.Row>
@@ -74,7 +77,7 @@ Tokens.defaultProps = {
 
 export default connect(
 	(state) => ({
-		tokens: state.global.get('tokens'),
+		tokens: state.balance.get('tokens'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
