@@ -21,7 +21,7 @@ class AmountField extends React.Component {
 
 		const value = e.target.value.trim();
 
-		if (!Math.floor(value * (10 ** currency.precision))) {
+		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
 			this.props.setValue(
 				'amount',
 				{
@@ -92,7 +92,7 @@ class AmountField extends React.Component {
 						<li>
 							Available Balance:
 							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
-								{ currency ? formatAmount(this.getAvailableAmount(currency), currency.precision, currency.symbol) : '0 ECHO' }
+								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO' }
 							</span>
 						</li>
 					</ul>

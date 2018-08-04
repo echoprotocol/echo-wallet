@@ -2,19 +2,19 @@ import operations from '../constants/Operations';
 
 const AREA_FIELDS = ['code'];
 
-export const getTransactionDetails = (operationType, options) => {
+export const getTransactionDetails = (operationType, showOptions) => {
 	const operation = operations[operationType];
 
-	const result = Object.entries(options).reduce((obj, [name, value]) => {
+	const result = Object.entries(showOptions).reduce((obj, [name, value]) => {
 		obj[name] = {
-			data: JSON.stringify(value),
+			data: value,
 			field: AREA_FIELDS.includes(name) ? 'area' : 'input',
 		};
 		return obj;
 	}, {
 		operation: {
 			field: 'input',
-			data: JSON.stringify(operation.name),
+			data: operation.name,
 		},
 	});
 

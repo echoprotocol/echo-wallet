@@ -22,6 +22,12 @@ class App extends React.Component {
 		this.props.connection();
 	}
 
+	onPusher() {
+		if (!this.props.visibleBar) { return; }
+
+		this.props.hideBar();
+	}
+
 	renderWrapper() {
 		const { globalLoading, children, location } = this.props;
 
@@ -50,7 +56,7 @@ class App extends React.Component {
 									<Sidebar.Pusher
 										key="sidebar-pusher"
 										dimmed={this.props.visibleBar}
-										onClick={() => this.props.hideBar()}
+										onClick={() => this.onPusher()}
 									>
 										{ this.renderWrapper() }
 									</Sidebar.Pusher>,

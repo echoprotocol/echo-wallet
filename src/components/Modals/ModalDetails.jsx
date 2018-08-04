@@ -23,7 +23,7 @@ class ModalDetails extends React.Component {
 
 	getArea(key, data) {
 		return (
-			<Form.Field className="comment" key={key} label={key} placeholder="Data" disabled control="textarea" value={data} />
+			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
 		);
 	}
 
@@ -34,16 +34,16 @@ class ModalDetails extends React.Component {
 					{key}
 				</label>
 				<div>
-					<input type="text" placeholder="Fee" name="Fee" disabled className="ui input" value={data} />
+					<input type="text" name="Fee" disabled className="ui input" value={data} />
 				</div>
 			</Form.Field>
 		);
 	}
 
 	renderOptions() {
-		const { operation, options } = this.props;
+		const { operation, showOptions } = this.props;
 
-		const formatedOptions = getTransactionDetails(operation, options.toJS());
+		const formatedOptions = getTransactionDetails(operation, showOptions.toJS());
 
 		return Object.entries(formatedOptions).map(([key, value]) => (
 			value.field === 'area' ? this.getArea(key, value.data) : this.getInput(key, value.data)
@@ -51,7 +51,7 @@ class ModalDetails extends React.Component {
 	}
 
 	render() {
-		const { options, show } = this.props;
+		const { showOptions, show } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -70,7 +70,7 @@ class ModalDetails extends React.Component {
 								<h3>Confirm transaction</h3>
 							</div>
 							<div className="field-wrap">
-								{ options ? this.renderOptions() : null }
+								{ showOptions ? this.renderOptions() : null }
 							</div>
 							<div className="form-panel">
 								<Button basic type="button" color="grey" onClick={() => this.onClose()}>Cancel</Button>
@@ -87,7 +87,7 @@ class ModalDetails extends React.Component {
 
 ModalDetails.propTypes = {
 	show: PropTypes.bool,
-	options: PropTypes.any,
+	showOptions: PropTypes.any,
 	operation: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
@@ -96,14 +96,14 @@ ModalDetails.propTypes = {
 
 ModalDetails.defaultProps = {
 	show: false,
-	options: null,
+	showOptions: null,
 	operation: '',
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_DETAILS, 'show']),
-		options: state.transaction.get('options'),
+		showOptions: state.transaction.get('showOptions'),
 		operation: state.transaction.get('operation'),
 	}),
 	(dispatch) => ({
