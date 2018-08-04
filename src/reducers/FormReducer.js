@@ -74,6 +74,14 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		name: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
 		accepted: false,
 	}),
 };

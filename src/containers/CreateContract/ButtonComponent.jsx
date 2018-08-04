@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Checkbox } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -11,6 +11,11 @@ import { clearForm } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
+	constructor() {
+		super();
+		this.state = { checked: false };
+	}
+
 	componentDidMount() {
 		this.props.clearForm();
 	}
@@ -20,6 +25,12 @@ class ButtonComponent extends React.Component {
 
 		this.props.createContract({
 			bytecode: bytecode.value.trim(),
+		});
+	}
+
+	onToggle() {
+		this.setState({
+			checked: !this.state.checked,
 		});
 	}
 
@@ -35,15 +46,22 @@ class ButtonComponent extends React.Component {
 
 	renderSubmit() {
 		return (
-			<Button
-				basic
-				type="submit"
-				color="orange"
-				className={classnames({ disabled: this.isDisabledSubmit() })}
-				onClick={(e) => this.onClick(e)}
-			>
+			<div>
+				<Checkbox
+					label="Add to watch list"
+					onClick={() => this.onToggle()}
+					checked={this.state.checked}
+				/>
+				<Button
+					basic
+					type="submit"
+					color="orange"
+					className={classnames({ disabled: this.isDisabledSubmit() })}
+					onClick={(e) => this.onClick(e)}
+				>
 				Create contract
-			</Button>
+				</Button>
+			</div>
 		);
 	}
 

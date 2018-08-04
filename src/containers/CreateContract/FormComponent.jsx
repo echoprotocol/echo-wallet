@@ -23,7 +23,7 @@ class FormComponent extends React.Component {
 	}
 
 	render() {
-		const { bytecode } = this.props;
+		const { bytecode, name, abi } = this.props;
 
 		return (
 			<div className="field-wrap">
@@ -40,6 +40,26 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e, true)}
 					/>
 				</Form.Field>
+				<Form.Field>
+					<Form.Field
+						label="Name"
+						placeholder="Name"
+						control="input"
+						name="name"
+						value={name.value}
+						onChange={(e) => this.onChange(e, true)}
+					/>
+				</Form.Field>
+				<Form.Field>
+					<Form.Field
+						label="Abi"
+						placeholder="Abi"
+						control="textarea"
+						name="abi"
+						value={abi.value}
+						onChange={(e) => this.onChange(e, true)}
+					/>
+				</Form.Field>
 			</div>
 		);
 	}
@@ -48,12 +68,15 @@ class FormComponent extends React.Component {
 
 FormComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
+	name: PropTypes.object.isRequired,
+	abi: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 };
-
 export default connect(
 	(state) => ({
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
+		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
+		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
