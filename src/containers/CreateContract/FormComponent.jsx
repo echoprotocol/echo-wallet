@@ -29,7 +29,7 @@ class FormComponent extends React.Component {
 				<div className="form-info">
 					<h3>Create Smart Contract</h3>
 				</div>
-				<Form.Field>
+				<div className="action-wrap error">
 					<Form.Field
 						label="ByteCode"
 						placeholder="Byte Code"
@@ -39,7 +39,9 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 					/>
 					{bytecode.error && <span className="error-message">{bytecode.error}</span>}
-				</Form.Field>
+
+				</div>
+
 			</div>
 		);
 	}

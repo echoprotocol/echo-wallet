@@ -1,16 +1,17 @@
 /* eslint-disable import/prefer-default-export */
+const reg = /^[0-9a-fA-F]+$/;
+
 export const validateCode = (code) => {
 	if (!code) {
 		return 'field should be not empty';
 	}
 
-	const hexNumber = parseInt(code, 16);
-	if (hexNumber.toString(16) !== code.toLowerCase()) {
+	if (!reg.test(code)) {
 		return 'field should be hex string';
 	}
 
 	if (code.length % 2 !== 0) {
-		return 'field should be hex string';
+		return 'code should include an even count of symbol';
 	}
 
 	return null;

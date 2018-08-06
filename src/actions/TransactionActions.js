@@ -10,6 +10,7 @@ import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
+import ToastActions from '../actions/ToastActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
 import { validateCode } from '../helpers/TransactionHelper';
@@ -210,7 +211,6 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-
 	if (!activeUserId || !activeUserName) return;
 
 	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
@@ -218,7 +218,6 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	if (!pubKey) return;
 
 	const error = validateCode(bytecode);
-	console.log(error)
 
 	if (error) {
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
@@ -267,7 +266,13 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, keys.active);
+	buildAndSendTransaction(operation, options, keys.active)
+		.then(() => {
+			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
+		})
+		.catch(() => {
+			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
+		});
 
 	dispatch(closeModal(MODAL_DETAILS));
 
