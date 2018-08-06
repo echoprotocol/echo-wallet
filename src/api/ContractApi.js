@@ -12,26 +12,26 @@ const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contr
 
 const getHash = (str) => keccak256(str);
 
-const fromUtf8 = (str, allowZero = true) => {
-	str = utf8.encode(str);
-	let hex = '';
-
-	for (let i = 0; i < str.length; i += 1) {
-		const code = str.charCodeAt(i);
-		if (code === 0) {
-			if (allowZero) {
-				hex += '00';
-			} else {
-				break;
-			}
-		} else {
-			const n = code.toString(16);
-			hex += n.length < 2 ? `0${n}` : n;
-		}
-	}
-
-	return hex;
-};
+// const fromUtf8 = (str, allowZero = true) => {
+// 	str = utf8.encode(str);
+// 	let hex = '';
+//
+// 	for (let i = 0; i < str.length; i += 1) {
+// 		const code = str.charCodeAt(i);
+// 		if (code === 0) {
+// 			if (allowZero) {
+// 				hex += '00';
+// 			} else {
+// 				break;
+// 			}
+// 		} else {
+// 			const n = code.toString(16);
+// 			hex += n.length < 2 ? `0${n}` : n;
+// 		}
+// 	}
+//
+// 	return hex;
+// };
 
 const toUtf8 = (hex) => {
 	let str = '';
@@ -52,9 +52,9 @@ const addressFromAccountId = (id) => {
 		throw new Error('Unknown id type');
 	}
 
-	const hex = fromUtf8(id.split('.')[2]);
+	const hex = parseInt(id.split('.')[2], 16);
 
-	return Array(64 - hex.length).fill(0).join('').concat(hex);
+	return Array(64 - String(hex).length).fill(0).join('').concat(String(hex));
 };
 
 //	end
@@ -67,6 +67,7 @@ export const getTransferTokenCode = (from, to, amount) => {
 	amount = String(amount);
 	const amountHex = Array(64 - amount.length).fill(0).join('').concat(amount);
 	const methodId = getHash('transferFrom(address,address,uint256)').substr(0, 8);
+	console.log(`${methodId}${fromAddress}${toAddress}${amountHex}`);
 
 	return `${methodId}${fromAddress}${toAddress}${amountHex}`;
 };
