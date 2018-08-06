@@ -43,7 +43,7 @@ class CommentField extends React.Component {
 					className="comment"
 					placeholder="Comment"
 					control="textarea"
-					value={comment}
+					value={currency && currency.type === 'tokens' ? '' : comment}
 					onChange={(e) => this.onComment(e)}
 					disabled={currency ? currency.type === 'tokens' : false}
 				/>
