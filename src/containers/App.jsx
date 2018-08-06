@@ -12,6 +12,7 @@ import Loading from '../components/Loading/index';
 import SidebarMenu from '../components/SideMenu/index';
 import Header from '../components/Header/index';
 import Footer from '../components/Footer/index';
+import Toast from '../components/Toast';
 
 import { AUTH_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
 
@@ -65,6 +66,8 @@ class App extends React.Component {
 				</Segment>
 
 				<Modals />
+				<Toast />
+
 			</div>
 		);
 	}
