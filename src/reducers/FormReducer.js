@@ -1,11 +1,13 @@
 import { createModule } from 'redux-modules';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import _ from 'lodash';
 
 import {
 	FORM_SIGN_UP,
 	FORM_SIGN_IN,
 	FORM_UNLOCK_MODAL,
+	FORM_CONTRACT_CONSTANT,
+	FORM_CONTRACT_FUNCTION,
 	FORM_TRANSFER,
 	FORM_CREATE_CONTRACT,
 } from '../constants/FormConstants';
@@ -47,6 +49,13 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 	}),
+	[FORM_CONTRACT_CONSTANT]: Map({
+		constants: List(),
+		query: '',
+	}),
+	[FORM_CONTRACT_FUNCTION]: Map({
+		functions: List(),
+	}),
 	[FORM_TRANSFER]: Map({
 		to: {
 			value: '',
@@ -84,6 +93,10 @@ export default createModule({
 		[FORM_SIGN_UP]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP]),
 		[FORM_SIGN_IN]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_IN]),
 		[FORM_UNLOCK_MODAL]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_UNLOCK_MODAL]),
+		[FORM_CONTRACT_CONSTANT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CONTRACT_CONSTANT]),
+		[FORM_CONTRACT_FUNCTION]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CONTRACT_FUNCTION]),
 		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
 		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
@@ -165,6 +178,13 @@ export default createModule({
 			reducer: (state, { payload }) => {
 				const field = _.cloneDeep(DEFAULT_FORM_FIELDS[payload.form].get(payload.field));
 				state = state.setIn([payload.form, payload.field], field);
+
+				return state;
+			},
+		},
+		setInside: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.form].concat(payload.fields), payload.value);
 
 				return state;
 			},

@@ -18,11 +18,9 @@ import SignUp from './containers/SignUp';
 import SignIn from './containers/SignIn';
 import SmartContracts from './containers/SmartContracts';
 import ViewContracts from './containers/ViewContracts';
-
 import Balances from './containers/Balances';
 import Transfer from './containers/Transfer';
 import CreateContract from './containers/CreateContract';
-
 
 export default class Routes extends React.Component {
 
@@ -38,7 +36,6 @@ export default class Routes extends React.Component {
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
 					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
 					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
-
 				</div>
 			</App>
 		);
