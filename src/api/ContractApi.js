@@ -11,10 +11,14 @@ const getContractProp = (instance, contract, account, code) => instance.dbApi().
 	[contract, account, '1.3.0', code],
 );
 
-const getContractResult = (instance, contract) => instance.dbApi().exec(
-	'get_contract_result',
-	[contract],
-);
+const getContractResult = (instance, resultId) => {
+	console.log('instance');
+	console.log(resultId);
+	return instance.dbApi().exec(
+		'get_contract_result',
+		[resultId],
+	);
+};
 
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 

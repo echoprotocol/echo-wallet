@@ -6,7 +6,7 @@ export const logParser = (log) => {
 		const contractId = parseInt(l.address.slice(2), 16);
 		const event = events[l.log[0]] || l.log[0];
 		const params = l.log.slice(1);
-
+        console.log(contractId, event)
 		return { contractId, event, params };
 	});
 };

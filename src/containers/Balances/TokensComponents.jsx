@@ -24,15 +24,18 @@ class Tokens extends React.Component {
 	}
 
 	renderList() {
-		return this.props.tokens.map((token) => (
-			<Table.Row>
-				<Table.Cell>{token.symbol}</Table.Cell>
-				<Table.Cell>
-					{formatAmount(token.balance, token.precision, '')}
-					<span className="icon-close" />
-				</Table.Cell>
-			</Table.Row>
-		));
+		return this.props.tokens.map((token, i) => {
+			const id = i;
+			return (
+				<Table.Row key={id}>
+					<Table.Cell>{token.symbol}</Table.Cell>
+					<Table.Cell>
+						{formatAmount(token.balance, token.precision, '')}
+						<span className="icon-close" />
+					</Table.Cell>
+				</Table.Row>
+			);
+		});
 	}
 
 	render() {
