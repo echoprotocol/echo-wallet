@@ -61,7 +61,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
+  .icon-error-red:before {
+    content: "\e918";
+    color: #f65c5c;
+  }
   .icon-close-white:before {
     content: "\e917";
     color: #fff;
@@ -85,10 +89,7 @@
   .icon-send2:before {
     content: "\e914";
   }
-  .icon-error_input:before {
-    content: "\e915";
-    color: #f65c5c;
-  }
+
   .icon-add:before {
     content: "\e900";
   }

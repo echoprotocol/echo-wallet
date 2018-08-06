@@ -10,13 +10,21 @@
             height: 10px;
             display: flex;
             align-items: center;
+            &:not(:last-child) {
+                &:after {
+                        content: "";
+                        width: 1px;
+                        height: 15px;
+                        background-color: $bd-gray;
+                        display: block;
+                        margin: 0 10px;
+                }
+            }
             &:last-child {
                 span {
                     margin-left: 4px;
                     color: $orange;
-                    &.dropdown {
-                        cursor: pointer;
-                    }
+                    cursor: pointer;
                 }
             }
         }
@@ -31,8 +39,16 @@
         border-left: 0;
         padding: 0.67857143em 1em;
         transition: border .3s;
+        align-self: flex-start;
+        min-height: 38px;
         &.active {
-            border-bottom-right-radius: 0 !important;
+            &:not(.no-choice) {
+                border-bottom-right-radius: 0 !important;
+            }
+        }
+
+        & > input.search {
+            padding-right: 28px;
         }
         .menu {
             max-height: 212px;
@@ -49,6 +65,49 @@
                 border: 0;
                 color: $bd-gray;
             }
+        }
+    }
+}
+.fee-dropdown {
+    &.ui.dropdown {
+        display: flex;
+        align-items: center;
+        border: 0;
+        border-left: 0;
+        padding: 0 0 0 5px;
+        transition: border .3s;
+        text-align: right;
+        min-width: auto;
+        min-height: auto;
+        & > .text {
+            margin-right: 5px;
+        }
+        .dropdown.icon {
+            font-size: 12px;
+            position: relative;
+            top: auto;
+            right: auto;
+            line-height: auto;
+            margin: 0;
+            padding: 0;
+        }
+        &.active {
+            box-shadow: none;
+            &:hover {
+                box-shadow: none;
+            }
+        }
+        .menu {
+            left: auto;
+            right: 0;
+            top: 20px;
+            max-height: 212px;
+            width: 151px;
+            max-width: 151px;
+            margin-left: -1px;
+            overflow: auto;
+            border-radius: 0.28571429rem;
+            border-top: 1px solid #96C8DA;
         }
     }
 }
@@ -148,4 +207,19 @@
     .type {
         font-style: italic;
     }
+}
+
+.ui.dropdown {
+    &.no-choice {
+        cursor: auto;
+        input.search {
+            display: none;
+        }
+        .menu {
+            display: none !important;
+        }
+        .dropdown.icon {
+            display: none;
+        }
+    } 
 }

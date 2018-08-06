@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import formatAmount from '../../helpers/HistoryHelper';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { setValue, setFormValue } from '../../actions/FormActions';
+import FeeField from './FeeField';
 
 class AmountField extends React.Component {
 
@@ -90,6 +91,10 @@ class AmountField extends React.Component {
 					Amount
 					<ul className="list-amount">
 						<li>
+							Fee:
+							<FeeField />
+						</li>
+						<li>
 							Available Balance:
 							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
 								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO' }
@@ -98,11 +103,13 @@ class AmountField extends React.Component {
 					</ul>
 				</label>
 				<Input type="text" placeholder="Amount" action>
-					<div className={classnames('amount-wrap', { error: amount.error })}>
+					<div className={classnames('amount-wrap action-wrap', { error: amount.error })}>
 						<input className="amount" placeholder="Amount" value={amount.value} name="amount" onChange={(e) => this.onChangeAmount(e)} />
+						{ amount.error ? <span className="icon-error-red value-status" /> : null }
 						<span className="error-message">{amount.error}</span>
 					</div>
-					<Dropdown text={currency ? currency.symbol : ''} className="assets-tokens-dropdown">
+					{/* if elements =< 1 add class no-choice */}
+					<Dropdown search text={currency ? currency.symbol : ''} className="assets-tokens-dropdown">
 						<Dropdown.Menu>
 							{ assets.length ? this.renderList('assets') : null }
 							{ tokens.length ? this.renderList('tokens') : null }
