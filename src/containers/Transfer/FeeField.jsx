@@ -31,6 +31,15 @@ class FeeComponent extends React.Component {
 		return false;
 	}
 
+	componentDidUpdate() {
+		const { assets, fee: { asset }, comment } = this.props;
+
+		if (assets.length && !asset) {
+			const value = this.props.getFee('transfer', assets[0].id, comment.value);
+			this.props.setValue('fee', value);
+		}
+	}
+
 	onFee(fee) {
 		this.props.setValue('fee', fee);
 	}

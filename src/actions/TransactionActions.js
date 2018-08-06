@@ -159,7 +159,7 @@ export const transfer = () => async (dispatch, getState) => {
 	const options = currency.type === 'tokens' ? {
 		registrar: fromAccountId,
 		receiver: currency.id,
-		asset_id: '1.3.0',
+		asset_id: fee.asset.id,
 		value: 0,
 		gasPrice: 0,
 		gas: 4700000,
