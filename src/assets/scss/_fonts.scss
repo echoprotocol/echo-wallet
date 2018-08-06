@@ -62,15 +62,22 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-
-  .icon-contractAdd:before {
-    content: "\e912";
+  .icon-close-white:before {
+    content: "\e917";
+    color: #fff;
+  }
+  .icon-checked-white:before {
+    content: "\e916";
+    color: #fff;
+  }
+  .icon-contractCopy:before {
+    content: "\e915";
   }
   .icon-contractSearch:before {
     content: "\e914";
   }
-  .icon-contractCopy:before {
-    content: "\e915";
+  .icon-contractAdd:before {
+    content: "\e912";
   }
   .icon-add2:before {
     content: "\e912";
@@ -91,6 +98,10 @@
   .icon-checked_1:before {
     content: "\e902";
     color: #7ad38d;
+  }
+  .icon-checked:before {
+    content: "\e902";
+    color: #fff;
   }
   .icon-checked:before {
     content: "\e903";
