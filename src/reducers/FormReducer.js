@@ -125,6 +125,7 @@ export default createModule({
 				const field = state.getIn([payload.form, payload.field]);
 
 				state = state.setIn([payload.form, payload.field], Object.assign({}, field, {
+					...field,
 					value: payload.value,
 					error: null,
 				}));
@@ -141,7 +142,7 @@ export default createModule({
 					const field = state.getIn([payload.form, payload.field]);
 
 					state = state.setIn([payload.form, payload.field], Object.assign({}, field, {
-						value: field.value,
+						...field,
 						error: payload.value,
 					}));
 				}

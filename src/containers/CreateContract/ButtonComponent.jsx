@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Checkbox } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -8,6 +8,11 @@ import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
 import { createContract } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
+
+import ToastActions from '../../actions/ToastActions';
+import ToastSuccess from '../../components/Toast/ToastSuccess';
+import ToastError from '../../components/Toast/ToastError';
+import ToastInfo from '../../components/Toast/ToastInfo';
 
 class ButtonComponent extends React.Component {
 
@@ -21,6 +26,10 @@ class ButtonComponent extends React.Component {
 	}
 
 	onClick() {
+		ToastActions.toastInfo(ToastInfo);
+		ToastActions.toastSuccess(ToastSuccess);
+		ToastActions.toastError(ToastError);
+
 		const { bytecode } = this.props;
 
 		this.props.createContract({
@@ -46,21 +55,21 @@ class ButtonComponent extends React.Component {
 
 	renderSubmit() {
 		return (
-			<div>
-				<Checkbox
-					label="Add to watch list"
-					onClick={() => this.onToggle()}
-					checked={this.state.checked}
-				/>
+			<div className="form-panel">
+				<div className="check orange">
+					<input type="checkbox" id="addToWatchList" checked={this.state.checked} />
+					<label className="label" onClick={() => this.onToggle()} htmlFor="addToWatchList">
+						<span className="label-text">Add to watch list</span>
+					</label>
+				</div>
 				<Button
 					basic
 					type="submit"
 					color="orange"
 					className={classnames({ disabled: this.isDisabledSubmit() })}
 					onClick={(e) => this.onClick(e)}
-				>
-				Create contract
-				</Button>
+					content="Create contract"
+				/>
 			</div>
 		);
 	}

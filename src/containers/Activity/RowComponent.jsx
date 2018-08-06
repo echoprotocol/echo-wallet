@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import formatAmount from '../../helpers/HistoryHelper';
@@ -9,48 +8,46 @@ import formatAmount from '../../helpers/HistoryHelper';
 class RowComponent extends React.Component {
 
 	render() {
-		const { rowData, id } = this.props;
+		const {
+			operationColor,
+			operation,
+			block,
+			from,
+			subject,
+			value,
+			fee,
+			timestamp,
+		} = this.props.data;
+
+		const amount = value.amount ? formatAmount(value.amount, value.precision, value.symbol) : null;
+		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision, fee.symbol) : null;
+
 		return (
-			<Table.Row key={id}>
+			<Table.Row>
 				<Table.Cell>
-					<span className={rowData.operationColor}>
-						{rowData.operation}
-					</span>
+					<span className={operationColor}>{operation}</span>
 				</Table.Cell>
 				<Table.Cell>
+					<span className="ellips">#{block}</span>
+				</Table.Cell>
+				<Table.Cell>
+					<span className="ellips">{from}</span>
+				</Table.Cell>
+				<Table.Cell>
+					{/* TODO add to contract create operation className=create */}
 					<span className="ellips">
-						#{rowData.block}
+						{subject}
 					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						{rowData.from}
-					</span>
+					<span className="ellips">{amount}</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className={rowData.operation === 'Contract' ? 'ellips create' : 'ellips'}>
-						{rowData.subject}
-					</span>
+					{feeAmount}
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						{
-							rowData.value.amount
-								? formatAmount(rowData.value.amount, rowData.value.precision, rowData.value.symbol)
-								: rowData.value.amount
-						}
-					</span>
-				</Table.Cell>
-				<Table.Cell>
-					{
-						rowData.fee.amount
-							? formatAmount(rowData.fee.amount, rowData.fee.precision, rowData.fee.symbol)
-							: rowData.fee.amount
-					}
-				</Table.Cell>
-				<Table.Cell>
-					<span className="date">{rowData.timestamp.date}</span>
-					<span className="time">{rowData.timestamp.time}</span>
+					<span className="date">{timestamp.date}</span>
+					<span className="time">{timestamp.time}</span>
 				</Table.Cell>
 			</Table.Row>
 		);
@@ -59,9 +56,8 @@ class RowComponent extends React.Component {
 }
 
 RowComponent.propTypes = {
-	id: PropTypes.number.isRequired,
-	rowData: PropTypes.object.isRequired,
+	data: PropTypes.object.isRequired,
 };
 
 
-export default connect()(RowComponent);
+export default RowComponent;
