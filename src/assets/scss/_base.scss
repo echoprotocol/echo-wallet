@@ -36,6 +36,11 @@ div,span {
 	-webkit-appearance: none;
 	border-radius: 0;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
 .wrapper {
 	display: flex;
 	min-height: 100vh;

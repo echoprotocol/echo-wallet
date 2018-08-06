@@ -46,7 +46,10 @@
                 border-bottom-right-radius: 0 !important;
             }
         }
-
+        .dropdown.icon {
+            margin: 0 0 0 auto;
+            padding-left: 1em;
+        }
         & > input.search {
             padding-right: 28px;
         }

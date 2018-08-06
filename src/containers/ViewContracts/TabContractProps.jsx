@@ -7,7 +7,6 @@ class TabContractProps extends React.Component {
 	render() {
 		return (
 			<div className="tab-content">
-				<Button icon="trash" content="remove from watchlist" />
 				<div className="watchlist">
 					<div className="watchlist-line">
 						<div className="watchlist-row">

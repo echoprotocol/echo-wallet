@@ -140,6 +140,7 @@
     .dropdown {
         &.assets-tokens-dropdown {
             max-width: 150px;
+            min-width: 150px;
         }
         &.icon {
             color: $bd-gray;
@@ -222,6 +223,11 @@
     .field-wrap {
         .field {
             .ui.input {
+                &.focused {
+                    .assets-tokens-dropdown {
+                        border-color: #85B7D9;
+                    }
+                }
                 .amount {
                     width: 100%;
                     border-top-right-radius: 0;
