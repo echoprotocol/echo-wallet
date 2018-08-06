@@ -2,7 +2,7 @@ import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 
 import {
-	getContractId,
+	getTokenPrecision,
 	getTokenBalance,
 	getContract,
 	getTokenSymbol,
@@ -33,7 +33,7 @@ export const getAssetsBalances = (assets) => async (dispatch) => {
 	}
 };
 
-export const getTokenBalances = (accountId) => async (dispatch) => {
+export const getTokenBalances = (accountId) => async (dispatch, getState) => {
 
 	/**
      *  Tokens structure
@@ -43,6 +43,10 @@ export const getTokenBalances = (accountId) => async (dispatch) => {
 	 *  	}
 	 *  }
      */
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	if (!instance) return;
+
 	let tokens = localStorage.getItem('tokens');
 	tokens = tokens ? JSON.parse(tokens) : {};
 
@@ -50,7 +54,7 @@ export const getTokenBalances = (accountId) => async (dispatch) => {
 		let balances = Object.keys(tokens[accountId]).map(async (symbol) => {
 			const contractId = tokens[accountId][symbol];
 			const balance = await getTokenBalance(accountId, contractId);
-			const precision = 18; // TODO get precision
+			const precision = await getTokenPrecision(instance, accountId, contractId);
 			return {
 				symbol, precision, balance, contractId,
 			};
@@ -69,12 +73,13 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	const tokens = getState().balance.get('tokens');
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!tokens.size || !accountId) return;
+	if (!tokens.size || !accountId || !instance) return;
 
 	let balances = tokens.map(async (value) => {
 		const balance = await getTokenBalance(accountId, value.symbol);
-		const precision = 18; // TODO get precision
+		const precision = await getTokenPrecision(instance, accountId, value.contractId);
 		return { symbol: value.symbol, precision, balance };
 	});
 
@@ -127,7 +132,7 @@ export const addToken = (address) => async (dispatch, getState) => {
 		localStorage.setItem('tokens', JSON.stringify(tokens));
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
-		const precision = 18; // TODO get precision
+		const precision = await getTokenPrecision(instance, accountId, contractId);
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
 			value: {
@@ -152,10 +157,6 @@ export const getBlock = (block) => async (dispatch, getState) => {
 
 	if (!tokens.size) return;
 
-	// console.log(await getState().echojs.getIn(['system', 'instance']).dbApi().exec(
-	// 	'call_contract_no_changing_state',
-	// 	['1.16.9', '1.2.26', '1.3.0', getHash('balanceOf(address)').substr(0, 8).concat('0000000000000000000000000000000000000000000000000000000000000019')],
-	// ));
 	const { transactions } = block;
 	if (!transactions.length) return;
 

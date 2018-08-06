@@ -12,6 +12,7 @@ import Loading from '../components/Loading/index';
 import SidebarMenu from '../components/SideMenu/index';
 import Header from '../components/Header/index';
 import Footer from '../components/Footer/index';
+import Toast from '../components/Toast';
 
 import { AUTH_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
 
@@ -19,6 +20,12 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.props.connection();
+	}
+
+	onPusher() {
+		if (!this.props.visibleBar) { return; }
+
+		this.props.hideBar();
 	}
 
 	renderWrapper() {
@@ -49,7 +56,7 @@ class App extends React.Component {
 									<Sidebar.Pusher
 										key="sidebar-pusher"
 										dimmed={this.props.visibleBar}
-										onClick={() => this.props.hideBar()}
+										onClick={() => this.onPusher()}
 									>
 										{ this.renderWrapper() }
 									</Sidebar.Pusher>,
@@ -59,6 +66,8 @@ class App extends React.Component {
 				</Segment>
 
 				<Modals />
+				<Toast />
+
 			</div>
 		);
 	}

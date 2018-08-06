@@ -14,7 +14,7 @@ import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 import { validateAccountName } from '../helpers/AuthHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, getMemo } from '../api/TransactionApi';
+import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
@@ -26,13 +26,33 @@ export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
-export const getFee = (type, assetId = '1.3.0') => (dispatch, getState) => {
+export const fetchFee = (type) => async (dispatch) => {
+	const globalObject = await dispatch(EchoJSActions.fetch('2.0.0'));
+	const asset = await dispatch(EchoJSActions.fetch('1.3.0'));
+
+	const value = globalObject.getIn([
+		'parameters',
+		'current_fees',
+		'parameters',
+		operations[type].value,
+		1,
+		'fee',
+	]);
+
+	return { value, asset: asset.toJS() };
+};
+
+export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
+
+	if (memo) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, memo));
+	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
 
@@ -60,7 +80,7 @@ export const getFee = (type, assetId = '1.3.0') => (dispatch, getState) => {
 		fee = price.times(fee);
 	}
 
-	return { value: String(fee), asset: feeAsset };
+	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
@@ -93,13 +113,24 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 };
 
 export const transfer = () => async (dispatch, getState) => {
+	const form = getState().form.get(FORM_TRANSFER).toJS();
+
 	const {
-		to, amount, currency, fee, comment,
-	} = getState().form.get(FORM_TRANSFER).toJS();
+		to, amount, currency, comment,
+	} = form;
+	let { fee } = form;
+
+	if (to.error || amount.error || fee.error || comment.error) {
+		return;
+	}
 
 	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
+	}
+
+	if (!fee.value || !fee.asset) {
+		fee = dispatch(getFee('transfer', '1.3.0', comment.value));
 	}
 
 	if (currency.id === fee.asset.id) {
@@ -110,7 +141,7 @@ export const transfer = () => async (dispatch, getState) => {
 			return;
 		}
 	} else {
-		const asset = getState().balances.get('assets').toArray().find((i) => i.id === fee.asset.id);
+		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
@@ -138,23 +169,37 @@ export const transfer = () => async (dispatch, getState) => {
 		},
 	};
 
+	const showOptions = {
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		from: fromAccount.name,
+		to: toAccount.name,
+		amount: `${amount.value} ${currency.symbol}`,
+	};
+
 	if (comment.value) {
 		options.memo = comment.value;
+		showOptions.comment = comment.value;
 	}
 
-	const pubKey = fromAccount.active.key_auths[0][0];
-	if (!pubKey) return;
+	const activePubKey = fromAccount.active.key_auths[0][0];
+	const memoPubKey = fromAccount.options.memo_key;
+	if (!activePubKey || !memoPubKey) return;
 
 	dispatch(resetTransaction());
 
-	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+	const activePrivateKey = getState().keychain.getIn([activePubKey, 'privateKey']);
+	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options, showOptions }));
 
-	if (!privateKey) {
+	if (!activePrivateKey || !memoPrivateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		dispatch(setField('privateKey', privateKey));
+		dispatch(setField('keys', {
+			active: activePrivateKey,
+			memo: memoPrivateKey,
+		}));
+
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
@@ -184,28 +229,36 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 		code: bytecode,
 	};
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options }));
+	const fee = await dispatch(fetchFee('contract'));
+
+	const showOptions = {
+		from: activeUserName,
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		code: bytecode,
+	};
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {
-		dispatch(setField('privateKey', privateKey));
+		dispatch(setField('keys', { active: privateKey }));
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
 };
 
 export const sendTransaction = () => async (dispatch, getState) => {
-	const { operation, privateKey, options } = getState().transaction.toJS();
+	const { operation, keys, options } = getState().transaction.toJS();
 
 	if (options.memo) {
 		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
 		const toAccount = (await dispatch(EchoJSActions.fetch(options.to))).toJS();
 
-		options.memo = getMemo(fromAccount, toAccount, options.memo, privateKey);
+		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, privateKey);
+	buildAndSendTransaction(operation, options, keys.active);
 
 	dispatch(closeModal(MODAL_DETAILS));
 
