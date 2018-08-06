@@ -14,5 +14,12 @@ export const validateAbi = (abi) => {
 	if (!abi) {
 		return 'Contract abi should not be empty';
 	}
+
+	try {
+		JSON.parse(this.responseText);
+	} catch (err) {
+		return 'Contract abi should be json';
+	}
+
 	return null;
 };

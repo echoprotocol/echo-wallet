@@ -59,3 +59,26 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 		dispatch(setError(MODAL_WATCH_LIST, 'error', err));
 	}
 };
+
+export const addContractByName = (name, abi) => (dispatch, getState) => {
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[name]) {
+		contracts[name] = {};
+	}
+
+	contracts[accountId][name] = abi;
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(GlobalReducer.actions.push({
+		field: 'contracts',
+		param: name,
+		value: abi,
+	}));
+
+	dispatch(closeModal(MODAL_WATCH_LIST));
+};

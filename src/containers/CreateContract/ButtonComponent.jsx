@@ -8,6 +8,7 @@ import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
 import { createContract } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
+import { addContract } from '../../actions/ContractActions';
 
 import ToastActions from '../../actions/ToastActions';
 import ToastSuccess from '../../components/Toast/ToastSuccess';
@@ -87,6 +88,7 @@ ButtonComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
 	createContract: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	addContract: PropTypes.func.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -102,5 +104,6 @@ export default connect(
 	(dispatch) => ({
 		createContract: (value) => dispatch(createContract(value)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
+		addContract: (address, abi) => dispatch(addContract(address, abi)),
 	}),
 )(ButtonComponent);
