@@ -5,7 +5,6 @@ export const FORM_TRANSFER = 'transfer';
 export const FORM_CREATE_CONTRACT = 'create_contract';
 export const FORM_CONTRACT_CONSTANT = 'contract_constant';
 export const FORM_CONTRACT_FUNCTION = 'contract_function';
-export const FORM_CONTRACT_FUNCTION_INPUTS = 'contract_functions_inputs';
 
 export const FORM_SIGN_UP_CHECKBOX_1 = 'I understand that I will lose access to my funds if I loose my password';
 export const FORM_SIGN_UP_CHECKBOX_2 = 'I understand no one can recover my password if I lose or forget it';
