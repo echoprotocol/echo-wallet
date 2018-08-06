@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Dropdown } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import { EchoJSActions } from 'echojs-redux';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -72,10 +72,8 @@ class FeeComponent extends React.Component {
 
 		// TODO add styles for fee error
 		return (
-			<Form.Field>
-				<label htmlFor="fee"> Fee </label>
-				<Dropdown selection options={options} text={text} />
-			</Form.Field>
+			// if elements =< 1 add class no-choice
+			<Dropdown className="fee-dropdown" selection options={options} text={text} />
 		);
 	}
 
