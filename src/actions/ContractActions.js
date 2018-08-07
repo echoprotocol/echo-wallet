@@ -1,18 +1,17 @@
-import { List, Map } from 'immutable';
+import { Map } from 'immutable';
 
 import {
 	getContractId,
-	getContract, getContractConstant,
+	getContract,
+	getContractConstant,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
-import { setValue } from './FormActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
 import { formatSignature, getMethod } from '../helpers/AbiHelper';
 
-import { FORM_CONTRACT_CONSTANT, FORM_CONTRACT_FUNCTION } from '../constants/FormConstants';
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
 export const loadContracts = (accountId) => (dispatch) => {
@@ -83,15 +82,13 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 
-	const value =
-		await getContractConstant(
-			instance,
-			accountId,
-			contractId,
-			getMethod(method, args),
-		);
+	await getContractConstant(
+		instance,
+		accountId,
+		contractId,
+		getMethod(method, args),
+	);
 
-	dispatch(setValue(FORM_CONTRACT_CONSTANT, 'query', value));
 };
 
 export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
@@ -99,7 +96,7 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const abi = localStorage.getItem('contracts')[accountId][contractId];
+	const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
 
 	if (isConst) {
 		let constants = abi.filter((value) =>
@@ -117,12 +114,8 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 			});
 		});
 
-		constants = await Promise.all(constants);
-
-		dispatch(setValue(FORM_CONTRACT_CONSTANT, 'constants', new List(constants)));
+		await Promise.all(constants);
 	} else {
-		const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
-
-		dispatch(setValue(FORM_CONTRACT_FUNCTION, 'functions', new List(functions)));
+		abi.filter((value) => !value.constant && value.name && value.type === 'function');
 	}
 };
