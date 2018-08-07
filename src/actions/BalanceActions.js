@@ -2,7 +2,6 @@ import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 
 import {
-	getContractId,
 	getTokenBalance,
 	getTokenPrecision,
 	getContract,
@@ -29,9 +28,10 @@ export const initBalances = (accountId) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	if (tokens && tokens[accountId]) {
-		let balances = Object.entries(tokens[accountId]).map(async ([symbol, contractId]) => {
+		let balances = tokens[accountId].map(async (contractId) => {
 			const balance = await getTokenBalance(instance, accountId, contractId);
 			const precision = await getTokenPrecision(instance, accountId, contractId);
+			const symbol = await getTokenSymbol(instance, accountId, contractId);
 
 			return {
 				id: contractId, symbol, precision, balance,
@@ -64,23 +64,23 @@ export const initBalances = (accountId) => async (dispatch, getState) => {
 	}
 };
 
-export const addToken = (address) => async (dispatch, getState) => {
+export const addToken = (contractId) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const contractId = `1.16.${getContractId(address)}`;
 
 	try {
 		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_TOKENS, 'address', 'Invalid contract address'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
 			return;
 		}
 
 		const symbol = await getTokenSymbol(instance, accountId, contractId);
+		const precision = await getTokenPrecision(instance, accountId, contractId);
 
-		if (!symbol) {
-			dispatch(setParamError(MODAL_TOKENS, 'address', 'Invalid token contract'));
+		if (!symbol || !Number.isInteger(precision)) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
 			return;
 		}
 
@@ -88,14 +88,13 @@ export const addToken = (address) => async (dispatch, getState) => {
 		tokens = tokens ? JSON.parse(tokens) : {};
 
 		if (!tokens[accountId]) {
-			tokens[accountId] = {};
+			tokens[accountId] = [];
 		}
 
-		tokens[accountId][symbol] = contractId;
+		tokens[accountId].push(contractId);
 		localStorage.setItem('tokens', JSON.stringify(tokens));
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
-		const precision = await getTokenPrecision(instance, accountId, contractId);
 
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
@@ -109,4 +108,21 @@ export const addToken = (address) => async (dispatch, getState) => {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
 	}
 
+};
+
+export const removeToken = (contractId) => (dispatch, getState) => {
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	let tokens = localStorage.getItem('tokens');
+	tokens = tokens ? JSON.parse(tokens) : {};
+
+	if (!tokens[accountId]) {
+		tokens[accountId] = [];
+	}
+
+	tokens[accountId] = tokens[accountId].filter((i) => i !== contractId);
+	localStorage.setItem('tokens', JSON.stringify(tokens));
+
+	const index = getState().balance.get('tokens').findIndex((i) => i.id === contractId);
+	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };

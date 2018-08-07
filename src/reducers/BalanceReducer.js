@@ -24,5 +24,14 @@ export default createModule({
 				return state;
 			},
 		},
+
+		delete: {
+			reducer: (state, { payload }) => {
+				const field = state.get(payload.field);
+				state = state.set(payload.field, field.delete(payload.value));
+
+				return state;
+			},
+		},
 	},
 });
