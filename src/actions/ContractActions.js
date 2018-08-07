@@ -4,13 +4,14 @@ import {
 	getContractId,
 	getContract,
 	getContractConstant,
+	formatSignature,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-import { formatSignature, getMethod } from '../helpers/AbiHelper';
+import { getMethod } from '../helpers/AbiHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
