@@ -57,7 +57,7 @@ export const getTokenBalances = (accountId) => async (dispatch, getState) => {
 			const balance = await getTokenBalance(instance, accountId, contractId);
 			const precision = await getTokenPrecision(instance, accountId, contractId);
 			return {
-				symbol, precision, balance, contractId,
+				symbol, precision, balance, id: contractId,
 			};
 		});
 
@@ -78,13 +78,8 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	if (!tokens.size || !accountId || !instance) return;
 	let balances = tokens.map(async (value) => {
-		const balance = await getTokenBalance(instance, accountId, value.contractId);
-		return {
-			symbol: value.symbol,
-			precision: value.precision,
-			contractId: value.contractId,
-			balance,
-		};
+		const balance = await getTokenBalance(instance, accountId, value.id);
+		return { ...value, balance };
 	});
 
 	balances = await Promise.all(balances);
@@ -139,7 +134,7 @@ export const addToken = (address) => async (dispatch, getState) => {
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
 			value: {
-				symbol, precision, balance, contractId,
+				symbol, precision, balance, id: contractId,
 			},
 		}));
 
@@ -150,40 +145,28 @@ export const addToken = (address) => async (dispatch, getState) => {
 
 };
 
+const checkTransactionLogs = async (r, instance, accountId) => {
+
+	const result = await getContractResult(instance, r[1]);
+
+	return checkTransactionResult(accountId, result);
+};
+
 export const getBlock = (block) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const instance = getState().echojs.getIn(['system', 'instance']);
-
-	if (!accountId || !instance) return;
-
 	const tokens = getState().balance.get('tokens');
-
-	if (!tokens.size) return;
-
 	const { transactions } = block;
-	if (!transactions.length) return;
 
-	let isNeedUpdate = false;
-	transactions.some((tr) => {
-		if (isNeedUpdate) return true;
-		isNeedUpdate = tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens));
-		if (isNeedUpdate) return true;
-		isNeedUpdate = tr.operation_results.some(async (r) => {
-            console.log(222)
-			console.log(r)
-			const operationResult = r[1];
-            console.log(333)
-            console.log('isNeedUpdate')
-            console.log(isNeedUpdate)
-			const result = await getContractResult(instance, operationResult);
-            console.log(result)
-            console.log(444)
-			return checkTransactionResult(accountId, result);
-		});
-		console.log(isNeedUpdate)
+	if (!accountId || !instance || !tokens.size || !transactions.length) return;
 
-		return isNeedUpdate;
-	});
+	const isNeedUpdate = transactions.some((tr) =>
+		tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens)) ||
+		tr.operation_results.some(async (r) => {
+			const result = await checkTransactionLogs(r, instance, accountId);
+			return result;
+		}));
 	if (isNeedUpdate) await dispatch(updateTokenBalances());
 };
+
