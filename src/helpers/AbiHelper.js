@@ -1,11 +1,9 @@
 import { ChainValidation } from 'echojs-lib';
-import { getHash } from '../api/ContractApi';
+import { formatSignature } from '../api/ContractApi';
 
-export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
-
-export const getMethod = (method, args) => {
+const getMethod = (method, args) => {
 	if (!args || !args.length) {
-		return 'Error. Input args pls';
+		return 'Empty field';
 	}
 
 	const argsString = args.map((arg) => {
@@ -29,3 +27,5 @@ export const getMethod = (method, args) => {
 	method = method.concat(argsString.join(''));
 	return method;
 };
+
+export default getMethod;

@@ -1,8 +1,7 @@
 import { keccak256 } from 'js-sha3';
 
-import { getMethod, formatSignature } from '../helpers/AbiHelper';
+import getMethod from '../helpers/AbiHelper';
 import { toInt, toUtf8 } from '../helpers/ConverterHelper';
-
 
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
@@ -16,9 +15,11 @@ export const getContractResult = (instance, resultId) => instance.dbApi().exec(
 	[resultId],
 );
 
-const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
-
 export const getHash = (str) => keccak256(str);
+
+export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
+
+const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 
 //	end
 
@@ -68,8 +69,4 @@ export const getContractConstant = (instance, accountId, contractId, method) => 
 	method,
 );
 
-export const getAddress = (instance, contractId) => getContractResult(
-	instance,
-	contractId,
-);
 export const getContract = (instance, contractId) => getContractInfo(instance, contractId);
