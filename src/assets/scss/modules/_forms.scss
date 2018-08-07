@@ -223,11 +223,20 @@
     .field-wrap {
         .field {
             .ui.input {
+                transition: margin .3s;
                 &.focused {
                     .assets-tokens-dropdown {
                         border-color: #85B7D9;
                     }
                 }
+                &.error {
+                    .assets-tokens-dropdown,
+                    .amount {
+                        border-color: $err-red;
+                    }
+                    margin-bottom: 10px;
+                }
+
                 .amount {
                     width: 100%;
                     border-top-right-radius: 0;
@@ -257,6 +266,40 @@
                     }
 
                 }
+            }
+        }
+    }
+}
+
+.ui.input.label-in-left {
+    display: flex;
+    position: relative;
+    max-width: 350px;
+    width: 100%;
+    input {
+        padding-left: 60px;
+        padding-right: 50px;
+    }
+    .label {
+        color: $bd-gray;
+        font-size: 1em;
+        position: absolute;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: table;
+    }
+    .edit-options {
+        position: absolute;
+        right: 12px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: table;
+        span {
+            &:not(:last-child) {
+                margin-right: 5px;
             }
         }
     }

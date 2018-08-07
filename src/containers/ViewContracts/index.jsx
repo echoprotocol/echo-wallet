@@ -44,7 +44,24 @@ class ViewContracts extends React.Component {
 								</span>
 							</li>
 							<li className="act">
-								<Button icon="trash" content="remove from watchlist" />
+								<Button
+									icon="trash"
+									className="transparent"
+									content="remove from watchlist"
+								/>
+							</li>
+						</ul>
+						{/* Показывать если пользовать редактирует Имя */}
+						<ul className="control-panel">
+							<li className="name edit">
+								<div className="ui input label-in-left">
+									<input type="text" />
+									<span className="label">Name: </span>
+									<div className="edit-options">
+										<span className="icon-edit-checked" />
+										<span className="icon-edit-close" />
+									</div>
+								</div>
 							</li>
 						</ul>
 					</div>

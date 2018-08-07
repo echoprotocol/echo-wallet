@@ -115,6 +115,8 @@ class AmountField extends React.Component {
 						</li>
 					</ul>
 				</label>
+
+				{/* КЛАСС error добавлять компоненту <Input /> */}
 				<Input
 					type="text"
 					placeholder="Amount"
@@ -133,8 +135,8 @@ class AmountField extends React.Component {
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
 						{ amount.error ? <span className="icon-error-red value-status" /> : null }
-						<span className="error-message">{amount.error}</span>
 					</div>
+					<span className="error-message">asdasd d sad{amount.error}</span>
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
@@ -147,6 +149,7 @@ class AmountField extends React.Component {
 						</Dropdown.Menu>
 					</Dropdown>
 				</Input>
+
 			</Form.Field>
 		);
 	}
