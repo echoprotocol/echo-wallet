@@ -9,7 +9,6 @@ import { transfer } from '../../actions/TransactionActions';
 
 import ToAccountField from './ToAccountField';
 import AmountField from './AmountField';
-import FeeField from './FeeField';
 
 import ToastActions from '../../actions/ToastActions';
 import ToastSuccess from '../../components/Toast/ToastSuccess';
@@ -50,7 +49,6 @@ class Transfer extends React.Component {
 					</Form.Field>
 					<ToAccountField />
 					<AmountField />
-					<FeeField />
 					<CommentField />
 					<div className="form-panel">
 						{/*

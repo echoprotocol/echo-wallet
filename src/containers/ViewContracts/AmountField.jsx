@@ -11,6 +11,14 @@ import FeeField from './FeeField';
 
 class AmountField extends React.Component {
 
+	constructor() {
+		super();
+		this.state = {
+			amountFocus: false,
+		};
+	}
+
+
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue('currency', this.props.assets[0]);
@@ -20,8 +28,7 @@ class AmountField extends React.Component {
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
-		let value = e.target.value.trim().match(/[0-9.]/g);
-		value = value ? value.join('') : '';
+		const value = e.target.value.trim();
 
 		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
 			this.props.setValue(
@@ -64,6 +71,11 @@ class AmountField extends React.Component {
 		return currency.balance - fee.value;
 	}
 
+	amountFocusToggle(e, value) {
+		this.setState({
+			amountFocus: !value,
+		});
+	}
 	renderList(type) {
 		const list = [
 			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
@@ -103,20 +115,41 @@ class AmountField extends React.Component {
 						</li>
 					</ul>
 				</label>
-				<Input type="text" placeholder="Amount" action>
+
+				{/* КЛАСС error добавлять компоненту <Input /> */}
+				<Input
+					type="text"
+					placeholder="Amount"
+					tabIndex="0"
+					action
+					className={this.state.amountFocus ? 'focused' : ''}
+				>
 					<div className={classnames('amount-wrap action-wrap', { error: amount.error })}>
-						<input className="amount" placeholder="Amount" value={amount.value} name="amount" onChange={(e) => this.onChangeAmount(e)} />
+						<input
+							className="amount"
+							placeholder="Amount"
+							value={amount.value}
+							name="amount"
+							onChange={(e) => this.onChangeAmount(e)}
+							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+						/>
 						{ amount.error ? <span className="icon-error-red value-status" /> : null }
-						<span className="error-message">{amount.error}</span>
 					</div>
+					<span className="error-message">asdasd d sad{amount.error}</span>
 					{/* if elements =< 1 add class no-choice */}
-					<Dropdown search text={currency ? currency.symbol : ''} className="assets-tokens-dropdown">
+					<Dropdown
+						search
+						text={currency ? currency.symbol : ''}
+						className="assets-tokens-dropdown"
+					>
 						<Dropdown.Menu>
 							{ assets.length ? this.renderList('assets') : null }
 							{ tokens.length ? this.renderList('tokens') : null }
 						</Dropdown.Menu>
 					</Dropdown>
 				</Input>
+
 			</Form.Field>
 		);
 	}
