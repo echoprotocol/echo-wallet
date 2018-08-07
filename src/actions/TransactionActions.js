@@ -125,6 +125,16 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
+	if (!to.value) {
+		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));
+		return;
+	}
+
+	if (!Math.floor(amount.value * (10 ** currency.precision))) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
+		return;
+	}
+
 	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
