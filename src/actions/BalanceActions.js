@@ -17,9 +17,7 @@ export const initBalances = (accountId) => async (dispatch, getState) => {
 	/**
 	 *  Tokens structure
 	 *  tokens: {
-	 *  	[accountId]: {
-	 *  		[tokenSymbol]: [contractId]
-	 *  	}
+	 *  	[accountId]: []	// - array with token contractIds
 	 *  }
 	 */
 	let tokens = localStorage.getItem('tokens');
