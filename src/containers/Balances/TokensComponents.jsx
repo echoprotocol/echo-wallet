@@ -76,7 +76,6 @@ class Tokens extends React.Component {
 	}
 
 	render() {
-        console.log("adasd",this.props.tokens);
 		return (
 			<div className="table-tokens">
 				{
