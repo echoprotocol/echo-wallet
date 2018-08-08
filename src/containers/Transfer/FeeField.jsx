@@ -19,6 +19,8 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		const { fee, comment, currency } = this.props;
 
+		if (!fee) { return true; }
+
 		if (!fee.asset && nextProps.assets) { return true; }
 
 		if (fee.value !== nextProps.fee.value) { return true; }
@@ -33,9 +35,9 @@ class FeeComponent extends React.Component {
 	}
 
 	componentDidUpdate() {
-		const { assets, fee: { asset }, comment } = this.props;
+		const { assets, fee, comment } = this.props;
 
-		if (assets.length && !asset) {
+		if (assets.length && (!fee || !fee.asset)) {
 			const value = this.props.getFee('transfer', assets[0].id, comment.value);
 			this.props.setValue('fee', value);
 		}
@@ -103,7 +105,10 @@ FeeComponent.propTypes = {
 };
 
 FeeComponent.defaultProps = {
-	fee: null,
+	fee: {
+		value: null,
+		asset: null,
+	},
 	assets: null,
 	currency: null,
 };
