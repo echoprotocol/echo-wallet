@@ -109,6 +109,7 @@
             display: none;
             position: absolute;
             right: 0;
+            top: 100%;
             margin-right: 5px;
             background-color: $err-red;
             padding: 0 5px;
@@ -176,19 +177,17 @@
                 animation: rotating 1s linear infinite;
             }
         }
-        &.ui.input {
-            &.error {
-                margin-bottom: 10px;
-                input {
-                    border: 1px solid $err-red;
-                }
-                .error-message {
-                    top: 99%;
-                }
-            }
+        &.error {
+            margin-bottom: 10px;
             input {
-                padding-right: 30px;
+                border: 1px solid $err-red;
             }
+            .error-message {
+                top: 99%;
+            }
+        }
+        input {
+            padding-right: 30px;
         }
 
         .value-status {

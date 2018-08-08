@@ -57,8 +57,8 @@ class TabContractProps extends React.Component {
 						</div>
 						<div className="watchlist-embed">
 							<div>
-                                [ <strong>Balance of </strong>
-                                  method Response ]
+								[ <strong>Balance of </strong>
+								method Response ]
 
 							</div>
 							<div>
