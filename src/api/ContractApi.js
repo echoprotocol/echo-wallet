@@ -84,4 +84,13 @@ export const getTokenPrecision = async (instance, accountId, contractId) => {
 	return parseInt(result, 16);
 };
 
+export const getContractConstant = (instance, accountId, contractId, method) => getContractProp(
+	instance,
+	contractId,
+	accountId,
+	method,
+);
+
 export const getContract = (instance, contractId) => getContractInfo(instance, contractId);
+
+export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);

@@ -27,7 +27,6 @@ class SidebarMenu extends React.Component {
 		this.setState({ activeIndex: newIndex });
 	}
 
-
 	render() {
 		const { activeIndex } = this.state;
 		return (
