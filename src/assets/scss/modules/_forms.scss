@@ -104,33 +104,37 @@
     }
 }
 
-.form {
-    .field {
+.field,
+.textarea-wrap {
+    .error-message {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-right: 5px;
+        background-color: $err-red;
+        padding: 0 5px;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        font-size: 12px;
+        color: $white;
+    }
+    &.error,
+    .error {
+        position: relative;
         .error-message {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            margin-right: 5px;
-            background-color: $err-red;
-            padding: 0 5px;
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-            font-size: 12px;
-            color: $white;
+            display: flex;
         }
-        .error {
-            position: relative;
-            .error-message {
-                display: flex;
-            }
-            .input {
+        .input {
+            border: 1px solid $err-red;
+            &:focus {
                 border: 1px solid $err-red;
-                &:focus {
-                    border: 1px solid $err-red;
-                }
             }
         }
+    }
+}
+.textarea-wrap {
+    .error-message {
+        margin-top: 2px;
     }
 }
 
@@ -179,17 +183,24 @@
                 animation: rotating 1s linear infinite;
             }
         }
-        &.error {
-            margin-bottom: 10px;
+        &.ui.input,
+        &.textarea-wrap
+        {
+            &.error {
+                margin-bottom: 10px;
+                input {
+                    border: 1px solid $err-red;
+                }
+                textarea {
+                    border-color: $err-red;
+                }
+                .error-message {
+                    top: 99%;
+                }
+            }
             input {
-                border: 1px solid $err-red;
+                padding-right: 30px;
             }
-            .error-message {
-                top: 99%;
-            }
-        }
-        input {
-            padding-right: 30px;
         }
 
         .value-status {
