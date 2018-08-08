@@ -1,10 +1,15 @@
 import React from 'react';
 import { Tab, Button, Icon } from 'semantic-ui-react';
+import qs from 'query-string';
 
 import TabContractProps from './TabContractProps';
 import TabCallContracts from './TabCallContracts';
 
 class ViewContracts extends React.Component {
+
+	componentWillMount() {
+        qs.parse(this.props.location.search).id
+	}
 
 	render() {
 		const panes = [
