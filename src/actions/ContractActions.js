@@ -1,19 +1,23 @@
 import { Map } from 'immutable';
 
 import {
-	getContractId,
 	getContract,
 	getContractConstant,
 	formatSignature,
 } from '../api/ContractApi';
 
-import { setError, setParamError, closeModal } from './ModalActions';
+import { getMethod } from '../helpers/AbiHelper';
+import { validateABI } from '../helpers/ValidateHelper';
+import { toastSuccess } from '../helpers/ToastHelper';
+
+import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
+import { SMART_CONTRACTS_PATH } from '../constants/RouterConstants';
+
+import { setFormError, setValue } from './FormActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-import { getMethod } from '../helpers/AbiHelper';
-
-import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
+import history from '../history';
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -28,17 +32,22 @@ export const loadContracts = (accountId) => (dispatch) => {
 	}));
 };
 
-export const addContract = (address, abi) => async (dispatch, getState) => {
+export const addContract = (name, contractId, abi) => async (dispatch, getState) => {
+	const abiError = validateABI(abi);
+
+	if (abiError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
+		return;
+	}
+
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	try {
-		const contractId = `1.16.${getContractId(address)}`;
-
 		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_WATCH_LIST, 'address', 'Invalid contract address'));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
 			return;
 		}
 
@@ -50,18 +59,29 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 			contracts[accountId] = {};
 		}
 
-		contracts[accountId][address] = abi;
+		if (contracts[accountId][name]) {
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', `Contract "${name}" already exists`));
+			return;
+		}
+
+		if (Object.values(contracts[accountId]).map((i) => i.contractId).includes(contractId)) {
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${contractId} already exists`));
+			return;
+		}
+
+		contracts[accountId][name] = { abi, contractId };
 		localStorage.setItem('contracts', JSON.stringify(contracts));
 
 		dispatch(GlobalReducer.actions.push({
 			field: 'contracts',
-			param: address,
-			value: abi,
+			param: name,
+			value: { abi, contractId },
 		}));
 
-		dispatch(closeModal(MODAL_WATCH_LIST));
+		history.push(SMART_CONTRACTS_PATH);
+		toastSuccess(`Contract ${name} successfully added`);
 	} catch (err) {
-		dispatch(setError(MODAL_WATCH_LIST, 'error', err));
+		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
 	}
 };
 

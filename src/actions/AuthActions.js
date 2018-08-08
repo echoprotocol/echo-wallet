@@ -10,7 +10,7 @@ import { setField } from './TransactionActions';
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 
-import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
+import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
 import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
 

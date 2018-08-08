@@ -1,5 +1,5 @@
 import KeyChainReducer from '../reducers/KeyChainReducer';
-import { validateAccountName, validatePassword } from '../helpers/AuthHelper';
+import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 import { mods, EXPIRED_TIME } from '../constants/KeyChainConstants';
 
 export const reset = () => (dispatch) => {
