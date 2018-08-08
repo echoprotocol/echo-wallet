@@ -11,7 +11,7 @@ import {
 	ADD_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
 
-class SmartContracts extends React.Component {
+class ContractList extends React.Component {
 
 	onLink(link) {
 		history.push(link);
@@ -84,14 +84,14 @@ class SmartContracts extends React.Component {
 
 }
 
-SmartContracts.propTypes = {
+ContractList.propTypes = {
 	contracts: PropTypes.any,
 };
 
-SmartContracts.defaultProps = {
+ContractList.defaultProps = {
 	contracts: null,
 };
 
 export default connect((state) => ({
 	contracts: state.global.get('contracts'),
-}))(SmartContracts);
+}))(ContractList);

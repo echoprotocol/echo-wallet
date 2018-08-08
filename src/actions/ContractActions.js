@@ -11,7 +11,7 @@ import { validateABI } from '../helpers/ValidateHelper';
 import { toastSuccess } from '../helpers/ToastHelper';
 
 import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
-import { SMART_CONTRACTS_PATH } from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
 import { setFormError, setValue } from './FormActions';
 
@@ -78,7 +78,7 @@ export const addContract = (name, contractId, abi) => async (dispatch, getState)
 			value: { abi, contractId },
 		}));
 
-		history.push(SMART_CONTRACTS_PATH);
+		history.push(CONTRACT_LIST_PATH);
 		toastSuccess(`Contract ${name} successfully added`);
 	} catch (err) {
 		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
