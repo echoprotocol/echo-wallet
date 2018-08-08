@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
@@ -29,7 +30,7 @@ class FormComponent extends React.Component {
 				<div className="form-info">
 					<h3>Create Smart Contract</h3>
 				</div>
-				<div className="action-wrap error">
+				<div className={classnames({ error: bytecode.error, 'action-wrap textarea-wrap': true })}>
 					<Form.Field
 						label="ByteCode"
 						placeholder="Byte Code"
@@ -38,7 +39,7 @@ class FormComponent extends React.Component {
 						value={bytecode.value}
 						onChange={(e) => this.onChange(e)}
 					/>
-					{bytecode.error && <span className="error-message">{bytecode.error}</span>}
+					<span className="error-message">{bytecode.error}</span>
 
 				</div>
 
