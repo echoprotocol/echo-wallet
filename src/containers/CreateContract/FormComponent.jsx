@@ -2,21 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
-import { setFormValue } from '../../actions/FormActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
-	onChange(e, lowerCase) {
+	componentWillMount() {
+		this.props.clearForm();
+	}
+
+	onChange(e) {
 		const field = e.target.name;
 		let { value } = e.target;
-
-		if (lowerCase) {
-			value = value.toLowerCase();
-		}
-
+		value = value.trim();
 		if (field) {
 			this.props.setFormValue(field, value);
 		}
@@ -24,22 +25,24 @@ class FormComponent extends React.Component {
 
 	render() {
 		const { bytecode } = this.props;
-
 		return (
 			<div className="field-wrap">
 				<div className="form-info">
 					<h3>Create Smart Contract</h3>
 				</div>
-				<Form.Field>
+				<div className={classnames({ error: bytecode.error, 'action-wrap textarea-wrap': true })}>
 					<Form.Field
 						label="ByteCode"
 						placeholder="Byte Code"
 						control="textarea"
 						name="bytecode"
 						value={bytecode.value}
-						onChange={(e) => this.onChange(e, true)}
+						onChange={(e) => this.onChange(e)}
 					/>
-				</Form.Field>
+					<span className="error-message">{bytecode.error}</span>
+
+				</div>
+
 			</div>
 		);
 	}
@@ -49,6 +52,7 @@ class FormComponent extends React.Component {
 FormComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -57,5 +61,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 	}),
 )(FormComponent);

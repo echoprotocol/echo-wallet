@@ -8,8 +8,13 @@ import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 import formatAmount from '../../helpers/HistoryHelper';
 
+import { removeToken } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
+
+	onRemoveToken(id) {
+		this.props.removeToken(id);
+	}
 
 	showTokensModal() {
 		this.props.openModal(MODAL_TOKENS);
@@ -31,7 +36,13 @@ class Tokens extends React.Component {
 				<Table.Cell>{symbol}</Table.Cell>
 				<Table.Cell>
 					{formatAmount(balance, precision, '')}
-					<span className="icon-close" />
+					<span
+						className="icon-close"
+						role="button"
+						onClick={(e) => this.onRemoveToken(id, e)}
+						onKeyPress={(e) => this.onRemoveToken(id, e)}
+						tabIndex="0"
+					/>
 				</Table.Cell>
 			</Table.Row>
 		));
@@ -73,6 +84,7 @@ class Tokens extends React.Component {
 Tokens.propTypes = {
 	tokens: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
+	removeToken: PropTypes.func.isRequired,
 };
 
 Tokens.defaultProps = {
@@ -86,5 +98,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
+		removeToken: (value) => dispatch(removeToken(value)),
 	}),
 )(Tokens);
