@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_CREATE_CONTRACT, FORM_TRANSFER } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
@@ -12,6 +12,7 @@ import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
+import { validateAbi, validateName } from '../helpers/ContractHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
@@ -258,6 +259,21 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
 };
 
+export const validateContractForm = ({ name, abi }) => async (dispatch) => {
+	const nameError = validateName(name);
+	const abiError = validateAbi(abi);
+
+	if (nameError) {
+		console.log(1);
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+	}
+
+	if (abiError) {
+		console.log(2);
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+	}
+}
+
 export const sendTransaction = () => async (dispatch, getState) => {
 	const { operation, keys, options } = getState().transaction.toJS();
 
@@ -268,7 +284,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, keys.active);
+	dispatch(buildAndSendTransaction(operation, options, keys.active));
 
 	dispatch(closeModal(MODAL_DETAILS));
 

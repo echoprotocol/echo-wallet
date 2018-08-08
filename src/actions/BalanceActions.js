@@ -13,7 +13,7 @@ import { setError, setParamError, closeModal } from './ModalActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
-export const initBalances = (accountId) => async (dispatch) => {
+export const initBalances = (accountId) => async (dispatch, getState) => {
 	/**
 	 *  Tokens structure
 	 *  tokens: {
@@ -27,9 +27,11 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
 	if (tokens && tokens[accountId]) {
 		let balances = Object.keys(tokens[accountId]).map(async (symbol) => {
-			const balance = await getTokenBalance(accountId, tokens[accountId][symbol]);
+			const balance = await getTokenBalance(instance, accountId, tokens[accountId][symbol]);
 			const precision = 18; // TODO get precision
 			return { symbol, precision, balance };
 		});

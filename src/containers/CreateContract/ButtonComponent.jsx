@@ -6,14 +6,8 @@ import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
-import { createContract } from '../../actions/TransactionActions';
-import { clearForm } from '../../actions/FormActions';
-import { addContract } from '../../actions/ContractActions';
-
-import ToastActions from '../../actions/ToastActions';
-import ToastSuccess from '../../components/Toast/ToastSuccess';
-import ToastError from '../../components/Toast/ToastError';
-import ToastInfo from '../../components/Toast/ToastInfo';
+import { createContract, validateContractForm } from '../../actions/TransactionActions';
+import { clearForm, setValue } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
@@ -27,21 +21,25 @@ class ButtonComponent extends React.Component {
 	}
 
 	onClick() {
-		ToastActions.toastInfo(ToastInfo);
-		ToastActions.toastSuccess(ToastSuccess);
-		ToastActions.toastError(ToastError);
+		const { bytecode, name, abi } = this.props;
 
-		const { bytecode } = this.props;
-
-		this.props.createContract({
-			bytecode: bytecode.value.trim(),
-		});
+		if (this.state.checked) {
+			this.props.validateContractForm({
+				name: name.value.trim(),
+				abi: abi.value.trim(),
+			});
+		} else {
+			this.props.createContract({
+				bytecode: bytecode.value.trim(),
+			});
+		}
 	}
 
 	onToggle() {
 		this.setState({
 			checked: !this.state.checked,
 		});
+		this.props.setValue('addToWatchList', !this.state.checked);
 	}
 
 	isDisabledSubmit() {
@@ -86,9 +84,12 @@ class ButtonComponent extends React.Component {
 ButtonComponent.propTypes = {
 	loading: PropTypes.bool,
 	bytecode: PropTypes.object.isRequired,
+	name: PropTypes.object.isRequired,
+	abi: PropTypes.object.isRequired,
 	createContract: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	addContract: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	validateContractForm: PropTypes.func.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -100,10 +101,13 @@ export default connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_CREATE_CONTRACT, 'loading']),
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
+		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
+		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
 	}),
 	(dispatch) => ({
 		createContract: (value) => dispatch(createContract(value)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
-		addContract: (address, abi) => dispatch(addContract(address, abi)),
+		setValue: (field, value) => dispatch(setValue(FORM_CREATE_CONTRACT, field, value)),
+		validateContractForm: (name, abi) => dispatch(validateContractForm(name, abi)),
 	}),
 )(ButtonComponent);

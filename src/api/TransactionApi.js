@@ -1,13 +1,31 @@
 import { TransactionBuilder, TransactionHelper, Aes, PrivateKey, ops } from 'echojs-lib';
+import ToastActions from '../actions/ToastActions';
+import ToastSuccess from '../components/Toast/ToastSuccess';
+import ToastError from '../components/Toast/ToastError';
+import { addContractByName } from '../actions/ContractActions';
+import { FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 
-export const buildAndSendTransaction = async (operation, options, privateKey) => {
+export const buildAndSendTransaction = (operation, options, privateKey) => async (dispatch, getState) => {
 	const tr = new TransactionBuilder();
 	tr.add_type_operation(operation, options);
 
 	await tr.set_required_fees();
 	tr.add_signer(privateKey);
 
-	return tr.broadcast();
+	try {
+		await tr.broadcast();
+
+		if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+			dispatch(addContractByName());
+		}
+
+		ToastActions.toastSuccess(ToastSuccess);
+	} catch (err) {
+		console.log(err);
+		ToastActions.toastError(ToastError);
+	}
+
+	return null;
 };
 
 export const getMemo = (fromAccount, toAccount, memo, privateKey) => {

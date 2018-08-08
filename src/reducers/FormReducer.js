@@ -82,6 +82,7 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		addToWatchList: false,
 		accepted: false,
 	}),
 };

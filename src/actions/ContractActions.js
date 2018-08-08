@@ -9,6 +9,7 @@ import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
+import { FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -60,15 +61,18 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 	}
 };
 
-export const addContractByName = (name, abi) => (dispatch, getState) => {
+export const addContractByName = () => (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
+	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
 
 	let contracts = localStorage.getItem('contracts');
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
-	if (!contracts[name]) {
-		contracts[name] = {};
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
 	}
 
 	contracts[accountId][name] = abi;

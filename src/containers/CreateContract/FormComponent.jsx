@@ -22,24 +22,10 @@ class FormComponent extends React.Component {
 		}
 	}
 
-	render() {
-		const { bytecode, name, abi } = this.props;
-
+	renderWatchListData() {
+		const { name, abi } = this.props;
 		return (
-			<div className="field-wrap">
-				<div className="form-info">
-					<h3>Create Smart Contract</h3>
-				</div>
-				<Form.Field>
-					<Form.Field
-						label="ByteCode"
-						placeholder="Byte Code"
-						control="textarea"
-						name="bytecode"
-						value={bytecode.value}
-						onChange={(e) => this.onChange(e, true)}
-					/>
-				</Form.Field>
+			<div>
 				<Form.Field>
 					<Form.Field
 						label="Name"
@@ -64,6 +50,29 @@ class FormComponent extends React.Component {
 		);
 	}
 
+	render() {
+		const { bytecode } = this.props;
+
+		return (
+			<div className="field-wrap">
+				<div className="form-info">
+					<h3>Create Smart Contract</h3>
+				</div>
+				<Form.Field>
+					<Form.Field
+						label="ByteCode"
+						placeholder="Byte Code"
+						control="textarea"
+						name="bytecode"
+						value={bytecode.value}
+						onChange={(e) => this.onChange(e, true)}
+					/>
+				</Form.Field>
+				{this.props.isChecked ? this.renderWatchListData() : null}
+			</div>
+		);
+	}
+
 }
 
 FormComponent.propTypes = {
@@ -71,12 +80,14 @@ FormComponent.propTypes = {
 	name: PropTypes.object.isRequired,
 	abi: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	isChecked: PropTypes.bool.isRequired,
 };
 export default connect(
 	(state) => ({
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
 		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
 		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
+		isChecked: state.form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']),
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
