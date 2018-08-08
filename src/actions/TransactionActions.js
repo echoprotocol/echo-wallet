@@ -10,14 +10,16 @@ import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
+import ToastActions from '../actions/ToastActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
-import { validateAbi, validateName } from '../helpers/ContractHelper';
+import { validateCode, validateAbi, validateContractName } from '../helpers/TransactionHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
+import { addContractByName } from './ContractActions';
 
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
@@ -216,16 +218,37 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
-export const createContract = ({ bytecode }) => async (dispatch, getState) => {
+export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-
 	if (!activeUserId || !activeUserName) return;
 
 	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
 
 	if (!pubKey) return;
+
+	const error = validateCode(bytecode);
+
+	if (error) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
+		return;
+	}
+
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+		const nameError = validateContractName(name);
+		const abiError = validateAbi(abi);
+
+		if (nameError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+			return;
+		}
+
+		if (abiError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+			return;
+		}
+	}
 
 	dispatch(resetTransaction());
 
@@ -260,19 +283,19 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 };
 
 export const validateContractForm = ({ name, abi }) => async (dispatch) => {
-	const nameError = validateName(name);
+	const nameError = validateContractName(name);
 	const abiError = validateAbi(abi);
 
 	if (nameError) {
-		console.log(1);
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+		return;
 	}
 
 	if (abiError) {
-		console.log(2);
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+
 	}
-}
+};
 
 export const sendTransaction = () => async (dispatch, getState) => {
 	const { operation, keys, options } = getState().transaction.toJS();
@@ -284,7 +307,17 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	dispatch(buildAndSendTransaction(operation, options, keys.active));
+	buildAndSendTransaction(operation, options, keys.active)
+		.then(() => {
+			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
+
+			if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+				dispatch(addContractByName());
+			}
+		})
+		.catch(() => {
+			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
+		});
 
 	dispatch(closeModal(MODAL_DETAILS));
 

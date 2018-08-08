@@ -23,16 +23,11 @@ class ButtonComponent extends React.Component {
 	onClick() {
 		const { bytecode, name, abi } = this.props;
 
-		if (this.state.checked) {
-			this.props.validateContractForm({
-				name: name.value.trim(),
-				abi: abi.value.trim(),
-			});
-		} else {
-			this.props.createContract({
-				bytecode: bytecode.value.trim(),
-			});
-		}
+		this.props.createContract({
+			bytecode: bytecode.value.trim(),
+			name: name.value.trim(),
+			abi: abi.value.trim(),
+		});
 	}
 
 	onToggle() {
