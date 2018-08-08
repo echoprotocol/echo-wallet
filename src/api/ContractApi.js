@@ -1,7 +1,7 @@
 import { keccak256 } from 'js-sha3';
 
-import getMethod from '../helpers/AbiHelper';
-import { toInt, toUtf8 } from '../helpers/ConverterHelper';
+import { getMethod } from '../helpers/ContractHelper';
+import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
@@ -10,7 +10,7 @@ const getContractProp = (instance, contract, account, code) => instance.dbApi().
 	[contract, account, '1.3.0', code],
 );
 
-export const getContractResult = (instance, resultId) => instance.dbApi().exec(
+export const getResult = (instance, resultId) => instance.dbApi().exec(
 	'get_contract_result',
 	[resultId],
 );
@@ -21,9 +21,32 @@ export const formatSignature = (constant) => getHash(`${constant.name}(${constan
 
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 
+const addressFromAccountId = (id) => {
+	const prefix = id.split('.').splice(0, 2).join('.');
+
+	if (prefix !== '1.2') {
+		throw new Error('Unknown id type');
+	}
+
+	const hex = parseInt(id.split('.')[2], 10).toString(16);
+
+	return Array(64 - String(hex).length).fill(0).join('').concat(String(hex));
+};
+
 //	end
 
 export const getContractId = (address) => parseInt(address.substr(-32), 16);
+
+export const getContractResult = (instance, resultId) => getResult(instance, resultId);
+
+export const getTransferTokenCode = (to, amount) => {
+	const toAddress = addressFromAccountId(to);
+	amount = parseInt(amount, 10).toString(16);
+	const amountHex = Array(64 - amount.length).fill(0).join('').concat(amount);
+	const methodId = getHash('transfer(address,uint256)').substr(0, 8);
+
+	return `${methodId}${toAddress}${amountHex}`;
+};
 
 export const getTokenBalance = async (instance, accountId, contractId) => {
 	const method = { name: 'balanceOf', inputs: [{ type: 'address' }] };

@@ -86,13 +86,3 @@ export const clearByField = (form, field) => (dispatch) => {
 export const setIn = (form, field, params) => (dispatch) => {
 	dispatch(FormReducer.actions.setIn({ form, field, params }));
 };
-
-/**
- * set inside by array
- * @param {String} form
- * @param {Array} fields
- * @param {String} value
- */
-export const setInside = (form, fields, value) => (dispatch) => {
-	dispatch(FormReducer.actions.setInside({ form, fields, value }));
-};

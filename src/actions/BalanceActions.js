@@ -9,7 +9,7 @@ import {
 	getTokenSymbol,
 } from '../api/ContractApi';
 
-import { checkBlockTransaction, checkTransactionResult } from '../helpers/TokenHelper';
+import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { setError, setParamError, closeModal } from './ModalActions';
@@ -92,7 +92,7 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 
 export const initBalances = (accountId) => async (dispatch) => {
 
-	await await dispatch(getTokenBalances(accountId));
+	await dispatch(getTokenBalances(accountId));
 
 	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
@@ -131,10 +131,11 @@ export const addToken = (address) => async (dispatch, getState) => {
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
 		const precision = await getTokenPrecision(instance, accountId, contractId);
+
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
 			value: {
-				symbol, precision, balance, id: contractId,
+				id: contractId, symbol, precision, balance,
 			},
 		}));
 

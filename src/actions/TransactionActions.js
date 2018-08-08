@@ -15,6 +15,7 @@ import { validateAccountName } from '../helpers/AuthHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
+import { getTransferTokenCode } from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
@@ -140,20 +141,21 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(getFee('transfer', '1.3.0', comment.value));
+		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
 	}
+
 
 	if (currency.id === fee.asset.id) {
 		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	}
@@ -164,9 +166,15 @@ export const transfer = () => async (dispatch, getState) => {
 	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
 	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
-	//	TODO check transfer token or asset
-
-	const options = {
+	const options = currency.type === 'tokens' ? {
+		registrar: fromAccountId,
+		receiver: currency.id,
+		asset_id: fee.asset.id,
+		value: 0,
+		gasPrice: 0,
+		gas: 4700000,
+		code: getTransferTokenCode(toAccount.id, amount.value * (10 ** currency.precision)),
+	} : {
 		fee: {
 			amount: fee.value,
 			asset_id: fee.asset.id,
@@ -186,7 +194,7 @@ export const transfer = () => async (dispatch, getState) => {
 		amount: `${amount.value} ${currency.symbol}`,
 	};
 
-	if (comment.value) {
+	if (comment.value && currency.type !== 'tokens') {
 		options.memo = comment.value;
 		showOptions.comment = comment.value;
 	}
@@ -200,7 +208,11 @@ export const transfer = () => async (dispatch, getState) => {
 	const activePrivateKey = getState().keychain.getIn([activePubKey, 'privateKey']);
 	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({
+		operation: currency.type === 'tokens' ? 'contract' : 'transfer',
+		options,
+		showOptions,
+	}));
 
 	if (!activePrivateKey || !memoPrivateKey) {
 		dispatch(openModal(MODAL_UNLOCK));

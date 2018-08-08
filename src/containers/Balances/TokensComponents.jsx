@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { openModal } from '../../actions/ModalActions';
-
 import formatAmount from '../../helpers/HistoryHelper';
+
 
 class Tokens extends React.Component {
 
@@ -24,18 +24,17 @@ class Tokens extends React.Component {
 	}
 
 	renderList() {
-		return this.props.tokens.map((token, i) => {
-			const id = i;
-			return (
-				<Table.Row key={id}>
-					<Table.Cell>{token.symbol}</Table.Cell>
-					<Table.Cell>
-						{formatAmount(token.balance, token.precision, '')}
-						<span className="icon-close" />
-					</Table.Cell>
-				</Table.Row>
-			);
-		});
+		return this.props.tokens.map(({
+			id, symbol, precision, balance,
+		}) => (
+			<Table.Row key={id}>
+				<Table.Cell>{symbol}</Table.Cell>
+				<Table.Cell>
+					{formatAmount(balance, precision, '')}
+					<span className="icon-close" />
+				</Table.Cell>
+			</Table.Row>
+		));
 	}
 
 	render() {
@@ -59,7 +58,10 @@ class Tokens extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
-						{ !this.props.tokens ? this.renderEmpty() : this.renderList() }
+						{
+							!this.props.tokens || !this.props.tokens.size ?
+								this.renderEmpty() : this.renderList()
+						}
 					</Table.Body>
 				</Table>
 			</div>

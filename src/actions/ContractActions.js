@@ -11,7 +11,7 @@ import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-import getMethod from '../helpers/AbiHelper';
+import { getMethod } from '../helpers/ContractHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
