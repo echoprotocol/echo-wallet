@@ -60,7 +60,7 @@ export const hideBar = () => (dispatch) => {
 };
 
 export const push = (field, param, value) => (dispatch) => {
-	dispatch(GlobalReducer.actions.remove({ field, param, value }));
+	dispatch(GlobalReducer.actions.push({ field, param, value }));
 };
 
 export const update = (field, param, value) => (dispatch) => {

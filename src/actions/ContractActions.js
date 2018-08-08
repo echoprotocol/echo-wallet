@@ -7,7 +7,7 @@ import {
 } from '../api/ContractApi';
 
 import { getMethod } from '../helpers/AbiHelper';
-import { validateABI } from '../helpers/ValidateHelper';
+import { validateABI, validateContractId } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
 import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
@@ -38,6 +38,13 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 
 	if (abiError) {
 		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
+		return;
+	}
+
+	const idError = validateContractId(id);
+
+	if (idError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
 		return;
 	}
 
