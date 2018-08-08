@@ -268,5 +268,5 @@
 		],
 		"name": "Approval",
 		"type": "event"
-	},
-];
+	}
+]

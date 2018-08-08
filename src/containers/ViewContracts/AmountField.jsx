@@ -5,7 +5,7 @@ import { Form, Input, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import formatAmount from '../../helpers/HistoryHelper';
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
 import { setValue, setFormValue } from '../../actions/FormActions';
 import FeeField from './FeeField';
 
@@ -175,12 +175,12 @@ export default connect(
 	(state) => ({
 		tokens: state.balance.get('tokens').toArray(),
 		assets: state.balance.get('assets').toArray(),
-		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
-		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
-		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
+		amount: state.form.getIn([FORM_CALL_CONTRACT, 'amount']),
+		currency: state.form.getIn([FORM_CALL_CONTRACT, 'currency']),
+		fee: state.form.getIn([FORM_CALL_CONTRACT, 'fee']),
 	}),
 	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
+		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
+		setFormValue: (field, value) => dispatch(setFormValue(FORM_CALL_CONTRACT, field, value)),
 	}),
 )(AmountField);

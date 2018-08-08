@@ -2,13 +2,19 @@ import React from 'react';
 import { Tab, Button, Icon } from 'semantic-ui-react';
 import qs from 'query-string';
 
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import TabContractProps from './TabContractProps';
 import TabCallContracts from './TabCallContracts';
+
+import { formatAbi } from '../../actions/ContractActions';
 
 class ViewContracts extends React.Component {
 
 	componentWillMount() {
-        qs.parse(this.props.location.search).id
+		const contractId = qs.parse(this.props.location.search).id;
+		this.props.formatAbi(contractId);
 	}
 
 	render() {
@@ -78,4 +84,14 @@ class ViewContracts extends React.Component {
 
 }
 
-export default ViewContracts;
+ViewContracts.propTypes = {
+	location: PropTypes.object.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+};
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		formatAbi: (value) => dispatch(formatAbi(value)),
+	}),
+)(ViewContracts);

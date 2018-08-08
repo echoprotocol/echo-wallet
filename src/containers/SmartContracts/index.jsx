@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,18 +26,20 @@ class SmartContracts extends React.Component {
 
 	renderRow([address], key) {
 		return (
-			<Table.Row key={key}>
-				<Table.Cell>
-					<span className="ellips">
-						{` 1.16.${getContractId(address)} `}
-					</span>
-				</Table.Cell>
-				<Table.Cell>
-					<span className="ellips">
-						{` ${address} `}
-					</span>
-				</Table.Cell>
-			</Table.Row>
+			<Link key={key} to={`/view-contracts?id=${address}`}>
+				<Table.Row >
+					<Table.Cell>
+						<span className="ellips">
+							{` 1.16.${getContractId(address)} `}
+						</span>
+					</Table.Cell>
+					<Table.Cell>
+						<span className="ellips">
+							{` ${address} `}
+						</span>
+					</Table.Cell>
+				</Table.Row>
+			</Link>
 		);
 	}
 

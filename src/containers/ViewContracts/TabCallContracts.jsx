@@ -1,8 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+
 import AmountField from './AmountField';
 import SelectMethod from './SelectMethod';
+
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+import { setFormValue } from '../../actions/FormActions';
 
 class TabCallContracts extends React.Component {
 
@@ -34,4 +39,17 @@ class TabCallContracts extends React.Component {
 
 }
 
-export default connect()(TabCallContracts);
+TabCallContracts.propTypes = {
+	location: PropTypes.object.isRequired,
+	functions: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+};
+
+export default connect(
+	(state) => ({
+		functions: state.contract.get('functions'),
+	}),
+	(dispatch) => ({
+		setFormValue: (field, value) => dispatch(setFormValue(FORM_CALL_CONTRACT, field, value)),
+	}),
+)(TabCallContracts);
