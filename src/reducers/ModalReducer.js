@@ -10,7 +10,7 @@ const DEFAULT_FIELDS = Map({
 
 const DEFAULT_MODAL_FIELDS = {
 	[MODAL_TOKENS]: Map({
-		address: {
+		contractId: {
 			value: '',
 			error: null,
 		},

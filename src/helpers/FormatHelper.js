@@ -1,6 +1,6 @@
 import operations from '../constants/Operations';
 
-const AREA_FIELDS = ['code'];
+const AREA_FIELDS = ['code', 'comment'];
 
 export const getTransactionDetails = (operationType, showOptions) => {
 	const operation = operations[operationType];
