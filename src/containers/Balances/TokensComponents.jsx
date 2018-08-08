@@ -22,42 +22,23 @@ class Tokens extends React.Component {
 
 	renderEmpty() {
 		return (
-			<Table.Row className="msg-empty">
-				<Table.Cell>There is no Tokens yet...</Table.Cell>
-			</Table.Row>
+			<div className="msg-empty">
+				<h3>You have no tokens</h3>
+				<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+			</div>
 		);
 	}
 
 	renderList() {
-		return this.props.tokens.map(({
-			id, symbol, precision, balance,
-		}) => (
-			<Table.Row key={id}>
-				<Table.Cell>{symbol}</Table.Cell>
-				<Table.Cell>
-					{formatAmount(balance, precision, '')}
-					<span
-						className="icon-close"
-						role="button"
-						onClick={(e) => this.onRemoveToken(id, e)}
-						onKeyPress={(e) => this.onRemoveToken(id, e)}
-						tabIndex="0"
-					/>
-				</Table.Cell>
-			</Table.Row>
-		));
-	}
-
-	render() {
 		return (
-			<div className="table-tokens">
+			<React.Fragment>
 				<div className="thead-wrap">
 					<Table className="thead" unstackable>
 						<Table.Body>
 							<Table.Row>
 								<Table.Cell>
 									<div className="table-title">Tokens</div>
-									<div className="col-title">Assets</div>
+									<div className="col-title">Tokens</div>
 								</Table.Cell>
 								<Table.Cell>
 									<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
@@ -70,11 +51,38 @@ class Tokens extends React.Component {
 				<Table className="tbody" unstackable>
 					<Table.Body>
 						{
-							!this.props.tokens || !this.props.tokens.size ?
-								this.renderEmpty() : this.renderList()
+							this.props.tokens.map(({
+								id, symbol, precision, balance,
+							}) => (
+								<Table.Row key={id}>
+									<Table.Cell>{symbol}</Table.Cell>
+									<Table.Cell>
+										{formatAmount(balance, precision, '')}
+										<span
+											className="icon-close"
+											role="button"
+											onClick={(e) => this.onRemoveToken(id, e)}
+											onKeyPress={(e) => this.onRemoveToken(id, e)}
+											tabIndex="0"
+										/>
+									</Table.Cell>
+								</Table.Row>
+							))
 						}
 					</Table.Body>
 				</Table>
+			</React.Fragment>
+		);
+	}
+
+	render() {
+        console.log("adasd",this.props.tokens);
+		return (
+			<div className="table-tokens">
+				{
+					!this.props.tokens || !this.props.tokens.size ?
+						this.renderEmpty() : this.renderList()
+				}
 			</div>
 		);
 	}

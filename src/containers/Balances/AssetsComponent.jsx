@@ -9,29 +9,16 @@ class Assets extends React.Component {
 
 	renderEmpty() {
 		return (
-			<Table.Row className="msg-empty">
-				<Table.Cell>There is no Assets yet...</Table.Cell>
-			</Table.Row>
+			<div className="msg-empty">
+				<h3>You have no assets</h3>
+			</div>
 		);
 	}
 
 	renderList() {
-		return this.props.assets.map((asset, i) => {
-			const id = i;
-			return (
-				<Table.Row key={id}>
-					<Table.Cell>{asset.symbol}</Table.Cell>
-					<Table.Cell>
-						{formatAmount(asset.balance, asset.precision, '')}
-					</Table.Cell>
-				</Table.Row>
-			);
-		});
-	}
 
-	render() {
 		return (
-			<div className="table-assets">
+			<React.Fragment>
 				<div className="thead-wrap">
 					<Table className="thead" unstackable>
 						<Table.Body>
@@ -41,7 +28,6 @@ class Assets extends React.Component {
 									<div className="col-title">Assets</div>
 								</Table.Cell>
 								<Table.Cell>
-									{/* <Button content="Add Asset" compact /> */}
 									<div className="col-title">Total amount</div>
 								</Table.Cell>
 							</Table.Row>
@@ -51,11 +37,34 @@ class Assets extends React.Component {
 				<Table className="tbody" unstackable>
 					<Table.Body>
 						{
-							!this.props.assets || !this.props.assets.size ?
-								this.renderEmpty() : this.renderList()
+
+							this.props.assets.map((asset, i) => {
+								const id = i;
+								return (
+									<Table.Row key={id}>
+										<Table.Cell>{asset.symbol}</Table.Cell>
+										<Table.Cell>
+											{formatAmount(asset.balance, asset.precision, '')}
+										</Table.Cell>
+									</Table.Row>
+								);
+
+							})
 						}
 					</Table.Body>
 				</Table>
+			</React.Fragment>
+		);
+	}
+
+	render() {
+		return (
+			<div className="table-assets">
+
+				{
+					!this.props.assets || !this.props.assets.size ?
+						this.renderEmpty() : this.renderList()
+				}
 			</div>
 		);
 	}
