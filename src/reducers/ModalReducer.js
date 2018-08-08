@@ -10,7 +10,7 @@ const DEFAULT_FIELDS = Map({
 
 const DEFAULT_MODAL_FIELDS = {
 	[MODAL_TOKENS]: Map({
-		address: {
+		contractId: {
 			value: '',
 			error: null,
 		},
@@ -46,7 +46,6 @@ export default createModule({
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-
 				return state;
 			},
 		},
