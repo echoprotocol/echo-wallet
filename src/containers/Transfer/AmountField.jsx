@@ -19,7 +19,8 @@ class AmountField extends React.Component {
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
-		const value = e.target.value.trim();
+		let value = e.target.value.trim().match(/[0-9.]/g);
+		value = value ? value.join('') : '';
 
 		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
 			this.props.setValue(
