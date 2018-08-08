@@ -56,7 +56,10 @@ class Tokens extends React.Component {
 				</div>
 				<Table className="tbody" unstackable>
 					<Table.Body>
-						{ !this.props.tokens ? this.renderEmpty() : this.renderList() }
+						{
+							!this.props.tokens || !this.props.tokens.size ?
+								this.renderEmpty() : this.renderList()
+						}
 					</Table.Body>
 				</Table>
 			</div>

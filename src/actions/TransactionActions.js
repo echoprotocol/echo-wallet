@@ -149,13 +149,13 @@ export const transfer = () => async (dispatch, getState) => {
 		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	}
@@ -166,20 +166,14 @@ export const transfer = () => async (dispatch, getState) => {
 	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
 	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
-	//	TODO check transfer token or asset
-
 	const options = currency.type === 'tokens' ? {
 		registrar: fromAccountId,
 		receiver: currency.id,
-		asset_id: '1.3.0',
+		asset_id: fee.asset.id,
 		value: 0,
 		gasPrice: 0,
 		gas: 4700000,
-		code: getTransferTokenCode(
-			fromAccountId,
-			toAccount.id,
-			amount.value * (10 ** currency.precision),
-		),
+		code: getTransferTokenCode(toAccount.id, amount.value * (10 ** currency.precision)),
 	} : {
 		fee: {
 			amount: fee.value,
