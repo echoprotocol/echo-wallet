@@ -5,7 +5,7 @@ export const TRANSFER_PATH = '/transfer';
 export const ADD_CONTRACT_PATH = '/add-contract';
 export const CREATE_CONTRACT_PATH = '/create-contract';
 export const CONTRACT_LIST_PATH = '/contracts';
-export const VIEW_CONTRACTS_PATH = '/view-contracts';
+export const VIEW_CONTRACT_PATH = '/view-contract/:name';
 export const INDEX_PATH = '/';
 
 export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH];

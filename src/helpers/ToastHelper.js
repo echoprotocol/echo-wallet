@@ -1,5 +1,7 @@
 import { toast } from 'react-toastify';
 
+import ToastInfo from '../components/Toast/ToastInfo';
+
 export const toastSuccess = (text) => {
 	toast.success(text, {
 		position: 'bottom-right',
@@ -8,11 +10,13 @@ export const toastSuccess = (text) => {
 	});
 };
 
-export const toastInfo = (text) => {
-	toast.info(text, {
-		autoClose: 3000,
+export const toastInfo = (text, onUndo, onClose) => {
+	toast.info(ToastInfo(text, onUndo), {
+		autoClose: 5000,
 		position: 'bottom-right',
 		hideProgressBar: true,
+		pauseOnHover: true,
+		onClose,
 	});
 };
 

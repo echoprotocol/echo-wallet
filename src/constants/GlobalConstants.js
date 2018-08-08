@@ -4,7 +4,7 @@ import {
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
-	VIEW_CONTRACTS_PATH,
+	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
 } from './RouterConstants';
 
@@ -30,7 +30,7 @@ export const HEADER_TITLE = [
 		title: 'Smart Contracts',
 	},
 	{
-		path: VIEW_CONTRACTS_PATH,
+		path: VIEW_CONTRACT_PATH,
 		title: 'Smart Contract Details',
 	},
 	{

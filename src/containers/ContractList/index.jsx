@@ -9,6 +9,7 @@ import history from '../../history';
 import {
 	CREATE_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
+	VIEW_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
 
 class ContractList extends React.Component {
@@ -17,12 +18,21 @@ class ContractList extends React.Component {
 		history.push(link);
 	}
 
-	renderRow([name, { contractId }]) {
+	renderRow([name, { id, disabled }]) {
+		if (disabled) {
+			return null;
+		}
+
 		return (
-			<Table.Row key={contractId}>
+			<Table.Row
+				className="pointer"
+				key={id}
+				role="button"
+				onClick={(e) => this.onLink(VIEW_CONTRACT_PATH.replace(/:name/, name), e)}
+			>
 				<Table.Cell>
 					<span className="ellips">
-						{contractId}
+						{id}
 					</span>
 				</Table.Cell>
 				<Table.Cell>
@@ -79,7 +89,14 @@ class ContractList extends React.Component {
 
 	render() {
 		const { contracts } = this.props;
-		return contracts && contracts.size ? this.renderList() : this.renderEmpty();
+
+		if (!contracts) {
+			return this.renderEmpty();
+		}
+
+		const activeContracts = Object.values(contracts.toJS()).filter((i) => !i.disabled);
+
+		return activeContracts.length ? this.renderList() : this.renderEmpty();
 	}
 
 }
