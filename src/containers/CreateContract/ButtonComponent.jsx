@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
-import { createContract, validateContractForm } from '../../actions/TransactionActions';
+import { createContract } from '../../actions/TransactionActions';
 import { clearForm, setValue } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
@@ -84,7 +84,6 @@ ButtonComponent.propTypes = {
 	createContract: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
-	validateContractForm: PropTypes.func.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -103,6 +102,5 @@ export default connect(
 		createContract: (value) => dispatch(createContract(value)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 		setValue: (field, value) => dispatch(setValue(FORM_CREATE_CONTRACT, field, value)),
-		validateContractForm: (name, abi) => dispatch(validateContractForm(name, abi)),
 	}),
 )(ButtonComponent);

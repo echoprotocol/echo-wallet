@@ -282,21 +282,6 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 
 };
 
-export const validateContractForm = ({ name, abi }) => async (dispatch) => {
-	const nameError = validateContractName(name);
-	const abiError = validateAbi(abi);
-
-	if (nameError) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
-		return;
-	}
-
-	if (abiError) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
-
-	}
-};
-
 export const sendTransaction = () => async (dispatch, getState) => {
 	const { operation, keys, options } = getState().transaction.toJS();
 
