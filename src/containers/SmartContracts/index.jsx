@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
-
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -8,8 +8,9 @@ import history from '../../history';
 
 import { getContractId } from '../../helpers/FormatHelper';
 
-import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
-import { CREATE_CONTRACT_PATH } from '../../constants/RouterConstants';
+// import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
+import { CREATE_CONTRACT_PATH, TO_WATCH_LIST_PATH } from '../../constants/RouterConstants';
+
 
 import { openModal } from '../../actions/ModalActions';
 
@@ -40,17 +41,15 @@ class SmartContracts extends React.Component {
 		);
 	}
 
-	render() {
-		const { contracts } = this.props;
-
+	renderNormal(contracts) {
 		return (
-			<div>
+			<React.Fragment>
 				<Table striped className="table-smart-contract">
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell>Contract ID</Table.HeaderCell>
 							<Table.HeaderCell>
-								Watched Contract Address
+                                Watched Contract Address
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
@@ -67,11 +66,32 @@ class SmartContracts extends React.Component {
 					</Table.Body>
 				</Table>
 				<div className="btn-list" >
-					<Button content="watch contract" color="grey" onClick={(e) => this.onModal(MODAL_WATCH_LIST, e)} />
+					<Link to={TO_WATCH_LIST_PATH}>
+						<Button content="watch contract" color="grey" />
+					</Link>
+					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
+				</div>
+			</React.Fragment>
+		);
+	}
+
+	renderEmpty() {
+		return (
+			<div className="empty-contracts">
+				<h3>Start watch contract or create a new one</h3>
+				<div className="btns">
+					<Link to={TO_WATCH_LIST_PATH}>
+						<Button content="watch contract" color="grey" />
+					</Link>
 					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
 				</div>
 			</div>
 		);
+	}
+
+	render() {
+		const { contracts } = this.props;
+		return contracts && contracts.size ? this.renderNormal(contracts) : this.renderEmpty();
 	}
 
 }

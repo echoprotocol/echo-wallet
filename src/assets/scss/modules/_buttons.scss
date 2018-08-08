@@ -24,6 +24,17 @@ $stripe-width: 10px;
         animation: loading-stripes .4s linear infinite;
     }
 }
+.ui.button {
+    &.transparent {
+        background-color: transparent;
+        border-color: transparent;
+        color: #aeb4c0;
+        text-transform: capitalize;
+        font-size: 1em;
+        padding: 8.5px 0;
+        margin: 0;
+    }
+}
 
 @keyframes loading-stripes {
     0% {background-position: 0px}
@@ -43,6 +54,8 @@ $stripe-width: 10px;
 .btn-list {
     padding: 20px;
     .ui.button {
-        margin: 0 10px 0 0;
+        &:not(:last-child) {
+            margin: 0 10px 0 0;
+        }
     }
 }

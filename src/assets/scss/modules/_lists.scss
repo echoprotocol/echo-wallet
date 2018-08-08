@@ -46,7 +46,10 @@
                 border-bottom-right-radius: 0 !important;
             }
         }
-
+        .dropdown.icon {
+            margin: 0 0 0 auto;
+            padding-left: 1em;
+        }
         & > input.search {
             padding-right: 28px;
         }
@@ -68,6 +71,32 @@
         }
     }
 }
+.contract-type-dropdown {
+    &.ui.dropdown {
+        display: flex;
+        align-items: center;
+        border: 1px solid $bd-gray;
+        padding: 3px 1em;
+        transition: border .3s;
+        align-self: flex-start;
+        min-height: 15px;
+        width: 120px;
+        .dropdown.icon {
+            font-size: 12px;
+            padding: 4px;
+        }
+        .text {
+            margin-top: 1px;
+        }
+        .menu {
+            .item {
+                margin: auto;
+                padding-bottom: 7px;
+                padding-top: 7px;
+            }
+        }
+    }
+}
 .fee-dropdown {
     &.ui.dropdown {
         display: flex;
@@ -81,6 +110,7 @@
         min-height: auto;
         & > .text {
             margin-right: 5px;
+            color: $orange;
         }
         .dropdown.icon {
             font-size: 12px;
@@ -111,6 +141,7 @@
         }
     }
 }
+
 .watchlist {
     margin: 30px 0;
     &-line {
@@ -138,11 +169,16 @@
         .type {
             margin-left: 10px;
         }
+        .value {
+           &.blue {
+               color: $blue;
+           } 
+        }
         .input.mini.ui {
             input {
                 height: 26px;
                 font-size: 14px;
-                min-width: 300px;
+                min-width: 280px;
             }
         }
         .button.mini.ui {
@@ -167,8 +203,14 @@
             display: flex;
             flex-wrap: wrap;
             align-items: flex-end;
-            margin-top: -10px;
             .item {
+                &.air {
+                    margin-right: 10px;
+                }
+                &.value {
+                    line-height: 25px;
+                    margin-bottom: -1px;
+                }
                 margin-top: 10px;
                 display: inline-block;
                 min-height: 24px;
