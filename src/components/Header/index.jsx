@@ -6,9 +6,12 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { logout } from '../../actions/GlobalActions';
-
+import {
+	BALANCES_PATH,
+	TRANSFER_PATH,
+	INDEX_PATH,
+} from '../../constants/RouterConstants';
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
-import { TRANSFER_PATH, BALANCES_PATH } from '../../constants/RouterConstants';
 
 import formatAmount from '../../helpers/HistoryHelper';
 
@@ -39,6 +42,7 @@ class Header extends React.Component {
 
 		return (
 			<div className="header">
+				<Link to={INDEX_PATH} className="icon-back" />
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>

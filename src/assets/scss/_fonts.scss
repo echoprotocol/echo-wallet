@@ -61,7 +61,20 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  .icon-edit-close,
+  .icon-edit-checked {
+    color: #d6d9df;
+    transition: color .3s;
+    &:hover {
+        color: #aeb4c0;
+    }
+  }
+  .icon-edit-close:before {
+    content: "\e919";
+  }
+  .icon-edit-checked:before {
+    content: "\e916";
+  }
   .icon-error-red:before {
     content: "\e918";
     color: #f65c5c;

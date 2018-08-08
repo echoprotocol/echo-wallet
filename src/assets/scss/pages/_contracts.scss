@@ -1,0 +1,16 @@
+.empty-contracts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .btns {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .ui.button {
+            &:not(:last-child) {
+                margin: 0 10px 0 0;
+            }
+        }
+    }
+}

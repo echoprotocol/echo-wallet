@@ -27,7 +27,7 @@ class FormComponent extends React.Component {
 		const { name, abi } = this.props;
 		return (
 			<div>
-				<Form.Field>
+				<div className={classnames({ error: name.error, 'action-wrap textarea-wrap': true })}>
 					<Form.Field
 						label="Name"
 						placeholder="Name"
@@ -37,8 +37,8 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e, true)}
 					/>
 					<span className="error-message">{name.error}</span>
-				</Form.Field>
-				<Form.Field>
+				</div>
+				<div className={classnames({ error: abi.error, 'action-wrap textarea-wrap': true })}>
 					<Form.Field
 						label="Abi"
 						placeholder="Abi"
@@ -48,7 +48,7 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e, true)}
 					/>
 					<span className="error-message">{abi.error}</span>
-				</Form.Field>
+				</div>
 			</div>
 		);
 	}
@@ -70,8 +70,8 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 					/>
 					<span className="error-message">{bytecode.error}</span>
-					{this.props.isChecked ? this.renderWatchListData() : null}
 				</div>
+				{this.props.isChecked ? this.renderWatchListData() : null}
 			</div>
 		);
 	}
