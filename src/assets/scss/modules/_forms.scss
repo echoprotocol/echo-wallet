@@ -9,6 +9,7 @@
 
 .form.user-form,
 .form.main-form {
+    padding: 50px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -109,6 +110,7 @@
             display: none;
             position: absolute;
             right: 0;
+            top: 100%;
             margin-right: 5px;
             background-color: $err-red;
             padding: 0 5px;
@@ -139,6 +141,7 @@
     .dropdown {
         &.assets-tokens-dropdown {
             max-width: 150px;
+            min-width: 150px;
         }
         &.icon {
             color: $bd-gray;
@@ -176,19 +179,17 @@
                 animation: rotating 1s linear infinite;
             }
         }
-        &.ui.input {
-            &.error {
-                margin-bottom: 10px;
-                input {
-                    border: 1px solid $err-red;
-                }
-                .error-message {
-                    top: 99%;
-                }
-            }
+        &.error {
+            margin-bottom: 10px;
             input {
-                padding-right: 30px;
+                border: 1px solid $err-red;
             }
+            .error-message {
+                top: 99%;
+            }
+        }
+        input {
+            padding-right: 30px;
         }
 
         .value-status {
@@ -223,6 +224,20 @@
     .field-wrap {
         .field {
             .ui.input {
+                transition: margin .3s;
+                &.focused {
+                    .assets-tokens-dropdown {
+                        border-color: #85B7D9;
+                    }
+                }
+                &.error {
+                    .assets-tokens-dropdown,
+                    .amount {
+                        border-color: $err-red;
+                    }
+                    margin-bottom: 10px;
+                }
+
                 .amount {
                     width: 100%;
                     border-top-right-radius: 0;
@@ -252,6 +267,40 @@
                     }
 
                 }
+            }
+        }
+    }
+}
+
+.ui.input.label-in-left {
+    display: flex;
+    position: relative;
+    max-width: 350px;
+    width: 100%;
+    input {
+        padding-left: 60px;
+        padding-right: 50px;
+    }
+    .label {
+        color: $bd-gray;
+        font-size: 1em;
+        position: absolute;
+        left: 12px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: table;
+    }
+    .edit-options {
+        position: absolute;
+        right: 12px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: table;
+        span {
+            &:not(:last-child) {
+                margin-right: 5px;
             }
         }
     }

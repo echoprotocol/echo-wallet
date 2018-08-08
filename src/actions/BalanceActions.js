@@ -4,6 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import {
 	getContractId,
 	getTokenBalance,
+	getTokenPrecision,
 	getContract,
 	getTokenSymbol,
 } from '../api/ContractApi';
@@ -13,7 +14,7 @@ import { setError, setParamError, closeModal } from './ModalActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
-export const initBalances = (accountId) => async (dispatch) => {
+export const initBalances = (accountId) => async (dispatch, getState) => {
 	/**
 	 *  Tokens structure
 	 *  tokens: {
@@ -25,13 +26,16 @@ export const initBalances = (accountId) => async (dispatch) => {
 	let tokens = localStorage.getItem('tokens');
 	tokens = tokens ? JSON.parse(tokens) : {};
 
-	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
+	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	if (tokens && tokens[accountId]) {
-		let balances = Object.keys(tokens[accountId]).map(async (symbol) => {
-			const balance = await getTokenBalance(accountId, tokens[accountId][symbol]);
-			const precision = 18; // TODO get precision
-			return { symbol, precision, balance };
+		let balances = Object.entries(tokens[accountId]).map(async ([symbol, contractId]) => {
+			const balance = await getTokenBalance(instance, accountId, contractId);
+			const precision = await getTokenPrecision(instance, accountId, contractId);
+
+			return {
+				id: contractId, symbol, precision, balance,
+			};
 		});
 
 		balances = await Promise.all(balances);
@@ -41,6 +45,8 @@ export const initBalances = (accountId) => async (dispatch) => {
 			value: new List(balances),
 		}));
 	}
+
+	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
 
 	if (assets && Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
@@ -89,10 +95,13 @@ export const addToken = (address) => async (dispatch, getState) => {
 		localStorage.setItem('tokens', JSON.stringify(tokens));
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
-		const precision = 18; // TODO get precision
-		dispatch(BalanceReducer.actions.setIn({
+		const precision = await getTokenPrecision(instance, accountId, contractId);
+
+		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
-			value: { symbol, precision, balance },
+			value: {
+				id: contractId, symbol, precision, balance,
+			},
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));

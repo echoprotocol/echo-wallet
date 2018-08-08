@@ -1,29 +1,59 @@
-.tub-full {
-    background-color: rgb(247, 247, 247);
+.tab-full {
+
+    .control {
+        &-wrap {
+            background-color: rgb(247, 247, 247);
+            width: 100%;
+        }
+        &-panel {
+            max-width: 900px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            min-height: 60px;
+            li {
+                &:not(:last-child){
+                    margin-right: 20px;
+                }
+            }
+            .label {
+                color: $gray;
+                margin-right: 8px;
+            }
+            .value {
+                font-style: 1.2em;
+                color: $link-gray;
+
+                i {
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
     .ui.tabular.menu {
         border: 0;
-        max-width: 860px;
-        padding: 0 20px;
+        max-width: 900px;
         margin: auto;
+        border-bottom: 2px solid rgb(247, 247, 247);
         .item {
             border: 0;
-            background-color: rgb(222, 222, 222);
-            border-top-right-radius: 8px;
-            border-top-left-radius: 8px;
-            font-size: .75rem;
+            font-size: .8em;
             font-weight: 600;
             line-height: 0px;
             margin: 0 0 -3px;
             color: $gray;
-            &:not(:last-child) {
-                margin-right: 10px;
-            }
+            border-bottom: 2px solid rgb(247, 247, 247);
+            border-radius: 0;
+            margin: 0 0 -2px 0;
+            transition: border 0.1s ease;
             &.active {
                 color: $orange;
                 line-height: 0px;
                 border-top-right-radius: 8px;
                 border-top-left-radius: 8px;
                 background-color: #fff;
+                border-bottom: 2px solid;
             }
         }
 
@@ -35,7 +65,7 @@
     .tab-content {
         max-width: 860px;
         margin: auto;
-        padding: 25px 20px; 
-        overflow: auto;
+        padding: 50px 20px; 
+        overflow: initial;
     }
 }
