@@ -51,8 +51,8 @@ class ButtonComponent extends React.Component {
 		return (
 			<div className="form-panel">
 				<div className="check orange">
-					<input type="checkbox" id="addToWatchList" checked={this.state.checked} />
-					<label className="label" onClick={() => this.onToggle()} htmlFor="addToWatchList">
+					<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.state.checked} />
+					<label className="label" htmlFor="addToWatchList">
 						<span className="label-text">Add to watch list</span>
 					</label>
 				</div>
