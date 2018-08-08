@@ -10,6 +10,8 @@ const getContractProp = (instance, contract, account, method) => instance.dbApi(
 
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
 
+export const getContractResult = (instance, contract) => instance.dbApi().exec('get_contract_result', [contract]);
+
 const getHash = (str) => keccak256(str);
 
 const toUtf8 = (hex) => {
@@ -84,7 +86,7 @@ export const getTokenPrecision = async (instance, accountId, contractId) => {
 	return parseInt(result, 16);
 };
 
-export const getContractConstant = (instance, accountId, contractId, method) => getContractProp(
+export const getContractConstant = (instance, contractId, accountId, method) => getContractProp(
 	instance,
 	contractId,
 	accountId,

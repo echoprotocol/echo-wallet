@@ -1,8 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Input, Dropdown } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+
+import { formatAbi } from '../../actions/ContractActions';
 
 class TabContractProps extends React.Component {
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.accountId) {
+			this.props.formatAbi('1.16.61', true);
+		}
+	}
 
 	render() {
 		const typeOptions = [
@@ -76,4 +85,20 @@ class TabContractProps extends React.Component {
 
 }
 
-export default connect()(TabContractProps);
+TabContractProps.propTypes = {
+	formatAbi: PropTypes.func.isRequired,
+	accountId: PropTypes.any,
+};
+
+TabContractProps.defaultProps = {
+	accountId: null,
+};
+
+export default connect(
+	(state) => ({
+		accountId: state.global.getIn(['activeUser', 'id']),
+	}),
+	(dispatch) => ({
+		formatAbi: (contractId, isConst) => dispatch(formatAbi(contractId, isConst)),
+	}),
+)(TabContractProps);

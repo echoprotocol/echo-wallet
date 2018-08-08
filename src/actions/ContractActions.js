@@ -1,19 +1,23 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 import {
 	getContractId,
 	getContract,
 	getContractConstant,
 	formatSignature,
+	getContractResult,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
+import ContractReducer from '../reducers/ContractReducer';
 
 import { getMethod } from '../helpers/AbiHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
+
+import erc20 from '../../config/erc20.abi.test.json';
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -97,7 +101,9 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
+
+	const abi = erc20;
+	// const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
 
 	if (isConst) {
 		let constants = abi.filter((value) =>
@@ -106,7 +112,7 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 		constants = constants.map(async (constant) => {
 			const method = formatSignature(constant);
 			const constantValue =
-				await getContractConstant(instance, accountId, contractId, method);
+				await getContractConstant(instance, contractId, accountId, method);
 			return Object.defineProperty(constant, 'constantValue', {
 				value: constantValue,
 				writable: true,
@@ -115,7 +121,10 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 			});
 		});
 
-		await Promise.all(constants);
+		constants = await Promise.all(constants);
+		console.log(constants);
+
+		dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(constants) }));
 	} else {
 		abi.filter((value) => !value.constant && value.name && value.type === 'function');
 	}
