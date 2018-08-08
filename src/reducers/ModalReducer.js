@@ -46,7 +46,6 @@ export default createModule({
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-
 				return state;
 			},
 		},
