@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { toggleBar } from '../../actions/GlobalActions';
 import {
 	CREATE_CONTRACT_PATH,
-	SMART_CONTRACTS_PATH,
+	CONTRACT_LIST_PATH,
+	ADD_CONTRACT_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
 
@@ -40,34 +41,34 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
 							<li>
-								<NavLink className="sidebar-nav-link" activeClassName="active" to={CREATE_CONTRACT_PATH}>
+								<Link className="sidebar-nav-link active" to={CREATE_CONTRACT_PATH}>
 									<span className="icon icon-contractAdd" />
 									<span className="sidebar-nav-text">Create Smart Contract</span>
-								</NavLink>
+								</Link>
 							</li>
 							<li>
-								<NavLink className="sidebar-nav-link" activeClassName="active" to={SMART_CONTRACTS_PATH}>
+								<Link className="sidebar-nav-link" to={CONTRACT_LIST_PATH}>
 									<span className="icon icon-contractSearch" />
 									<span className="sidebar-nav-text">View Smart Contract</span>
-								</NavLink>
+								</Link>
 							</li>
 							<li>
-								<NavLink className="sidebar-nav-link" activeClassName="active" to={SMART_CONTRACTS_PATH}>
+								<Link className="sidebar-nav-link" to={ADD_CONTRACT_PATH}>
 									<span className="icon icon-contractCopy" />
 									<span className="sidebar-nav-text">Added Smart Contract</span>
-								</NavLink>
+								</Link>
 							</li>
 							<li>
-								<NavLink className="sidebar-nav-link" activeClassName="active" to={INDEX_PATH}>
+								<Link className="sidebar-nav-link" to={INDEX_PATH}>
 									<span className="icon icon-recent-activity" />
 									<span className="sidebar-nav-text">Recent Activity</span>
-								</NavLink>
+								</Link>
 							</li>
 							{/* <li>
-								<NavLink className="sidebar-nav-link" to={INDEX_PATH}>
+								<Link className="sidebar-nav-link" to={INDEX_PATH}>
 									<span className="icon icon-recent-activity" />
 									<span className="sidebar-nav-text">Voting</span>
-								</NavLink>
+								</Link>
 							</li> */}
 
 						</ul>

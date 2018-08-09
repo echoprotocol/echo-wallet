@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { openModal } from '../../actions/ModalActions';
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 
 import { removeToken } from '../../actions/BalanceActions';
 
