@@ -4,7 +4,7 @@ import { Tab } from 'semantic-ui-react';
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
 
-class ViewContracts extends React.Component {
+class ViewTransaction extends React.Component {
 
 	render() {
 		const panes = [
@@ -46,4 +46,4 @@ class ViewContracts extends React.Component {
 
 }
 
-export default ViewContracts;
+export default ViewTransaction;
