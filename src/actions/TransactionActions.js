@@ -324,8 +324,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 
 			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
 		})
-		.catch((err) => {
-			console.log(err);
+		.catch(() => {
 			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
 		});
 
