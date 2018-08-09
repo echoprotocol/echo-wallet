@@ -12,7 +12,7 @@ import { setError, setParamError, closeModal } from './ModalActions';
 import GlobalReducer from '../reducers/GlobalReducer';
 import { FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 
-import { getMethod } from '../helpers/AbiHelper';
+import { getMethod } from '../helpers/ContractHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
