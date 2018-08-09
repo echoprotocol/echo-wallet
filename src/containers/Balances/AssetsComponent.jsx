@@ -3,7 +3,7 @@ import { Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 
 class Assets extends React.Component {
 

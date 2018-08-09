@@ -3,7 +3,7 @@ import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
-	SMART_CONTRACTS_PATH,
+	CONTRACT_LIST_PATH,
 	VIEW_CONTRACTS_PATH,
 	ADD_CONTRACT_PATH,
 	TRANSACTION_DETAILS_PATH,
@@ -27,7 +27,7 @@ export const HEADER_TITLE = [
 		title: 'Create Contract',
 	},
 	{
-		path: SMART_CONTRACTS_PATH,
+		path: CONTRACT_LIST_PATH,
 		title: 'Smart Contracts',
 	},
 	{

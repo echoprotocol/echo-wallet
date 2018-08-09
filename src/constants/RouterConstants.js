@@ -4,7 +4,7 @@ export const BALANCES_PATH = '/balances';
 export const TRANSFER_PATH = '/transfer';
 export const ADD_CONTRACT_PATH = '/add-contract';
 export const CREATE_CONTRACT_PATH = '/create-contract';
-export const SMART_CONTRACTS_PATH = '/smart-contracts';
+export const CONTRACT_LIST_PATH = '/contracts';
 export const VIEW_CONTRACTS_PATH = '/view-contracts';
 export const TRANSACTION_DETAILS_PATH = '/transaction-details';
 
@@ -18,5 +18,5 @@ export const CENTER_MODE_ROUTES = [
 	CREATE_CONTRACT_PATH,
 	TRANSFER_PATH,
 	ADD_CONTRACT_PATH,
-	SMART_CONTRACTS_PATH,
+	CONTRACT_LIST_PATH,
 ];

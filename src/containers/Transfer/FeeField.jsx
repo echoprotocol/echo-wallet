@@ -6,7 +6,7 @@ import { EchoJSActions } from 'echojs-redux';
 import classnames from 'classnames';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
 import { getFee } from '../../actions/TransactionActions';
 
