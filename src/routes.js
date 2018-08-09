@@ -11,6 +11,7 @@ import {
 	CREATE_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
 	VIEW_CONTRACTS_PATH,
+	TRANSACTION_DETAILS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -23,6 +24,8 @@ import AddToWatchList from './containers/AddToWatchList';
 import Balances from './containers/Balances';
 import Transfer from './containers/Transfer';
 import CreateContract from './containers/CreateContract';
+import TransactionDetails from './containers/TransactionDetails';
+
 
 export default class Routes extends React.Component {
 
@@ -39,6 +42,7 @@ export default class Routes extends React.Component {
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
 					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
 					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
+					<Route exact path={TRANSACTION_DETAILS_PATH} component={TransactionDetails} />
 				</div>
 			</App>
 		);
