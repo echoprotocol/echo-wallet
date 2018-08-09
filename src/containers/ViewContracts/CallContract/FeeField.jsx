@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import { EchoJSActions } from 'echojs-redux';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
-import formatAmount from '../../helpers/HistoryHelper';
-import { setValue } from '../../actions/FormActions';
-import { getFee } from '../../actions/TransactionActions';
+import { FORM_TRANSFER } from '../../../constants/FormConstants';
+import formatAmount from '../../../helpers/HistoryHelper';
+import { setValue } from '../../../actions/FormActions';
+import { getFee } from '../../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 

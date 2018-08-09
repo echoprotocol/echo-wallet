@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
-import formatAmount from '../../helpers/HistoryHelper';
-import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
-import { setValue, setFormValue } from '../../actions/FormActions';
+import formatAmount from '../../../helpers/HistoryHelper';
+import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
+import { setValue, setFormValue } from '../../../actions/FormActions';
 import FeeField from './FeeField';
 
 class AmountField extends React.Component {

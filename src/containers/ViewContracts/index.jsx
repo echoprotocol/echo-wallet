@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import TabContractProps from './TabContractProps';
-import TabCallContracts from './TabCallContracts';
+import TabCallContracts from './CallContract/TabCallContracts';
 
 import { formatAbi } from '../../actions/ContractActions';
 

@@ -4,7 +4,6 @@ import {
 	getContractId,
 	getContract,
 	getContractConstant,
-	formatSignature,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';

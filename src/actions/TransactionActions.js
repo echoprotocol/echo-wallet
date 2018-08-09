@@ -318,6 +318,7 @@ export const callContract = (method, inputs) => async (dispatch, getState) => {
 	dispatch(resetTransaction());
 
 	// transform to bytecode
+
 	const bytecode = '';
 	const amount = 0;
 	const asset = '1.3.0';

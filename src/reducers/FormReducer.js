@@ -78,6 +78,7 @@ const DEFAULT_FORM_FIELDS = {
 		accepted: false,
 	}),
 	[FORM_CALL_CONTRACT]: Map({
+		inputs: new Map({}),
 		amount: {
 			value: '',
 			error: null,
@@ -88,6 +89,11 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
+		functionName: {
+			value: '',
+			error: null,
+		},
+		payable: false,
 	}),
 };
 
@@ -153,6 +159,40 @@ export default createModule({
 						error: payload.value,
 					}));
 				}
+
+				return state;
+			},
+		},
+
+		setInFormValue: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				let field = state.getIn(path) || {};
+
+				if (field.toJS) field = field.toJS();
+
+				state = state.setIn(path, Object.assign({}, field, {
+					...field,
+					value: payload.value,
+					error: null,
+				}));
+
+				return state;
+			},
+		},
+
+		setInFormError: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				let field = state.getIn(path);
+				if (field.toJS) field = field.toJS();
+
+				state = state.setIn(path, Object.assign({}, field, {
+					...field,
+					error: payload.value,
+				}));
 
 				return state;
 			},
