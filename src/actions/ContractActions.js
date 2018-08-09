@@ -1,6 +1,7 @@
 import { Map } from 'immutable';
 
 import {
+	getContractId,
 	getContract,
 	getContractConstant,
 	formatSignature,
@@ -117,8 +118,6 @@ export const addContractByName = (
 		param: name,
 		value: { abi, contractId },
 	}));
-
-	dispatch(closeModal(MODAL_WATCH_LIST));
 };
 /**
  * parameters
