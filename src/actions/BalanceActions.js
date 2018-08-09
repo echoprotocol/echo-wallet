@@ -10,10 +10,10 @@ import {
 } from '../api/ContractApi';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
+import { toastSuccess } from '../helpers/ToastHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { setError, setParamError, closeModal } from './ModalActions';
-import ToastActions from '../actions/ToastActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -143,7 +143,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
-		ToastActions.toastSuccess('Token successfully added');
+		toastSuccess('Token successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
 	}
