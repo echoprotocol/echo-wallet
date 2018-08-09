@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
