@@ -13,7 +13,8 @@ import { setError, setParamError, closeModal } from './ModalActions';
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 
-import { getMethod } from '../helpers/AbiHelper';
+import { getMethod } from '../helpers/ContractHelper';
+import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
@@ -69,6 +70,40 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 	}
 };
 
+export const addContractByName = (
+	contractResultId,
+	accountId,
+	name,
+	abi,
+) => async (dispatch, getState) => {
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+	const contractId = `1.16.${getContractId(address)}`;
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	contracts[accountId][name] = {
+		abi,
+		contractId,
+	};
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(GlobalReducer.actions.push({
+		field: 'contracts',
+		param: name,
+		value: { abi, contractId },
+	}));
+
+	dispatch(closeModal(MODAL_WATCH_LIST));
+};
 /**
  * parameters
  * method: {
@@ -111,8 +146,13 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 
 		constants = constants.map(async (constant) => {
 			const method = formatSignature(constant);
-			const constantValue =
+			let constantValue =
 				await getContractConstant(instance, contractId, accountId, method);
+			if (constant.outputs[0].type === 'string') {
+				constantValue = toUtf8(constantValue.substr(-64));
+			} else {
+				constantValue = toInt(constantValue.substr(-64));
+			}
 			return Object.defineProperty(constant, 'constantValue', {
 				value: constantValue,
 				writable: true,
@@ -122,7 +162,6 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 		});
 
 		constants = await Promise.all(constants);
-		console.log(constants);
 
 		dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(constants) }));
 	} else {
