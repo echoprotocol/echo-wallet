@@ -9,7 +9,7 @@ import history from '../../history';
 import { getContractId } from '../../helpers/FormatHelper';
 
 // import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
-import { CREATE_CONTRACT_PATH, TO_WATCH_LIST_PATH, VIEW_CONTRACTS_PATH } from '../../constants/RouterConstants';
+import { CREATE_CONTRACT_PATH, TO_WATCH_LIST_PATH } from '../../constants/RouterConstants';
 
 
 import { openModal } from '../../actions/ModalActions';
@@ -26,20 +26,18 @@ class SmartContracts extends React.Component {
 
 	renderRow([address], key) {
 		return (
-			<Link key={key} to={`${VIEW_CONTRACTS_PATH}?id=${address}`}>
-				<Table.Row >
-					<Table.Cell>
-						<span className="ellips">
-							{` 1.16.${getContractId(address)} `}
-						</span>
-					</Table.Cell>
-					<Table.Cell>
-						<span className="ellips">
-							{` ${address} `}
-						</span>
-					</Table.Cell>
-				</Table.Row>
-			</Link>
+			<Table.Row key={key}>
+				<Table.Cell>
+					<span className="ellips">
+						{` 1.16.${getContractId(address)} `}
+					</span>
+				</Table.Cell>
+				<Table.Cell>
+					<span className="ellips">
+						{` ${address} `}
+					</span>
+				</Table.Cell>
+			</Table.Row>
 		);
 	}
 

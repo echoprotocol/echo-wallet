@@ -14,6 +14,7 @@ import ToastActions from '../actions/ToastActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
 import { validateCode, validateAbi, validateContractName } from '../helpers/TransactionHelper';
+import { getMethod } from '../helpers/ContractHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
@@ -349,7 +350,7 @@ export const callContract = (method, inputs) => async (dispatch, getState) => {
 
 	// transform to bytecode
 
-	const bytecode = '';
+	const bytecode = getMethod(method, inputs);
 	const amount = 0;
 	const asset = '1.3.0';
 
