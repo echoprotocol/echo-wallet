@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
-import formatAmount from '../../helpers/HistoryHelper';
+
 import { openModal } from '../../actions/ModalActions';
+import formatAmount from '../../helpers/HistoryHelper';
+
 import { removeToken } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {

@@ -6,7 +6,7 @@ import {
 	formatSignature,
 } from '../api/ContractApi';
 
-import { getMethod } from '../helpers/AbiHelper';
+import { getMethod } from '../helpers/ContractHelper';
 import { validateABI } from '../helpers/ValidateHelper';
 import { toastSuccess } from '../helpers/ToastHelper';
 

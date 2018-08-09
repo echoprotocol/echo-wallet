@@ -1,28 +1,25 @@
 import { keccak256 } from 'js-sha3';
-import utf8 from 'utf8';
+
+import { getMethod } from '../helpers/ContractHelper';
+import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
-const getContractProp = (instance, contract, account, method) => instance.dbApi().exec(
+const getContractProp = (instance, contract, account, code) => instance.dbApi().exec(
 	'call_contract_no_changing_state',
-	[contract, account, '1.3.0', method],
+	[contract, account, '1.3.0', code],
 );
 
+export const getResult = (instance, resultId) => instance.dbApi().exec(
+	'get_contract_result',
+	[resultId],
+);
+
+export const getHash = (str) => keccak256(str);
+
+export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
+
 const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
-
-const getHash = (str) => keccak256(str);
-
-const toUtf8 = (hex) => {
-	let str = '';
-
-	for (let i = 0; i < hex.length; i += 2) {
-		const code = parseInt(hex.substr(i, 2), 16);
-		if (code === 0) break;
-		str += String.fromCharCode(code);
-	}
-
-	return utf8.decode(str);
-};
 
 const addressFromAccountId = (id) => {
 	const prefix = id.split('.').splice(0, 2).join('.');
@@ -40,6 +37,8 @@ const addressFromAccountId = (id) => {
 
 export const getContractId = (address) => parseInt(address.substr(-32), 16);
 
+export const getContractResult = (instance, resultId) => getResult(instance, resultId);
+
 export const getTransferTokenCode = (to, amount) => {
 	const toAddress = addressFromAccountId(to);
 	amount = parseInt(amount, 10).toString(16);
@@ -50,38 +49,40 @@ export const getTransferTokenCode = (to, amount) => {
 };
 
 export const getTokenBalance = async (instance, accountId, contractId) => {
-	const accountAddress = addressFromAccountId(accountId);
-
+	const method = { name: 'balanceOf', inputs: [{ type: 'address' }] };
+	const args = [accountId];
 	const result = await getContractProp(
 		instance,
 		contractId,
 		accountId,
-		getHash('balanceOf(address)').substr(0, 8).concat(accountAddress),
+		getMethod(method, args),
 	);
 
-	return parseInt(result, 16);
+	return toInt(result);
 };
 
 export const getTokenSymbol = async (instance, accountId, contractId) => {
+	const method = { name: 'symbol', inputs: [] };
 	const result = await getContractProp(
 		instance,
 		contractId,
 		accountId,
-		getHash('symbol()').substr(0, 8),
+		formatSignature(method),
 	);
 
-	return toUtf8(result.substr(-64));
+	return toUtf8(result);
 };
 
 export const getTokenPrecision = async (instance, accountId, contractId) => {
+	const method = { name: 'decimals', inputs: [] };
 	const result = await getContractProp(
 		instance,
 		contractId,
 		accountId,
-		getHash('decimals()').substr(0, 8),
+		formatSignature(method),
 	);
 
-	return parseInt(result, 16);
+	return toInt(result);
 };
 
 export const getContractConstant = (instance, accountId, contractId, method) => getContractProp(
@@ -92,5 +93,3 @@ export const getContractConstant = (instance, accountId, contractId, method) => 
 );
 
 export const getContract = (instance, contractId) => getContractInfo(instance, contractId);
-
-export const formatSignature = (constant) => getHash(`${constant.name}(${constant.inputs.map((input) => input.type).join(',')})`).substr(0, 8);
