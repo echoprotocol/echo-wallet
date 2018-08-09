@@ -11,11 +11,6 @@ import { clearForm, setValue } from '../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
-	constructor() {
-		super();
-		this.state = { checked: false };
-	}
-
 	componentDidMount() {
 		this.props.clearForm();
 	}
@@ -31,10 +26,7 @@ class ButtonComponent extends React.Component {
 	}
 
 	onToggle() {
-		this.setState({
-			checked: !this.state.checked,
-		});
-		this.props.setValue('addToWatchList', !this.state.checked);
+		this.props.setValue('addToWatchList', !this.props.addToWatchList);
 	}
 
 	isDisabledSubmit() {
@@ -51,7 +43,7 @@ class ButtonComponent extends React.Component {
 		return (
 			<div className="form-panel">
 				<div className="check orange">
-					<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.state.checked} />
+					<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.props.addToWatchList} />
 					<label className="label" htmlFor="addToWatchList">
 						<span className="label-text">Add to watch list</span>
 					</label>
@@ -81,6 +73,7 @@ ButtonComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
 	name: PropTypes.object.isRequired,
 	abi: PropTypes.object.isRequired,
+	addToWatchList: PropTypes.bool.isRequired,
 	createContract: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
@@ -97,6 +90,7 @@ export default connect(
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
 		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
 		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
+		addToWatchList: state.form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']),
 	}),
 	(dispatch) => ({
 		createContract: (value) => dispatch(createContract(value)),

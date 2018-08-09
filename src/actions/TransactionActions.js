@@ -17,7 +17,11 @@ import { validateCode, validateAbi, validateContractName } from '../helpers/Tran
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
-import { getTransferTokenCode } from '../api/ContractApi';
+import {
+	getContractId,
+	getTransferTokenCode,
+	getContractResult,
+} from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -305,14 +309,23 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	}
 
 	buildAndSendTransaction(operation, options, keys.active)
-		.then(() => {
-			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
+		.then(async (res) => {
+			const instance = getState().echojs.getIn(['system', 'instance']);
+
+			const contractResultId = res[0].trx.operation_results[0][1];
+
+			const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+			const contractId = `1.16.${getContractId(address)}`;
 
 			if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
-				dispatch(addContractByName());
+				dispatch(addContractByName(contractId));
 			}
+
+			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
 		})
-		.catch(() => {
+		.catch((err) => {
+			console.log(err);
 			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
 		});
 
