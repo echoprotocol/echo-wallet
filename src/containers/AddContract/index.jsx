@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
 
-import { setFormValue, setFormError, clearForm } from '../../actions/FormActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
 
 
@@ -24,21 +24,6 @@ class AddContractComponent extends React.Component {
 		const { name, id, abi } = this.props;
 
 		if (name.error || id.error || abi.error) {
-			return;
-		}
-
-		if (!name.value.trim()) {
-			this.props.setFormError('name', 'Name should not be empty');
-			return;
-		}
-
-		if (!id.value.trim()) {
-			this.props.setFormError('id', 'ID should not be empty');
-			return;
-		}
-
-		if (!abi.value.trim()) {
-			this.props.setFormError('abi', 'ABI should not be empty');
 			return;
 		}
 
@@ -110,7 +95,6 @@ AddContractComponent.propTypes = {
 	abi: PropTypes.object.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	setFormError: PropTypes.func.isRequired,
 	addContract: PropTypes.func.isRequired,
 };
 
@@ -124,7 +108,6 @@ export default connect(
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_ADD_CONTRACT)),
 		setFormValue: (param, value) => dispatch(setFormValue(FORM_ADD_CONTRACT, param, value)),
-		setFormError: (param, value) => dispatch(setFormError(FORM_ADD_CONTRACT, param, value)),
 		addContract: (name, id, abi) => dispatch(addContract(name, id, abi)),
 	}),
 )(AddContractComponent);

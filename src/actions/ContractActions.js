@@ -9,7 +9,11 @@ import {
 } from '../api/ContractApi';
 
 import { getMethod } from '../helpers/ContractHelper';
-import { validateABI } from '../helpers/ValidateHelper';
+import {
+	validateAbi,
+	validateContractName,
+	validateContractId,
+} from '../helpers/ValidateHelper';
 import { toastSuccess } from '../helpers/ToastHelper';
 
 import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
@@ -34,8 +38,20 @@ export const loadContracts = (accountId) => (dispatch) => {
 	}));
 };
 
-export const addContract = (name, contractId, abi) => async (dispatch, getState) => {
-	const abiError = validateABI(abi);
+export const addContract = (name, id, abi) => async (dispatch, getState) => {
+	const nameError = validateContractName(name);
+	const idError = validateContractId(id);
+	const abiError = validateAbi(abi);
+
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'name', nameError));
+		return;
+	}
+
+	if (idError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
+		return;
+	}
 
 	if (abiError) {
 		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
@@ -46,7 +62,7 @@ export const addContract = (name, contractId, abi) => async (dispatch, getState)
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	try {
-		const contract = await getContract(instance, contractId);
+		const contract = await getContract(instance, id);
 
 		if (!contract) {
 			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
@@ -66,18 +82,18 @@ export const addContract = (name, contractId, abi) => async (dispatch, getState)
 			return;
 		}
 
-		if (Object.values(contracts[accountId]).map((i) => i.contractId).includes(contractId)) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${contractId} already exists`));
+		if (Object.values(contracts[accountId]).map((i) => i.id).includes(id)) {
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${id} already exists`));
 			return;
 		}
 
-		contracts[accountId][name] = { abi, contractId };
+		contracts[accountId][name] = { abi, id };
 		localStorage.setItem('contracts', JSON.stringify(contracts));
 
 		dispatch(GlobalReducer.actions.push({
 			field: 'contracts',
 			param: name,
-			value: { abi, contractId },
+			value: { abi, id },
 		}));
 
 		history.push(SMART_CONTRACTS_PATH);
@@ -97,7 +113,7 @@ export const addContractByName = (
 
 	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
 
-	const contractId = `1.16.${getContractId(address)}`;
+	const id = `1.16.${getContractId(address)}`;
 
 	let contracts = localStorage.getItem('contracts');
 
@@ -109,14 +125,14 @@ export const addContractByName = (
 
 	contracts[accountId][name] = {
 		abi,
-		contractId,
+		id,
 	};
 	localStorage.setItem('contracts', JSON.stringify(contracts));
 
 	dispatch(GlobalReducer.actions.push({
 		field: 'contracts',
 		param: name,
-		value: { abi, contractId },
+		value: { abi, id },
 	}));
 };
 /**

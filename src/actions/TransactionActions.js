@@ -12,8 +12,12 @@ import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
-import { validateAccountName } from '../helpers/ValidateHelper';
-import { validateCode, validateAbi, validateContractName } from '../helpers/TransactionHelper';
+import {
+	validateAccountName,
+	validateCode,
+	validateAbi,
+	validateContractName,
+} from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
