@@ -17,11 +17,7 @@ import { validateCode, validateAbi, validateContractName } from '../helpers/Tran
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
-import {
-	getContractId,
-	getTransferTokenCode,
-	getContractResult,
-} from '../api/ContractApi';
+import { getTransferTokenCode } from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -309,17 +305,9 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	}
 
 	buildAndSendTransaction(operation, options, keys.active)
-		.then(async (res) => {
-			const instance = getState().echojs.getIn(['system', 'instance']);
-
-			const contractResultId = res[0].trx.operation_results[0][1];
-
-			const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
-
-			const contractId = `1.16.${getContractId(address)}`;
-
+		.then((res) => {
 			if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
-				dispatch(addContractByName(contractId));
+				dispatch(addContractByName(res[0].trx.operation_results[0][1]));
 			}
 
 			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);

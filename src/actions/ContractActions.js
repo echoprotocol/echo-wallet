@@ -5,6 +5,7 @@ import {
 	getContract,
 	getContractConstant,
 	formatSignature,
+	getContractResult,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
@@ -66,7 +67,7 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 	}
 };
 
-export const addContractByName = (contractId) => (dispatch, getState) => {
+export const addContractByName = (contractResultId) => async (dispatch, getState) => {
 	const accountId = getState()
 		.global
 		.getIn(['activeUser', 'id']);
@@ -77,6 +78,12 @@ export const addContractByName = (contractId) => (dispatch, getState) => {
 	const abi = getState()
 		.form
 		.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+	const contractId = `1.16.${getContractId(address)}`;
 
 	let contracts = localStorage.getItem('contracts');
 
