@@ -10,7 +10,7 @@ import {
 	TO_WATCH_LIST_PATH,
 	CREATE_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
-	VIEW_CONTRACTS_PATH,
+	VIEW_CONTRACT_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -18,7 +18,7 @@ import Activity from './containers/Activity';
 import SignUp from './containers/SignUp';
 import SignIn from './containers/SignIn';
 import SmartContracts from './containers/SmartContracts';
-import ViewContracts from './containers/ViewContracts';
+import ViewContract from './containers/ViewContract';
 import AddToWatchList from './containers/AddToWatchList';
 import Balances from './containers/Balances';
 import Transfer from './containers/Transfer';
@@ -38,7 +38,7 @@ export default class Routes extends React.Component {
 					<Route exact path={TO_WATCH_LIST_PATH} component={AddToWatchList} />
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
 					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
-					<Route exact path={VIEW_CONTRACTS_PATH} component={ViewContracts} />
+					<Route exact path={VIEW_CONTRACT_PATH} component={ViewContract} />
 				</div>
 			</App>
 		);

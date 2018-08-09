@@ -4,7 +4,7 @@ import { Tab, Button, Icon } from 'semantic-ui-react';
 import TabContractProps from './TabContractProps';
 import TabCallContracts from './TabCallContracts';
 
-class ViewContracts extends React.Component {
+class ViewContract extends React.Component {
 
 	render() {
 		const panes = [
@@ -73,4 +73,4 @@ class ViewContracts extends React.Component {
 
 }
 
-export default ViewContracts;
+export default ViewContract;
