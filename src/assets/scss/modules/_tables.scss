@@ -163,29 +163,15 @@ $thead-height: 46px;
 
     // WIDTH OF CELLS
     tr {
-        &:not(.msg-empty) {
-            th, td {
-                &:first-child {
-                    min-width: 25vw;
-                    padding-left:  20px;
-                }
-        
-                &:last-child {
-                    min-width: calc(75vw - 1px);
-                    padding-right:  20px;
-                }
+        th, td {
+            &:first-child {
+                min-width: 25vw;
+                padding-left:  20px;
             }
-        }
-        &.msg-empty {
-            padding: 50px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            td {
-                color: #aeb4c0;
-                font-weight: 600;
-                border: 0;
+    
+            &:last-child {
+                min-width: calc(75vw - 1px);
+                padding-right:  20px;
             }
         }
     }
@@ -194,31 +180,30 @@ $thead-height: 46px;
     tbody {
         tr {
             transition: background-color .3s;
-            &:not(.msg-empty) {
-                &:nth-child(2n) {
-                    &:hover {
-                        background-color: $orange;
-                    }
-                }
+
+            &:nth-child(2n) {
                 &:hover {
                     background-color: $orange;
-                    td {
-                        color: #fff;
-                        &:last-child {
-                            color: #fff9b5;
-                        }
+                }
+            }
+            &:hover {
+                background-color: $orange;
+                td {
+                    color: #fff;
+                    &:last-child {
+                        color: #fff9b5;
                     }
                 }
-                td {
-                    border-top: 0;
-                    transition: color .3s;
-                    padding: 0.82857143em 5px;
-                    color: $black;
-                    &:last-child {
-                        color: $blue;
-                        span {
-                            display: block;
-                        }
+            }
+            td {
+                border-top: 0;
+                transition: color .3s;
+                padding: 0.82857143em 5px;
+                color: $black;
+                &:last-child {
+                    color: $blue;
+                    span {
+                        display: block;
                     }
                 }
             }
@@ -303,9 +288,11 @@ $thead-height: 46px;
         }
     }
     .tbody {
-        height: calc(100vh - 180px);
+        height: calc(100vh - 220px);
         border-left: 1px solid $bd-gray;
         border-right: 1px solid $bd-gray;
+        border-bottom: 1px solid $bd-gray;
+
         .icon-close {
             font-size: 14px;
             cursor: pointer;
@@ -365,5 +352,19 @@ $thead-height: 46px;
                 }
             }
         }
+    }
+}
+
+
+.msg-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 15vh 20px;
+    h3 {
+        color: #9d9d9d;
+        font-weight: normal;
+        margin-bottom: 10px;
     }
 }

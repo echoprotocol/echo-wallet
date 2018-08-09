@@ -66,7 +66,7 @@ class ViewContracts extends React.Component {
 						</ul>
 					</div>
 				</div>
-				<Tab menu={{ tabular: true }} className="tab-full" panes={panes} />
+				<Tab className="tab-full" panes={panes} />
 			</div>
 		);
 	}
