@@ -32,7 +32,7 @@
   max-height: 100%;
   border-radius: 0em !important;
   margin: 0em !important;
-  overflow-y: auto !important;
+//   overflow-y: auto !important;
   z-index: 102;
 }
 
@@ -345,6 +345,7 @@ body.pushable > .pusher {
 .ui.left.overlay.sidebar {
 //   -webkit-transform: translate3d(-100%, 0%, 0);
 //           transform: translate3d(-100%, 0%, 0);
+    transition: width .1s;
     width: 60px;
 }
 .ui.right.overlay.sidebar {
@@ -361,14 +362,13 @@ body.pushable > .pusher {
 }
 
 /* Animation */
-.animating.ui.overlay.sidebar,
-.ui.visible.overlay.sidebar {
-//   -webkit-transition: -webkit-transform 500ms ease;
-//   transition: -webkit-transform 500ms ease;
-//   transition: transform 500ms ease;
-//   transition: transform 500ms ease, -webkit-transform 500ms ease;
-    transition: width 500ms ease;
-
+.ui.overlay.animating.sidebar {
+    transition: width .4s ease;
+    transition-delay: .2s;
+}
+.ui.overlay.animating.visible.sidebar {
+    transition: width .4s ease;
+    transition-delay: 0;
 }
 
 /* End - Sidebar */
