@@ -69,6 +69,10 @@
         color: #aeb4c0;
     }
   }
+
+  .icon-recent-activity:before {
+    content: "\e91a";
+  }
   .icon-edit-close:before {
     content: "\e919";
   }
@@ -135,9 +139,9 @@
   .icon-info:before {
     content: "\e908";
   }
-  .icon-menu_1:before {
-    content: "\e909";
-  }
+//   .icon-menu_1:before {
+//     content: "\e909";
+//   }
   .icon-menu_2:before {
     content: "\e90a";
   }
