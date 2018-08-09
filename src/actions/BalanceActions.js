@@ -13,6 +13,7 @@ import { checkBlockTransaction, checkTransactionResult } from '../helpers/Contra
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { setError, setParamError, closeModal } from './ModalActions';
+import ToastActions from '../actions/ToastActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -124,6 +125,11 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			tokens[accountId] = [];
 		}
 
+		if (tokens[accountId].includes(contractId)) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Token already exists'));
+			return;
+		}
+
 		tokens[accountId].push(contractId);
 		localStorage.setItem('tokens', JSON.stringify(tokens));
 
@@ -137,6 +143,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
+		ToastActions.toastSuccess('Token successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
 	}

@@ -41,7 +41,7 @@ class ModalTokens extends React.Component {
 					<div className="modal-body">
 						<Form className="user-form">
 							<div className="form-info">
-								<h3>Watch Tokens</h3>
+								<h3>Add ERC20 token to watch list</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field>
