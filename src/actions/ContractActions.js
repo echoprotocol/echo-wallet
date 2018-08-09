@@ -1,13 +1,19 @@
 import { Map } from 'immutable';
 
 import {
+	getContractId,
 	getContract,
 	getContractConstant,
 	formatSignature,
+	getContractResult,
 } from '../api/ContractApi';
 
-import { getMethod } from '../helpers/AbiHelper';
-import { validateABI, validateContractId } from '../helpers/ValidateHelper';
+import { getMethod } from '../helpers/ContractHelper';
+import {
+	validateAbi,
+	validateContractName,
+	validateContractId,
+} from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
 import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
@@ -34,17 +40,22 @@ export const loadContracts = (accountId) => (dispatch) => {
 };
 
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
-	const abiError = validateABI(abi);
+	const nameError = validateContractName(name);
+	const idError = validateContractId(id);
+	const abiError = validateAbi(abi);
 
-	if (abiError) {
-		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'name', nameError));
 		return;
 	}
 
-	const idError = validateContractId(id);
-
 	if (idError) {
 		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
+		return;
+	}
+
+	if (abiError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
 		return;
 	}
 
@@ -124,6 +135,37 @@ export const disableContract = (name) => (dispatch) => {
 		() => dispatch(enableContract(name)),
 		() => setTimeout(() => dispatch(removeContract(name)), 1000),
 	);
+};
+
+export const addContractByName = (
+	contractResultId,
+	accountId,
+	name,
+	abi,
+) => async (dispatch, getState) => {
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+	const id = `1.16.${getContractId(address)}`;
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	contracts[accountId][name] = {
+		abi,
+		id,
+	};
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(push('contracts', name, { disabled: false, abi, id }));
+
+	toastSuccess(`Contract ${name} successfully added`);
 };
 
 /**
