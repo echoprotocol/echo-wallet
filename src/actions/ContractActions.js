@@ -14,12 +14,13 @@ import {
 	validateContractName,
 	validateContractId,
 } from '../helpers/ValidateHelper';
-import { toastSuccess } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
 import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
 import { setFormError, setValue } from './FormActions';
+import { push, remove, update } from './GlobalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -90,17 +91,50 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		contracts[accountId][name] = { abi, id };
 		localStorage.setItem('contracts', JSON.stringify(contracts));
 
-		dispatch(GlobalReducer.actions.push({
-			field: 'contracts',
-			param: name,
-			value: { abi, id },
-		}));
+		dispatch(push('contracts', name, { disabled: false, abi, id }));
 
 		history.push(CONTRACT_LIST_PATH);
 		toastSuccess(`Contract ${name} successfully added`);
 	} catch (err) {
 		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
 	}
+};
+
+export const removeContract = (name) => (dispatch, getState) => {
+	if (!getState().global.getIn(['contracts', name]).disabled) {
+		return;
+	}
+
+	dispatch(remove('contracts', name));
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	delete contracts[accountId][name];
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+};
+
+export const enableContract = (name) => (dispatch) => {
+	dispatch(update('contracts', name, { disabled: false }));
+};
+
+export const disableContract = (name) => (dispatch) => {
+	dispatch(update('contracts', name, { disabled: true }));
+
+	history.push(CONTRACT_LIST_PATH);
+
+	toastInfo(
+		`You have removed ${name} from watch list`,
+		() => dispatch(enableContract(name)),
+		() => setTimeout(() => dispatch(removeContract(name)), 1000),
+	);
 };
 
 export const addContractByName = (
@@ -129,12 +163,11 @@ export const addContractByName = (
 	};
 	localStorage.setItem('contracts', JSON.stringify(contracts));
 
-	dispatch(GlobalReducer.actions.push({
-		field: 'contracts',
-		param: name,
-		value: { abi, id },
-	}));
+	dispatch(push('contracts', name, { disabled: false, abi, id }));
+
+	toastSuccess(`Contract ${name} successfully added`);
 };
+
 /**
  * parameters
  * method: {
