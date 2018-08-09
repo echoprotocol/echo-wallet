@@ -5,6 +5,7 @@ import {
 	getContract,
 	getContractConstant,
 	formatSignature,
+	getContractResult,
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
@@ -65,6 +66,40 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 	}
 };
 
+export const addContractByName = (
+	contractResultId,
+	accountId,
+	name,
+	abi,
+) => async (dispatch, getState) => {
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+	const contractId = `1.16.${getContractId(address)}`;
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	contracts[accountId][name] = {
+		abi,
+		contractId,
+	};
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(GlobalReducer.actions.push({
+		field: 'contracts',
+		param: name,
+		value: { abi, contractId },
+	}));
+
+	dispatch(closeModal(MODAL_WATCH_LIST));
+};
 /**
  * parameters
  * method: {
