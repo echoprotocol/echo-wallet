@@ -11,7 +11,6 @@ import {
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
-import { FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 
 import { getMethod } from '../helpers/ContractHelper';
 
@@ -67,18 +66,12 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 	}
 };
 
-export const addContractByName = (contractResultId) => async (dispatch, getState) => {
-	const accountId = getState()
-		.global
-		.getIn(['activeUser', 'id']);
-
-	const name = getState()
-		.form
-		.getIn([FORM_CREATE_CONTRACT, 'name']).value;
-	const abi = getState()
-		.form
-		.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
-
+export const addContractByName = (
+	contractResultId,
+	accountId,
+	name,
+	abi,
+) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;

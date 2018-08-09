@@ -305,11 +305,19 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	}
 
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
+	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
 
 	buildAndSendTransaction(operation, options, keys.active)
 		.then((res) => {
 			if (addToWatchList) {
-				dispatch(addContractByName(res[0].trx.operation_results[0][1]));
+				dispatch(addContractByName(
+					res[0].trx.operation_results[0][1],
+					accountId,
+					name,
+					abi,
+				));
 			}
 
 			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
