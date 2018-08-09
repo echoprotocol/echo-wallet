@@ -8,6 +8,7 @@ import {
 	FORM_UNLOCK_MODAL,
 	FORM_TRANSFER,
 	FORM_CREATE_CONTRACT,
+	FORM_ADD_CONTRACT,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -74,7 +75,31 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		name: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
+		addToWatchList: false,
 		accepted: false,
+	}),
+	[FORM_ADD_CONTRACT]: Map({
+		name: {
+			value: '',
+			error: null,
+		},
+		id: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
+		error: null,
 	}),
 };
 
@@ -87,6 +112,7 @@ export default createModule({
 		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
 		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
+		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
 	}),
 	transformations: {
 		set: {

@@ -1,14 +1,24 @@
 import { Map } from 'immutable';
 
-import { getContract, getContractConstant } from '../api/ContractApi';
+import { getContract, getContractConstant, getContractResult } from '../api/ContractApi';
 
-import { setError, setParamError, closeModal } from './ModalActions';
+import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
+import {
+	validateAbi,
+	validateContractName,
+	validateContractId,
+} from '../helpers/ValidateHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+
+import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
+import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
+
+import { setFormError, setValue } from './FormActions';
+import { push, remove, update } from './GlobalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
-
-import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
+import history from '../history';
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -23,17 +33,34 @@ export const loadContracts = (accountId) => (dispatch) => {
 	}));
 };
 
-export const addContract = (address, abi) => async (dispatch, getState) => {
+export const addContract = (name, id, abi) => async (dispatch, getState) => {
+	const nameError = validateContractName(name);
+	const idError = validateContractId(id);
+	const abiError = validateAbi(abi);
+
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'name', nameError));
+		return;
+	}
+
+	if (idError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
+		return;
+	}
+
+	if (abiError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'abi', abiError));
+		return;
+	}
+
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	try {
-		const contractId = `1.16.${getContractId(address)}`;
-
-		const contract = await getContract(instance, contractId);
+		const contract = await getContract(instance, id);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_WATCH_LIST, 'address', 'Invalid contract address'));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
 			return;
 		}
 
@@ -45,19 +72,94 @@ export const addContract = (address, abi) => async (dispatch, getState) => {
 			contracts[accountId] = {};
 		}
 
-		contracts[accountId][address] = abi;
+		if (contracts[accountId][name]) {
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', `Contract "${name}" already exists`));
+			return;
+		}
+
+		if (Object.values(contracts[accountId]).map((i) => i.id).includes(id)) {
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${id} already exists`));
+			return;
+		}
+
+		contracts[accountId][name] = { abi, id };
 		localStorage.setItem('contracts', JSON.stringify(contracts));
 
-		dispatch(GlobalReducer.actions.push({
-			field: 'contracts',
-			param: address,
-			value: abi,
-		}));
+		dispatch(push('contracts', name, { disabled: false, abi, id }));
 
-		dispatch(closeModal(MODAL_WATCH_LIST));
+		history.push(CONTRACT_LIST_PATH);
+		toastSuccess(`Contract ${name} successfully added`);
 	} catch (err) {
-		dispatch(setError(MODAL_WATCH_LIST, 'error', err));
+		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
 	}
+};
+
+export const removeContract = (name) => (dispatch, getState) => {
+	if (!getState().global.getIn(['contracts', name]).disabled) {
+		return;
+	}
+
+	dispatch(remove('contracts', name));
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	delete contracts[accountId][name];
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+};
+
+export const enableContract = (name) => (dispatch) => {
+	dispatch(update('contracts', name, { disabled: false }));
+};
+
+export const disableContract = (name) => (dispatch) => {
+	dispatch(update('contracts', name, { disabled: true }));
+
+	history.push(CONTRACT_LIST_PATH);
+
+	toastInfo(
+		`You have removed ${name} from watch list`,
+		() => dispatch(enableContract(name)),
+		() => setTimeout(() => dispatch(removeContract(name)), 1000),
+	);
+};
+
+export const addContractByName = (
+	contractResultId,
+	accountId,
+	name,
+	abi,
+) => async (dispatch, getState) => {
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+
+	const id = `1.16.${getContractId(address)}`;
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	contracts[accountId][name] = {
+		abi,
+		id,
+	};
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(push('contracts', name, { disabled: false, abi, id }));
+
+	toastSuccess(`Contract ${name} successfully added`);
 };
 
 /**

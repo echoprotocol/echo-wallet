@@ -1,4 +1,5 @@
 import utf8 from 'utf8';
+import accounting from 'accounting';
 
 import operations from '../constants/Operations';
 import { events } from '../constants/LogEventConstants';
@@ -52,3 +53,8 @@ export const toUtf8 = (hex) => {
 };
 
 export const toInt = (hex) => parseInt(hex, 16);
+<<<<<<< HEAD
+=======
+
+export const formatAmount = (amount, precision, symbol) => accounting.formatMoney(amount / (10 ** precision), symbol, precision, ' ', '.', '%v %s');
+>>>>>>> 7fb9f4a74543e3338896cd2da6f383969defc07e

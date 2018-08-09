@@ -48,12 +48,31 @@ export default createModule({
 		toggleBar: {
 			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
 		},
+
 		hideBar: {
 			reducer: (state) => state.set('visibleBar', false),
 		},
+
 		push: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.field, payload.param], payload.value);
+
+				return state;
+			},
+		},
+
+		update: {
+			reducer: (state, { payload }) => {
+				const param = state.getIn([payload.field, payload.param]);
+				state = state.setIn([payload.field, payload.param], { ...param, ...payload.value });
+
+				return state;
+			},
+		},
+
+		remove: {
+			reducer: (state, { payload }) => {
+				state = state.deleteIn([payload.field, payload.param]);
 
 				return state;
 			},
