@@ -70,7 +70,7 @@ export const getTokenSymbol = async (instance, accountId, contractId) => {
 		formatSignature(method),
 	);
 
-	return toUtf8(result);
+	return toUtf8(result.substr(-64));
 };
 
 export const getTokenPrecision = async (instance, accountId, contractId) => {

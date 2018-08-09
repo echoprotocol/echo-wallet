@@ -20,7 +20,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 		history.push(INDEX_PATH);
 	}
 
-	dispatch(initBalances(id));
+	await dispatch(initBalances(id));
 	dispatch(loadContracts(id));
 };
 
@@ -29,22 +29,21 @@ export const connection = () => async (dispatch) => {
 
 	try {
 		await dispatch(EchoJSActions.connect(undefined, { types: ['accounts', 'block'], method: getObject }));
+		const accountName = localStorage.getItem('current_account');
+
+		if (!accountName) {
+			if (!AUTH_ROUTES.includes(history.location.pathname)) {
+				history.push(SIGN_IN_PATH);
+			}
+		} else {
+			await dispatch(initAccount(accountName));
+		}
+
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
 	} finally {
 		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}
-
-	const accountName = localStorage.getItem('current_account');
-
-	if (!accountName) {
-		if (!AUTH_ROUTES.includes(history.location.pathname)) {
-			history.push(SIGN_IN_PATH);
-		}
-		return;
-	}
-
-	dispatch(initAccount(accountName));
 };
 
 export const logout = () => () => {
@@ -58,4 +57,16 @@ export const toggleBar = (value) => (dispatch) => {
 
 export const hideBar = () => (dispatch) => {
 	dispatch(GlobalReducer.actions.hideBar({ }));
+};
+
+export const push = (field, param, value) => (dispatch) => {
+	dispatch(GlobalReducer.actions.push({ field, param, value }));
+};
+
+export const update = (field, param, value) => (dispatch) => {
+	dispatch(GlobalReducer.actions.update({ field, param, value }));
+};
+
+export const remove = (field, param) => (dispatch) => {
+	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
