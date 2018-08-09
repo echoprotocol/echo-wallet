@@ -77,7 +77,18 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		accepted: false,
 	}),
-	[FORM_CALL_CONTRACT]: Map({}),
+	[FORM_CALL_CONTRACT]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+	}),
 };
 
 export default createModule({

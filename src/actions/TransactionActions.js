@@ -4,14 +4,16 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_TRANSFER, FORM_CREATE_CONTRACT } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
+import ToastActions from '../actions/ToastActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
+import { validateCode } from '../helpers/TransactionHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
@@ -231,12 +233,18 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-
 	if (!activeUserId || !activeUserName) return;
 
 	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
 
 	if (!pubKey) return;
+
+	const error = validateCode(bytecode);
+
+	if (error) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
+		return;
+	}
 
 	dispatch(resetTransaction());
 
@@ -280,11 +288,66 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, keys.active);
+	buildAndSendTransaction(operation, options, keys.active)
+		.then(() => {
+			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
+		})
+		.catch(() => {
+			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
+		});
 
 	dispatch(closeModal(MODAL_DETAILS));
 
 	history.push(INDEX_PATH);
 
 	dispatch(resetTransaction());
+};
+
+export const callContract = (method, inputs) => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const activeUserName = getState().global.getIn(['activeUser', 'name']);
+	if (!activeUserId || !activeUserName) return;
+
+	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
+
+	if (!pubKey) return;
+
+	// validate fields
+
+	dispatch(resetTransaction());
+
+	// transform to bytecode
+	const bytecode = '';
+	const amount = 0;
+	const asset = '1.3.0';
+
+	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+
+	const options = {
+		registrar: activeUserId,
+		asset_id: asset,
+		value: amount,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode,
+	};
+
+	const fee = await dispatch(fetchFee('contract'));
+
+	const showOptions = {
+		from: activeUserName,
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		code: bytecode,
+	};
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+
+	if (!privateKey) {
+		dispatch(openModal(MODAL_UNLOCK));
+	} else {
+		dispatch(setField('keys', { active: privateKey }));
+		dispatch(openModal(MODAL_DETAILS));
+	}
+
 };

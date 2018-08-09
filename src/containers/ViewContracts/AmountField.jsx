@@ -122,9 +122,9 @@ class AmountField extends React.Component {
 					placeholder="Amount"
 					tabIndex="0"
 					action
-					className={this.state.amountFocus ? 'focused' : ''}
+					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
 				>
-					<div className={classnames('amount-wrap action-wrap', { error: amount.error })}>
+					<div className="amount-wrap action-wrap">
 						<input
 							className="amount"
 							placeholder="Amount"
