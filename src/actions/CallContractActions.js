@@ -21,7 +21,24 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-export const callMethod = () => () => {
+export const callMethod = () => (dispatch, getState) => {
 
+	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', true));
+
+	const functions = getState().contract.get('functions').toJS();
+	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
+
+	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
+
+	if (!targetFunction) return;
+
+	const isErrorExist = false;
+    targetFunction.inputs.forEach((i) => {
+    	const fieldName = i.name;
+    	const fieldType = i.type;
+
+	});
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 };
 

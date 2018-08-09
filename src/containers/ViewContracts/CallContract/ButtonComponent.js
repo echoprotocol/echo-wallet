@@ -57,8 +57,6 @@ ButtonComponent.defaultProps = {
 
 export default connect(
 	(state) => ({
-		functions: state.contract.get('functions'),
-		functionForm: state.form.get(FORM_CALL_CONTRACT),
 		loading: state.form.getIn([FORM_CALL_CONTRACT, 'loading']),
 	}),
 	(dispatch) => ({
