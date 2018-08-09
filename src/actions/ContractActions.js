@@ -211,7 +211,7 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 
 	if (isConst) {
 		let constants = abi.filter((value) =>
-			value.constant && value.name && !value.inputs.length);
+			value.constant && value.name);
 
 		constants = constants.map(async (constant) => {
 			const method = formatSignature(constant);

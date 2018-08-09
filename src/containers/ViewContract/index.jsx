@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, Button, Icon } from 'semantic-ui-react';
 
-import TabContractProps from './TabContractProps';
+import TabContractProps from './Constants/TabContractProps';
 import TabCallContracts from './TabCallContracts';
 
 class ViewContract extends React.Component {
