@@ -363,11 +363,11 @@ body.pushable > .pusher {
 
 /* Animation */
 .ui.overlay.animating.sidebar {
-    transition: width .4s ease;
-    transition-delay: .2s;
+    transition: width .3s ease;
+    transition-delay: .1s;
 }
 .ui.overlay.animating.visible.sidebar {
-    transition: width .4s ease;
+    transition: width .3s ease;
     transition-delay: 0;
 }
 
