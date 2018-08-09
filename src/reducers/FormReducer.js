@@ -74,6 +74,15 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		name: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
+		addToWatchList: false,
 		accepted: false,
 	}),
 };

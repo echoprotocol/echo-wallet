@@ -23,6 +23,36 @@ class FormComponent extends React.Component {
 		}
 	}
 
+	renderWatchListData() {
+		const { name, abi } = this.props;
+		return (
+			<div>
+				<div className={classnames({ error: name.error, 'action-wrap textarea-wrap': true })}>
+					<Form.Field
+						label="Name"
+						placeholder="Name"
+						control="input"
+						name="name"
+						value={name.value}
+						onChange={(e) => this.onChange(e, true)}
+					/>
+					<span className="error-message">{name.error}</span>
+				</div>
+				<div className={classnames({ error: abi.error, 'action-wrap textarea-wrap': true })}>
+					<Form.Field
+						label="Abi"
+						placeholder="Abi"
+						control="textarea"
+						name="abi"
+						value={abi.value}
+						onChange={(e) => this.onChange(e, true)}
+					/>
+					<span className="error-message">{abi.error}</span>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		const { bytecode } = this.props;
 		return (
@@ -40,9 +70,8 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 					/>
 					<span className="error-message">{bytecode.error}</span>
-
 				</div>
-
+				{this.props.isChecked ? this.renderWatchListData() : null}
 			</div>
 		);
 	}
@@ -51,13 +80,18 @@ class FormComponent extends React.Component {
 
 FormComponent.propTypes = {
 	bytecode: PropTypes.object.isRequired,
+	name: PropTypes.object.isRequired,
+	abi: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	isChecked: PropTypes.bool.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };
-
 export default connect(
 	(state) => ({
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
+		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
+		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
+		isChecked: state.form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']),
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),

@@ -10,6 +10,7 @@ export const buildAndSendTransaction = async (operation, options, privateKey) =>
 	return tr.broadcast();
 };
 
+
 export const getMemo = (fromAccount, toAccount, memo, privateKey) => {
 	const nonce = TransactionHelper.unique_nonce_uint64();
 
