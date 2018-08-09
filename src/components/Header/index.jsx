@@ -14,7 +14,7 @@ import {
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
 
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 
 class Header extends React.Component {
 
