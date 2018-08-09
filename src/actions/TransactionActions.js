@@ -304,9 +304,11 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
+	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
+
 	buildAndSendTransaction(operation, options, keys.active)
 		.then((res) => {
-			if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+			if (addToWatchList) {
 				dispatch(addContractByName(res[0].trx.operation_results[0][1]));
 			}
 
