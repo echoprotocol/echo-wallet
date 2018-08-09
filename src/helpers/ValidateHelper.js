@@ -54,6 +54,16 @@ export const validateContractName = (name) => {
 	return null;
 };
 
+export const validateContractId = (id) => {
+	id = id.split('.');
+
+	if (id.length !== 3 || id.splice(0, 2).join('.') !== '1.16' || Number.isInteger(id[2])) {
+		return 'Invalid contract ID';
+	}
+
+	return null;
+};
+
 export const validateAbi = (str) => {
 	if (!str) {
 		return 'Contract abi should not be empty';
