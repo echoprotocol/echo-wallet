@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER, FORM_CREATE_CONTRACT } from '../constants/FormConstants';
+import { FORM_CREATE_CONTRACT, FORM_TRANSFER } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
@@ -13,13 +13,14 @@ import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import { validateAccountName } from '../helpers/ValidateHelper';
-import { validateCode } from '../helpers/TransactionHelper';
+import { validateCode, validateAbi, validateContractName } from '../helpers/TransactionHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
 import { getTransferTokenCode } from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
+import { addContractByName } from './ContractActions';
 
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
@@ -229,7 +230,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
-export const createContract = ({ bytecode }) => async (dispatch, getState) => {
+export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -244,6 +245,21 @@ export const createContract = ({ bytecode }) => async (dispatch, getState) => {
 	if (error) {
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
 		return;
+	}
+
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+		const nameError = validateContractName(name);
+		const abiError = validateAbi(abi);
+
+		if (nameError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+			return;
+		}
+
+		if (abiError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+			return;
+		}
 	}
 
 	dispatch(resetTransaction());
@@ -288,8 +304,22 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
+	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
+	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+
 	buildAndSendTransaction(operation, options, keys.active)
-		.then(() => {
+		.then((res) => {
+			if (addToWatchList) {
+				dispatch(addContractByName(
+					res[0].trx.operation_results[0][1],
+					accountId,
+					name,
+					abi,
+				));
+			}
+
 			toastSuccess(`${operations[operation].name} transaction was sent`);
 		})
 		.catch(() => {
