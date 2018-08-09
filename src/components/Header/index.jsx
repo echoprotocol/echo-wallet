@@ -6,12 +6,13 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { logout } from '../../actions/GlobalActions';
+
+import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
-import { HEADER_TITLE } from '../../constants/GlobalConstants';
 
 import formatAmount from '../../helpers/HistoryHelper';
 
@@ -94,9 +95,9 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-	location: PropTypes.object.isRequired,
-	history: PropTypes.object.isRequired,
 	assets: PropTypes.any,
+	history: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 };
 

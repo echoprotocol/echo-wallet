@@ -17,12 +17,12 @@ class ContractList extends React.Component {
 		history.push(link);
 	}
 
-	renderRow([name, { contractId }]) {
+	renderRow([name, { id }]) {
 		return (
-			<Table.Row key={contractId}>
+			<Table.Row key={id}>
 				<Table.Cell>
 					<span className="ellips">
-						{contractId}
+						{id}
 					</span>
 				</Table.Cell>
 				<Table.Cell>
