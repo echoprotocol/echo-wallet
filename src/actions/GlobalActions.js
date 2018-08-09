@@ -20,7 +20,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 		history.push(INDEX_PATH);
 	}
 
-	dispatch(initBalances(id));
+	await dispatch(initBalances(id));
 	dispatch(loadContracts(id));
 };
 
