@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import history from '../../history';
 
-import { getContractId } from '../../helpers/FormatHelper';
+import { getContractId } from '../../helpers/ContractHelper';
 
 // import { MODAL_WATCH_LIST } from '../../constants/ModalConstants';
 import { CREATE_CONTRACT_PATH, TO_WATCH_LIST_PATH } from '../../constants/RouterConstants';

@@ -24,8 +24,6 @@ export const getTransactionDetails = (operationType, showOptions) => {
 	return result;
 };
 
-export const getContractId = (address) => parseInt(address.substr(-32), 16);
-
 export const logParser = (log) => {
 	if (!log || !log.length) return null;
 	return log.map((l) => {
@@ -54,4 +52,3 @@ export const toUtf8 = (hex) => {
 };
 
 export const toInt = (hex) => parseInt(hex, 16);
-

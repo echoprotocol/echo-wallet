@@ -14,10 +14,10 @@ import ToastActions from '../actions/ToastActions';
 
 import { validateAccountName } from '../helpers/AuthHelper';
 import { validateCode } from '../helpers/TransactionHelper';
+import { getMethod } from '../helpers/ContractHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
-import { getTransferTokenCode } from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
@@ -168,26 +168,40 @@ export const transfer = () => async (dispatch, getState) => {
 	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
 	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
-	const options = currency.type === 'tokens' ? {
-		registrar: fromAccountId,
-		receiver: currency.id,
-		asset_id: fee.asset.id,
-		value: 0,
-		gasPrice: 0,
-		gas: 4700000,
-		code: getTransferTokenCode(toAccount.id, amount.value * (10 ** currency.precision)),
-	} : {
-		fee: {
-			amount: fee.value,
+	let options = {};
+
+	if (currency.type === 'tokens') {
+		const code = getMethod(
+			{
+				name: 'transfer',
+				inputs: [{ type: 'address' }, { type: 'uint256' }],
+			},
+			[toAccount.id, amount.value * (10 ** currency.precision)],
+		);
+
+		options = {
+			registrar: fromAccountId,
+			receiver: currency.id,
 			asset_id: fee.asset.id,
-		},
-		from: fromAccountId,
-		to: toAccount.id,
-		amount: {
-			amount: amount.value * (10 ** currency.precision),
-			asset_id: currency.id,
-		},
-	};
+			value: 0,
+			gasPrice: 0,
+			gas: 4700000,
+			code,
+		};
+	} else {
+		options = {
+			fee: {
+				amount: fee.value,
+				asset_id: fee.asset.id,
+			},
+			from: fromAccountId,
+			to: toAccount.id,
+			amount: {
+				amount: amount.value * (10 ** currency.precision),
+				asset_id: currency.id,
+			},
+		};
+	}
 
 	const showOptions = {
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,

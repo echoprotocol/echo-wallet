@@ -1,17 +1,12 @@
 import { Map } from 'immutable';
 
-import {
-	getContractId,
-	getContract,
-	getContractConstant,
-	formatSignature,
-} from '../api/ContractApi';
+import { getContract, getContractConstant } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
-import { getMethod } from '../helpers/ContractHelper';
+import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 
 import { MODAL_WATCH_LIST } from '../constants/ModalConstants';
 
@@ -104,7 +99,7 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 			value.constant && value.name && !value.inputs.length);
 
 		constants = constants.map(async (constant) => {
-			const method = formatSignature(constant);
+			const method = getMethodId(constant);
 			const constantValue =
 				await getContractConstant(instance, accountId, contractId, method);
 			return Object.defineProperty(constant, 'constantValue', {
