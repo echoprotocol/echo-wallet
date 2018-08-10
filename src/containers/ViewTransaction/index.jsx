@@ -2,6 +2,7 @@ import React from 'react';
 import { Tab } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
@@ -18,7 +19,6 @@ class ViewTransaction extends React.Component {
 
 		const panes = [
 			{
-				menuItem: 'Overview',
 				render: () => (
 					<Tab.Pane>
 						<TabOverview data={state.data} />
@@ -28,6 +28,8 @@ class ViewTransaction extends React.Component {
 		];
 
 		if (state.data.name === 'Contract') {
+			panes[0].menuItem = 'Overview';
+
 			panes.push({
 				menuItem: 'Event Logs',
 				render: () => (
@@ -52,7 +54,11 @@ class ViewTransaction extends React.Component {
 						</ul>
 					</div>
 				</div>
-				<Tab menu={{ tabular: true }} className="tab-full" panes={panes} />
+				<Tab
+					menu={{ tabular: true }}
+					className={classnames('tab-full', { 'hide-menu': state.data.name !== 'Contract' })}
+					panes={panes}
+				/>
 			</div>
 		);
 	}
