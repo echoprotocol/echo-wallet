@@ -1,5 +1,7 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
@@ -7,24 +9,35 @@ import TabLogs from './TabLogs';
 class ViewTransaction extends React.Component {
 
 	render() {
+		const { state } = this.props.location;
+
+		if (!state) {
+			this.props.history.goBack();
+			return null;
+		}
+
 		const panes = [
 			{
 				menuItem: 'Overview',
 				render: () => (
 					<Tab.Pane>
-						<TabOverview />
-					</Tab.Pane>
-				),
-			},
-			{
-				menuItem: 'Event Logs',
-				render: () => (
-					<Tab.Pane>
-						<TabLogs />
+						<TabOverview data={state.data} />
 					</Tab.Pane>
 				),
 			},
 		];
+
+		if (state.data.name === 'Contract') {
+			panes.push({
+				menuItem: 'Event Logs',
+				render: () => (
+					<Tab.Pane>
+						<TabLogs data={state.data} />
+					</Tab.Pane>
+				),
+			});
+		}
+
 		return (
 			<div>
 				<div className="tab-full">
@@ -33,7 +46,7 @@ class ViewTransaction extends React.Component {
 							<li className="name">
 								<span className="label">transaction:</span>
 								<span className="value pointer">
-                                    transactionlongcodetransactionlongcodetransactionlongcode
+									{state.data.id}
 								</span>
 							</li>
 						</ul>
@@ -46,4 +59,10 @@ class ViewTransaction extends React.Component {
 
 }
 
-export default ViewTransaction;
+ViewTransaction.propTypes = {
+	location: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+};
+
+
+export default withRouter(ViewTransaction);

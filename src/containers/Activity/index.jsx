@@ -3,9 +3,9 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { formatHistory } from '../../actions/TableActions';
+import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
 
-import HISTORY_DATA from '../../constants/TableConstants';
+import { HISTORY_DATA } from '../../constants/TableConstants';
 
 import RowComponent from './RowComponent';
 
@@ -37,10 +37,6 @@ class Activity extends React.Component {
 		}
 	}
 
-	componentWillUnmount() {
-
-	}
-
 	renderTable() {
 		const { history } = this.props;
 
@@ -58,7 +54,15 @@ class Activity extends React.Component {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{ history.map((i) => (<RowComponent key={i.id} data={i} />)) }
+					{
+						history.map((i) => (
+							<RowComponent
+								key={i.id}
+								data={i}
+								viewTransaction={this.props.viewTransaction}
+							/>
+						))
+					}
 				</Table.Body>
 			</Table>
 		);
@@ -74,6 +78,7 @@ Activity.propTypes = {
 	history: PropTypes.any,
 	account: PropTypes.any,
 	formatHistory: PropTypes.func.isRequired,
+	viewTransaction: PropTypes.func.isRequired,
 };
 
 Activity.defaultProps = {
@@ -91,5 +96,6 @@ export default connect(
 	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
+		viewTransaction: (value) => dispatch(viewTransaction(value)),
 	}),
 )(Activity);
