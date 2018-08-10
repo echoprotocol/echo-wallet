@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import { EchoJSActions } from 'echojs-redux';
-import classnames from 'classnames';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -19,8 +18,6 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		const { fee, comment, currency } = this.props;
 
-		if (!fee) { return true; }
-
 		if (!fee.asset && nextProps.assets) { return true; }
 
 		if (fee.value !== nextProps.fee.value) { return true; }
@@ -32,15 +29,6 @@ class FeeComponent extends React.Component {
 		if (currency && currency.type !== nextProps.currency.type) { return true; }
 
 		return false;
-	}
-
-	componentDidUpdate() {
-		const { assets, fee, comment } = this.props;
-
-		if (assets.length && (!fee || !fee.asset)) {
-			const value = this.props.getFee('transfer', assets[0].id, comment.value);
-			this.props.setValue('fee', value);
-		}
 	}
 
 	onFee(fee) {
@@ -82,13 +70,10 @@ class FeeComponent extends React.Component {
 		const options = this.getOptions();
 		const text = this.getText(options);
 
+		// TODO add styles for fee error
 		return (
-			<Dropdown
-				className={classnames('fee-dropdown', { 'no-choice': options.length <= 1 })}
-				selection
-				options={options}
-				text={text}
-			/>
+			// if elements =< 1 add class no-choice
+			<Dropdown className="fee-dropdown" selection options={options} text={text} />
 		);
 	}
 
@@ -105,10 +90,7 @@ FeeComponent.propTypes = {
 };
 
 FeeComponent.defaultProps = {
-	fee: {
-		value: null,
-		asset: null,
-	},
+	fee: null,
 	assets: null,
 	currency: null,
 };

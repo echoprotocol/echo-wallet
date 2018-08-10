@@ -10,10 +10,14 @@ import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
-import ToastActions from '../actions/ToastActions';
 
-import { validateAccountName } from '../helpers/AuthHelper';
-import { validateCode, validateAbi, validateContractName } from '../helpers/TransactionHelper';
+import { toastSuccess, toastError } from '../helpers/ToastHelper';
+import {
+	validateAccountName,
+	validateCode,
+	validateAbi,
+	validateContractName,
+} from '../helpers/ValidateHelper';
 import { getMethod } from '../helpers/ContractHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
@@ -321,10 +325,10 @@ export const sendTransaction = () => async (dispatch, getState) => {
 				));
 			}
 
-			ToastActions.toastSuccess(`${operations[operation].name} transaction was sent`);
+			toastSuccess(`${operations[operation].name} transaction was sent`);
 		})
 		.catch(() => {
-			ToastActions.toastError(`${operations[operation].name} transaction wasn't sent`);
+			toastError(`${operations[operation].name} transaction wasn't sent`);
 		});
 
 	dispatch(closeModal(MODAL_DETAILS));
