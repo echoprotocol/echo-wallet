@@ -70,6 +70,9 @@
     }
   }
 
+  .icon-send:before {
+    content: "\e91b";
+  }
   .icon-recent-activity:before {
     content: "\e91a";
   }
@@ -159,9 +162,6 @@
   }
   .icon-remove:before {
     content: "\e90f";
-  }
-  .icon-send:before {
-    content: "\e910";
   }
   .icon-top_1:before {
     content: "\e911";
