@@ -25,6 +25,7 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 		if (!instance) return;
 
 		transaction.details = await getContractResult(instance, transaction.subject);
+		[transaction.contract] = (await dispatch(fetch(transaction.subject))).toJS().contracts_id;
 	}
 
 	history.push(VIEW_TRANSACTION_PATH, { data: transaction });

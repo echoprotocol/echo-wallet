@@ -1,47 +1,45 @@
 import React from 'react';
-import { connect } from 'react-redux';
-// import { Form, Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 
 class TabLogs extends React.Component {
 
+	renderLog(item, key) {
+		return (
+			<React.Fragment key={key}>
+				<li key={`${item.data}topics`}>
+					<div className="col">Topics:</div>
+					<div className="col">
+						{
+							item.log.map((topic, i) => (
+								<div className="topic-item" key={`${item.data}${topic}`}>
+									<span className="num">[{i}]</span>
+									{topic}
+								</div>
+							))
+						}
+					</div>
+				</li>
+				<li key={`${item.data}data`}>
+					<div className="col data">Data:</div>
+					<div className="col">
+						<div className="data-item">
+							<span className="arrow">➡</span>
+							{item.data}
+						</div>
+					</div>
+				</li>
+			</React.Fragment>
+		);
+	}
+
 	render() {
+		const { details } = this.props.data;
+
 		return (
 			<div className="tab-content">
 				<ul className="logs-list">
-					<li>
-						<div className="col">Topics:</div>
-						<div className="col">
-							<div className="topic-item">
-								<span className="num">[0]</span>
-                                0x3eesdsd12qse1234nb234h2b34b234b23423423e3242342323423423e3242342
-							</div>
-							<div className="topic-item"><span className="num">[1]</span>
-                                0x3eesdsd12qse1234nb234h2b34b234b23242342323423423e324234234234
-							</div>
-							<div className="topic-item">
-								<span className="num">[2]</span>
-                                0x3eesdsd12qse1234nb234h2b34b234b23423423e3223423423e324234234234
-							</div>
-						</div>
-					</li>
-					<li>
-						<div className="col data">Data:</div>
-						<div className="col">
-							<div className="data-item">
-								<span className="arrow">➡</span>
-                                0000000000000000000000000000000000000000000000000dsff3dsd223212sd32
-							</div>
-							<div className="data-item">
-								<span className="arrow">➡</span>
-                                00000000000000000000000000000000000000000000000dsffsd223212sd32
-							</div>
-							<div className="data-item">
-								<span className="arrow">➡</span>
-                                00000000000000000000000000000000000000000000000dsff21sd223212sd32
-							</div>
-						</div>
-					</li>
+					{details.tr_receipt.log.map((log, i) => this.renderLog(log, i))}
 				</ul>
 			</div>
 		);
@@ -49,4 +47,8 @@ class TabLogs extends React.Component {
 
 }
 
-export default connect()(TabLogs);
+TabLogs.propTypes = {
+	data: PropTypes.object.isRequired,
+};
+
+export default TabLogs;

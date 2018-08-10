@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { formatAmount } from '../../helpers/FormatHelper';
-import { getContractId } from '../../helpers/ContractHelper';
 
 class TabOverview extends React.Component {
 
@@ -11,17 +10,15 @@ class TabOverview extends React.Component {
 	}
 
 	renderContractOptions() {
-		const { details } = this.props.data;
+		const { details, contract } = this.props.data;
 
 		return (
 			<React.Fragment>
 				{
-					parseInt(details.exec_res.new_address, 16) ?
+					contract ?
 						<li>
 							<div className="col">Contract ID:</div>
-							<div className="col">
-								1.16.{getContractId(details.exec_res.new_address)}
-							</div>
+							<div className="col">{contract}</div>
 						</li> : null
 				}
 				<li>
@@ -32,10 +29,13 @@ class TabOverview extends React.Component {
 					<div className="col">Code deposit:</div>
 					<div className="col">{details.exec_res.code_deposit}</div>
 				</li>
-				<li>
-					<div className="col">New address:</div>
-					<div className="col">{details.exec_res.new_address}</div>
-				</li>
+				{
+					parseInt(details.exec_res.new_address, 16) ?
+						<li>
+							<div className="col">New address:</div>
+							<div className="col">{details.exec_res.new_address}</div>
+						</li> : null
+				}
 				<li>
 					<div className="col">Bytecode:</div>
 					<div className="col">

@@ -172,7 +172,7 @@
         .value {
            &.blue {
                color: $blue;
-           } 
+           }
         }
         .input.mini.ui {
             input {
@@ -263,7 +263,7 @@
         .dropdown.icon {
             display: none;
         }
-    } 
+    }
 }
 
 .overview-list,
@@ -313,14 +313,17 @@
         .arrow {
             margin-right: 3px;
         }
-        
+
     }
 }
 .logs-list {
     li {
         .col {
             &:nth-child(2) {
+                font-family: Monospace;
+                font-size: 14px;
                 max-width: 620px;
+                color: $black;
             }
         }
     }
