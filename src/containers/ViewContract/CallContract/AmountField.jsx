@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
-import formatAmount from '../../../helpers/HistoryHelper';
+import formatAmount from '../../../helpers/FormatHelper';
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setValue, setFormValue } from '../../../actions/FormActions';
 import FeeField from './FeeField';

@@ -3,7 +3,7 @@ import { Table } from 'semantic-ui-react';
 
 import PropTypes from 'prop-types';
 
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 
 class RowComponent extends React.Component {
 

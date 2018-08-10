@@ -33,11 +33,14 @@ export const callMethod = () => (dispatch, getState) => {
 	if (!targetFunction) return;
 
 	const isErrorExist = false;
-    targetFunction.inputs.forEach((i) => {
+    const args = targetFunction.inputs.map((i) => {
     	const fieldName = i.name;
     	const fieldType = i.type;
-
+		return functionForm.inputs[fieldName].value;
 	});
+
+    console.log(args);
+
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 };

@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { toggleBar } from '../../actions/GlobalActions';
 import {
 	CREATE_CONTRACT_PATH,
-	SMART_CONTRACTS_PATH,
+	CONTRACT_LIST_PATH,
+	ADD_CONTRACT_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
@@ -83,7 +84,7 @@ class SidebarMenu extends React.Component {
 										</Link>
 									</div>
 									<div key="1" className="accordeon-item">
-										<Link className="sidebar-nav-sublink" to={SMART_CONTRACTS_PATH}>
+										<Link className="sidebar-nav-sublink" to={CONTRACT_LIST_PATH}>
 											{ this.props.visibleBar ?
 												'View Smart Contracts' :
 												<span className="icon icon-contractSearch" />
@@ -91,9 +92,9 @@ class SidebarMenu extends React.Component {
 										</Link>
 									</div>
 									<div key="2" className="accordeon-item">
-										<Link className="sidebar-nav-sublink" to="/">
+										<Link className="sidebar-nav-sublink" to={ADD_CONTRACT_PATH}>
 											{ this.props.visibleBar ?
-												'Added Smart Contracts' :
+												'Add Smart Contract' :
 												<span className="icon icon-contractCopy" />
 											}
 										</Link>
