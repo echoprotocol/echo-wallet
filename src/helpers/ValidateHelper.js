@@ -156,7 +156,10 @@ const validateInt = (value, isUint, size = 256) => {
 const validateString = (value) => (typeof value === 'string' ? null : 'Value should be a string');
 const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'Value should be in object id format');
 const validateBool = (value) => (typeof value === 'boolean' ? null : 'Value should be a boolean');
-const validateArray = (value) => ((typeof value === 'object' && value.length !== undefined) ? null : 'Value should be an array');
+const validateArray = (value, size = null) => (
+	(typeof value !== 'object' || value.length === undefined || (size && value.length !== size))
+		? 'Value should be an array' : null
+);
 
 export const validateByType = (value, type) => {
 	if (!value) return 'Value should not be empty';
@@ -174,6 +177,9 @@ export const validateByType = (value, type) => {
 		method = validateBool;
 	} else if (type.search('byte') !== -1) {
 		method = validateArray;
+		const match = type.match(/\d+/);
+		const matchResult = match ? match[0] : null;
+		size = (type === 'byte') ? 1 : matchResult;
 	} else if (intMark !== -1) {
 		method = validateInt;
 		isUint = (intMark === 1);

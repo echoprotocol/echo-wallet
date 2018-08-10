@@ -51,7 +51,6 @@ ButtonComponent.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
 	functionForm: PropTypes.object.isRequired,
-	functions: PropTypes.object.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -62,7 +61,6 @@ export default connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_CALL_CONTRACT, 'loading']),
 		functionForm: state.form.get(FORM_CALL_CONTRACT),
-		functions: state.contract.get('functions'),
 	}),
 	(dispatch) => ({
 		callContract: (fn, fnForm) => dispatch(callContract(fn, fnForm)),

@@ -350,7 +350,7 @@ export const callContract = () => async (dispatch, getState) => {
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
 	const contractId = getState().contract.get('id');
 
-	// check exist account adn contract
+	// check exist account and contract
 	if (!activeUserId || !activeUserName || !contractId) {
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 		return;
