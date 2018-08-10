@@ -11,7 +11,7 @@ export const buildAndSendTransaction = async (operation, options, privateKey) =>
 };
 
 
-export const getMemo = (fromAccount, toAccount, memo, privateKey) => {
+export const encodeMemo = (fromAccount, toAccount, memo, privateKey) => {
 	const nonce = TransactionHelper.unique_nonce_uint64();
 
 	return {
@@ -25,6 +25,21 @@ export const getMemo = (fromAccount, toAccount, memo, privateKey) => {
 			memo,
 		),
 	};
+};
+
+export const decodeMemo = (memo, privateKey) => {
+	const publicKey = privateKey.toPublicKey().toString();
+
+	if (publicKey !== memo.from && publicKey !== memo.to) {
+		return null;
+	}
+
+	return Aes.decryptWithChecksum(
+		privateKey,
+		publicKey === memo.from ? memo.to : memo.from,
+		memo.nonce,
+		memo.message,
+	).toString('utf-8');
 };
 
 export const getMemoFee = (globalObject, memo, privateKey = '5KGG3tFb5F4h3aiUSKNnKeDcNbL5y1ZVXQXVqpWVMYhW82zBrNb') => {

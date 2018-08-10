@@ -5,8 +5,11 @@ import operations from '../constants/Operations';
 
 import { VIEW_TRANSACTION_PATH } from '../constants/RouterConstants';
 import { HISTORY_DATA } from '../constants/TableConstants';
+import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import { setValue } from './TableActions';
+import { openModal } from './ModalActions';
+import { setComment } from './TransactionActions';
 
 import { getContractResult } from '../api/ContractApi';
 
@@ -29,6 +32,11 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 	}
 
 	history.push(VIEW_TRANSACTION_PATH, { data: transaction });
+};
+
+export const openUnlock = (comment) => (dispatch) => {
+	dispatch(openModal(MODAL_UNLOCK));
+	dispatch(setComment({ comment }));
 };
 
 const formatOperation = (data) => async (dispatch, getState) => {
@@ -86,6 +94,10 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (type === 47) {
 		[, result.subject] = data.result;
+	}
+
+	if (type === 0 && operation.memo.message) {
+		result.memo = operation.memo;
 	}
 
 	result.color = result.from === accountName ? 'yellow' : 'green';

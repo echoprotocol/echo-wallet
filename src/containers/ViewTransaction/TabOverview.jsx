@@ -9,6 +9,16 @@ class TabOverview extends React.Component {
 		return formatAmount(value.amount, value.precision, value.symbol);
 	}
 
+	renderComment() {
+		const { comment, data: { memo } } = this.props;
+
+		return comment.unlocked ? comment.value : (
+			<div role="button" onClick={() => this.props.unlock(memo)} onKeyPress={() => this.props.unlock(memo)} tabIndex="0">
+				Show comment
+			</div>
+		);
+	}
+
 	renderContractOptions() {
 		const { details, contract } = this.props.data;
 
@@ -100,6 +110,14 @@ class TabOverview extends React.Component {
 					</li>
 
 					{
+						data.memo ?
+							<li>
+								<div className="col">Comment:</div>
+								<div className="col">{this.renderComment()}</div>
+							</li> : null
+					}
+
+					{
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 
@@ -112,6 +130,8 @@ class TabOverview extends React.Component {
 
 TabOverview.propTypes = {
 	data: PropTypes.object.isRequired,
+	comment: PropTypes.object.isRequired,
+	unlock: PropTypes.func.isRequired,
 };
 
 export default TabOverview;

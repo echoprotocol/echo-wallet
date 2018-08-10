@@ -22,7 +22,7 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
+import { buildAndSendTransaction, encodeMemo, getMemoFee } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -33,6 +33,10 @@ export const resetTransaction = () => (dispatch) => {
 
 export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
+};
+
+export const setComment = ({ comment, unlocked, error }) => (dispatch) => {
+	dispatch(TransactionReducer.actions.setComment({ comment, unlocked, error }));
 };
 
 export const fetchFee = (type) => async (dispatch) => {
@@ -320,7 +324,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
 		const toAccount = (await dispatch(EchoJSActions.fetch(options.to))).toJS();
 
-		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
+		options.memo = encodeMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);

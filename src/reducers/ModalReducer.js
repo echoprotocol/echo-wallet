@@ -21,12 +21,7 @@ const DEFAULT_MODAL_FIELDS = {
 export default createModule({
 	name: 'modal',
 	initialState: Map({
-		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS).merge({
-			title: null,
-			content: null,
-			btnTitleSuccess: null,
-			btnTitleCancel: null,
-		}),
+		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_DETAILS]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_TOKENS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_TOKENS]),
 	}),

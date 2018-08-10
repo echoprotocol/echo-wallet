@@ -3,14 +3,32 @@ import { Tab } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+
+import { openUnlock } from '../../actions/HistoryActions';
+import { resetTransaction } from '../../actions/TransactionActions';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
 
-	render() {
+	componentDidMount() {
 		const { state } = this.props.location;
+
+		if (!state) return;
+
+		if (state.data.name === 'Transfer' && state.data.memo) {
+			this.props.openUnlock(state.data.memo);
+		}
+	}
+
+	componentWillUnmount() {
+		this.props.resetTransaction();
+	}
+
+	render() {
+		const { location: { state }, comment } = this.props;
 
 		if (!state) {
 			this.props.history.goBack();
@@ -21,7 +39,11 @@ class ViewTransaction extends React.Component {
 			{
 				render: () => (
 					<Tab.Pane>
-						<TabOverview data={state.data} />
+						<TabOverview
+							data={state.data}
+							comment={comment}
+							unlock={this.props.openUnlock}
+						/>
 					</Tab.Pane>
 				),
 			},
@@ -68,9 +90,20 @@ class ViewTransaction extends React.Component {
 }
 
 ViewTransaction.propTypes = {
+	comment: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
+	openUnlock: PropTypes.func.isRequired,
+	resetTransaction: PropTypes.func.isRequired,
 };
 
 
-export default withRouter(ViewTransaction);
+export default withRouter(connect(
+	(state) => ({
+		comment: state.transaction.get('comment'),
+	}),
+	(dispatch) => ({
+		openUnlock: (value) => dispatch(openUnlock(value)),
+		resetTransaction: () => dispatch(resetTransaction()),
+	}),
+)(ViewTransaction));
