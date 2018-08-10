@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import AmountField from './AmountField';
+import AmountField from '../../../components/AmountField';
 import SelectMethod from './SelectMethod';
 import ButtonComponent from './ButtonComponent';
 
@@ -24,7 +24,7 @@ class TabCallContracts extends React.Component {
 	renderAmount(functionForm) {
 		const payable = functionForm.get('payable');
 		return (
-			payable && <AmountField />
+			payable && <AmountField form={FORM_CALL_CONTRACT} />
 		);
 	}
 

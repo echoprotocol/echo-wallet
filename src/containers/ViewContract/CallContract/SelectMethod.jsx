@@ -68,14 +68,14 @@ class SelectMethod extends React.Component {
 					placeholder="Enter method or choose it from dropdown list"
 					search
 					searchQuery={searchText}
-					defaultSelectedLabel
 					fluid
-					selection
+					closeOnBlur
 					text={functionName.value}
 					open={this.state.isOpenDropdown}
 					onClick={(e) => this.onToggleDropdown(e)}
 					onSearchChange={(e) => this.onSearch(e)}
 					onClose={(e) => this.onCloseDropdown(e)}
+					className="selection"
 				>
 					<Dropdown.Menu>
 						{this.renderList()}

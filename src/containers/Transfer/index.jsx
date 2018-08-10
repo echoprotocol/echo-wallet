@@ -8,7 +8,7 @@ import { clearForm } from '../../actions/FormActions';
 import { transfer } from '../../actions/TransactionActions';
 
 import ToAccountField from './ToAccountField';
-import AmountField from './AmountField';
+import AmountField from '../../components/AmountField';
 import CommentField from './CommentField';
 
 class Transfer extends React.Component {
@@ -39,7 +39,7 @@ class Transfer extends React.Component {
 						</div>
 					</Form.Field>
 					<ToAccountField />
-					<AmountField />
+					<AmountField form={FORM_TRANSFER} />
 					<CommentField />
 					<div className="form-panel">
 						{/*

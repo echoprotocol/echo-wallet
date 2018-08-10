@@ -134,6 +134,7 @@ export default createModule({
 		[FORM_CALL_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT]),
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
+
 	}),
 	transformations: {
 		set: {

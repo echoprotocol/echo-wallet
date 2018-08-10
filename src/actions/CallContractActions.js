@@ -21,7 +21,3 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-export const callMethod = () => () => {
-
-};
-

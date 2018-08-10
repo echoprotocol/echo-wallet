@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 
-import { callMethod } from '../../../actions/CallContractActions';
+import { callContract } from '../../../actions/TransactionActions';
 import { clearForm } from '../../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
@@ -15,7 +15,8 @@ class ButtonComponent extends React.Component {
 	}
 
 	onClick() {
-		this.props.callMethod();
+		const { functions, functionForm } = this.props;
+		this.props.callContract(functions, functionForm);
 	}
 
 	renderLoading() {
@@ -46,9 +47,11 @@ class ButtonComponent extends React.Component {
 }
 
 ButtonComponent.propTypes = {
-	callMethod: PropTypes.func.isRequired,
+	callContract: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	functionForm: PropTypes.object.isRequired,
+	functions: PropTypes.object.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -57,12 +60,12 @@ ButtonComponent.defaultProps = {
 
 export default connect(
 	(state) => ({
-		functions: state.contract.get('functions'),
-		functionForm: state.form.get(FORM_CALL_CONTRACT),
 		loading: state.form.getIn([FORM_CALL_CONTRACT, 'loading']),
+		functionForm: state.form.get(FORM_CALL_CONTRACT),
+		functions: state.contract.get('functions'),
 	}),
 	(dispatch) => ({
-		callMethod: (value) => dispatch(callMethod(value)),
+		callContract: (fn, fnForm) => dispatch(callContract(fn, fnForm)),
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT)),
 	}),
 )(ButtonComponent);

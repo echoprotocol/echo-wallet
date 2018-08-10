@@ -197,10 +197,11 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 };
 
-export const formatAbi = (contractId) => async (dispatch, getState) => {
+export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const abi = JSON.parse(JSON.parse(localStorage.getItem('contracts'))[accountId][contractId]);
+	const contracts = JSON.parse(localStorage.getItem('contracts'));
+	const abi = JSON.parse(contracts[accountId][contractName].abi);
 
 	let constants = abi.filter((value) =>
 		value.constant && value.name && !value.inputs.length);
