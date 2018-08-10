@@ -27,7 +27,9 @@ class ViewTransaction extends React.Component {
 			},
 		];
 
-		if (state.data.name === 'Contract') {
+		const isLogData = state.data.name === 'Contract' && state.data.details.tr_receipt.log.length;
+
+		if (isLogData) {
 			panes[0].menuItem = 'Overview';
 
 			panes.push({
@@ -56,7 +58,7 @@ class ViewTransaction extends React.Component {
 				</div>
 				<Tab
 					menu={{ tabular: true }}
-					className={classnames('tab-full', { 'hide-menu': state.data.name !== 'Contract' })}
+					className={classnames('tab-full', { 'hide-menu': isLogData })}
 					panes={panes}
 				/>
 			</div>

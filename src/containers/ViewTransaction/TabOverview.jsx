@@ -36,16 +36,19 @@ class TabOverview extends React.Component {
 							<div className="col">{details.exec_res.new_address}</div>
 						</li> : null
 				}
-				<li>
-					<div className="col">Bytecode:</div>
-					<div className="col">
-						<div className="bytecode-wrap">
-							<div className="bytecode">
-								{details.exec_res.output}
+				{
+					parseInt(details.exec_res.output, 16) ?
+						<li>
+							<div className="col">Bytecode:</div>
+							<div className="col">
+								<div className="bytecode-wrap">
+									<div className="bytecode">
+										{details.exec_res.output}
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-				</li>
+						</li> : null
+				}
 			</React.Fragment>
 		);
 	}
