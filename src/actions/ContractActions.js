@@ -19,8 +19,8 @@ import ContractReducer from '../reducers/ContractReducer';
 
 import { getMethod } from '../helpers/ContractHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
-import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
-import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
+import { FORM_ADD_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
+import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import { setFormError, setValue } from './FormActions';
 import { push, remove, update } from './GlobalActions';
@@ -28,8 +28,6 @@ import { push, remove, update } from './GlobalActions';
 import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
-
-import erc20 from '../../config/erc20.abi.test.json';
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -142,6 +140,41 @@ export const disableContract = (name) => (dispatch) => {
 	);
 };
 
+export const updateContractName = (oldName) => (dispatch, getState) => {
+	const newName = getState().form.getIn([FORM_VIEW_CONTRACT, 'newName']).value;
+
+	const nameError = validateContractName(newName);
+
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'name', nameError));
+		return;
+	}
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	let contracts = localStorage.getItem('contracts');
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	contracts[accountId][newName] = contracts[accountId][oldName];
+	delete contracts[accountId][oldName];
+	localStorage.setItem('contracts', JSON.stringify(contracts));
+
+	dispatch(remove('contracts', oldName));
+
+	dispatch(push('contracts', newName, {
+		disabled: false,
+		abi: contracts[accountId][newName].abi,
+		id: contracts[accountId][newName].id,
+	}));
+
+	history.push(VIEW_CONTRACT_PATH.replace(/:name/, newName));
+};
+
 export const addContractByName = (
 	contractResultId,
 	accountId,
@@ -190,28 +223,47 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
+	const queryResult = '00000000000';
+	// const queryResult = await getContractConstant(
+	// 	instance,
+	// 	accountId,
+	// 	contractId,
+	// 	getMethod(method, args),
+	// );
 
-	await getContractConstant(
-		instance,
-		accountId,
-		contractId,
-		getMethod(method, args),
-	);
+	const constants = getState().contract.get('constants');
+	const newConstants = constants.toJS().map((constant) => {
+		if (constant.name === method.name) {
+			constant.constantValue = queryResult;
+		}
+		return constant;
+	});
 
+	// dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 };
 
-export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
+export const formatAbi = (contractName, isConst) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const abi = erc20;
-	// const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
+	const contractId = JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].id;
+
+	const abi = JSON.parse(JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].abi);
 
 	if (isConst) {
 		let constants = abi.filter((value) =>
 			value.constant && value.name);
+
+		// const inputs = constants
+		// 	.filter((value) => value.inputs.length)
+		// 	.map((constant) => {
+		// 		return({
+		// 		name: constant.name,
+		// 		inputs: constant.inputs,
+		// 	})
+		// 	});
 
 		constants = constants.map(async (constant) => {
 			const method = formatSignature(constant);
@@ -236,4 +288,5 @@ export const formatAbi = (contractId, isConst) => async (dispatch, getState) => 
 	} else {
 		abi.filter((value) => !value.constant && value.name && value.type === 'function');
 	}
+	dispatch(ContractReducer.actions.set({ field: 'id', value: contractId }));
 };

@@ -9,6 +9,7 @@ import {
 	FORM_TRANSFER,
 	FORM_CREATE_CONTRACT,
 	FORM_ADD_CONTRACT,
+	FORM_VIEW_CONTRACT,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -101,6 +102,13 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		error: null,
 	}),
+	[FORM_VIEW_CONTRACT]: Map({
+		newName: {
+			value: '',
+			error: null,
+		},
+		error: null,
+	}),
 };
 
 export default createModule({
@@ -113,6 +121,8 @@ export default createModule({
 		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
+		[FORM_VIEW_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_VIEW_CONTRACT]),
 	}),
 	transformations: {
 		set: {
@@ -147,6 +157,14 @@ export default createModule({
 					value: payload.value,
 					error: null,
 				}));
+
+				return state;
+			},
+		},
+
+		push: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.field, payload.param], payload.value);
 
 				return state;
 			},

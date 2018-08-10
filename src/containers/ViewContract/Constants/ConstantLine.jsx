@@ -25,7 +25,7 @@ class ConstantLine extends React.Component {
 							options={typeOptions}
 						/>
 						{/* Можно добавить класс blue */}
-						<span className="value blue item">
+						<span className="value item">
 							{constant.constantValue}
 						</span>
 					</div>

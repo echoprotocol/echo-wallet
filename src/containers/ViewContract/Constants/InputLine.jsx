@@ -1,18 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Input, Dropdown } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+import { push } from '../../../actions/FormActions';
+import SingleInput from './SingleInput';
+import ButtonCall from './ButtonComponent';
 
 class InputLine extends React.Component {
-
-	// constant: true
-	// constantValue: "Example Fixed Supply Token"
-	// inputs: []
-	// name: "name"
-	// outputs: [{…}]
-	// payable: false
-	// stateMutability: "view"
-	// type: "function"
 
 	render() {
 		const { constant, typeOptions } = this.props;
@@ -33,22 +28,24 @@ class InputLine extends React.Component {
 							className="item contract-type-dropdown air"
 							options={typeOptions}
 						/>
-						{constant.inputs.map((input, index) => {
-							const id = index;
-							if (id !== 0) {
+						{
+							constant.inputs.map((input, index) => {
+								const id = index;
+								this.props.push([constant.name, id], { value: '', error: null });
+								if (id !== 0) {
+									return (
+										<div key={id} >
+											<span className="comma item">,</span>
+											<SingleInput field={{ id, name: constant.name }} inputData={input} />
+										</div>
+									);
+								}
 								return (
-									<div key={id}>
-										<span className="comma item">,</span>
-										<Input className="item" size="mini" placeholder={`${input.name} (${input.type})`} />
-									</div>
+									<SingleInput key={id} field={{ id, name: constant.name }} inputData={input} />
 								);
-							}
-							return (<Input key={id} className="item" size="mini" placeholder={`${input.name} (${input.type})`} />);
-						})}
-						{/* <Input className="item" size="mini" placeholder="guy (address)" /> */}
-						{/* <span className="comma item">,</span> */}
-						{/* <Input className="item" size="mini" placeholder="wad (unit256)" /> */}
-						<Button className="item" size="mini" content="call" />
+							})
+						}
+						<ButtonCall constant={constant} />
 					</div>
 				</div>
 			</div>
@@ -60,6 +57,13 @@ class InputLine extends React.Component {
 InputLine.propTypes = {
 	typeOptions: PropTypes.array.isRequired,
 	constant: PropTypes.object.isRequired,
+	push: PropTypes.func.isRequired,
 };
 
-export default connect()(InputLine);
+export default connect(
+	(state) => ({
+	}),
+	(dispatch) => ({
+		push: (field, param) => dispatch(push(FORM_VIEW_CONTRACT, field, param)),
+	}),
+)(InputLine);

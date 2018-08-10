@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 
 import { formatAbi } from '../../../actions/ContractActions';
 
@@ -10,12 +11,13 @@ import InputLine from './InputLine';
 class TabContractProps extends React.Component {
 
 	componentDidMount() {
-		this.props.formatAbi('1.16.0', true);
+		const contractName = this.props.location.pathname.split('/')[2];
+		this.props.formatAbi(contractName, true);
 	}
-	// ? this.renderConstantLine(typeOptions)
-	// 		: this.renderInputLine(typeOptions)
+
 	render() {
 		const { constants } = this.props;
+
 		const typeOptions = [
 			{
 				text: 'unit256',
@@ -30,12 +32,12 @@ class TabContractProps extends React.Component {
 				value: 'address',
 			},
 		];
+
 		return (
 			<div className="tab-content">
 				<div className="watchlist">
 					{constants.toJS().length ? constants.toJS().map((constant, index) => {
 						const id = index;
-						console.log(constant);
 						if (constant.inputs.length) {
 							return (<InputLine key={id} typeOptions={typeOptions} constant={constant} />);
 						}
@@ -50,6 +52,7 @@ class TabContractProps extends React.Component {
 
 TabContractProps.propTypes = {
 	constants: PropTypes.any,
+	location: PropTypes.object.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 };
 
@@ -57,11 +60,11 @@ TabContractProps.defaultProps = {
 	constants: null,
 };
 
-export default connect(
+export default withRouter(connect(
 	(state) => ({
 		constants: state.contract.get('constants'),
 	}),
 	(dispatch) => ({
-		formatAbi: (id, isConst) => dispatch(formatAbi(id, isConst)),
+		formatAbi: (name, isConst) => dispatch(formatAbi(name, isConst)),
 	}),
-)(TabContractProps);
+)(TabContractProps));

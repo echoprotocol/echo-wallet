@@ -6,6 +6,7 @@ export default createModule({
 	initialState: Map({
 		functions: List([]),
 		constants: List([]),
+		id: '',
 	}),
 	transformations: {
 		set: {
