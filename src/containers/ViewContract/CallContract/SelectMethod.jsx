@@ -65,12 +65,12 @@ class SelectMethod extends React.Component {
 			<Form.Field>
 				<label htmlFor="Method">Select method</label>
 				<Dropdown
-					placeholder="Enter method or choose it from dropdown list"
+					placeholder="Select method"
 					search
 					searchQuery={searchText}
 					fluid
 					closeOnBlur
-					text={functionName.value}
+					text={functionName}
 					open={this.state.isOpenDropdown}
 					onClick={(e) => this.onToggleDropdown(e)}
 					onSearchChange={(e) => this.onSearch(e)}

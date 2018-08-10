@@ -200,6 +200,7 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const contracts = JSON.parse(localStorage.getItem('contracts'));
 	const abi = JSON.parse(contracts[accountId][contractName].abi);
+	const contractId = contracts[accountId][contractName].id;
 
 	let constants = abi.filter((value) =>
 		value.constant && value.name && !value.inputs.length);
@@ -209,5 +210,6 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
 	dispatch(ContractReducer.actions.set({ field: 'functions', value: new List(functions) }));
+	dispatch(ContractReducer.actions.set({ field: 'id', value: contractId }));
 
 };

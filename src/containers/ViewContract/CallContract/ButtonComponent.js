@@ -15,8 +15,7 @@ class ButtonComponent extends React.Component {
 	}
 
 	onClick() {
-		const { functions, functionForm } = this.props;
-		this.props.callContract(functions, functionForm);
+		this.props.callContract();
 	}
 
 	renderLoading() {
@@ -39,7 +38,8 @@ class ButtonComponent extends React.Component {
 	}
 
 	render() {
-		const { loading } = this.props;
+		const { loading, functionForm } = this.props;
+		if (!functionForm.get('functionName')) return null;
 
 		return loading ? this.renderLoading() : this.renderSubmit();
 	}

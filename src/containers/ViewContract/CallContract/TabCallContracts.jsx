@@ -4,6 +4,7 @@ import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import AmountField from '../../../components/AmountField';
+import FeeField from '../../../components/AmountField/FeeField';
 import SelectMethod from './SelectMethod';
 import ButtonComponent from './ButtonComponent';
 
@@ -23,9 +24,13 @@ class TabCallContracts extends React.Component {
 
 	renderAmount(functionForm) {
 		const payable = functionForm.get('payable');
-		return (
-			payable && <AmountField form={FORM_CALL_CONTRACT} />
-		);
+		const functionName = functionForm.get('functionName');
+
+		if (functionName) {
+			return payable ?
+				<AmountField form={FORM_CALL_CONTRACT} /> : <FeeField form={FORM_CALL_CONTRACT} />;
+		}
+		return null;
 	}
 
 	render() {
