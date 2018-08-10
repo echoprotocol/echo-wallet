@@ -7,8 +7,6 @@ import {
 	getContractResult,
 } from '../api/ContractApi';
 
-import { setError, setParamError, closeModal } from './ModalActions';
-
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 

@@ -4,12 +4,20 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_CREATE_CONTRACT, FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_CREATE_CONTRACT, FORM_TRANSFER, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
-import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
+import {
+	toggleLoading,
+	setFormError,
+	setValue,
+	setFormValue,
+	setIn,
+	clearForm,
+	setInFormValue,
+} from './FormActions';
 
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import {
@@ -386,4 +394,23 @@ export const callContract = (method, inputs) => async (dispatch, getState) => {
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
+};
+
+export const setFunction = (functionName) => (dispatch, getState) => {
+	const functions = getState().contract.get('functions') || [];
+
+	const targetFunction = functions.find((f) => (f.name === functionName));
+
+	if (!targetFunction) return;
+
+	dispatch(clearForm(FORM_CALL_CONTRACT));
+
+	targetFunction.inputs.forEach((i) => {
+		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
+	});
+
+	dispatch(setFormValue(FORM_CALL_CONTRACT, 'functionName', functionName));
+	if (!targetFunction.payable) return;
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
