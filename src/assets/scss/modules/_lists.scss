@@ -291,10 +291,16 @@
         }
     }
     .bytecode {
+        &-wrap {
+            background-color: #f9f9f9;
+            border: 1px solid $bd-gray;
+            padding: 10px 5px;
+
+        }
+        padding: 0 5px;
+        max-height: 400px;
+        overflow: auto;
         word-wrap: break-word;
-        background-color: #f9f9f9;
-        border: 1px solid $bd-gray;
-        padding: 10px;
         font-size: 13px;
     }
     .topic-item,

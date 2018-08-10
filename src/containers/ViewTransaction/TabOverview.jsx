@@ -39,7 +39,11 @@ class TabOverview extends React.Component {
 				<li>
 					<div className="col">Bytecode:</div>
 					<div className="col">
-						<div className="bytecode">{details.exec_res.output}</div>
+						<div className="bytecode-wrap">
+							<div className="bytecode">
+								{details.exec_res.output}
+							</div>
+						</div>
 					</div>
 				</li>
 			</React.Fragment>
