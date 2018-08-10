@@ -25,6 +25,9 @@
                     margin-left: 4px;
                     color: $orange;
                     cursor: pointer;
+                    &:focus {
+                        text-decoration: underline;
+                    }
                 }
             }
         }
@@ -108,6 +111,17 @@
         text-align: right;
         min-width: auto;
         min-height: auto;
+        
+        
+        &.no-choice {
+            &.active {
+                & > .text {
+                    cursor: pointer;
+                    color: $orange;
+                    text-decoration: underline;
+                }
+            }
+        }
         & > .text {
             margin-right: 5px;
             color: $orange;
@@ -255,7 +269,9 @@
     &.no-choice {
         cursor: auto;
         input.search {
-            display: none;
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
         }
         .menu {
             display: none !important;

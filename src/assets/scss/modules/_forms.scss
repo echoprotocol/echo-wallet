@@ -50,7 +50,14 @@
         }
     }
     input {
-        display: none;
+        // display: none;
+        position: absolute;
+        opacity: 0;
+        &:focus ~ .label {
+            .label-text {
+                color: $black;
+            }
+        }
         &:checked ~ .label {
             .label-text {
                 color: $black;
@@ -239,7 +246,7 @@
                 transition: margin .3s;
                 &.focused {
                     .assets-tokens-dropdown {
-                        border-color: #85B7D9;
+                        border-color: $orange;
                     }
                 }
                 &.error {
@@ -302,6 +309,7 @@
         bottom: 0;
         margin: auto;
         display: table;
+        line-height: 38px;
     }
     .edit-options {
         position: absolute;
@@ -310,6 +318,7 @@
         bottom: 0;
         margin: auto;
         display: table;
+        line-height: 38px;
         span {
             &:not(:last-child) {
                 margin-right: 5px;
