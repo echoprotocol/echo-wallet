@@ -33,6 +33,15 @@ $stripe-width: 10px;
         font-size: 1em;
         padding: 8.5px 0;
         margin: 0;
+        &.large {
+            font-size: 1.2em;
+            min-height: auto;
+            padding: 0;
+            line-height: 1;
+            margin: 0;
+            align-self: flex-start;
+            margin: -2px 0 0;
+        }
     }
 }
 
