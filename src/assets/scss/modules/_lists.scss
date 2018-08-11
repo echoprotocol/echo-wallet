@@ -53,8 +53,18 @@
             margin: 0 0 0 auto;
             padding-left: 1em;
         }
+        &.no-choice {
+            & > input.search {
+                &:focus {
+                    & + .text {
+                        color: $orange;
+                    }
+                }
+            }
+        }
         & > input.search {
             padding-right: 28px;
+            transition: color .3s;
         }
         .menu {
             max-height: 212px;
