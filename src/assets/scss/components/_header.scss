@@ -42,6 +42,15 @@
     .ui.dropdown {
         line-height: normal;
     }
+    .button {
+        &.transparent {
+            &:focus {
+                i {
+                    color: #6d7178;
+                }
+            }
+        }
+    }
 }
 
 
