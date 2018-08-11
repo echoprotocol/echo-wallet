@@ -49,22 +49,36 @@
             }
         }
     }
-    input {
-        // display: none;
-        position: absolute;
-        opacity: 0;
-        &:focus ~ .label {
-            .label-text {
-                color: $black;
+    &.orange {
+        input {
+            // display: none;
+            position: absolute;
+            opacity: 0;
+            &:focus {
+                & ~ .label {
+                    &:before {
+                        background-color: rgba($orange,.185);
+                        color: transparent;
+                    }
+                }
+                &:checked {
+                    & ~ .label {
+                        &:before {
+                            background-color: rgba($orange,.185);
+                            color: $orange;
+                        }
+                    }
+                }
             }
-        }
-        &:checked ~ .label {
-            .label-text {
-                color: $black;
-            }
-            &:before {
-                background-color: $black;
-                border: 2px solid $black;
+
+            &:checked ~ .label {
+                .label-text {
+                    color: $black;
+                }
+                &:before {
+                    background-color: $black;
+                    border: 2px solid $black;
+                }
             }
         }
     }

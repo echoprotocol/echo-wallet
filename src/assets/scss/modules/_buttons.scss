@@ -43,7 +43,9 @@ $stripe-width: 10px;
 .ui {
     &.orange.button {
         &:focus {
-            background-color: #f26202;
+            background-color: rgba($orange,.185);
+            color: $orange;
+            box-shadow: 0px 0px 0px 1px $orange inset;
         }
         &.basic {
             transition: background-color .4s !important;
@@ -52,7 +54,6 @@ $stripe-width: 10px;
             &:focus {
                 background-color: $orange !important;
                 color: #fff !important;
-        
             }
         }
 
