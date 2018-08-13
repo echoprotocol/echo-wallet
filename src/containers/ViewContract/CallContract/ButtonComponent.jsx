@@ -44,7 +44,6 @@ class ButtonComponent extends React.Component {
 
 ButtonComponent.propTypes = {
 	callContract: PropTypes.func.isRequired,
-	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
 	functionForm: PropTypes.object.isRequired,
 };

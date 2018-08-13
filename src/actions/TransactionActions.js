@@ -14,8 +14,6 @@ import {
 	setFormError,
 	setValue,
 	setIn,
-	clearForm,
-	setInFormValue,
 	setInFormError,
 } from './FormActions';
 
