@@ -100,10 +100,7 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
-		functionName: {
-			value: '',
-			error: null,
-		},
+		functionName: '',
 		payable: false,
 	}),
 	[FORM_ADD_CONTRACT]: Map({
@@ -232,7 +229,6 @@ export default createModule({
 
 				let field = state.getIn(path);
 				if (field.toJS) field = field.toJS();
-
 				state = state.setIn(path, Object.assign({}, field, {
 					...field,
 					error: payload.value,

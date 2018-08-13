@@ -7,12 +7,15 @@ import { withRouter } from 'react-router';
 import { updateContractName, disableContract, formatAbi } from '../../actions/ContractActions';
 import { clearForm, setFormValue } from '../../actions/FormActions';
 
-import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
+import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT } from '../../constants/FormConstants';
 
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 
+import ContractReducer from '../../reducers/ContractReducer';
+
 class ViewContract extends React.Component {
+
 
 	constructor() {
 		super();
@@ -21,6 +24,11 @@ class ViewContract extends React.Component {
 
 	componentWillMount() {
 		this.props.formatAbi(this.props.match.params.name);
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm(FORM_CALL_CONTRACT);
+		this.props.clearContract();
 	}
 
 	onChange(e) {
@@ -144,6 +152,7 @@ ViewContract.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
+	clearContract: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 };
 
@@ -158,5 +167,6 @@ export default withRouter(connect(
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
+		clearContract: () => dispatch(ContractReducer.actions.reset()),
 	}),
 )(ViewContract));

@@ -7,12 +7,40 @@ import SingleInput from './SingleInput';
 import { contractQuery } from '../../../actions/ContractActions';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+import { convertContractConstant } from '../../../helpers/FormatHelper';
 
 class InputLine extends React.Component {
 
 	constructor() {
 		super();
-		this.state = { showResult: false };
+		this.state = {
+			showResult: false,
+			valueType: undefined,
+			constantValue: undefined,
+		};
+	}
+
+	componentWillMount() {
+		const { constant } = this.props;
+		if (constant.outputs[0].type === 'string') {
+			this.setState({ valueType: 'string' });
+		} else if (constant.outputs[0].type === 'bool') {
+			this.setState({ valueType: 'bool' });
+		} else {
+			this.setState({ valueType: 'number' });
+		}
+		this.setState({ constantValue: constant.constantValue });
+	}
+
+	onChange(e, data) {
+		const { constantValue } = this.state;
+		const result = convertContractConstant(data.value, this.state.valueType, constantValue);
+		if (result) {
+			this.setState({
+				constantValue: result.value,
+				valueType: result.type,
+			});
+		}
 	}
 
 	onQuery() {
@@ -35,11 +63,12 @@ class InputLine extends React.Component {
 					</div>
 					<div className="watchlist-col">
 						<Dropdown
-							placeholder="Empty"
+							placeholder={this.state.valueType}
 							compact
 							selection
 							className="item contract-type-dropdown air"
 							options={typeOptions}
+							onChange={(e, data) => this.onChange(e, data)}
 						/>
 						{
 							constant.inputs.map((input, index) => {

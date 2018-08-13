@@ -1,6 +1,6 @@
 import { Map, List } from 'immutable';
 
-import { setFormError, setValue, pushForm } from './FormActions';
+import { setFormError, setValue, pushForm, setInFormValue, clearForm } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 
 import {
@@ -22,9 +22,8 @@ import {
 	validateContractId,
 } from '../helpers/ValidateHelper';
 
-import { FORM_ADD_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
+import { FORM_ADD_CONTRACT, FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
-
 
 import history from '../history';
 
@@ -242,17 +241,13 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 export const formatAbi = (contractName) => async (dispatch, getState) => {
 
-	const instance = getState()
-		.echojs
-		.getIn(['system', 'instance']);
+	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	const accountId = getState()
-		.global
-		.getIn(['activeUser', 'id']);
+	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const contractId = JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].id;
-
-	const abi = JSON.parse(JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].abi);
+	const contracts = JSON.parse(localStorage.getItem('contracts'));
+	const abi = JSON.parse(contracts[accountId][contractName].abi);
+	const contractId = contracts[accountId][contractName].id;
 
 	let constants = abi.filter((value) =>
 		value.constant && value.name);
@@ -298,13 +293,36 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 		field: 'constants',
 		value: new List(constants),
 	}));
+
 	const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
+
 	dispatch(ContractReducer.actions.set({
 		field: 'functions',
 		value: new List(functions),
 	}));
+
 	dispatch(ContractReducer.actions.set({
 		field: 'id',
 		value: contractId,
 	}));
+
+};
+
+export const setFunction = (functionName) => (dispatch, getState) => {
+	const functions = getState().contract.get('functions') || [];
+
+	const targetFunction = functions.find((f) => (f.name === functionName));
+
+	if (!targetFunction) return;
+
+	dispatch(clearForm(FORM_CALL_CONTRACT));
+
+	targetFunction.inputs.forEach((i) => {
+		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
+	});
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'functionName', functionName));
+	if (!targetFunction.payable) return;
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
