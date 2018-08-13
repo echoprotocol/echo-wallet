@@ -13,6 +13,7 @@ import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 
 class ViewContract extends React.Component {
+
 	constructor() {
 		super();
 		this.state = { isEditName: false };
