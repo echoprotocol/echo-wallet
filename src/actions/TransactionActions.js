@@ -4,12 +4,20 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_CREATE_CONTRACT, FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_CREATE_CONTRACT, FORM_TRANSFER, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
-import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
+import {
+	toggleLoading,
+	setFormError,
+	setValue,
+	setFormValue,
+	setIn,
+	clearForm,
+	setInFormValue,
+} from './FormActions';
 
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import {
@@ -18,6 +26,7 @@ import {
 	validateAbi,
 	validateContractName,
 } from '../helpers/ValidateHelper';
+import { getMethod } from '../helpers/ContractHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
@@ -335,4 +344,73 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	history.push(INDEX_PATH);
 
 	dispatch(resetTransaction());
+};
+
+export const callContract = (method, inputs) => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const activeUserName = getState().global.getIn(['activeUser', 'name']);
+	if (!activeUserId || !activeUserName) return;
+
+	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
+
+	if (!pubKey) return;
+
+	// validate fields
+
+	dispatch(resetTransaction());
+
+	// transform to bytecode
+
+	const bytecode = getMethod(method, inputs);
+	const amount = 0;
+	const asset = '1.3.0';
+
+	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+
+	const options = {
+		registrar: activeUserId,
+		asset_id: asset,
+		value: amount,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode,
+	};
+
+	const fee = await dispatch(fetchFee('contract'));
+
+	const showOptions = {
+		from: activeUserName,
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		code: bytecode,
+	};
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+
+	if (!privateKey) {
+		dispatch(openModal(MODAL_UNLOCK));
+	} else {
+		dispatch(setField('keys', { active: privateKey }));
+		dispatch(openModal(MODAL_DETAILS));
+	}
+
+};
+
+export const setFunction = (functionName) => (dispatch, getState) => {
+	const functions = getState().contract.get('functions') || [];
+
+	const targetFunction = functions.find((f) => (f.name === functionName));
+
+	if (!targetFunction) return;
+
+	dispatch(clearForm(FORM_CALL_CONTRACT));
+
+	targetFunction.inputs.forEach((i) => {
+		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
+	});
+
+	dispatch(setFormValue(FORM_CALL_CONTRACT, 'functionName', functionName));
+	if (!targetFunction.payable) return;
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };

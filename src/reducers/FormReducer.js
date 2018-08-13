@@ -8,6 +8,7 @@ import {
 	FORM_UNLOCK_MODAL,
 	FORM_TRANSFER,
 	FORM_CREATE_CONTRACT,
+	FORM_CALL_CONTRACT,
 	FORM_ADD_CONTRACT,
 } from '../constants/FormConstants';
 
@@ -86,6 +87,24 @@ const DEFAULT_FORM_FIELDS = {
 		addToWatchList: false,
 		accepted: false,
 	}),
+	[FORM_CALL_CONTRACT]: Map({
+		inputs: new Map({}),
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+		functionName: {
+			value: '',
+			error: null,
+		},
+		payable: false,
+	}),
 	[FORM_ADD_CONTRACT]: Map({
 		name: {
 			value: '',
@@ -112,7 +131,10 @@ export default createModule({
 		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
 		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
+		[FORM_CALL_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT]),
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
+
 	}),
 	transformations: {
 		set: {
@@ -164,6 +186,40 @@ export default createModule({
 						error: payload.value,
 					}));
 				}
+
+				return state;
+			},
+		},
+
+		setInFormValue: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				let field = state.getIn(path) || {};
+
+				if (field.toJS) field = field.toJS();
+
+				state = state.setIn(path, Object.assign({}, field, {
+					...field,
+					value: payload.value,
+					error: null,
+				}));
+
+				return state;
+			},
+		},
+
+		setInFormError: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				let field = state.getIn(path);
+				if (field.toJS) field = field.toJS();
+
+				state = state.setIn(path, Object.assign({}, field, {
+					...field,
+					error: payload.value,
+				}));
 
 				return state;
 			},
