@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { clearForm } from '../../actions/FormActions';
 
 import FormComponent from './FormComponent';
-import ButtonComponent from './ButtonComponent';
+// import ButtonComponent from './ButtonComponent';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
@@ -20,7 +20,7 @@ class CreateContract extends React.Component {
 		return (
 			<Form className="main-form">
 				<FormComponent />
-				<ButtonComponent />
+				{/* <ButtonComponent /> */}
 			</Form>
 		);
 	}

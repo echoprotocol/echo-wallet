@@ -6,7 +6,8 @@ $thead-height: 46px;
     flex-direction: column;
     margin: 0;
     height: calc(100vh - 100px);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     @media (min-width: 1060px){
         overflow-y: scroll;
         overflow-x: hidden;
@@ -219,13 +220,7 @@ $thead-height: 46px;
 }
 @media (max-width: 1200px){
     .wallet-wrap {
-        .table-assets,
-        .table-tokens {
-            .thead,
-            .tbody {
-                border-right: 0 !important;
-            }
-        }
+        padding: 0 20px;
     }
 }
 .table-assets,
@@ -353,6 +348,12 @@ $thead-height: 46px;
             }
         }
     }
+}
+.table-assets {
+    margin-right: 10px;
+}
+.table-tokens {
+    margin-left: 10px;
 }
 
 

@@ -1,12 +1,14 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 import {
 	getContractId,
 	getContract,
 	getContractConstant,
-	formatSignature,
 	getContractResult,
 } from '../api/ContractApi';
+
+import GlobalReducer from '../reducers/GlobalReducer';
+import ContractReducer from '../reducers/ContractReducer';
 
 import { getMethod } from '../helpers/ContractHelper';
 import {
@@ -16,13 +18,11 @@ import {
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
-import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
+import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
-import { setFormError, setValue } from './FormActions';
+import { setFormError, setValue, setInFormValue, clearForm } from './FormActions';
 import { push, remove, update } from './GlobalActions';
-
-import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
@@ -195,31 +195,40 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 };
 
-export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
-
-	const instance = getState().echojs.getIn(['system', 'instance']);
+export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
+	const contracts = JSON.parse(localStorage.getItem('contracts'));
+	const abi = JSON.parse(contracts[accountId][contractName].abi);
+	const contractId = contracts[accountId][contractName].id;
 
-	if (isConst) {
-		let constants = abi.filter((value) =>
-			value.constant && value.name && !value.inputs.length);
+	let constants = abi.filter((value) =>
+		value.constant && value.name && !value.inputs.length);
 
-		constants = constants.map(async (constant) => {
-			const method = formatSignature(constant);
-			const constantValue =
-				await getContractConstant(instance, accountId, contractId, method);
-			return Object.defineProperty(constant, 'constantValue', {
-				value: constantValue,
-				writable: true,
-				enumerable: true,
-				configurable: true,
-			});
-		});
+	constants = await Promise.all(constants);
+	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(constants) }));
 
-		await Promise.all(constants);
-	} else {
-		abi.filter((value) => !value.constant && value.name && value.type === 'function');
-	}
+	const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
+	dispatch(ContractReducer.actions.set({ field: 'functions', value: new List(functions) }));
+	dispatch(ContractReducer.actions.set({ field: 'id', value: contractId }));
+
+};
+
+export const setFunction = (functionName) => (dispatch, getState) => {
+	const functions = getState().contract.get('functions') || [];
+
+	const targetFunction = functions.find((f) => (f.name === functionName));
+
+	if (!targetFunction) return;
+
+	dispatch(clearForm(FORM_CALL_CONTRACT));
+
+	targetFunction.inputs.forEach((i) => {
+		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
+	});
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'functionName', functionName));
+	if (!targetFunction.payable) return;
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };

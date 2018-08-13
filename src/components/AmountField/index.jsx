@@ -5,8 +5,11 @@ import { Form, Input, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+
 import { setValue, setFormValue } from '../../actions/FormActions';
+
+import { FORM_TRANSFER } from '../../constants/FormConstants';
+
 import FeeField from './FeeField';
 
 class AmountField extends React.Component {
@@ -21,7 +24,7 @@ class AmountField extends React.Component {
 
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
-			this.props.setValue('currency', this.props.assets[0]);
+			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
 		}
 	}
 
@@ -32,6 +35,7 @@ class AmountField extends React.Component {
 
 		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
 			this.props.setValue(
+				this.props.form,
 				'amount',
 				{
 					error: `Amount should be more than ${1 / (10 ** currency.precision)}`,
@@ -42,15 +46,15 @@ class AmountField extends React.Component {
 			return;
 		}
 
-		this.props.setFormValue(e.target.name, value);
+		this.props.setFormValue(this.props.form, e.target.name, value);
 	}
 
 	setAvailableAmount(currency) {
-		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
+		this.props.setFormValue(this.props.form, 'amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
 	setCurrency(currency, type) {
-		this.props.setValue('currency', { ...currency, type });
+		this.props.setValue(this.props.form, 'currency', { ...currency, type });
 	}
 
 	getAvailableAmount(currency) {
@@ -94,8 +98,9 @@ class AmountField extends React.Component {
 	}
 
 	render() {
-		const { assets, tokens, amount } = this.props;
-
+		const {
+			assets, tokens, amount, form,
+		} = this.props;
 		const currency = this.props.currency || assets[0];
 
 		return (
@@ -105,7 +110,7 @@ class AmountField extends React.Component {
 					<ul className="list-amount">
 						<li>
 							Fee:
-							<FeeField />
+							<FeeField form={form} />
 						</li>
 						<li>
 							Available Balance:
@@ -115,8 +120,6 @@ class AmountField extends React.Component {
 						</li>
 					</ul>
 				</label>
-
-				{/* КЛАСС error добавлять компоненту <Input /> */}
 				<Input
 					type="text"
 					placeholder="Amount"
@@ -136,7 +139,7 @@ class AmountField extends React.Component {
 						/>
 						{ amount.error ? <span className="icon-error-red value-status" /> : null }
 					</div>
-					<span className="error-message">asdasd d sad{amount.error}</span>
+					{amount.error && <span className="error-message">{amount.error}</span>}
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
@@ -164,6 +167,7 @@ AmountField.propTypes = {
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	form: PropTypes.string.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -172,15 +176,18 @@ AmountField.defaultProps = {
 };
 
 export default connect(
-	(state) => ({
-		tokens: state.balance.get('tokens').toArray(),
-		assets: state.balance.get('assets').toArray(),
-		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
-		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
-		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
-	}),
+	(state, ownProps) => {
+		const { form } = ownProps;
+		return {
+			assets: state.balance.get('assets').toArray(),
+			amount: state.form.getIn([form, 'amount']),
+			currency: state.form.getIn([form, 'currency']),
+			fee: state.form.getIn([form, 'fee']),
+			tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+		};
+	},
 	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
+		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
+		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
 	}),
 )(AmountField);
