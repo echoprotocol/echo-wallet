@@ -5,6 +5,16 @@
     padding: 0 20px;
     background-color: rgb(247, 247, 247);
     border-bottom: 1px solid rgb(247, 247, 247);
+    .icon-back {
+        line-height: 15px;
+        padding: 5px;
+        color: rgba(#c4c5ca,1);
+        margin: -1px 10px 0 0;
+        transition: color .3s;
+        &:hover {
+            color: rgba(#6d7178,1);
+        }
+    }
     .page-title {
         color: $link-gray;
         font-size: 18px;
@@ -28,6 +38,18 @@
         padding-left: 50px;
         display: flex;
         align-items: center;
+    }
+    .ui.dropdown {
+        line-height: normal;
+    }
+    .button {
+        &.transparent {
+            &:focus {
+                i {
+                    color: #6d7178;
+                }
+            }
+        }
     }
 }
 

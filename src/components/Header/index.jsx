@@ -8,9 +8,13 @@ import { Link } from 'react-router-dom';
 import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
-import { TRANSFER_PATH, BALANCES_PATH } from '../../constants/RouterConstants';
+import {
+	BALANCES_PATH,
+	TRANSFER_PATH,
+	INDEX_PATH,
+} from '../../constants/RouterConstants';
 
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 
 class Header extends React.Component {
 
@@ -39,9 +43,16 @@ class Header extends React.Component {
 
 		return (
 			<div className="header">
+				<Link to={INDEX_PATH} className="icon-back" />
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
-					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>
+					<Button
+						icon="icon-send"
+						className="transparent"
+						content="Send"
+						onClick={(e) => this.onSend(e)}
+						size="large"
+					/>
 					<div className="user-section">
 						<Link className="balance" to={BALANCES_PATH}>
 							<span>
@@ -90,9 +101,9 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-	location: PropTypes.object.isRequired,
-	history: PropTypes.object.isRequired,
 	assets: PropTypes.any,
+	history: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 };
 

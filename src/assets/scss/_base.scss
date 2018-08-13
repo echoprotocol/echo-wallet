@@ -36,6 +36,11 @@ div,span {
 	-webkit-appearance: none;
 	border-radius: 0;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
 .wrapper {
 	display: flex;
 	min-height: 100vh;
@@ -47,17 +52,19 @@ div,span {
 		display: flex;
 		align-items: center;
         justify-content: center;
-        padding: 50px 0;
 		div {
 			width: 100%;
 		}
 	}
 }
-
-.link.orange {
-	color: $orange;
+.link {
+    &:focus {
+        text-decoration: underline;
+    }
+    &.orange {
+        color: $orange;
+    }
 }
-
 
 // ANIMATIONS 
 

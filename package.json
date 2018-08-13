@@ -19,7 +19,7 @@
     "classnames": "^2.2.6",
     "config": "^1.31.0",
     "echojs-lib": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-lib.git",
-    "echojs-redux": "^0.1.0",
+    "echojs-redux": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-redux.git",
     "echojs-ws": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-ws.git",
     "file-loader": "^1.1.11",
     "history": "^4.7.2",
@@ -41,7 +41,8 @@
     "redux-modules": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.78.3",
-    "uglifyjs-webpack-plugin": "^1.2.2"
+    "uglifyjs-webpack-plugin": "^1.2.2",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
     "babel-loader": "^7.1.3",
@@ -52,7 +53,7 @@
     "copy-webpack-plugin": "^4.5.2",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.10",
-    "electron": "^2.0.6",
+    "electron": "^2.0.7",
     "electron-installer-dmg": "^2.0.0",
     "electron-packager": "^12.1.0",
     "eslint": "^4.18.2",
@@ -63,11 +64,11 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.0.4",
     "img-loader": "^2.0.1",
-    "node-sass": "^4.7.2",
+    "node-sass": "^4.9.3",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.2",
     "url-loader": "^1.0.1",
-    "webpack": "^4.16.3",
+    "webpack": "^4.16.5",
     "webpack-cli": "^2.0.10",
     "webpack-dev-middleware": "^3.0.0",
     "webpack-dev-server": "^3.1.0"

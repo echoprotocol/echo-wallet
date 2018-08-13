@@ -3,8 +3,10 @@ import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
-	SMART_CONTRACTS_PATH,
-	VIEW_CONTRACTS_PATH,
+	CONTRACT_LIST_PATH,
+	VIEW_CONTRACT_PATH,
+	ADD_CONTRACT_PATH,
+	TRANSACTION_DETAILS_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -25,12 +27,20 @@ export const HEADER_TITLE = [
 		title: 'Create Contract',
 	},
 	{
-		path: SMART_CONTRACTS_PATH,
+		path: CONTRACT_LIST_PATH,
 		title: 'Smart Contracts',
 	},
 	{
-		path: VIEW_CONTRACTS_PATH,
+		path: VIEW_CONTRACT_PATH,
 		title: 'Smart Contract Details',
+	},
+	{
+		path: ADD_CONTRACT_PATH,
+		title: 'Smart Contract',
+	},
+	{
+		path: TRANSACTION_DETAILS_PATH,
+		title: 'Transaction:',
 	},
 ];
 

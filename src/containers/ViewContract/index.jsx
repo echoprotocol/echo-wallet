@@ -1,10 +1,11 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
 
+import ContractSettings from './ContractSettings';
 import TabContractProps from './TabContractProps';
 import TabCallContracts from './TabCallContracts';
 
-class ViewContracts extends React.Component {
+class ViewContract extends React.Component {
 
 	render() {
 		const panes = [
@@ -25,13 +26,15 @@ class ViewContracts extends React.Component {
 				),
 			},
 		];
+
 		return (
 			<div>
-				<Tab menu={{ tabular: true }} className="tub-full" panes={panes} />
+				<ContractSettings />
+				<Tab menu={{ tabular: true }} className="tab-full" panes={panes} />
 			</div>
 		);
 	}
 
 }
 
-export default ViewContracts;
+export default ViewContract;

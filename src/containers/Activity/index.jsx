@@ -7,7 +7,6 @@ import { formatHistory } from '../../actions/TableActions';
 
 import HISTORY_DATA from '../../constants/TableConstants';
 
-import Loading from '../../components/Loading';
 import RowComponent from './RowComponent';
 
 class Activity extends React.Component {
@@ -66,7 +65,7 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		return this.props.history ? this.renderTable() : <Loading />;
+		return this.props.history ? this.renderTable() : null;
 	}
 
 }

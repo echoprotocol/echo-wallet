@@ -16,15 +16,15 @@ class ModalTokens extends React.Component {
 	}
 
 	onInput(e) {
-		this.props.setParamValue('address', e.target.value);
+		this.props.setParamValue('contractId', e.target.value);
 	}
 
 	onClick() {
-		this.props.addToken(this.props.address.value.trim());
+		this.props.addToken(this.props.contractId.value.trim());
 	}
 
 	render() {
-		const { show, address } = this.props;
+		const { show, contractId } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -41,21 +41,21 @@ class ModalTokens extends React.Component {
 					<div className="modal-body">
 						<Form className="user-form">
 							<div className="form-info">
-								<h3>Watch Tokens</h3>
+								<h3>Add ERC20 token to watch list</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field>
-									<label htmlFor="tokens">Token name</label>
-									<div className={classnames({ error: address.error })}>
+									<label htmlFor="tokens">Contract ID</label>
+									<div className={classnames({ error: contractId.error })}>
 										<input
 											type="text"
-											placeholder="Contract Address"
-											name="address"
+											placeholder="Contract ID"
+											name="contractId"
 											className="ui input"
-											value={address.value}
+											value={contractId.value}
 											onInput={(e) => this.onInput(e)}
 										/>
-										<span className="error-message">{address.error}</span>
+										<span className="error-message">{contractId.error}</span>
 									</div>
 								</Form.Field>
 							</div>
@@ -71,7 +71,7 @@ class ModalTokens extends React.Component {
 
 ModalTokens.propTypes = {
 	show: PropTypes.bool,
-	address: PropTypes.object.isRequired,
+	contractId: PropTypes.object.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	setParamValue: PropTypes.func.isRequired,
 	addToken: PropTypes.func.isRequired,
@@ -84,7 +84,7 @@ ModalTokens.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TOKENS, 'show']),
-		address: state.modal.getIn([MODAL_TOKENS, 'address']),
+		contractId: state.modal.getIn([MODAL_TOKENS, 'contractId']),
 		error: state.modal.getIn([MODAL_TOKENS, 'error']),
 	}),
 	(dispatch) => ({

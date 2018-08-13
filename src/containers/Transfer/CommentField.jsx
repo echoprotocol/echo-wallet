@@ -34,6 +34,7 @@ class CommentField extends React.Component {
 
 	render() {
 		const { comment } = this.state;
+		const { currency } = this.props;
 
 		return (
 			<Form.Field>
@@ -42,8 +43,9 @@ class CommentField extends React.Component {
 					className="comment"
 					placeholder="Comment"
 					control="textarea"
-					value={comment}
+					value={currency && currency.type === 'tokens' ? '' : comment}
 					onChange={(e) => this.onComment(e)}
+					disabled={currency ? currency.type === 'tokens' : false}
 				/>
 			</Form.Field>
 		);
@@ -52,11 +54,18 @@ class CommentField extends React.Component {
 }
 
 CommentField.propTypes = {
+	currency: PropTypes.object,
 	setFormValue: PropTypes.func.isRequired,
 };
 
+CommentField.defaultProps = {
+	currency: null,
+};
+
 export default connect(
-	() => ({}),
+	(state) => ({
+		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
+	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
 	}),

@@ -1,19 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Input, Dropdown } from 'semantic-ui-react';
+import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
-import formatAmount from '../../helpers/HistoryHelper';
+import { formatAmount } from '../../helpers/FormatHelper';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { setValue, setFormValue } from '../../actions/FormActions';
 
+import FeeField from './FeeField';
+import CurrencyField from './CurrencyField';
+
 class AmountField extends React.Component {
 
-	componentDidUpdate() {
-		if (this.props.assets.length && !this.props.currency) {
-			this.props.setValue('currency', this.props.assets[0]);
-		}
+	constructor() {
+		super();
+		this.state = {
+			amountFocus: false,
+		};
 	}
 
 	onChangeAmount(e) {
@@ -41,10 +45,6 @@ class AmountField extends React.Component {
 		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
-	setCurrency(currency) {
-		this.props.setValue('currency', currency);
-	}
-
 	getAvailableAmount(currency) {
 		if (!currency) {
 			return 0;
@@ -63,25 +63,14 @@ class AmountField extends React.Component {
 		return currency.balance - fee.value;
 	}
 
-	renderList(type) {
-		const list = [
-			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
-		];
-
-		return this.props[type].reduce((arr, a, i) => {
-			const id = i;
-			arr.push((
-				<Dropdown.Item key={id} onClick={(e) => this.setCurrency(a, e)}>
-					{a.symbol}
-				</Dropdown.Item>
-			));
-
-			return arr;
-		}, list);
+	amountFocusToggle(e, value) {
+		this.setState({
+			amountFocus: !value,
+		});
 	}
 
 	render() {
-		const { assets, tokens, amount } = this.props;
+		const { assets, amount } = this.props;
 
 		const currency = this.props.currency || assets[0];
 
@@ -91,6 +80,10 @@ class AmountField extends React.Component {
 					Amount
 					<ul className="list-amount">
 						<li>
+							Fee:
+							<FeeField />
+						</li>
+						<li>
 							Available Balance:
 							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
 								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO' }
@@ -98,17 +91,27 @@ class AmountField extends React.Component {
 						</li>
 					</ul>
 				</label>
-				<Input type="text" placeholder="Amount" action>
-					<div className={classnames('amount-wrap', { error: amount.error })}>
-						<input className="amount" placeholder="Amount" value={amount.value} name="amount" onChange={(e) => this.onChangeAmount(e)} />
+				<Input
+					type="text"
+					placeholder="Amount"
+					tabIndex="0"
+					action
+					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
+				>
+					<div className="amount-wrap action-wrap">
+						<input
+							className="amount"
+							placeholder="Amount"
+							value={amount.value}
+							name="amount"
+							onChange={(e) => this.onChangeAmount(e)}
+							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+						/>
+						{ amount.error ? <span className="icon-error-red value-status" /> : null }
 						<span className="error-message">{amount.error}</span>
 					</div>
-					<Dropdown text={currency ? currency.symbol : ''} className="assets-tokens-dropdown">
-						<Dropdown.Menu>
-							{ assets.length ? this.renderList('assets') : null }
-							{ tokens.length ? this.renderList('tokens') : null }
-						</Dropdown.Menu>
-					</Dropdown>
+					<CurrencyField />
 				</Input>
 			</Form.Field>
 		);
@@ -120,7 +123,6 @@ AmountField.propTypes = {
 	currency: PropTypes.object,
 	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
-	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -133,7 +135,6 @@ AmountField.defaultProps = {
 
 export default connect(
 	(state) => ({
-		tokens: state.balance.get('tokens').toArray(),
 		assets: state.balance.get('assets').toArray(),
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),

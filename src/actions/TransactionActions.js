@@ -4,19 +4,27 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_TRANSFER } from '../constants/FormConstants';
+import { FORM_CREATE_CONTRACT, FORM_TRANSFER } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal } from './ModalActions';
 import { toggleLoading, setFormError, setValue, setIn } from './FormActions';
 
-import { validateAccountName } from '../helpers/AuthHelper';
+import { toastSuccess, toastError } from '../helpers/ToastHelper';
+import {
+	validateAccountName,
+	validateCode,
+	validateAbi,
+	validateContractName,
+} from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { buildAndSendTransaction, getMemo, getMemoFee } from '../api/TransactionApi';
+import { getTransferTokenCode } from '../api/ContractApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
+import { addContractByName } from './ContractActions';
 
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
@@ -140,20 +148,21 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(getFee('transfer', '1.3.0', comment.value));
+		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
 	}
+
 
 	if (currency.id === fee.asset.id) {
 		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 			return;
 		}
 	}
@@ -164,9 +173,15 @@ export const transfer = () => async (dispatch, getState) => {
 	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
 	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
-	//	TODO check transfer token or asset
-
-	const options = {
+	const options = currency.type === 'tokens' ? {
+		registrar: fromAccountId,
+		receiver: currency.id,
+		asset_id: fee.asset.id,
+		value: 0,
+		gasPrice: 0,
+		gas: 4700000,
+		code: getTransferTokenCode(toAccount.id, amount.value * (10 ** currency.precision)),
+	} : {
 		fee: {
 			amount: fee.value,
 			asset_id: fee.asset.id,
@@ -186,7 +201,7 @@ export const transfer = () => async (dispatch, getState) => {
 		amount: `${amount.value} ${currency.symbol}`,
 	};
 
-	if (comment.value) {
+	if (comment.value && currency.type !== 'tokens') {
 		options.memo = comment.value;
 		showOptions.comment = comment.value;
 	}
@@ -200,7 +215,11 @@ export const transfer = () => async (dispatch, getState) => {
 	const activePrivateKey = getState().keychain.getIn([activePubKey, 'privateKey']);
 	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'transfer', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({
+		operation: currency.type === 'tokens' ? 'contract' : 'transfer',
+		options,
+		showOptions,
+	}));
 
 	if (!activePrivateKey || !memoPrivateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
@@ -215,16 +234,37 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
-export const createContract = ({ bytecode }) => async (dispatch, getState) => {
+export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-
 	if (!activeUserId || !activeUserName) return;
 
 	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
 
 	if (!pubKey) return;
+
+	const error = validateCode(bytecode);
+
+	if (error) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
+		return;
+	}
+
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+		const nameError = validateContractName(name);
+		const abiError = validateAbi(abi);
+
+		if (nameError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+			return;
+		}
+
+		if (abiError) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+			return;
+		}
+	}
 
 	dispatch(resetTransaction());
 
@@ -268,7 +308,27 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		options.memo = getMemo(fromAccount, toAccount, options.memo, keys.memo);
 	}
 
-	buildAndSendTransaction(operation, options, keys.active);
+	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
+	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+
+	buildAndSendTransaction(operation, options, keys.active)
+		.then((res) => {
+			if (addToWatchList) {
+				dispatch(addContractByName(
+					res[0].trx.operation_results[0][1],
+					accountId,
+					name,
+					abi,
+				));
+			}
+
+			toastSuccess(`${operations[operation].name} transaction was sent`);
+		})
+		.catch(() => {
+			toastError(`${operations[operation].name} transaction wasn't sent`);
+		});
 
 	dispatch(closeModal(MODAL_DETAILS));
 

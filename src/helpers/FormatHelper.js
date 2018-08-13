@@ -1,6 +1,10 @@
-import operations from '../constants/Operations';
+import utf8 from 'utf8';
+import accounting from 'accounting';
 
-const AREA_FIELDS = ['code'];
+import operations from '../constants/Operations';
+import { events } from '../constants/LogEventConstants';
+
+const AREA_FIELDS = ['code', 'comment'];
 
 export const getTransactionDetails = (operationType, showOptions) => {
 	const operation = operations[operationType];
@@ -22,3 +26,34 @@ export const getTransactionDetails = (operationType, showOptions) => {
 };
 
 export const getContractId = (address) => parseInt(address.substr(-32), 16);
+
+export const logParser = (log) => {
+	if (!log || !log.length) return null;
+	return log.map((l) => {
+		const contractId = parseInt(l.address.slice(2), 16);
+		const event = events[l.log[0]] || l.log[0];
+		const params = l.log.slice(1);
+		return { contractId, event, params };
+	});
+};
+
+export const getLog = (result) => {
+	const trReceipt = result.tr_receipt;
+	return trReceipt ? trReceipt.log : null;
+};
+
+export const toUtf8 = (hex) => {
+	let str = '';
+
+	for (let i = 0; i < hex.length; i += 2) {
+		const code = parseInt(hex.substr(i, 2), 16);
+		if (code !== 0) {
+			str += String.fromCharCode(code);
+		}
+	}
+	return utf8.decode(str);
+};
+
+export const toInt = (hex) => parseInt(hex, 16);
+
+export const formatAmount = (amount, precision, symbol) => accounting.formatMoney(amount / (10 ** precision), symbol, precision, ' ', '.', '%v %s');
