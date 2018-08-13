@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form } from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
-
-import { setFormValue, clearForm } from '../../actions/FormActions';
+import { createContract } from '../../actions/TransactionActions';
+import { setFormValue, setValue, clearForm } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
@@ -23,33 +23,56 @@ class FormComponent extends React.Component {
 		}
 	}
 
+	onClick() {
+		const { bytecode, name, abi } = this.props;
+		this.props.createContract({
+			bytecode: bytecode.value.trim(),
+			name: name.value.trim(),
+			abi: abi.value.trim(),
+		});
+	}
+
+	onToggle() {
+		this.props.setValue('addToWatchList', !this.props.addToWatchList);
+	}
+
+	isDisabledSubmit() {
+		const { bytecode } = this.props;
+
+		return (!bytecode.value || bytecode.error);
+	}
+
 	renderWatchListData() {
 		const { name, abi } = this.props;
 		return (
-			<div>
-				<div className={classnames({ error: name.error, 'action-wrap textarea-wrap': true })}>
-					<Form.Field
-						label="Name"
-						placeholder="Name"
-						control="input"
-						name="name"
-						value={name.value}
-						onChange={(e) => this.onChange(e, true)}
-					/>
+			<React.Fragment>
+				<div className={classnames({ error: name.error, 'error-wrap': true })}>
+					<div className="action-wrap">
+						<Form.Field
+							label="Name"
+							placeholder="Name"
+							control="input"
+							name="name"
+							value={name.value}
+							onChange={(e) => this.onChange(e, true)}
+						/>
+					</div>
 					<span className="error-message">{name.error}</span>
 				</div>
-				<div className={classnames({ error: abi.error, 'action-wrap textarea-wrap': true })}>
-					<Form.Field
-						label="Abi"
-						placeholder="Abi"
-						control="textarea"
-						name="abi"
-						value={abi.value}
-						onChange={(e) => this.onChange(e, true)}
-					/>
+				<div className={classnames({ error: abi.error, 'error-wrap': true })}>
+					<div className="action-wrap">
+						<Form.Field
+							label="Abi"
+							placeholder="Abi"
+							control="textarea"
+							name="abi"
+							value={abi.value}
+							onChange={(e) => this.onChange(e, true)}
+						/>
+					</div>
 					<span className="error-message">{abi.error}</span>
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 
@@ -60,18 +83,40 @@ class FormComponent extends React.Component {
 				<div className="form-info">
 					<h3>Create Smart Contract</h3>
 				</div>
-				<div className={classnames({ error: bytecode.error, 'action-wrap textarea-wrap': true })}>
-					<Form.Field
-						label="ByteCode"
-						placeholder="Byte Code"
-						control="textarea"
-						name="bytecode"
-						value={bytecode.value}
-						onChange={(e) => this.onChange(e)}
-					/>
+				<div className={classnames({ error: bytecode.error, 'error-wrap': true })}>
+					<div className="action-wrap">
+						<Form.Field
+							label="ByteCode"
+							placeholder="Byte Code"
+							control="textarea"
+							name="bytecode"
+							value={bytecode.value}
+							onChange={(e) => this.onChange(e)}
+						/>
+
+					</div>
 					<span className="error-message">{bytecode.error}</span>
 				</div>
-				{this.props.isChecked ? this.renderWatchListData() : null}
+				<div className={classnames({ active: this.props.addToWatchList, 'shrink-wrap': true })}>
+					<div className="check orange">
+						<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.props.addToWatchList} />
+						<label className="label" htmlFor="addToWatchList">
+							<span className="label-text">Add to watch list</span>
+						</label>
+					</div>
+					<div className="shrink">
+						{this.renderWatchListData()}
+					</div>
+					<Button
+						basic
+						type="submit"
+						color="orange"
+						className={classnames({ disabled: this.isDisabledSubmit() })}
+						onClick={(e) => this.onClick(e)}
+						content="Create contract"
+					/>
+				</div>
+
 			</div>
 		);
 	}
@@ -83,7 +128,9 @@ FormComponent.propTypes = {
 	name: PropTypes.object.isRequired,
 	abi: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	isChecked: PropTypes.bool.isRequired,
+	addToWatchList: PropTypes.bool.isRequired,
+	createContract: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };
 export default connect(
@@ -91,9 +138,11 @@ export default connect(
 		bytecode: state.form.getIn([FORM_CREATE_CONTRACT, 'bytecode']),
 		name: state.form.getIn([FORM_CREATE_CONTRACT, 'name']),
 		abi: state.form.getIn([FORM_CREATE_CONTRACT, 'abi']),
-		isChecked: state.form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']),
+		addToWatchList: state.form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']),
 	}),
 	(dispatch) => ({
+		createContract: (value) => dispatch(createContract(value)),
+		setValue: (field, value) => dispatch(setValue(FORM_CREATE_CONTRACT, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 	}),

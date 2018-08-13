@@ -36,7 +36,9 @@ div,span {
 	-webkit-appearance: none;
 	border-radius: 0;
 }
-
+.hidden {
+    display: none;
+}
 .pointer {
     cursor: pointer;
 }
@@ -50,8 +52,11 @@ div,span {
 	flex: 1;
 	&.center-mode {
 		display: flex;
-		align-items: center;
         justify-content: center;
+        .user-form,
+        .main-form {
+            margin-top: 10vh;
+        }
 		div {
 			width: 100%;
 		}
