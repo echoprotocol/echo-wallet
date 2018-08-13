@@ -86,7 +86,7 @@ FormComponent.propTypes = {
 	confirmPassword: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
+	loading: PropTypes.bool.isRequired,
 };
 
 export default connect(
