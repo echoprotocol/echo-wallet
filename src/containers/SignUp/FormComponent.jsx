@@ -29,14 +29,23 @@ class FormComponent extends React.Component {
 	}
 
 	render() {
-		const { accountName, generatedPassword, confirmPassword } = this.props;
+		const {
+			accountName, generatedPassword, confirmPassword, loading,
+		} = this.props;
 
 		return (
 			<div className="field-wrap">
 				<Form.Field>
 					<label htmlFor="accountName">Account name (public)</label>
 					<div className={accountName.error ? 'error' : ''}>
-						<input name="accountName" className="ui input" placeholder="Account name" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
+						<input
+							name="accountName"
+							className="ui input"
+							placeholder="Account name"
+							value={accountName.value}
+							onChange={(e) => this.onChange(e, true)}
+							disabled={loading}
+						/>
 						<span className="error-message">{accountName.error}</span>
 					</div>
 				</Form.Field>
@@ -54,7 +63,14 @@ class FormComponent extends React.Component {
 				<Form.Field>
 					<label htmlFor="confirmPassword">Confirm password</label>
 					<div className={confirmPassword.error ? 'error' : ''}>
-						<input name="confirmPassword" className="ui input" placeholder="Confirm password" value={confirmPassword.value} onChange={(e) => this.onChange(e)} />
+						<input
+							name="confirmPassword"
+							className="ui input"
+							placeholder="Confirm password"
+							value={confirmPassword.value}
+							onChange={(e) => this.onChange(e)}
+							disabled={loading}
+						/>
 						<span className="error-message">{confirmPassword.error}</span>
 					</div>
 				</Form.Field>
@@ -70,6 +86,7 @@ FormComponent.propTypes = {
 	confirmPassword: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 
 export default connect(
@@ -77,6 +94,7 @@ export default connect(
 		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),
 		generatedPassword: state.form.getIn([FORM_SIGN_UP, 'generatedPassword']),
 		confirmPassword: state.form.getIn([FORM_SIGN_UP, 'confirmPassword']),
+		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_UP, field, value)),
