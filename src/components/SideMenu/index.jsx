@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-import { toggleBar } from '../../actions/GlobalActions';
+
+import { toggleBar, hideBar } from '../../actions/GlobalActions';
 import {
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
@@ -41,36 +43,49 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
 							<li>
-								<Link className="sidebar-nav-link active" to={CREATE_CONTRACT_PATH}>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									onClick={() => this.props.hideBar()}
+									to={CREATE_CONTRACT_PATH}
+								>
 									<span className="icon icon-contractAdd" />
 									<span className="sidebar-nav-text">Create Smart Contract</span>
-								</Link>
+								</NavLink>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to={CONTRACT_LIST_PATH}>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									to={CONTRACT_LIST_PATH}
+									onClick={() => this.props.hideBar()}
+								>
 									<span className="icon icon-contractSearch" />
 									<span className="sidebar-nav-text">View Smart Contract</span>
-								</Link>
+								</NavLink>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to={ADD_CONTRACT_PATH}>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									to={ADD_CONTRACT_PATH}
+									onClick={() => this.props.hideBar()}
+								>
 									<span className="icon icon-contractCopy" />
 									<span className="sidebar-nav-text">Added Smart Contract</span>
-								</Link>
+								</NavLink>
 							</li>
 							<li>
-								<Link className="sidebar-nav-link" to={INDEX_PATH}>
+								<NavLink
+									className="sidebar-nav-link"
+									exact
+									to={INDEX_PATH}
+									onClick={() => this.props.hideBar()}
+								>
 									<span className="icon icon-recent-activity" />
 									<span className="sidebar-nav-text">Recent Activity</span>
-								</Link>
+								</NavLink>
 							</li>
-							{/* <li>
-								<Link className="sidebar-nav-link" to={INDEX_PATH}>
-									<span className="icon icon-recent-activity" />
-									<span className="sidebar-nav-text">Voting</span>
-								</Link>
-							</li> */}
-
 						</ul>
 					</div>
 
@@ -85,13 +100,16 @@ SidebarMenu.propTypes = {
 
 	visibleBar: PropTypes.bool.isRequired,
 	toggleBar: PropTypes.func.isRequired,
+	hideBar: PropTypes.func.isRequired,
 };
 
-export default connect(
+export default withRouter(connect(
 	(state) => ({
 		visibleBar: state.global.get('visibleBar'),
 	}),
 	(dispatch) => ({
 		toggleBar: (value) => dispatch(toggleBar(value)),
+		hideBar: () => dispatch(hideBar()),
 	}),
-)(SidebarMenu);
+)(SidebarMenu));
+

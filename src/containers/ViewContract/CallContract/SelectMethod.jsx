@@ -17,6 +17,11 @@ class SelectMethod extends React.Component {
 		};
 	}
 
+	componentWillMount() {
+		if (!this.props.functions.size) return;
+		this.setFunction(this.props.functions.get(0).name);
+	}
+
 	onSearch(e) {
 		this.setState({ searchText: e.target.value });
 	}
