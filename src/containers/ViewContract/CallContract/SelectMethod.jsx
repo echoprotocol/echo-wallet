@@ -4,7 +4,7 @@ import { Dropdown, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
-import { setFunction } from '../../../actions/TransactionActions';
+import { setFunction } from '../../../actions/ContractActions';
 
 class SelectMethod extends React.Component {
 
@@ -70,12 +70,12 @@ class SelectMethod extends React.Component {
 			<Form.Field>
 				<label htmlFor="Method">Select method</label>
 				<Dropdown
-					placeholder="Enter method or choose it from dropdown list"
+					placeholder="Select method"
 					search
 					searchQuery={searchText}
 					fluid
 					closeOnBlur
-					text={functionName.value}
+					text={functionName}
 					open={this.state.isOpenDropdown}
 					onClick={(e) => this.onToggleDropdown(e)}
 					onSearchChange={(e) => this.onSearch(e)}
@@ -96,7 +96,7 @@ class SelectMethod extends React.Component {
 SelectMethod.propTypes = {
 	functions: PropTypes.object,
 	setFunction: PropTypes.func.isRequired,
-	functionName: PropTypes.object.isRequired,
+	functionName: PropTypes.string.isRequired,
 };
 
 SelectMethod.defaultProps = {

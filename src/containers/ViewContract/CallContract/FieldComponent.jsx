@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue } from '../../../actions/FormActions';
@@ -15,23 +16,21 @@ class TabCallContracts extends React.Component {
 			this.props.setFormValue(field, value);
 		}
 	}
-
 	render() {
 		const { field, data } = this.props;
 		return (
-			<Form.Field>
-				<label htmlFor={field}>{field}</label>
-				<div className="ui">
-					<input
-						name={field}
-						className="ui input"
-						placeholder={field}
-						value={data.value}
-						onChange={(e) => this.onChange(e)}
-					/>
-					{data.error && <span className="error-message">{data.error}</span>}
-				</div>
-			</Form.Field>
+			<div className={classnames({ error: data.error, 'action-wrap textarea-wrap': true })}>
+
+				<Form.Field
+					control="input"
+					name={field}
+					placeholder={field}
+					value={data.value}
+					label={field}
+					onChange={(e) => this.onChange(e)}
+				/>
+				<span className="error-message">{data.error}</span>
+			</div>
 		);
 	}
 
