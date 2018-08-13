@@ -224,8 +224,8 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const queryResult = await getContractConstant(
 		instance,
-		accountId,
 		contractId,
+		accountId,
 		getMethod(method, args),
 	);
 
