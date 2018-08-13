@@ -22,7 +22,7 @@ import { toInt, toUtf8 } from '../helpers/FormatHelper';
 import { FORM_ADD_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
-import { setFormError, setValue } from './FormActions';
+import { setFormError, setValue, pushForm } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 
 import GlobalReducer from '../reducers/GlobalReducer';
@@ -223,13 +223,12 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const queryResult = '00000000000';
-	// const queryResult = await getContractConstant(
-	// 	instance,
-	// 	accountId,
-	// 	contractId,
-	// 	getMethod(method, args),
-	// );
+	const queryResult = await getContractConstant(
+		instance,
+		accountId,
+		contractId,
+		getMethod(method, args),
+	);
 
 	const constants = getState().contract.get('constants');
 	const newConstants = constants.toJS().map((constant) => {
@@ -239,7 +238,7 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 		return constant;
 	});
 
-	// dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
+	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 };
 
 export const formatAbi = (contractName, isConst) => async (dispatch, getState) => {
@@ -256,14 +255,18 @@ export const formatAbi = (contractName, isConst) => async (dispatch, getState) =
 		let constants = abi.filter((value) =>
 			value.constant && value.name);
 
-		// const inputs = constants
-		// 	.filter((value) => value.inputs.length)
-		// 	.map((constant) => {
-		// 		return({
-		// 		name: constant.name,
-		// 		inputs: constant.inputs,
-		// 	})
-		// 	});
+		constants.forEach((constant) => {
+			if (constant.inputs.length) {
+				Object.keys(constant.inputs).forEach((input) => {
+					dispatch(pushForm(
+						FORM_VIEW_CONTRACT,
+						[constant.name, input],
+						{ value: '', error: null },
+
+					));
+				});
+			}
+		});
 
 		constants = constants.map(async (constant) => {
 			const method = formatSignature(constant);
@@ -271,6 +274,8 @@ export const formatAbi = (contractName, isConst) => async (dispatch, getState) =
 				await getContractConstant(instance, contractId, accountId, method);
 			if (constant.outputs[0].type === 'string') {
 				constantValue = toUtf8(constantValue.substr(-64));
+			} else if (constant.outputs[0].type === 'bool') {
+				constantValue = !!toInt(constantValue.substr(-64));
 			} else {
 				constantValue = toInt(constantValue.substr(-64));
 			}

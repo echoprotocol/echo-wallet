@@ -3,10 +3,44 @@ import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
+import { convertContractConstant } from '../../../helpers/FormatHelper';
+
 class ConstantLine extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			valueType: undefined,
+			constantValue: undefined,
+		};
+	}
+
+	componentWillMount() {
+		const { constant } = this.props;
+		if (constant.outputs[0].type === 'string') {
+			this.setState({ valueType: 'string' });
+		} else if (constant.outputs[0].type === 'bool') {
+			this.setState({ valueType: 'bool' });
+		} else {
+			this.setState({ valueType: 'number' });
+		}
+		this.setState({ constantValue: constant.constantValue });
+	}
+
+	onChange(e, data) {
+		const { constantValue } = this.state;
+		const result = convertContractConstant(data.value, this.state.valueType, constantValue);
+		if (result) {
+			this.setState({
+				constantValue: result.value,
+				valueType: result.type,
+			});
+		}
+	}
 
 	render() {
 		const { constant, typeOptions } = this.props;
+		const value = this.state.constantValue;
 		return (
 			<div className="watchlist-line">
 				<div className="watchlist-row">
@@ -18,15 +52,15 @@ class ConstantLine extends React.Component {
 					</div>
 					<div className="watchlist-col">
 						<Dropdown
-							placeholder={constant.outputs[0].type}
+							placeholder={this.state.valueType}
 							compact
 							selection
 							className="item contract-type-dropdown air"
 							options={typeOptions}
+							onChange={(e, data) => this.onChange(e, data)}
 						/>
-						{/* Можно добавить класс blue */}
 						<span className="value item">
-							{constant.constantValue}
+							{value.toString()}
 						</span>
 					</div>
 				</div>

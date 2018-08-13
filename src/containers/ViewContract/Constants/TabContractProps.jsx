@@ -18,29 +18,44 @@ class TabContractProps extends React.Component {
 	render() {
 		const { constants } = this.props;
 
-		const typeOptions = [
-			{
-				text: 'unit256',
-				value: 'unit256',
-			},
-			{
-				text: 'bytes32',
-				value: 'bytes32',
-			},
-			{
-				text: 'address',
-				value: 'address',
-			},
-		];
-
 		return (
 			<div className="tab-content">
 				<div className="watchlist">
 					{constants.toJS().length ? constants.toJS().map((constant, index) => {
 						const id = index;
+
+						let typeOptions = [
+							{
+								text: constant.outputs[0].type === 'string' ? 'string' : 'number',
+								value: constant.outputs[0].type === 'string' ? 'string' : 'number',
+							},
+							{
+								text: 'hex',
+								value: 'hex',
+							},
+						];
+
+						if (constant.outputs[0].type === 'bool') {
+							typeOptions = [
+								{
+									text: 'bool',
+									value: 'bool',
+								},
+								{
+									text: 'number',
+									value: 'number',
+								},
+								{
+									text: 'hex',
+									value: 'hex',
+								},
+							];
+						}
+
 						if (constant.inputs.length) {
 							return (<InputLine key={id} typeOptions={typeOptions} constant={constant} />);
 						}
+
 						return (<ConstantLine key={id} typeOptions={typeOptions} constant={constant} />);
 					}) : ''}
 				</div>

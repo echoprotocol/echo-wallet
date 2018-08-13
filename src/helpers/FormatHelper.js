@@ -56,4 +56,65 @@ export const toUtf8 = (hex) => {
 
 export const toInt = (hex) => parseInt(hex, 16);
 
+export const toHex = (str) => {
+	let hex;
+	let result = '';
+
+	for (let i = 0; i < str.length; i += 1) {
+		hex = str.charCodeAt(i).toString(16);
+		result += hex;
+	}
+
+	return result;
+};
+
+export const convertContractConstant = (toType, fromType, constantValue) => {
+	switch (toType) {
+		case fromType: return null;
+		case 'hex':
+			if (fromType === 'number') {
+				return {
+					value: constantValue.toString(16),
+					type: 'hex',
+				};
+			} else if (fromType === 'string') {
+				return {
+					value: toHex(constantValue),
+					type: 'hex',
+				};
+			} else if (fromType === 'bool') {
+				return {
+					value: constantValue ? 1 : 0,
+					type: 'hex',
+				};
+			}
+			return {
+				value: toHex(constantValue.toString()),
+				type: 'hex',
+			};
+		case 'string':
+			return {
+				value: toUtf8(constantValue),
+				type: 'string',
+			};
+		case 'number':
+			if (fromType === 'bool') {
+				return {
+					value: constantValue ? 1 : 0,
+					type: 'number',
+				};
+			}
+			return {
+				value: toInt(constantValue),
+				type: 'number',
+			};
+		case 'bool':
+			return {
+				value: !!toInt(constantValue),
+				type: 'number',
+			};
+		default: return null;
+	}
+};
+
 export const formatAmount = (amount, precision, symbol) => accounting.formatMoney(amount / (10 ** precision), symbol, precision, ' ', '.', '%v %s');

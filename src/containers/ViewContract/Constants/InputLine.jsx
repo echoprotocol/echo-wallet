@@ -1,13 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
-import { push } from '../../../actions/FormActions';
 import SingleInput from './SingleInput';
-import ButtonCall from './ButtonComponent';
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+import { contractQuery } from '../../../actions/ContractActions';
 
 class InputLine extends React.Component {
+
+	constructor() {
+		super();
+		this.state = { showResult: false };
+	}
+
+	onQuery() {
+		const { inputField, constant, contractId } = this.props;
+		const args = Object.keys(constant.inputs).map((input) => inputField.toJS()[`${constant.name},${input}`].value);
+		this.props.contractQuery(constant, args, contractId);
+		this.setState({ showResult: true });
+	}
 
 	render() {
 		const { constant, typeOptions } = this.props;
@@ -31,7 +42,6 @@ class InputLine extends React.Component {
 						{
 							constant.inputs.map((input, index) => {
 								const id = index;
-								this.props.push([constant.name, id], { value: '', error: null });
 								if (id !== 0) {
 									return (
 										<div key={id} >
@@ -45,9 +55,20 @@ class InputLine extends React.Component {
 								);
 							})
 						}
-						<ButtonCall constant={constant} />
+						<Button className="item" size="mini" content="call" onClick={() => this.onQuery()} />
 					</div>
 				</div>
+				{
+					this.state.showResult &&
+						<div className="watchlist-row">
+							<div className="watchlist-col" />
+							<div className="watchlist-col">
+								<span>
+									{constant.constantValue}
+								</span>
+							</div>
+						</div>
+				}
 			</div>
 		);
 	}
@@ -57,13 +78,20 @@ class InputLine extends React.Component {
 InputLine.propTypes = {
 	typeOptions: PropTypes.array.isRequired,
 	constant: PropTypes.object.isRequired,
-	push: PropTypes.func.isRequired,
+	inputField: PropTypes.object,
+	contractId: PropTypes.string.isRequired,
+	contractQuery: PropTypes.func.isRequired,
 };
 
+InputLine.defaultProps = {
+	inputField: null,
+};
 export default connect(
 	(state) => ({
+		inputField: state.form.getIn([FORM_VIEW_CONTRACT]),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
-		push: (field, param) => dispatch(push(FORM_VIEW_CONTRACT, field, param)),
+		contractQuery: (method, args, contractId) => dispatch(contractQuery(method, args, contractId)),
 	}),
 )(InputLine);

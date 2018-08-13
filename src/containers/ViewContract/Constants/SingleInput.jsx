@@ -3,18 +3,9 @@ import { connect } from 'react-redux';
 import { Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
-import { setFormValue, push } from '../../../actions/FormActions';
+import { setFormValue } from '../../../actions/FormActions';
 
 class SingleInput extends React.Component {
-
-	// constant: true
-	// constantValue: "Example Fixed Supply Token"
-	// inputs: []
-	// name: "name"
-	// outputs: [{…}]
-	// payable: false
-	// stateMutability: "view"
-	// type: "function"
 
 	onChange(e) {
 		const field = e.target.name;
@@ -59,7 +50,6 @@ export default connect(
 		inputField: state.form.getIn([FORM_VIEW_CONTRACT]),
 	}),
 	(dispatch) => ({
-		push: (field, param) => dispatch(push(FORM_VIEW_CONTRACT, field, param)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
 	}),
 )(SingleInput);
