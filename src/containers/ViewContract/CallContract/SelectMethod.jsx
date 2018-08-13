@@ -45,7 +45,7 @@ class SelectMethod extends React.Component {
 
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
-		const list = this.props.functions.reduce((arr, f, i) => {
+		const list = this.props.functions.reduce((arr, f) => {
 			if (search && !f.name.toLowerCase().match(search)) {
 				return arr;
 			}

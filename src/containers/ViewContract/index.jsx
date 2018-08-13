@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab} from 'semantic-ui-react';
+import { Tab } from 'semantic-ui-react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
