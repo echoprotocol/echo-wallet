@@ -41,7 +41,7 @@ class Activity extends React.Component {
 		const { history } = this.props;
 
 		return (
-			<Table striped className="table-activity">
+			<Table className="table-activity">
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell>Operation</Table.HeaderCell>

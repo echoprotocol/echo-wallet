@@ -31,7 +31,7 @@ class SignUp extends React.Component {
 					<ButtonComponent />
 					<span className="sign-nav">
 						Have an account?
-						<Link className="link orange" to={SIGN_IN_PATH}> Login</Link>
+						<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
 					</span>
 				</Form>
 			</div>

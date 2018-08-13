@@ -1154,7 +1154,18 @@ i.icon.contao:before {
   content: "\f26d";
 }
 i.icon.copy:before {
-  content: "\f0c5";
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\e905";
 }
 i.icon.copyright:before {
   content: "\f1f9";
@@ -3670,7 +3681,19 @@ i.icon.selected.radio:before {
   content: "\f192";
 }
 i.icon.send:before {
-  content: "\f1d8";
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\E91B";
 }
 i.icon.setting:before {
   content: "\f013";

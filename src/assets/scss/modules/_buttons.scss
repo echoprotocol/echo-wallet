@@ -29,18 +29,22 @@ $stripe-width: 10px;
         background-color: transparent;
         border-color: transparent;
         color: #aeb4c0;
+        i {
+            color: #aeb4c0;
+        }
         text-transform: capitalize;
         font-size: 1em;
         padding: 8.5px 0;
         margin: 0;
         &.large {
-            font-size: 1.2em;
+            font-size: 1.1em;
             min-height: auto;
             padding: 0;
             line-height: 1;
             margin: 0;
             align-self: flex-start;
             margin: -2px 0 0;
+            letter-spacing: -.4px;
         }
     }
 }
@@ -49,13 +53,22 @@ $stripe-width: 10px;
     0% {background-position: 0px}
     100% {background-position: $stripe-width}
 }
-
-.ui.basic.orange.button {
-    transition: background-color .4s !important;
-    transition: color .3s;
-    &:hover {
-        background-color: $orange !important;
-        color: #fff !important;
+.ui {
+    &.orange.button {
+        &:focus {
+            background-color: rgba($orange,.185);
+            color: $orange;
+            box-shadow: 0px 0px 0px 1px $orange inset;
+        }
+        &.basic {
+            transition: background-color .4s !important;
+            transition: color .3s;
+            &:hover,
+            &:focus {
+                background-color: $orange !important;
+                color: #fff !important;
+            }
+        }
 
     }
 }

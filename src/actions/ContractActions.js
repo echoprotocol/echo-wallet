@@ -1,8 +1,13 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
+
 
 import { getContract, getContractConstant, getContractResult } from '../api/ContractApi';
 
-import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
+import { getMethod, getContractId } from '../helpers/ContractHelper';
+
+import GlobalReducer from '../reducers/GlobalReducer';
+import ContractReducer from '../reducers/ContractReducer';
+
 import {
 	validateAbi,
 	validateContractName,
@@ -15,8 +20,6 @@ import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
 import { setFormError, setValue } from './FormActions';
 import { push, remove, update } from './GlobalActions';
-
-import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
@@ -189,31 +192,20 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 };
 
-export const formatAbi = (contractId, isConst) => async (dispatch, getState) => {
-
-	const instance = getState().echojs.getIn(['system', 'instance']);
+export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const abi = JSON.parse(localStorage.getItem('contracts'))[accountId][contractId];
 
-	if (isConst) {
-		let constants = abi.filter((value) =>
-			value.constant && value.name && !value.inputs.length);
+	const contracts = JSON.parse(localStorage.getItem('contracts'));
+	const abi = JSON.parse(contracts[accountId][contractName].abi);
 
-		constants = constants.map(async (constant) => {
-			const method = getMethodId(constant);
-			const constantValue =
-				await getContractConstant(instance, accountId, contractId, method);
-			return Object.defineProperty(constant, 'constantValue', {
-				value: constantValue,
-				writable: true,
-				enumerable: true,
-				configurable: true,
-			});
-		});
+	let constants = abi.filter((value) =>
+		value.constant && value.name && !value.inputs.length);
 
-		await Promise.all(constants);
-	} else {
-		abi.filter((value) => !value.constant && value.name && value.type === 'function');
-	}
+	constants = await Promise.all(constants);
+	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(constants) }));
+
+	const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
+	dispatch(ContractReducer.actions.set({ field: 'functions', value: new List(functions) }));
+
 };
