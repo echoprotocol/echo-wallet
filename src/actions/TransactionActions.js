@@ -460,21 +460,3 @@ export const callContract = () => async (dispatch, getState) => {
 
 };
 
-export const setFunction = (functionName) => (dispatch, getState) => {
-	const functions = getState().contract.get('functions') || [];
-
-	const targetFunction = functions.find((f) => (f.name === functionName));
-
-	if (!targetFunction) return;
-
-	dispatch(clearForm(FORM_CALL_CONTRACT));
-
-	targetFunction.inputs.forEach((i) => {
-		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
-	});
-
-	dispatch(setValue(FORM_CALL_CONTRACT, 'functionName', functionName));
-	if (!targetFunction.payable) return;
-
-	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
-};

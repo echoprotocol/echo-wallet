@@ -4,7 +4,7 @@ import { Dropdown, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
-import { setFunction } from '../../../actions/TransactionActions';
+import { setFunction } from '../../../actions/ContractActions';
 
 class SelectMethod extends React.Component {
 

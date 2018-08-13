@@ -18,10 +18,10 @@ import {
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
-import { FORM_ADD_CONTRACT } from '../constants/FormConstants';
+import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
-import { setFormError, setValue } from './FormActions';
+import { setFormError, setValue, setInFormValue, clearForm } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 
 import history from '../history';
@@ -212,4 +212,23 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	dispatch(ContractReducer.actions.set({ field: 'functions', value: new List(functions) }));
 	dispatch(ContractReducer.actions.set({ field: 'id', value: contractId }));
 
+};
+
+export const setFunction = (functionName) => (dispatch, getState) => {
+	const functions = getState().contract.get('functions') || [];
+
+	const targetFunction = functions.find((f) => (f.name === functionName));
+
+	if (!targetFunction) return;
+
+	dispatch(clearForm(FORM_CALL_CONTRACT));
+
+	targetFunction.inputs.forEach((i) => {
+		dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', i.name], ''));
+	});
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'functionName', functionName));
+	if (!targetFunction.payable) return;
+
+	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
