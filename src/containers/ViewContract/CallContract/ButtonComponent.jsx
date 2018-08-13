@@ -15,10 +15,12 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (<Button type="submit" color="orange" className="load">Creating...</Button>);
+		return (<Button type="submit" color="orange" className="load">Sending...</Button>);
 	}
 
 	renderSubmit() {
+		if (!this.props.functionName) return null;
+
 		return (
 			<div className="form-panel">
 				<Button
@@ -34,8 +36,7 @@ class ButtonComponent extends React.Component {
 	}
 
 	render() {
-		const { loading, functionForm } = this.props;
-		if (!functionForm.get('functionName')) return null;
+		const { loading } = this.props;
 
 		return loading ? this.renderLoading() : this.renderSubmit();
 	}
@@ -45,7 +46,7 @@ class ButtonComponent extends React.Component {
 ButtonComponent.propTypes = {
 	callContract: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
-	functionForm: PropTypes.object.isRequired,
+	functionName: PropTypes.string.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -55,7 +56,7 @@ ButtonComponent.defaultProps = {
 export default connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_CALL_CONTRACT, 'loading']),
-		functionForm: state.form.get(FORM_CALL_CONTRACT),
+		functionName: state.form.getIn([FORM_CALL_CONTRACT, 'functionName']),
 	}),
 	(dispatch) => ({
 		callContract: (fn, fnForm) => dispatch(callContract(fn, fnForm)),

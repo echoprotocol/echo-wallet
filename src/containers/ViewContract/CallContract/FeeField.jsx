@@ -8,7 +8,7 @@ import { formatAmount } from '../../../helpers/FormatHelper';
 import { setValue } from '../../../actions/FormActions';
 import { getFee } from '../../../actions/TransactionActions';
 
-import { FORM_TRANSFER } from '../../../constants/FormConstants';
+import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -17,7 +17,7 @@ class FeeComponent extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const { fee, comment, currency } = this.props;
+		const { fee, currency } = this.props;
 
 		if (!fee.asset && nextProps.assets) { return true; }
 
@@ -25,15 +25,13 @@ class FeeComponent extends React.Component {
 
 		if (fee.asset.id && nextProps.fee.asset.id) { return true; }
 
-		if (comment.value !== nextProps.comment.value) { return true; }
-
 		if (currency && currency.type !== nextProps.currency.type) { return true; }
 
 		return false;
 	}
 
 	onFee(fee) {
-		this.props.setValue(this.props.form, 'fee', fee);
+		this.props.setValue('fee', fee);
 	}
 
 	getOptions() {
@@ -43,7 +41,6 @@ class FeeComponent extends React.Component {
 			const fee = this.props.getFee(
 				type === 'tokens' ? 'contract' : 'transfer',
 				id,
-				this.props.comment.value,
 			);
 
 			return {
@@ -71,9 +68,7 @@ class FeeComponent extends React.Component {
 		const options = this.getOptions();
 		const text = this.getText(options);
 
-		// TODO add styles for fee error
 		return (
-			// if elements =< 1 add class no-choice
 			<Form.Field>
 				<label htmlFor="Method">fee</label>
 				<Dropdown selection options={options} text={text} />
@@ -87,11 +82,9 @@ FeeComponent.propTypes = {
 	assets: PropTypes.any,
 	fee: PropTypes.any,
 	currency: PropTypes.any,
-	comment: PropTypes.any.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	loadGlobalObject: PropTypes.func.isRequired,
-	form: PropTypes.string.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -101,17 +94,13 @@ FeeComponent.defaultProps = {
 };
 
 export default connect(
-	(state, ownProps) => {
-		const { form } = ownProps;
-		return {
-			assets: state.balance.get('assets').toArray(),
-			fee: state.form.getIn([form, 'fee']),
-			currency: state.form.getIn([form, 'currency']),
-			comment: form === FORM_TRANSFER ? state.form.getIn([FORM_TRANSFER, 'comment']) : {},
-		};
-	},
+	(state) => ({
+		assets: state.balance.get('assets').toArray(),
+		fee: state.form.getIn([FORM_CALL_CONTRACT, 'fee']),
+		currency: state.form.getIn([FORM_CALL_CONTRACT, 'currency']),
+	}),
 	(dispatch) => ({
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
+		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
 		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
 		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
 	}),
