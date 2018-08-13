@@ -40,13 +40,13 @@ class SelectMethod extends React.Component {
 
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
-		const list = this.props.functions.reduce((arr, f) => {
+		const list = this.props.functions.reduce((arr, f, i) => {
 			if (search && !f.name.toLowerCase().match(search)) {
 				return arr;
 			}
 
 			arr.push((
-				<Dropdown.Item key={f.name} onClick={(e) => this.setFunction(f.name, e)}>
+				<Dropdown.Item key={f.name} selected={i === 0} onClick={(e) => this.setFunction(f.name, e)}>
 					{f.name}
 				</Dropdown.Item>
 			));

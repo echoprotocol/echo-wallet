@@ -47,7 +47,7 @@ class Header extends React.Component {
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button
-						icon="icon-send"
+						icon="send"
 						className="transparent"
 						content="Send"
 						onClick={(e) => this.onSend(e)}

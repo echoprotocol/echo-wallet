@@ -57,11 +57,14 @@ div,span {
 		}
 	}
 }
-
-.link.orange {
-	color: $orange;
+.link {
+    &:focus {
+        text-decoration: underline;
+    }
+    &.orange {
+        color: $orange;
+    }
 }
-
 
 // ANIMATIONS 
 
