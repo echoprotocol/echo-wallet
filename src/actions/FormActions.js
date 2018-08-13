@@ -88,5 +88,31 @@ export const setIn = (form, field, params) => (dispatch) => {
 };
 
 export const pushForm = (field, param, value) => (dispatch) => {
-	dispatch(FormReducer.actions.push({ field, param, value }));
+	dispatch(FormReducer.actions.push({
+		field,
+		param,
+		value,
+	}));
+};
+
+/**
+ * Set multiple params by field
+ * @param {String} form
+ * @param {String} field
+ * @param value
+ * @returns {Function}
+ */
+export const setInFormValue = (form, fields, value) => (dispatch) => {
+	dispatch(FormReducer.actions.setInFormValue({ form, fields, value }));
+};
+
+/**
+ * Set multiple params by field
+ * @param {String} form
+ * @param {Array} fields
+ * @param value
+ * @returns {Function}
+ */
+export const setInFormError = (form, fields, value) => (dispatch) => {
+	dispatch(FormReducer.actions.setInFormError({ form, fields, value }));
 };

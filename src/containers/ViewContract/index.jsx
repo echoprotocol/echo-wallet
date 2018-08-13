@@ -4,19 +4,22 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
-import TabContractProps from './Constants/TabContractProps';
-import TabCallContracts from './TabCallContracts';
-
-import { updateContractName, disableContract } from '../../actions/ContractActions';
+import { updateContractName, disableContract, formatAbi } from '../../actions/ContractActions';
 import { clearForm, setFormValue } from '../../actions/FormActions';
 
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 
-class ViewContract extends React.Component {
+import TabCallContracts from './CallContract/TabCallContracts';
+import TabContractProps from './Constants/TabContractProps';
 
+class ViewContract extends React.Component {
 	constructor() {
 		super();
 		this.state = { isEditName: false };
+	}
+
+	componentWillMount() {
+		this.props.formatAbi(this.props.match.params.name);
 	}
 
 	onChange(e) {
@@ -139,6 +142,8 @@ ViewContract.propTypes = {
 	disableContract: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+	match: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(
@@ -151,5 +156,6 @@ export default withRouter(connect(
 		disableContract: (name) => dispatch(disableContract(name)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
 		clearForm: (value) => dispatch(clearForm(value)),
+		formatAbi: (value) => dispatch(formatAbi(value)),
 	}),
 )(ViewContract));

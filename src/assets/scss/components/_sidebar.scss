@@ -10,27 +10,58 @@
         font-size: 30px;
     }
     &-close {
-        margin-left: auto;        
+        margin-left: auto;
+    }
+    &-logo,
+    &-close {
+        transition: opacity .5;
+        opacity: 0;
+        width: 0;
+        z-index: -1;
+    }
+    .icon {
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        font-size: 20px;
+        margin-right: 10px;
+        &-menu {
+            position: absolute;
+            transition: opacity .5s, color .3s;
+            opacity: 1;
+            width: 60px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            left: 0;
+        }
     }
     &-header {
-        padding: 20px 20px 0;
+        padding: 0 20px;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+        height: 50px;
         .icon-menu,
         .icon-close {
-            display: block;
             cursor: pointer;
             color: #c4c5ca;
-            transition: color .3s;
             &:hover {
                 color: $link-gray;
             }
         }
+        .icon-close {
+            transition: color .3s;
+        }
+
     }
     &-body {
         padding: 0;
         margin: 90px 0 30px; 
+        overflow: hidden;
     }
 
     &-footer {
@@ -47,156 +78,63 @@
             color: $link-gray;
             display: block;
             transition: background-color .3s;
-            &.accordion {
-                padding: 2px 0;
-                transition: padding .1s;
-            }
             .sidebar-nav-link {
                 display: flex;
-                min-height: 40px;
-                padding: 8px 20px;
+                min-height: 45px;
+                padding: 8px 15px;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
                 white-space: nowrap;
-            }
-            .icon {
-                display: block;
-                width: 20px;
-                height: 20px;
-                text-align: center;
-                line-height: 20px;
-                font-size: 22px;
-            }
-            a {
                 color: $link-gray;
+                border-left: 4px solid transparent;
+                transition: background-color .3s,border .3s, color .3s;
+                &:hover {
+                    background-color: rgba(#c5c9d2,.2);
+                    border-color: rgba(#c5c9d2,.2);
+
+                }
+                &.active {
+                    border-left: 4px solid $orange;
+                    background-color: #c5c9d2;
+                    color: #fff;
+                    pointer-events: none;
+                    .sidebar-nav-text {
+                        color: #fff;
+                    }
+                }
             }
         }
+        &-text {
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity .3s;       
+        }
     }
-    .accordion .content {
-        display: none;
-    }
-    
 }
 
-
-// FOR ANIMATION 
-
-.sidebar {
-    &-nav {
-        .ui.accordion {
-            .title {
-                display: flex;
-                justify-content: center;
-                white-space: nowrap;
-                margin: 0;
-                border-bottom: 1px solid transparent;
-            }
-        }   
-        &-text {
-            display: none;
-            margin-right: auto;
+.visible.sidebar {
+    .sidebar-logo,
+    .sidebar-close {
+        width: auto;
+        opacity: 1;
+        transition: opacity .3s;
+        z-index: initial;
+    }
+    .icon {
+        &-menu {
+            transition: none;
+            opacity: 0;
+            width: 0;
+            z-index: -1;
         }
     }
-    .accordeon-item {
-        height: 40px;
-        transition: background-color .3s,border .3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-left: 2px solid transparent;
-        padding-right: 2px;
-        animation: fadeIn 1s;
-        white-space: nowrap;
-        &:hover {
-            background-color: rgb(197, 201, 210);
-            border-left: 2px solid $orange;
-        }
-    }
-    &:not(.visible) {
-        .sidebar-nav {
-            li {
-                &.opened {
-                    .content {
-                        background-color: rgb(221, 222, 228);
-                    }
-                }
-            }
-            .ui.accordion {
-                .title {
-                    transition: border 2s;
-                    border-bottom: 1px solid $bd-gray;
-                    max-width: 60px;
-                    margin: auto;
-                    position: relative;
-                    &:before {
-                        position: absolute;
-                        font-size: 11px;
-                        font-family: 'Dropdown';
-                        line-height: 0;
-                        -webkit-backface-visibility: hidden;
-                        backface-visibility: hidden;
-                        font-weight: normal;
-                        font-style: normal;
-                        text-align: center;
-                        content: "\F0D7";
-                        transform: rotate(180deg);
-                        bottom: 2px;
-                        color: #aeb4c0;
-                    }
-                }
-            }   
-        }
-    }
-    &.visible {
-        .sidebar-nav {
-            li {
-                &.opened {
-                    background-color: rgb(221, 222, 228);
-                    padding: 10px 0;
-                }
-            }
-            .ui.accordion {
-                .title {
-                    margin: 0 20px;
-                }
-            }
-        }
-
+    .sidebar-nav {
         .sidebar-nav-text {
-            display: flex;
-            animation: fadeIn 1s;
+            display: block;
+            position: relative;
+            opacity: 1;
+            transition: opacity .3s;
+            transition-delay: .2s;
         }
-        .accordion {
-            &.ui.opened {
-                .title:after {
-                    display: flex;
-                }
-            }
-         }
-         .accordeon-item {
-            height: 40px;
-            transition: background-color .3s,border .3s;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding-left: 46px;
-            border-left: 4px solid transparent;
-            &:hover {
-                background-color: rgb(197, 201, 210);
-                border-left: 4px solid $orange;
-            }
-        }
-        .icon {
-            line-height: 1;
-            font-size: 20px;
-            margin-right: 10px;
-        }
-    }
-   .accordion {
-       &.ui.opened {
-           .title:after {
-               display: none;
-           }
-       }
     }
 }

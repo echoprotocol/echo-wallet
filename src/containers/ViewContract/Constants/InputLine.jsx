@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import SingleInput from './SingleInput';
-import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+
 import { contractQuery } from '../../../actions/ContractActions';
+
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 class InputLine extends React.Component {
 

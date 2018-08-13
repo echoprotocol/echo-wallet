@@ -4,10 +4,13 @@ import {
 	getContractId,
 	getContract,
 	getContractConstant,
-	formatSignature,
 	getContractResult,
 } from '../api/ContractApi';
 
+import GlobalReducer from '../reducers/GlobalReducer';
+import ContractReducer from '../reducers/ContractReducer';
+
+import { getMethod } from '../helpers/ContractHelper';
 import {
 	validateAbi,
 	validateContractName,
@@ -24,8 +27,6 @@ import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConst
 
 import { setFormError, setValue, pushForm } from './FormActions';
 import { push, remove, update } from './GlobalActions';
-
-import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
@@ -241,11 +242,15 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 };
 
-export const formatAbi = (contractName, isConst) => async (dispatch, getState) => {
+export const formatAbi = (contractName) => async (dispatch, getState) => {
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
+	const instance = getState()
+		.echojs
+		.getIn(['system', 'instance']);
 
-	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const accountId = getState()
+		.global
+		.getIn(['activeUser', 'id']);
 
 	const contractId = JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].id;
 
@@ -257,14 +262,17 @@ export const formatAbi = (contractName, isConst) => async (dispatch, getState) =
 
 		constants.forEach((constant) => {
 			if (constant.inputs.length) {
-				Object.keys(constant.inputs).forEach((input) => {
-					dispatch(pushForm(
-						FORM_VIEW_CONTRACT,
-						[constant.name, input],
-						{ value: '', error: null },
-
-					));
-				});
+				Object.keys(constant.inputs)
+					.forEach((input) => {
+						dispatch(pushForm(
+							FORM_VIEW_CONTRACT,
+							[constant.name, input],
+							{
+								value: '',
+								error: null
+							},
+						));
+					});
 			}
 		});
 
@@ -289,9 +297,19 @@ export const formatAbi = (contractName, isConst) => async (dispatch, getState) =
 
 		constants = await Promise.all(constants);
 
-		dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(constants) }));
+		dispatch(ContractReducer.actions.set({
+			field: 'constants',
+			value: new List(constants)
+		}));
 	} else {
-		abi.filter((value) => !value.constant && value.name && value.type === 'function');
+		const functions = abi.filter((value) => !value.constant && value.name && value.type === 'function');
+		dispatch(ContractReducer.actions.set({
+			field: 'functions',
+			value: new List(functions)
+		}));
 	}
-	dispatch(ContractReducer.actions.set({ field: 'id', value: contractId }));
-};
+	dispatch(ContractReducer.actions.set({
+		field: 'id',
+		value: contractId
+	}));
+}

@@ -56,7 +56,7 @@ export const toggleBar = (value) => (dispatch) => {
 };
 
 export const hideBar = () => (dispatch) => {
-	dispatch(GlobalReducer.actions.hideBar({ }));
+	dispatch(GlobalReducer.actions.hideBar());
 };
 
 export const push = (field, param, value) => (dispatch) => {

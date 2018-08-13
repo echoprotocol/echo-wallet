@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import { EchoJSActions } from 'echojs-redux';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
 import { getFee } from '../../actions/TransactionActions';
+
+import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -32,7 +33,7 @@ class FeeComponent extends React.Component {
 	}
 
 	onFee(fee) {
-		this.props.setValue('fee', fee);
+		this.props.setValue(this.props.form, 'fee', fee);
 	}
 
 	getOptions() {
@@ -87,6 +88,7 @@ FeeComponent.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	loadGlobalObject: PropTypes.func.isRequired,
+	form: PropTypes.string.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -96,14 +98,17 @@ FeeComponent.defaultProps = {
 };
 
 export default connect(
-	(state) => ({
-		assets: state.balance.get('assets').toArray(),
-		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
-		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
-		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
-	}),
+	(state, ownProps) => {
+		const { form } = ownProps;
+		return {
+			assets: state.balance.get('assets').toArray(),
+			fee: state.form.getIn([form, 'fee']),
+			currency: state.form.getIn([form, 'currency']),
+			comment: form === FORM_TRANSFER ? state.form.getIn([FORM_TRANSFER, 'comment']) : {},
+		};
+	},
 	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
+		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
 		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
 		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
 	}),

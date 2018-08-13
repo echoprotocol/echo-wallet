@@ -46,7 +46,13 @@ class Header extends React.Component {
 				<Link to={INDEX_PATH} className="icon-back" />
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
-					<Button color="blue" size="small" onClick={(e) => this.onSend(e)}>Send</Button>
+					<Button
+						icon="send"
+						className="transparent"
+						content="Send"
+						onClick={(e) => this.onSend(e)}
+						size="large"
+					/>
 					<div className="user-section">
 						<Link className="balance" to={BALANCES_PATH}>
 							<span>

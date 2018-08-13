@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+
 import { setFormValue } from '../../../actions/FormActions';
+
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 class SingleInput extends React.Component {
 
