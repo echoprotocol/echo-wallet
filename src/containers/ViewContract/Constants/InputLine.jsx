@@ -2,12 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { List } from 'immutable';
 import SingleInput from './SingleInput';
 
 import { contractQuery } from '../../../actions/ContractActions';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 import { convertContractConstant } from '../../../helpers/FormatHelper';
+import ContractReducer from '../../../reducers/ContractReducer';
 
 class InputLine extends React.Component {
 
@@ -16,7 +18,6 @@ class InputLine extends React.Component {
 		this.state = {
 			showResult: false,
 			valueType: undefined,
-			constantValue: undefined,
 		};
 	}
 
@@ -29,25 +30,38 @@ class InputLine extends React.Component {
 		} else {
 			this.setState({ valueType: 'number' });
 		}
-		this.setState({ constantValue: constant.constantValue });
 	}
 
 	onChange(e, data) {
-		const { constantValue } = this.state;
-		const result = convertContractConstant(data.value, this.state.valueType, constantValue);
+		const { constant, constants } = this.props;
+		const result = convertContractConstant(
+			data.value,
+			this.state.valueType,
+			constant.constantValue,
+		);
+
 		if (result) {
-			this.setState({
-				constantValue: result.value,
-				valueType: result.type,
+			const newConstants = constants.toJS().map((item) => {
+				if (item.name === constant.name) {
+					item.constantValue = result.value;
+				}
+				return item;
 			});
+
+			this.props.set(newConstants);
+
+			this.setState({ valueType: result.type });
 		}
 	}
 
 	onQuery() {
-		const { inputField, constant, contractId } = this.props;
+		const {
+			inputField, constant, contractId,
+		} = this.props;
 		const args = Object.keys(constant.inputs).map((input) => inputField.toJS()[`${constant.name},${input}`].value);
 		this.props.contractQuery(constant, args, contractId);
 		this.setState({ showResult: true });
+
 	}
 
 	render() {
@@ -107,22 +121,27 @@ class InputLine extends React.Component {
 }
 
 InputLine.propTypes = {
+	constants: PropTypes.any,
 	typeOptions: PropTypes.array.isRequired,
 	constant: PropTypes.object.isRequired,
 	inputField: PropTypes.object,
 	contractId: PropTypes.string.isRequired,
 	contractQuery: PropTypes.func.isRequired,
+	set: PropTypes.func.isRequired,
 };
 
 InputLine.defaultProps = {
 	inputField: null,
+	constants: null,
 };
 export default connect(
 	(state) => ({
+		constants: state.contract.get('constants'),
 		inputField: state.form.getIn([FORM_VIEW_CONTRACT]),
 		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		contractQuery: (method, args, contractId) => dispatch(contractQuery(method, args, contractId)),
+		set: (values) => dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(values) })),
 	}),
 )(InputLine);

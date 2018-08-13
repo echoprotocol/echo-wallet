@@ -221,12 +221,20 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const queryResult = await getContractConstant(
+	let queryResult = await getContractConstant(
 		instance,
 		contractId,
 		accountId,
 		getMethod(method, args),
 	);
+
+	if (method.outputs[0].type === 'string') {
+		queryResult = toUtf8(queryResult.substr(-64));
+	} else if (method.outputs[0].type === 'bool') {
+		queryResult = !!toInt(queryResult.substr(-64));
+	} else {
+		queryResult = toInt(queryResult.substr(-64));
+	}
 
 	const constants = getState().contract.get('constants');
 	const newConstants = constants.toJS().map((constant) => {
