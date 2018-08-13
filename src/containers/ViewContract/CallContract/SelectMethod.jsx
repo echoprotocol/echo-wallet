@@ -96,7 +96,7 @@ class SelectMethod extends React.Component {
 SelectMethod.propTypes = {
 	functions: PropTypes.object,
 	setFunction: PropTypes.func.isRequired,
-	functionName: PropTypes.object.isRequired,
+	functionName: PropTypes.string.isRequired,
 };
 
 SelectMethod.defaultProps = {

@@ -138,7 +138,6 @@ export const validateAbi = (str) => {
 };
 
 const validateInt = (value, isUint, size = 256) => {
-	value = Number(value);
 	if (!Number.isInteger(value)) return 'value should be integer';
 
 	if (isUint && value < 0) return 'value should be unsigned integer';
@@ -156,9 +155,8 @@ const validateInt = (value, isUint, size = 256) => {
 const validateString = (value) => (typeof value === 'string' ? null : 'Value should be a string');
 const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'Value should be in object id format');
 const validateBool = (value) => (typeof value === 'boolean' ? null : 'Value should be a boolean');
-const validateArray = (value, size = null) => (
-	(typeof value !== 'object' || value.length === undefined || (size && value.length !== size))
-		? 'Value should be an array' : null
+const validateArray = (value) => (
+	Array.isArray(value) ? null : 'Value should be an array'
 );
 
 export const validateByType = (value, type) => {
@@ -176,11 +174,17 @@ export const validateByType = (value, type) => {
 	} else if (type.search('bool') !== -1) {
 		method = validateBool;
 	} else if (type.search('byte') !== -1) {
+		try {
+			value = JSON.parse(value);
+		} catch (e) {
+			return 'value should be an array';
+		}
 		method = validateArray;
 		const match = type.match(/\d+/);
 		const matchResult = match ? match[0] : null;
 		size = (type === 'byte') ? 1 : matchResult;
 	} else if (intMark !== -1) {
+		value = Number(value);
 		method = validateInt;
 		isUint = (intMark === 1);
 		const match = type.match(/\d+/);
@@ -191,7 +195,11 @@ export const validateByType = (value, type) => {
 
 	const arrayMark = type.search('[]');
 	if (arrayMark !== -1) {
-		value = JSON.parse(value);
+		try {
+			value = JSON.parse(value);
+		} catch (e) {
+			return 'value should be an array';
+		}
 		let error = validateArray(value);
 		if (error) return error;
 		value.some((v) => {

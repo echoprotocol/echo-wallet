@@ -4,7 +4,7 @@ import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import AmountField from '../../../components/AmountField';
-import FeeField from '../../../components/AmountField/FeeField';
+// import FeeField from '../../../components/AmountField/FeeField';
 import SelectMethod from './SelectMethod';
 import ButtonComponent from './ButtonComponent';
 
@@ -13,6 +13,7 @@ import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setFormValue } from '../../../actions/FormActions';
 
 import Field from './FieldComponent';
+import FeeField from './FeeField';
 
 class TabCallContracts extends React.Component {
 

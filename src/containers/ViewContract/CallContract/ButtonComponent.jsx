@@ -10,10 +10,6 @@ import { clearForm } from '../../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
-	componentDidMount() {
-		this.props.clearForm();
-	}
-
 	onClick() {
 		this.props.callContract();
 	}
