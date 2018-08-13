@@ -13,6 +13,13 @@ import CurrencyField from './CurrencyField';
 
 class AmountField extends React.Component {
 
+	constructor() {
+		super();
+		this.state = {
+			amountFocus: false,
+		};
+	}
+
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
@@ -56,6 +63,12 @@ class AmountField extends React.Component {
 		return currency.balance - fee.value;
 	}
 
+	amountFocusToggle(e, value) {
+		this.setState({
+			amountFocus: !value,
+		});
+	}
+
 	render() {
 		const { assets, amount } = this.props;
 
@@ -78,9 +91,23 @@ class AmountField extends React.Component {
 						</li>
 					</ul>
 				</label>
-				<Input type="text" placeholder="Amount" action>
-					<div className={classnames('amount-wrap action-wrap', { error: amount.error })}>
-						<input className="amount" placeholder="Amount" value={amount.value} name="amount" onChange={(e) => this.onChangeAmount(e)} />
+				<Input
+					type="text"
+					placeholder="Amount"
+					tabIndex="0"
+					action
+					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
+				>
+					<div className="amount-wrap action-wrap">
+						<input
+							className="amount"
+							placeholder="Amount"
+							value={amount.value}
+							name="amount"
+							onChange={(e) => this.onChangeAmount(e)}
+							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+						/>
 						{ amount.error ? <span className="icon-error-red value-status" /> : null }
 						<span className="error-message">{amount.error}</span>
 					</div>
