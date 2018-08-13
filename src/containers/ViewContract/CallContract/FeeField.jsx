@@ -1,0 +1,107 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Dropdown, Form } from 'semantic-ui-react';
+import { EchoJSActions } from 'echojs-redux';
+
+import { formatAmount } from '../../../helpers/FormatHelper';
+import { setValue } from '../../../actions/FormActions';
+import { getFee } from '../../../actions/TransactionActions';
+
+import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
+
+class FeeComponent extends React.Component {
+
+	componentDidMount() {
+		this.props.loadGlobalObject();
+	}
+
+	shouldComponentUpdate(nextProps) {
+		const { fee, currency } = this.props;
+
+		if (!fee.asset && nextProps.assets) { return true; }
+
+		if (fee.value !== nextProps.fee.value) { return true; }
+
+		if (fee.asset.id && nextProps.fee.asset.id) { return true; }
+
+		if (currency && currency.type !== nextProps.currency.type) { return true; }
+
+		return false;
+	}
+
+	onFee(fee) {
+		this.props.setValue('fee', fee);
+	}
+
+	getOptions() {
+		const options = this.props.assets.map(({
+			id, precision, symbol, type,
+		}) => {
+			const fee = this.props.getFee(
+				type === 'tokens' ? 'contract' : 'transfer',
+				id,
+			);
+
+			return {
+				key: symbol,
+				value: fee ? fee.value : '',
+				text: fee ? formatAmount(fee.value, precision, symbol) : '',
+				onClick: (e) => this.onFee(fee, e),
+			};
+		});
+
+		return options;
+	}
+
+	getText(options) {
+		const { fee } = this.props;
+
+		if (fee && fee.value) {
+			return formatAmount(fee.value, fee.asset.precision, fee.asset.symbol);
+		}
+
+		return options[0] ? options[0].text : '';
+	}
+
+	render() {
+		const options = this.getOptions();
+		const text = this.getText(options);
+
+		return (
+			<Form.Field>
+				<label htmlFor="Method">fee</label>
+				<Dropdown selection options={options} text={text} />
+			</Form.Field>
+		);
+	}
+
+}
+
+FeeComponent.propTypes = {
+	assets: PropTypes.any,
+	fee: PropTypes.any,
+	currency: PropTypes.any,
+	setValue: PropTypes.func.isRequired,
+	getFee: PropTypes.func.isRequired,
+	loadGlobalObject: PropTypes.func.isRequired,
+};
+
+FeeComponent.defaultProps = {
+	fee: null,
+	assets: null,
+	currency: null,
+};
+
+export default connect(
+	(state) => ({
+		assets: state.balance.get('assets').toArray(),
+		fee: state.form.getIn([FORM_CALL_CONTRACT, 'fee']),
+		currency: state.form.getIn([FORM_CALL_CONTRACT, 'currency']),
+	}),
+	(dispatch) => ({
+		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
+		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
+		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
+	}),
+)(FeeComponent);

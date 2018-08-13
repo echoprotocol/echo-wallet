@@ -1,12 +1,15 @@
 import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 
+const DEFAULT_FIELDS = Map({
+	functions: List([]),
+	constants: List([]),
+	id: '',
+});
+
 export default createModule({
 	name: 'contract',
-	initialState: Map({
-		functions: List([]),
-		constants: List([]),
-	}),
+	initialState: DEFAULT_FIELDS,
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
@@ -17,8 +20,7 @@ export default createModule({
 		},
 		reset: {
 			reducer: (state) => {
-				state = state.set('functions', new List([]));
-				state = state.set('constants', new List([]));
+				state = DEFAULT_FIELDS;
 
 				return state;
 			},
