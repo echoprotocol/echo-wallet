@@ -1,4 +1,5 @@
 import { ChainValidation } from 'echojs-lib';
+import BN from 'bignumber.js';
 
 const reg = /^[0-9a-fA-F]+$/;
 
@@ -56,11 +57,9 @@ export const validateContractName = (name) => {
 
 export const validateContractId = (id) => {
 	id = id.split('.');
-
 	if (id.length !== 3 || id.splice(0, 2).join('.') !== '1.16' || Number.isInteger(id[2])) {
 		return 'Invalid contract ID';
 	}
-
 	return null;
 };
 
@@ -137,3 +136,110 @@ export const validateAbi = (str) => {
 		return 'Invalid ABI';
 	}
 };
+
+const validateInt = (value, isUint, size = 256) => {
+	if (!Number.isInteger(value)) return 'value should be integer';
+
+	if (isUint && value < 0) return 'value should be unsigned integer';
+
+	if (size % 8 !== 0) return 'various sizes should be in in steps of 8';
+
+	const maxLimit = isUint ? (2 ** size) - 1 : ((2 ** (size - 1)) - 1);
+	const minLimit = isUint ? 0 : -(2 ** (size - 1));
+
+	if (value > maxLimit && value < minLimit) return `value should be in ${isUint ? 'u' : ''}int${size} format`;
+
+	return null;
+};
+
+const validateString = (value) => (typeof value === 'string' ? null : 'Value should be a string');
+const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'Value should be in object id format');
+const validateBool = (value) => (typeof value === 'boolean' ? null : 'Value should be a boolean');
+const validateArray = (value) => (
+	Array.isArray(value) ? null : 'Value should be an array'
+);
+
+export const validateByType = (value, type) => {
+	if (!value) return 'Value should not be empty';
+
+	let method = null;
+	let isUint = null;
+	let size = null;
+
+	const intMark = type.search('int');
+	if (type.search('string') !== -1) {
+		method = validateString;
+	} else if (type.search('address') !== -1) {
+		method = validateAddress;
+	} else if (type.search('bool') !== -1) {
+		method = validateBool;
+	} else if (type.search('byte') !== -1) {
+		try {
+			value = JSON.parse(value);
+		} catch (e) {
+			return 'value should be an array';
+		}
+		method = validateArray;
+		const match = type.match(/\d+/);
+		const matchResult = match ? match[0] : null;
+		size = (type === 'byte') ? 1 : matchResult;
+	} else if (intMark !== -1) {
+		value = Number(value);
+		method = validateInt;
+		isUint = (intMark === 1);
+		const match = type.match(/\d+/);
+		size = match && match[0];
+	} else {
+		return 'value could not be validated';
+	}
+
+	const arrayMark = type.search('[]');
+	if (arrayMark !== -1) {
+		try {
+			value = JSON.parse(value);
+		} catch (e) {
+			return 'value should be an array';
+		}
+		let error = validateArray(value);
+		if (error) return error;
+		value.some((v) => {
+			error = method(v, isUint, size);
+			return error;
+		});
+
+		return error;
+	}
+
+	return method(value, isUint, size);
+
+};
+
+export const validateAmount = ({ value }, { precision, balance }) => {
+	if (!Math.floor(value * (10 ** precision))) {
+		return `Amount should be more than ${1 / (10 ** precision)}`;
+	}
+
+	if (new BN(value).times(10 ** precision).gt(balance)) {
+		return 'Insufficient funds';
+	}
+
+	return null;
+};
+
+export const validateFee = (amount, currency, fee, assets) => {
+	if (currency && currency.id === fee.asset.id) {
+		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
+
+		if (total.gt(currency.balance)) {
+			return 'Insufficient funds';
+		}
+	} else {
+		const asset = assets.find((i) => i.id === fee.asset.id);
+		if (new BN(fee.value).gt(asset.balance)) {
+			return 'Insufficient funds';
+		}
+	}
+
+	return null;
+};
+

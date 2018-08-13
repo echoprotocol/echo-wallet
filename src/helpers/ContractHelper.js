@@ -19,8 +19,10 @@ export const getMethod = (method, args) => {
 
 	const argsString = args.map((arg) => {
 		let newArg = '';
-		if (ChainValidation.is_object_id(arg)) {
-			newArg = parseInt(arg.substr(arg.lastIndexOf('.') + 1), 10).toString(16).padStart(64, '0');
+		if (!Number.isNaN(Number(arg))) {
+			newArg += Number(arg).toString(16);
+		} else if (ChainValidation.is_object_id(arg)) {
+			newArg = parseInt(arg.substr(arg.lastIndexOf('.') + 1), 10).toString(16);
 		} else if ((typeof arg) === 'string') {
 			for (let i = 0; i < arg.length; i += 1) {
 				if (!Number.isNaN(arg.charAt(i))) {
@@ -29,9 +31,8 @@ export const getMethod = (method, args) => {
 					newArg += parseInt(arg.charAt(i), 10).toString(16);
 				}
 			}
-			newArg = newArg.padStart(64, '0');
 		}
-		return newArg;
+		return newArg.padStart(64, '0');
 	});
 
 	method = getMethodId(method);

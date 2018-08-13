@@ -1,11 +1,31 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
 
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import ContractSettings from './ContractSettings';
 import TabContractProps from './TabContractProps';
-import TabCallContracts from './TabCallContracts';
+import TabCallContracts from './CallContract/TabCallContracts';
 
-class ViewContract extends React.Component {
+import { formatAbi } from '../../actions/ContractActions';
+
+import { clearForm } from '../../actions/FormActions';
+
+import ContractReducer from '../../reducers/ContractReducer';
+
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+
+class ViewContracts extends React.Component {
+
+	componentWillMount() {
+		this.props.formatAbi(this.props.match.params.name);
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm();
+		this.props.clearContract();
+	}
 
 	render() {
 		const panes = [
@@ -26,7 +46,6 @@ class ViewContract extends React.Component {
 				),
 			},
 		];
-
 		return (
 			<div>
 				<ContractSettings />
@@ -37,4 +56,18 @@ class ViewContract extends React.Component {
 
 }
 
-export default ViewContract;
+ViewContracts.propTypes = {
+	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	clearContract: PropTypes.func.isRequired,
+	match: PropTypes.object.isRequired,
+};
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		formatAbi: (value) => dispatch(formatAbi(value)),
+		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT)),
+		clearContract: () => dispatch(ContractReducer.actions.reset()),
+	}),
+)(ViewContracts);

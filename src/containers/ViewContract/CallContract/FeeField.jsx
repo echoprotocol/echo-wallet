@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Form } from 'semantic-ui-react';
 import { EchoJSActions } from 'echojs-redux';
-import classnames from 'classnames';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { formatAmount } from '../../helpers/FormatHelper';
-import { setValue } from '../../actions/FormActions';
-import { getFee } from '../../actions/TransactionActions';
+import { formatAmount } from '../../../helpers/FormatHelper';
+import { setValue } from '../../../actions/FormActions';
+import { getFee } from '../../../actions/TransactionActions';
+
+import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -17,9 +17,7 @@ class FeeComponent extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const { fee, comment, currency } = this.props;
-
-		if (!fee) { return true; }
+		const { fee, currency } = this.props;
 
 		if (!fee.asset && nextProps.assets) { return true; }
 
@@ -27,20 +25,9 @@ class FeeComponent extends React.Component {
 
 		if (fee.asset.id && nextProps.fee.asset.id) { return true; }
 
-		if (comment.value !== nextProps.comment.value) { return true; }
-
 		if (currency && currency.type !== nextProps.currency.type) { return true; }
 
 		return false;
-	}
-
-	componentDidUpdate() {
-		const { assets, fee, comment } = this.props;
-
-		if (assets.length && (!fee || !fee.asset)) {
-			const value = this.props.getFee('transfer', assets[0].id, comment.value);
-			this.props.setValue('fee', value);
-		}
 	}
 
 	onFee(fee) {
@@ -54,7 +41,6 @@ class FeeComponent extends React.Component {
 			const fee = this.props.getFee(
 				type === 'tokens' ? 'contract' : 'transfer',
 				id,
-				this.props.comment.value,
 			);
 
 			return {
@@ -83,12 +69,10 @@ class FeeComponent extends React.Component {
 		const text = this.getText(options);
 
 		return (
-			<Dropdown
-				className={classnames('fee-dropdown', { 'no-choice': options.length <= 1 })}
-				selection
-				options={options}
-				text={text}
-			/>
+			<Form.Field>
+				<label htmlFor="Method">fee</label>
+				<Dropdown selection options={options} text={text} />
+			</Form.Field>
 		);
 	}
 
@@ -98,17 +82,13 @@ FeeComponent.propTypes = {
 	assets: PropTypes.any,
 	fee: PropTypes.any,
 	currency: PropTypes.any,
-	comment: PropTypes.any.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	loadGlobalObject: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
-	fee: {
-		value: null,
-		asset: null,
-	},
+	fee: null,
 	assets: null,
 	currency: null,
 };
@@ -116,12 +96,11 @@ FeeComponent.defaultProps = {
 export default connect(
 	(state) => ({
 		assets: state.balance.get('assets').toArray(),
-		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
-		comment: state.form.getIn([FORM_TRANSFER, 'comment']),
-		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
+		fee: state.form.getIn([FORM_CALL_CONTRACT, 'fee']),
+		currency: state.form.getIn([FORM_CALL_CONTRACT, 'currency']),
 	}),
 	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
+		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
 		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
 		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
 	}),
