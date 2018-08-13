@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -120,7 +121,19 @@ class TabOverview extends React.Component {
 					{
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
-
+					<li>
+						<div className="col">Comment:</div>
+						<div className="col">
+							<Button
+								content="Show comment"
+								type="button"
+								icon="comment"
+								size="mini"
+								className="light"
+								color="grey"
+							/>
+						</div>
+					</li>
 				</ul>
 			</div>
 		);

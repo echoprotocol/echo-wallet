@@ -61,6 +61,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+
+  .icon-comment:before {
+    content: "\e91c";
+  }
+
   .icon-edit-close,
   .icon-edit-checked {
     color: #d6d9df;
