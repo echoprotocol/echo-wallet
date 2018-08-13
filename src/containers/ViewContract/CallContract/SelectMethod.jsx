@@ -17,6 +17,11 @@ class SelectMethod extends React.Component {
 		};
 	}
 
+	componentWillMount() {
+		if (!this.props.functions.size) return;
+		this.setFunction(this.props.functions.get(0).name);
+	}
+
 	onSearch(e) {
 		this.setState({ searchText: e.target.value });
 	}
@@ -46,7 +51,7 @@ class SelectMethod extends React.Component {
 			}
 
 			arr.push((
-				<Dropdown.Item key={f.name} selected={i === 0} onClick={(e) => this.setFunction(f.name, e)}>
+				<Dropdown.Item key={f.name} onClick={(e) => this.setFunction(f.name, e)}>
 					{f.name}
 				</Dropdown.Item>
 			));
