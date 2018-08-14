@@ -10,10 +10,21 @@ import TabCallContracts from './CallContract/TabCallContracts';
 
 import { formatAbi } from '../../actions/ContractActions';
 
+import { clearForm } from '../../actions/FormActions';
+
+import ContractReducer from '../../reducers/ContractReducer';
+
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+
 class ViewContracts extends React.Component {
 
 	componentWillMount() {
 		this.props.formatAbi(this.props.match.params.name);
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm();
+		this.props.clearContract();
 	}
 
 	render() {
@@ -47,6 +58,8 @@ class ViewContracts extends React.Component {
 
 ViewContracts.propTypes = {
 	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	clearContract: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 };
 
@@ -54,5 +67,7 @@ export default connect(
 	() => ({}),
 	(dispatch) => ({
 		formatAbi: (value) => dispatch(formatAbi(value)),
+		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT)),
+		clearContract: () => dispatch(ContractReducer.actions.reset()),
 	}),
 )(ViewContracts);

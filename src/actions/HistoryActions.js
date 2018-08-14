@@ -96,7 +96,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		[, result.subject] = data.result;
 	}
 
-	if (type === 0 && operation.memo.message) {
+	if (type === 0 && operation.memo && operation.memo.message) {
 		result.memo = operation.memo;
 	}
 
