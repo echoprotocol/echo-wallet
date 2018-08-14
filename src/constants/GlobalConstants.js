@@ -32,7 +32,7 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: VIEW_CONTRACT_PATH,
-		title: 'Smart Contract Details',
+		title: 'Contract',
 	},
 	{
 		path: ADD_CONTRACT_PATH,

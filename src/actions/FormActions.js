@@ -87,6 +87,14 @@ export const setIn = (form, field, params) => (dispatch) => {
 	dispatch(FormReducer.actions.setIn({ form, field, params }));
 };
 
+export const pushForm = (field, param, value) => (dispatch) => {
+	dispatch(FormReducer.actions.push({
+		field,
+		param,
+		value,
+	}));
+};
+
 /**
  * Set multiple params by field
  * @param {String} form

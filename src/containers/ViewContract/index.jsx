@@ -1,29 +1,29 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
-
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import ContractSettings from './ContractSettings';
-import TabContractProps from './TabContractProps';
-import TabCallContracts from './CallContract/TabCallContracts';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 
 import { formatAbi } from '../../actions/ContractActions';
-
 import { clearForm } from '../../actions/FormActions';
+
+import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+
+import ContractSettings from './ContractSettings';
+import TabCallContracts from './CallContract/TabCallContracts';
+import TabContractProps from './Constants/TabContractProps';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
-import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
-
-class ViewContracts extends React.Component {
+class ViewContract extends React.Component {
 
 	componentWillMount() {
 		this.props.formatAbi(this.props.match.params.name);
 	}
 
 	componentWillUnmount() {
-		this.props.clearForm();
+		this.props.clearForm(FORM_CALL_CONTRACT);
+		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
 	}
 
@@ -49,25 +49,25 @@ class ViewContracts extends React.Component {
 		return (
 			<div>
 				<ContractSettings />
-				<Tab menu={{ tabular: true }} className="tab-full" panes={panes} />
+				<Tab className="tab-full" panes={panes} />
 			</div>
 		);
 	}
 
 }
 
-ViewContracts.propTypes = {
-	formatAbi: PropTypes.func.isRequired,
+ViewContract.propTypes = {
 	clearForm: PropTypes.func.isRequired,
+	formatAbi: PropTypes.func.isRequired,
 	clearContract: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 };
 
-export default connect(
+export default withRouter(connect(
 	() => ({}),
 	(dispatch) => ({
+		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
-		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
 	}),
-)(ViewContracts);
+)(ViewContract));
