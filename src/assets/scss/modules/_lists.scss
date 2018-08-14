@@ -196,7 +196,7 @@
         .value {
            &.blue {
                color: $blue;
-           } 
+           }
         }
         .input.mini.ui {
             input {
@@ -289,7 +289,7 @@
         .dropdown.icon {
             display: none;
         }
-    } 
+    }
 }
 
 .overview-list,
@@ -317,11 +317,20 @@
         }
     }
     .bytecode {
+        &-wrap {
+            background-color: #f9f9f9;
+            border: 1px solid $bd-gray;
+            padding: 10px 5px;
+
+        }
+        padding: 0 5px;
+        max-height: 400px;
+        overflow: auto;
         word-wrap: break-word;
-        background-color: #f9f9f9;
-        border: 1px solid $bd-gray;
-        padding: 10px;
         font-size: 13px;
+    }
+    .ui.button {
+        margin-top: -6px;
     }
     .topic-item,
     .data-item, {
@@ -333,14 +342,17 @@
         .arrow {
             margin-right: 3px;
         }
-        
+
     }
 }
 .logs-list {
     li {
         .col {
             &:nth-child(2) {
+                font-family: Monospace;
+                font-size: 14px;
                 max-width: 620px;
+                color: $black;
             }
         }
     }

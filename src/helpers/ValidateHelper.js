@@ -113,7 +113,7 @@ export const validateAbi = (str) => {
 
 			const typeSchema = schema[item.type];
 
-			if (item.type === 'function' && !item.constant) {
+			if (item.stateMutability) {
 				typeSchema.stateMutability = 'string';
 			}
 
