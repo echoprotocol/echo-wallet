@@ -1122,7 +1122,18 @@ i.icon.columns:before {
   content: "\f0db";
 }
 i.icon.comment:before {
-  content: "\f075";
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e91c";
 }
 i.icon.comment.alternate:before {
   content: "\f27a";

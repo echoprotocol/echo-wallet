@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -13,9 +14,17 @@ class TabOverview extends React.Component {
 		const { comment, data: { memo } } = this.props;
 
 		return comment.unlocked ? comment.value : (
-			<div role="button" onClick={() => this.props.unlock(memo)} onKeyPress={() => this.props.unlock(memo)} tabIndex="0">
-				Show comment
-			</div>
+			<Button
+				content="Show comment"
+				type="button"
+				icon="comment"
+				size="mini"
+				className="light"
+				color="grey"
+				onClick={() => this.props.unlock(memo)}
+				onKeyPress={() => this.props.unlock(memo)}
+				tabIndex="0"
+			/>
 		);
 	}
 
@@ -120,7 +129,6 @@ class TabOverview extends React.Component {
 					{
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
-
 				</ul>
 			</div>
 		);
