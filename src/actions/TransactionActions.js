@@ -319,8 +319,6 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
 
-	toastSuccess(`${operations[operation].name} transaction was sent`);
-
 	buildAndSendTransaction(operation, options, keys.active)
 		.then((res) => {
 			if (addToWatchList) {
@@ -337,6 +335,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		.catch(() => {
 			toastError(`${operations[operation].name} transaction wasn't completed`);
 		});
+	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));
 
