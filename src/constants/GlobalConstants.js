@@ -20,7 +20,7 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: TRANSFER_PATH,
-		title: 'Send',
+		title: 'Create Payment',
 	},
 	{
 		path: CREATE_CONTRACT_PATH,
