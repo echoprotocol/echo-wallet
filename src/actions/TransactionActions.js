@@ -348,11 +348,12 @@ export const sendTransaction = () => async (dispatch, getState) => {
 				));
 			}
 
-			toastSuccess(`${operations[operation].name} transaction was sent`);
+			toastSuccess(`${operations[operation].name} transaction was completed`);
 		})
 		.catch(() => {
-			toastError(`${operations[operation].name} transaction wasn't sent`);
+			toastError(`${operations[operation].name} transaction wasn't completed`);
 		});
+	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));
 

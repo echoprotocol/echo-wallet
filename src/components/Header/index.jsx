@@ -12,6 +12,9 @@ import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
+	ADD_CONTRACT_PATH,
+	CREATE_CONTRACT_PATH,
+	CONTRACT_LIST_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -43,14 +46,28 @@ class Header extends React.Component {
 		return item ? item.title : '';
 	}
 
+	renderLinkToParent() {
+		const { location } = this.props;
+		return (
+			location.pathname.split('/').length > 2 ?
+				<Link to={`/${location.pathname.split('/')[1]}`} className="icon-back" /> :
+				<Link to={INDEX_PATH} className="icon-back" />
+		);
+	}
+
 	render() {
+		const { location } = this.props;
+
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO';
-
 		return (
 			<div className="header">
-				<Link to={INDEX_PATH} className="icon-back" />
+				{
+					![INDEX_PATH, ADD_CONTRACT_PATH, CREATE_CONTRACT_PATH, CONTRACT_LIST_PATH]
+						.find((url) => url === location.pathname) &&
+						this.renderLinkToParent()
+				}
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button
