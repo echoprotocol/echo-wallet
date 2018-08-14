@@ -10,29 +10,25 @@ import {
 import { push, remove, update } from './GlobalActions';
 
 import {
-	getContractId,
 	getContract,
 	getContractConstant,
-	getContractResult, formatSignature,
+	getContractResult,
 } from '../api/ContractApi';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 
-import { getMethod } from '../helpers/ContractHelper';
+import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
+
 import {
 	validateAbi,
 	validateContractName,
 	validateContractId,
 } from '../helpers/ValidateHelper';
 
-import {
-	FORM_ADD_CONTRACT,
-	FORM_VIEW_CONTRACT,
-	FORM_CALL_CONTRACT,
-} from '../constants/FormConstants';
+import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
@@ -287,7 +283,7 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	});
 
 	constants = constants.map(async (constant) => {
-		const method = formatSignature(constant);
+		const method = getMethodId(constant);
 		let constantValue =
 				await getContractConstant(instance, contractId, accountId, method);
 		if (constant.outputs[0].type === 'string') {

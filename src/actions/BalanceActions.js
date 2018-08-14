@@ -183,7 +183,8 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 
 			if (subscribeAccountId !== accountId) return;
 
-			const assets = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']).toJS();
+			let assets = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
+			assets = assets ? assets.toJS() : assets;
 			if (!assets) return;
 			dispatch(getAssetsBalances(assets));
 			break;

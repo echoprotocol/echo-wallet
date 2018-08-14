@@ -1,8 +1,16 @@
 import { ChainValidation } from 'echojs-lib';
+import { keccak256 } from 'js-sha3';
 
-import { formatSignature } from '../api/ContractApi';
 import operations from '../constants/Operations';
 import { getLog, logParser } from './FormatHelper';
+
+export const getHash = (str) => keccak256(str);
+
+export const getMethodId = (method) => {
+	const inputs = method.inputs.map((input) => input.type).join(',');
+
+	return getHash(`${method.name}(${inputs})`).substr(0, 8);
+};
 
 export const getMethod = (method, args) => {
 	if (!args || !args.length) {
@@ -27,7 +35,7 @@ export const getMethod = (method, args) => {
 		return newArg.padStart(64, '0');
 	});
 
-	method = formatSignature(method);
+	method = getMethodId(method);
 	method = method.concat(argsString.join(''));
 	return method;
 };
@@ -58,3 +66,5 @@ export const checkTransactionResult = (accountId, result) => {
 		return false;
 	});
 };
+
+export const getContractId = (address) => parseInt(address.substr(-32), 16);
