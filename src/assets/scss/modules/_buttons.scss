@@ -26,25 +26,31 @@ $stripe-width: 10px;
 }
 .ui.button {
     &.transparent {
+        font-family: proximanovaSemibold;
         background-color: transparent;
         border-color: transparent;
         color: #aeb4c0;
-        i {
-            color: #aeb4c0;
-        }
         text-transform: capitalize;
         font-size: 1em;
         padding: 8.5px 0;
         margin: 0;
+        &:hover,
+        &:focus {
+            color: #9ca2ac;
+        }
         &.large {
-            font-size: 1.1em;
+            i {
+                &:before {
+                    display: table;
+                    line-height: 15px;
+                }
+            }
+            font-size: 1em;
             min-height: auto;
             padding: 0;
             line-height: 1;
             margin: 0;
             align-self: flex-start;
-            margin: -2px 0 0;
-            letter-spacing: -.4px;
         }
     }
 }

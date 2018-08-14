@@ -86,7 +86,7 @@ class FormComponent extends React.Component {
 				<div className={classnames({ error: bytecode.error, 'error-wrap': true })}>
 					<div className="action-wrap">
 						<Form.Field
-							label="ByteCode"
+							label="Byte Code"
 							placeholder="Byte Code"
 							control="textarea"
 							name="bytecode"
