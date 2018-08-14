@@ -9,11 +9,13 @@ import {
 	getTokenSymbol,
 } from '../api/ContractApi';
 
+import { setError, setParamError, closeModal } from './ModalActions';
+
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess } from '../helpers/ToastHelper';
+import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
-import { setError, setParamError, closeModal } from './ModalActions';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -101,6 +103,16 @@ export const initBalances = (accountId) => async (dispatch) => {
 export const addToken = (contractId) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	if (!contractId) {
+		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+		return;
+	}
+
+	if (validateContractId(contractId)) {
+		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+		return;
+	}
 
 	try {
 		const contract = await getContract(instance, contractId);
