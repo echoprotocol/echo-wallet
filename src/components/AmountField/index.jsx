@@ -17,17 +17,19 @@ class AmountField extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			isOpenDropdown: false,
 			amountFocus: false,
 		};
 	}
-
 
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
 		}
 	}
-
+	onToggleDropdown() {
+		this.setState({ isOpenDropdown: !this.state.isOpenDropdown });
+	}
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
@@ -80,6 +82,7 @@ class AmountField extends React.Component {
 			amountFocus: !value,
 		});
 	}
+
 	renderList(type) {
 		const list = [
 			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
@@ -143,6 +146,9 @@ class AmountField extends React.Component {
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
+						open={this.state.isOpenDropdown}
+						onClick={(e) => this.onToggleDropdown(e)}
+						onBlur={(e) => this.onToggleDropdown(e)}
 						text={currency ? currency.symbol : ''}
 						className="assets-tokens-dropdown"
 					>
