@@ -112,7 +112,6 @@ Header.propTypes = {
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
-	match: PropTypes.object.isRequired,
 };
 
 Header.defaultProps = {
