@@ -1,22 +1,18 @@
 import { Map, List } from 'immutable';
 
-import {
-	getContractId,
-	getContract,
-	getContractConstant,
-	getContractResult,
-} from '../api/ContractApi';
+import { getContract, getContractConstant, getContractResult } from '../api/ContractApi';
 
-import GlobalReducer from '../reducers/GlobalReducer';
-import ContractReducer from '../reducers/ContractReducer';
-
-import { getMethod } from '../helpers/ContractHelper';
+import { getMethod, getContractId } from '../helpers/ContractHelper';
 import {
 	validateAbi,
 	validateContractName,
 	validateContractId,
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+
+import GlobalReducer from '../reducers/GlobalReducer';
+import ContractReducer from '../reducers/ContractReducer';
+
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH } from '../constants/RouterConstants';
