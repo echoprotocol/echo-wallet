@@ -21,7 +21,6 @@ import {
 import { getMethod } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import {
-	validateAccountName,
 	validateCode,
 	validateAbi,
 	validateContractName,
