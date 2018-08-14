@@ -54,19 +54,17 @@ class SignIn extends React.Component {
 						<h3>Welcome to Echo</h3>
 					</div>
 					<div className="field-wrap">
-						<Form.Field>
+						<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
 							<label htmlFor="AccountName">Account name</label>
-							<div className={accountName.error ? 'error' : ''}>
-								<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
-								<span className="error-message">{accountName.error}</span>
-							</div>
+
+							<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
+							<span className="error-message">{accountName.error}</span>
+
 						</Form.Field>
-						<Form.Field>
+						<Form.Field className={classnames('error-wrap', { error: password.error })}>
 							<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
-							<div className={password.error ? 'error' : ''}>
-								<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-								<span className="error-message">{password.error}</span>
-							</div>
+							<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+							<span className="error-message">{password.error}</span>
 						</Form.Field>
 					</div>
 					{

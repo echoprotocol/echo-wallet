@@ -4,8 +4,8 @@
         align-items: center;
         color: $black;
         text-transform: none;
-        font-weight: 400;
         font-size: 1.1em;
+        font-family: proxima;
         li {
             height: 10px;
             display: flex;
@@ -141,8 +141,7 @@
             position: relative;
             top: auto;
             right: auto;
-            line-height: auto;
-            margin: 0;
+            margin: -3px 0 0 0;
             padding: 0;
         }
         &.active {

@@ -44,19 +44,17 @@ class ModalTokens extends React.Component {
 								<h3>Add ERC20 token to watch list</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field>
+								<Form.Field className={classnames('error-wrap', { error: contractId.error })}>
 									<label htmlFor="tokens">Contract ID</label>
-									<div className={classnames({ error: contractId.error })}>
-										<input
-											type="text"
-											placeholder="Contract ID"
-											name="contractId"
-											className="ui input"
-											value={contractId.value}
-											onInput={(e) => this.onInput(e)}
-										/>
-										<span className="error-message">{contractId.error}</span>
-									</div>
+									<input
+										type="text"
+										placeholder="Contract ID"
+										name="contractId"
+										className="ui input"
+										value={contractId.value}
+										onInput={(e) => this.onInput(e)}
+									/>
+									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
 							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Watch Token</Button>

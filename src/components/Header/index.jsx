@@ -54,7 +54,6 @@ class Header extends React.Component {
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO';
-
 		return (
 			<div className="header">
 				{

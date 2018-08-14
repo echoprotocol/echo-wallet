@@ -39,47 +39,41 @@ class AddContractComponent extends React.Component {
 					<h3>Add contract to watch list</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: name.error })}>
 						<label htmlFor="name">Name</label>
-						<div className={classnames({ error: name.error })}>
-							<input
-								type="text"
-								placeholder="Name"
-								name="name"
-								className="ui input"
-								value={name.value}
-								onInput={(e) => this.onInput(e)}
-							/>
-							<span className="error-message">{name.error}</span>
-						</div>
+						<input
+							type="text"
+							placeholder="Name"
+							name="name"
+							className="ui input"
+							value={name.value}
+							onInput={(e) => this.onInput(e)}
+						/>
+						<span className="error-message">{name.error}</span>
 					</Form.Field>
-					<Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
-						<div className={classnames({ error: id.error })}>
-							<input
-								type="text"
-								placeholder="Contract ID"
-								name="id"
-								className="ui input"
-								value={id.value}
-								onInput={(e) => this.onInput(e)}
-							/>
-							<span className="error-message">{id.error}</span>
-						</div>
+						<input
+							type="text"
+							placeholder="Contract ID"
+							name="id"
+							className="ui input"
+							value={id.value}
+							onInput={(e) => this.onInput(e)}
+						/>
+						<span className="error-message">{id.error}</span>
 					</Form.Field>
-					<Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">ABI</label>
-						<div className={classnames({ error: abi.error })}>
-							<textarea
-								type="text"
-								placeholder="Contract ABI"
-								name="abi"
-								className="ui input"
-								value={abi.value}
-								onInput={(e) => this.onInput(e)}
-							/>
-							<span className="error-message">{abi.error}</span>
-						</div>
+						<textarea
+							type="text"
+							placeholder="Contract ABI"
+							name="abi"
+							className="ui input"
+							value={abi.value}
+							onInput={(e) => this.onInput(e)}
+						/>
+						<span className="error-message">{abi.error}</span>
 					</Form.Field>
 				</div>
 				<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Watch Contract</Button>
