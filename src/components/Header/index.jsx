@@ -34,7 +34,14 @@ class Header extends React.Component {
 	getTitle() {
 		const { location } = this.props;
 
-		const item = HEADER_TITLE.find((title) => title.path === location.pathname);
+		const item = HEADER_TITLE.find((title) => {
+			if (title.path === location.pathname) {
+				return true;
+			} else if (title.path.split('/')[1] === location.pathname.split('/')[1]) {
+				return true;
+			}
+			return false;
+		});
 
 		return item ? item.title : '';
 	}

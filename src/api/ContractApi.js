@@ -58,7 +58,7 @@ export const getTokenPrecision = async (instance, accountId, contractId) => {
 	return toInt(result);
 };
 
-export const getContractConstant = (instance, accountId, contractId, method) => getContractProp(
+export const getContractConstant = (instance, contractId, accountId, method) => getContractProp(
 	instance,
 	contractId,
 	accountId,

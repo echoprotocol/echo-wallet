@@ -140,6 +140,9 @@
     }
     &.orange {
         input {
+            &:disabled ~ .label {
+                opacity: .6;
+            }
             &:checked ~ .label {
                 &:before {
                     background-color: $orange;
