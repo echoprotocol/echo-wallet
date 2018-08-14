@@ -28,6 +28,7 @@ class ViewContract extends React.Component {
 
 	componentWillUnmount() {
 		this.props.clearForm(FORM_CALL_CONTRACT);
+		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
 	}
 

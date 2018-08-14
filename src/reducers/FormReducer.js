@@ -194,6 +194,24 @@ export default createModule({
 					state = state.setIn([payload.form, payload.field], payload.value);
 				} else {
 					const field = state.getIn([payload.form, payload.field]);
+					console.log(field);
+
+					state = state.setIn([payload.form, payload.field], Object.assign({}, field, {
+						...field,
+						error: payload.value,
+					}));
+				}
+
+				return state;
+			},
+		},
+
+		setError: {
+			reducer: (state, { payload }) => {
+				if (payload.field === 'error') {
+					state = state.setIn([payload.form, payload.field], payload.value);
+				} else {
+					const field = state.getIn([payload.form, payload.field]);
 
 					state = state.setIn([payload.form, payload.field], Object.assign({}, field, {
 						...field,

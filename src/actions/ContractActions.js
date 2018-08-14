@@ -1,6 +1,12 @@
 import { Map, List } from 'immutable';
 
-import { setFormError, setValue, pushForm, setInFormValue, clearForm } from './FormActions';
+import {
+	setFormError,
+	setValue,
+	pushForm,
+	setInFormValue,
+	clearForm,
+} from './FormActions';
 import { push, remove, update } from './GlobalActions';
 
 import {
@@ -22,7 +28,11 @@ import {
 	validateContractId,
 } from '../helpers/ValidateHelper';
 
-import { FORM_ADD_CONTRACT, FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT } from '../constants/FormConstants';
+import {
+	FORM_ADD_CONTRACT,
+	FORM_VIEW_CONTRACT,
+	FORM_CALL_CONTRACT,
+} from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
