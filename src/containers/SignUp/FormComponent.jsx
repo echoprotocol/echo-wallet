@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import classnames from 'classnames';
 
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
@@ -33,12 +34,10 @@ class FormComponent extends React.Component {
 
 		return (
 			<div className="field-wrap">
-				<Form.Field>
+				<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
 					<label htmlFor="accountName">Account name (public)</label>
-					<div className={accountName.error ? 'error' : ''}>
-						<input name="accountName" className="ui input" placeholder="Account name" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
-						<span className="error-message">{accountName.error}</span>
-					</div>
+					<input name="accountName" className="ui input" placeholder="Account name" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
+					<span className="error-message">{accountName.error}</span>
 				</Form.Field>
 				<Form.Field>
 					<label htmlFor="generatedPassword">Generated password</label>
@@ -51,12 +50,10 @@ class FormComponent extends React.Component {
 						</CopyToClipboard>
 					</div>
 				</Form.Field>
-				<Form.Field>
+				<Form.Field className={classnames('error-wrap', { error: confirmPassword.error })}>
 					<label htmlFor="confirmPassword">Confirm password</label>
-					<div className={confirmPassword.error ? 'error' : ''}>
-						<input name="confirmPassword" className="ui input" placeholder="Confirm password" value={confirmPassword.value} onChange={(e) => this.onChange(e)} />
-						<span className="error-message">{confirmPassword.error}</span>
-					</div>
+					<input name="confirmPassword" className="ui input" placeholder="Confirm password" value={confirmPassword.value} onChange={(e) => this.onChange(e)} />
+					<span className="error-message">{confirmPassword.error}</span>
 				</Form.Field>
 			</div>
 		);
