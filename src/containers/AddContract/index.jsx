@@ -67,7 +67,7 @@ class AddContractComponent extends React.Component {
 						<label htmlFor="abi">ABI</label>
 						<textarea
 							type="text"
-							placeholder="Contract ABI"
+							placeholder="Contract Abi"
 							name="abi"
 							className="ui input"
 							value={abi.value}

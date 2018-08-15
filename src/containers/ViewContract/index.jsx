@@ -32,7 +32,7 @@ class ViewContract extends React.Component {
 			{
 				menuItem: 'View properties',
 				render: () => (
-					<Tab.Pane>
+					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
 					</Tab.Pane>
 				),
@@ -40,7 +40,7 @@ class ViewContract extends React.Component {
 			{
 				menuItem: 'call contracts',
 				render: () => (
-					<Tab.Pane>
+					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />
 					</Tab.Pane>
 				),

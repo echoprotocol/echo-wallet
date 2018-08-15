@@ -53,10 +53,9 @@ div,span {
 	&.center-mode {
 		display: flex;
         justify-content: center;
-        .user-form,
-        .main-form {
-            margin-top: 10vh;
-        }
+        max-height: calc(100vh - 100px);
+        overflow: auto;
+        overflow-y: overlay;
 		div {
 			width: 100%;
 		}
