@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
-import { setValue, setFormValue } from '../../actions/FormActions';
+import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -34,17 +34,12 @@ class AmountField extends React.Component {
 		const { currency } = this.props;
 
 		const value = e.target.value.trim();
+		console.log(e.target.value.trim());
 
-		if (!value.match(/^[0-9]*\.?[0-9]*$/)) {
-			this.props.setValue(this.props.form, 'amount', {
-				error: 'Amount must contain only digits and dot',
-				value,
-			});
+		if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
+			this.props.setFormError(this.props.form, 'amount', 'Amount must contain only digits and dot');
 
-			return;
-		}
-
-		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
+		} else if (value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
 			this.props.setValue(
 				this.props.form,
 				'amount',
@@ -54,10 +49,9 @@ class AmountField extends React.Component {
 				},
 			);
 
-			return;
+		} else {
+			this.props.setFormValue(this.props.form, e.target.name, value);
 		}
-
-		this.props.setFormValue(this.props.form, e.target.name, value);
 	}
 
 	setAvailableAmount(currency) {
@@ -182,6 +176,7 @@ AmountField.propTypes = {
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 	form: PropTypes.string.isRequired,
 };
 
@@ -204,5 +199,6 @@ export default connect(
 	(dispatch) => ({
 		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
 		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
+		setFormError: (form, field, value) => dispatch(setFormError(form, field, value)),
 	}),
 )(AmountField);
