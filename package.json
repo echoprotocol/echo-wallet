@@ -12,7 +12,6 @@
     "package-linux": "electron-packager ./dist Echo --platform linux --arch amd64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/Echo-linux-amd64/ --dest dist/installers/ --arch amd64"
   },
   "dependencies": {
-    "accounting": "^0.4.1",
     "autoprefixer": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",
