@@ -18,7 +18,16 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            color: #c4c5ca;
+            transition: color .3s;
+            &:hover {
+                color: #6d7178;
+            }
         }
+    }
+    .form.user-form,
+    .form.main-form {
+        padding: 0;
     }
 }
 
