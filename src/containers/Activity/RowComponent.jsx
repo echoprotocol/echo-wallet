@@ -24,8 +24,11 @@ class RowComponent extends React.Component {
 			timestamp,
 		} = this.props.data;
 
-		const amount = value.amount ? formatAmount(value.amount, value.precision, value.symbol) : null;
-		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision, fee.symbol) : null;
+		const amount = value.amount ? formatAmount(value.amount, value.precision) : null;
+		const symbol = value.amount ? value.symbol : null;
+
+		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision) : null;
+		const feeSymbol = fee.amount ? fee.symbol : null;
 
 		return (
 			<Table.Row
@@ -50,9 +53,11 @@ class RowComponent extends React.Component {
 				</Table.Cell>
 				<Table.Cell>
 					<span className="ellips">{amount}</span>
+					<span className="ellips">{symbol}</span>
 				</Table.Cell>
 				<Table.Cell>
-					{feeAmount}
+					<span>{feeAmount}</span>
+					<span>{feeSymbol}</span>
 				</Table.Cell>
 				<Table.Cell>
 					<span className="date">{moment.utc(timestamp).local().format('MMMM D, YYYY')}</span>
