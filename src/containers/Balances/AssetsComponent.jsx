@@ -20,15 +20,21 @@ class Assets extends React.Component {
 		return (
 			<React.Fragment>
 				<div className="thead-wrap">
+
+					<div className="thead-info">
+						<div className="table-title">Assets</div>
+					</div>
+
 					<Table className="thead" unstackable>
 						<Table.Body>
 							<Table.Row>
 								<Table.Cell>
-									<div className="table-title">Assets</div>
-									<div className="col-title">Assets</div>
+                                    Assets
+									{/* <div className="col-title">Assets</div> */}
 								</Table.Cell>
 								<Table.Cell>
-									<div className="col-title">Total amount</div>
+                                    Total amount
+									{/* <div className="col-title">Total amount</div> */}
 								</Table.Cell>
 							</Table.Row>
 						</Table.Body>
