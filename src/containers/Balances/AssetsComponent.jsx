@@ -4,8 +4,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+import { redirectToTransfer } from '../../actions/BalanceActions';
 
 class Assets extends React.Component {
+
+	toTransfer(symbol) {
+		this.props.redirectToTransfer(symbol);
+	}
 
 	renderEmpty() {
 		return (
@@ -41,7 +46,7 @@ class Assets extends React.Component {
 							this.props.assets.map((asset, i) => {
 								const id = i;
 								return (
-									<Table.Row key={id}>
+									<Table.Row key={id} onClick={() => this.toTransfer(asset)}>
 										<Table.Cell>{asset.symbol}</Table.Cell>
 										<Table.Cell>
 											{formatAmount(asset.balance, asset.precision, '')}
@@ -73,12 +78,18 @@ class Assets extends React.Component {
 
 Assets.propTypes = {
 	assets: PropTypes.any,
+	redirectToTransfer: PropTypes.func.isRequired,
 };
 
 Assets.defaultProps = {
 	assets: null,
 };
 
-export default connect((state) => ({
-	assets: state.balance.get('assets'),
-}))(Assets);
+export default connect(
+	(state) => ({
+		assets: state.balance.get('assets'),
+	}),
+	(dispatch) => ({
+		redirectToTransfer: (asset) => dispatch(redirectToTransfer(asset, 'assets')),
+	}),
+)(Assets);

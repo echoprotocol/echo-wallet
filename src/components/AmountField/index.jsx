@@ -79,6 +79,7 @@ class AmountField extends React.Component {
 			return 0;
 		}
 
+		console.log(fee, currency)
 		if (fee.asset && fee.asset.id !== currency.id) {
 			return currency.balance;
 		}
@@ -96,7 +97,6 @@ class AmountField extends React.Component {
 		const list = [
 			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
 		];
-
 		return this.props[type].reduce((arr, a, i) => {
 			const id = i;
 			arr.push((
