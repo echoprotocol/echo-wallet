@@ -17,14 +17,14 @@ class TabCallContracts extends React.Component {
 		}
 	}
 	render() {
-		const { field, data } = this.props;
+		const { field, data, type } = this.props;
 		return (
 			<div className={classnames({ error: data.error, 'action-wrap textarea-wrap': true })}>
 
 				<Form.Field
 					control="input"
 					name={field}
-					placeholder={field}
+					placeholder={`(${type})`}
 					value={data.value}
 					label={field}
 					onChange={(e) => this.onChange(e)}
@@ -39,14 +39,15 @@ class TabCallContracts extends React.Component {
 TabCallContracts.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	field: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
 	data: PropTypes.object.isRequired,
 };
 
 export default connect(
 	(state, ownProps) => {
-		const { field } = ownProps;
+		const { field, type } = ownProps;
 		const data = state.form.getIn([FORM_CALL_CONTRACT, 'inputs', field]);
-		return { field, data };
+		return { field, data, type };
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
