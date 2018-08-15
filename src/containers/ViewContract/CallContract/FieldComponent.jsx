@@ -6,6 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue } from '../../../actions/FormActions';
+import { formatCallContractField } from '../../../helpers/FormatHelper';
 
 class TabCallContracts extends React.Component {
 
@@ -17,7 +18,9 @@ class TabCallContracts extends React.Component {
 		}
 	}
 	render() {
-		const { field, data } = this.props;
+		const { data } = this.props;
+		const field = formatCallContractField(this.props.field);
+
 		return (
 			<div className={classnames({ error: data.error, 'action-wrap textarea-wrap': true })}>
 
