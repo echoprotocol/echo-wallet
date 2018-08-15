@@ -18,7 +18,7 @@ class TabCallContracts extends React.Component {
 		}
 	}
 	render() {
-		const { data } = this.props;
+		const { data, type } = this.props;
 		const field = formatCallContractField(this.props.field);
 
 		return (
@@ -27,7 +27,7 @@ class TabCallContracts extends React.Component {
 				<Form.Field
 					control="input"
 					name={field}
-					placeholder={field}
+					placeholder={`(${type})`}
 					value={data.value}
 					label={field}
 					onChange={(e) => this.onChange(e)}
@@ -42,14 +42,15 @@ class TabCallContracts extends React.Component {
 TabCallContracts.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	field: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
 	data: PropTypes.object.isRequired,
 };
 
 export default connect(
 	(state, ownProps) => {
-		const { field } = ownProps;
+		const { field, type } = ownProps;
 		const data = state.form.getIn([FORM_CALL_CONTRACT, 'inputs', field]);
-		return { field, data };
+		return { field, data, type };
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
