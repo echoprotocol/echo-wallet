@@ -49,7 +49,7 @@ class ViewContract extends React.Component {
 		return (
 			<div>
 				<ContractSettings />
-				<Tab className="tab-full" panes={panes} />
+				<Tab className="tab-full scroll-fix" panes={panes} />
 			</div>
 		);
 	}

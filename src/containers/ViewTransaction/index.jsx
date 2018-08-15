@@ -80,7 +80,7 @@ class ViewTransaction extends React.Component {
 				</div>
 				<Tab
 					menu={{ tabular: true }}
-					className={classnames('tab-full', { 'hide-menu': isLogData })}
+					className={classnames('tab-full scroll-fix', { 'hide-menu': isLogData })}
 					panes={panes}
 				/>
 			</div>

@@ -1,5 +1,8 @@
 .tab-full {
-
+    &.scroll-fix {
+        max-height: calc(100vh - 160px);
+        overflow: overlay;
+    }
     .control {
         &-wrap {
             background-color: rgb(247, 247, 247);
@@ -31,11 +34,17 @@
             }
         }
     }
+
     .ui.tabular.menu {
         border: 0;
-        max-width: 900px;
+        max-width: 860px;
         margin: auto;
         border-bottom: 2px solid rgb(247, 247, 247);
+        & + .ui.segment.tab {
+            max-width: 900px;
+            margin: auto;
+            padding: 0 20px;
+        }
         .item {
             border: 0;
             font-size: .8em;
@@ -47,6 +56,10 @@
             border-radius: 0;
             margin: 0 0 -2px 0;
             transition: border 0.1s ease;
+            padding: 0;
+            &:not(:last-child) {
+                margin-right: 35px;
+            }
             &.active {
                 color: $orange;
                 line-height: 0px;
@@ -65,7 +78,17 @@
     .tab-content {
         max-width: 860px;
         margin: auto;
-        padding: 50px 20px; 
+        padding: 30px 20px 20px; 
         overflow: initial;
+    }
+}
+
+.tab-content {
+    .form.user-form,
+    .form.main-form {
+        padding: 0;
+    }
+    .watchlist {
+        margin: 0
     }
 }
