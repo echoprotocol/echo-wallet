@@ -39,7 +39,7 @@ $thead-height: 46px;
        min-width: 10vw;
         &:first-child {
             min-width: calc(21vw - 30px);
-            padding-left:  0.92857143em;
+            padding-left:  20px;
         }
         &:nth-child(2),
         &:nth-child(3),
@@ -136,9 +136,8 @@ $thead-height: 46px;
     flex-direction: column;
     margin: 0;
     height: calc(100vh - 176px);
-    overflow: auto;
-    @media (min-width: 1060px){
-        overflow-x: hidden;
+    overflow-x: hidden;
+    @media (min-width: 1060px) {
         margin: 46px 0 0 0;
         height: calc(100vh - 222px);
     }
@@ -265,13 +264,14 @@ $thead-height: 46px;
             &:last-child {
                 align-items: flex-end;
                 .button {
-                    margin: 0;
+                    margin: 0 -20px 0 0;
                 }
             }
         }
         .table-title {
             font-size: 1.2em;
             color: $black;
+            margin-left: -20px;
         }
         .col-title {
             color: $gray;

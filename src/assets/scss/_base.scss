@@ -53,10 +53,6 @@ div,span {
 	&.center-mode {
 		display: flex;
         justify-content: center;
-        .user-form,
-        .main-form {
-            margin-top: 10vh;
-        }
 		div {
 			width: 100%;
 		}

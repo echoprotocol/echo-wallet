@@ -348,7 +348,7 @@
     li {
         .col {
             &:nth-child(2) {
-                font-family: Monospace;
+                font-family: source;
                 font-size: 14px;
                 max-width: 620px;
                 color: $black;
