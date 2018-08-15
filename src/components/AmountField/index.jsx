@@ -34,7 +34,6 @@ class AmountField extends React.Component {
 		const { currency } = this.props;
 
 		const value = e.target.value.trim();
-		console.log(e.target.value.trim());
 
 		if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
 			this.props.setFormError(this.props.form, 'amount', 'Amount must contain only digits and dot');
