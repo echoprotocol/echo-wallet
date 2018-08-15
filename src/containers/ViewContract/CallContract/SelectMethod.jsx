@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setFunction } from '../../../actions/ContractActions';
+import { formatCallContractField } from '../../../helpers/FormatHelper';
 
 class SelectMethod extends React.Component {
 
@@ -52,7 +53,7 @@ class SelectMethod extends React.Component {
 
 			arr.push((
 				<Dropdown.Item key={f.name} onClick={(e) => this.setFunction(f.name, e)}>
-					{f.name}
+					{formatCallContractField(f.name)}
 				</Dropdown.Item>
 			));
 
@@ -63,7 +64,7 @@ class SelectMethod extends React.Component {
 	}
 
 	render() {
-		const { functionName } = this.props;
+		const functionName = formatCallContractField(this.props.functionName);
 		const { searchText } = this.state;
 
 		return (
