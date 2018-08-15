@@ -67,22 +67,26 @@ export const toHex = (str) => {
 };
 
 export const convertContractConstant = (toType, fromType, constantValue) => {
+	if (fromType === 'hex') {
+		constantValue = constantValue.replace('0x', '');
+	}
+
 	switch (toType) {
 		case fromType: return null;
 		case 'hex':
 			if (fromType === 'number') {
 				return {
-					value: constantValue.toString(16),
+					value: `0x${constantValue.toString(16)}`,
 					type: 'hex',
 				};
 			} else if (fromType === 'string') {
 				return {
-					value: toHex(constantValue),
+					value: `0x${toHex(constantValue)}`,
 					type: 'hex',
 				};
 			} else if (fromType === 'bool') {
 				return {
-					value: constantValue ? 1 : 0,
+					value: `0x${constantValue ? 1 : 0}`,
 					type: 'hex',
 				};
 			}
@@ -109,7 +113,7 @@ export const convertContractConstant = (toType, fromType, constantValue) => {
 		case 'bool':
 			return {
 				value: !!toInt(constantValue),
-				type: 'number',
+				type: 'bool',
 			};
 		default: return null;
 	}
