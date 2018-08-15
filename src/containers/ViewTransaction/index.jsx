@@ -38,7 +38,7 @@ class ViewTransaction extends React.Component {
 		const panes = [
 			{
 				render: () => (
-					<Tab.Pane>
+					<Tab.Pane className="scroll-fix">
 						<TabOverview
 							data={state.data}
 							comment={comment}
@@ -57,7 +57,7 @@ class ViewTransaction extends React.Component {
 			panes.push({
 				menuItem: 'Event Logs',
 				render: () => (
-					<Tab.Pane>
+					<Tab.Pane className="scroll-fix">
 						<TabLogs data={state.data} />
 					</Tab.Pane>
 				),
@@ -80,7 +80,7 @@ class ViewTransaction extends React.Component {
 				</div>
 				<Tab
 					menu={{ tabular: true }}
-					className={classnames('tab-full scroll-fix', { 'hide-menu': isLogData })}
+					className={classnames('tab-full', { 'hide-menu': isLogData })}
 					panes={panes}
 				/>
 			</div>

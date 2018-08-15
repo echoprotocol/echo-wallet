@@ -40,10 +40,27 @@
         max-width: 860px;
         margin: auto;
         border-bottom: 2px solid rgb(247, 247, 247);
-        & + .ui.segment.tab {
-            max-width: 900px;
-            margin: auto;
-            padding: 0 20px;
+        position: relative;
+        & + .ui.tab.scroll-fix {
+            max-height: calc(100vh - 200px);
+        }
+        &:after {
+            content: "";
+            height: 2px;
+            background-color: rgb(247, 247, 247);
+            width: 80vw;
+            position: absolute;
+            bottom: -2px;
+            visibility: visible;
+        }
+        &:before {
+            content: "";
+            height: 2px;
+            background-color: rgb(247, 247, 247);
+            width: 80vw;
+            position: absolute;
+            bottom: -2px;
+            right: 100%;
         }
         .item {
             border: 0;
@@ -57,6 +74,7 @@
             margin: 0 0 -2px 0;
             transition: border 0.1s ease;
             padding: 0;
+            z-index: 2;
             &:not(:last-child) {
                 margin-right: 35px;
             }
@@ -74,12 +92,17 @@
     .ui.tab {
         background-color: #fff;
         border: 0;
+        &.scroll-fix {
+            max-height: calc(100vh - 160px);
+            overflow: overlay;
+        }
     }
     .tab-content {
         max-width: 860px;
         margin: auto;
-        padding: 30px 20px 20px; 
+        padding: 30px 45px 20px; 
         overflow: initial;
+
     }
 }
 
