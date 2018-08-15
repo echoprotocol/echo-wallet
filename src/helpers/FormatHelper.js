@@ -4,6 +4,9 @@ import operations from '../constants/Operations';
 import { events } from '../constants/LogEventConstants';
 
 const AREA_FIELDS = ['code', 'comment'];
+const removeCamelCaseRegEx = /([A-Z]+|[A-Z]?[a-z]+)(?=[A-Z]|\\b)/g;
+const removeSpaceRegEx = /\s\s+/g;
+const removeUnderscoreRegEx = /_/g;
 
 export const getTransactionDetails = (operationType, showOptions) => {
 	const operation = operations[operationType];
@@ -144,3 +147,11 @@ export const formatAmount = (amount, precision, symbol) => {
 
 	return symbol ? `${resultNumber} ${symbol}` : resultNumber;
 };
+
+export const formatCallContractField = (value) => String(value)
+	.replace(removeUnderscoreRegEx, ' ')
+	.split(removeCamelCaseRegEx)
+	.join(' ')
+	.trim()
+	.replace(removeSpaceRegEx, ' ')
+	.toLowerCase();

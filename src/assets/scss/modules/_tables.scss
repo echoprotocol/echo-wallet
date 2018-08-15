@@ -6,10 +6,10 @@ $thead-height: 46px;
     flex-direction: column;
     margin: 0;
     height: calc(100vh - 100px);
-    overflow-y: auto;
+    overflow-y: overlay;
     overflow-x: hidden;
     @media (min-width: 1060px){
-        overflow-y: scroll;
+        overflow-y: overlay;
         overflow-x: hidden;
         margin: 46px 0 0 0;
         height: calc(100vh - 146px);
@@ -20,7 +20,7 @@ $thead-height: 46px;
         width: 100%;
         background-color: #fff;
         @media (min-width: 1060px){
-            overflow-y: scroll;
+            overflow-y: overlay;
             position: fixed;
             overflow-x: hidden;
             margin-top: -($thead-height);
@@ -39,7 +39,7 @@ $thead-height: 46px;
        min-width: 10vw;
         &:first-child {
             min-width: calc(21vw - 30px);
-            padding-left:  0.92857143em;
+            padding-left:  20px;
         }
         &:nth-child(2),
         &:nth-child(3),
@@ -136,9 +136,8 @@ $thead-height: 46px;
     flex-direction: column;
     margin: 0;
     height: calc(100vh - 176px);
-    overflow: auto;
-    @media (min-width: 1060px){
-        overflow-x: hidden;
+    overflow-x: hidden;
+    @media (min-width: 1060px) {
         margin: 46px 0 0 0;
         height: calc(100vh - 222px);
     }
@@ -249,8 +248,20 @@ $thead-height: 46px;
         }
 
     }
+
     .thead {
-        border-bottom: 1px solid $bd-gray;
+        border: 1px solid $bd-gray;
+        &-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 25px;
+            margin: 10px 0;
+            .table-title {
+                font-size: 1.2em;
+                color: $black;
+            }
+        }
         &-wrap {
             position: relative;
             max-width: 1000px;
@@ -258,26 +269,21 @@ $thead-height: 46px;
         }
 
         td {
-            height: 80px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            color: $gray;
+            font-size: .9em;
+            font-family: proximanovaSemibold;
+            margin-top: auto;
             &:last-child {
                 align-items: flex-end;
-                .button {
-                    margin: 0;
-                }
+
             }
         }
-        .table-title {
-            font-size: 1.2em;
-            color: $black;
-        }
+
         .col-title {
-            color: $gray;
-            font-size: .85em;
-            font-weight: 600;
-            margin-top: auto;
+
         }
     }
     .tbody {
