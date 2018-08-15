@@ -19,7 +19,7 @@ import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
-import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+import { toastInfo } from '../helpers/ToastHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 import {
