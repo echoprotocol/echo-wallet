@@ -9,7 +9,7 @@
 
 .form.user-form,
 .form.main-form {
-    padding: 50px 0;
+    padding: 65px 0 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,7 +35,7 @@
     }
     h3 {
         font-size: 1.5em;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         text-align: center;
     }
     .shrink {
@@ -127,6 +127,7 @@
             font-family: 'Icons';
             display: block;
             color: #fff;
+            min-width: 22px;
             width: 22px;
             height: 22px;
             border-radius: 4px;
@@ -189,6 +190,22 @@
 .textarea-wrap {
     .error-message {
         margin-top: 2px;
+    }
+}
+
+.user-form {
+    .ui.right.button {
+        width: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }
 
