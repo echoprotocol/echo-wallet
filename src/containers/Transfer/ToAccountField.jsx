@@ -44,14 +44,16 @@ class ToAccountComponent extends React.Component {
 		const { to } = this.props;
 
 		return (
-			<Form.Field>
+			<Form.Field className={classnames('error-wrap', { error: to.error })}>
+
 				<label htmlFor="accountTo">To</label>
-				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error, error: to.error })}>
+				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error })}>
 					<input name="accountTo" value={to.value} onInput={(e) => this.onInput(e)} />
 					{ to.checked && !to.error ? <span className="icon-checked_1 value-status" /> : null }
 					{ to.error ? <span className="icon-error-red value-status" /> : null }
-					<span className="error-message">{to.error}</span>
 				</Input>
+				<span className="error-message">{to.error}</span>
+
 			</Form.Field>
 		);
 	}

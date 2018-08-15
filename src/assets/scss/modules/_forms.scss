@@ -140,6 +140,9 @@
     }
     &.orange {
         input {
+            &:disabled ~ .label {
+                opacity: .6;
+            }
             &:checked ~ .label {
                 &:before {
                     background-color: $orange;
@@ -238,7 +241,6 @@
         &.textarea-wrap
         {
             &.error {
-                margin-bottom: 10px;
                 input {
                     // border: 1px solid $err-red;
                 }
@@ -298,7 +300,6 @@
                     .amount {
                         border-color: $err-red;
                     }
-                    margin-bottom: 10px;
                 }
 
                 .amount {

@@ -10,6 +10,7 @@ import {
 	FORM_CREATE_CONTRACT,
 	FORM_CALL_CONTRACT,
 	FORM_ADD_CONTRACT,
+	FORM_VIEW_CONTRACT,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -117,6 +118,13 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		error: null,
 	}),
+	[FORM_VIEW_CONTRACT]: Map({
+		newName: {
+			value: '',
+			error: null,
+		},
+		error: null,
+	}),
 };
 
 export default createModule({
@@ -131,7 +139,8 @@ export default createModule({
 		[FORM_CALL_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT]),
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
-
+		[FORM_VIEW_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_VIEW_CONTRACT]),
 	}),
 	transformations: {
 		set: {
@@ -171,7 +180,32 @@ export default createModule({
 			},
 		},
 
+		push: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.field, payload.param], payload.value);
+
+				return state;
+			},
+		},
+
 		setFormError: {
+			reducer: (state, { payload }) => {
+				if (payload.field === 'error') {
+					state = state.setIn([payload.form, payload.field], payload.value);
+				} else {
+					const field = state.getIn([payload.form, payload.field]);
+
+					state = state.setIn([payload.form, payload.field], Object.assign({}, field, {
+						...field,
+						error: payload.value,
+					}));
+				}
+
+				return state;
+			},
+		},
+
+		setError: {
 			reducer: (state, { payload }) => {
 				if (payload.field === 'error') {
 					state = state.setIn([payload.form, payload.field], payload.value);

@@ -48,13 +48,14 @@ class CheckComponent extends React.Component {
 
 	render() {
 		const { checkList } = this.state;
+		const { loading } = this.props;
 
 		return (
 			<div className="check-list">
 				{
 					checkList.map(({ id, text, checked }, index) => (
 						<div className="check orange" key={id}>
-							<input type="checkbox" id={id} checked={checked} onChange={(e) => this.onChange(e, index)} />
+							<input type="checkbox" id={id} checked={checked} onChange={(e) => this.onChange(e, index)} disabled={loading} />
 							<label className="label" htmlFor={id}>
 								<span className="label-text">{text}</span>
 							</label>
@@ -69,10 +70,13 @@ class CheckComponent extends React.Component {
 
 CheckComponent.propTypes = {
 	setValue: PropTypes.func.isRequired,
+	loading: PropTypes.bool.isRequired,
 };
 
 export default connect(
-	() => ({}),
+	(state) => ({
+		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+	}),
 	(dispatch) => ({
 		setValue: (field, value) => dispatch(setValue(FORM_SIGN_UP, field, value)),
 	}),

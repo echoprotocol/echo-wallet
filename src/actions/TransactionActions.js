@@ -21,7 +21,6 @@ import {
 import { getMethod } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import {
-	validateAccountName,
 	validateCode,
 	validateAbi,
 	validateContractName,
@@ -102,17 +101,15 @@ export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getSt
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
-	let accountNameError = validateAccountName(accountName);
-
-	if (accountNameError) {
-		dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
+	if (!accountName) {
+		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));
 		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 		return;
 	}
 
 	try {
 		const instance = getState().echojs.getIn(['system', 'instance']);
-		accountNameError = await validateAccountExist(instance, accountName, true);
+		const accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
@@ -348,11 +345,12 @@ export const sendTransaction = () => async (dispatch, getState) => {
 				));
 			}
 
-			toastSuccess(`${operations[operation].name} transaction was sent`);
+			toastSuccess(`${operations[operation].name} transaction was completed`);
 		})
 		.catch(() => {
-			toastError(`${operations[operation].name} transaction wasn't sent`);
+			toastError(`${operations[operation].name} transaction wasn't completed`);
 		});
+	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));
 
