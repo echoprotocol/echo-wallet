@@ -18,6 +18,7 @@ class AmountField extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			searchText: '',
 			isOpenDropdown: false,
 			amountFocus: false,
 		};
@@ -33,6 +34,9 @@ class AmountField extends React.Component {
 		this.setState({ isOpenDropdown: !this.state.isOpenDropdown });
 	}
 
+	onSearch(e) {
+		this.setState({ searchText: e.target.value });
+	}
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
@@ -75,28 +79,42 @@ class AmountField extends React.Component {
 	}
 
 	renderList(type) {
-		const list = [
-			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
+		const { searchText } = this.state;
+		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
+		const list = (search || this.props[type].length === 0) ? [] : [
+			{
+				key: `${type}_header`,
+				text: type.toUpperCase(),
+				value: type.toUpperCase(),
+				className: 'header',
+				disabled: true,
+			},
 		];
+		const result = this.props[type].reduce((arr, a, i) => {
+			if (!search || a.symbol.toLowerCase().match(search)) {
+				const id = i;
+				arr.push({
+					key: a ? a.id : id + type,
+					text: a ? a.symbol : '',
+					value: a ? a.id : id + type,
+					onClick: (e) => this.setCurrency(a, type, e),
+				});
+			}
 
-		return this.props[type].reduce((arr, a, i) => {
-			const id = i;
-			arr.push((
-				<Dropdown.Item key={id} onClick={(e) => this.setCurrency(a, type, e)}>
-					{a.symbol}
-				</Dropdown.Item>
-			));
 
 			return arr;
+
 		}, list);
+		return result;
 	}
 
 	render() {
 		const {
-			assets, tokens, amount, form,
+			assets, amount, form,
 		} = this.props;
+		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-
+		const options = this.renderList('assets').concat(this.renderList('tokens'));
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
@@ -137,17 +155,15 @@ class AmountField extends React.Component {
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
-						open={this.state.isOpenDropdown}
-						onClick={(e) => this.onToggleDropdown(e)}
-						onBlur={(e) => this.onToggleDropdown(e)}
+						searchQuery={searchText}
+						closeOnChange
+						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
+						selection
+						options={options}
 						className="assets-tokens-dropdown"
-					>
-						<Dropdown.Menu>
-							{ assets.length ? this.renderList('assets') : null }
-							{ tokens.length ? this.renderList('tokens') : null }
-						</Dropdown.Menu>
-					</Dropdown>
+					/>
+
 				</Input>
 
 			</Form.Field>
@@ -160,7 +176,6 @@ AmountField.propTypes = {
 	currency: PropTypes.object,
 	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
-	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,

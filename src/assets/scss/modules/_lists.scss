@@ -48,9 +48,11 @@
             &:not(.no-choice) {
                 border-bottom-right-radius: 0 !important;
             }
+            .filtered {
+                display: none;
+            }
         }
         .dropdown.icon {
-            margin: 0 0 0 auto;
             padding-left: 1em;
         }
         &.no-choice {
