@@ -61,7 +61,12 @@ class Tokens extends React.Component {
 							this.props.tokens.map(({
 								id, symbol, precision, balance,
 							}) => (
-								<Table.Row key={id} onClick={() => this.toTransfer({ id, symbol, precision, balance })}>
+								<Table.Row
+									key={id}
+									onClick={() => this.toTransfer({
+										id, symbol, precision, balance,
+									})}
+								>
 									<Table.Cell>{symbol}</Table.Cell>
 									<Table.Cell>
 										{formatAmount(balance, precision, '')}
