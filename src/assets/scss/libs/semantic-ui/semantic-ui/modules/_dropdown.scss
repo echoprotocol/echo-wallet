@@ -468,29 +468,43 @@ select.ui.dropdown {
 }
 
 /* Hover */
-.ui.selection.dropdown:hover {
-  border-color: rgba(34, 36, 38, 0.35);
-  -webkit-box-shadow: none;
-          box-shadow: none;
+.ui.selection.dropdown {
+    &:not(.assets-tokens-dropdown) {
+        &:hover {
+            border-color: rgba(34, 36, 38, 0.35);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+    }
 }
 
 /* Active */
 .ui.selection.active.dropdown {
-  border-color: $inut-color;
-  -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
-          box-shadow: 0px 2px 3px 0px $bd-gray;
+    &:not(.assets-tokens-dropdown) {
+        border-color: $inut-color;
+        -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
+                box-shadow: 0px 2px 3px 0px $bd-gray;
+    }
 }
-.ui.selection.active.dropdown .menu {
-  border-color: $inut-color;
-  -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
-          box-shadow: 0px 2px 3px 0px $bd-gray;
-}
+.ui.selection.active.dropdown {
+    &:not(.assets-tokens-dropdown) {
+        .menu {
+            border-color: $inut-color;
+            -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
+            box-shadow: 0px 2px 3px 0px $bd-gray;
+        }
+    }
+} 
 
 /* Focus */
-.ui.selection.dropdown:focus {
-  border-color: $inut-color;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+.ui.selection.dropdown {
+    &:not(.assets-tokens-dropdown) {
+        &:focus {
+            border-color: $inut-color;
+            -webkit-box-shadow: none;
+                    box-shadow: none;
+        }
+    }
 }
 .ui.selection.dropdown:focus .menu {
   border-color: $inut-color;
@@ -505,15 +519,24 @@ select.ui.dropdown {
 }
 
 /* Visible Hover */
-.ui.selection.active.dropdown:hover {
-  border-color: $inut-color;
-  -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
-          box-shadow: 0px 2px 3px 0px $bd-gray;
+.ui.selection.active.dropdown {
+    &:not(.assets-tokens-dropdown) {
+        &:hover {
+            border-color: $inut-color;
+            -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
+                    box-shadow: 0px 2px 3px 0px $bd-gray;
+        }
+    }
+
 }
-.ui.selection.active.dropdown:hover .menu {
-  border-color: $inut-color;
-  -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
-          box-shadow: 0px 2px 3px 0px $bd-gray;
+.ui.selection.active.dropdown  {
+    &:not(.assets-tokens-dropdown) {
+        &:hover .menu {
+            border-color: $inut-color;
+            -webkit-box-shadow: 0px 2px 3px 0px $bd-gray;
+                    box-shadow: 0px 2px 3px 0px $bd-gray;
+        }
+    }
 }
 
 /* Dropdown Icon */

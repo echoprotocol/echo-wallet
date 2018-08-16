@@ -19,7 +19,6 @@ class AmountField extends React.Component {
 		super();
 		this.state = {
 			searchText: '',
-			isOpenDropdown: false,
 			amountFocus: false,
 		};
 	}
@@ -28,10 +27,6 @@ class AmountField extends React.Component {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
 		}
-	}
-
-	onToggleDropdown() {
-		this.setState({ isOpenDropdown: !this.state.isOpenDropdown });
 	}
 
 	onSearch(e) {
@@ -44,6 +39,33 @@ class AmountField extends React.Component {
 		const { name } = e.target;
 
 		this.props.amountInput(this.props.form, value, currency, name);
+	}
+
+	onChangeCurrency(e, value) {
+		const { tokens, assets } = this.props;
+		let target = tokens.find((el) => el.id === value);
+		if (target) {
+			this.setCurrency(target, 'tokens');
+			this.setState({ searchText: '' });
+
+			return;
+		}
+		target = assets.find((el) => el.id === value);
+		if (target) {
+			this.setCurrency(target, 'assets');
+			this.setState({ searchText: '' });
+
+		}
+	}
+
+	onDropdownChange(e, value) {
+		if (typeof e.target.value === 'undefined') { // if click
+			this.onChangeCurrency(e, value);
+		} else if (e.keyCode === 13) { // if enter
+			this.onChangeCurrency(e, value);
+		}
+
+
 	}
 
 	setAvailableAmount(currency) {
@@ -78,6 +100,7 @@ class AmountField extends React.Component {
 		});
 	}
 
+
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
@@ -94,13 +117,11 @@ class AmountField extends React.Component {
 			if (!search || a.symbol.toLowerCase().match(search)) {
 				const id = i;
 				arr.push({
-					key: a ? a.id : id + type,
+					key: a ? a.id : id,
 					text: a ? a.symbol : '',
-					value: a ? a.id : id + type,
-					onClick: (e) => this.setCurrency(a, type, e),
+					value: a ? a.id : id,
 				});
 			}
-
 
 			return arr;
 
@@ -155,6 +176,7 @@ class AmountField extends React.Component {
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						searchQuery={searchText}
 						closeOnChange
 						onSearchChange={(e) => this.onSearch(e)}
@@ -176,6 +198,7 @@ AmountField.propTypes = {
 	currency: PropTypes.object,
 	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
+	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -197,6 +220,7 @@ export default connect(
 			currency: state.form.getIn([form, 'currency']),
 			fee: state.form.getIn([form, 'fee']),
 			tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+
 		};
 	},
 	(dispatch) => ({
