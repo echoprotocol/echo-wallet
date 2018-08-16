@@ -11,7 +11,7 @@ import { formatCallContractField } from '../../../helpers/FormatHelper';
 class TabCallContracts extends React.Component {
 
 	onChange(e) {
-		const field = e.target.name;
+		const { field } = this.props;
 		const value = e.target.value.trim();
 		if (field) {
 			this.props.setFormValue(field, value);
