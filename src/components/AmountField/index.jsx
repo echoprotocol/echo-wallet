@@ -61,7 +61,6 @@ class AmountField extends React.Component {
 			return 0;
 		}
 
-		console.log(fee, currency)
 		if (fee.asset && fee.asset.id !== currency.id) {
 			return currency.balance;
 		}
