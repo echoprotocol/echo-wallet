@@ -1,5 +1,6 @@
 import { ChainValidation } from 'echojs-lib';
 import { keccak256 } from 'js-sha3';
+import RPL from 'rlp';
 
 import operations from '../constants/Operations';
 import { getLog, logParser } from './FormatHelper';
@@ -18,6 +19,9 @@ export const getMethod = (method, args) => {
 	}
 
 	const argsString = args.map((arg) => {
+		console.log('lib');
+		console.log(RPL.encode(arg));
+		console.log(RPL.encode(arg).toString('hex'));
 		let newArg = '';
 		if (!Number.isNaN(Number(arg))) {
 			newArg += Number(arg).toString(16);
@@ -32,6 +36,8 @@ export const getMethod = (method, args) => {
 				}
 			}
 		}
+		console.log('origin');
+		console.log(newArg);
 		return newArg.padStart(64, '0');
 	});
 
