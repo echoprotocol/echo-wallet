@@ -43,6 +43,7 @@ class ButtonComponent extends React.Component {
 				basic
 				type="submit"
 				color="orange"
+				disabled={this.isDisabledSubmit()}
 				className={classnames({ disabled: this.isDisabledSubmit() })}
 				onClick={(e) => this.onClick(e)}
 			>

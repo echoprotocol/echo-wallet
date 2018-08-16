@@ -36,16 +36,20 @@ class Tokens extends React.Component {
 		return (
 			<React.Fragment>
 				<div className="thead-wrap">
+					<div className="thead-info">
+						<div className="table-title">Tokens</div>
+						<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+					</div>
 					<Table className="thead" unstackable>
 						<Table.Body>
 							<Table.Row>
 								<Table.Cell>
-									<div className="table-title">Tokens</div>
-									<div className="col-title">Tokens</div>
+                                    Tokens
+									{/* <div className="col-title">Tokens</div> */}
 								</Table.Cell>
 								<Table.Cell>
-									<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
-									<div className="col-title">Total amount</div>
+                                    Total amount
+									{/* <div className="col-title"></div> */}
 								</Table.Cell>
 							</Table.Row>
 						</Table.Body>

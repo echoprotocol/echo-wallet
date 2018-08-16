@@ -48,7 +48,7 @@ class SignIn extends React.Component {
 		const { accountName, password, loading } = this.props;
 
 		return (
-			<div>
+			<div className="sign-scroll-fix">
 				<Form className="user-form">
 					<div className="form-info">
 						<h3>Welcome to Echo</h3>
@@ -70,7 +70,7 @@ class SignIn extends React.Component {
 					{
 						loading ?
 							<Button basic type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
-							<Button basic type="submit" color="orange" onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
+							<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
 					}
 					<span className="sign-nav">
 						Don’t have an account?

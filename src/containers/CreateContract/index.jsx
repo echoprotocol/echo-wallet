@@ -20,7 +20,6 @@ class CreateContract extends React.Component {
 		return (
 			<Form className="main-form">
 				<FormComponent />
-				{/* <ButtonComponent /> */}
 			</Form>
 		);
 	}
