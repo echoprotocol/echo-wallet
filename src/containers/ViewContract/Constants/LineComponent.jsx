@@ -3,26 +3,30 @@ import { connect } from 'react-redux';
 import { Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
-import SingleInput from './SingleInput';
+import classnames from 'classnames';
 
-import { contractQuery } from '../../../actions/ContractActions';
+import { contractQuery, set } from '../../../actions/ContractActions';
+
+import { convertContractConstant } from '../../../helpers/FormatHelper';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
-import { convertContractConstant } from '../../../helpers/FormatHelper';
-import ContractReducer from '../../../reducers/ContractReducer';
 
-class InputLine extends React.Component {
+import SingleInput from './InputComponent';
 
-	constructor() {
-		super();
+class LineComponent extends React.Component {
+
+	constructor(props) {
+		super(props);
+
 		this.state = {
-			showResult: false,
 			valueType: undefined,
+			showResult: false,
 		};
 	}
 
 	componentWillMount() {
 		const { constant } = this.props;
+
 		if (constant.outputs[0].type === 'string') {
 			this.setState({ valueType: 'string' });
 		} else if (constant.outputs[0].type === 'bool') {
@@ -34,6 +38,7 @@ class InputLine extends React.Component {
 
 	onChange(e, data) {
 		const { constant, constants } = this.props;
+
 		const result = convertContractConstant(
 			data.value,
 			this.state.valueType,
@@ -52,20 +57,60 @@ class InputLine extends React.Component {
 
 			this.setState({ valueType: result.type });
 		}
+
 	}
 
 	onQuery() {
 		const {
-			inputField, constant, contractId,
+			constant, contractId, inputs,
 		} = this.props;
-		const args = Object.keys(constant.inputs).map((input) => inputField.toJS()[`${constant.name},${input}`].value);
+
+		const args = Object.keys(constant.inputs)
+			.map((input) => inputs.toJS()[constant.name][input].value);
+
 		this.props.contractQuery(constant, args, contractId);
+
 		this.setState({ showResult: true });
+
+	}
+
+	renderConstant() {
+		const { constant } = this.props;
+
+		return (
+			<span className="value item">
+				{constant.constantValue}
+			</span>
+		);
+	}
+
+	renderInput() {
+		const { constant, inputs } = this.props;
+
+		return (
+			<React.Fragment>
+				{
+					constant.inputs.map((input, index) => {
+						const id = index;
+						const errorValue = inputs.toJS()[constant.name][index].error;
+						return (
+							<div key={id} className={classnames({ error: errorValue, 'action-wrap textarea-wrap': true })}>
+								{ id !== 0 && <span className="comma item">,</span> }
+								<SingleInput field={{ id, name: constant.name }} inputData={input} />
+								<span className="error-message">{errorValue}</span>
+							</div>
+						);
+					})
+				}
+				<Button className="item" size="mini" content="call" onClick={() => this.onQuery()} />
+			</React.Fragment>
+		);
 
 	}
 
 	render() {
 		const { constant, typeOptions } = this.props;
+
 		return (
 			<div className="watchlist-line">
 				<div className="watchlist-row">
@@ -85,34 +130,22 @@ class InputLine extends React.Component {
 							onChange={(e, data) => this.onChange(e, data)}
 						/>
 						{
-							constant.inputs.map((input, index) => {
-								const id = index;
-								if (id !== 0) {
-									return (
-										<div key={id} >
-											<span className="comma item">,</span>
-											<SingleInput field={{ id, name: constant.name }} inputData={input} />
-										</div>
-									);
-								}
-								return (
-									<SingleInput key={id} field={{ id, name: constant.name }} inputData={input} />
-								);
-							})
+							constant.inputs.length
+								? this.renderInput()
+								: this.renderConstant()
 						}
-						<Button className="item" size="mini" content="call" onClick={() => this.onQuery()} />
 					</div>
 				</div>
 				{
 					this.state.showResult &&
-						<div className="watchlist-row">
-							<div className="watchlist-col" />
-							<div className="watchlist-col">
-								<span>
-									{constant.constantValue}
-								</span>
-							</div>
+					<div className="watchlist-row">
+						<div className="watchlist-col" />
+						<div className="watchlist-col">
+							<span>
+								{constant.constantValue}
+							</span>
 						</div>
+					</div>
 				}
 			</div>
 		);
@@ -120,28 +153,28 @@ class InputLine extends React.Component {
 
 }
 
-InputLine.propTypes = {
+LineComponent.propTypes = {
 	constants: PropTypes.any,
 	typeOptions: PropTypes.array.isRequired,
 	constant: PropTypes.object.isRequired,
-	inputField: PropTypes.object,
+	inputs: PropTypes.object.isRequired,
 	contractId: PropTypes.string.isRequired,
 	contractQuery: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
 };
 
-InputLine.defaultProps = {
-	inputField: null,
+LineComponent.defaultProps = {
 	constants: null,
 };
+
 export default connect(
 	(state) => ({
 		constants: state.contract.get('constants'),
-		inputField: state.form.getIn([FORM_VIEW_CONTRACT]),
 		contractId: state.contract.get('id'),
+		inputs: state.form.getIn([FORM_VIEW_CONTRACT, 'inputs']),
 	}),
 	(dispatch) => ({
 		contractQuery: (method, args, contractId) => dispatch(contractQuery(method, args, contractId)),
-		set: (values) => dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(values) })),
+		set: (value) => dispatch(set('constants', new List(value))),
 	}),
-)(InputLine);
+)(LineComponent);

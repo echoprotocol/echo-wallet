@@ -3,9 +3,9 @@ import { Map, List } from 'immutable';
 import {
 	setFormError,
 	setValue,
-	pushForm,
 	setInFormValue,
 	clearForm,
+	setInFormErrorConstant,
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 
@@ -25,13 +25,17 @@ import { toInt, toUtf8 } from '../helpers/FormatHelper';
 import {
 	validateAbi,
 	validateContractName,
-	validateContractId,
+	validateContractId, validateByType,
 } from '../helpers/ValidateHelper';
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
+
+export const set = (field, value) => (dispatch) => {
+	dispatch(ContractReducer.actions.set({ field, value }));
+};
 
 export const loadContracts = (accountId) => (dispatch) => {
 	let contracts = localStorage.getItem('contracts');
@@ -220,6 +224,20 @@ export const addContractByName = (
  */
 
 export const contractQuery = (method, args, contractId) => async (dispatch, getState) => {
+	let isErrorExist = false;
+
+	method.inputs.forEach((input, index) => {
+		const error = validateByType(args[index], input.type);
+		if (error) {
+			dispatch(setInFormErrorConstant(FORM_VIEW_CONTRACT, ['inputs', method.name, index], error));
+			isErrorExist = true;
+		}
+	});
+
+	if (isErrorExist) {
+		return;
+	}
+
 	const instance = getState().echojs.getIn(['system', 'instance']);
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -263,18 +281,14 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	let constants = abi.filter((value) =>
 		value.constant && value.name);
 
+	const inputs = [];
 	constants.forEach((constant) => {
 		if (constant.inputs.length) {
+			inputs[constant.name] = [];
 			Object.keys(constant.inputs)
 				.forEach((input) => {
-					dispatch(pushForm(
-						FORM_VIEW_CONTRACT,
-						[constant.name, input],
-						{
-							value: '',
-							error: null,
-						},
-					));
+					inputs[constant.name][input] = {};
+					dispatch(setInFormValue(FORM_VIEW_CONTRACT, ['inputs', constant.name, input], ''));
 				});
 		}
 	});
