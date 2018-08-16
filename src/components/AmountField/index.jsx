@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue, setFormValue } from '../../actions/FormActions';
+import amountInput from '../../actions/AmountActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -27,37 +28,18 @@ class AmountField extends React.Component {
 			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
 		}
 	}
+
 	onToggleDropdown() {
 		this.setState({ isOpenDropdown: !this.state.isOpenDropdown });
 	}
+
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
 		const value = e.target.value.trim();
+		const { name } = e.target;
 
-		if (!value.match(/^[0-9]*\.?[0-9]*$/)) {
-			this.props.setValue(this.props.form, 'amount', {
-				error: 'Amount must contain only digits and dot',
-				value,
-			});
-
-			return;
-		}
-
-		if (value !== '' && !Math.floor(value * (10 ** currency.precision))) {
-			this.props.setValue(
-				this.props.form,
-				'amount',
-				{
-					error: `Amount should be more than ${1 / (10 ** currency.precision)}`,
-					value,
-				},
-			);
-
-			return;
-		}
-
-		this.props.setFormValue(this.props.form, e.target.name, value);
+		this.props.amountInput(this.props.form, value, currency, name);
 	}
 
 	setAvailableAmount(currency) {
@@ -182,6 +164,7 @@ AmountField.propTypes = {
 	amount: PropTypes.object.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	amountInput: PropTypes.func.isRequired,
 	form: PropTypes.string.isRequired,
 };
 
@@ -204,5 +187,7 @@ export default connect(
 	(dispatch) => ({
 		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
 		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
+		amountInput: (form, value, currency, name) =>
+			dispatch(amountInput(form, value, currency, name)),
 	}),
 )(AmountField);

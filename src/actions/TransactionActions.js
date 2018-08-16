@@ -134,6 +134,7 @@ export const transfer = () => async (dispatch, getState) => {
 		to, amount, currency, comment,
 	} = form;
 	let { fee } = form;
+	amount.value = amount.value.replace(',', '.');
 
 	if (to.error || amount.error || fee.error || comment.error) {
 		return;
@@ -473,4 +474,3 @@ export const callContract = () => async (dispatch, getState) => {
 	}
 
 };
-

@@ -6,3 +6,8 @@
         margin-left: 4px;
     }
 }
+
+.sign-scroll-fix {
+    max-height: calc(100vh - 50px);
+    overflow: overlay;
+}

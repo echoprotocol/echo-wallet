@@ -60,7 +60,8 @@ class Header extends React.Component {
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
-		const balance = asset ? formatAmount(asset.balance, asset.precision, asset.symbol) : '0 ECHO';
+		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
+		const symbol = asset ? asset.symbol : 'ECHO';
 		return (
 			<div className="header">
 				{
@@ -82,6 +83,9 @@ class Header extends React.Component {
 							<span>
 								{balance}
 							</span>
+							<span>
+								{symbol}
+							</span>
 						</Link>
 						<Dropdown text={localStorage.getItem('current_account')}>
 							<Dropdown.Menu>
@@ -90,6 +94,7 @@ class Header extends React.Component {
 										<span>{localStorage.getItem('current_account')}</span>
 										<div className="balance">
 											<span>{balance}</span>
+											<span>{symbol}</span>
 										</div>
 									</a>
 								</Dropdown.Item>
