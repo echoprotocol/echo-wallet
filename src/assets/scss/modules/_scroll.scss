@@ -1,0 +1,102 @@
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content  {
+    &::-webkit-scrollbar-button {
+        background-image:url('');
+        background-repeat:no-repeat;
+        width:0;
+        height:0;
+    }
+}
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content  {
+    &::-webkit-scrollbar-track {
+        background-color:#d4d4d4;
+    }
+}
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content {
+    &::-webkit-scrollbar-thumb {
+        background-color:#fff;
+        border-left: 2px solid #d4d4d4;
+        border-right: 2px solid #d4d4d4;
+        border-radius: 4px;
+    }
+} 
+
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.table-smart-contract,
+.content,
+.bytecode {
+    &::-webkit-scrollbar-thumb:horizontal {
+        border-top: 2px solid #d4d4d4;
+        border-bottom: 2px solid #d4d4d4;
+    }
+}
+
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content  {
+    &::-webkit-scrollbar-thumb:hover{
+        background-color:rgba(#fff,.5);
+    }
+}
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content  {
+    &::-webkit-resizer{
+        background-image:url('');
+        background-repeat:no-repeat;
+        width:0;
+        height:0px
+    }
+}
+textarea,
+.menu,
+.table-assets .tbody,
+.table-tokens .tbody,
+.table-activity,
+.scroll-fix,
+.bytecode,
+.table-smart-contract,
+.content {
+    &::-webkit-scrollbar{
+        width: 11px;
+
+    }
+}
