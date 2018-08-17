@@ -22,13 +22,13 @@ class InputComponent extends React.Component {
 			inputData, field: currentField, inputs,
 		} = this.props;
 
-		const testField = inputs.toJS()[currentField.name][currentField.id].value;
+		const { value } = inputs.toJS()[currentField.name][currentField.id];
 
 		return (
 			<Input
 				className="item"
 				size="mini"
-				value={testField}
+				value={value}
 				onChange={(e) => this.onChange(e)}
 				placeholder={`${inputData.name} (${inputData.type})`}
 			/>

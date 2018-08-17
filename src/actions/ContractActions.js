@@ -281,13 +281,10 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	let constants = abi.filter((value) =>
 		value.constant && value.name);
 
-	const inputs = [];
 	constants.forEach((constant) => {
 		if (constant.inputs.length) {
-			inputs[constant.name] = [];
 			Object.keys(constant.inputs)
 				.forEach((input) => {
-					inputs[constant.name][input] = {};
 					dispatch(setInFormValue(FORM_VIEW_CONTRACT, ['inputs', constant.name, input], ''));
 				});
 		}

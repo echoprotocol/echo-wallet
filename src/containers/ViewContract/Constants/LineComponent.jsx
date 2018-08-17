@@ -11,7 +11,7 @@ import { convertContractConstant } from '../../../helpers/FormatHelper';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
-import SingleInput from './InputComponent';
+import InputComponent from './InputComponent';
 
 class LineComponent extends React.Component {
 
@@ -96,7 +96,7 @@ class LineComponent extends React.Component {
 						return (
 							<div key={id} className={classnames({ error: errorValue, 'action-wrap textarea-wrap': true })}>
 								{ id !== 0 && <span className="comma item">,</span> }
-								<SingleInput field={{ id, name: constant.name }} inputData={input} />
+								<InputComponent field={{ id, name: constant.name }} inputData={input} />
 								<span className="error-message">{errorValue}</span>
 							</div>
 						);
