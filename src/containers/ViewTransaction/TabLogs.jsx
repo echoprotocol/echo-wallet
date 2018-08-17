@@ -2,11 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from '../../components/Dropdown';
 
-
 class TabLogs extends React.Component {
 
 	renderLog(item, key) {
-		console.log(1);
 		const dropdownOptions = [
 			{
 				text: 'hex',
@@ -42,7 +40,7 @@ class TabLogs extends React.Component {
 				</li>
 				<li key={`${item.data}data`}>
 					<div className="col data">Data:</div>
-					<Dropdown options={dropdownOptions} />
+					<Dropdown options={dropdownOptions} data={item.data} />
 					<div className="col">
 						<div className="data-item">
 							<span className="arrow">➡</span>

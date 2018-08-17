@@ -4,20 +4,24 @@ import { Dropdown } from 'semantic-ui-react';
 
 class DropdownComponent extends React.Component {
 
+	// onChange() {
+	//
+	// }
+
 	render() {
-		const { options } = this.props;
-		console.log(options);
+		const { options, data } = this.props;
+		if (data) {
+			console.log(data);
+		}
 		return (
-			<React.Fragment>
-				<Dropdown
-					placeholder="default"
-					compact
-					selection
-					className="item contract-type-dropdown air"
-					options={options}
-					// onChange={(e, data) => this.onChange(e, data)}
-				/>
-			</React.Fragment>
+			<Dropdown
+				placeholder="def"
+				compact
+				selection
+				className="item contract-type-dropdown air"
+				options={options}
+				// onChange={(e, data) => this.onChange(e, data)}
+			/>
 		);
 	}
 
@@ -25,6 +29,11 @@ class DropdownComponent extends React.Component {
 
 DropdownComponent.propTypes = {
 	options: PropTypes.array.isRequired,
+	data: PropTypes.any,
+};
+
+DropdownComponent.defaultProps = {
+	data: null,
 };
 
 export default DropdownComponent;
