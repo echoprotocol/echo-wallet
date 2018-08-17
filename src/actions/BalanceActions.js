@@ -12,7 +12,7 @@ import {
 import { setError, setParamError, closeModal } from './ModalActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
-import { toastSuccess } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
@@ -220,4 +220,20 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 
 	const index = getState().balance.get('tokens').findIndex((i) => i.id === contractId);
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
+};
+
+export const enableContract = (contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
+};
+
+export const disableToken = (name, contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
+
+
+	toastInfo(
+		`You have removed ${name} from watch list`,
+		() => dispatch(enableContract(contractId)),
+		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
+		() => setTimeout(() => {}, 1000),
+	);
 };

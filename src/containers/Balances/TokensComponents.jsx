@@ -8,12 +8,12 @@ import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 import { formatAmount } from '../../helpers/FormatHelper';
 
-import { removeToken } from '../../actions/BalanceActions';
+import { disableToken } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
 
-	onRemoveToken(id) {
-		this.props.removeToken(id);
+	onRemoveToken(name, id) {
+		this.props.removeToken(name, id);
 	}
 
 	showTokensModal() {
@@ -22,16 +22,18 @@ class Tokens extends React.Component {
 
 	renderEmpty() {
 		return (
-			<div className="msg-empty">
-				<h3>You have no tokens</h3>
-				<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+			<div className="table-tokens">
+				<div className="msg-empty">
+					<h3>You have no tokens</h3>
+					<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+				</div>
 			</div>
 		);
 	}
 
 	renderList() {
 		return (
-			<React.Fragment>
+			<div className="table-tokens">
 				<div className="thead-wrap">
 					<div className="thead-info">
 						<div className="table-title">Tokens</div>
@@ -65,8 +67,8 @@ class Tokens extends React.Component {
 										<span
 											className="icon-close"
 											role="button"
-											onClick={(e) => this.onRemoveToken(id, e)}
-											onKeyPress={(e) => this.onRemoveToken(id, e)}
+											onClick={(e) => this.onRemoveToken(symbol, id, e)}
+											onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
 											tabIndex="0"
 										/>
 									</Table.Cell>
@@ -75,19 +77,20 @@ class Tokens extends React.Component {
 						}
 					</Table.Body>
 				</Table>
-			</React.Fragment>
+			</div>
 		);
 	}
 
 	render() {
-		return (
-			<div className="table-tokens">
-				{
-					!this.props.tokens || !this.props.tokens.size ?
-						this.renderEmpty() : this.renderList()
-				}
-			</div>
-		);
+		const { tokens } = this.props;
+
+		if (!tokens || !tokens.size) {
+			return this.renderEmpty();
+		}
+
+		const activeContracts = tokens.toJS().filter((i) => !i.disabled);
+
+		return activeContracts.length ? this.renderList() : this.renderEmpty();
 	}
 
 }
@@ -109,6 +112,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
-		removeToken: (value) => dispatch(removeToken(value)),
+		removeToken: (name, id) => dispatch(disableToken(name, id)),
 	}),
 )(Tokens);
