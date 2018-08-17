@@ -113,7 +113,7 @@ class AmountField extends React.Component {
 				disabled: true,
 			},
 		];
-		const result = this.props[type].reduce((arr, a, i) => {
+		return this.props[type].reduce((arr, a, i) => {
 			if (!search || a.symbol.toLowerCase().match(search)) {
 				const id = i;
 				arr.push({
@@ -126,7 +126,6 @@ class AmountField extends React.Component {
 			return arr;
 
 		}, list);
-		return result;
 	}
 
 	render() {
