@@ -98,7 +98,7 @@ export const pushForm = (field, param, value) => (dispatch) => {
 /**
  * Set multiple params by field
  * @param {String} form
- * @param {String} field
+ * @param {String} fields
  * @param value
  * @returns {Function}
  */
@@ -115,4 +115,15 @@ export const setInFormValue = (form, fields, value) => (dispatch) => {
  */
 export const setInFormError = (form, fields, value) => (dispatch) => {
 	dispatch(FormReducer.actions.setInFormError({ form, fields, value }));
+};
+
+/**
+ * Set multiple params by field for constant
+ * @param {String} form
+ * @param {Array} fields
+ * @param value
+ * @returns {Function}
+ */
+export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
+	dispatch(FormReducer.actions.setInFormErrorConstant({ form, fields, value }));
 };

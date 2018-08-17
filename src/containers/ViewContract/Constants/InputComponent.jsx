@@ -3,31 +3,32 @@ import { connect } from 'react-redux';
 import { Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { setFormValue } from '../../../actions/FormActions';
+import { setInFormValue } from '../../../actions/FormActions';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
-class SingleInput extends React.Component {
+class InputComponent extends React.Component {
 
 	onChange(e) {
-		const field = e.target.name;
+		const { field } = this.props;
 		const value = e.target.value.trim();
 		if (field) {
-			this.props.setFormValue(field, value);
+			this.props.setInFormValue(field.name, field.id, value);
 		}
 	}
 
 	render() {
-		const { inputData, inputField, field: currentField } = this.props;
+		const {
+			inputData, field: currentField, inputs,
+		} = this.props;
 
-		const newField = inputField.toJS()[`${currentField.name},${currentField.id}`].value;
+		const { value } = inputs.toJS()[currentField.name][currentField.id];
 
 		return (
 			<Input
 				className="item"
 				size="mini"
-				name={`${currentField.name},${currentField.id}`}
-				value={newField}
+				value={value}
 				onChange={(e) => this.onChange(e)}
 				placeholder={`${inputData.name} (${inputData.type})`}
 			/>
@@ -36,22 +37,19 @@ class SingleInput extends React.Component {
 
 }
 
-SingleInput.propTypes = {
+InputComponent.propTypes = {
 	inputData: PropTypes.object.isRequired,
-	inputField: PropTypes.any,
+	inputs: PropTypes.object.isRequired,
 	field: PropTypes.any.isRequired,
-	setFormValue: PropTypes.func.isRequired,
-};
-
-SingleInput.defaultProps = {
-	inputField: null,
+	setInFormValue: PropTypes.func.isRequired,
 };
 
 export default connect(
 	(state) => ({
 		inputField: state.form.getIn([FORM_VIEW_CONTRACT]),
+		inputs: state.form.getIn([FORM_VIEW_CONTRACT, 'inputs']),
 	}),
 	(dispatch) => ({
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
+		setInFormValue: (field, index, value) => dispatch(setInFormValue(FORM_VIEW_CONTRACT, ['inputs', field, index], value)),
 	}),
-)(SingleInput);
+)(InputComponent);
