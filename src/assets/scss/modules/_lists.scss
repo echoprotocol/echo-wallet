@@ -249,7 +249,7 @@
             input {
                 height: 26px;
                 font-size: 14px;
-                min-width: 280px;
+                min-width: 260px;
             }
         }
         .button.mini.ui {
@@ -381,7 +381,12 @@
     }
     .topic-item,
     .data-item, {
-        display: flex;
+        max-width: 620px;
+        word-wrap: break-word;
+        display: block;
+        @media (max-width: 900px){
+            max-width: 480px;
+        }
         &:not(:last-child) {
             margin-bottom: 10px;
         }
@@ -392,6 +397,7 @@
 
     }
 }
+
 .logs-list {
     li {
         .col {

@@ -228,8 +228,7 @@ $thead-height: 46px;
     .tbody {
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
-        margin: 0;
+        overflow-y: overlay;
         border: 0;
         border-radius: 0;
         max-width: 1000px;
