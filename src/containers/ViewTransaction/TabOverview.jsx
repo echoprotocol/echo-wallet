@@ -15,7 +15,7 @@ class TabOverview extends React.Component {
 
 		return comment.unlocked ? comment.value : (
 			<Button
-				content="Show comment"
+				content="Show note"
 				type="button"
 				icon="comment"
 				size="mini"
@@ -121,7 +121,7 @@ class TabOverview extends React.Component {
 					{
 						data.memo ?
 							<li>
-								<div className="col">Comment:</div>
+								<div className="col">Note:</div>
 								<div className="col">{this.renderComment()}</div>
 							</li> : null
 					}
