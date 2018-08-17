@@ -52,7 +52,7 @@ $thead-height: 46px;
         &:nth-child(5) {
             min-width: calc(18vw - 30px);
             .ellips {
-                max-width: 16.5vw;
+                max-width: 14vw;
             }
             @media (max-width: 1200px){
                 text-align: right;
@@ -66,7 +66,7 @@ $thead-height: 46px;
         &:last-child {
             min-width: 12vw;
             text-align: right;
-            padding-right:  1.7em;
+            padding-right:  20px;
         }
     }
 
@@ -116,7 +116,8 @@ $thead-height: 46px;
                 &:nth-child(4) {
                     color: $blue;
                 }
-                &:nth-child(5) {
+                &:nth-child(5),
+                &:nth-child(6) {
                     color: $gray-dark;
                 }
                 &:last-child {
@@ -214,6 +215,12 @@ $thead-height: 46px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    .text-bold {
+        font-family: proximanovaSemibold;
+        & + span {
+            margin-left: 4px;
+        }
+    }
 }
 @media (max-width: 1200px){
     .wallet-wrap {
@@ -279,10 +286,6 @@ $thead-height: 46px;
                 align-items: flex-end;
 
             }
-        }
-
-        .col-title {
-
         }
     }
     .tbody {

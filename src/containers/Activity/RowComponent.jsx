@@ -52,12 +52,16 @@ class RowComponent extends React.Component {
 					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">{amount}</span>
-					<span className="ellips">{symbol}</span>
+					<span className="ellips">
+						<span className="text-bold">{amount}</span>
+						<span>{symbol}</span>
+					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span>{feeAmount}</span>
-					<span>{feeSymbol}</span>
+					<span className="ellips">
+						<span className="text-bold">{feeAmount}</span>
+						<span>{feeSymbol}</span>
+					</span>
 				</Table.Cell>
 				<Table.Cell>
 					<span className="date">{moment.utc(timestamp).local().format('MMMM D, YYYY')}</span>
