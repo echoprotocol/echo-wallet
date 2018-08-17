@@ -390,7 +390,7 @@ export const callContract = () => async (dispatch, getState) => {
 		const error = validateByType(value, type);
 		if (error) {
 			dispatch(setInFormError(FORM_CALL_CONTRACT, ['inputs', field], error));
-			isErrorExist = true;
+			isErrorExist = false;
 		}
 		return value;
 	});
