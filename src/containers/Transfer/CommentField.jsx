@@ -39,9 +39,9 @@ class CommentField extends React.Component {
 		return (
 			<Form.Field>
 				<Form.Field
-					label="Comment"
+					label="Note"
 					className="comment"
-					placeholder="Comment"
+					placeholder="Note"
 					control="textarea"
 					value={currency && currency.type === 'tokens' ? '' : comment}
 					onChange={(e) => this.onComment(e)}
