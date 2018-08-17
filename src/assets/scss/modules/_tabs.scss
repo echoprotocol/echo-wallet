@@ -100,16 +100,13 @@
     .ui.tab {
         background-color: #fff;
         border: 0;
-        // &.scroll-fix {
-        //     max-height: calc(100vh - 160px);
-        //     overflow: overlay;
-        // }
     }
     .tab-content {
         max-width: 860px;
         margin: auto;
         padding: 30px 45px 20px; 
-        overflow: initial;
+        // overflow: initial;
+        overflow: -webkit-paged-x;
 
     }
 }
