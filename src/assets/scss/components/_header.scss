@@ -118,11 +118,8 @@
         color: $link-gray;
         span {
             &:nth-child(1) {
-                font-weight: 600;
-                margin-right: 5px;
-            }
-            &:nth-child(2) {
-                font-weight: 400;
+                font-family: proximanovaSemibold;
+                margin-right: 4px;
             }
         }
     }

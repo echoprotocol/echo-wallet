@@ -5,15 +5,9 @@ import { withRouter } from 'react-router';
 
 import { formatAbi } from '../../../actions/ContractActions';
 
-import ConstantLine from './ConstantLine';
-import InputLine from './InputLine';
+import ConstantLine from './LineComponent';
 
 class TabContractProps extends React.Component {
-
-	componentDidMount() {
-		const contractName = this.props.location.pathname.split('/')[2];
-		this.props.formatAbi(contractName, true);
-	}
 
 	render() {
 		const { constants } = this.props;
@@ -52,10 +46,6 @@ class TabContractProps extends React.Component {
 							];
 						}
 
-						if (constant.inputs.length) {
-							return (<InputLine key={id} typeOptions={typeOptions} constant={constant} />);
-						}
-
 						return (<ConstantLine key={id} typeOptions={typeOptions} constant={constant} />);
 					}) : ''}
 				</div>
@@ -67,8 +57,6 @@ class TabContractProps extends React.Component {
 
 TabContractProps.propTypes = {
 	constants: PropTypes.any,
-	location: PropTypes.object.isRequired,
-	formatAbi: PropTypes.func.isRequired,
 };
 
 TabContractProps.defaultProps = {
@@ -80,6 +68,6 @@ export default withRouter(connect(
 		constants: state.contract.get('constants'),
 	}),
 	(dispatch) => ({
-		formatAbi: (name, isConst) => dispatch(formatAbi(name, isConst)),
+		formatAbi: (name) => dispatch(formatAbi(name)),
 	}),
 )(TabContractProps));

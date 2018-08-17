@@ -1,8 +1,17 @@
 .tab-full {
-    &.scroll-fix {
-        max-height: calc(100vh - 160px);
+    .scroll-fix {
+        max-height: calc(100vh - 200px);
         overflow: overlay;
     }
+    &.hide-menu {
+        .scroll-fix {
+            max-height: calc(100vh - 160px);
+        }
+        .menu {
+            display: none;
+        }
+    }
+ 
     .control {
         &-wrap {
             background-color: rgb(247, 247, 247);
@@ -37,18 +46,17 @@
 
     .ui.tabular.menu {
         border: 0;
-        max-width: 860px;
+        max-width: 900px;
+        padding: 0 20px;
         margin: auto;
         border-bottom: 2px solid rgb(247, 247, 247);
         position: relative;
-        & + .ui.tab.scroll-fix {
-            max-height: calc(100vh - 200px);
-        }
+
         &:after {
             content: "";
             height: 2px;
             background-color: rgb(247, 247, 247);
-            width: 80vw;
+            width: 100vw;
             position: absolute;
             bottom: -2px;
             visibility: visible;
@@ -92,16 +100,13 @@
     .ui.tab {
         background-color: #fff;
         border: 0;
-        &.scroll-fix {
-            max-height: calc(100vh - 160px);
-            overflow: overlay;
-        }
     }
     .tab-content {
         max-width: 860px;
         margin: auto;
         padding: 30px 45px 20px; 
-        overflow: initial;
+        // overflow: initial;
+        overflow: -webkit-paged-x;
 
     }
 }

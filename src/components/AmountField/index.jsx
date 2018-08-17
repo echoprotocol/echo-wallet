@@ -18,7 +18,7 @@ class AmountField extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			isOpenDropdown: false,
+			searchText: '',
 			amountFocus: false,
 		};
 	}
@@ -29,10 +29,9 @@ class AmountField extends React.Component {
 		}
 	}
 
-	onToggleDropdown() {
-		this.setState({ isOpenDropdown: !this.state.isOpenDropdown });
+	onSearch(e) {
+		this.setState({ searchText: e.target.value });
 	}
-
 	onChangeAmount(e) {
 		const { currency } = this.props;
 
@@ -40,6 +39,33 @@ class AmountField extends React.Component {
 		const { name } = e.target;
 
 		this.props.amountInput(this.props.form, value, currency, name);
+	}
+
+	onChangeCurrency(e, value) {
+		const { tokens, assets } = this.props;
+		let target = tokens.find((el) => el.id === value);
+		if (target) {
+			this.setCurrency(target, 'tokens');
+			this.setState({ searchText: '' });
+
+			return;
+		}
+		target = assets.find((el) => el.id === value);
+		if (target) {
+			this.setCurrency(target, 'assets');
+			this.setState({ searchText: '' });
+
+		}
+	}
+
+	onDropdownChange(e, value) {
+		if (typeof e.target.value === 'undefined') { // if click
+			this.onChangeCurrency(e, value);
+		} else if (e.keyCode === 13) { // if enter
+			this.onChangeCurrency(e, value);
+		}
+
+
 	}
 
 	setAvailableAmount(currency) {
@@ -74,28 +100,41 @@ class AmountField extends React.Component {
 		});
 	}
 
+
 	renderList(type) {
-		const list = [
-			<Dropdown.Header key={`${type}_header`} content={type.toUpperCase()} />,
+		const { searchText } = this.state;
+		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
+		const list = (search || this.props[type].length === 0) ? [] : [
+			{
+				key: `${type}_header`,
+				text: type.toUpperCase(),
+				value: type.toUpperCase(),
+				className: 'header',
+				disabled: true,
+			},
 		];
 		return this.props[type].reduce((arr, a, i) => {
-			const id = i;
-			arr.push((
-				<Dropdown.Item key={id} onClick={(e) => this.setCurrency(a, type, e)}>
-					{a.symbol}
-				</Dropdown.Item>
-			));
+			if (!search || a.symbol.toLowerCase().match(search)) {
+				const id = i;
+				arr.push({
+					key: a ? a.id : id,
+					text: a ? a.symbol : '',
+					value: a ? a.id : id,
+				});
+			}
 
 			return arr;
+
 		}, list);
 	}
 
 	render() {
 		const {
-			assets, tokens, amount, form,
+			assets, amount, form,
 		} = this.props;
+		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-
+		const options = this.renderList('assets').concat(this.renderList('tokens'));
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
@@ -136,17 +175,16 @@ class AmountField extends React.Component {
 					{/* if elements =< 1 add class no-choice */}
 					<Dropdown
 						search
-						open={this.state.isOpenDropdown}
-						onClick={(e) => this.onToggleDropdown(e)}
-						onBlur={(e) => this.onToggleDropdown(e)}
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
+						searchQuery={searchText}
+						closeOnChange
+						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
-						className="assets-tokens-dropdown"
-					>
-						<Dropdown.Menu>
-							{ assets.length ? this.renderList('assets') : null }
-							{ tokens.length ? this.renderList('tokens') : null }
-						</Dropdown.Menu>
-					</Dropdown>
+						selection
+						options={options}
+						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
+					/>
+
 				</Input>
 
 			</Form.Field>
@@ -181,6 +219,7 @@ export default connect(
 			currency: state.form.getIn([form, 'currency']),
 			fee: state.form.getIn([form, 'fee']),
 			tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+
 		};
 	},
 	(dispatch) => ({
