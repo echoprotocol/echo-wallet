@@ -222,7 +222,7 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };
 
-export const enableContract = (contractId) => (dispatch) => {
+export const enableToken = (contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
 };
 
@@ -232,7 +232,7 @@ export const disableToken = (name, contractId) => (dispatch) => {
 
 	toastInfo(
 		`You have removed ${name} from watch list`,
-		() => dispatch(enableContract(contractId)),
+		() => dispatch(enableToken(contractId)),
 		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
 		() => setTimeout(() => {}, 1000),
 	);
