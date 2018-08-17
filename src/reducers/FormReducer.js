@@ -119,6 +119,7 @@ const DEFAULT_FORM_FIELDS = {
 		error: null,
 	}),
 	[FORM_VIEW_CONTRACT]: Map({
+		inputs: new Map({}),
 		newName: {
 			value: '',
 			error: null,
@@ -246,6 +247,21 @@ export default createModule({
 
 				let field = state.getIn(path);
 				if (field.toJS) field = field.toJS();
+				state = state.setIn(path, Object.assign({}, field, {
+					...field,
+					error: payload.value,
+				}));
+
+				return state;
+			},
+		},
+
+		setInFormErrorConstant: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				const field =
+					state.toJS()[payload.form][payload.fields[0]][payload.fields[1]][payload.fields[2]];
 				state = state.setIn(path, Object.assign({}, field, {
 					...field,
 					error: payload.value,
