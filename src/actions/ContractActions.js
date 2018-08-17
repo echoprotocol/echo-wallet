@@ -19,7 +19,7 @@ import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
-import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+import { toastInfo } from '../helpers/ToastHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 import {
@@ -101,7 +101,6 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		dispatch(push('contracts', name, { disabled: false, abi, id }));
 
 		history.push(CONTRACT_LIST_PATH);
-		toastSuccess(`Contract ${name} successfully added`);
 	} catch (err) {
 		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
 	}
@@ -206,8 +205,6 @@ export const addContractByName = (
 	localStorage.setItem('contracts', JSON.stringify(contracts));
 
 	dispatch(push('contracts', name, { disabled: false, abi, id }));
-
-	toastSuccess(`Contract ${name} successfully added`);
 };
 
 /**

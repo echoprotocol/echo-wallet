@@ -21,7 +21,7 @@ class SignUp extends React.Component {
 	render() {
 
 		return (
-			<div>
+			<div className="sign-scroll-fix">
 				<Form className="user-form">
 					<div className="form-info">
 						<h3>Welcome to Echo</h3>
