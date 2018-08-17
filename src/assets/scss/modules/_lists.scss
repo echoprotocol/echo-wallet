@@ -73,7 +73,9 @@
 }
     
     
-
+.addition {
+    display: none !important;
+}
 .assets-tokens-dropdown {
     &.ui.dropdown {
         display: flex;

@@ -22,7 +22,12 @@ class AmountField extends React.Component {
 			amountFocus: false,
 		};
 	}
-
+	componentWillMount() {
+		const options = this.renderList('assets').concat(this.renderList('tokens'));
+		this.setState({
+			options,
+		});
+	}
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
@@ -30,6 +35,9 @@ class AmountField extends React.Component {
 	}
 
 	onSearch(e) {
+		if (e.target.value === '') {
+			this.props.setValue(0);
+		}
 		this.setState({ searchText: e.target.value });
 	}
 	onChangeAmount(e) {
@@ -104,6 +112,7 @@ class AmountField extends React.Component {
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
+
 		const list = (search || this.props[type].length === 0) ? [] : [
 			{
 				key: `${type}_header`,
@@ -114,6 +123,7 @@ class AmountField extends React.Component {
 			},
 		];
 		return this.props[type].reduce((arr, a, i) => {
+            
 			if (!search || a.symbol.toLowerCase().match(search)) {
 				const id = i;
 				arr.push({
@@ -134,7 +144,7 @@ class AmountField extends React.Component {
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const options = this.renderList('assets').concat(this.renderList('tokens'));
+		// const options = this.renderList('assets').concat(this.renderList('tokens'));
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
@@ -178,10 +188,11 @@ class AmountField extends React.Component {
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						searchQuery={searchText}
 						closeOnChange
-						onSearchChange={(e) => this.onSearch(e)}
+						onSearchChange={(e, { value }) => this.onSearch(e, value)}
 						text={currency ? currency.symbol : ''}
 						selection
-						options={options}
+						options={this.state.options}
+						noResultsMessage="No results are found"
 						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
 					/>
 
