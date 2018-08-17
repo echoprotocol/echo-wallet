@@ -1,10 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Dropdown from '../../components/Dropdown';
 
 
 class TabLogs extends React.Component {
 
 	renderLog(item, key) {
+		console.log(1);
+		const dropdownOptions = [
+			{
+				text: 'hex',
+				value: 'hex',
+			},
+			{
+				text: 'string',
+				value: 'string',
+			},
+			{
+				text: 'number',
+				value: 'number',
+			},
+			{
+				text: 'bool',
+				value: 'bool',
+			},
+		];
 		return (
 			<React.Fragment key={key}>
 				<li key={`${item.data}topics`}>
@@ -22,6 +42,7 @@ class TabLogs extends React.Component {
 				</li>
 				<li key={`${item.data}data`}>
 					<div className="col data">Data:</div>
+					<Dropdown options={dropdownOptions} />
 					<div className="col">
 						<div className="data-item">
 							<span className="arrow">➡</span>

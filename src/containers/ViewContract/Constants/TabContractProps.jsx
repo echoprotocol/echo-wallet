@@ -9,6 +9,46 @@ import ConstantLine from './LineComponent';
 
 class TabContractProps extends React.Component {
 
+	getOptions(type) {
+		switch (type) {
+			case 'bool': return [
+				{
+					text: 'bool',
+					value: 'bool',
+				},
+				{
+					text: 'number',
+					value: 'number',
+				},
+				{
+					text: 'hex',
+					value: 'hex',
+				},
+			];
+			case 'string':
+			case 'address': return [
+				{
+					text: type === 'address' ? 'id' : type,
+					value: type === 'address' ? 'number' : type,
+				},
+				{
+					text: 'hex',
+					value: 'hex',
+				},
+			];
+			default: return [
+				{
+					text: 'number',
+					value: 'number',
+				},
+				{
+					text: 'hex',
+					value: 'hex',
+				},
+			];
+		}
+	}
+
 	render() {
 		const { constants } = this.props;
 
@@ -18,35 +58,13 @@ class TabContractProps extends React.Component {
 					{constants.toJS().length ? constants.toJS().map((constant, index) => {
 						const id = index;
 
-						let typeOptions = [
-							{
-								text: constant.outputs[0].type === 'string' ? 'string' : 'number',
-								value: constant.outputs[0].type === 'string' ? 'string' : 'number',
-							},
-							{
-								text: 'hex',
-								value: 'hex',
-							},
-						];
-
-						if (constant.outputs[0].type === 'bool') {
-							typeOptions = [
-								{
-									text: 'bool',
-									value: 'bool',
-								},
-								{
-									text: 'number',
-									value: 'number',
-								},
-								{
-									text: 'hex',
-									value: 'hex',
-								},
-							];
-						}
-
-						return (<ConstantLine key={id} typeOptions={typeOptions} constant={constant} />);
+						return (
+							<ConstantLine
+								key={id}
+								typeOptions={this.getOptions(constant.outputs[0].type)}
+								constant={constant}
+							/>
+						);
 					}) : ''}
 				</div>
 			</div>

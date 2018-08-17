@@ -7,7 +7,7 @@ import classnames from 'classnames';
 
 import { contractQuery, set } from '../../../actions/ContractActions';
 
-import { convertContractConstant } from '../../../helpers/FormatHelper';
+import { convertContractConstant, formatCallContractField } from '../../../helpers/FormatHelper';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
@@ -38,6 +38,9 @@ class LineComponent extends React.Component {
 
 	onChange(e, data) {
 		const { constant, constants } = this.props;
+		if (this.state.valueType === 'id') {
+			this.setState({ valueType: 'number' });
+		}
 
 		const result = convertContractConstant(
 			data.value,
@@ -79,7 +82,7 @@ class LineComponent extends React.Component {
 
 		return (
 			<span className="value item">
-				{constant.constantValue}
+				{constant.constantValue.toString()}
 			</span>
 		);
 	}
@@ -114,7 +117,7 @@ class LineComponent extends React.Component {
 		return (
 			<div className="watchlist-line">
 				<div className="watchlist-row">
-					<span className="row-title"> {constant.name} </span>
+					<span className="row-title"> {formatCallContractField(constant.name)} </span>
 				</div>
 				<div className="watchlist-row">
 					<div className="watchlist-col">
@@ -122,7 +125,7 @@ class LineComponent extends React.Component {
 					</div>
 					<div className="watchlist-col">
 						<Dropdown
-							placeholder={this.state.valueType}
+							placeholder={constant.outputs[0].type === 'address' ? 'id' : this.state.valueType}
 							compact
 							selection
 							className="item contract-type-dropdown air"
