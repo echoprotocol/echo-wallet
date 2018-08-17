@@ -183,7 +183,7 @@ class AmountField extends React.Component {
 						text={currency ? currency.symbol : ''}
 						selection
 						options={options}
-						className="assets-tokens-dropdown"
+						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
 					/>
 
 				</Input>
