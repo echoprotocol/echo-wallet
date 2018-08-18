@@ -128,6 +128,24 @@
             }
         }
     }
+    .tokens_header {
+        .text {
+            &:before {
+                content: "tokens";
+                text-transform: uppercase;
+                display: block;
+            }
+        }
+    }
+    .assets_header {
+        .text {
+            &:before {
+                content: "assets";
+                text-transform: uppercase;
+                display: block;
+            }
+        }
+    }
 }
 .contract-type-dropdown {
     &.ui.dropdown {
