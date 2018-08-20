@@ -2,7 +2,7 @@ import { key } from 'echojs-lib';
 import { EchoJSActions } from 'echojs-redux';
 
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
-import { closeModal, openModal } from './ModalActions';
+import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 import { setField, setComment } from './TransactionActions';
@@ -131,20 +131,23 @@ export const unlockAccount = ({
 	accountName,
 	password,
 }) => async (dispatch, getState) => {
-	let accountNameError = validateAccountName(accountName);
-	const passwordError = validatePassword(password);
 
-	if (accountNameError) {
-		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
-		return;
-	}
-
-	if (passwordError) {
-		dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
-		return;
-	}
+	dispatch(setDisable(MODAL_UNLOCK, true));
 
 	try {
+		let accountNameError = validateAccountName(accountName);
+		const passwordError = validatePassword(password);
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
+			return;
+		}
+
+		if (passwordError) {
+			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
+			return;
+		}
+
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
@@ -205,6 +208,7 @@ export const unlockAccount = ({
 	} catch (err) {
 		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
 	} finally {
+		dispatch(setDisable(MODAL_UNLOCK, false));
 		dispatch(toggleLoading(FORM_UNLOCK_MODAL, false));
 	}
 
