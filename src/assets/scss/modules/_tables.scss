@@ -157,6 +157,12 @@ $thead-height: 46px;
             background:0;
             color: $gray;
             padding: 0.92857143em 5px;
+            span {
+                cursor: pointer;
+                i {
+                    margin-left: 5px;
+                }          
+            }
         }
     }
 
