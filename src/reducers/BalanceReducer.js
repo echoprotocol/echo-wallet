@@ -1,12 +1,14 @@
 import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 
+const DEFAULT_FIELDS = Map({
+	tokens: List([]),
+	assets: List([]),
+});
+
 export default createModule({
 	name: 'balance',
-	initialState: Map({
-		tokens: List([]),
-		assets: List([]),
-	}),
+	initialState: DEFAULT_FIELDS,
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
@@ -29,6 +31,14 @@ export default createModule({
 			reducer: (state, { payload }) => {
 				const field = state.get(payload.field);
 				state = state.set(payload.field, field.delete(payload.value));
+
+				return state;
+			},
+		},
+
+		reset: {
+			reducer: (state) => {
+				state = DEFAULT_FIELDS;
 
 				return state;
 			},
