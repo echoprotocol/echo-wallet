@@ -52,7 +52,11 @@ class Assets extends React.Component {
 							this.props.assets.map((asset, i) => {
 								const id = i;
 								return (
-									<Table.Row key={id} onClick={() => this.toTransfer(asset)}>
+									<Table.Row
+										key={id}
+										className="pointer"
+										onClick={() => this.toTransfer(asset)}
+									>
 										<Table.Cell>{asset.symbol}</Table.Cell>
 										<Table.Cell>
 											{formatAmount(asset.balance, asset.precision, '')}

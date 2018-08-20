@@ -338,11 +338,9 @@ $thead-height: 46px;
             &:not(.msg-empty):hover {
                 background-color: $orange;
                 .icon-close {
-                    margin-left: 20px;
                     display: inline-block;
                     opacity: 1;
                     width: auto;
-                    transition: opacity .5s, margin .3s;
 
                 }
                 td {
@@ -353,6 +351,7 @@ $thead-height: 46px;
                 }
             }
         }
+
     }
 }
 .table-assets {
@@ -360,6 +359,31 @@ $thead-height: 46px;
 }
 .table-tokens {
     margin-left: 10px;
+    .tbody {
+        tr {
+            &:hover {
+                td {
+                    &:last-child {
+                        display: flex;
+                        max-width: 34px;
+                        justify-content: center;
+                        align-items: center;
+                        animation: fadeIn .4s;
+                        padding: 0;
+                    }
+                }
+            }
+            td {
+                &:nth-child(2) {
+                    justify-content: flex-end;
+                }
+                &:last-child {
+                    display: none;
+                }
+            }
+        }
+    }
+
 }
 
 
