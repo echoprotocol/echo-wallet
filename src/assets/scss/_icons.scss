@@ -2,6 +2,22 @@
     content: "\e91c";
 }
 
+.icon-menu-wallet:before {
+    content: "\e91d";
+}
+
+.icon-sort:before {
+    content: "\e91e";
+}
+
+.icon-send:before {
+    content: "\e91b";
+}
+
+.icon-recent-activity:before {
+    content: "\e91a";
+}
+
 .icon-edit-close,
 .icon-edit-checked {
     color: #d6d9df;
@@ -11,42 +27,45 @@
     }
 }
 
-.icon-send:before {
-    content: "\e91b";
-}
-.icon-recent-activity:before {
-    content: "\e91a";
-}
 .icon-edit-close:before {
     content: "\e919";
 }
+
 .icon-edit-checked:before {
     content: "\e916";
 }
+
 .icon-error-red:before {
     content: "\e918";
     color: #f65c5c;
 }
+
 .icon-close-white:before {
     content: "\e917";
     color: #fff;
 }
+
 .icon-checked-white:before {
     content: "\e916";
     color: #fff;
 }
+
 .icon-contractCopy:before {
     content: "\e915";
 }
+
 .icon-contractSearch:before {
     content: "\e914";
 }
+
 .icon-contractAdd:before {
     content: "\e912";
 }
+
 .icon-add2:before {
     content: "\e912";
 }
+
 .icon-send2:before {
     content: "\e914";
 }
@@ -54,56 +73,73 @@
 .icon-add:before {
     content: "\e900";
 }
+
 .icon-back:before {
     content: "\e901";
 }
+
 .icon-checked_1:before {
     content: "\e902";
     color: #7ad38d;
 }
+
 .icon-checked:before {
     content: "\e902";
     color: #fff;
 }
+
 .icon-checked:before {
     content: "\e903";
 }
+
 .icon-close:before {
     content: "\e904";
 }
+
 .icon-copy:before {
     content: "\e905";
 }
+
 .icon-dotted:before {
     content: "\e906";
 }
+
 .icon-dropdown_arrow:before {
     content: "\e907";
 }
+
 .icon-info:before {
     content: "\e908";
 }
+
 .icon-menu_2:before {
     content: "\e90a";
 }
+
 .icon-menu_3:before {
     content: "\e90b";
 }
+
 .icon-menu_4:before {
     content: "\e90c";
 }
+
 .icon-menu_5:before {
     content: "\e90d";
 }
+
 .icon-menu:before {
     content: "\e90e";
 }
+
 .icon-remove:before {
     content: "\e90f";
 }
+
 .icon-top_1:before {
     content: "\e911";
 }
+
 .icon-hide:before {
     content: "\e913";
 }
