@@ -172,7 +172,6 @@ export const updateContractName = (oldName) => (dispatch, getState) => {
 	localStorage.setItem('contracts', JSON.stringify(contracts));
 
 	dispatch(remove('contracts', oldName));
-
 	dispatch(push('contracts', newName, {
 		disabled: false,
 		abi: contracts[accountId][newName].abi,
