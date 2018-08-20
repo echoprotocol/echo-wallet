@@ -11,6 +11,7 @@ import {
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 	ADD_CONTRACT_PATH,
+	BALANCES_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
 
@@ -42,6 +43,17 @@ class SidebarMenu extends React.Component {
 					</div>
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
+							<li>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									onClick={() => this.props.hideBar()}
+									to={BALANCES_PATH}
+								>
+									<span className="icon icon-menu-wallet" />
+									<span className="sidebar-nav-text">Wallet</span>
+								</NavLink>
+							</li>
 							<li>
 								<NavLink
 									exact
