@@ -43,6 +43,7 @@ class SidebarMenu extends React.Component {
 					</div>
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
+
 							<li>
 								<NavLink
 									exact
@@ -54,6 +55,7 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Wallet</span>
 								</NavLink>
 							</li>
+
 							<li>
 								<NavLink
 									exact
@@ -65,6 +67,7 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Create Smart Contract</span>
 								</NavLink>
 							</li>
+
 							<li>
 								<NavLink
 									exact
@@ -76,6 +79,7 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">View Smart Contract</span>
 								</NavLink>
 							</li>
+
 							<li>
 								<NavLink
 									exact
@@ -87,6 +91,7 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Added Smart Contract</span>
 								</NavLink>
 							</li>
+
 							<li>
 								<NavLink
 									className="sidebar-nav-link"
@@ -98,6 +103,7 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Recent Activity</span>
 								</NavLink>
 							</li>
+
 						</ul>
 					</div>
 
