@@ -31,6 +31,27 @@ class Tokens extends React.Component {
 		);
 	}
 
+	renderRow({
+		id, symbol, precision, balance, disabled,
+	}) {
+		if (disabled) return null;
+		return (
+			<Table.Row key={id}>
+				<Table.Cell>{symbol}</Table.Cell>
+				<Table.Cell>
+					{formatAmount(balance, precision, '')}
+					<span
+						className="icon-close"
+						role="button"
+						onClick={(e) => this.onRemoveToken(symbol, id, e)}
+						onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
+						tabIndex="0"
+					/>
+				</Table.Cell>
+			</Table.Row>
+		);
+	}
+
 	renderList() {
 		return (
 			<div className="table-tokens">
@@ -57,23 +78,7 @@ class Tokens extends React.Component {
 				<Table className="tbody" unstackable>
 					<Table.Body>
 						{
-							this.props.tokens.map(({
-								id, symbol, precision, balance,
-							}) => (
-								<Table.Row key={id}>
-									<Table.Cell>{symbol}</Table.Cell>
-									<Table.Cell>
-										{formatAmount(balance, precision, '')}
-										<span
-											className="icon-close"
-											role="button"
-											onClick={(e) => this.onRemoveToken(symbol, id, e)}
-											onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
-											tabIndex="0"
-										/>
-									</Table.Cell>
-								</Table.Row>
-							))
+							this.props.tokens.map((t) => this.renderRow(t))
 						}
 					</Table.Body>
 				</Table>

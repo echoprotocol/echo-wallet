@@ -206,6 +206,9 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 };
 
 export const removeToken = (contractId) => (dispatch, getState) => {
+	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
+	if (!targetToken || !targetToken.disabled) return;
+
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	let tokens = localStorage.getItem('tokens');
@@ -233,7 +236,6 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	toastInfo(
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableToken(contractId)),
-		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
-		() => setTimeout(() => {}, 1000),
+		() => dispatch(removeToken(contractId)),
 	);
 };
