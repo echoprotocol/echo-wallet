@@ -84,39 +84,7 @@
             }
         }
     }
-    &.orange {
-        input {
-            position: absolute;
-            opacity: 0;
-            &:focus {
-                & ~ .label {
-                    &:before {
-                        background-color: rgba($orange,.1);
-                        color: transparent;
-                    }
-                    .label-text {
-                        color: $orange;
-                    }
-                }
-                &:checked {
-                    & ~ .label {
-                        &:before {
-                            color: #fff;
-                        }
-                        .label-text {
-                            color: $orange;
-                        }
-                    }
-                }
-            }
 
-            &:checked ~ .label {
-                .label-text {
-                    color: $black;
-                }
-            }
-        }
-    }
     .label {
         display: flex;
         align-items: center;
@@ -264,9 +232,6 @@
         &.textarea-wrap
         {
             &.error {
-                input {
-                    // border: 1px solid $err-red;
-                }
                 textarea {
                     border-color: $err-red;
                 }
@@ -365,7 +330,7 @@
     max-width: 350px;
     width: 100%;
     input {
-        padding-left: 60px;
+        min-width: 360px;
         padding-right: 50px;
     }
     .label {
@@ -379,18 +344,20 @@
         display: table;
         line-height: 38px;
     }
-    .edit-options {
+    .edit-option {
+        top: 9px;
+        height: 20px;
+        min-width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
-        right: 12px;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        display: table;
-        line-height: 38px;
-        span {
-            &:not(:last-child) {
-                margin-right: 5px;
-            }
+        z-index: 2;
+        &.icon-edit-checked {
+            right: 20px;
+        }
+        &.icon-edit-close {
+            right: 0;
         }
     }
 }
@@ -425,5 +392,34 @@
         color: $white;
         animation: fadeIn .3s;
 
+    }
+}
+
+input {
+    &:focus {
+        box-shadow:
+        0 0 0 2px rgba($gray,.2),
+        0 0 0 2px rgba($gray,.2);
+    }
+}
+.check {
+    input {
+        position: absolute;
+        opacity: 0;
+        &:focus {
+            & ~ .label {
+                &:before {
+                    box-shadow:
+                    0 0 0 2px rgba($gray,.2),
+                    0 0 0 2px rgba($gray,.2);
+                }
+
+            }
+        }
+        &:checked ~ .label {
+            .label-text {
+                color: $black;
+            }
+        }
     }
 }
