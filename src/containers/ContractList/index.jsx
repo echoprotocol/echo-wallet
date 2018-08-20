@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -52,9 +52,18 @@ class ContractList extends React.Component {
 				<Table striped className="table-smart-contract">
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell>Contract ID</Table.HeaderCell>
 							<Table.HeaderCell>
-                                Watched Contract Name
+								<span>
+                                    Contract ID
+									<Icon name="sort" size="tiny" />
+								</span>
+
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<span>
+                                    Watched Contract Name
+									<Icon name="sort" size="tiny" />
+								</span>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
