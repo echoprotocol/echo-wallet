@@ -7,13 +7,16 @@ import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { openModal } from '../../actions/ModalActions';
 import { formatAmount } from '../../helpers/FormatHelper';
-
-import { removeToken } from '../../actions/BalanceActions';
+import { removeToken, redirectToTransfer } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
 
 	onRemoveToken(id) {
 		this.props.removeToken(id);
+	}
+
+	toTransfer(symbol) {
+		this.props.redirectToTransfer(symbol);
 	}
 
 	showTokensModal() {
@@ -58,7 +61,12 @@ class Tokens extends React.Component {
 							this.props.tokens.map(({
 								id, symbol, precision, balance,
 							}) => (
-								<Table.Row key={id}>
+								<Table.Row
+									key={id}
+									onClick={() => this.toTransfer({
+										id, symbol, precision, balance,
+									})}
+								>
 									<Table.Cell>{symbol}</Table.Cell>
 									<Table.Cell>
 										{formatAmount(balance, precision, '')}
@@ -96,6 +104,7 @@ Tokens.propTypes = {
 	tokens: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
+	redirectToTransfer: PropTypes.func.isRequired,
 };
 
 Tokens.defaultProps = {
@@ -110,5 +119,6 @@ export default connect(
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		removeToken: (value) => dispatch(removeToken(value)),
+		redirectToTransfer: (token) => dispatch(redirectToTransfer(token, 'tokens')),
 	}),
 )(Tokens);

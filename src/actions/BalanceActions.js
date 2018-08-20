@@ -10,14 +10,19 @@ import {
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
+import { setValue } from './FormActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
+import { FORM_TRANSFER } from '../constants/FormConstants';
+import { TRANSFER_PATH } from '../constants/RouterConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
+
+import history from '../history';
 
 export const getAssetsBalances = (assets) => async (dispatch) => {
 
@@ -220,4 +225,10 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 
 	const index = getState().balance.get('tokens').findIndex((i) => i.id === contractId);
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
+};
+
+export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
+	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
+	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
+	history.push(TRANSFER_PATH);
 };
