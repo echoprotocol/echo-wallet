@@ -7,13 +7,16 @@ import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { openModal } from '../../actions/ModalActions';
 import { formatAmount } from '../../helpers/FormatHelper';
-
-import { disableToken } from '../../actions/BalanceActions';
+import { disableToken, redirectToTransfer } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
 
 	onRemoveToken(name, id) {
 		this.props.removeToken(name, id);
+	}
+
+	toTransfer(symbol) {
+		this.props.redirectToTransfer(symbol);
 	}
 
 	showTokensModal() {
@@ -36,17 +39,29 @@ class Tokens extends React.Component {
 	}) {
 		if (disabled) return null;
 		return (
-			<Table.Row key={id}>
-				<Table.Cell>{symbol}</Table.Cell>
-				<Table.Cell>
+			<Table.Row
+				key={id}
+				className="pointer"
+			>
+				<Table.Cell
+					onClick={() => this.toTransfer({
+						id, symbol, precision, balance,
+					})}
+				>
+					{symbol}
+				</Table.Cell>
+				<Table.Cell
+					onClick={() => this.toTransfer({
+						id, symbol, precision, balance,
+					})}
+				>
 					{formatAmount(balance, precision, '')}
-					<span
-						className="icon-close"
-						role="button"
-						onClick={(e) => this.onRemoveToken(symbol, id, e)}
-						onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
-						tabIndex="0"
-					/>
+				</Table.Cell>
+				<Table.Cell
+					onClick={(e) => this.onRemoveToken(symbol, id, e)}
+					onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
+				>
+					<span className="icon-close" />
 				</Table.Cell>
 			</Table.Row>
 		);
@@ -75,7 +90,7 @@ class Tokens extends React.Component {
 						</Table.Body>
 					</Table>
 				</div>
-				<Table className="tbody" unstackable>
+				<Table className="tbody tokens-balance-table" unstackable>
 					<Table.Body>
 						{
 							this.props.tokens.map((t) => this.renderRow(t))
@@ -104,6 +119,7 @@ Tokens.propTypes = {
 	tokens: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
+	redirectToTransfer: PropTypes.func.isRequired,
 };
 
 Tokens.defaultProps = {
@@ -118,5 +134,6 @@ export default connect(
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		removeToken: (name, id) => dispatch(disableToken(name, id)),
+		redirectToTransfer: (token) => dispatch(redirectToTransfer(token, 'tokens')),
 	}),
 )(Tokens);

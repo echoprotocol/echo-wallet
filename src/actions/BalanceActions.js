@@ -10,14 +10,19 @@ import {
 } from '../api/ContractApi';
 
 import { setError, setParamError, closeModal } from './ModalActions';
+import { setValue } from './FormActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
+import { FORM_TRANSFER } from '../constants/FormConstants';
+import { TRANSFER_PATH } from '../constants/RouterConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
+
+import history from '../history';
 
 export const getAssetsBalances = (assets) => async (dispatch) => {
 
@@ -232,10 +237,15 @@ export const enableToken = (contractId) => (dispatch) => {
 export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
-
 	toastInfo(
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableToken(contractId)),
-		() => dispatch(removeToken(contractId)),
+		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
 	);
+};
+
+export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
+	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
+	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
+	history.push(TRANSFER_PATH);
 };
