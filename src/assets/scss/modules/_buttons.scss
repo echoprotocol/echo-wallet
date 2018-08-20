@@ -38,20 +38,6 @@ $stripe-width: 10px;
         &:focus {
             color: #9ca2ac;
         }
-        &.large {
-            i {
-                &:before {
-                    display: table;
-                    line-height: 15px;
-                }
-            }
-            font-size: 1em;
-            min-height: auto;
-            padding: 0;
-            line-height: 1;
-            margin: 0;
-            align-self: flex-start;
-        }
     }
 }
 

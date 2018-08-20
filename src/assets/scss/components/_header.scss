@@ -43,10 +43,36 @@
         line-height: normal;
     }
     .button {
-        &.transparent {
-            &:focus {
-                i {
-                    color: #6d7178;
+        &.send {
+            font-family: proximanovaSemibold;
+            background-color: transparent;
+            color: $link-gray;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            border-right: 1px solid $bd-gray;
+            border-left: 1px solid $bd-gray;
+            height: 50px;
+            border-radius: 0;
+            width: 106px;
+            background-color: transparent;
+            transition: background-color .3s;
+            i {
+                &:before {
+                    margin: -2px 5px 0 0;
+                    display: block;
+                }
+                font-size: 1.3rem;    
+                color: rgba($orange, .9);
+                transition: .3s;
+            }
+            &:focus,
+            &:hover {
+                background-color: $bg-gray;
+                i { 
+                    color: $orange;
                 }
             }
         }

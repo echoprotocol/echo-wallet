@@ -73,10 +73,9 @@ class Header extends React.Component {
 				<div className="panel-right">
 					<Button
 						icon="send"
-						className="transparent"
+						className="send"
 						content="Send"
 						onClick={(e) => this.onSend(e)}
-						size="large"
 					/>
 					<div className="user-section">
 						<Link className="balance" to={BALANCES_PATH}>
