@@ -12,8 +12,8 @@ import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
-	// ADD_CONTRACT_PATH,
-	// CREATE_CONTRACT_PATH,
+	ADD_CONTRACT_PATH,
+	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 } from '../../constants/RouterConstants';
 
@@ -47,8 +47,7 @@ class Header extends React.Component {
 
 	renderLinkToParent() {
 		const { location } = this.props;
-		const contractActionsList = ['add-contract', 'create-contract'];
-		if (contractActionsList.includes(location.pathname.split('/')[1])) {
+		if ([ADD_CONTRACT_PATH, CREATE_CONTRACT_PATH].includes(`/${location.pathname.split('/')[1]}`)) {
 			return (
 				<Link to={CONTRACT_LIST_PATH} className="icon-back" />
 			);
