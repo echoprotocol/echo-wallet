@@ -23,6 +23,13 @@ class AmountField extends React.Component {
 		};
 	}
 
+	componentWillMount() {
+		const options = this.renderList('assets').concat(this.renderList('tokens'));
+		this.setState({
+			options,
+		});
+	}
+
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue('currency', this.props.assets[0]);
@@ -35,7 +42,6 @@ class AmountField extends React.Component {
 
 	onChangeAmount(e) {
 		const { currency } = this.props;
-
 		const value = e.target.value.trim();
 		const { name } = e.target;
 
@@ -48,14 +54,12 @@ class AmountField extends React.Component {
 		if (target) {
 			this.setCurrency(target, 'tokens');
 			this.setState({ searchText: '' });
-
 			return;
 		}
 		target = assets.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'assets');
 			this.setState({ searchText: '' });
-
 		}
 	}
 
@@ -64,9 +68,8 @@ class AmountField extends React.Component {
 			this.onChangeCurrency(e, value);
 		} else if (e.keyCode === 13) { // if enter
 			this.onChangeCurrency(e, value);
+			setTimeout(() => { e.target.blur(); }, 0);
 		}
-
-
 	}
 
 	setAvailableAmount(currency) {
@@ -95,6 +98,10 @@ class AmountField extends React.Component {
 		return currency.balance - fee.value;
 	}
 
+	clearSearchText() {
+		this.setState({ searchText: '' });
+	}
+
 	amountFocusToggle(e, value) {
 		this.setState({
 			amountFocus: !value,
@@ -105,12 +112,12 @@ class AmountField extends React.Component {
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
-		const list = (search || this.props[type].length === 0) ? [] : [
+		const list = (searchText !== '' || search || this.props[type].length === 0) ? [] : [
 			{
 				key: `${type}_header`,
-				text: type.toUpperCase(),
+				text: '',
 				value: type.toUpperCase(),
-				className: 'header',
+				className: `${type}_header header`,
 				disabled: true,
 			},
 		];
@@ -123,9 +130,7 @@ class AmountField extends React.Component {
 					value: a ? a.id : id,
 				});
 			}
-
 			return arr;
-
 		}, list);
 	}
 
@@ -135,7 +140,6 @@ class AmountField extends React.Component {
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const options = this.renderList('assets').concat(this.renderList('tokens'));
 		const type = form === FORM_TRANSFER && currency.type !== 'tokens' ? 'transfer' : 'contract';
 
 		return (
@@ -184,7 +188,9 @@ class AmountField extends React.Component {
 						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
-						options={options}
+						onBlur={() => this.clearSearchText()}
+						options={this.state.options}
+						noResultsMessage="No results are found"
 						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
 					/>
 

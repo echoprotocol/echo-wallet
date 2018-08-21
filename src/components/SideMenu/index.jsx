@@ -8,9 +8,7 @@ import { withRouter } from 'react-router';
 
 import { toggleBar, hideBar } from '../../actions/GlobalActions';
 import {
-	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
-	ADD_CONTRACT_PATH,
 	BALANCES_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
@@ -61,34 +59,10 @@ class SidebarMenu extends React.Component {
 									exact
 									className="sidebar-nav-link"
 									onClick={() => this.props.hideBar()}
-									to={CREATE_CONTRACT_PATH}
-								>
-									<span className="icon icon-contractAdd" />
-									<span className="sidebar-nav-text">Create Smart Contract</span>
-								</NavLink>
-							</li>
-
-							<li>
-								<NavLink
-									exact
-									className="sidebar-nav-link"
 									to={CONTRACT_LIST_PATH}
-									onClick={() => this.props.hideBar()}
 								>
 									<span className="icon icon-contractSearch" />
-									<span className="sidebar-nav-text">View Smart Contract</span>
-								</NavLink>
-							</li>
-
-							<li>
-								<NavLink
-									exact
-									className="sidebar-nav-link"
-									to={ADD_CONTRACT_PATH}
-									onClick={() => this.props.hideBar()}
-								>
-									<span className="icon icon-contractCopy" />
-									<span className="sidebar-nav-text">Added Smart Contract</span>
+									<span className="sidebar-nav-text">Smart Contract</span>
 								</NavLink>
 							</li>
 
