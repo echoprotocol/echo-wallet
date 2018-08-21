@@ -62,14 +62,15 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getState) => {
+export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
-	if (memo) {
-		fee = new BN(fee).plus(getMemoFee(globalObject, memo));
+
+	if (comment) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, comment));
 	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
