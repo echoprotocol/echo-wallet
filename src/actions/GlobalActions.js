@@ -7,7 +7,7 @@ import history from '../history';
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
 import { HISTORY_DATA } from '../constants/TableConstants';
 
-import { initBalances, getObject } from '../actions/BalanceActions';
+import { initBalances, getObject, resetBalance } from '../actions/BalanceActions';
 import { loadContracts } from '../actions/ContractActions';
 import { clear } from '../actions/TableActions';
 
@@ -68,11 +68,16 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
+export const reset = () => (dispatch) => {
+	dispatch(GlobalReducer.actions.reset());
+};
+
+
 export const logout = () => (dispatch) => {
 	localStorage.removeItem('current_account');
-	dispatch(update('activeUser', 'id', ''));
-	dispatch(update('activeUser', 'name', ''));
+	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
 	dispatch(clear(HISTORY_DATA));
+	dispatch(resetBalance());
 	history.push(SIGN_IN_PATH);
 };
 
