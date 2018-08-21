@@ -55,7 +55,7 @@ class Tokens extends React.Component {
 						</Table.Body>
 					</Table>
 				</div>
-				<Table className="tbody" unstackable>
+				<Table className="tbody tokens-balance-table" unstackable>
 					<Table.Body>
 						{
 							this.props.tokens.map(({
@@ -63,20 +63,27 @@ class Tokens extends React.Component {
 							}) => (
 								<Table.Row
 									key={id}
-									onClick={() => this.toTransfer({
-										id, symbol, precision, balance,
-									})}
+									className="pointer"
 								>
-									<Table.Cell>{symbol}</Table.Cell>
-									<Table.Cell>
+									<Table.Cell
+										onClick={() => this.toTransfer({
+											id, symbol, precision, balance,
+										})}
+									>
+										{symbol}
+									</Table.Cell>
+									<Table.Cell
+										onClick={() => this.toTransfer({
+											id, symbol, precision, balance,
+										})}
+									>
 										{formatAmount(balance, precision, '')}
-										<span
-											className="icon-close"
-											role="button"
-											onClick={(e) => this.onRemoveToken(id, e)}
-											onKeyPress={(e) => this.onRemoveToken(id, e)}
-											tabIndex="0"
-										/>
+									</Table.Cell>
+									<Table.Cell
+										onClick={(e) => this.onRemoveToken(id, e)}
+										onKeyPress={(e) => this.onRemoveToken(id, e)}
+									>
+										<span className="icon-close" />
 									</Table.Cell>
 								</Table.Row>
 							))

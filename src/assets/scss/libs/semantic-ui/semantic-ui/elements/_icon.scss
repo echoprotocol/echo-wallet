@@ -2503,7 +2503,18 @@ i.icon.snowflake:before {
   content: "\f2dc";
 }
 i.icon.sort:before {
-  content: "\f0dc";
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e91e";
 }
 i.icon.sort.alphabet.down:before {
   content: "\f15d";
