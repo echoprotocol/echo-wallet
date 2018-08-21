@@ -37,9 +37,6 @@ class AmountField extends React.Component {
 	}
 
 	onSearch(e) {
-		if (e.target.value === '') {
-			this.props.setValue(0);
-		}
 		this.setState({ searchText: e.target.value });
 	}
 
@@ -185,7 +182,7 @@ class AmountField extends React.Component {
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						searchQuery={searchText}
 						closeOnChange
-						onSearchChange={(e, { value }) => this.onSearch(e, value)}
+						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
 						onBlur={() => this.clearSearchText()}
