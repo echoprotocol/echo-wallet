@@ -12,8 +12,8 @@ import {
 	BALANCES_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
-	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
+	// ADD_CONTRACT_PATH,
+	// CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 } from '../../constants/RouterConstants';
 
@@ -42,12 +42,17 @@ class Header extends React.Component {
 			}
 			return false;
 		});
-
 		return item ? item.title : '';
 	}
 
 	renderLinkToParent() {
 		const { location } = this.props;
+		const contractActionsList = ['add-contract', 'create-contract'];
+		if (contractActionsList.includes(location.pathname.split('/')[1])) {
+			return (
+				<Link to={CONTRACT_LIST_PATH} className="icon-back" />
+			);
+		}
 		return (
 			location.pathname.split('/').length > 2 ?
 				<Link to={`/${location.pathname.split('/')[1]}`} className="icon-back" /> :
@@ -65,7 +70,7 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				{
-					![INDEX_PATH, ADD_CONTRACT_PATH, CREATE_CONTRACT_PATH, CONTRACT_LIST_PATH]
+					![INDEX_PATH, CONTRACT_LIST_PATH, BALANCES_PATH]
 						.find((url) => url === location.pathname) &&
 						this.renderLinkToParent()
 				}
