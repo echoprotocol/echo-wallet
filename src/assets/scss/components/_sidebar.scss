@@ -7,14 +7,13 @@
         flex: 1;
     }
     &-logo {
-        font-size: 30px;
+        font-size: 0;
     }
     &-close {
         margin-left: auto;
     }
     &-logo,
     &-close {
-        transition: opacity .5;
         opacity: 0;
         width: 0;
         z-index: -1;
@@ -116,6 +115,9 @@
 }
 
 .visible.sidebar {
+    .sidebar-logo {
+        font-size: 30px;
+    }
     .sidebar-logo,
     .sidebar-close {
         width: auto;
