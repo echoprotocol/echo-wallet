@@ -32,7 +32,7 @@ class AmountField extends React.Component {
 
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
-			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
+			this.props.setValue('currency', this.props.assets[0]);
 		}
 	}
 
@@ -44,7 +44,8 @@ class AmountField extends React.Component {
 		const { currency } = this.props;
 		const value = e.target.value.trim();
 		const { name } = e.target;
-		this.props.amountInput(this.props.form, value, currency, name);
+
+		this.props.amountInput(value, currency, name);
 	}
 
 	onChangeCurrency(e, value) {
@@ -72,11 +73,11 @@ class AmountField extends React.Component {
 	}
 
 	setAvailableAmount(currency) {
-		this.props.setFormValue(this.props.form, 'amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
+		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
 	setCurrency(currency, type) {
-		this.props.setValue(this.props.form, 'currency', { ...currency, type });
+		this.props.setValue('currency', { ...currency, type });
 	}
 
 	getAvailableAmount(currency) {
@@ -139,6 +140,8 @@ class AmountField extends React.Component {
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
+		const type = form === FORM_TRANSFER && currency.type !== 'tokens' ? 'transfer' : 'contract';
+
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
@@ -146,7 +149,7 @@ class AmountField extends React.Component {
 					<ul className="list-amount">
 						<li>
 							Fee:
-							<FeeField form={form} />
+							<FeeField form={form} type={type} />
 						</li>
 						<li>
 							Available Balance:
@@ -200,15 +203,17 @@ class AmountField extends React.Component {
 }
 
 AmountField.propTypes = {
+	form: PropTypes.string.isRequired,
+
 	currency: PropTypes.object,
 	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
+
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	form: PropTypes.string.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -217,21 +222,16 @@ AmountField.defaultProps = {
 };
 
 export default connect(
-	(state, ownProps) => {
-		const { form } = ownProps;
-		return {
-			assets: state.balance.get('assets').toArray(),
-			amount: state.form.getIn([form, 'amount']),
-			currency: state.form.getIn([form, 'currency']),
-			fee: state.form.getIn([form, 'fee']),
-			tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
-
-		};
-	},
-	(dispatch) => ({
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
-		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
-		amountInput: (form, value, currency, name) =>
-			dispatch(amountInput(form, value, currency, name)),
+	(state, { form }) => ({
+		assets: state.balance.get('assets').toArray(),
+		amount: state.form.getIn([form, 'amount']),
+		currency: state.form.getIn([form, 'currency']),
+		fee: state.form.getIn([form, 'fee']),
+		tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+	}),
+	(dispatch, { form }) => ({
+		setValue: (field, value) => dispatch(setValue(form, field, value)),
+		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
+		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 	}),
 )(AmountField);
