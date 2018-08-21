@@ -135,7 +135,7 @@ export const transfer = () => async (dispatch, getState) => {
 		to, amount, currency, comment,
 	} = form;
 	let { fee } = form;
-	amount.value = amount.value.replace(',', '.');
+	amount.value = String(amount.value).replace(',', '.');
 
 	if (to.error || amount.error || fee.error || comment.error) {
 		return;

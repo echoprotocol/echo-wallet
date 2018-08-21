@@ -44,9 +44,8 @@ class FeeComponent extends React.Component {
 
 			return {
 				key: asset.symbol,
-				value: fee ? fee.value : '',
+				value: JSON.stringify(fee),
 				text: fee ? formatAmount(fee.value, asset.precision, asset.symbol) : '',
-				onClick: (e) => this.onFee(fee, e),
 			};
 		});
 
@@ -74,6 +73,7 @@ class FeeComponent extends React.Component {
 				selection
 				options={options}
 				text={text}
+				onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 			/>
 		);
 	}
