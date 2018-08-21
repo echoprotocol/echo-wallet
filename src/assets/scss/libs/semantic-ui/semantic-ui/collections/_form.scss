@@ -355,10 +355,11 @@
   background: #FFFFFF;
 }
 .ui.form textarea:focus {
-  color: rgba(0, 0, 0, 0.95);
+  color: $black;
   border-color: $inut-color;
   border-radius: 0.28571429rem;
   background: #FFFFFF;
+  @extend %onFocus;
 }
 
 /*--------------------

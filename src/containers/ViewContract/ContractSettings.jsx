@@ -1,13 +1,11 @@
 import React from 'react';
-import { Button, Input, Icon } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import classnames from 'classnames';
-
 import { updateContractName, disableContract } from '../../actions/ContractActions';
 import { setFormValue, setValue } from '../../actions/FormActions';
-
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 
 class ContractSettings extends React.Component {
@@ -17,17 +15,27 @@ class ContractSettings extends React.Component {
 		super();
 		this.state = {
 			isEditName: false,
-			inputFocus: false,
+			timeout: null,
 		};
 		this.onFocusInput = this.onFocusInput.bind(this);
+	}
+
+	onBlurBlock(contractName) {
+		this.setState({
+			timeout: setTimeout(() => this.changeName(contractName), 100),
+		});
+	}
+
+	onFocusBlock() {
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
 	}
 
 	onFocusInput(component) {
 		if (component) {
 			component.focus();
-			this.setState(...this.state, { inputFocus: true });
 		}
-
 	}
 
 	onChange(e) {
@@ -40,14 +48,12 @@ class ContractSettings extends React.Component {
 
 
 	onOpen() {
-		this.setState(...this.state, { isEditName: !this.state.isEditName });
+		this.setState(...this.state, { isEditName: true });
 	}
 
-	onClose(contractName) {
-		if (this.state.inputFocus) {
-			return;
-		}
-		this.changeName(contractName);
+	onClose(e) {
+		e.preventDefault();
+		this.setState(...this.state, { isEditName: false });
 	}
 	onPushEnter(e, contractName) {
 		if (e.which === 13 || e.keyCode === 13) {
@@ -56,6 +62,7 @@ class ContractSettings extends React.Component {
 	}
 
 	changeName(oldName) {
+
 		this.props.updateContractName(oldName);
 
 		this.setState({ isEditName: false });
@@ -78,16 +85,12 @@ class ContractSettings extends React.Component {
 		const contractName = location.pathname.split('/')[2];
 		return (
 
-			<span
-				className="value pointer"
-				role="button"
-				onClick={() => this.onOpen()}
-				onKeyPress={() => this.onOpen()}
-				tabIndex="0"
-			>
-				{contractName}
-				<Icon name="edit" />
-			</span>
+			<Button
+				className="value"
+				onFocus={() => this.onOpen()}
+				content={contractName}
+				icon="edit"
+			/>
 
 		);
 	}
@@ -98,48 +101,35 @@ class ContractSettings extends React.Component {
 		const contractName = location.pathname.split('/')[2];
 
 		return (
-			<React.Fragment>
-				<div
-					className={classnames('error-wrap', { error: false })}
+
+			<div
+				className={classnames('error-wrap', { error: false })}
+				onBlur={() => this.onBlurBlock(contractName)}
+				onFocus={() => this.onFocusBlock()}
+			>
+				<Input
+					type="text"
+					name="newName"
+					defaultValue={contractName}
+					ref={this.onFocusInput}
+					className="label-in-left"
+					onChange={(e) => this.onChange(e)}
+					onKeyPress={(e) => this.onPushEnter(e, contractName)}
 				>
-					<Input
-						type="text"
-						name="newName"
-						defaultValue={contractName}
-						ref={this.onFocusInput}
-						className="label-in-left"
-						onChange={(e) => this.onChange(e)}
-						onBlur={
-							() => {
-								this.setState({ inputFocus: false });
-								this.onClose(contractName);
-							}
-						}
-						onKeyPress={(e) => this.onPushEnter(e, contractName)}
-					>
 
-						<input />
-						<span
-							className="edit-option icon-edit-checked"
-							role="button"
-							onClick={() => this.changeName(contractName)}
-							onKeyPress={() => this.changeName(contractName)}
-							tabIndex="0"
+					<input />
+					<button
+						className="edit-option icon-edit-checked"
+						onClick={() => this.changeName(contractName)}
+					/>
+					<button
+						className="edit-option icon-edit-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+				</Input>
 
-						/>
-						<span
-							className="edit-option icon-edit-close"
-							role="button"
-							onClick={(e) => this.onClose(e)}
-							onKeyPress={(e) => this.onClose(e)}
-							tabIndex="0"
-						/>
-					</Input>
-
-					<span className="error-message">Error message</span>
-				</div>
-
-			</React.Fragment>
+				<span className="error-message">Error message</span>
+			</div>
 		);
 	}
 

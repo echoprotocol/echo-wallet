@@ -23,15 +23,6 @@
     content: "\e91a";
 }
 
-.icon-edit-close,
-.icon-edit-checked {
-    color: #d6d9df;
-    transition: color .3s;
-    &:hover {
-        color: #aeb4c0;
-    }
-}
-
 .icon-edit-close:before {
     content: "\e919";
 }

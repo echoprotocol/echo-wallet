@@ -14,37 +14,35 @@
 *******************************/
 
 .ui.button {
-  cursor: pointer;
-  display: inline-block;
-  min-height: 1em;
-  outline: none;
-  border: none;
-  vertical-align: baseline;
-  background: $gray none;
-  color: #fff;
-  font-family: $font-family;
-  margin: 0em 0.25em 0em 0em;
-  padding: 0.78571429em 1em 0.78571429em;
-  text-transform: uppercase;
-  text-shadow: none;
-  font-weight: 400;
-  line-height: 1em;
-  font-style: normal;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 0.28571429rem;
-  -webkit-box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  will-change: '';
-  -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1em;
+    outline: none;
+    border: none;
+    vertical-align: baseline;
+    background-color: $gray;
+    color: #fff;
+    font-family: proximanovaSemibold;
+    margin: 0em 0.25em 0em 0em;
+    padding: 0.78571429em 1em 0.78571429em;
+    text-transform: uppercase;
+    text-shadow: none;
+    font-weight: 400;
+    line-height: 1em;
+    font-style: normal;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0.28571429rem;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition:
+        opacity .3s,
+        background-color .3s,
+        color .3s,
+        box-shadow .3s,
+        background-color .3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -58,10 +56,8 @@
 ---------------*/
 
 .ui.button:hover {
-  background-color: #CACBCD;
+  background-color: rgb(156, 162, 172);
   background-image: none;
-  -webkit-box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $bd-gray inset;
 
 }
 .ui.button:hover .icon {
@@ -71,15 +67,13 @@
 /*--------------
       Focus
 ---------------*/
-
-.ui.button:focus {
-  background-color: #CACBCD;
-  background-image: '' !important;
-  -webkit-box-shadow: '' !important;
-          box-shadow: '' !important;
-}
-.ui.button:focus .icon {
-  opacity: 0.85;
+.ui {
+    &.button:focus {
+        @extend %onFocus;
+    }
+    &.button:focus .icon {
+        opacity: 0.85;
+    }
 }
 
 /*--------------
@@ -738,14 +732,12 @@
 
 .ui.basic.buttons .button,
 .ui.basic.button {
-  background: transparent none !important;
+  background-color: transparent;
   color: rgba(186, 188, 203, 1);
   font-weight: normal;
   border-radius: 0.28571429rem;
   text-transform: uppercase;
   text-shadow: none !important;
-  -webkit-box-shadow: 0px 0px 0px 1px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px $bd-gray inset;
 }
 .ui.basic.buttons {
   -webkit-box-shadow: none;
@@ -756,35 +748,7 @@
 .ui.basic.buttons .button {
   border-radius: 0em;
 }
-.ui.basic.buttons .button:hover,
-.ui.basic.button:hover {
-  background: #FFFFFF !important;
-  -webkit-box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
-}
-.ui.basic.buttons .button:focus,
-.ui.basic.button:focus {
-  background: #FFFFFF !important;
-  -webkit-box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px rgba(34, 36, 38, 0.35) inset, 0px 0px 0px 0px $bd-gray inset;
-}
-.ui.basic.buttons .button:active,
-.ui.basic.button:active {
-  background: #F8F8F8 !important;
-  -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 4px 0px $bd-gray inset;
-          box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 4px 0px $bd-gray inset;
-}
-.ui.basic.buttons .active.button,
-.ui.basic.active.button {
-  background: rgba(0, 0, 0, 0.05) !important;
-  -webkit-box-shadow: '' !important;
-          box-shadow: '' !important;
-  color: rgba(0, 0, 0, 0.95) !important;
-}
-.ui.basic.buttons .active.button:hover,
-.ui.basic.active.button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
+
 
 /* Vertical */
 .ui.basic.buttons .button:hover {
@@ -1419,81 +1383,57 @@
 
 /*--- Grey ---*/
 
-.ui.grey.buttons .button,
-.ui.grey.button {
-  background-color: #767676;
-  color: #FFFFFF;
-  text-shadow: none;
-  background-image: none;
-}
-.ui.grey.button {
-  -webkit-box-shadow: 0px 0em 0px 0px $bd-gray inset;
-          box-shadow: 0px 0em 0px 0px $bd-gray inset;
-}
-.ui.grey.buttons .button:hover,
-.ui.grey.button:hover {
-  background-color: #838383;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.grey.buttons .button:focus,
-.ui.grey.button:focus {
-  background-color: #8a8a8a;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.grey.buttons .button:active,
-.ui.grey.button:active {
-  background-color: #909090;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.grey.buttons .active.button,
-.ui.grey.buttons .active.button:active,
-.ui.grey.active.button,
-.ui.grey.button .active.button:active {
-  background-color: #696969;
-  color: #FFFFFF;
-  text-shadow: none;
-}
 
-/* Basic */
-.ui.basic.grey.buttons .button,
-.ui.basic.grey.button {
-  -webkit-box-shadow: 0px 0px 0px 1px #767676 inset !important;
-          box-shadow: 0px 0px 0px 1px #767676 inset !important;
-  color: #767676 !important;
-}
-.ui.basic.grey.buttons .button:hover,
-.ui.basic.grey.button:hover {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #838383 inset !important;
-          box-shadow: 0px 0px 0px 1px #838383 inset !important;
-  color: #838383 !important;
-}
-.ui.basic.grey.buttons .button:focus,
-.ui.basic.grey.button:focus {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #8a8a8a inset !important;
-          box-shadow: 0px 0px 0px 1px #8a8a8a inset !important;
-  color: #838383 !important;
-}
-.ui.basic.grey.buttons .active.button,
-.ui.basic.grey.active.button {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #696969 inset !important;
-          box-shadow: 0px 0px 0px 1px #696969 inset !important;
-  color: #909090 !important;
-}
-.ui.basic.grey.buttons .button:active,
-.ui.basic.grey.button:active {
-  -webkit-box-shadow: 0px 0px 0px 1px #909090 inset !important;
-          box-shadow: 0px 0px 0px 1px #909090 inset !important;
-  color: #909090 !important;
-}
+
+
 .ui.buttons:not(.vertical) > .basic.grey.button:not(:first-child) {
   margin-left: -1px;
 }
+
+.ui {
+    &.grey {
+        &.buttons .button,
+        &.button {
+            background-color: $gray;
+            color: #FFFFFF;
+            text-shadow: none;
+            background-image: none;
+            border: 1px solid $gray;
+            &:hover {
+                background-color: $gray;
+                color: #FFFFFF;
+                text-shadow: none;
+            }
+            &:focus {
+                background-color: $gray;
+                color: #FFFFFF;
+                text-shadow: none;
+            }
+        }
+    }
+    &.basic {
+        &.grey {
+            &.buttons .button,
+            &.button {
+                background: transparent;
+                color: $gray;
+                &:focus {
+                    background: transparent;
+                    color: #838383;
+                }         
+                &:hover {
+                    background-color: #838383;
+                    color: #fff;
+                }
+
+            }
+        } 
+    }
+
+
+}
+
+
 
 /* Inverted */
 .ui.inverted.grey.buttons .button,
@@ -2030,79 +1970,44 @@
 }
 
 /*--- Orange ---*/
+.ui {
+    &.orange {
+        &.buttons .button,
+        &.button {
+            color: #FFFFFF;
+            text-shadow: none;
+            background-color: $orange;
+        
+            &:focus {
+                text-shadow: none;
+            }
+            &:hover {
+                text-shadow: none;
+                background-color: #f26202;
+            }
+        }
+    }
+    &.basic {
+        &.orange {
+            &.buttons .button,
+            &.button {
+                border: 1px solid $orange;
+                background-color: transparent;
+                color: $orange;
+                &:focus {
+                    color: #f26202;
+            
+                }
+                &:hover {
+                    background-color: $orange;
+                    color: #fff;
+                }
+            }
+        }
+    }
 
-.ui.orange.buttons .button,
-.ui.orange.button {
-  background-color: $orange;
-  color: #FFFFFF;
-  text-shadow: none;
-  background-image: none;
-}
-.ui.orange.button {
-  -webkit-box-shadow: 0px 0em 0px 0px $bd-gray inset;
-          box-shadow: 0px 0em 0px 0px $bd-gray inset;
-}
-.ui.orange.buttons .button:hover,
-.ui.orange.button:hover {
-  background-color: #f26202;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.orange.buttons .button:focus,
-.ui.orange.button:focus {
-  background-color: $orange;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.orange.buttons .button:active,
-.ui.orange.button:active {
-  background-color: #cf590c;
-  color: #FFFFFF;
-  text-shadow: none;
-}
-.ui.orange.buttons .active.button,
-.ui.orange.buttons .active.button:active,
-.ui.orange.active.button,
-.ui.orange.button .active.button:active {
-  background-color: #f56100;
-  color: #FFFFFF;
-  text-shadow: none;
 }
 
-/* Basic */
-.ui.basic.orange.buttons .button,
-.ui.basic.orange.button {
-  -webkit-box-shadow: 0px 0px 0px 1px $orange inset !important;
-          box-shadow: 0px 0px 0px 1px $orange inset !important;
-  color: $orange !important;
-}
-.ui.basic.orange.buttons .button:hover,
-.ui.basic.orange.button:hover {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #f26202 inset !important;
-          box-shadow: 0px 0px 0px 1px #f26202 inset !important;
-  color: #f26202 !important;
-}
-.ui.basic.orange.buttons .button:focus,
-.ui.basic.orange.button:focus {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #e55b00 inset !important;
-          box-shadow: 0px 0px 0px 1px #e55b00 inset !important;
-  color: #f26202 !important;
-}
-.ui.basic.orange.buttons .active.button,
-.ui.basic.orange.active.button {
-  background: transparent !important;
-  -webkit-box-shadow: 0px 0px 0px 1px #f56100 inset !important;
-          box-shadow: 0px 0px 0px 1px #f56100 inset !important;
-  color: #cf590c !important;
-}
-.ui.basic.orange.buttons .button:active,
-.ui.basic.orange.button:active {
-  -webkit-box-shadow: 0px 0px 0px 1px #cf590c inset !important;
-          box-shadow: 0px 0px 0px 1px #cf590c inset !important;
-  color: #cf590c !important;
-}
 .ui.buttons:not(.vertical) > .basic.orange.button:not(:first-child) {
   margin-left: -1px;
 }
