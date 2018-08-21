@@ -68,11 +68,6 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const reset = () => (dispatch) => {
-	dispatch(GlobalReducer.actions.reset());
-};
-
-
 export const logout = () => (dispatch) => {
 	localStorage.removeItem('current_account');
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));

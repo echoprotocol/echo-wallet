@@ -79,13 +79,5 @@ export default createModule({
 				return state;
 			},
 		},
-
-		reset: {
-			reducer: (state) => {
-				state = _.cloneDeep(DEFAULT_FIELDS);
-
-				return state;
-			},
-		},
 	},
 });
