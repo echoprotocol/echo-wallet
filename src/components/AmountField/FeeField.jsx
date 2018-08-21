@@ -2,55 +2,50 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
-import { EchoJSActions } from 'echojs-redux';
+import classnames from 'classnames';
+import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
-import { getFee } from '../../actions/TransactionActions';
-
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { getFee, fetchFee } from '../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 
-	componentDidMount() {
-		this.props.loadGlobalObject();
+	constructor(props) {
+		super(props);
+
+		props.fetchFee().then((fee) => {
+			props.setValue('fee', fee);
+		});
 	}
 
 	shouldComponentUpdate(nextProps) {
-		const { fee, comment, currency } = this.props;
+		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		if (!fee.asset && nextProps.assets) { return true; }
+		const { fee, comment } = this.props;
 
-		if (fee.value !== nextProps.fee.value) { return true; }
+		if (comment.value !== nextProps.comment.value) {
+			const value = this.props.getFee(fee.asset.id, nextProps.comment.value);
+			this.props.setValue('fee', value);
+		}
 
-		if (fee.asset.id && nextProps.fee.asset.id) { return true; }
-
-		if (comment.value !== nextProps.comment.value) { return true; }
-
-		if (currency && currency.type !== nextProps.currency.type) { return true; }
-
-		return false;
+		return true;
 	}
 
 	onFee(fee) {
-		this.props.setValue(this.props.form, 'fee', fee);
+		this.props.setValue('fee', fee);
 	}
 
 	getOptions() {
-		const options = this.props.assets.map(({
-			id, precision, symbol, type,
-		}) => {
-			const fee = this.props.getFee(
-				type === 'tokens' ? 'contract' : 'transfer',
-				id,
-				this.props.comment.value,
-			);
+		const { assets, comment } = this.props;
+
+		const options = assets.map((asset) => {
+			const fee = this.props.getFee(asset.id, comment.value);
 
 			return {
-				key: symbol,
-				value: fee ? fee.value : '',
-				text: fee ? formatAmount(fee.value, precision, symbol) : '',
-				onClick: (e) => this.onFee(fee, e),
+				key: asset.symbol,
+				value: JSON.stringify(fee),
+				text: fee ? formatAmount(fee.value, asset.precision, asset.symbol) : '',
 			};
 		});
 
@@ -70,46 +65,44 @@ class FeeComponent extends React.Component {
 	render() {
 		const options = this.getOptions();
 		const text = this.getText(options);
-
-		// TODO add styles for fee error
 		return (
-			// if elements =< 1 add class no-choice
-			<Dropdown className="fee-dropdown" selection options={options} text={text} />
+			<Dropdown
+				className={classnames('fee-dropdown', {
+					'no-choice': options.length < 2,
+				})}
+				selection
+				options={options}
+				text={text}
+				onChange={(e, { value }) => this.onFee(JSON.parse(value))}
+			/>
 		);
 	}
 
 }
 
 FeeComponent.propTypes = {
-	assets: PropTypes.any,
-	fee: PropTypes.any,
-	currency: PropTypes.any,
+	fee: PropTypes.object,
+	assets: PropTypes.array,
 	comment: PropTypes.any.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
-	loadGlobalObject: PropTypes.func.isRequired,
-	form: PropTypes.string.isRequired,
+	fetchFee: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
-	fee: null,
-	assets: null,
-	currency: null,
+	fee: {},
+	assets: [],
 };
 
 export default connect(
-	(state, ownProps) => {
-		const { form } = ownProps;
-		return {
-			assets: state.balance.get('assets').toArray(),
-			fee: state.form.getIn([form, 'fee']),
-			currency: state.form.getIn([form, 'currency']),
-			comment: form === FORM_TRANSFER ? state.form.getIn([FORM_TRANSFER, 'comment']) : {},
-		};
-	},
-	(dispatch) => ({
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
-		loadGlobalObject: () => dispatch(EchoJSActions.fetch('2.0.0')),
-		getFee: (operation, value, comment) => dispatch(getFee(operation, value, comment)),
+	(state, { form }) => ({
+		assets: state.balance.get('assets').toArray(),
+		fee: state.form.getIn([form, 'fee']),
+		comment: state.form.getIn([form, 'comment']) || {},
+	}),
+	(dispatch, { form, type }) => ({
+		setValue: (field, value) => dispatch(setValue(form, field, value)),
+		getFee: (asset, comment) => dispatch(getFee(type, asset, comment)),
+		fetchFee: () => dispatch(fetchFee(type)),
 	}),
 )(FeeComponent);
