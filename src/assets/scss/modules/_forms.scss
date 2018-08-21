@@ -35,9 +35,9 @@
         justify-content: center;
         line-height: normal;
         text-transform: uppercase;
-        font-size: .9em;
-        letter-spacing:.7px;
+        letter-spacing:.2px;
     }
+    
     h3 {
         font-size: 1.5em;
         margin-bottom: 25px;
@@ -280,6 +280,8 @@
                 transition: margin .3s;
                 &.focused {
                     .assets-tokens-dropdown {
+                        @extend %onFocus;
+                        clip-path: inset(-5px -5px -5px 0);
                         border-color: $inut-color;
                     }
                 }
@@ -294,6 +296,8 @@
                     width: 100%;
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
+                    clip-path: inset(-5px 0px -5px -5px);
+
                     &-wrap {
                         width: 100%;
                         position: relative;
@@ -306,6 +310,7 @@
                             position: absolute;
                             right: 0;
                             top: 1px;
+                            z-index: 2;
                         }
                         &:before {
                             width: 1px;
@@ -315,6 +320,7 @@
                             position: absolute;
                             right: 0;
                             bottom: 1px;
+                            z-index: 2;
                         }
                     }
 
@@ -352,7 +358,15 @@
         align-items: center;
         justify-content: center;
         position: absolute;
-        z-index: 2;
+        z-index: 4;
+        border: 0;
+        background-color: transparent;
+        color: #d6d9df;
+        transition: color .3s;
+        &:hover,
+        &:focus {
+            color: #aeb4c0;
+        }
         &.icon-edit-checked {
             right: 20px;
         }
@@ -397,9 +411,7 @@
 
 input {
     &:focus {
-        box-shadow:
-        0 0 0 2px rgba($gray,.2),
-        0 0 0 2px rgba($gray,.2);
+        @extend %onFocus;
     }
 }
 .check {
@@ -409,9 +421,7 @@ input {
         &:focus {
             & ~ .label {
                 &:before {
-                    box-shadow:
-                    0 0 0 2px rgba($gray,.2),
-                    0 0 0 2px rgba($gray,.2);
+                    @extend %onFocus;
                 }
 
             }

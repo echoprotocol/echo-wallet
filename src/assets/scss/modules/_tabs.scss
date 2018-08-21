@@ -40,7 +40,6 @@
                     display: flex;
                     align-items: center;
                     margin-right: auto;
-
                 }
             }
             .label {
@@ -48,28 +47,27 @@
                 margin-right: 8px;
             }
             .value {
+                &.ui.button {
+                    i {
+                        margin: -5px 0 0 5px !important;
+                        color: $gray;
+                        transition: color .3s;
+                        display: block;
+                        font-size: 14px;
+                    }
+                }
+                background-color: transparent;
                 color: $link-gray;
                 padding: 3px 5px;
                 border-radius: 3px;
                 display: flex;
                 height: 26px;
                 align-items: center;
-
+                flex-direction: row-reverse;
                 &:focus {
-                    box-shadow:
-                    0 0 0 2px rgba($gray,.2),
-                    0 0 0 2px rgba($gray,.2);
+                    @extend %onFocus;
                 }
-                &:active {
-                    box-shadow: none;
-                }
-                i {
-                    margin-left: 5px;
-                    color: $gray;
-                    transition: color .3s;
-                    margin-top: -5px;
-                    display: block;
-                }
+
                 &:hover {
                     i {
                         color: $link-gray;
