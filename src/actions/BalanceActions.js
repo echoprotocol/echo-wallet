@@ -259,3 +259,7 @@ export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 	history.push(TRANSFER_PATH);
 };
+
+export const resetBalance = () => (dispatch) => {
+	dispatch(BalanceReducer.actions.reset());
+};
