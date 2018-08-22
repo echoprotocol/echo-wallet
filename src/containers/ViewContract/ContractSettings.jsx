@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-
+import classnames from 'classnames';
 import { updateContractName, disableContract } from '../../actions/ContractActions';
 import { setFormValue, setValue } from '../../actions/FormActions';
-
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 
 class ContractSettings extends React.Component {
@@ -14,26 +13,59 @@ class ContractSettings extends React.Component {
 
 	constructor() {
 		super();
-		this.state = { isEditName: false };
+		this.state = {
+			isEditName: false,
+			timeout: null,
+		};
+		this.onFocusInput = this.onFocusInput.bind(this);
+	}
+
+	onBlurBlock(contractName) {
+		this.setState({
+			timeout: setTimeout(() => this.changeName(contractName), 100),
+		});
+	}
+
+	onFocusBlock() {
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+	}
+
+	onFocusInput(component) {
+		if (component) {
+			component.focus();
+		}
 	}
 
 	onChange(e) {
 		const field = e.target.name;
 		const { value } = e.target;
-
 		if (field) {
 			this.props.setFormValue(field, value);
 		}
 	}
 
-	onToggle() {
-		this.setState({ isEditName: !this.state.isEditName });
+
+	onOpen() {
+		this.setState({ isEditName: true });
+	}
+
+	onClose(e) {
+		e.preventDefault();
+		this.setState({ isEditName: false });
+	}
+	onPushEnter(e, contractName) {
+		if (e.which === 13 || e.keyCode === 13) {
+			this.changeName(contractName);
+		}
 	}
 
 	changeName(oldName) {
+
 		this.props.updateContractName(oldName);
 
-		this.setState({ isEditName: !this.state.isEditName });
+		this.setState({ isEditName: false });
 
 		this.props.setValue(
 			FORM_VIEW_CONTRACT, 'newName',
@@ -48,65 +80,89 @@ class ContractSettings extends React.Component {
 		this.props.disableContract(name);
 	}
 
-	renderContractInfo() {
+	renderName() {
+		const { location } = this.props;
+		const contractName = location.pathname.split('/')[2];
+		return (
+
+			<Button
+				className="value"
+				onFocus={() => this.onOpen()}
+				content={contractName}
+				icon="edit"
+			/>
+
+		);
+	}
+
+	renderChangeName() {
+		const { location } = this.props;
+
+		const contractName = location.pathname.split('/')[2];
+
+		return (
+
+			<div
+				className={classnames('error-wrap', { error: false })}
+				onBlur={() => this.onBlurBlock(contractName)}
+				onFocus={() => this.onFocusBlock()}
+			>
+				<Input
+					type="text"
+					name="newName"
+					defaultValue={contractName}
+					ref={this.onFocusInput}
+					className="label-in-left"
+					onChange={(e) => this.onChange(e)}
+					onKeyPress={(e) => this.onPushEnter(e, contractName)}
+				>
+
+					<input />
+					<button
+						className="edit-option icon-edit-checked"
+						onClick={() => this.changeName(contractName)}
+					/>
+					<button
+						className="edit-option icon-edit-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+				</Input>
+
+				<span className="error-message">Error message</span>
+			</div>
+		);
+	}
+
+	render() {
 		const { location, accountId } = this.props;
 
 		const contractName = location.pathname.split('/')[2];
 
 		const contractId = JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].id;
 		return (
-			<ul className="control-panel">
-				<li className="name">
-					<span className="label">Name:</span>
-					<span className="value pointer" role="button" onClick={() => this.onToggle()} onKeyPress={() => this.onToggle()} tabIndex="0">
-						{contractName}
-						<Icon name="edit" size="small" />
-					</span>
-				</li>
-				<li className="id">
-					<span className="label">Contract ID:</span>
-					<span className="value">
-						{contractId}
-					</span>
-				</li>
-				<li className="act">
-					<Button
-						icon="trash"
-						className="transparent"
-						content="remove from watchlist"
-						onClick={() => this.removeContract(contractName)}
-					/>
-				</li>
-			</ul>
-		);
-	}
-
-	renderChangeName() {
-		const { newName, location } = this.props;
-
-		const contractName = location.pathname.split('/')[2];
-
-		return (
-			<ul className="control-panel">
-				<li className="name edit">
-					<div className="ui input label-in-left">
-						<input type="text" name="newName" value={newName.value} onChange={(e) => this.onChange(e)} />
-						<span className="label">Name: </span>
-						<div className="edit-options">
-							<span className="icon-edit-checked" role="button" onClick={() => this.changeName(contractName)} onKeyPress={() => this.changeName(contractName)} tabIndex="0" />
-							<span className="icon-edit-close" role="button" onClick={() => this.onToggle()} onKeyPress={() => this.onToggle()} tabIndex="0" />
-						</div>
-					</div>
-				</li>
-			</ul>
-		);
-	}
-
-	render() {
-		return (
 			<div className="tab-full">
 				<div className="control-wrap">
-					{!this.state.isEditName ? this.renderContractInfo() : this.renderChangeName()}
+					<ul className="control-panel">
+						<li className="id">
+							<span className="label">Contract ID:</span>
+							<span className="value">
+								{contractId}
+							</span>
+						</li>
+						<li className="name">
+							<span className="label">Name:</span>
+							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
+						</li>
+						<li className="act">
+							<Button
+								icon="trash"
+								className="transparent"
+								content="remove"
+								onClick={() => this.removeContract(contractName)}
+							/>
+						</li>
+					</ul>
+
 				</div>
 			</div>
 		);
@@ -115,7 +171,7 @@ class ContractSettings extends React.Component {
 }
 
 ContractSettings.propTypes = {
-	newName: PropTypes.object.isRequired,
+	// newName: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	accountId: PropTypes.string.isRequired,
 	updateContractName: PropTypes.func.isRequired,

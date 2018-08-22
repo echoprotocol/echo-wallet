@@ -1,11 +1,11 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 200px);
+        max-height: calc(100vh - 195px);
         overflow: overlay;
     }
     &.hide-menu {
         .scroll-fix {
-            max-height: calc(100vh - 160px);
+            max-height: calc(100vh - 155px);
         }
         .menu {
             display: none;
@@ -16,6 +16,7 @@
         &-wrap {
             background-color: rgb(247, 247, 247);
             width: 100%;
+            border-top: 1px solid $bd-gray;
         }
         &-panel {
             max-width: 900px;
@@ -23,10 +24,22 @@
             display: flex;
             align-items: center;
             padding: 10px 20px;
-            min-height: 60px;
+            height: 54px;
+            .error-wrap {
+                margin-bottom: 0;
+            }
             li {
                 &:not(:last-child){
-                    margin-right: 20px;
+                    margin-right: 40px;
+                }
+                &.id {
+                    display: flex;
+                    align-items: center;
+                }
+                &.name {
+                    display: flex;
+                    align-items: center;
+                    margin-right: auto;
                 }
             }
             .label {
@@ -34,12 +47,33 @@
                 margin-right: 8px;
             }
             .value {
-                font-style: 1.2em;
-                color: $link-gray;
-
-                i {
-                    margin-left: 5px;
+                &.ui.button {
+                    i {
+                        margin: -5px 0 0 5px !important;
+                        color: $gray;
+                        transition: color .3s;
+                        display: block;
+                        font-size: 14px;
+                    }
                 }
+                background-color: transparent;
+                color: $link-gray;
+                padding: 3px 5px;
+                border-radius: 3px;
+                display: flex;
+                height: 26px;
+                align-items: center;
+                flex-direction: row-reverse;
+                &:focus {
+                    @extend %onFocus;
+                }
+
+                &:hover {
+                    i {
+                        color: $link-gray;
+                    }
+                }
+
             }
         }
     }
