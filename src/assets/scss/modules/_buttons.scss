@@ -24,19 +24,59 @@ $stripe-width: 10px;
         animation: loading-stripes .4s linear infinite;
     }
 }
-.ui.button {
-    &.transparent {
-        font-family: proximanovaSemibold;
-        background-color: transparent;
-        border-color: transparent;
-        color: #aeb4c0;
-        text-transform: capitalize;
-        font-size: 1em;
-        padding: 8.5px 0;
-        margin: 0;
-        &:hover,
-        &:focus {
-            color: #9ca2ac;
+.ui {
+    &.button {
+        &.transparent {
+            background-color: transparent;
+            border-color: transparent;
+            color: #aeb4c0;
+            text-transform: capitalize;
+            font-size: 1em;
+            padding: 5px 10px;
+            margin: 0;
+            &:hover {
+                color: #9ca2ac;
+            }
+        }
+        &.copy {
+            &:focus {
+                background-color: rgba($orange,.185);
+                color: $orange;
+            }
+        }
+        &.send {
+            font-family: proximanovaSemibold;
+            background-color: transparent;
+            color: $link-gray;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            border-right: 1px solid $bd-gray;
+            border-left: 1px solid $bd-gray;
+            height: 50px;
+            border-radius: 0;
+            width: 106px;
+            background-color: transparent;
+            transition: background-color .3s;
+            i {
+                &:before {
+                    margin: -2px 5px 0 0;
+                    display: block;
+                }
+                font-size: 1.3rem;    
+                color: rgba($orange, .9);
+                transition: .3s;
+            }
+            &:focus,
+            &:hover {
+                box-shadow: none;
+                background-color: $bg-gray;
+                i { 
+                    color: $orange;
+                }
+            }
         }
     }
 }
@@ -44,28 +84,6 @@ $stripe-width: 10px;
 @keyframes loading-stripes {
     0% {background-position: 0px}
     100% {background-position: $stripe-width}
-}
-.ui {
-    &.orange.button {
-        &:not(.load) {
-            &:focus {
-                background-color: rgba($orange,.185);
-                color: $orange;
-                box-shadow: 0px 0px 0px 1px $orange inset;
-            }
-        }
-
-        &.basic {
-            transition: background-color .4s !important;
-            transition: color .3s;
-            &:hover,
-            &:focus {
-                background-color: $orange !important;
-                color: #fff !important;
-            }
-        }
-
-    }
 }
 
 .btn-list {
