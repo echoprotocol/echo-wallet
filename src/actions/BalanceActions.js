@@ -9,7 +9,12 @@ import {
 	getTokenSymbol,
 } from '../api/ContractApi';
 
-import { setError, setParamError, closeModal } from './ModalActions';
+import {
+	setError,
+	setParamError,
+	closeModal,
+	setDisable,
+} from './ModalActions';
 import { setValue } from './FormActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
@@ -106,20 +111,23 @@ export const initBalances = (accountId) => async (dispatch) => {
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {
+
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	if (!contractId) {
-		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
-		return;
-	}
-
-	if (validateContractId(contractId)) {
-		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
-		return;
-	}
+	dispatch(setDisable(MODAL_TOKENS, true));
 
 	try {
+		if (!contractId) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+			return;
+		}
+
+		if (validateContractId(contractId)) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			return;
+		}
+
 		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
@@ -163,6 +171,8 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		toastSuccess('Token successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
+	} finally {
+		dispatch(setDisable(MODAL_TOKENS, false));
 	}
 
 };

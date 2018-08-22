@@ -50,7 +50,9 @@ class ModalUnlockWallet extends React.Component {
 	}
 
 	render() {
-		const { show, password, loading } = this.props;
+		const {
+			show, password, loading, disabled,
+		} = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -80,7 +82,7 @@ class ModalUnlockWallet extends React.Component {
 							</div>
 							{loading
 								? <Button type="submit" color="orange" className="load" >Loading...</Button>
-								: <Button basic type="submit" color="orange" onClick={(e) => this.onSuccess(e)}>Unlock Wallet</Button>
+								: <Button basic type="submit" color="orange" onClick={(e) => this.onSuccess(e)} disabled={disabled}>Unlock Wallet</Button>
 							}
 						</Form>
 					</div>
@@ -93,6 +95,7 @@ class ModalUnlockWallet extends React.Component {
 
 ModalUnlockWallet.propTypes = {
 	show: PropTypes.bool,
+	disabled: PropTypes.bool.isRequired,
 	disableBackgroundClick: PropTypes.bool,
 	loading: PropTypes.bool,
 	accountName: PropTypes.string,
@@ -113,6 +116,7 @@ ModalUnlockWallet.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
+		disabled: state.modal.getIn([MODAL_UNLOCK, 'disabled']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
 		accountName: state.global.getIn(['activeUser', 'name']),
