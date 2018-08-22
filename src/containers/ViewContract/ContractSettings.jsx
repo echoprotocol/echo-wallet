@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import classnames from 'classnames';
+
 import { updateContractName, disableContract } from '../../actions/ContractActions';
-import { setFormValue, setValue } from '../../actions/FormActions';
+import { setFormValue, setValue, setFormError } from '../../actions/FormActions';
+
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
+import { validateContractName } from '../../helpers/ValidateHelper';
 
 class ContractSettings extends React.Component {
 
@@ -55,6 +58,7 @@ class ContractSettings extends React.Component {
 		e.preventDefault();
 		this.setState({ isEditName: false });
 	}
+
 	onPushEnter(e, contractName) {
 		if (e.which === 13 || e.keyCode === 13) {
 			this.changeName(contractName);
@@ -62,18 +66,19 @@ class ContractSettings extends React.Component {
 	}
 
 	changeName(oldName) {
+		const newName = this.props.newName.value;
+		const newNameError = validateContractName(newName);
 
-		this.props.updateContractName(oldName);
+		if (newNameError) {
+			this.props.setFormError('newName', newNameError);
+			return;
+		}
+
+		this.props.updateContractName(oldName, newName);
 
 		this.setState({ isEditName: false });
 
-		this.props.setValue(
-			FORM_VIEW_CONTRACT, 'newName',
-			{
-				error: null,
-				value: '',
-			},
-		);
+		this.props.setValue('newName', { error: null, value: '' });
 	}
 
 	removeContract(name) {
@@ -96,14 +101,14 @@ class ContractSettings extends React.Component {
 	}
 
 	renderChangeName() {
-		const { location } = this.props;
+		const { location, newName } = this.props;
 
 		const contractName = location.pathname.split('/')[2];
 
 		return (
 
 			<div
-				className={classnames('error-wrap', { error: false })}
+				className={classnames('error-wrap', { error: newName.error })}
 				onBlur={() => this.onBlurBlock(contractName)}
 				onFocus={() => this.onFocusBlock()}
 			>
@@ -128,7 +133,7 @@ class ContractSettings extends React.Component {
 					/>
 				</Input>
 
-				<span className="error-message">Error message</span>
+				<span className="error-message">{newName.error}</span>
 			</div>
 		);
 	}
@@ -171,13 +176,14 @@ class ContractSettings extends React.Component {
 }
 
 ContractSettings.propTypes = {
-	// newName: PropTypes.object.isRequired,
+	newName: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	accountId: PropTypes.string.isRequired,
 	updateContractName: PropTypes.func.isRequired,
 	disableContract: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -189,6 +195,7 @@ export default withRouter(connect(
 		updateContractName: (name) => dispatch(updateContractName(name)),
 		disableContract: (name) => dispatch(disableContract(name)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
+		setValue: (field, value) => dispatch(setValue(FORM_VIEW_CONTRACT, field, value)),
+		setFormError: (field, value) => dispatch(setFormError(FORM_VIEW_CONTRACT, field, value)),
 	}),
 )(ContractSettings));

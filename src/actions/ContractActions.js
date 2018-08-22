@@ -147,13 +147,11 @@ export const disableContract = (name) => (dispatch) => {
 	);
 };
 
-export const updateContractName = (oldName) => (dispatch, getState) => {
-	const newName = getState().form.getIn([FORM_VIEW_CONTRACT, 'newName']).value;
-
+export const updateContractName = (oldName, newName) => (dispatch, getState) => {
 	const nameError = validateContractName(newName);
 
 	if (nameError) {
-		dispatch(setFormError(FORM_ADD_CONTRACT, 'name', nameError));
+		dispatch(setFormError(FORM_VIEW_CONTRACT, 'newName', nameError));
 		return;
 	}
 
