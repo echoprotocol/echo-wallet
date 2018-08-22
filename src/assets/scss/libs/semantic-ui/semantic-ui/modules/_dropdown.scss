@@ -504,12 +504,6 @@ select.ui.dropdown {
           box-shadow: 0px 2px 3px 0px $bd-gray;
 }
 
-/* Visible */
-.ui.selection.visible.dropdown > .text:not(.default) {
-  font-weight: normal;
-  color: rgba(0, 0, 0, 0.8);
-}
-
 /* Visible Hover */
 .ui.selection.active.dropdown {
     &:hover {
