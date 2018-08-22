@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
-import { getFee, fetchFee } from '../../actions/TransactionActions';
+import { getFee, fetchFee, checkFeePool } from '../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 
@@ -39,15 +39,19 @@ class FeeComponent extends React.Component {
 	getOptions() {
 		const { assets, comment } = this.props;
 
-		const options = assets.map((asset) => {
+		const options = assets.reduce((arr, asset) => {
 			const fee = this.props.getFee(asset.id, comment.value);
 
-			return {
-				key: asset.symbol,
-				value: JSON.stringify(fee),
-				text: fee ? formatAmount(fee.value, asset.precision, asset.symbol) : '',
-			};
-		});
+			if (fee && this.props.checkFeePool(asset.id, fee.value)) {
+				arr.push({
+					key: asset.symbol,
+					value: JSON.stringify(fee),
+					text: formatAmount(fee.value, asset.precision, asset.symbol),
+				});
+			}
+
+			return arr;
+		}, []);
 
 		return options;
 	}
@@ -87,6 +91,7 @@ FeeComponent.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
+	checkFeePool: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -104,5 +109,6 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFee: (asset, comment) => dispatch(getFee(type, asset, comment)),
 		fetchFee: () => dispatch(fetchFee(type)),
+		checkFeePool: (asset, fee) => dispatch(checkFeePool(asset, fee)),
 	}),
 )(FeeComponent);
