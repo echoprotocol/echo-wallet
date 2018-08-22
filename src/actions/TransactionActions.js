@@ -8,7 +8,7 @@ import { FORM_CREATE_CONTRACT, FORM_TRANSFER, FORM_CALL_CONTRACT } from '../cons
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
-import { openModal, closeModal } from './ModalActions';
+import { openModal, closeModal, setDisable } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -62,14 +62,15 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getState) => {
+export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
-	if (memo) {
-		fee = new BN(fee).plus(getMemoFee(globalObject, memo));
+
+	if (comment) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, comment));
 	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
@@ -134,7 +135,7 @@ export const transfer = () => async (dispatch, getState) => {
 		to, amount, currency, comment,
 	} = form;
 	let { fee } = form;
-	amount.value = amount.value.replace(',', '.');
+	amount.value = String(amount.value).replace(',', '.');
 
 	if (to.error || amount.error || fee.error || comment.error) {
 		return;
@@ -321,6 +322,9 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 };
 
 export const sendTransaction = () => async (dispatch, getState) => {
+
+	dispatch(setDisable(MODAL_DETAILS, true));
+
 	const { operation, keys, options } = getState().transaction.toJS();
 
 	if (options.memo) {
@@ -350,7 +354,8 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		})
 		.catch(() => {
 			toastError(`${operations[operation].name} transaction wasn't completed`);
-		});
+		})
+		.finally(() => dispatch(setDisable(MODAL_DETAILS, false)));
 	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));

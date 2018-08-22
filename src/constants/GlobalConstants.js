@@ -24,7 +24,7 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: CREATE_CONTRACT_PATH,
-		title: 'Create Contract',
+		title: 'Smart Contracts',
 	},
 	{
 		path: CONTRACT_LIST_PATH,
@@ -32,15 +32,15 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: VIEW_CONTRACT_PATH,
-		title: 'Contract',
+		title: 'Smart Contracts',
 	},
 	{
 		path: ADD_CONTRACT_PATH,
-		title: 'Smart Contract',
+		title: 'Smart Contracts',
 	},
 	{
 		path: VIEW_TRANSACTION_PATH,
-		title: 'Transaction:',
+		title: 'Transaction',
 	},
 ];
 
