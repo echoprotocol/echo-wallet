@@ -131,13 +131,11 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
-	const {
-		to, amount, currency, comment,
-	} = form;
+	const { to, currency, comment } = form;
 	let { fee } = form;
-	amount.value = String(amount.value).replace(',', '.');
+	const amount = Number(form.amount.value).toString();
 
-	if (to.error || amount.error || fee.error || comment.error) {
+	if (to.error || form.amount.error || fee.error || comment.error) {
 		return;
 	}
 
@@ -146,12 +144,12 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
-	if (!Math.floor(amount.value * (10 ** currency.precision))) {
+	if (!Math.floor(amount * (10 ** currency.precision))) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
 		return;
 	}
 
-	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
+	if (new BN(amount).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
 	}
@@ -162,7 +160,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 
 	if (currency.id === fee.asset.id) {
-		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
+		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
@@ -190,7 +188,7 @@ export const transfer = () => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			[toAccount.id, amount.value * (10 ** currency.precision)],
+			[toAccount.id, amount * (10 ** currency.precision)],
 		);
 
 		options = {
@@ -211,7 +209,7 @@ export const transfer = () => async (dispatch, getState) => {
 			from: fromAccountId,
 			to: toAccount.id,
 			amount: {
-				amount: amount.value * (10 ** currency.precision),
+				amount: amount * (10 ** currency.precision),
 				asset_id: currency.id,
 			},
 		};
@@ -221,7 +219,7 @@ export const transfer = () => async (dispatch, getState) => {
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		from: fromAccount.name,
 		to: toAccount.name,
-		amount: `${amount.value} ${currency.symbol}`,
+		amount: `${amount} ${currency.symbol}`,
 	};
 
 	if (comment.value && currency.type !== 'tokens') {
