@@ -7,12 +7,12 @@ import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { openModal } from '../../actions/ModalActions';
 import { formatAmount } from '../../helpers/FormatHelper';
-import { removeToken, redirectToTransfer } from '../../actions/BalanceActions';
+import { disableToken, redirectToTransfer } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
 
-	onRemoveToken(id) {
-		this.props.removeToken(id);
+	onRemoveToken(name, id) {
+		this.props.removeToken(name, id);
 	}
 
 	toTransfer(symbol) {
@@ -25,16 +25,51 @@ class Tokens extends React.Component {
 
 	renderEmpty() {
 		return (
-			<div className="msg-empty">
-				<h3>You have no tokens</h3>
-				<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+			<div className="table-tokens">
+				<div className="msg-empty">
+					<h3>You have no tokens</h3>
+					<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+				</div>
 			</div>
+		);
+	}
+
+	renderRow({
+		id, symbol, precision, balance, disabled,
+	}) {
+		if (disabled) return null;
+		return (
+			<Table.Row
+				key={id}
+				className="pointer"
+			>
+				<Table.Cell
+					onClick={() => this.toTransfer({
+						id, symbol, precision, balance,
+					})}
+				>
+					{symbol}
+				</Table.Cell>
+				<Table.Cell
+					onClick={() => this.toTransfer({
+						id, symbol, precision, balance,
+					})}
+				>
+					{formatAmount(balance, precision, '')}
+				</Table.Cell>
+				<Table.Cell
+					onClick={(e) => this.onRemoveToken(symbol, id, e)}
+					onKeyPress={(e) => this.onRemoveToken(symbol, id, e)}
+				>
+					<span className="icon-close" />
+				</Table.Cell>
+			</Table.Row>
 		);
 	}
 
 	renderList() {
 		return (
-			<React.Fragment>
+			<div className="table-tokens">
 				<div className="thead-wrap">
 					<div className="thead-info">
 						<div className="table-title">Tokens</div>
@@ -58,51 +93,24 @@ class Tokens extends React.Component {
 				<Table className="tbody tokens-balance-table" unstackable>
 					<Table.Body>
 						{
-							this.props.tokens.map(({
-								id, symbol, precision, balance,
-							}) => (
-								<Table.Row
-									key={id}
-									className="pointer"
-								>
-									<Table.Cell
-										onClick={() => this.toTransfer({
-											id, symbol, precision, balance,
-										})}
-									>
-										{symbol}
-									</Table.Cell>
-									<Table.Cell
-										onClick={() => this.toTransfer({
-											id, symbol, precision, balance,
-										})}
-									>
-										{formatAmount(balance, precision, '')}
-									</Table.Cell>
-									<Table.Cell
-										onClick={(e) => this.onRemoveToken(id, e)}
-										onKeyPress={(e) => this.onRemoveToken(id, e)}
-									>
-										<span className="icon-close" />
-									</Table.Cell>
-								</Table.Row>
-							))
+							this.props.tokens.map((t) => this.renderRow(t))
 						}
 					</Table.Body>
 				</Table>
-			</React.Fragment>
+			</div>
 		);
 	}
 
 	render() {
-		return (
-			<div className="table-tokens">
-				{
-					!this.props.tokens || !this.props.tokens.size ?
-						this.renderEmpty() : this.renderList()
-				}
-			</div>
-		);
+		const { tokens } = this.props;
+
+		if (!tokens || !tokens.size) {
+			return this.renderEmpty();
+		}
+
+		const activeContracts = tokens.toJS().filter((i) => !i.disabled);
+
+		return activeContracts.length ? this.renderList() : this.renderEmpty();
 	}
 
 }
@@ -125,7 +133,7 @@ export default connect(
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
-		removeToken: (value) => dispatch(removeToken(value)),
+		removeToken: (name, id) => dispatch(disableToken(name, id)),
 		redirectToTransfer: (token) => dispatch(redirectToTransfer(token, 'tokens')),
 	}),
 )(Tokens);
