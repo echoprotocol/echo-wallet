@@ -39,6 +39,19 @@ export default createModule({
 		reset: {
 			reducer: (state) => {
 				state = DEFAULT_FIELDS;
+				return state;
+			},
+		},
+
+		update: {
+			reducer: (state, { payload }) => {
+				const index = state.get(payload.field).findIndex((t) => (t.id === payload.param));
+				if (index === -1) return state;
+				const updatedList = state
+					.get(payload.field)
+					.update(index, (v) => ({ ...v, ...payload.value }));
+
+				state = state.set(payload.field, updatedList);
 
 				return state;
 			},
