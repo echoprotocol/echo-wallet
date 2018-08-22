@@ -48,12 +48,12 @@ class ContractSettings extends React.Component {
 
 
 	onOpen() {
-		this.setState(...this.state, { isEditName: true });
+		this.setState({ isEditName: true });
 	}
 
 	onClose(e) {
 		e.preventDefault();
-		this.setState(...this.state, { isEditName: false });
+		this.setState({ isEditName: false });
 	}
 	onPushEnter(e, contractName) {
 		if (e.which === 13 || e.keyCode === 13) {
