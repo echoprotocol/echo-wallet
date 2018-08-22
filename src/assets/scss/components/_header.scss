@@ -12,6 +12,11 @@
         margin: 0 10px 0 0;
         transition: color .3s;
         display: block;
+        &:focus {
+            border-radius: 0.28571429rem;
+            @extend %onFocus;
+        }
+        &:focus,
         &:hover {
             color: rgba(#6d7178,1);
         }

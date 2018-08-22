@@ -200,7 +200,11 @@
                     cursor: pointer;
                     color: $orange;
                     text-decoration: underline;
+
                 }
+            }
+            & > .text {
+                margin-right: 0;
             }
         }
         & > .text {
