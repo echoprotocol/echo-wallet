@@ -250,6 +250,9 @@
             margin: 0 0 12px 0;
         }
     }
+    .error-wrap {
+        margin-bottom: 0;
+    }
     &-row {
         display: flex;
         align-items: center;
@@ -265,6 +268,11 @@
                     margin-right: 5px;
                 }
             }
+        }
+        .result-value {
+            margin: 22px 0 8px 35px;
+            word-wrap: break-word;
+            max-width: 730px;
         }
         .type {
             margin-left: 10px;
@@ -312,8 +320,7 @@
                     margin-bottom: -1px;
                 }
                 margin-top: 10px;
-                display: inline-block;
-                min-height: 24px;
+                min-height: 26px;
             }
         }
 

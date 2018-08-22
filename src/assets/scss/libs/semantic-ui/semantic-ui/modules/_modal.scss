@@ -526,22 +526,22 @@
 }
 @media only screen and (min-width: 992px) {
   .ui.small.modal {
-    width: 680px;
+    width: 650px;
     margin: 0em 0em 0em 0em;
   }
 }
-@media only screen and (min-width: 1200px) {
-  .ui.small.modal {
-    width: 720px;
-    margin: 0em 0em 0em 0em;
-  }
-}
-@media only screen and (min-width: 1920px) {
-  .ui.small.modal {
-    width: 760px;
-    margin: 0em 0em 0em 0em;
-  }
-}
+// @media only screen and (min-width: 1200px) {
+//   .ui.small.modal {
+//     width: 680px;
+//     margin: 0em 0em 0em 0em;
+//   }
+// }
+// @media only screen and (min-width: 1920px) {
+//   .ui.small.modal {
+//     width: 680px;
+//     margin: 0em 0em 0em 0em;
+//   }
+// }
 
 /* Large Modal Width */
 .ui.large.modal > .header {

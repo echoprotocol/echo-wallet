@@ -22,18 +22,19 @@ class TabCallContracts extends React.Component {
 		const field = formatCallContractField(this.props.field);
 
 		return (
-			<div className={classnames({ error: data.error, 'action-wrap textarea-wrap': true })}>
 
-				<Form.Field
-					control="input"
-					name={field}
+			<Form.Field className={classnames('error-wrap', { error: data.error })}>
+				<label htmlFor={field}>{field}</label>
+
+				<input
 					placeholder={`(${type})`}
+					name={field}
+					className="ui input"
 					value={data.value}
-					label={field}
 					onChange={(e) => this.onChange(e)}
 				/>
 				<span className="error-message">{data.error}</span>
-			</div>
+			</Form.Field>
 		);
 	}
 

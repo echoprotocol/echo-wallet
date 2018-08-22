@@ -113,7 +113,7 @@ class FormComponent extends React.Component {
 						color="orange"
 						className={classnames({ disabled: this.isDisabledSubmit() })}
 						onClick={(e) => this.onClick(e)}
-						content="Create contract"
+						content="Create"
 					/>
 				</div>
 
