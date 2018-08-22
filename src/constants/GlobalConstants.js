@@ -24,7 +24,7 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: CREATE_CONTRACT_PATH,
-		title: 'Create Contract',
+		title: 'Smart Contracts',
 	},
 	{
 		path: CONTRACT_LIST_PATH,

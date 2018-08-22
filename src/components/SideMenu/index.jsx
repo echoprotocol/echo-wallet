@@ -41,7 +41,6 @@ class SidebarMenu extends React.Component {
 					</div>
 					<div className="sidebar-body">
 						<ul className="sidebar-nav">
-
 							<li>
 								<NavLink
 									exact
@@ -53,19 +52,6 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Wallet</span>
 								</NavLink>
 							</li>
-
-							<li>
-								<NavLink
-									exact
-									className="sidebar-nav-link"
-									onClick={() => this.props.hideBar()}
-									to={CONTRACT_LIST_PATH}
-								>
-									<span className="icon icon-contractSearch" />
-									<span className="sidebar-nav-text">Smart Contract</span>
-								</NavLink>
-							</li>
-
 							<li>
 								<NavLink
 									className="sidebar-nav-link"
@@ -77,7 +63,17 @@ class SidebarMenu extends React.Component {
 									<span className="sidebar-nav-text">Recent Activity</span>
 								</NavLink>
 							</li>
-
+							<li>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									onClick={() => this.props.hideBar()}
+									to={CONTRACT_LIST_PATH}
+								>
+									<span className="icon icon-contractSearch" />
+									<span className="sidebar-nav-text">Smart Contracts</span>
+								</NavLink>
+							</li>
 						</ul>
 					</div>
 
