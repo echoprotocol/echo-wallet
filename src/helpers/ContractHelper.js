@@ -1,8 +1,9 @@
-import { ChainValidation } from 'echojs-lib';
 import { keccak256 } from 'js-sha3';
 
 import operations from '../constants/Operations';
 import { getLog, logParser } from './FormatHelper';
+
+const zero64String = '0000000000000000000000000000000000000000000000000000000000000000';
 
 export const getHash = (str) => keccak256(str);
 
@@ -12,32 +13,120 @@ export const getMethodId = (method) => {
 	return getHash(`${method.name}(${inputs})`).substr(0, 8);
 };
 
+const to64HexString = (v, type) => {
+
+	switch (type) {
+		case 'int': {
+			return Number(v).toString(16).padStart(64, '0');
+		}
+		case 'bool': {
+			const tmpValue = v.toLowerCase() === 'false' ? 0 : Boolean(v);
+			return Number(tmpValue).toString(16).padStart(64, '0');
+		}
+		case 'string': {
+			return Buffer.from(v).toString('hex').padEnd(64, '0');
+		}
+		case 'hex': {
+			return v.replace('0x', '').padEnd(64, '0');
+		}
+		case 'address': {
+			return Number(v.substr(v.lastIndexOf('.') + 1)).toString(16).padStart(64, '0');
+		}
+		default:
+			return zero64String;
+	}
+};
+
+const encode = (value, type, isArray) => {
+	let arg = '';
+	if (isArray) {
+		try {
+			value = JSON.parse(value);
+			if (!Array.isArray(value)) return zero64String;
+		} catch (e) {
+			return zero64String;
+		}
+		if (value.length === 0) return zero64String;
+		arg = to64HexString(value.length, 'int');
+		return value.reduce((newArg, v) => (newArg.concat(to64HexString(v, type))), arg);
+	}
+
+	if (type === 'string' || type === 'hex') {
+
+		if (value.length === 0) return zero64String;
+		const mode = type === 'hex' ? 2 : 1;
+
+		arg = to64HexString(value.length / mode, 'int');
+
+		const chunks = value.match(new RegExp(`.{1,${32 * mode}}`, 'g'));
+		const chunksLength = chunks.length;
+		return type === 'hex' ?
+			arg.concat(value.padEnd(chunksLength * 64), '0') :
+			chunks.reduce((newArg, v) => (newArg.concat(to64HexString(v, type))), arg);
+	}
+	return to64HexString(value, type);
+
+};
+
 export const getMethod = (method, args) => {
 	if (!args || !args.length) {
 		return 'Empty field';
 	}
 
-	const argsString = args.map((arg) => {
-		let newArg = '';
-		if (!Number.isNaN(Number(arg))) {
-			newArg += Number(arg).toString(16);
-		} else if (ChainValidation.is_object_id(arg)) {
-			newArg = parseInt(arg.substr(arg.lastIndexOf('.') + 1), 10).toString(16);
-		} else if ((typeof arg) === 'string') {
-			for (let i = 0; i < arg.length; i += 1) {
-				if (!Number.isNaN(arg.charAt(i))) {
-					newArg += arg.charCodeAt(i).toString(16);
-				} else {
-					newArg += parseInt(arg.charAt(i), 10).toString(16);
-				}
-			}
+	let hexStrings = '';
+	const defaultOffset = (method.inputs.length * 32);
+	const argsString = method.inputs.reduce((hexArgs, v, i) => {
+
+		const arg = args[i];
+		if (!arg) return hexArgs;
+		const { type } = v;
+
+		let isArray = false;
+
+		const offset = defaultOffset + (hexStrings.length ? hexStrings.length / 2 : 0);
+
+		if (type.search('\\[\\]') !== -1) {
+			isArray = true;
 		}
-		return newArg.padStart(64, '0');
-	});
+
+		if (type.search('int') !== -1) {
+
+			const result = encode(arg, 'int', isArray);
+			if (isArray) hexStrings = hexStrings.concat(result);
+			else hexArgs = hexArgs.concat(result);
+
+		} else if (type.search('address') !== -1) {
+
+			const result = encode(arg, 'address', isArray);
+			if (isArray) hexStrings = hexStrings.concat(result);
+			else hexArgs = hexArgs.concat(result);
+
+		} else if (type.search('bool') !== -1) {
+
+			const result = encode(arg, 'bool', isArray);
+			if (isArray) hexStrings = hexStrings.concat(result);
+			else hexArgs = hexArgs.concat(result);
+
+		} else if (type.search('byte') !== -1) {
+
+
+			if (type !== 'bytes') isArray = true;
+			hexStrings = hexStrings.concat(encode(arg, 'hex', isArray));
+			isArray = true;
+
+		} else if (type.search('string') !== -1) {
+
+			hexStrings = hexStrings.concat(encode(arg, 'string', isArray));
+			isArray = true;
+
+		}
+
+		if (isArray) hexArgs = hexArgs.concat(to64HexString(offset, 'int'));
+		return hexArgs;
+	}, '');
 
 	method = getMethodId(method);
-	method = method.concat(argsString.join(''));
-	return method;
+	return method.concat(argsString, hexStrings);
 };
 
 export const checkBlockTransaction = (accountId, op, tokens) => {
