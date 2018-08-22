@@ -403,7 +403,8 @@
             }
         }
     }
-    .bytecode {
+    .bytecode, // bytecode собираемся переделывать (нужно убрать из стилей)
+    .note {
         &-wrap {
             background-color: #f9f9f9;
             border: 1px solid $bd-gray;
@@ -416,6 +417,7 @@
         word-wrap: break-word;
         font-size: 13px;
     }
+
     .ui.button {
         margin-top: -6px;
     }
