@@ -6,6 +6,7 @@ import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS } from './../constants/ModalC
 
 const DEFAULT_FIELDS = Map({
 	show: false,
+	disabled: false,
 });
 
 const DEFAULT_MODAL_FIELDS = {
@@ -36,6 +37,12 @@ export default createModule({
 			reducer: (state, { payload }) => {
 				const initialState = _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[payload.type]);
 				state = state.set(payload.type, initialState);
+				return state;
+			},
+		},
+		setDisable: {
+			reducer: (state, { payload }) => {
+				state = state.setIn([payload.type, 'disabled'], payload.value);
 				return state;
 			},
 		},
