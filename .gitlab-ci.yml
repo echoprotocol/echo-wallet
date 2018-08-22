@@ -61,3 +61,19 @@ build.macos:
 #     paths:
 #     - dist/installers/echo_0.0.1_x86_64.deb
 #     expire_in: 1 week
+
+build.windows:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-prepare
+    - npm run package-win
+  only:
+    - web
+    - tags
+  tags:
+    - echo-windows
+  artifacts:
+     paths:
+     - dist/installers/echo-installer.exe
+     expire_in: 1 week
