@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
-import { getFee, fetchFee, checkFeePool } from '../../actions/TransactionActions';
+import { getFee, fetchFee } from '../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 
@@ -42,7 +42,7 @@ class FeeComponent extends React.Component {
 		const options = assets.reduce((arr, asset) => {
 			const fee = this.props.getFee(asset.id, comment.value);
 
-			if (fee && this.props.checkFeePool(asset.id, fee.value)) {
+			if (fee) {
 				arr.push({
 					key: asset.symbol,
 					value: JSON.stringify(fee),
@@ -91,7 +91,6 @@ FeeComponent.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
-	checkFeePool: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -109,6 +108,5 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFee: (asset, comment) => dispatch(getFee(type, asset, comment)),
 		fetchFee: () => dispatch(fetchFee(type)),
-		checkFeePool: (asset, fee) => dispatch(checkFeePool(asset, fee)),
 	}),
 )(FeeComponent);

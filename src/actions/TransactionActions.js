@@ -99,11 +99,8 @@ export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, ge
 	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
 };
 
-export const checkFeePool = (assetId, fee) => (dispatch, getState) => {
-	if (assetId === '1.3.0') { return true; }
-
-	const asset = getState().echojs.getIn(['data', 'assets', assetId]).toJS();
-	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
+export const checkFeePool = (echo, asset, fee) => {
+	if (echo.id === asset.id) { return true; }
 
 	let feePool = new BN(asset.dynamic.fee_pool).div(10 ** echo.precision);
 
@@ -172,6 +169,17 @@ export const transfer = () => async (dispatch, getState) => {
 		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
 	}
 
+	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn(['data', 'assets', fee.asset.id]).toJS();
+
+	if (!checkFeePool(echo, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_TRANSFER,
+			'amount',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return;
+	}
 
 	if (currency.id === fee.asset.id) {
 		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
