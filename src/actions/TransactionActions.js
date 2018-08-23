@@ -30,7 +30,12 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, encodeMemo, getMemoFee } from '../api/TransactionApi';
+import {
+	buildAndSendTransaction,
+	estimateCallContractFee,
+	encodeMemo,
+	getMemoFee,
+} from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -99,6 +104,22 @@ export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, ge
 	}
 
 	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
+};
+
+export const estimateTransactionFee = (contractId, code, asset) => async (dispatch, getState) => {
+	const instance = getState().echojs.getIn(['system', 'instance']);
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	const transferResult = await estimateFee(
+		instance,
+		contractId,
+		accountId,
+		code,
+		asset,
+	);
+
+	console.log(transferResult);
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
@@ -304,9 +325,11 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 
 	const fee = await dispatch(fetchFee('contract'));
 
+	const feeValue = await estimateCallContractFee('contract', options);
+
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 
@@ -457,10 +480,11 @@ export const callContract = () => async (dispatch, getState) => {
 		gas: 4700000,
 		code: bytecode,
 	};
+	const feeValue = await estimateCallContractFee('contract', options);
 
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 
