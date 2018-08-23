@@ -105,9 +105,9 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	await dispatch(getTokenBalances(accountId));
 
-	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
+	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
 
-	await dispatch(getAssetsBalances(assets));
+	await dispatch(getAssetsBalances(account.balances));
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {
@@ -205,15 +205,15 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 			if (isNeedUpdate) await dispatch(updateTokenBalances());
 			break;
 		}
-		case 'accounts': {
-			const subscribeAccountId = subscribeObject.value.get('id');
+		case 'objects': {
+			const objectId = subscribeObject.value.get('id');
+			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
 
-			if (subscribeAccountId !== accountId) return;
+			if (!balances) { return; }
 
-			let assets = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
-			assets = assets ? assets.toJS() : assets;
-			if (!assets) return;
-			dispatch(getAssetsBalances(assets));
+			if (!Object.values(balances.toJS()).includes(objectId)) { return; }
+
+			dispatch(getAssetsBalances(balances.toJS()));
 			break;
 		}
 		default:
