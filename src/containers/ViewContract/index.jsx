@@ -14,6 +14,7 @@ import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 
 import ContractReducer from '../../reducers/ContractReducer';
+import { resetConverter } from '../../actions/ConverterActions';
 
 class ViewContract extends React.Component {
 
@@ -25,6 +26,7 @@ class ViewContract extends React.Component {
 		this.props.clearForm(FORM_CALL_CONTRACT);
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
+		this.props.resetConverter();
 	}
 
 	render() {
@@ -60,6 +62,7 @@ ViewContract.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearContract: PropTypes.func.isRequired,
+	resetConverter: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 };
 
@@ -69,5 +72,6 @@ export default withRouter(connect(
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
+		resetConverter: () => dispatch(resetConverter()),
 	}),
 )(ViewContract));

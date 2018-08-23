@@ -1,50 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Dropdown from '../../components/Dropdown';
 
 class TabLogs extends React.Component {
 
 	renderLog(item, key) {
-		const dropdownOptions = [
+		const { dataLog, topics } = this.props;
+
+		const options = [
 			{
 				text: 'hex',
 				value: 'hex',
 			},
 			{
-				text: 'string',
-				value: 'string',
-			},
-			{
-				text: 'number',
-				value: 'number',
-			},
-			{
-				text: 'bool',
-				value: 'bool',
+				text: 'id',
+				value: 'id',
 			},
 		];
+
 		return (
 			<React.Fragment key={key}>
 				<li key={`${item.data}topics`}>
 					<div className="col">Topics:</div>
 					<div className="col">
 						{
-							item.log.map((topic, i) => (
-								<div className="topic-item" key={`${item.data}${topic}`}>
-									<span className="num">[{i}]</span>
-									{topic}
-								</div>
-							))
+							item.log.map((topic, i) => {
+								const convertedTopic = topics.find((val) => i === val.id);
+
+								return (
+									<div className="topic-item" key={`${item.data}${topic}`}>
+										<span className="num">[{i}]</span>
+										{ i !== 0 && <Dropdown data={topic} component={i} variativeOptions={options} />}
+										{convertedTopic ? convertedTopic.value : `0x${topic}`}
+									</div>
+								);
+							})
 						}
 					</div>
 				</li>
 				<li key={`${item.data}data`}>
 					<div className="col data">Data:</div>
-					<Dropdown options={dropdownOptions} data={item.data} />
+					<Dropdown data={item.data} component="dataLog" />
 					<div className="col">
 						<div className="data-item">
 							<span className="arrow">➡</span>
-							{item.data}
+							{dataLog || `0x${item.data}`}
 						</div>
 					</div>
 				</li>
@@ -68,6 +69,18 @@ class TabLogs extends React.Component {
 
 TabLogs.propTypes = {
 	data: PropTypes.object.isRequired,
+	dataLog: PropTypes.any,
+	topics: PropTypes.array.isRequired,
 };
 
-export default TabLogs;
+TabLogs.defaultProps = {
+	dataLog: '',
+};
+
+export default connect(
+	(state) => ({
+		dataLog: state.converter.get('data'),
+		topics: state.converter.get('topics').toJS(),
+	}),
+	() => ({}),
+)(TabLogs);

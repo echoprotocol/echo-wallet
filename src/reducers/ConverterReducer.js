@@ -1,8 +1,10 @@
 import { createModule } from 'redux-modules';
-import { Map, List } from 'immutable';
+import { List, Map } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	logs: new List([]),
+	data: '',
+	topics: List([]),
+	convertedConstants: List([]),
 });
 
 export default createModule({
@@ -12,13 +14,6 @@ export default createModule({
 		set: {
 			reducer: (state, { payload }) => {
 				state = state.set(payload.field, payload.value);
-
-				return state;
-			},
-		},
-		setIn: {
-			reducer: (state, { payload }) => {
-				state = state.setIn(payload.fields, payload.value);
 
 				return state;
 			},

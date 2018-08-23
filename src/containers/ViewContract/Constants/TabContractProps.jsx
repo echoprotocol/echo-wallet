@@ -13,6 +13,10 @@ class TabContractProps extends React.Component {
 		switch (type) {
 			case 'bool': return [
 				{
+					text: 'hex',
+					value: 'hex',
+				},
+				{
 					text: 'bool',
 					value: 'bool',
 				},
@@ -20,30 +24,26 @@ class TabContractProps extends React.Component {
 					text: 'number',
 					value: 'number',
 				},
-				{
-					text: 'hex',
-					value: 'hex',
-				},
 			];
 			case 'string':
 			case 'address': return [
 				{
-					text: type === 'address' ? 'id' : type,
-					value: type === 'address' ? 'number' : type,
-				},
-				{
 					text: 'hex',
 					value: 'hex',
+				},
+				{
+					text: type === 'address' ? 'id' : type,
+					value: type === 'address' ? 'number' : type,
 				},
 			];
 			default: return [
 				{
-					text: 'number',
-					value: 'number',
-				},
-				{
 					text: 'hex',
 					value: 'hex',
+				},
+				{
+					text: 'number',
+					value: 'number',
 				},
 			];
 		}

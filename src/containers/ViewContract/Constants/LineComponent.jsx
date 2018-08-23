@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { List } from 'immutable';
 import classnames from 'classnames';
 
-import { contractQuery, set } from '../../../actions/ContractActions';
+import { contractQuery } from '../../../actions/ContractActions';
 
-import { convertContractConstant, formatCallContractField } from '../../../helpers/FormatHelper';
+import { formatCallContractField } from '../../../helpers/FormatHelper';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 import InputComponent from './InputComponent';
+import Dropdown from '../../../components/Dropdown';
 
 class LineComponent extends React.Component {
 
@@ -19,48 +19,8 @@ class LineComponent extends React.Component {
 		super(props);
 
 		this.state = {
-			valueType: undefined,
 			showResult: false,
 		};
-	}
-
-	componentWillMount() {
-		const { constant } = this.props;
-
-		if (constant.outputs[0].type === 'string') {
-			this.setState({ valueType: 'string' });
-		} else if (constant.outputs[0].type === 'bool') {
-			this.setState({ valueType: 'bool' });
-		} else {
-			this.setState({ valueType: 'number' });
-		}
-	}
-
-	onChange(e, data) {
-		const { constant, constants } = this.props;
-		if (this.state.valueType === 'id') {
-			this.setState({ valueType: 'number' });
-		}
-
-		const result = convertContractConstant(
-			data.value,
-			this.state.valueType,
-			constant.constantValue,
-		);
-
-		if (result) {
-			const newConstants = constants.toJS().map((item) => {
-				if (item.name === constant.name) {
-					item.constantValue = result.value;
-				}
-				return item;
-			});
-
-			this.props.set(newConstants);
-
-			this.setState({ valueType: result.type });
-		}
-
 	}
 
 	onQuery() {
@@ -78,11 +38,13 @@ class LineComponent extends React.Component {
 	}
 
 	renderConstant() {
-		const { constant } = this.props;
+		const { constant, convertedConstants } = this.props;
+
+		const convertedConstant = convertedConstants.find((val) => constant.name === val.name);
 
 		return (
 			<span className="value item">
-				{constant.constantValue.toString()}
+				{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}
 			</span>
 		);
 	}
@@ -111,6 +73,28 @@ class LineComponent extends React.Component {
 
 	}
 
+	renderQueryResult() {
+		const { constant, convertedConstants } = this.props;
+
+		const convertedConstant = convertedConstants.find((val) => constant.name === val.name);
+
+		return (
+			<React.Fragment>
+				{
+					this.state.showResult &&
+					<div className="watchlist-row">
+						<div className="watchlist-col" />
+						<div className="watchlist-col">
+							<span>
+								{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}
+							</span>
+						</div>
+					</div>
+				}
+			</React.Fragment>
+		);
+	}
+
 	render() {
 		const { constant, typeOptions } = this.props;
 
@@ -125,12 +109,9 @@ class LineComponent extends React.Component {
 					</div>
 					<div className="watchlist-col">
 						<Dropdown
-							placeholder={constant.outputs[0].type === 'address' ? 'id' : this.state.valueType}
-							compact
-							selection
-							className="item contract-type-dropdown air"
-							options={typeOptions}
-							onChange={(e, data) => this.onChange(e, data)}
+							data={constant.constantValue}
+							variativeOptions={typeOptions}
+							component={constant}
 						/>
 						{
 							constant.inputs.length
@@ -139,17 +120,7 @@ class LineComponent extends React.Component {
 						}
 					</div>
 				</div>
-				{
-					this.state.showResult &&
-					<div className="watchlist-row">
-						<div className="watchlist-col" />
-						<div className="watchlist-col">
-							<span>
-								{constant.constantValue}
-							</span>
-						</div>
-					</div>
-				}
+				{this.renderQueryResult()}
 			</div>
 		);
 	}
@@ -157,27 +128,21 @@ class LineComponent extends React.Component {
 }
 
 LineComponent.propTypes = {
-	constants: PropTypes.any,
+	convertedConstants: PropTypes.array.isRequired,
 	typeOptions: PropTypes.array.isRequired,
 	constant: PropTypes.object.isRequired,
 	inputs: PropTypes.object.isRequired,
 	contractId: PropTypes.string.isRequired,
 	contractQuery: PropTypes.func.isRequired,
-	set: PropTypes.func.isRequired,
-};
-
-LineComponent.defaultProps = {
-	constants: null,
 };
 
 export default connect(
 	(state) => ({
-		constants: state.contract.get('constants'),
+		convertedConstants: state.converter.get('convertedConstants').toJS(),
 		contractId: state.contract.get('id'),
 		inputs: state.form.getIn([FORM_VIEW_CONTRACT, 'inputs']),
 	}),
 	(dispatch) => ({
 		contractQuery: (method, args, contractId) => dispatch(contractQuery(method, args, contractId)),
-		set: (value) => dispatch(set('constants', new List(value))),
 	}),
 )(LineComponent);

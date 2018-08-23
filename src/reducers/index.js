@@ -6,7 +6,7 @@ import tableReducer from './TableReducer';
 import balanceReducer from './BalanceReducer';
 import transactionReducer from './TransactionReducer';
 import contractReducer from './ContractReducer';
-import transactionLogsReducer from './TransactionLogsReducer';
+import converterReducer from './ConverterReducer';
 
 
 export default {
@@ -18,5 +18,5 @@ export default {
 	balance: balanceReducer.reducer,
 	transaction: transactionReducer.reducer,
 	contract: contractReducer.reducer,
-	transactionLogs: transactionLogsReducer.reducer,
+	converter: converterReducer.reducer,
 };
