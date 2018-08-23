@@ -30,7 +30,7 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		await dispatch(EchoJSActions.connect(undefined, { types: ['accounts', 'block'], method: getObject }));
+		await dispatch(EchoJSActions.connect(undefined, { types: ['objects', 'block'], method: getObject }));
 		const accountName = localStorage.getItem('current_account');
 
 		if (!accountName) {
@@ -75,4 +75,3 @@ export const logout = () => (dispatch) => {
 	dispatch(resetBalance());
 	history.push(SIGN_IN_PATH);
 };
-
