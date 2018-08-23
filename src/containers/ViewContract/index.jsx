@@ -30,7 +30,7 @@ class ViewContract extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: <Button className="tab-btn" ><span>View properties</span></Button>,
+				menuItem: <Button className="tab-btn" key="0"><span>View properties</span></Button>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -38,7 +38,7 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: <Button className="tab-btn"><span>call contracts</span></Button>,
+				menuItem: <Button className="tab-btn" key="1"><span>call contracts</span></Button>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />

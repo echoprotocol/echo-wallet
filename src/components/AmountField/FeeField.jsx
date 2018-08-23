@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -70,21 +70,28 @@ class FeeComponent extends React.Component {
 		const options = this.getOptions();
 		const text = this.getText(options);
 		return (
-			<Dropdown
-				className={classnames('fee-dropdown', {
-					'no-choice': options.length < 2,
-				})}
-				selection
-				options={options}
-				text={text}
-				onChange={(e, { value }) => this.onFee(JSON.parse(value))}
-			/>
+			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
+				{this.props.isSingle ? <label htmlFor="Method">fee</label> : null}
+				<Dropdown
+					className={classnames({
+						'fee-dropdown': !this.props.isSingle,
+						'no-choice': options.length < 2,
+					})}
+					selection
+					fluid
+					tabIndex={(options.length < 2) ? '-1' : '0'}
+					options={options}
+					text={text}
+					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
+				/>
+			</Form.Field>
 		);
 	}
 
 }
 
 FeeComponent.propTypes = {
+	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
 	comment: PropTypes.any.isRequired,
@@ -94,12 +101,14 @@ FeeComponent.propTypes = {
 };
 
 FeeComponent.defaultProps = {
+	isSingle: false,
 	fee: {},
 	assets: [],
 };
 
 export default connect(
-	(state, { form }) => ({
+	(state, { form, isSingle }) => ({
+		isSingle,
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
 		comment: state.form.getIn([form, 'comment']) || {},
