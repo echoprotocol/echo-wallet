@@ -104,7 +104,8 @@
             bottom: -2px;
             right: 100%;
         }
-        .item {
+        .item,
+        .tab-btn {
             border: 0;
             font-size: .8em;
             font-weight: 600;
@@ -117,6 +118,7 @@
             transition: border 0.1s ease;
             padding: 0;
             z-index: 2;
+            background-color: transparent;
             &:not(:last-child) {
                 margin-right: 35px;
             }
@@ -125,9 +127,39 @@
                 line-height: 0px;
                 border-top-right-radius: 8px;
                 border-top-left-radius: 8px;
-                background-color: #fff;
                 border-bottom: 2px solid;
             }
+        }
+        .tab-btn {
+            span {
+                display: block;
+                padding: 10px 0 8px;
+                position: relative;
+            }
+            &:focus {
+                box-shadow: none;
+                span {
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        right: -5px;
+                        left: -5px;
+                        top: 0;
+                        bottom: 0;
+                        border-radius: 3px;
+                        @extend %onFocus;
+                    }
+
+                }
+            }
+            &:active {
+                span {
+                    &:before {
+                        display: none;
+                    }
+                }
+            }
+
         }
 
     }

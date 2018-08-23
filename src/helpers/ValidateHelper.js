@@ -65,7 +65,7 @@ export const validateContractId = (id) => {
 
 export const validateAbi = (str) => {
 	if (!str) {
-		return 'Contract abi should not be empty';
+		return 'Contract ABI should not be empty';
 	}
 
 	const schema = {
