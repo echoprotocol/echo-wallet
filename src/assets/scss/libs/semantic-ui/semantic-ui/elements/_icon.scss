@@ -3339,7 +3339,16 @@ i.icon.drivers.license:before {
   content: "\f2c2";
 }
 i.icon.dropdown:before {
-  content: "\f0d7";
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\E907";
 }
 i.icon.eercast:before {
   content: "\f2da";
