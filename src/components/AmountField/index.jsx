@@ -136,7 +136,7 @@ class AmountField extends React.Component {
 
 	render() {
 		const {
-			assets, amount, form,
+			assets, amount, form, fee,
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
@@ -164,7 +164,7 @@ class AmountField extends React.Component {
 					placeholder="Amount"
 					tabIndex="0"
 					action
-					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
+					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
 					<div className="amount-wrap action-wrap">
 						<input
@@ -176,10 +176,9 @@ class AmountField extends React.Component {
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
-						{ amount.error ? <span className="icon-error-red value-status" /> : null }
+						{ amount.error || fee.error ? <span className="icon-error-red value-status" /> : null }
 					</div>
-					{amount.error && <span className="error-message">{amount.error}</span>}
-					{/* if elements =< 1 add class no-choice */}
+					{ amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null }
 					<Dropdown
 						search
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
