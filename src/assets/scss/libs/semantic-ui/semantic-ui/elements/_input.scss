@@ -28,25 +28,28 @@
   color: rgba(0, 0, 0, 0.87);
 }
 .ui.input > input {
-  margin: 0em;
-  max-width: 100%;
-  -webkit-box-flex: 1;
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto;
-  outline: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  text-align: left;
-  line-height: 1.21428571em;
-  font-family: $font-family;
-  padding: 0.67857143em 1em;
-  background: #FFFFFF;
-  border: 1px solid $bd-gray;
-  color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
-  -webkit-transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
-  transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
-  transition: box-shadow 0.1s ease, border-color 0.1s ease;
-  transition: box-shadow 0.1s ease, border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
+    margin: 0em;
+    max-width: 100%;
+    -webkit-box-flex: 1;
+        -ms-flex: 1 0 auto;
+            flex: 1 0 auto;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: left;
+    line-height: 1.21428571em;
+    font-family: $font-family;
+    padding: 0.67857143em 1em;
+    background: #FFFFFF;
+    border: 1px solid $inut-color;
+    color: rgba(0, 0, 0, 0.87);
+    border-radius: 0.28571429rem;
+    -webkit-transition: border-color $speed ease, -webkit-box-shadow $speed ease;
+    transition: border-color $speed ease, -webkit-box-shadow $speed ease;
+    transition: box-shadow $speed ease, border-color $speed ease;
+    transition: box-shadow $speed ease, border-color $speed ease, -webkit-box-shadow $speed ease;
+    &:hover {
+        border-color: $inut-hover;
+    }
 }
 
 /*--------------------

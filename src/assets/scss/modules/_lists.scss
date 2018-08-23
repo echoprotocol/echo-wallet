@@ -46,12 +46,11 @@
             &:hover,
             &:active,
             &:focus {
-                border-color: $bd-gray;
+                border-color: $inut-color;
                 cursor: pointer;
             }
             &.active {
                 box-shadow: none;
-                border-color: $bd-gray;
                 .menu {
                     box-shadow: none;
                     border-color: $bd-gray;
@@ -76,11 +75,14 @@
 .addition {
     display: none !important;
 }
+
+
+
 .assets-tokens-dropdown {
     &.ui.dropdown {
         display: flex;
         align-items: center;
-        border: 1px solid $bd-gray;
+        border: 1px solid $inut-color;
         border-left: 0;
         padding: 0.67857143em 1em;
         transition: border .3s;
@@ -114,7 +116,7 @@
             cursor: pointer;
         }
         .menu {
-            max-height: 212px;
+            max-height: 180px;
             width: 151px;
             max-width: 151px;
             margin-left: -1px;
@@ -154,7 +156,6 @@
     &.ui.dropdown {
         display: flex;
         align-items: center;
-        border: 1px solid $bd-gray;
         padding: 3px 1em;
         transition: border .3s;
         align-self: flex-start;

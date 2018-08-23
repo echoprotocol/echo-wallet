@@ -13,12 +13,16 @@ $green:                 rgb(122, 211, 141);
 $blue:                  rgb(77, 161, 255);
 $blue-light:            rgb(112, 165, 224);
 $err-red:               rgb(255, 72, 72);
-$inut-color:            rgb(186, 188, 203);
+
+$inut-color:            rgb(221, 221, 221); // #dddddd
+$inut-hover:            rgb(186, 188, 203); // #babccb
 
 // labels
 $lbl-yellow:            rgb(255, 175, 20);
 $lbl-green:             rgb(147, 199, 53);
 $lbl-red:               rgb(255, 85, 96);
+
+$speed: .3s;
 
 // tables 
 $t-row-color:           #fbfbfb;

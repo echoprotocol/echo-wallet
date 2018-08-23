@@ -5,12 +5,12 @@ $thead-height: 46px;
         display: flex;
         flex-direction: column;
         max-width: 10px;
-        margin: 0 0 0 5px;
+        margin: -2px 0 0 5px;
         i {
             margin: 0;
             width: 10px;
-            line-height: 1.5em;
-            font-size: .25em;
+            line-height: 8px;
+            font-size: 4px;
             &.active {
                 color: $link-gray;
             }
