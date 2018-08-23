@@ -106,22 +106,6 @@ export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, ge
 	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
 };
 
-export const estimateTransactionFee = (contractId, code, asset) => async (dispatch, getState) => {
-	const instance = getState().echojs.getIn(['system', 'instance']);
-
-	const accountId = getState().global.getIn(['activeUser', 'id']);
-
-	const transferResult = await estimateFee(
-		instance,
-		contractId,
-		accountId,
-		code,
-		asset,
-	);
-
-	console.log(transferResult);
-};
-
 export const checkAccount = (accountName) => async (dispatch, getState) => {
 	if (!accountName) {
 		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));

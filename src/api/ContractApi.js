@@ -6,9 +6,9 @@ import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 //	TODO methods should be in echojs-lib!!!
 //	please, don't export them and use only as private methods at contract api
-const getContractProp = (instance, contract, account, code, asset = '1.3.0') => instance.dbApi().exec(
+const getContractProp = (instance, contract, account, code) => instance.dbApi().exec(
 	'call_contract_no_changing_state',
-	[contract, account, asset, code],
+	[contract, account, '1.3.0', code],
 );
 
 export const getResult = (instance, resultId) => instance.dbApi().exec(
