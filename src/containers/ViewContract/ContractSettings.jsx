@@ -57,6 +57,7 @@ class ContractSettings extends React.Component {
 	onClose(e) {
 		e.preventDefault();
 		this.setState({ isEditName: false });
+		this.props.setValue('newName', { error: null, value: '' });
 	}
 
 	onPushEnter(e, contractName) {
@@ -67,14 +68,17 @@ class ContractSettings extends React.Component {
 
 	changeName(oldName) {
 		const newName = this.props.newName.value;
-		const newNameError = validateContractName(newName);
 
-		if (newNameError) {
-			this.props.setFormError('newName', newNameError);
-			return;
+		if (newName) {
+			const newNameError = validateContractName(newName);
+
+			if (newNameError) {
+				this.props.setFormError('newName', newNameError);
+				return;
+			}
+
+			this.props.updateContractName(oldName, newName);
 		}
-
-		this.props.updateContractName(oldName, newName);
 
 		this.setState({ isEditName: false });
 
@@ -192,7 +196,7 @@ export default withRouter(connect(
 		newName: state.form.getIn([FORM_VIEW_CONTRACT, 'newName']),
 	}),
 	(dispatch) => ({
-		updateContractName: (name) => dispatch(updateContractName(name)),
+		updateContractName: (oldName, newName) => dispatch(updateContractName(oldName, newName)),
 		disableContract: (name) => dispatch(disableContract(name)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
 		setValue: (field, value) => dispatch(setValue(FORM_VIEW_CONTRACT, field, value)),
