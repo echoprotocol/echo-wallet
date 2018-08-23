@@ -601,7 +601,7 @@ select.ui.dropdown {
 /* Active/Visible Search */
 .ui.search.dropdown.active > input.search,
 .ui.search.dropdown.visible > input.search {
-  cursor: auto;
+  cursor: pointer;
 }
 .ui.search.dropdown.active > .text,
 .ui.search.dropdown.visible > .text {

@@ -236,6 +236,9 @@
             overflow: auto;
             border-radius: 0.28571429rem;
             border-top: 1px solid #96C8DA;
+            & > .item {
+                padding: .5rem;
+            }
         }
         .item {
             .text {

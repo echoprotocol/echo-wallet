@@ -20,6 +20,9 @@
         &:hover {
             color: rgba(#6d7178,1);
         }
+        &:active {
+            box-shadow: none;
+        }
         & + .page-title {
             font-size: 16px;
         }
@@ -116,6 +119,27 @@
     .balance {
         transition: color .4s;
         color: $link-gray;
+        position: relative;
+
+        &:focus {
+            &:before {
+                top: 0px;
+                right: -3px;
+                bottom: 3px;
+                left: -3px;
+                content: '';
+                position: absolute;
+                @extend %onFocus;
+                display: block;
+                border-radius: 3px;
+            }
+
+        }
+        &:active {
+            &:before {
+                box-shadow: none;
+            }
+        }
         span {
             &:nth-child(1) {
                 font-family: proximanovaSemibold;
