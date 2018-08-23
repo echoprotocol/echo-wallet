@@ -281,7 +281,7 @@
                 &.focused {
                     .assets-tokens-dropdown {
                         @extend %onFocus;
-                        clip-path: inset(-5px -5px -5px 0);
+                        clip-path: inset(-4px -4px -4px 0);
                         border-color: $inut-color;
                     }
                 }
@@ -309,7 +309,7 @@
                             height: 10px;
                             position: absolute;
                             right: 0;
-                            top: 1px;
+                            top: 1.2px;
                             z-index: 2;
                         }
                         &:before {

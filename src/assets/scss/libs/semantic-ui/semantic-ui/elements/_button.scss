@@ -24,7 +24,7 @@
     color: #fff;
     font-family: proximanovaSemibold;
     margin: 0em 0.25em 0em 0em;
-    padding: 0.78571429em 1em 0.78571429em;
+    padding: 0.78571429em 1em 0.65571429em;
     text-transform: uppercase;
     text-shadow: none;
     font-weight: 400;
@@ -1974,10 +1974,10 @@
     &.orange {
         &.buttons .button,
         &.button {
+            border: 1px solid $orange;
             color: #FFFFFF;
             text-shadow: none;
             background-color: $orange;
-        
             &:focus {
                 text-shadow: none;
             }
