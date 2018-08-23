@@ -27,7 +27,7 @@ class TabCallContracts extends React.Component {
 				<Form.Field
 					control="input"
 					name={field}
-					placeholder={`(${type})`}
+					placeholder={`(${type !== 'address' ? type : 'id'})`}
 					value={data.value}
 					label={field}
 					onChange={(e) => this.onChange(e)}

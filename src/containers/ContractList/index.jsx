@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,8 +14,34 @@ import {
 
 class ContractList extends React.Component {
 
+	constructor() {
+		super();
+		this.state = {
+			sortType: 'id',
+			sortInc: true,
+		};
+	}
+
+	onSort(sortType) {
+		const sortInc = sortType === this.state.sortType ? !this.state.sortInc : true;
+		this.setState({ sortType, sortInc });
+	}
+
 	onLink(link) {
 		history.push(link);
+	}
+
+	sortList() {
+		const contracts = this.props.contracts.toJS();
+		const { sortType, sortInc } = this.state;
+
+		return Object.entries(contracts)
+			.sort(([name1, { id: id1 }], [name2, { id: id2 }]) => {
+
+				const t1 = (sortType === 'id' ? id1.split('1.16.')[1] : name1) || '';
+				const t2 = (sortType === 'id' ? id2.split('1.16.')[1] : name2) || '';
+				return (t1.localeCompare(t2, [], { numeric: true })) * (sortInc ? 1 : -1);
+			});
 	}
 
 	renderRow([name, { id, disabled }]) {
@@ -45,22 +71,31 @@ class ContractList extends React.Component {
 	}
 
 	renderList() {
-		const contracts = this.props.contracts.toJS();
-
 		return (
 			<React.Fragment>
 				<Table striped className="table-smart-contract">
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell>Contract ID</Table.HeaderCell>
-							<Table.HeaderCell>
-                                Watched Contract Name
+							<Table.HeaderCell onClick={() => this.onSort('id')}>
+								<span>
+                                    Contract ID
+									<Icon name="sort" size="tiny" />
+								</span>
+
+							</Table.HeaderCell>
+							<Table.HeaderCell onClick={() => this.onSort('name')}>
+								<span>
+                                    Watched Contract Name
+									<Icon name="sort" size="tiny" />
+								</span>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 
 					<Table.Body>
-						{ Object.entries(contracts).map((i) => this.renderRow(i)) }
+						{
+							this.sortList().map((i) => this.renderRow(i))
+						}
 					</Table.Body>
 				</Table>
 				<div className="btn-list" >

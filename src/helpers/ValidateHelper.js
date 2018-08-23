@@ -44,7 +44,7 @@ export const validateCode = (code) => {
 };
 
 export const validateContractName = (name) => {
-	if (!name) {
+	if (!name.trim()) {
 		return 'Contract name should not be empty';
 	}
 
@@ -138,6 +138,7 @@ export const validateAbi = (str) => {
 };
 
 const validateInt = (value, isUint, size = 256) => {
+	value = Number(value);
 	if (!Number.isInteger(value)) return 'value should be integer';
 
 	if (isUint && value < 0) return 'value should be unsigned integer';
@@ -152,12 +153,12 @@ const validateInt = (value, isUint, size = 256) => {
 	return null;
 };
 
-const validateString = (value) => (typeof value === 'string' ? null : 'Value should be a string');
-const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'Value should be in object id format');
-const validateBool = (value) => (typeof value === 'boolean' ? null : 'Value should be a boolean');
-const validateArray = (value) => (
-	Array.isArray(value) ? null : 'Value should be an array'
-);
+const validateString = (value) => (typeof value === 'string' ? null : 'value should be a string');
+const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'value should be in object id format');
+const validateBool = (value) => (typeof value === 'boolean' ? null : 'value should be a boolean');
+const validateArray = (value) => (Array.isArray(value) ? null : 'value should be an array');
+const validateBytes = (value) => ((typeof value === 'string' && reg.test(value)) ? null : 'value should be a hex string');
+
 
 export const validateByType = (value, type) => {
 	if (!value) return 'Value should not be empty';
@@ -165,6 +166,7 @@ export const validateByType = (value, type) => {
 	let method = null;
 	let isUint = null;
 	let size = null;
+	let isBytesArray = false;
 
 	const intMark = type.search('int');
 	if (type.search('string') !== -1) {
@@ -174,17 +176,9 @@ export const validateByType = (value, type) => {
 	} else if (type.search('bool') !== -1) {
 		method = validateBool;
 	} else if (type.search('byte') !== -1) {
-		try {
-			value = JSON.parse(value);
-		} catch (e) {
-			return 'value should be an array';
-		}
-		method = validateArray;
-		const match = type.match(/\d+/);
-		const matchResult = match ? match[0] : null;
-		size = (type === 'byte') ? 1 : matchResult;
+		isBytesArray = type !== 'bytes';
+		method = validateBytes;
 	} else if (intMark !== -1) {
-		value = Number(value);
 		method = validateInt;
 		isUint = (intMark === 1);
 		const match = type.match(/\d+/);
@@ -193,12 +187,13 @@ export const validateByType = (value, type) => {
 		return 'value could not be validated';
 	}
 
-	const arrayMark = type.search('[]');
-	if (arrayMark !== -1) {
+	const arrayMark = type.search('\\[\\]');
+
+	if (arrayMark !== -1 || isBytesArray) {
 		try {
 			value = JSON.parse(value);
 		} catch (e) {
-			return 'value should be an array';
+			return `value should be an ${type} array`;
 		}
 		let error = validateArray(value);
 		if (error) return error;
@@ -207,7 +202,7 @@ export const validateByType = (value, type) => {
 			return error;
 		});
 
-		return error;
+		return error ? `in array ${error}` : error;
 	}
 
 	return method(value, isUint, size);
@@ -242,4 +237,3 @@ export const validateFee = (amount, currency, fee, assets) => {
 
 	return null;
 };
-

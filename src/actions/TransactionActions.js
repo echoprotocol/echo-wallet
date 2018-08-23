@@ -8,7 +8,7 @@ import { FORM_CREATE_CONTRACT, FORM_TRANSFER, FORM_CALL_CONTRACT } from '../cons
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
-import { openModal, closeModal } from './ModalActions';
+import { openModal, closeModal, setDisable } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -62,14 +62,15 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getState) => {
+export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
-	if (memo) {
-		fee = new BN(fee).plus(getMemoFee(globalObject, memo));
+
+	if (comment) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, comment));
 	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
@@ -86,18 +87,29 @@ export const getFee = (type, assetId = '1.3.0', memo = null) => (dispatch, getSt
 		feeAsset = feeAsset.toJS();
 
 		const { quote, base } = feeAsset.options.core_exchange_rate;
-		base.precision = base.asset_id === assetId ? feeAsset.precision : coreAsset.precision;
-		quote.precision = quote.asset_id === assetId ? feeAsset.precision : coreAsset.precision;
-
 
 		const price = new BN(quote.amount)
 			.div(base.amount)
-			.times(10 ** (base.precision - quote.precision));
+			.times(10 ** (coreAsset.precision - feeAsset.precision));
 
-		fee = price.times(fee);
+		fee = new BN(fee).div(10 ** coreAsset.precision);
+		fee = price.times(fee).times(10 ** feeAsset.precision);
 	}
 
 	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
+};
+
+export const checkFeePool = (echo, asset, fee) => {
+	if (echo.id === asset.id) { return true; }
+
+	let feePool = new BN(asset.dynamic.fee_pool).div(10 ** echo.precision);
+
+	const { quote, base } = asset.options.core_exchange_rate;
+	const precision = echo.precision - asset.precision;
+	const price = new BN(quote.amount).div(base.amount).times(10 ** precision);
+	feePool = price.times(feePool).times(10 ** asset.precision);
+
+	return feePool.gt(fee);
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
@@ -130,13 +142,11 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
-	const {
-		to, amount, currency, comment,
-	} = form;
+	const { to, currency, comment } = form;
 	let { fee } = form;
-	amount.value = amount.value.replace(',', '.');
+	const amount = Number(form.amount.value).toString();
 
-	if (to.error || amount.error || fee.error || comment.error) {
+	if (to.error || form.amount.error || fee.error || comment.error) {
 		return;
 	}
 
@@ -145,12 +155,12 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
-	if (!Math.floor(amount.value * (10 ** currency.precision))) {
+	if (!Math.floor(amount * (10 ** currency.precision))) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
 		return;
 	}
 
-	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
+	if (new BN(amount).times(10 ** currency.precision).gt(currency.balance)) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
 		return;
 	}
@@ -159,9 +169,20 @@ export const transfer = () => async (dispatch, getState) => {
 		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
 	}
 
+	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn(['data', 'assets', fee.asset.id]).toJS();
+
+	if (!checkFeePool(echo, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_TRANSFER,
+			'amount',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return;
+	}
 
 	if (currency.id === fee.asset.id) {
-		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
+		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
@@ -189,7 +210,7 @@ export const transfer = () => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			[toAccount.id, amount.value * (10 ** currency.precision)],
+			[toAccount.id, amount * (10 ** currency.precision)],
 		);
 
 		options = {
@@ -210,7 +231,7 @@ export const transfer = () => async (dispatch, getState) => {
 			from: fromAccountId,
 			to: toAccount.id,
 			amount: {
-				amount: amount.value * (10 ** currency.precision),
+				amount: amount * (10 ** currency.precision),
 				asset_id: currency.id,
 			},
 		};
@@ -220,7 +241,7 @@ export const transfer = () => async (dispatch, getState) => {
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		from: fromAccount.name,
 		to: toAccount.name,
-		amount: `${amount.value} ${currency.symbol}`,
+		amount: `${amount} ${currency.symbol}`,
 	};
 
 	if (comment.value && currency.type !== 'tokens') {
@@ -321,6 +342,9 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 };
 
 export const sendTransaction = () => async (dispatch, getState) => {
+
+	dispatch(setDisable(MODAL_DETAILS, true));
+
 	const { operation, keys, options } = getState().transaction.toJS();
 
 	if (options.memo) {
@@ -350,7 +374,8 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		})
 		.catch(() => {
 			toastError(`${operations[operation].name} transaction wasn't completed`);
-		});
+		})
+		.finally(() => dispatch(setDisable(MODAL_DETAILS, false)));
 	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));

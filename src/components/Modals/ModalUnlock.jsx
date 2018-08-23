@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
@@ -50,7 +51,9 @@ class ModalUnlockWallet extends React.Component {
 	}
 
 	render() {
-		const { show, password, loading } = this.props;
+		const {
+			show, password, loading, disabled,
+		} = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -70,17 +73,15 @@ class ModalUnlockWallet extends React.Component {
 								<h3>Unlock Wallet</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field>
+								<Form.Field className={classnames('error-wrap', { error: password.error })}>
 									<label htmlFor="Password">Password</label>
-									<div className={password.error ? 'error' : ''}>
-										<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-										<span className="error-message">{password.error}</span>
-									</div>
+									<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+									<span className="error-message">{password.error}</span>
 								</Form.Field>
 							</div>
 							{loading
 								? <Button type="submit" color="orange" className="load" >Loading...</Button>
-								: <Button basic type="submit" color="orange" onClick={(e) => this.onSuccess(e)}>Unlock Wallet</Button>
+								: <Button basic type="submit" color="orange" onClick={(e) => this.onSuccess(e)} disabled={disabled}>Unlock Wallet</Button>
 							}
 						</Form>
 					</div>
@@ -93,6 +94,7 @@ class ModalUnlockWallet extends React.Component {
 
 ModalUnlockWallet.propTypes = {
 	show: PropTypes.bool,
+	disabled: PropTypes.bool.isRequired,
 	disableBackgroundClick: PropTypes.bool,
 	loading: PropTypes.bool,
 	accountName: PropTypes.string,
@@ -113,6 +115,7 @@ ModalUnlockWallet.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
+		disabled: state.modal.getIn([MODAL_UNLOCK, 'disabled']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
 		accountName: state.global.getIn(['activeUser', 'name']),

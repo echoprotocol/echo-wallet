@@ -9,15 +9,25 @@ import {
 	getTokenSymbol,
 } from '../api/ContractApi';
 
-import { setError, setParamError, closeModal } from './ModalActions';
+import {
+	setError,
+	setParamError,
+	closeModal,
+	setDisable,
+} from './ModalActions';
+import { setValue } from './FormActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
-import { toastSuccess } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
+import { FORM_TRANSFER } from '../constants/FormConstants';
+import { TRANSFER_PATH } from '../constants/RouterConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
+
+import history from '../history';
 
 export const getAssetsBalances = (assets) => async (dispatch) => {
 
@@ -101,20 +111,23 @@ export const initBalances = (accountId) => async (dispatch) => {
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {
+
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	if (!contractId) {
-		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
-		return;
-	}
-
-	if (validateContractId(contractId)) {
-		dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
-		return;
-	}
+	dispatch(setDisable(MODAL_TOKENS, true));
 
 	try {
+		if (!contractId) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+			return;
+		}
+
+		if (validateContractId(contractId)) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			return;
+		}
+
 		const contract = await getContract(instance, contractId);
 
 		if (!contract) {
@@ -158,6 +171,8 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		toastSuccess('Token successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
+	} finally {
+		dispatch(setDisable(MODAL_TOKENS, false));
 	}
 
 };
@@ -206,6 +221,9 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 };
 
 export const removeToken = (contractId) => (dispatch, getState) => {
+	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
+	if (!targetToken || !targetToken.disabled) return;
+
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	let tokens = localStorage.getItem('tokens');
@@ -220,4 +238,28 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 
 	const index = getState().balance.get('tokens').findIndex((i) => i.id === contractId);
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
+};
+
+export const enableToken = (contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
+};
+
+export const disableToken = (name, contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
+
+	toastInfo(
+		`You have removed ${name} from watch list`,
+		() => dispatch(enableToken(contractId)),
+		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
+	);
+};
+
+export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
+	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
+	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
+	history.push(TRANSFER_PATH);
+};
+
+export const resetBalance = () => (dispatch) => {
+	dispatch(BalanceReducer.actions.reset());
 };
