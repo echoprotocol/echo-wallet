@@ -23,7 +23,7 @@ class ModalDetails extends React.Component {
 
 	getArea(key, data) {
 		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
+			<Form.Field className="comment" key={key} label="Note" disabled control="textarea" value={data} />
 		);
 	}
 
