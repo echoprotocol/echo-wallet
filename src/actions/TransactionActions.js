@@ -96,7 +96,7 @@ export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, ge
 		fee = price.times(fee).times(10 ** feeAsset.precision);
 	}
 
-	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
+	return { value: new BN(fee).integerValue(BN.ROUND_UP).toString(), asset: feeAsset };
 };
 
 export const checkFeePool = (echo, asset, fee) => {
@@ -155,13 +155,10 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
-	if (!Math.floor(amount * (10 ** currency.precision))) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
-		return;
-	}
+	const amountError = validateAmount(amount, currency);
 
-	if (new BN(amount).times(10 ** currency.precision).gt(currency.balance)) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+	if (amountError) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
 		return;
 	}
 
@@ -175,7 +172,7 @@ export const transfer = () => async (dispatch, getState) => {
 	if (!checkFeePool(echo, feeAsset, fee.value)) {
 		dispatch(setFormError(
 			FORM_TRANSFER,
-			'amount',
+			'fee',
 			`${fee.asset.symbol} fee pool balance is less than fee amount`,
 		));
 		return;
@@ -185,13 +182,13 @@ export const transfer = () => async (dispatch, getState) => {
 		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
 		}
 	}
@@ -443,7 +440,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	if (payable) {
 		// validate amount
-		const amountError = validateAmount(amount, currency);
+		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
 			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
 			dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));

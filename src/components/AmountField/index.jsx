@@ -6,8 +6,8 @@ import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
-import { setValue, setFormValue } from '../../actions/FormActions';
-import amountInput from '../../actions/AmountActions';
+import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
+import { amountInput } from '../../actions/AmountActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -61,6 +61,7 @@ class AmountField extends React.Component {
 			this.setCurrency(target, 'assets');
 			this.setState({ searchText: '' });
 		}
+		this.props.setFormError('amount', null);
 	}
 
 	onDropdownChange(e, value) {
@@ -136,7 +137,7 @@ class AmountField extends React.Component {
 
 	render() {
 		const {
-			assets, amount, form,
+			assets, amount, form, fee,
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
@@ -164,7 +165,7 @@ class AmountField extends React.Component {
 					placeholder="Amount"
 					tabIndex="0"
 					action
-					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
+					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
 					<div className="amount-wrap action-wrap">
 						<input
@@ -176,10 +177,9 @@ class AmountField extends React.Component {
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
-						{ amount.error ? <span className="icon-error-red value-status" /> : null }
+						{ amount.error || fee.error ? <span className="icon-error-red value-status" /> : null }
 					</div>
-					{amount.error && <span className="error-message">{amount.error}</span>}
-					{/* if elements =< 1 add class no-choice */}
+					{ amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null }
 					<Dropdown
 						search
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
@@ -214,6 +214,7 @@ AmountField.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -233,5 +234,6 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
+		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 	}),
 )(AmountField);

@@ -14,16 +14,6 @@ import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
 
-	componentDidMount() {
-		const { state } = this.props.location;
-
-		if (!state) return;
-
-		if (state.data.name === 'Transfer' && state.data.memo) {
-			this.props.openUnlock(state.data.memo);
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.resetTransaction();
 		this.props.resetConverter();
@@ -53,10 +43,10 @@ class ViewTransaction extends React.Component {
 
 		const isLogData = state.data.name === 'Contract' && state.data.details.tr_receipt.log.length;
 		if (isLogData) {
-			panes[0].menuItem = <Button className="tab-btn" key={0} ><span>Overview</span></Button>;
+			panes[0].menuItem = <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Overview" key={0} />;
 
 			panes.push({
-				menuItem: <Button className="tab-btn" key={1} ><span>Event Logs</span></Button>,
+				menuItem: <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Event Logs" key={1} />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabLogs data={state.data} />

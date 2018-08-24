@@ -277,12 +277,11 @@
     .field-wrap {
         .field {
             .ui.input {
-                transition: margin .3s;
                 &.focused {
                     .assets-tokens-dropdown {
                         @extend %onFocus;
                         clip-path: inset(-4px -4px -4px 0);
-                        border-color: $inut-color;
+                        border-color: $inut-hover;
                     }
                 }
                 &.error {
@@ -302,6 +301,11 @@
                         width: 100%;
                         position: relative;
                         display: flex;
+                        &:hover {
+                            & + .assets-tokens-dropdown {
+                                border-color: $inut-hover;
+                            }
+                        }
                         &:after {
                             width: 1px;
                             background: #fff;
@@ -363,6 +367,7 @@
         background-color: transparent;
         color: #d6d9df;
         transition: color .3s;
+        cursor: pointer;
         &:hover,
         &:focus {
             color: #aeb4c0;
