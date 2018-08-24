@@ -14,30 +14,39 @@ class SelectMethod extends React.Component {
 
 		this.state = {
 			searchText: '',
-			isOpenDropdown: false,
 		};
 	}
 
 	componentWillMount() {
+
 		if (!this.props.functions.size) return;
 		this.setFunction(this.props.functions.get(0).name);
+
+		const options = this.renderList();
+		this.setState({
+			options,
+		});
 	}
 
 	onSearch(e) {
 		this.setState({ searchText: e.target.value });
 	}
 
-	onToggleDropdown() {
-		this.setState({ searchText: '', isOpenDropdown: !this.state.isOpenDropdown });
+	onCloseDropdown() {
+		this.setState({ searchText: '' });
 	}
 
-	onCloseDropdown() {
-		this.setState({ searchText: '', isOpenDropdown: false });
+	onDropdownChange(e, value) {
+		if (typeof e.target.value === 'undefined') { // if click
+			this.setFunction(value);
+		} else if (e.keyCode === 13) { // if enter
+			this.setFunction(value);
+			setTimeout(() => { e.target.blur(); }, 0);
+		}
 	}
 
 	setFunction(functionName) {
 		this.props.setFunction(functionName);
-		this.setState({ isOpenDropdown: false });
 	}
 
 
@@ -45,48 +54,36 @@ class SelectMethod extends React.Component {
 		const { searchText } = this.state;
 
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
-
-		const list = this.props.functions.reduce((arr, f) => {
-			if (search && !f.name.toLowerCase().match(search)) {
-				return arr;
+		const list = [];
+		return this.props.functions.reduce((arr, a, i) => {
+			if (!search || a.symbol.toLowerCase().match(search)) {
+				arr.push({
+					key: a ? a.name + i : '',
+					text: a ? a.name : '',
+					value: a ? a.name : i,
+				});
 			}
-
-			arr.push((
-				<Dropdown.Item key={f.name} onClick={(e) => this.setFunction(f.name, e)}>
-					{formatCallContractField(f.name)}
-				</Dropdown.Item>
-			));
-
 			return arr;
-		}, []);
-
-		return list.length !== 1 ? list : [];
+		}, list);
 	}
 
 	render() {
 		const functionName = formatCallContractField(this.props.functionName);
 		const { searchText } = this.state;
-
 		return (
 			<Form.Field>
 				<label htmlFor="Method">Select method</label>
 				<Dropdown
-					placeholder="Select method"
 					search
+					onChange={(e, { value }) => this.onDropdownChange(e, value)}
 					searchQuery={searchText}
-					fluid
-					closeOnBlur
-					text={functionName}
-					open={this.state.isOpenDropdown}
-					onClick={(e) => this.onToggleDropdown(e)}
 					onSearchChange={(e) => this.onSearch(e)}
+					text={functionName}
+					selection
+					options={this.state.options}
+					noResultsMessage="No results are found"
 					onClose={(e) => this.onCloseDropdown(e)}
-					className="selection"
-				>
-					<Dropdown.Menu>
-						{this.renderList()}
-					</Dropdown.Menu>
-				</Dropdown>
+				/>
 			</Form.Field>
 
 		);
