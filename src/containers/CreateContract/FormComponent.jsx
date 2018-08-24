@@ -65,7 +65,7 @@ class FormComponent extends React.Component {
 							label="ABI"
 							placeholder="ABI"
 							control="textarea"
-							name="ABI"
+							name="abi"
 							value={abi.value}
 							onChange={(e) => this.onChange(e, true)}
 						/>
