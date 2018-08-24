@@ -66,6 +66,31 @@ class Header extends React.Component {
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
+		const options = [
+			{
+				value: 'current_account',
+				key: 'current_account',
+				content: (
+					<a className="user-item">
+						<span>{localStorage.getItem('current_account')}</span>
+						<div className="balance">
+							<span>{balance}</span>
+							<span>{symbol}</span>
+						</div>
+					</a>
+				),
+			},
+			{
+				value: 'logout',
+				key: 'logout',
+				content: (
+					<a className="user-panel">
+						<span className="logout">Logout</span>
+					</a>
+				),
+				onClick: (e) => this.onLogout(e),
+			},
+		];
 		return (
 			<div className="header">
 				{
@@ -90,6 +115,7 @@ class Header extends React.Component {
 								{symbol}
 							</span>
 						</Link>
+						{/*
 						<Dropdown text={localStorage.getItem('current_account')}>
 							<Dropdown.Menu>
 								<Dropdown.Item>
@@ -101,7 +127,7 @@ class Header extends React.Component {
 										</div>
 									</a>
 								</Dropdown.Item>
-								{/* <Dropdown.Item>
+								 <Dropdown.Item>
 									<a className="user-item">
 										<span>user 2</span>
 										<div className="balance">
@@ -109,7 +135,7 @@ class Header extends React.Component {
 											<span>ECHO</span>
 										</div>
 									</a>
-								</Dropdown.Item> */}
+								</Dropdown.Item>
 								<Dropdown.Item>
 									<a
 										className="user-panel"
@@ -118,12 +144,17 @@ class Header extends React.Component {
 										onKeyPress={(e) => this.onLogout(e)}
 										tabIndex="0"
 									>
-										{/* <span className="add-account">Add account</span> */}
+										<span className="add-account">Add account</span>
 										<span className="logout">Logout</span>
 									</a>
 								</Dropdown.Item>
 							</Dropdown.Menu>
-						</Dropdown>
+                        </Dropdown>
+                        */}
+						<Dropdown
+							options={options}
+							text={localStorage.getItem('current_account')}
+						/>
 					</div>
 				</div>
 			</div>
