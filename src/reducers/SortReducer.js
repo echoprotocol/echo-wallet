@@ -2,7 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import { SORT_CONTRACTS } from './../constants/SortConstants';
+import { SORT_CONTRACTS } from './../constants/GlobalConstants';
 
 const DEFAULT_FIELDS = Map({
 });

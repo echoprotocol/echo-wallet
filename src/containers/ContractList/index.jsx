@@ -12,7 +12,7 @@ import {
 	ADD_CONTRACT_PATH,
 	VIEW_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
-import { SORT_CONTRACTS } from '../../constants/SortConstants';
+import { SORT_CONTRACTS } from '../../constants/GlobalConstants';
 
 import { toggleSort } from '../../actions/SortActions';
 

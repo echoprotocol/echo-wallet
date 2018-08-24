@@ -34,15 +34,12 @@ class Header extends React.Component {
 		if (e.keyCode === 13) {
 			switch (value) {
 				case 'current_account':
-					console.log(value);
 					break;
 
 				case 'add-account':
-					console.log(value);
 					break;
 
 				case 'logout':
-					console.log(value);
 					break;
 
 				default:
