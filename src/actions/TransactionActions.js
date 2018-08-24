@@ -284,12 +284,12 @@ export const estimateFormFee = (asset) => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const contractId = getState().contract.get('id');
 
-	if (!activeUserId || !contractId) return;
+	if (!activeUserId || !contractId) return 0;
 	const functions = getState().contract.get('functions').toJS();
 	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
 
 	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
-	if (!targetFunction) return;
+	if (!targetFunction) return 0;
 
 	const args = targetFunction.inputs.map((i) => {
 		const { name: field } = i;
