@@ -48,12 +48,19 @@
             }
             .value {
                 &.ui.button {
+                    text-transform: none;
+                    &:hover {
+                        i {
+                            color: rgb(137, 140, 145);
+                        }
+                    }
                     i {
                         margin: -5px 0 0 5px !important;
-                        color: $gray;
+                        color: rgb(178, 180, 183);
                         transition: color .3s;
                         display: block;
                         font-size: 14px;
+                        transition: color $speed;
                     }
                 }
                 background-color: transparent;
@@ -111,16 +118,20 @@
             font-weight: 600;
             line-height: 0px;
             margin: 0 0 -3px;
-            color: $gray;
+            color: rgb(168, 168, 168);
             border-bottom: 2px solid rgb(247, 247, 247);
             border-radius: 0;
             margin: 0 0 -2px 0;
-            transition: border 0.1s ease;
+            transition: border $speed ease, color  $speed ease;
             padding: 0;
             z-index: 2;
             background-color: transparent;
             &:not(:last-child) {
                 margin-right: 35px;
+            }
+            &:hover {
+                color: $gray;
+                border-bottom: 2px solid rgb(211, 214, 220);
             }
             &.active {
                 color: $orange;
