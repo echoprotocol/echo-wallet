@@ -27,7 +27,7 @@ class TabCallContracts extends React.Component {
 				<label htmlFor={field}>{field}</label>
 
 				<input
-					placeholder={`(${type !== 'address' ? type : 'id'})`}
+					placeholder={`(${type.replace(/address/g, 'id')})`}
 					name={field}
 					className="ui input"
 					value={data.value}
