@@ -51,10 +51,10 @@ class ViewTransaction extends React.Component {
 
 		const isLogData = state.data.name === 'Contract' && state.data.details.tr_receipt.log.length;
 		if (isLogData) {
-			panes[0].menuItem = <Button className="tab-btn" ><span>Overview</span></Button>;
+			panes[0].menuItem = <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Overview" />;
 
 			panes.push({
-				menuItem: <Button className="tab-btn" ><span>Event Logs</span></Button>,
+				menuItem: <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Event Logs" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabLogs data={state.data} />

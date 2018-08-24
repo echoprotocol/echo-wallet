@@ -62,10 +62,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    .logout {
-        color: $orange;
-        font-weight: 600;
-    }
+
     .ui.dropdown {
         .menu {
             right: 0;
@@ -77,6 +74,7 @@
             .balance {
                 margin-left: 30px;
             }
+
             & > .item {
                 padding: 0;
                 &:hover {
@@ -102,8 +100,54 @@
 
                 }
                 .user-panel {
-                    padding: 0.8571429rem 1.14285714rem;
-                    border-top: 1px solid $bd-gray;
+                    padding: 0;
+
+                }
+            }
+            .logout {
+                color: $orange;
+                font-family: proximanovaSemibold;
+                margin: 0 10px 0 auto;
+                padding: 3px 5px;
+                border-radius: $angulars;
+                border-bottom: 1px solid transparent;
+                position: relative;
+                &:after {
+                    margin: 1px 0 -2px 0;
+                    height: 1px;
+                    display: block;
+                    content: '';
+                    background-color: transparent;
+                    transition: background $speed;
+                } 
+                &:hover {
+                    &:after {
+                        background-color: rgba($orange, .4);
+                    }
+                }
+                &-wrap {
+                    max-width: 76px;
+                    margin-left: auto;
+                    height: 38px;
+                    display: flex;
+                    justify-content: flex-end;
+                    &.selected {
+                        background-color: transparent;
+                        .logout {
+                            @extend %onTextFocus;
+                        }
+                    }
+                    &:before {
+                        width: 300px;
+                        height: 1px;
+                        display: block;
+                        content: '';
+                        top: 0;
+                        background-color: $bd-gray;
+                        right: 0;
+                        margin: auto;
+                        position: absolute;
+                    }
                 }
             }
         }
@@ -111,9 +155,61 @@
         .dropdown.icon {
             color: $link-gray;
         }
-        .text {
+        & > .text {
             color: $orange;
-            font-weight: 600;
+            font-family: proximanovaSemibold;            
+        }
+        .add-account {
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 15px;
+            height: 39px;
+            z-index: 2;
+            font-family: proximanovaSemibold;
+            font-size: .9rem;
+            color: rgb(211, 212, 214);
+            transition: color $speed;
+            &.selected {
+                color: $inut-hover;
+                background-color: transparent;
+                .text {
+                    position: relative;
+                    &:before {
+                        @extend %onTextFocus;
+                        position: absolute;
+                        content: '';
+                        display: block;
+                        right: -3px;
+                        left: -3px;
+                        top: -3px;
+                        bottom: -1px;
+                        border-radius: $angulars;
+                    }
+                }
+            }
+            &:hover {
+                color: $inut-hover;
+            }
+            &:focus {
+                color: $inut-hover;
+            }
+            &:before {
+                font-family: 'icomoon';
+                speak: none;
+                font-style: normal;
+                font-weight: normal;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1px;
+                /* Better Font Rendering =========== */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 1.3em;
+                content: "\e900";
+                margin-right: 7px;
+            }
         }
     }
     .balance {
@@ -149,24 +245,3 @@
     }
 }
 
-.add-account {
-    color: $bd-gray;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    &:before {
-        font-family: 'icomoon';
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1px;
-        /* Better Font Rendering =========== */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-size: 1.3em;
-        content: "\e900";
-        margin-right: 7px;
-    }
-}
