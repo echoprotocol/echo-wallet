@@ -117,7 +117,7 @@ class ContractList extends React.Component {
 				</Table>
 				<div className="btn-list" >
 					<Link to={ADD_CONTRACT_PATH}>
-						<Button content="watch contract" color="grey" />
+						<Button content="watch contract" />
 					</Link>
 					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
 				</div>
@@ -131,7 +131,7 @@ class ContractList extends React.Component {
 				<h3>Start watch contract or create a new one</h3>
 				<div className="btns">
 					<Link to={ADD_CONTRACT_PATH}>
-						<Button content="watch contract" color="grey" />
+						<Button content="watch contract" />
 					</Link>
 					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
 				</div>
