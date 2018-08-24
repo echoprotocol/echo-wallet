@@ -41,10 +41,10 @@ class TabLogs extends React.Component {
 				</li>
 				<li key={`${item.data}data`}>
 					<div className="col data">Data:</div>
-					<Dropdown data={item.data} component="dataLog" />
 					<div className="col">
 						<div className="data-item">
-							<span className="arrow">➡</span>
+							<Dropdown data={item.data} component="dataLog" />
+							<span className="arrow">→</span>
 							{dataLog || `0x${item.data}`}
 						</div>
 					</div>

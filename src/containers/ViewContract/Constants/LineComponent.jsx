@@ -83,11 +83,8 @@ class LineComponent extends React.Component {
 				{
 					this.state.showResult &&
 					<div className="watchlist-row">
-						<div className="watchlist-col" />
-						<div className="watchlist-col">
-							<span>
-								{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}
-							</span>
+						<div className="result-value">
+							{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}
 						</div>
 					</div>
 				}
