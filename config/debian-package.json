@@ -1,0 +1,10 @@
+{
+  "dest": "dist/installers/",
+  "bin": "PixelPlex-app",
+  "categories": [
+    "GNOME", "GTK", "Utility"
+  ],
+  "lintianOverrides": [
+    "changelog-file-missing-in-native-package"
+  ]
+}
