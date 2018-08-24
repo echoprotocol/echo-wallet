@@ -132,9 +132,9 @@ export const unlockAccount = ({
 	password,
 }) => async (dispatch, getState) => {
 
-	dispatch(setDisable(MODAL_UNLOCK, true));
-
 	try {
+		dispatch(setDisable(MODAL_UNLOCK, true));
+
 		let accountNameError = validateAccountName(accountName);
 		const passwordError = validatePassword(password);
 
@@ -155,7 +155,6 @@ export const unlockAccount = ({
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
 			return;
 		}
-		dispatch(toggleLoading(FORM_UNLOCK_MODAL, true));
 
 		const account = await dispatch(EchoJSActions.fetch(accountName));
 
@@ -209,7 +208,6 @@ export const unlockAccount = ({
 		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
 	} finally {
 		dispatch(setDisable(MODAL_UNLOCK, false));
-		dispatch(toggleLoading(FORM_UNLOCK_MODAL, false));
 	}
 
 };
