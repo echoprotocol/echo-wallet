@@ -77,16 +77,21 @@ class ContractList extends React.Component {
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
-								<span>
+								<span className="sort-wrap">
                                     Contract ID
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon name="dropdown" flipped="vertically" />
+										<Icon name="dropdown" className="active" flipped="horizontally" />
+									</div>
 								</span>
-
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
-								<span>
+								<span className="sort-wrap">
                                     Watched Contract Name
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon name="dropdown" flipped="vertically" />
+										<Icon name="dropdown" flipped="horizontally" />
+									</div>
 								</span>
 							</Table.HeaderCell>
 						</Table.Row>

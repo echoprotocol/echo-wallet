@@ -5,7 +5,7 @@ $black:					rgb(59, 59, 59);
 $gray:					rgb(174, 180, 192); // #aeb4c0
 $link-gray:             rgb(109, 113, 120); // #6d7178
 $gray-dark:             rgb(125, 129, 138);
-$bd-gray:               rgba(186, 188, 203,.6);
+$bd-gray:               rgba(233, 233, 237, 1); // #e9e9ed
 $bg-gray:               rgb(233, 233, 237);
 $bg-hover:              rgba(197, 201, 210, 0.2);
 $orange:                rgb(255, 107, 72);
@@ -13,12 +13,16 @@ $green:                 rgb(122, 211, 141);
 $blue:                  rgb(77, 161, 255);
 $blue-light:            rgb(112, 165, 224);
 $err-red:               rgb(255, 72, 72);
-$inut-color:            rgb(186, 188, 203);
+
+$inut-color:            rgb(221, 221, 221); // #dddddd
+$inut-hover:            rgb(186, 188, 203); // #babccb
 
 // labels
 $lbl-yellow:            rgb(255, 175, 20);
 $lbl-green:             rgb(147, 199, 53);
 $lbl-red:               rgb(255, 85, 96);
+
+$speed: .3s;
 
 // tables 
 $t-row-color:           #fbfbfb;

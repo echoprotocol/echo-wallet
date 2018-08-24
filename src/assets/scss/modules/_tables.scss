@@ -1,5 +1,29 @@
 $thead-height: 46px;
 
+.table {
+    .sort {
+        display: flex;
+        flex-direction: column;
+        max-width: 10px;
+        margin: -2px 0 0 5px;
+        i {
+            margin: 0;
+            width: 10px;
+            line-height: 8px;
+            font-size: 4px;
+            &.active {
+                color: $link-gray;
+            }
+        }
+        &-wrap {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            
+        }
+    }
+}
+
 .table.table-activity {
 
     display: flex;
@@ -163,12 +187,6 @@ $thead-height: 46px;
             background:0;
             color: $gray;
             padding: 0.92857143em 5px;
-            span {
-                cursor: pointer;
-                i {
-                    margin-left: 5px;
-                }          
-            }
         }
     }
 
