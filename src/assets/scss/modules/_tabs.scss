@@ -142,32 +142,23 @@
             }
         }
         .tab-btn {
-            span {
-                display: block;
-                padding: 10px 0 8px;
-                position: relative;
-            }
+            position: relative;
             &:focus {
                 box-shadow: none;
-                span {
-                    &:before {
-                        content: '';
-                        position: absolute;
-                        right: -5px;
-                        left: -5px;
-                        top: 0;
-                        bottom: 0;
-                        border-radius: 3px;
-                        @extend %onFocus;
-                    }
-
+                &:before {
+                    content: '';
+                    position: absolute;
+                    right: -4px;
+                    left: -4px;
+                    top: 8px;
+                    bottom: 10px;
+                    border-radius: 3px;
+                    @extend %onTextFocus;
                 }
             }
             &:active {
-                span {
-                    &:before {
-                        display: none;
-                    }
+                &:before {
+                    box-shadow: none;
                 }
             }
 
