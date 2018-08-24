@@ -62,8 +62,8 @@ class FormComponent extends React.Component {
 				<div className={classnames({ error: abi.error, 'error-wrap': true })}>
 					<div className="action-wrap">
 						<Form.Field
-							label="Abi"
-							placeholder="Abi"
+							label="ABI"
+							placeholder="ABI"
 							control="textarea"
 							name="abi"
 							value={abi.value}

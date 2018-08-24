@@ -1,6 +1,6 @@
 import { setFormValue, setFormError } from './FormActions';
 
-const amountInput = (form, value, currency, name) => (dispatch) => {
+export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
 		dispatch(setFormError(form, 'amount', 'Amount must contain only digits and dot'));
 		return;
@@ -24,4 +24,4 @@ const amountInput = (form, value, currency, name) => (dispatch) => {
 	dispatch(setFormValue(form, name, value));
 };
 
-export default amountInput;
+export default {};
