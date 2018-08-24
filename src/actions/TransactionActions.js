@@ -282,6 +282,59 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
+export const estimateFormFee = (fee) => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const contractId = getState().contract.get('id');
+
+	if (!activeUserId || !contractId) return;
+	const functions = getState().contract.get('functions').toJS();
+	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
+
+	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
+	if (!targetFunction) return;
+
+	const args = targetFunction.inputs.map((i) => {
+		const { name: field } = i;
+		const { value } = functionForm.inputs[field];
+		return value;
+	});
+
+	const bytecode = getMethod(targetFunction, args);
+
+	const { amount, currency } = functionForm;
+	let { payable } = functionForm;
+
+	if ((payable && (!amount || !currency)) || !fee) {
+		payable = false;
+	}
+
+	let amountValue = 0;
+
+	if (payable && !validateAmount(amount, currency)) {
+		amountValue = amount.value * (10 ** currency.precision);
+	}
+
+	// validate fee
+	if (!fee.value || !fee.asset) {
+		fee = await dispatch(getFee('contract'));
+	}
+
+	const options = {
+		registrar: activeUserId,
+		receiver: contractId,
+		asset_id: fee.asset.id,
+		value: amountValue,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode,
+	};
+
+	const feeValue = await estimateCallContractFee('contract', options);
+
+	return feeValue / (10 ** fee.asset.precision);
+};
+
 export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);

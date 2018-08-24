@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue } from '../../actions/FormActions';
-import { getFee, fetchFee } from '../../actions/TransactionActions';
+import { getFee, fetchFee, estimateFormFee } from '../../actions/TransactionActions';
 
 class FeeComponent extends React.Component {
 
