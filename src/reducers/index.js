@@ -7,6 +7,7 @@ import balanceReducer from './BalanceReducer';
 import transactionReducer from './TransactionReducer';
 import contractReducer from './ContractReducer';
 import sortReducer from './SortReducer';
+import contractFeeReducer from './ContractFeeReducer';
 
 
 export default {
@@ -19,4 +20,5 @@ export default {
 	transaction: transactionReducer.reducer,
 	contract: contractReducer.reducer,
 	sort: sortReducer.reducer,
+	fee: contractFeeReducer.reducer,
 };

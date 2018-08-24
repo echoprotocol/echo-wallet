@@ -6,6 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue } from '../../../actions/FormActions';
+import { setContractFees } from '../../../actions/ContractActions';
 import { formatCallContractField } from '../../../helpers/FormatHelper';
 
 class TabCallContracts extends React.Component {
@@ -15,6 +16,7 @@ class TabCallContracts extends React.Component {
 		const value = e.target.value.trim();
 		if (field) {
 			this.props.setFormValue(field, value);
+			this.props.setContractFees();
 		}
 	}
 	render() {
@@ -42,6 +44,7 @@ class TabCallContracts extends React.Component {
 
 TabCallContracts.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 	field: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
 	data: PropTypes.object.isRequired,
@@ -55,5 +58,6 @@ export default connect(
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
+		setContractFees: () => dispatch(setContractFees()),
 	}),
 )(TabCallContracts);

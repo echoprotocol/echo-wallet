@@ -279,7 +279,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
-export const estimateFormFee = (fee) => async (dispatch, getState) => {
+export const estimateFormFee = (asset) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const contractId = getState().contract.get('id');
@@ -302,7 +302,7 @@ export const estimateFormFee = (fee) => async (dispatch, getState) => {
 	const { amount, currency } = functionForm;
 	let { payable } = functionForm;
 
-	if ((payable && (!amount || !currency)) || !fee) {
+	if ((payable && (!amount || !currency)) || !asset) {
 		payable = false;
 	}
 
@@ -312,15 +312,10 @@ export const estimateFormFee = (fee) => async (dispatch, getState) => {
 		amountValue = amount.value * (10 ** currency.precision);
 	}
 
-	// validate fee
-	if (!fee.value || !fee.asset) {
-		fee = await dispatch(getFee('contract'));
-	}
-
 	const options = {
 		registrar: activeUserId,
 		receiver: contractId,
-		asset_id: fee.asset.id,
+		asset_id: asset.id,
 		value: amountValue,
 		gasPrice: 0,
 		gas: 4700000,
@@ -329,7 +324,7 @@ export const estimateFormFee = (fee) => async (dispatch, getState) => {
 
 	const feeValue = await estimateCallContractFee('contract', options);
 
-	return feeValue / (10 ** fee.asset.precision);
+	return feeValue;
 };
 
 export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
