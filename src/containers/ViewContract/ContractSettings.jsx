@@ -77,7 +77,7 @@ class ContractSettings extends React.Component {
 				return;
 			}
 
-			this.props.updateContractName(oldName, newName);
+			this.props.updateContractName(oldName, newName.trim());
 		}
 
 		this.setState({ isEditName: false });
