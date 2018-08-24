@@ -3,6 +3,8 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import Loading from '../../components/Loading';
+
 import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
 
 import { HISTORY_DATA } from '../../constants/TableConstants';
@@ -69,7 +71,9 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		return this.props.history ? this.renderTable() : null;
+		const { account, history } = this.props;
+
+		return account.get('history') && history ? this.renderTable() : <Loading />;
 	}
 
 }

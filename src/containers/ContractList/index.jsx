@@ -3,6 +3,7 @@ import { Table, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import history from '../../history';
 
@@ -11,20 +12,14 @@ import {
 	ADD_CONTRACT_PATH,
 	VIEW_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
+import { SORT_CONTRACTS } from '../../constants/SortConstants';
+
+import { toggleSort } from '../../actions/SortActions';
 
 class ContractList extends React.Component {
 
-	constructor() {
-		super();
-		this.state = {
-			sortType: 'id',
-			sortInc: true,
-		};
-	}
-
 	onSort(sortType) {
-		const sortInc = sortType === this.state.sortType ? !this.state.sortInc : true;
-		this.setState({ sortType, sortInc });
+		this.props.toggleSort(sortType);
 	}
 
 	onLink(link) {
@@ -33,7 +28,7 @@ class ContractList extends React.Component {
 
 	sortList() {
 		const contracts = this.props.contracts.toJS();
-		const { sortType, sortInc } = this.state;
+		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return Object.entries(contracts)
 			.sort(([name1, { id: id1 }], [name2, { id: id2 }]) => {
@@ -71,22 +66,44 @@ class ContractList extends React.Component {
 	}
 
 	renderList() {
+		const { sortType, sortInc } = this.props.sort.toJS();
 		return (
 			<React.Fragment>
 				<Table striped className="table-smart-contract">
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
-								<span>
+								<span className="sort-wrap">
                                     Contract ID
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon
+											name="dropdown"
+											flipped="vertically"
+											className={classnames({ active: sortType === 'id' && sortInc })}
+										/>
+										<Icon
+											name="dropdown"
+											flipped="horizontally"
+											className={classnames({ active: sortType === 'id' && !sortInc })}
+										/>
+									</div>
 								</span>
-
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
-								<span>
+								<span className="sort-wrap">
                                     Watched Contract Name
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon
+											name="dropdown"
+											flipped="vertically"
+											className={classnames({ active: sortType === 'name' && sortInc })}
+										/>
+										<Icon
+											name="dropdown"
+											flipped="horizontally"
+											className={classnames({ active: sortType === 'name' && !sortInc })}
+										/>
+									</div>
 								</span>
 							</Table.HeaderCell>
 						</Table.Row>
@@ -138,12 +155,20 @@ class ContractList extends React.Component {
 
 ContractList.propTypes = {
 	contracts: PropTypes.any,
+	toggleSort: PropTypes.func.isRequired,
+	sort: PropTypes.object.isRequired,
 };
 
 ContractList.defaultProps = {
 	contracts: null,
 };
 
-export default connect((state) => ({
-	contracts: state.global.get('contracts'),
-}))(ContractList);
+export default connect(
+	(state) => ({
+		contracts: state.global.get('contracts'),
+		sort: state.sort.get(SORT_CONTRACTS),
+	}),
+	(dispatch) => ({
+		toggleSort: (type) => dispatch(toggleSort(SORT_CONTRACTS, type)),
+	}),
+)(ContractList);

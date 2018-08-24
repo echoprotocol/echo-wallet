@@ -24,7 +24,7 @@ class ModalTokens extends React.Component {
 	}
 
 	render() {
-		const { show, contractId } = this.props;
+		const { show, contractId, disabled } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -57,7 +57,9 @@ class ModalTokens extends React.Component {
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
-							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Watch Token</Button>
+							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)} disabled={disabled}>
+								Watch Token
+							</Button>
 						</Form>
 					</div>
 				</div>
@@ -69,6 +71,7 @@ class ModalTokens extends React.Component {
 
 ModalTokens.propTypes = {
 	show: PropTypes.bool,
+	disabled: PropTypes.bool.isRequired,
 	contractId: PropTypes.object.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	setParamValue: PropTypes.func.isRequired,
@@ -82,6 +85,7 @@ ModalTokens.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TOKENS, 'show']),
+		disabled: state.modal.getIn([MODAL_TOKENS, 'disabled']),
 		contractId: state.modal.getIn([MODAL_TOKENS, 'contractId']),
 		error: state.modal.getIn([MODAL_TOKENS, 'error']),
 	}),

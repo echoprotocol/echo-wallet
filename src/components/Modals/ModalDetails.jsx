@@ -23,7 +23,7 @@ class ModalDetails extends React.Component {
 
 	getArea(key, data) {
 		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
+			<Form.Field className="comment" key={key} label="Note" disabled control="textarea" value={data} />
 		);
 	}
 
@@ -51,7 +51,7 @@ class ModalDetails extends React.Component {
 	}
 
 	render() {
-		const { showOptions, show } = this.props;
+		const { showOptions, show, disabled } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -74,7 +74,9 @@ class ModalDetails extends React.Component {
 							</div>
 							<div className="form-panel">
 								<Button basic type="button" color="grey" onClick={() => this.onClose()}>Cancel</Button>
-								<Button basic type="button" color="orange" onClick={() => this.onConfirm()}>Confirm</Button>
+								<Button basic type="button" color="orange" onClick={() => this.onConfirm()} disabled={disabled}>
+									Confirm
+								</Button>
 							</div>
 						</Form>
 					</div>
@@ -87,6 +89,7 @@ class ModalDetails extends React.Component {
 
 ModalDetails.propTypes = {
 	show: PropTypes.bool,
+	disabled: PropTypes.bool.isRequired,
 	showOptions: PropTypes.any,
 	operation: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
@@ -103,6 +106,7 @@ ModalDetails.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_DETAILS, 'show']),
+		disabled: state.modal.getIn([MODAL_DETAILS, 'disabled']),
 		showOptions: state.transaction.get('showOptions'),
 		operation: state.transaction.get('operation'),
 	}),
