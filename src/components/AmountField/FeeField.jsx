@@ -39,15 +39,19 @@ class FeeComponent extends React.Component {
 	getOptions() {
 		const { assets, comment } = this.props;
 
-		const options = assets.map((asset) => {
+		const options = assets.reduce((arr, asset) => {
 			const fee = this.props.getFee(asset.id, comment.value);
 
-			return {
-				key: asset.symbol,
-				value: JSON.stringify(fee),
-				text: fee ? formatAmount(fee.value, asset.precision, asset.symbol) : '',
-			};
-		});
+			if (fee) {
+				arr.push({
+					key: asset.symbol,
+					value: JSON.stringify(fee),
+					text: formatAmount(fee.value, asset.precision, asset.symbol),
+				});
+			}
+
+			return arr;
+		}, []);
 
 		return options;
 	}

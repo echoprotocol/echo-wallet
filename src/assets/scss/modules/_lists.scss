@@ -46,12 +46,11 @@
             &:hover,
             &:active,
             &:focus {
-                border-color: $bd-gray;
+                border-color: $inut-color;
                 cursor: pointer;
             }
             &.active {
                 box-shadow: none;
-                border-color: $bd-gray;
                 .menu {
                     box-shadow: none;
                     border-color: $bd-gray;
@@ -76,11 +75,14 @@
 .addition {
     display: none !important;
 }
+
+
+
 .assets-tokens-dropdown {
     &.ui.dropdown {
         display: flex;
         align-items: center;
-        border: 1px solid $bd-gray;
+        border: 1px solid $inut-color;
         border-left: 0;
         padding: 0.67857143em 1em;
         transition: border .3s;
@@ -114,7 +116,7 @@
             cursor: pointer;
         }
         .menu {
-            max-height: 212px;
+            max-height: 180px;
             width: 151px;
             max-width: 151px;
             margin-left: -1px;
@@ -154,7 +156,6 @@
     &.ui.dropdown {
         display: flex;
         align-items: center;
-        border: 1px solid $bd-gray;
         padding: 3px 1em;
         transition: border .3s;
         align-self: flex-start;
@@ -200,7 +201,11 @@
                     cursor: pointer;
                     color: $orange;
                     text-decoration: underline;
+
                 }
+            }
+            & > .text {
+                margin-right: 0;
             }
         }
         & > .text {
@@ -232,6 +237,9 @@
             overflow: auto;
             border-radius: 0.28571429rem;
             border-top: 1px solid #96C8DA;
+            & > .item {
+                padding: .5rem;
+            }
         }
         .item {
             .text {
@@ -250,6 +258,9 @@
             margin: 0 0 12px 0;
         }
     }
+    .error-wrap {
+        margin-bottom: 0;
+    }
     &-row {
         display: flex;
         align-items: center;
@@ -265,6 +276,11 @@
                     margin-right: 5px;
                 }
             }
+        }
+        .result-value {
+            margin: 22px 0 8px 35px;
+            word-wrap: break-word;
+            max-width: 730px;
         }
         .type {
             margin-left: 10px;
@@ -312,8 +328,7 @@
                     margin-bottom: -1px;
                 }
                 margin-top: 10px;
-                display: inline-block;
-                min-height: 24px;
+                min-height: 26px;
             }
         }
 
@@ -392,7 +407,8 @@
             }
         }
     }
-    .bytecode {
+    .bytecode, // bytecode собираемся переделывать (нужно убрать из стилей)
+    .note {
         &-wrap {
             background-color: #f9f9f9;
             border: 1px solid $bd-gray;
@@ -405,6 +421,7 @@
         word-wrap: break-word;
         font-size: 13px;
     }
+
     .ui.button {
         margin-top: -6px;
     }

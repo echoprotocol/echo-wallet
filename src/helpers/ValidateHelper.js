@@ -44,7 +44,7 @@ export const validateCode = (code) => {
 };
 
 export const validateContractName = (name) => {
-	if (!name) {
+	if (!name.trim()) {
 		return 'Contract name should not be empty';
 	}
 
@@ -65,7 +65,7 @@ export const validateContractId = (id) => {
 
 export const validateAbi = (str) => {
 	if (!str) {
-		return 'Contract abi should not be empty';
+		return 'Contract ABI should not be empty';
 	}
 
 	const schema = {
@@ -237,4 +237,3 @@ export const validateFee = (amount, currency, fee, assets) => {
 
 	return null;
 };
-

@@ -13,19 +13,26 @@ class TabOverview extends React.Component {
 	renderComment() {
 		const { comment, data: { memo } } = this.props;
 
-		return comment.unlocked ? comment.value : (
-			<Button
-				content="Show note"
-				type="button"
-				icon="comment"
-				size="mini"
-				className="light"
-				color="grey"
-				onClick={() => this.props.unlock(memo)}
-				onKeyPress={() => this.props.unlock(memo)}
-				tabIndex="0"
-			/>
-		);
+		return comment.unlocked ?
+			(
+				<div className="note-wrap">
+					<div className="note">
+						{comment.value}
+					</div>
+				</div>
+			) : (
+				<Button
+					content="Show note"
+					type="button"
+					icon="comment"
+					size="mini"
+					className="light"
+					color="grey"
+					onClick={() => this.props.unlock(memo)}
+					onKeyPress={() => this.props.unlock(memo)}
+					tabIndex="0"
+				/>
+			);
 	}
 
 	renderContractOptions() {
@@ -122,7 +129,7 @@ class TabOverview extends React.Component {
 						data.memo ?
 							<li>
 								<div className="col">Note:</div>
-								<div className="col">{this.renderComment()}</div>
+								<div className="col"> {this.renderComment()} </div>
 							</li> : null
 					}
 
