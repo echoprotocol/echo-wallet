@@ -1,22 +1,27 @@
-import { setFormValue, setValue, setFormError } from './FormActions';
+import { setFormValue, setFormError } from './FormActions';
 
-const amountInput = (form, value, currency, name) => (dispatch) => {
+export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
 		dispatch(setFormError(form, 'amount', 'Amount must contain only digits and dot'));
+		return;
+	}
 
-	} else if (value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
-		dispatch(setValue(
+	if (value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
+		dispatch(setFormError(
 			form,
 			'amount',
-			{
-				error: `Amount should be more than ${1 / (10 ** currency.precision)}`,
-				value,
-			},
+			`Amount should be more than ${1 / (10 ** currency.precision)}`,
 		));
-
-	} else {
-		dispatch(setFormValue(form, name, value));
 	}
+
+	if (/\.|,/.test(value)) {
+		const [intPath, doublePath] = value.split(/\.|,/);
+		value = `${intPath ? Number(intPath) : ''}.${doublePath || ''}`;
+	} else {
+		value = value ? Number(value).toString() : value;
+	}
+
+	dispatch(setFormValue(form, name, value));
 };
 
-export default amountInput;
+export default {};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
 import classnames from 'classnames';
@@ -94,11 +94,11 @@ class LineComponent extends React.Component {
 						const id = index;
 						const errorValue = inputs.toJS()[constant.name][index].error;
 						return (
-							<div key={id} className={classnames({ error: errorValue, 'action-wrap textarea-wrap': true })}>
+							<Form.Field key={id} className={classnames({ error: errorValue, 'error-wrap': true })}>
 								{ id !== 0 && <span className="comma item">,</span> }
 								<InputComponent field={{ id, name: constant.name }} inputData={input} />
 								<span className="error-message">{errorValue}</span>
-							</div>
+							</Form.Field>
 						);
 					})
 				}
@@ -139,12 +139,9 @@ class LineComponent extends React.Component {
 				{
 					this.state.showResult &&
 					<div className="watchlist-row">
-						<div className="watchlist-col" />
-						<div className="watchlist-col">
-							<span>
-								{constant.constantValue}
-							</span>
-						</div>
+						<span className="result-value">
+							{constant.constantValue}
+						</span>
 					</div>
 				}
 			</div>

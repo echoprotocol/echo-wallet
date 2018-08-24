@@ -30,7 +30,26 @@ class Header extends React.Component {
 
 		this.props.history.push(TRANSFER_PATH);
 	}
+	onDropdownChange(e, value) {
+		if (e.keyCode === 13) {
+			switch (value) {
+				case 'current_account':
+					console.log(value);
+					break;
 
+				case 'add-account':
+					console.log(value);
+					break;
+
+				case 'logout':
+					console.log(value);
+					break;
+
+				default:
+			}
+		}
+
+	}
 	getTitle() {
 		const { location } = this.props;
 
@@ -66,6 +85,39 @@ class Header extends React.Component {
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
+		const options = [
+			{
+				value: 'current_account',
+				key: 'current_account',
+				content: (
+					<a className="user-item">
+						<span>{localStorage.getItem('current_account')}</span>
+						<div className="balance">
+							<span>{balance}</span>
+							<span>{symbol}</span>
+						</div>
+					</a>
+				),
+			},
+			{
+				value: 'add-account',
+				key: 'add-account',
+				className: 'add-account',
+				content: 'Add account',
+				onClick: (e) => this.onLogout(e),
+			},
+			{
+				value: 'logout',
+				key: 'logout',
+				className: 'logout-wrap',
+				content: (
+					<a className="user-panel">
+						<span className="logout">Logout</span>
+					</a>
+				),
+				onClick: (e) => this.onLogout(e),
+			},
+		];
 		return (
 			<div className="header">
 				{
@@ -90,40 +142,13 @@ class Header extends React.Component {
 								{symbol}
 							</span>
 						</Link>
-						<Dropdown text={localStorage.getItem('current_account')}>
-							<Dropdown.Menu>
-								<Dropdown.Item>
-									<a className="user-item">
-										<span>{localStorage.getItem('current_account')}</span>
-										<div className="balance">
-											<span>{balance}</span>
-											<span>{symbol}</span>
-										</div>
-									</a>
-								</Dropdown.Item>
-								{/* <Dropdown.Item>
-									<a className="user-item">
-										<span>user 2</span>
-										<div className="balance">
-											<span>1083.24299901</span>
-											<span>ECHO</span>
-										</div>
-									</a>
-								</Dropdown.Item> */}
-								<Dropdown.Item>
-									<a
-										className="user-panel"
-										role="button"
-										onClick={(e) => this.onLogout(e)}
-										onKeyPress={(e) => this.onLogout(e)}
-										tabIndex="0"
-									>
-										{/* <span className="add-account">Add account</span> */}
-										<span className="logout">Logout</span>
-									</a>
-								</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown>
+
+						<Dropdown
+							options={options}
+							text={localStorage.getItem('current_account')}
+							onChange={(e, { value }) => this.onDropdownChange(e, value)}
+						/>
+
 					</div>
 				</div>
 			</div>

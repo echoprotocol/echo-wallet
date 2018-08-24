@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
@@ -72,12 +73,10 @@ class ModalUnlockWallet extends React.Component {
 								<h3>Unlock Wallet</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field>
+								<Form.Field className={classnames('error-wrap', { error: password.error })}>
 									<label htmlFor="Password">Password</label>
-									<div className={password.error ? 'error' : ''}>
-										<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-										<span className="error-message">{password.error}</span>
-									</div>
+									<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+									<span className="error-message">{password.error}</span>
 								</Form.Field>
 							</div>
 							{loading

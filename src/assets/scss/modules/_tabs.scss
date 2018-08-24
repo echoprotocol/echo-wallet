@@ -1,11 +1,11 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 200px);
+        max-height: calc(100vh - 195px);
         overflow: overlay;
     }
     &.hide-menu {
         .scroll-fix {
-            max-height: calc(100vh - 160px);
+            max-height: calc(100vh - 155px);
         }
         .menu {
             display: none;
@@ -16,6 +16,7 @@
         &-wrap {
             background-color: rgb(247, 247, 247);
             width: 100%;
+            border-top: 1px solid $bd-gray;
         }
         &-panel {
             max-width: 900px;
@@ -23,10 +24,22 @@
             display: flex;
             align-items: center;
             padding: 10px 20px;
-            min-height: 60px;
+            height: 54px;
+            .error-wrap {
+                margin-bottom: 0;
+            }
             li {
                 &:not(:last-child){
-                    margin-right: 20px;
+                    margin-right: 40px;
+                }
+                &.id {
+                    display: flex;
+                    align-items: center;
+                }
+                &.name {
+                    display: flex;
+                    align-items: center;
+                    margin-right: auto;
                 }
             }
             .label {
@@ -34,12 +47,40 @@
                 margin-right: 8px;
             }
             .value {
-                font-style: 1.2em;
-                color: $link-gray;
-
-                i {
-                    margin-left: 5px;
+                &.ui.button {
+                    text-transform: none;
+                    &:hover {
+                        i {
+                            color: rgb(137, 140, 145);
+                        }
+                    }
+                    i {
+                        margin: -5px 0 0 5px !important;
+                        color: rgb(178, 180, 183);
+                        transition: color .3s;
+                        display: block;
+                        font-size: 14px;
+                        transition: color $speed;
+                    }
                 }
+                background-color: transparent;
+                color: $link-gray;
+                padding: 3px 5px;
+                border-radius: 3px;
+                display: flex;
+                height: 26px;
+                align-items: center;
+                flex-direction: row-reverse;
+                &:focus {
+                    @extend %onFocus;
+                }
+
+                &:hover {
+                    i {
+                        color: $link-gray;
+                    }
+                }
+
             }
         }
     }
@@ -70,30 +111,57 @@
             bottom: -2px;
             right: 100%;
         }
-        .item {
+        .item,
+        .tab-btn {
             border: 0;
             font-size: .8em;
             font-weight: 600;
             line-height: 0px;
             margin: 0 0 -3px;
-            color: $gray;
+            color: rgb(168, 168, 168);
             border-bottom: 2px solid rgb(247, 247, 247);
             border-radius: 0;
             margin: 0 0 -2px 0;
-            transition: border 0.1s ease;
+            transition: border $speed ease, color  $speed ease;
             padding: 0;
             z-index: 2;
+            background-color: transparent;
             &:not(:last-child) {
                 margin-right: 35px;
+            }
+            &:hover {
+                color: $gray;
+                border-bottom: 2px solid rgb(211, 214, 220);
             }
             &.active {
                 color: $orange;
                 line-height: 0px;
                 border-top-right-radius: 8px;
                 border-top-left-radius: 8px;
-                background-color: #fff;
                 border-bottom: 2px solid;
             }
+        }
+        .tab-btn {
+            position: relative;
+            &:focus {
+                box-shadow: none;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    right: -4px;
+                    left: -4px;
+                    top: 8px;
+                    bottom: 10px;
+                    border-radius: 3px;
+                    @extend %onTextFocus;
+                }
+            }
+            &:active {
+                &:before {
+                    box-shadow: none;
+                }
+            }
+
         }
 
     }

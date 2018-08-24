@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab } from 'semantic-ui-react';
+import { Tab, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
@@ -30,7 +30,7 @@ class ViewContract extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: 'View properties',
+				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="View properties" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -38,7 +38,7 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: 'call contracts',
+				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="call contracts" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />

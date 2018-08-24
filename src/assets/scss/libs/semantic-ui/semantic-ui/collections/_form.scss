@@ -104,19 +104,15 @@
   font-family: $font-family;
   margin: 0em;
   outline: none;
-  -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
   line-height: 1.21428571em;
   padding: 0.67857143em 1em;
   font-size: 1em;
-  background: #FFFFFF;
-  border: 1px solid $bd-gray;
+  background-color: #fff;
+  border: 1px solid $inut-color;
   color: rgba(0, 0, 0, 0.87);
   border-radius: 0.28571429rem;
-  -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
-          box-shadow: 0em 0em 0em 0em transparent inset;
-  -webkit-transition: color 0.1s ease, border-color 0.1s ease;
-  transition: color 0.1s ease, border-color 0.1s ease;
+  -webkit-transition: color $speed ease, border-color $speed ease;
+  transition: color $speed ease, border-color $speed ease;
 }
 
 /* Text Area */
@@ -126,20 +122,20 @@
   tap-highlight-color: rgba(255, 255, 255, 0);
   padding: 0.78571429em 1em;
   background: #FFFFFF;
-  border: 1px solid $bd-gray;
+  border: 1px solid $inut-color;
   outline: none;
   color: rgba(0, 0, 0, 0.87);
   border-radius: 0.28571429rem;
   -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
           box-shadow: 0em 0em 0em 0em transparent inset;
-  -webkit-transition: color 0.1s ease, border-color 0.1s ease;
-  transition: color 0.1s ease, border-color 0.1s ease;
+  -webkit-transition: color $speed ease, border-color $speed ease;
+  transition: color $speed ease, border-color $speed ease;
   font-size: 1em;
   line-height: 1.2857;
   resize: none;
 }
 .ui.form textarea:not([rows]) {
-  height: 12em;
+  height: 10em;
   min-height: 8em;
   max-height: 24em;
 }
@@ -165,14 +161,14 @@
   height: auto;
   width: 100%;
   background: #FFFFFF;
-  border: 1px solid $bd-gray;
+  border: 1px solid $inut-color;
   border-radius: 0.28571429rem;
   -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
           box-shadow: 0em 0em 0em 0em transparent inset;
   padding: 0.62em 1em;
   color: rgba(0, 0, 0, 0.87);
-  -webkit-transition: color 0.1s ease, border-color 0.1s ease;
-  transition: color 0.1s ease, border-color 0.1s ease;
+  -webkit-transition: color $speed ease, border-color $speed ease;
+  transition: color $speed ease, border-color $speed ease;
 }
 
 /*--------------------
@@ -336,6 +332,34 @@
 }
 
 /*--------------------
+        Hover
+---------------------*/
+.ui.form textarea:hover,
+.ui.form input:not([type]):hover,
+.ui.form input[type="date"]:hover,
+.ui.form input[type="datetime-local"]:hover,
+.ui.form input[type="email"]:hover,
+.ui.form input[type="number"]:hover,
+.ui.form input[type="password"]:hover,
+.ui.form input[type="search"]:hover,
+.ui.form input[type="tel"]:hover,
+.ui.form input[type="time"]:hover,
+.ui.form input[type="text"]:hover,
+.ui.form input[type="file"]:hover,
+.ui.form input[type="url"]:hover {
+    &:not(:disabled) {
+        border-color: $inut-hover;
+    }
+}
+
+.ui.form textarea:focus {
+  color: $black;
+  border-color: $inut-hover;
+  border-radius: 0.28571429rem;
+  background: #FFFFFF;
+  @extend %onFocus;
+}
+/*--------------------
         Focus
 ---------------------*/
 
@@ -352,21 +376,19 @@
 .ui.form input[type="file"]:focus,
 .ui.form input[type="url"]:focus {
   color: rgba(0, 0, 0, 0.95);
-  border-color: $inut-color;
+  border-color: $inut-hover;
   border-radius: 0.28571429rem;
   background: #FFFFFF;
-  -webkit-box-shadow: 0px 0em 0em 0em rgba(34, 36, 38, 0.35) inset;
-          box-shadow: 0px 0em 0em 0em rgba(34, 36, 38, 0.35) inset;
 }
 .ui.form textarea:focus {
-  color: rgba(0, 0, 0, 0.95);
-  border-color: $inut-color;
+  color: $black;
+  border-color: $inut-hover;
   border-radius: 0.28571429rem;
   background: #FFFFFF;
-  -webkit-box-shadow: 0px 0em 0em 0em rgba(34, 36, 38, 0.35) inset;
-          box-shadow: 0px 0em 0em 0em rgba(34, 36, 38, 0.35) inset;
-  -webkit-appearance: none;
+  @extend %onFocus;
 }
+
+
 
 /*--------------------
         Success

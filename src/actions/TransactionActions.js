@@ -87,18 +87,29 @@ export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, ge
 		feeAsset = feeAsset.toJS();
 
 		const { quote, base } = feeAsset.options.core_exchange_rate;
-		base.precision = base.asset_id === assetId ? feeAsset.precision : coreAsset.precision;
-		quote.precision = quote.asset_id === assetId ? feeAsset.precision : coreAsset.precision;
-
 
 		const price = new BN(quote.amount)
 			.div(base.amount)
-			.times(10 ** (base.precision - quote.precision));
+			.times(10 ** (coreAsset.precision - feeAsset.precision));
 
-		fee = price.times(fee);
+		fee = new BN(fee).div(10 ** coreAsset.precision);
+		fee = price.times(fee).times(10 ** feeAsset.precision);
 	}
 
-	return { value: new BN(fee).integerValue().toString(), asset: feeAsset };
+	return { value: new BN(fee).integerValue(BN.ROUND_UP).toString(), asset: feeAsset };
+};
+
+export const checkFeePool = (echo, asset, fee) => {
+	if (echo.id === asset.id) { return true; }
+
+	let feePool = new BN(asset.dynamic.fee_pool).div(10 ** echo.precision);
+
+	const { quote, base } = asset.options.core_exchange_rate;
+	const precision = echo.precision - asset.precision;
+	const price = new BN(quote.amount).div(base.amount).times(10 ** precision);
+	feePool = price.times(feePool).times(10 ** asset.precision);
+
+	return feePool.gt(fee);
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
@@ -131,13 +142,11 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
-	const {
-		to, amount, currency, comment,
-	} = form;
+	const { to, currency, comment } = form;
 	let { fee } = form;
-	amount.value = String(amount.value).replace(',', '.');
+	const amount = Number(form.amount.value).toString();
 
-	if (to.error || amount.error || fee.error || comment.error) {
+	if (to.error || form.amount.error || fee.error || comment.error) {
 		return;
 	}
 
@@ -146,13 +155,10 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
-	if (!Math.floor(amount.value * (10 ** currency.precision))) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
-		return;
-	}
+	const amountError = validateAmount(amount, currency);
 
-	if (new BN(amount.value).times(10 ** currency.precision).gt(currency.balance)) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+	if (amountError) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
 		return;
 	}
 
@@ -160,18 +166,29 @@ export const transfer = () => async (dispatch, getState) => {
 		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
 	}
 
+	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn(['data', 'assets', fee.asset.id]).toJS();
+
+	if (!checkFeePool(echo, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_TRANSFER,
+			'fee',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return;
+	}
 
 	if (currency.id === fee.asset.id) {
-		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
+		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
 			return;
 		}
 	}
@@ -190,7 +207,7 @@ export const transfer = () => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			[toAccount.id, amount.value * (10 ** currency.precision)],
+			[toAccount.id, amount * (10 ** currency.precision)],
 		);
 
 		options = {
@@ -211,7 +228,7 @@ export const transfer = () => async (dispatch, getState) => {
 			from: fromAccountId,
 			to: toAccount.id,
 			amount: {
-				amount: amount.value * (10 ** currency.precision),
+				amount: amount * (10 ** currency.precision),
 				asset_id: currency.id,
 			},
 		};
@@ -221,7 +238,7 @@ export const transfer = () => async (dispatch, getState) => {
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		from: fromAccount.name,
 		to: toAccount.name,
-		amount: `${amount.value} ${currency.symbol}`,
+		amount: `${amount} ${currency.symbol}`,
 	};
 
 	if (comment.value && currency.type !== 'tokens') {
@@ -423,7 +440,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	if (payable) {
 		// validate amount
-		const amountError = validateAmount(amount, currency);
+		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
 			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
 			dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));

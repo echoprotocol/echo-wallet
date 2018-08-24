@@ -12,7 +12,7 @@ import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setFormValue } from '../../../actions/FormActions';
 
 import Field from './FieldComponent';
-import FeeField from './FeeField';
+import FeeField from '../../../components/AmountField/FeeField';
 
 class TabCallContracts extends React.Component {
 
@@ -34,7 +34,9 @@ class TabCallContracts extends React.Component {
 
 		if (functionName) {
 			return payable ?
-				<AmountField form={FORM_CALL_CONTRACT} /> : <FeeField form={FORM_CALL_CONTRACT} type="contract" />;
+				<AmountField form={FORM_CALL_CONTRACT} />
+				:
+				<FeeField form={FORM_CALL_CONTRACT} isSingle feeLabel="contract" type="contract" />;
 		}
 		return null;
 	}
