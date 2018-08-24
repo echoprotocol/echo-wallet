@@ -28,7 +28,7 @@ export const getTransactionDetails = (operationType, showOptions) => {
 };
 
 export const logParser = (log) => {
-	if (!log || !log.length) return null;
+	if (!log || !log.length) return [];
 	return log.map((l) => {
 		const contractId = parseInt(l.address.slice(2), 16);
 		const event = events[l.log[0]] || l.log[0];
@@ -121,7 +121,7 @@ export const convertContractConstant = (toType, fromType, constantValue) => {
 	}
 };
 
-const toFixed = (value, precision) => {
+export const toFixed = (value, precision) => {
 	const power = 10 ** precision;
 
 	return (Math.round(value * power) / power).toFixed(precision);
