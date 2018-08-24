@@ -395,11 +395,6 @@ select.ui.dropdown {
   transition: opacity $speed ease;
 }
 
-/* Compact */
-.ui.compact.selection.dropdown {
-  min-width: 0px;
-}
-
 /*  Selection Menu */
 .ui.selection.dropdown .menu {
   overflow-x: hidden;
