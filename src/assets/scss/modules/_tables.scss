@@ -32,7 +32,7 @@ $thead-height: 46px;
     height: calc(100vh - 100px);
     overflow-y: overlay;
     overflow-x: hidden;
-    @media (min-width: 900px){
+    @media (min-width: 840px){
         overflow-y: overlay;
         overflow-x: hidden;
         margin: 46px 0 0 0;
@@ -43,7 +43,7 @@ $thead-height: 46px;
     thead {
         width: 100%;
         background-color: #fff;
-        @media (min-width: 900px){
+        @media (min-width: 840px){
             overflow-y: overlay;
             position: fixed;
             overflow-x: hidden;
@@ -60,7 +60,13 @@ $thead-height: 46px;
     // WIDTH OF CELLS
 
     th, td {
-       min-width: 11vw;
+        min-width: 11vw;
+        @media (max-width: 980px) {
+            font-size: .9em;
+        }
+        @media (max-width: 1200px) {
+            font-size: .95em;
+        }
         &:nth-child(6) {
             max-width: 11px;
         }
@@ -76,6 +82,14 @@ $thead-height: 46px;
             }
             min-width: 13vw;
         }
+        
+        &:nth-child(2) {
+            @media (max-width: 980px) {
+                min-width: 12vw;
+            }
+        }
+   
+        
 
         &:nth-child(5) {
             min-width: calc(18vw - 30px);
@@ -97,6 +111,9 @@ $thead-height: 46px;
         &:last-child {
             text-align: right;
             padding-right:  20px;
+            @media (max-width: 1200px) {
+                letter-spacing: -.2px;
+            }
         }
     }
 
