@@ -6,8 +6,8 @@ import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
-import { setValue, setFormValue } from '../../actions/FormActions';
-import amountInput from '../../actions/AmountActions';
+import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
+import { amountInput } from '../../actions/AmountActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -61,6 +61,7 @@ class AmountField extends React.Component {
 			this.setCurrency(target, 'assets');
 			this.setState({ searchText: '' });
 		}
+		this.props.setFormError('amount', null);
 	}
 
 	onDropdownChange(e, value) {
@@ -213,6 +214,7 @@ AmountField.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -232,5 +234,6 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
+		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 	}),
 )(AmountField);
