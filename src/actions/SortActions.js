@@ -32,7 +32,6 @@ export const initSorts = () => (dispatch, getState) => {
 		sorts[accountId] = {};
 	}
 
-	Object.entries(sorts[accountId]).map(([container, value]) => {
-		dispatch(SortReducer.actions.set({ container, value }));
-	});
+	Object.entries(sorts[accountId]).map(([container, value]) =>
+		dispatch(SortReducer.actions.set({ container, value })));
 };
