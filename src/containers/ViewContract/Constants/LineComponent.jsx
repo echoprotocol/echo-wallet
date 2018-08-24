@@ -15,14 +15,6 @@ import Dropdown from '../../../components/Dropdown';
 
 class LineComponent extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			showResult: false,
-		};
-	}
-
 	onQuery() {
 		const {
 			constant, contractId, inputs,
@@ -32,8 +24,6 @@ class LineComponent extends React.Component {
 			.map((input) => inputs.toJS()[constant.name][input].value);
 
 		this.props.contractQuery(constant, args, contractId);
-
-		this.setState({ showResult: true });
 
 	}
 
@@ -81,7 +71,7 @@ class LineComponent extends React.Component {
 		return (
 			<React.Fragment>
 				{
-					this.state.showResult &&
+					constant.showQueryResult &&
 					<div className="watchlist-row">
 						<div className="result-value">
 							{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}

@@ -231,6 +231,14 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	});
 
 	if (isErrorExist) {
+		const constants = getState().contract.get('constants');
+		const newConstants = constants.toJS().map((constant) => {
+			if (constant.name === method.name) {
+				constant.showQueryResult = false;
+			}
+			return constant;
+		});
+		dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 		return;
 	}
 
@@ -249,6 +257,7 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	const newConstants = constants.toJS().map((constant) => {
 		if (constant.name === method.name) {
 			constant.constantValue = queryResult;
+			constant.showQueryResult = true;
 		}
 		return constant;
 	});
@@ -282,12 +291,9 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 		const method = getMethodId(constant);
 		const constantValue =
 				await getContractConstant(instance, contractId, accountId, method);
-		return Object.defineProperty(constant, 'constantValue', {
-			value: constantValue.substr(-64),
-			writable: true,
-			enumerable: true,
-			configurable: true,
-		});
+		constant.constantValue = constantValue.substr(-64);
+		constant.showQueryResult = false;
+		return constant;
 	});
 
 	constants = await Promise.all(constants);
