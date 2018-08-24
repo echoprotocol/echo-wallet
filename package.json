@@ -1,6 +1,8 @@
 {
   "name": "PixelPlex-app",
+  "author": "PixelPlex <info@pixelplex.by>",
   "description": "PixelPlex React Redux app",
+  "homepage": "https://pixelplex.by/",
   "version": "0.1.0",
   "scripts": {
     "start": "cross-env NODE_ENV=local webpack-dev-server --mode development --progress --colors --history-api-fallback --hot --inline",
@@ -8,10 +10,8 @@
     "build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
     "package-prepare": "ELECTRON=TRUE npm run build-dev",
-    "package-osx": "electron-packager ./dist Echo --platform=darwin --out ./dist/inst/ && electron-installer-dmg dist/inst/Echo-darwin-x64/Echo.app/ dist/installers/Echo",
-    "package-linux": "electron-packager ./dist Echo --platform linux --arch amd64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/Echo-linux-amd64/ --dest dist/installers/ --arch amd64",
-    "package-win": "electron-packager ./dist PixelPlex-app --platform win32 --arch x64 --out ./dist/inst/",
-    "build-win-inst": "node win-packager.js"
+    "build-linux": "build --pd dist -p never --linux deb",
+    "build-win": "build --pd dist -p never --win --x64"
   },
   "dependencies": {
     "autoprefixer": "^8.1.0",
@@ -53,11 +53,12 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "clean-webpack-plugin": "^0.1.18",
+    "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.2",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.10",
     "electron": "^2.0.7",
+    "electron-builder": "^20.28.2",
     "electron-installer-dmg": "^2.0.0",
     "electron-packager": "^12.1.0",
     "eslint": "^4.18.2",
@@ -76,5 +77,18 @@
     "webpack-cli": "^2.0.10",
     "webpack-dev-middleware": "^3.0.0",
     "webpack-dev-server": "^3.1.0"
+  },
+  "build": {
+    "appId": "org.echo",
+    "directories": {
+      "output": "installers"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "displayLanguageSelector": true
+    }
   }
 }

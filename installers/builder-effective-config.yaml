@@ -1,0 +1,11 @@
+directories:
+  output: installers
+  buildResources: build
+appId: org.echo
+nsis:
+  oneClick: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  displayLanguageSelector: true
+electronVersion: 2.0.7
