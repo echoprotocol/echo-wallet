@@ -8,6 +8,7 @@ import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConsta
 import { HISTORY_DATA } from '../constants/TableConstants';
 
 import { initBalances, getObject, resetBalance } from '../actions/BalanceActions';
+import { initSorts } from '../actions/SortActions';
 import { loadContracts } from '../actions/ContractActions';
 import { clear } from '../actions/TableActions';
 
@@ -23,6 +24,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 	}
 
 	await dispatch(initBalances(id));
+	dispatch(initSorts());
 	dispatch(loadContracts(id));
 };
 
