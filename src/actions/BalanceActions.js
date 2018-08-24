@@ -18,7 +18,7 @@ import {
 import { setValue } from './FormActions';
 
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
-import { toastSuccess } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
@@ -105,9 +105,9 @@ export const initBalances = (accountId) => async (dispatch) => {
 
 	await dispatch(getTokenBalances(accountId));
 
-	const assets = (await dispatch(EchoJSActions.fetch(accountId))).toJS().balances;
+	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
 
-	await dispatch(getAssetsBalances(assets));
+	await dispatch(getAssetsBalances(account.balances));
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {
@@ -205,15 +205,15 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 			if (isNeedUpdate) await dispatch(updateTokenBalances());
 			break;
 		}
-		case 'accounts': {
-			const subscribeAccountId = subscribeObject.value.get('id');
+		case 'objects': {
+			const objectId = subscribeObject.value.get('id');
+			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
 
-			if (subscribeAccountId !== accountId) return;
+			if (!balances) { return; }
 
-			let assets = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
-			assets = assets ? assets.toJS() : assets;
-			if (!assets) return;
-			dispatch(getAssetsBalances(assets));
+			if (!Object.values(balances.toJS()).includes(objectId)) { return; }
+
+			dispatch(getAssetsBalances(balances.toJS()));
 			break;
 		}
 		default:
@@ -221,6 +221,9 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 };
 
 export const removeToken = (contractId) => (dispatch, getState) => {
+	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
+	if (!targetToken || !targetToken.disabled) return;
+
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	let tokens = localStorage.getItem('tokens');
@@ -237,8 +240,26 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };
 
+export const enableToken = (contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
+};
+
+export const disableToken = (name, contractId) => (dispatch) => {
+	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
+
+	toastInfo(
+		`You have removed ${name} from watch list`,
+		() => dispatch(enableToken(contractId)),
+		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
+	);
+};
+
 export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 	history.push(TRANSFER_PATH);
+};
+
+export const resetBalance = () => (dispatch) => {
+	dispatch(BalanceReducer.actions.reset());
 };

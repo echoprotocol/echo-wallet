@@ -1291,7 +1291,18 @@ i.icon.edge:before {
   content: "\f282";
 }
 i.icon.edit:before {
-  content: "\f044";
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e91f";
 }
 i.icon.eject:before {
   content: "\f052";
@@ -2778,7 +2789,18 @@ i.icon.transgender.alternate:before {
   content: "\f225";
 }
 i.icon.trash:before {
-  content: "\f1f8";
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e90f";
 }
 i.icon.trash.alternate:before {
   content: "\f2ed";
@@ -3317,7 +3339,16 @@ i.icon.drivers.license:before {
   content: "\f2c2";
 }
 i.icon.dropdown:before {
-  content: "\f0d7";
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\E907";
 }
 i.icon.eercast:before {
   content: "\f2da";

@@ -9,16 +9,28 @@
         line-height: 15px;
         padding: 5px;
         color: rgba(#c4c5ca,1);
-        margin: -1px 10px 0 0;
+        margin: 0 10px 0 0;
         transition: color .3s;
+        display: block;
+        &:focus {
+            border-radius: 0.28571429rem;
+            @extend %onFocus;
+        }
+        &:focus,
         &:hover {
             color: rgba(#6d7178,1);
+        }
+        &:active {
+            box-shadow: none;
+        }
+        & + .page-title {
+            font-size: 16px;
         }
     }
     .page-title {
         color: $link-gray;
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 20px;
+        font-family: proximanovaSemibold;
     }
     .show-sidebar-btn {
         color: $link-gray;
@@ -41,15 +53,6 @@
     }
     .ui.dropdown {
         line-height: normal;
-    }
-    .button {
-        &.transparent {
-            &:focus {
-                i {
-                    color: #6d7178;
-                }
-            }
-        }
     }
 }
 
@@ -116,6 +119,27 @@
     .balance {
         transition: color .4s;
         color: $link-gray;
+        position: relative;
+
+        &:focus {
+            &:before {
+                top: 0px;
+                right: -3px;
+                bottom: 3px;
+                left: -3px;
+                content: '';
+                position: absolute;
+                @extend %onFocus;
+                display: block;
+                border-radius: 3px;
+            }
+
+        }
+        &:active {
+            &:before {
+                box-shadow: none;
+            }
+        }
         span {
             &:nth-child(1) {
                 font-family: proximanovaSemibold;

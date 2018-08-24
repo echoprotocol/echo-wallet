@@ -23,22 +23,29 @@ class AmountField extends React.Component {
 		};
 	}
 
+	componentWillMount() {
+		const options = this.renderList('assets').concat(this.renderList('tokens'));
+		this.setState({
+			options,
+		});
+	}
+
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
-			this.props.setValue(this.props.form, 'currency', this.props.assets[0]);
+			this.props.setValue('currency', this.props.assets[0]);
 		}
 	}
 
 	onSearch(e) {
 		this.setState({ searchText: e.target.value });
 	}
+
 	onChangeAmount(e) {
 		const { currency } = this.props;
-
 		const value = e.target.value.trim();
 		const { name } = e.target;
 
-		this.props.amountInput(this.props.form, value, currency, name);
+		this.props.amountInput(value, currency, name);
 	}
 
 	onChangeCurrency(e, value) {
@@ -47,14 +54,12 @@ class AmountField extends React.Component {
 		if (target) {
 			this.setCurrency(target, 'tokens');
 			this.setState({ searchText: '' });
-
 			return;
 		}
 		target = assets.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'assets');
 			this.setState({ searchText: '' });
-
 		}
 	}
 
@@ -63,17 +68,16 @@ class AmountField extends React.Component {
 			this.onChangeCurrency(e, value);
 		} else if (e.keyCode === 13) { // if enter
 			this.onChangeCurrency(e, value);
+			setTimeout(() => { e.target.blur(); }, 0);
 		}
-
-
 	}
 
 	setAvailableAmount(currency) {
-		this.props.setFormValue(this.props.form, 'amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
+		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
 	}
 
 	setCurrency(currency, type) {
-		this.props.setValue(this.props.form, 'currency', { ...currency, type });
+		this.props.setValue('currency', { ...currency, type });
 	}
 
 	getAvailableAmount(currency) {
@@ -94,6 +98,10 @@ class AmountField extends React.Component {
 		return currency.balance - fee.value;
 	}
 
+	clearSearchText() {
+		this.setState({ searchText: '' });
+	}
+
 	amountFocusToggle(e, value) {
 		this.setState({
 			amountFocus: !value,
@@ -104,12 +112,12 @@ class AmountField extends React.Component {
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
-		const list = (search || this.props[type].length === 0) ? [] : [
+		const list = (searchText !== '' || search || this.props[type].length === 0) ? [] : [
 			{
 				key: `${type}_header`,
-				text: type.toUpperCase(),
+				text: '',
 				value: type.toUpperCase(),
-				className: 'header',
+				className: `${type}_header header`,
 				disabled: true,
 			},
 		];
@@ -122,19 +130,18 @@ class AmountField extends React.Component {
 					value: a ? a.id : id,
 				});
 			}
-
 			return arr;
-
 		}, list);
 	}
 
 	render() {
 		const {
-			assets, amount, form,
+			assets, amount, form, fee,
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const options = this.renderList('assets').concat(this.renderList('tokens'));
+		const type = form === FORM_TRANSFER && currency.type !== 'tokens' ? 'transfer' : 'contract';
+
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
@@ -142,7 +149,7 @@ class AmountField extends React.Component {
 					<ul className="list-amount">
 						<li>
 							Fee:
-							<FeeField form={form} />
+							<FeeField form={form} type={type} />
 						</li>
 						<li>
 							Available Balance:
@@ -157,7 +164,7 @@ class AmountField extends React.Component {
 					placeholder="Amount"
 					tabIndex="0"
 					action
-					className={classnames('amount-wrap action-wrap', { error: amount.error }, { focused: this.state.amountFocus })}
+					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
 					<div className="amount-wrap action-wrap">
 						<input
@@ -169,10 +176,9 @@ class AmountField extends React.Component {
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
-						{ amount.error ? <span className="icon-error-red value-status" /> : null }
+						{ amount.error || fee.error ? <span className="icon-error-red value-status" /> : null }
 					</div>
-					{amount.error && <span className="error-message">{amount.error}</span>}
-					{/* if elements =< 1 add class no-choice */}
+					{ amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null }
 					<Dropdown
 						search
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
@@ -181,7 +187,9 @@ class AmountField extends React.Component {
 						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
-						options={options}
+						onBlur={() => this.clearSearchText()}
+						options={this.state.options}
+						noResultsMessage="No results are found"
 						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
 					/>
 
@@ -194,15 +202,17 @@ class AmountField extends React.Component {
 }
 
 AmountField.propTypes = {
+	form: PropTypes.string.isRequired,
+
 	currency: PropTypes.object,
 	fee: PropTypes.object,
 	assets: PropTypes.any.isRequired,
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
+
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	form: PropTypes.string.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -211,21 +221,16 @@ AmountField.defaultProps = {
 };
 
 export default connect(
-	(state, ownProps) => {
-		const { form } = ownProps;
-		return {
-			assets: state.balance.get('assets').toArray(),
-			amount: state.form.getIn([form, 'amount']),
-			currency: state.form.getIn([form, 'currency']),
-			fee: state.form.getIn([form, 'fee']),
-			tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
-
-		};
-	},
-	(dispatch) => ({
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
-		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
-		amountInput: (form, value, currency, name) =>
-			dispatch(amountInput(form, value, currency, name)),
+	(state, { form }) => ({
+		assets: state.balance.get('assets').toArray(),
+		amount: state.form.getIn([form, 'amount']),
+		currency: state.form.getIn([form, 'currency']),
+		fee: state.form.getIn([form, 'fee']),
+		tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+	}),
+	(dispatch, { form }) => ({
+		setValue: (field, value) => dispatch(setValue(form, field, value)),
+		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
+		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 	}),
 )(AmountField);
