@@ -155,13 +155,10 @@ export const transfer = () => async (dispatch, getState) => {
 		return;
 	}
 
-	if (!Math.floor(amount * (10 ** currency.precision))) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', `Amount should be more than ${1 / (10 ** currency.precision)}`));
-		return;
-	}
+	const amountError = validateAmount(amount, currency);
 
-	if (new BN(amount).times(10 ** currency.precision).gt(currency.balance)) {
-		dispatch(setFormError(FORM_TRANSFER, 'amount', 'Insufficient funds'));
+	if (amountError) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
 		return;
 	}
 
@@ -443,7 +440,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	if (payable) {
 		// validate amount
-		const amountError = validateAmount(amount, currency);
+		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
 			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
 			dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));

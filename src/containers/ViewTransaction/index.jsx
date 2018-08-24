@@ -13,16 +13,6 @@ import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
 
-	componentDidMount() {
-		const { state } = this.props.location;
-
-		if (!state) return;
-
-		if (state.data.name === 'Transfer' && state.data.memo) {
-			this.props.openUnlock(state.data.memo);
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.resetTransaction();
 	}
