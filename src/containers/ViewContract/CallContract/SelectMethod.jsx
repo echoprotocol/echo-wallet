@@ -59,7 +59,7 @@ class SelectMethod extends React.Component {
 			if (!search || a.symbol.toLowerCase().match(search)) {
 				arr.push({
 					key: a ? a.name + i : '',
-					text: a ? a.name : '',
+					text: a ? formatCallContractField(a.name) : '',
 					value: a ? a.name : i,
 				});
 			}
