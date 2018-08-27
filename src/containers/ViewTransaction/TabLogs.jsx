@@ -53,6 +53,7 @@ class TabLogs extends React.Component {
 		);
 	}
 
+
 	render() {
 		const { details } = this.props.data;
 
