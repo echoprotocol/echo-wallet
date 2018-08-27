@@ -2,10 +2,11 @@ directories:
   output: build/binaries
   buildResources: src/assets/app_resources
 appId: org.echo
-extends: null
+asar: false
 files:
-  - build/electron
-  - '!node_modules'
+  - build/**/*
+  - node_modules/**/*
+  - package.json
 win:
   target:
     - target: nsis

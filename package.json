@@ -4,6 +4,7 @@
   "description": "PixelPlex React Redux app",
   "homepage": "https://pixelplex.by/",
   "version": "0.1.0",
+  "main": "build/electron/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=local webpack-dev-server --mode development --progress --colors --history-api-fallback --hot --inline",
     "build": "cross-env NODE_ENV=production webpack --progress --display-error-details --colors --mode production",
@@ -90,8 +91,9 @@
   "build": {
     "appId": "org.echo",
     "files": [
-      "build/electron",
-      "!node_modules"
+      "build/**/*",
+      "node_modules/**/*",
+      "package.json"
     ],
     "directories": {
       "buildResources": "src/assets/app_resources",

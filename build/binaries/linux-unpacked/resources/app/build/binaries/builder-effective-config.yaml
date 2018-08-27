@@ -1,0 +1,21 @@
+directories:
+  output: build/binaries
+  buildResources: src/assets/app_resources
+appId: org.echo
+asar: false
+files:
+  - build/**/*
+  - node_modules/**/*
+  - package.json
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - ia32
+linux:
+  category: Finance
+  target:
+    - deb
+  synopsis: 'BitShares: Cryptocurrency and Decentralized Exchange'
+electronVersion: 2.0.8
