@@ -26,12 +26,15 @@ class TabLogs extends React.Component {
 					<div className="col">
 						{
 							item.log.map((topic, i) => {
-								const convertedTopic = topics.find((val) => i === val.id);
+								const convertedTopic = topics.find((val) => i.toString() === val.id);
 
 								return (
 									<div className="topic-item" key={`${item.data}${topic}`}>
 										<span className="num">[{i}]</span>
-										{ i !== 0 && <Dropdown data={topic} component={i} variativeOptions={options} />}
+										{
+											i !== 0 &&
+											<Dropdown data={topic} component={i.toString()} variativeOptions={options} />
+										}
 										{convertedTopic ? convertedTopic.value : `0x${topic}`}
 									</div>
 								);

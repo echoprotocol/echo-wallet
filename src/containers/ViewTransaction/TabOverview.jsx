@@ -25,6 +25,55 @@ class TabOverview extends React.Component {
 		);
 	}
 
+	renderBytecode(isContract) {
+		const { bytecode, details } = this.props.data;
+		const { bytecodeArgs } = this.props;
+		const { methodHash, args } = parseBytecode(bytecode);
+
+		return (
+			!isContract ?
+				<li>
+					<div className="col">Bytecode:</div>
+					<div className="col">
+						{this.copyBytecode()}
+						<div className="bytecode-wrap">
+							<div className="bytecode">
+								Method: 0x{methodHash}
+							</div>
+							{
+								args.map((arg, index) => {
+									const id = index;
+									const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
+									return (
+										<React.Fragment key={id} >
+											<Dropdown
+												data={arg}
+												component={`bytecode${id}`}
+											/>
+											<div className="bytecode">
+												Argument[{id + 1}]: {convertedArg ? convertedArg.value : `0x${arg}`}
+											</div>
+										</React.Fragment>
+									);
+								})
+							}
+						</div>
+					</div>
+				</li> :
+				<li>
+					<div className="col">Bytecode:</div>
+					<div className="col">
+						<div className="bytecode-wrap">
+							<div className="bytecode">
+								{details.exec_res.output}
+							</div>
+						</div>
+					</div>
+				</li>
+
+		);
+	}
+
 	renderComment() {
 		const { comment, data: { memo } } = this.props;
 
@@ -52,8 +101,6 @@ class TabOverview extends React.Component {
 
 	renderContractOptions() {
 		const { details, contract, bytecode } = this.props.data;
-		const { bytecodeArgs } = this.props;
-		const { methodHash, args } = parseBytecode(bytecode);
 
 		return (
 			<React.Fragment>
@@ -80,35 +127,7 @@ class TabOverview extends React.Component {
 						</li> : null
 				}
 				{
-					bytecode ?
-						<li>
-							<div className="col">Bytecode:</div>
-							<div className="col">
-								{this.copyBytecode()}
-								<div className="bytecode-wrap">
-									<div className="bytecode">
-										Method: 0x{methodHash}
-									</div>
-									{
-										args.map((arg, index) => {
-											const id = index;
-											const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
-											return (
-												<React.Fragment key={id} >
-													<Dropdown
-														data={arg}
-														component={`bytecode${id}`}
-													/>
-													<div className="bytecode">
-														Argument[{id + 1}]: {convertedArg ? convertedArg.value : `0x${arg}`}
-													</div>
-												</React.Fragment>
-											);
-										})
-									}
-								</div>
-							</div>
-						</li> : null
+					bytecode ? this.renderBytecode(parseInt(details.exec_res.new_address, 16)) : null
 				}
 			</React.Fragment>
 		);
