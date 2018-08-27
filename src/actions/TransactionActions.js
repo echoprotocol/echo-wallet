@@ -36,7 +36,12 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, encodeMemo, getMemoFee } from '../api/TransactionApi';
+import {
+	buildAndSendTransaction,
+	estimateCallContractFee,
+	encodeMemo,
+	getMemoFee,
+} from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -49,8 +54,8 @@ export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
-export const setComment = ({ comment, unlocked, error }) => (dispatch) => {
-	dispatch(TransactionReducer.actions.setComment({ comment, unlocked, error }));
+export const setNote = ({ note, unlocked, error }) => (dispatch) => {
+	dispatch(TransactionReducer.actions.setNote({ note, unlocked, error }));
 };
 
 export const fetchFee = (type) => async (dispatch) => {
@@ -68,15 +73,15 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0', comment = null) => (dispatch, getState) => {
+export const getFee = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
 
-	if (comment) {
-		fee = new BN(fee).plus(getMemoFee(globalObject, comment));
+	if (note) {
+		fee = new BN(fee).plus(getMemoFee(globalObject, note));
 	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
@@ -148,11 +153,11 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
-	const { to, currency, comment } = form;
+	const { to, currency, note } = form;
 	let { fee } = form;
 	const amount = Number(form.amount.value).toString();
 
-	if (to.error || form.amount.error || fee.error || comment.error) {
+	if (to.error || form.amount.error || fee.error || note.error) {
 		return;
 	}
 
@@ -169,7 +174,7 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', comment.value) : getFee('contract'));
+		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', note.value) : getFee('contract'));
 	}
 
 	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
@@ -247,9 +252,9 @@ export const transfer = () => async (dispatch, getState) => {
 		amount: `${amount} ${currency.symbol}`,
 	};
 
-	if (comment.value && currency.type !== 'tokens') {
-		options.memo = comment.value;
-		showOptions.comment = comment.value;
+	if (note.value && currency.type !== 'tokens') {
+		options.memo = note.value;
+		showOptions.note = note.value;
 	}
 
 	const activePubKey = fromAccount.active.key_auths[0][0];
@@ -278,6 +283,54 @@ export const transfer = () => async (dispatch, getState) => {
 		dispatch(openModal(MODAL_DETAILS));
 	}
 
+};
+
+export const estimateFormFee = (asset) => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const contractId = getState().contract.get('id');
+
+	if (!activeUserId || !contractId) return 0;
+	const functions = getState().contract.get('functions').toJS();
+	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
+
+	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
+	if (!targetFunction) return 0;
+
+	const args = targetFunction.inputs.map((i) => {
+		const { name: field } = i;
+		const { value } = functionForm.inputs[field];
+		return value;
+	});
+
+	const bytecode = getMethod(targetFunction, args);
+
+	const { amount, currency } = functionForm;
+	let { payable } = functionForm;
+
+	if ((payable && (!amount || !currency)) || !asset) {
+		payable = false;
+	}
+
+	let amountValue = 0;
+
+	if (payable && !validateAmount(amount, currency)) {
+		amountValue = amount.value * (10 ** currency.precision);
+	}
+
+	const options = {
+		registrar: activeUserId,
+		receiver: contractId,
+		asset_id: asset.id,
+		value: amountValue,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode,
+	};
+
+	const feeValue = await estimateCallContractFee('contract', options);
+
+	return feeValue;
 };
 
 export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
@@ -327,9 +380,11 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 
 	const fee = await dispatch(fetchFee('contract'));
 
+	const feeValue = await estimateCallContractFee('contract', options);
+
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 
@@ -480,10 +535,11 @@ export const callContract = () => async (dispatch, getState) => {
 		gas: 4700000,
 		code: bytecode,
 	};
+	const feeValue = await estimateCallContractFee('contract', options);
 
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 

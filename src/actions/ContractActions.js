@@ -8,6 +8,7 @@ import {
 	setInFormErrorConstant,
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
+import { estimateFormFee } from './TransactionActions';
 
 import {
 	getContract,
@@ -17,10 +18,10 @@ import {
 
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
+import ContractFeeReducer from '../reducers/ContractFeeReducer';
 
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastInfo } from '../helpers/ToastHelper';
-import { toInt, toUtf8 } from '../helpers/FormatHelper';
 
 import {
 	validateAbi,
@@ -232,6 +233,14 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	});
 
 	if (isErrorExist) {
+		const constants = getState().contract.get('constants');
+		const newConstants = constants.toJS().map((constant) => {
+			if (constant.name === method.name) {
+				constant.showQueryResult = false;
+			}
+			return constant;
+		});
+		dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 		return;
 	}
 
@@ -239,25 +248,18 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	let queryResult = await getContractConstant(
+	const queryResult = await getContractConstant(
 		instance,
 		contractId,
 		accountId,
 		getMethod(method, args),
 	);
 
-	if (method.outputs[0].type === 'string') {
-		queryResult = toUtf8(queryResult.substr(-64));
-	} else if (method.outputs[0].type === 'bool') {
-		queryResult = !!toInt(queryResult.substr(-64));
-	} else {
-		queryResult = toInt(queryResult.substr(-64));
-	}
-
 	const constants = getState().contract.get('constants');
 	const newConstants = constants.toJS().map((constant) => {
 		if (constant.name === method.name) {
 			constant.constantValue = queryResult;
+			constant.showQueryResult = true;
 		}
 		return constant;
 	});
@@ -289,21 +291,11 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
-		let constantValue =
+		const constantValue =
 				await getContractConstant(instance, contractId, accountId, method);
-		if (constant.outputs[0].type === 'string') {
-			constantValue = toUtf8(constantValue.substr(-64));
-		} else if (constant.outputs[0].type === 'bool') {
-			constantValue = !!toInt(constantValue.substr(-64));
-		} else {
-			constantValue = toInt(constantValue.substr(-64));
-		}
-		return Object.defineProperty(constant, 'constantValue', {
-			value: constantValue,
-			writable: true,
-			enumerable: true,
-			configurable: true,
-		});
+		constant.constantValue = constantValue.substr(-64);
+		constant.showQueryResult = false;
+		return constant;
 	});
 
 	constants = await Promise.all(constants);
@@ -344,4 +336,26 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	if (!targetFunction.payable) return;
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
+};
+
+export const setContractFees = () => async (dispatch, getState) => {
+	const assets = getState().balance.get('assets').toArray();
+
+	let fees = assets.reduce((arr, asset) => {
+		const value = dispatch(estimateFormFee(asset));
+		arr.push(value);
+		return arr;
+	}, []);
+
+	fees = await Promise.all(fees);
+
+	fees = fees.reduce((arr, value, i) => {
+		arr.push({
+			value,
+			asset: assets[i],
+		});
+		return arr;
+	}, []);
+
+	dispatch(ContractFeeReducer.actions.set({ value: fees }));
 };

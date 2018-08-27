@@ -225,7 +225,7 @@
                 left: -3px;
                 content: '';
                 position: absolute;
-                @extend %onFocus;
+                @extend %onTextFocus;
                 display: block;
                 border-radius: 3px;
             }
