@@ -279,8 +279,6 @@
             .ui.input {
                 &.focused {
                     .assets-tokens-dropdown {
-                        // @extend %onFocus;
-                        // clip-path: inset(-4px -4px -4px 0);
                         border-color: $inut-hover;
                         position: relative;
                         &:before {
