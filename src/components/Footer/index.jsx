@@ -8,6 +8,7 @@ import { version } from '../../../package.json';
 class Footer extends React.PureComponent {
 
 	render() {
+		const { isConnect, latency, lastBlock } = this.props;
 
 		const connected = (
 			<div className="footer">
@@ -15,9 +16,9 @@ class Footer extends React.PureComponent {
 					<li>Echo.{version}</li>
 					<li className="pipeline">
                         Latency
-						<span className="pipeline-latency"> {this.props.latency} ms </span>
+						<span className="pipeline-latency"> {latency.value} ms </span>
                         / Block
-						<span className="pipeline-block"> #{this.props.lastBlock}</span>
+						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
 						<span className="status green">Connected</span>
@@ -40,7 +41,7 @@ class Footer extends React.PureComponent {
 			</div>
 		);
 
-		return this.props.isConnect ? connected : disconnected;
+		return isConnect && !latency.error ? connected : disconnected;
 	}
 
 }
@@ -54,7 +55,10 @@ Footer.propTypes = {
 Footer.defaultProps = {
 	lastBlock: '',
 	isConnect: false,
-	latency: '',
+	latency: {
+		value: 0,
+		error: null,
+	},
 };
 
 
