@@ -12,6 +12,7 @@ const getInstallerConfig = () => {
 		outputDirectory: path.join(outPath, 'installers'),
 		exe: 'PixelPlex-app.exe',
 		setupExe: 'echo-installer.exe',
+		noMsi: true,
 	});
 };
 

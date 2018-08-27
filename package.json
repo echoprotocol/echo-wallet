@@ -14,11 +14,11 @@
     "package-linux": "electron-packager ./dist PixelPlex-app --platform=linux --arch x64 --out ./dist/inst/ && electron-installer-debian --src dist/inst/PixelPlex-app-linux-x64/ --arch amd64 --config config/debian-package.json",
     "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
     "postbuild-electron": "npm run prepare-electron",
-    "prepare-electron": "copyfiles -f src/assets/app_resources/* build/electron/",
+    "prepare-electron": "copyfiles -f src/assets/app_resources/index.js build/electron/",
     "prepackage": "npm run build-electron",
-    "build-win": "npm run prepackage && build --pd dist -p never --win --x64",
-    "build-deb": "npm run prepackage && build  -p never --linux deb",
-    "package-win": "electron-packager ./dist PixelPlex-app --platform win32 --arch x64 --out ./dist/inst/",
+    "package": "build -p never",
+    "package-win": "npm run prepackage && build  -p never --windows",
+    "package-deb": "npm run prepackage && build  -p never --linux deb"
   },
   "dependencies": {
     "autoprefixer": "^8.1.0",
@@ -97,12 +97,16 @@
       "buildResources": "src/assets/app_resources",
       "output": "build/binaries"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "displayLanguageSelector": true
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "category": "Finance",
