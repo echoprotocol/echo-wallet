@@ -67,7 +67,7 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
-		comment: {
+		note: {
 			value: '',
 			error: null,
 		},

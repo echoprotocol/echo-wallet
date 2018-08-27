@@ -6,8 +6,12 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+
 import { setValue } from '../../actions/FormActions';
 import { getFee, fetchFee } from '../../actions/TransactionActions';
+import { setContractFees } from '../../actions/ContractActions';
+
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -19,13 +23,17 @@ class FeeComponent extends React.Component {
 		});
 	}
 
+	componentDidMount() {
+		this.props.setContractFees();
+	}
+
 	shouldComponentUpdate(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		const { fee, comment } = this.props;
+		const { fee, note } = this.props;
 
-		if (comment.value !== nextProps.comment.value) {
-			const value = this.props.getFee(fee.asset.id, nextProps.comment.value);
+		if (note.value !== nextProps.note.value) {
+			const value = this.props.getFee(fee.asset.id, nextProps.note.value);
 			this.props.setValue('fee', value);
 		}
 
@@ -37,10 +45,10 @@ class FeeComponent extends React.Component {
 	}
 
 	getOptions() {
-		const { assets, comment } = this.props;
+		const { assets, note } = this.props;
 
 		const options = assets.reduce((arr, asset) => {
-			const fee = this.props.getFee(asset.id, comment.value);
+			const fee = this.props.getFee(asset.id, note.value);
 
 			if (fee) {
 				arr.push({
@@ -49,6 +57,23 @@ class FeeComponent extends React.Component {
 					text: formatAmount(fee.value, asset.precision, asset.symbol),
 				});
 			}
+
+			return arr;
+		}, []);
+
+		return options;
+	}
+
+	getOptionsCallContract() {
+		const { fees } = this.props;
+
+		const options = fees.reduce((arr, fee) => {
+			arr.push({
+				key: fee.asset.symbol,
+				value: JSON.stringify(fee),
+				text: formatAmount(fee.value, fee.asset.precision, fee.asset.symbol),
+			});
+
 
 			return arr;
 		}, []);
@@ -67,7 +92,9 @@ class FeeComponent extends React.Component {
 	}
 
 	render() {
-		const options = this.getOptions();
+		const { form } = this.props;
+
+		const options = form === FORM_CALL_CONTRACT ? this.getOptionsCallContract() : this.getOptions();
 		const text = this.getText(options);
 		return (
 			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
@@ -94,10 +121,13 @@ FeeComponent.propTypes = {
 	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
-	comment: PropTypes.any.isRequired,
+	form: PropTypes.string.isRequired,
+	note: PropTypes.any.isRequired,
+	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -111,11 +141,14 @@ export default connect(
 		isSingle,
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
-		comment: state.form.getIn([form, 'comment']) || {},
+		note: state.form.getIn([form, 'note']) || {},
+		fees: state.fee.toArray() || [],
+		form,
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
-		getFee: (asset, comment) => dispatch(getFee(type, asset, comment)),
+		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
+		setContractFees: () => dispatch(setContractFees()),
 	}),
 )(FeeComponent);
