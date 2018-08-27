@@ -6,8 +6,12 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+
 import { setValue } from '../../actions/FormActions';
 import { getFee, fetchFee } from '../../actions/TransactionActions';
+import { setContractFees } from '../../actions/ContractActions';
+
+import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -17,6 +21,10 @@ class FeeComponent extends React.Component {
 		props.fetchFee().then((fee) => {
 			props.setValue('fee', fee);
 		});
+	}
+
+	componentDidMount() {
+		this.props.setContractFees();
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -56,6 +64,23 @@ class FeeComponent extends React.Component {
 		return options;
 	}
 
+	getOptionsCallContract() {
+		const { fees } = this.props;
+
+		const options = fees.reduce((arr, fee) => {
+			arr.push({
+				key: fee.asset.symbol,
+				value: JSON.stringify(fee),
+				text: formatAmount(fee.value, fee.asset.precision, fee.asset.symbol),
+			});
+
+
+			return arr;
+		}, []);
+
+		return options;
+	}
+
 	getText(options) {
 		const { fee } = this.props;
 
@@ -67,7 +92,9 @@ class FeeComponent extends React.Component {
 	}
 
 	render() {
-		const options = this.getOptions();
+		const { form } = this.props;
+
+		const options = form === FORM_CALL_CONTRACT ? this.getOptionsCallContract() : this.getOptions();
 		const text = this.getText(options);
 		return (
 			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
@@ -94,10 +121,13 @@ FeeComponent.propTypes = {
 	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
+	form: PropTypes.string.isRequired,
 	note: PropTypes.any.isRequired,
+	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 };
 
 FeeComponent.defaultProps = {
@@ -112,10 +142,13 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
 		note: state.form.getIn([form, 'note']) || {},
+		fees: state.fee.toArray() || [],
+		form,
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
+		setContractFees: () => dispatch(setContractFees()),
 	}),
 )(FeeComponent);

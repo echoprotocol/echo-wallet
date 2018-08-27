@@ -8,6 +8,7 @@ import {
 	setInFormErrorConstant,
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
+import { estimateFormFee } from './TransactionActions';
 
 import {
 	getContract,
@@ -17,6 +18,7 @@ import {
 
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
+import ContractFeeReducer from '../reducers/ContractFeeReducer';
 
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastInfo } from '../helpers/ToastHelper';
@@ -334,4 +336,26 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	if (!targetFunction.payable) return;
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
+};
+
+export const setContractFees = () => async (dispatch, getState) => {
+	const assets = getState().balance.get('assets').toArray();
+
+	let fees = assets.reduce((arr, asset) => {
+		const value = dispatch(estimateFormFee(asset));
+		arr.push(value);
+		return arr;
+	}, []);
+
+	fees = await Promise.all(fees);
+
+	fees = fees.reduce((arr, value, i) => {
+		arr.push({
+			value,
+			asset: assets[i],
+		});
+		return arr;
+	}, []);
+
+	dispatch(ContractFeeReducer.actions.set({ value: fees }));
 };

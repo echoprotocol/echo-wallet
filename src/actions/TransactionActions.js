@@ -30,7 +30,12 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
-import { buildAndSendTransaction, encodeMemo, getMemoFee } from '../api/TransactionApi';
+import {
+	buildAndSendTransaction,
+	estimateCallContractFee,
+	encodeMemo,
+	getMemoFee,
+} from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 import { addContractByName } from './ContractActions';
@@ -274,6 +279,54 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
+export const estimateFormFee = (asset) => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const contractId = getState().contract.get('id');
+
+	if (!activeUserId || !contractId) return 0;
+	const functions = getState().contract.get('functions').toJS();
+	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
+
+	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
+	if (!targetFunction) return 0;
+
+	const args = targetFunction.inputs.map((i) => {
+		const { name: field } = i;
+		const { value } = functionForm.inputs[field];
+		return value;
+	});
+
+	const bytecode = getMethod(targetFunction, args);
+
+	const { amount, currency } = functionForm;
+	let { payable } = functionForm;
+
+	if ((payable && (!amount || !currency)) || !asset) {
+		payable = false;
+	}
+
+	let amountValue = 0;
+
+	if (payable && !validateAmount(amount, currency)) {
+		amountValue = amount.value * (10 ** currency.precision);
+	}
+
+	const options = {
+		registrar: activeUserId,
+		receiver: contractId,
+		asset_id: asset.id,
+		value: amountValue,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode,
+	};
+
+	const feeValue = await estimateCallContractFee('contract', options);
+
+	return feeValue;
+};
+
 export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -321,9 +374,11 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 
 	const fee = await dispatch(fetchFee('contract'));
 
+	const feeValue = await estimateCallContractFee('contract', options);
+
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 
@@ -474,10 +529,11 @@ export const callContract = () => async (dispatch, getState) => {
 		gas: 4700000,
 		code: bytecode,
 	};
+	const feeValue = await estimateCallContractFee('contract', options);
 
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode,
 	};
 

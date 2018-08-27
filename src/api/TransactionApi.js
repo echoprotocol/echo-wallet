@@ -10,6 +10,14 @@ export const buildAndSendTransaction = async (operation, options, privateKey) =>
 	return tr.broadcast();
 };
 
+export const estimateCallContractFee = async (operation, options) => {
+	const tr = new TransactionBuilder();
+	tr.add_type_operation(operation, options);
+
+	await tr.set_required_fees();
+
+	return tr.operations[0][1].fee.amount;
+};
 
 export const encodeMemo = (fromAccount, toAccount, memo, privateKey) => {
 	const nonce = TransactionHelper.unique_nonce_uint64();
