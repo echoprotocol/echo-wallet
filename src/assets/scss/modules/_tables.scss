@@ -1,5 +1,3 @@
-$thead-height: 46px;
-
 .table {
     .sort {
         display: flex;
@@ -43,12 +41,16 @@ $thead-height: 46px;
     thead {
         width: 100%;
         background-color: #fff;
-        @media (min-width: 840px){
+
+        @media (min-width: 840px) {
             overflow-y: overlay;
             position: fixed;
             overflow-x: hidden;
-            margin-top: -($thead-height);
+            margin-top: -44px;
 
+        }
+        @media (min-width: 1200px){
+            margin-top: -46px;
         }
         th {
             background:0;
