@@ -28,7 +28,7 @@ export const getTransactionDetails = (operationType, showOptions) => {
 };
 
 export const logParser = (log) => {
-	if (!log || !log.length) return null;
+	if (!log || !log.length) return [];
 	return log.map((l) => {
 		const contractId = parseInt(l.address.slice(2), 16);
 		const event = events[l.log[0]] || l.log[0];
@@ -51,77 +51,28 @@ export const toUtf8 = (hex) => {
 			str += String.fromCharCode(code);
 		}
 	}
-	return utf8.decode(str);
+	let result = str;
+	try {
+		result = utf8.decode(str);
+	} catch (error) {
+		result = str;
+	}
+	return result;
 };
 
 export const toInt = (hex) => parseInt(hex, 16);
 
-export const toHex = (str) => {
-	let hex;
-	let result = '';
-
-	for (let i = 0; i < str.length; i += 1) {
-		hex = str.charCodeAt(i).toString(16);
-		result += hex;
-	}
-
-	return result;
-};
-
-export const convertContractConstant = (toType, fromType, constantValue) => {
-	if (fromType === 'hex') {
-		constantValue = constantValue.replace('0x', '');
-	}
-
+export const converter = (toType, constantValue) => {
 	switch (toType) {
-		case fromType: return null;
-		case 'hex':
-			if (fromType === 'number') {
-				return {
-					value: `0x${constantValue.toString(16)}`,
-					type: 'hex',
-				};
-			} else if (fromType === 'string') {
-				return {
-					value: `0x${toHex(constantValue)}`,
-					type: 'hex',
-				};
-			} else if (fromType === 'bool') {
-				return {
-					value: `0x${constantValue ? 1 : 0}`,
-					type: 'hex',
-				};
-			}
-			return {
-				value: toHex(constantValue.toString()),
-				type: 'hex',
-			};
-		case 'string':
-			return {
-				value: toUtf8(constantValue),
-				type: 'string',
-			};
-		case 'number':
-			if (fromType === 'bool') {
-				return {
-					value: constantValue ? 1 : 0,
-					type: 'number',
-				};
-			}
-			return {
-				value: toInt(constantValue),
-				type: 'number',
-			};
-		case 'bool':
-			return {
-				value: !!toInt(constantValue),
-				type: 'bool',
-			};
+		case 'id':
+		case 'number': return toInt(constantValue).toString();
+		case 'string': return toUtf8(constantValue);
+		case 'bool': return (!!toInt(constantValue)).toString();
 		default: return null;
 	}
 };
 
-const toFixed = (value, precision) => {
+export const toFixed = (value, precision) => {
 	const power = 10 ** precision;
 
 	return (Math.round(value * power) / power).toFixed(precision);

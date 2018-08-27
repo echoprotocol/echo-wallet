@@ -8,6 +8,7 @@ import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConsta
 import { HISTORY_DATA } from '../constants/TableConstants';
 
 import { initBalances, getObject, resetBalance } from '../actions/BalanceActions';
+import { initSorts } from '../actions/SortActions';
 import { loadContracts } from '../actions/ContractActions';
 import { clear } from '../actions/TableActions';
 
@@ -23,6 +24,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 	}
 
 	await dispatch(initBalances(id));
+	dispatch(initSorts());
 	dispatch(loadContracts(id));
 };
 
@@ -30,7 +32,7 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		await dispatch(EchoJSActions.connect(undefined, { types: ['accounts', 'block'], method: getObject }));
+		await dispatch(EchoJSActions.connect(undefined, { types: ['objects', 'block'], method: getObject }));
 		const accountName = localStorage.getItem('current_account');
 
 		if (!accountName) {
@@ -75,4 +77,3 @@ export const logout = () => (dispatch) => {
 	dispatch(resetBalance());
 	history.push(SIGN_IN_PATH);
 };
-

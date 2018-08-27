@@ -46,21 +46,21 @@ build.macos:
      expire_in: 1 week
 
 
-#build.linux:
-#  stage: deploy
-#  script:
-#    - npm install
-#    - npm run package-prepare
-#    - npm run package-linux
-#  only:
-#    - web
-#    - tags
-#  tags:
-#    - echo-linux
-#  artifacts:
-#     paths:
-#     - dist/installers/echo_0.0.1_x86_64.deb
-#     expire_in: 1 week
+build.linux:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-prepare
+    - npm run package-linux
+  only:
+    - web
+    - tags
+  tags:
+    - echo-linux
+  artifacts:
+     paths:
+     - dist/installers/echo_0.0.1_amd64.deb
+     expire_in: 1 week
 
 build.windows:
   stage: deploy

@@ -39,6 +39,10 @@
             align-items: center;
             justify-content: center;
             left: 0;
+            &:hover,
+            &:focus {
+                background-color: rgba(#c5c9d2,.2);
+            }
         }
     }
     &-header {
@@ -55,6 +59,7 @@
                 color: $link-gray;
             }
         }
+
         .icon-close {
             transition: color .3s;
         }
@@ -90,7 +95,8 @@
                 color: $link-gray;
                 border-left: 4px solid transparent;
                 transition: background-color .3s,border .3s, color .3s;
-                &:hover {
+                &:hover,
+                &:focus {
                     background-color: rgba(#c5c9d2,.2);
                     border-color: rgba(#c5c9d2,.2);
 
@@ -132,6 +138,19 @@
             opacity: 0;
             width: 0;
             z-index: -1;
+            display: none;
+        }
+        &-close {
+            width: 60px;
+            height: 50px;
+            display: flex;
+            margin-right: -20px;
+            align-items: center;
+            justify-content: center;
+            &:hover,
+            &:focus  {
+                background-color: rgba(#c5c9d2,.2);
+            }
         }
     }
     .sidebar-nav {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab } from 'semantic-ui-react';
+import { Tab, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
@@ -14,6 +14,7 @@ import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 
 import ContractReducer from '../../reducers/ContractReducer';
+import { resetConverter } from '../../actions/ConverterActions';
 
 class ViewContract extends React.Component {
 
@@ -25,12 +26,13 @@ class ViewContract extends React.Component {
 		this.props.clearForm(FORM_CALL_CONTRACT);
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
+		this.props.resetConverter();
 	}
 
 	render() {
 		const panes = [
 			{
-				menuItem: 'View properties',
+				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="View properties" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -38,7 +40,7 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: 'call contracts',
+				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="call contracts" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />
@@ -60,6 +62,7 @@ ViewContract.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearContract: PropTypes.func.isRequired,
+	resetConverter: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 };
 
@@ -69,5 +72,6 @@ export default withRouter(connect(
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
+		resetConverter: () => dispatch(resetConverter()),
 	}),
 )(ViewContract));

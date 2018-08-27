@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab } from 'semantic-ui-react';
+import { Tab, Button } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -7,24 +7,16 @@ import { connect } from 'react-redux';
 
 import { openUnlock } from '../../actions/HistoryActions';
 import { resetTransaction } from '../../actions/TransactionActions';
+import { resetConverter } from '../../actions/ConverterActions';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
 
-	componentDidMount() {
-		const { state } = this.props.location;
-
-		if (!state) return;
-
-		if (state.data.name === 'Transfer' && state.data.memo) {
-			this.props.openUnlock(state.data.memo);
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.resetTransaction();
+		this.props.resetConverter();
 	}
 
 	render() {
@@ -51,10 +43,10 @@ class ViewTransaction extends React.Component {
 
 		const isLogData = state.data.name === 'Contract' && state.data.details.tr_receipt.log.length;
 		if (isLogData) {
-			panes[0].menuItem = 'Overview';
+			panes[0].menuItem = <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Overview" key={0} />;
 
 			panes.push({
-				menuItem: 'Event Logs',
+				menuItem: <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Event Logs" key={1} />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabLogs data={state.data} />
@@ -69,7 +61,7 @@ class ViewTransaction extends React.Component {
 					<div className="control-wrap">
 						<ul className="control-panel">
 							<li className="name">
-								<span className="label">transaction:</span>
+								<span className="label">Transaction:</span>
 								<span className="value pointer">
 									{state.data.id}
 								</span>
@@ -94,6 +86,7 @@ ViewTransaction.propTypes = {
 	history: PropTypes.object.isRequired,
 	openUnlock: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	resetConverter: PropTypes.func.isRequired,
 };
 
 
@@ -104,5 +97,6 @@ export default withRouter(connect(
 	(dispatch) => ({
 		openUnlock: (value) => dispatch(openUnlock(value)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		resetConverter: () => dispatch(resetConverter()),
 	}),
 )(ViewTransaction));

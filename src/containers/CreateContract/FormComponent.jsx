@@ -62,8 +62,8 @@ class FormComponent extends React.Component {
 				<div className={classnames({ error: abi.error, 'error-wrap': true })}>
 					<div className="action-wrap">
 						<Form.Field
-							label="Abi"
-							placeholder="Abi"
+							label="ABI"
+							placeholder="ABI"
 							control="textarea"
 							name="abi"
 							value={abi.value}
@@ -113,7 +113,7 @@ class FormComponent extends React.Component {
 						color="orange"
 						className={classnames({ disabled: this.isDisabledSubmit() })}
 						onClick={(e) => this.onClick(e)}
-						content="Create contract"
+						content="Create"
 					/>
 				</div>
 

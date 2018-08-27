@@ -1,8 +1,0 @@
-"build-win": "build --pd dist -p never --win --x64"
-"nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "displayLanguageSelector": true
-    }

@@ -3,6 +3,7 @@ import { Table, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import history from '../../history';
 
@@ -11,11 +12,31 @@ import {
 	ADD_CONTRACT_PATH,
 	VIEW_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
+import { SORT_CONTRACTS } from '../../constants/GlobalConstants';
+
+import { toggleSort } from '../../actions/SortActions';
 
 class ContractList extends React.Component {
 
+	onSort(sortType) {
+		this.props.toggleSort(sortType);
+	}
+
 	onLink(link) {
 		history.push(link);
+	}
+
+	sortList() {
+		const contracts = this.props.contracts.toJS();
+		const { sortType, sortInc } = this.props.sort.toJS();
+
+		return Object.entries(contracts)
+			.sort(([name1, { id: id1 }], [name2, { id: id2 }]) => {
+
+				const t1 = (sortType === 'id' ? id1.split('1.16.')[1] : name1) || '';
+				const t2 = (sortType === 'id' ? id2.split('1.16.')[1] : name2) || '';
+				return (t1.localeCompare(t2, [], { numeric: true })) * (sortInc ? 1 : -1);
+			});
 	}
 
 	renderRow([name, { id, disabled }]) {
@@ -45,36 +66,58 @@ class ContractList extends React.Component {
 	}
 
 	renderList() {
-		const contracts = this.props.contracts.toJS();
-
+		const { sortType, sortInc } = this.props.sort.toJS();
 		return (
 			<React.Fragment>
 				<Table striped className="table-smart-contract">
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell>
-								<span>
+							<Table.HeaderCell onClick={() => this.onSort('id')}>
+								<span className="sort-wrap">
                                     Contract ID
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon
+											name="dropdown"
+											flipped="vertically"
+											className={classnames({ active: sortType === 'id' && sortInc })}
+										/>
+										<Icon
+											name="dropdown"
+											flipped="horizontally"
+											className={classnames({ active: sortType === 'id' && !sortInc })}
+										/>
+									</div>
 								</span>
-
 							</Table.HeaderCell>
-							<Table.HeaderCell>
-								<span>
+							<Table.HeaderCell onClick={() => this.onSort('name')}>
+								<span className="sort-wrap">
                                     Watched Contract Name
-									<Icon name="sort" size="tiny" />
+									<div className="sort">
+										<Icon
+											name="dropdown"
+											flipped="vertically"
+											className={classnames({ active: sortType === 'name' && sortInc })}
+										/>
+										<Icon
+											name="dropdown"
+											flipped="horizontally"
+											className={classnames({ active: sortType === 'name' && !sortInc })}
+										/>
+									</div>
 								</span>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 
 					<Table.Body>
-						{ Object.entries(contracts).map((i) => this.renderRow(i)) }
+						{
+							this.sortList().map((i) => this.renderRow(i))
+						}
 					</Table.Body>
 				</Table>
 				<div className="btn-list" >
 					<Link to={ADD_CONTRACT_PATH}>
-						<Button content="watch contract" color="grey" />
+						<Button content="watch contract" />
 					</Link>
 					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
 				</div>
@@ -88,7 +131,7 @@ class ContractList extends React.Component {
 				<h3>Start watch contract or create a new one</h3>
 				<div className="btns">
 					<Link to={ADD_CONTRACT_PATH}>
-						<Button content="watch contract" color="grey" />
+						<Button content="watch contract" />
 					</Link>
 					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
 				</div>
@@ -112,12 +155,20 @@ class ContractList extends React.Component {
 
 ContractList.propTypes = {
 	contracts: PropTypes.any,
+	toggleSort: PropTypes.func.isRequired,
+	sort: PropTypes.object.isRequired,
 };
 
 ContractList.defaultProps = {
 	contracts: null,
 };
 
-export default connect((state) => ({
-	contracts: state.global.get('contracts'),
-}))(ContractList);
+export default connect(
+	(state) => ({
+		contracts: state.global.get('contracts'),
+		sort: state.sort.get(SORT_CONTRACTS),
+	}),
+	(dispatch) => ({
+		toggleSort: (type) => dispatch(toggleSort(SORT_CONTRACTS, type)),
+	}),
+)(ContractList);

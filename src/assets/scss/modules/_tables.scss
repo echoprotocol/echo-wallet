@@ -1,3 +1,26 @@
+.table {
+    .sort {
+        display: flex;
+        flex-direction: column;
+        max-width: 10px;
+        margin: -2px 0 0 5px;
+        i {
+            margin: 0;
+            width: 10px;
+            line-height: 8px;
+            font-size: 4px;
+            &.active {
+                color: $link-gray;
+            }
+        }
+        &-wrap {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            
+        }
+    }
+}
 $thead-height: 46px;
 
 .table.table-activity {
@@ -8,7 +31,7 @@ $thead-height: 46px;
     height: calc(100vh - 100px);
     overflow-y: overlay;
     overflow-x: hidden;
-    @media (min-width: 1060px){
+    @media (min-width: 840px){
         overflow-y: overlay;
         overflow-x: hidden;
         margin: 46px 0 0 0;
@@ -19,24 +42,53 @@ $thead-height: 46px;
     thead {
         width: 100%;
         background-color: #fff;
-        @media (min-width: 1060px){
+
+        @media (min-width: 840px) {
             overflow-y: overlay;
             position: fixed;
             overflow-x: hidden;
-            margin-top: -($thead-height);
+            margin-top: -44px;
 
+        }
+        @media (min-width: 1200px){
+            margin-top: -46px;
         }
         th {
             background:0;
             color: $gray;
             padding: 0.92857143em 5px;
+            @media (min-width: 840px) and (max-width: 1200px)  {
+                &:last-child {
+                    position: relative;
+                    &:after {
+                        width: 100px;
+                        height: 1px;
+                        background-color: #e9e9ed;
+                        content: '';
+                        display: block;
+                        position: absolute;
+                        bottom: -1px;
+                        right: -50px;
+                    }
+                }
+            }
         }
     }
 
     // WIDTH OF CELLS
 
     th, td {
-       min-width: 10vw;
+        min-width: 11vw;
+        @media (max-width: 980px) {
+            font-size: .9em;
+        }
+        @media (max-width: 1200px) {
+            font-size: .95em;
+        }
+        &:nth-child(6) {
+            max-width: 11px;
+            width: 100%;
+        }
         &:first-child {
             min-width: calc(21vw - 30px);
             padding-left:  20px;
@@ -49,6 +101,15 @@ $thead-height: 46px;
             }
             min-width: 13vw;
         }
+        
+        &:nth-child(2) {
+            @media (max-width: 980px) {
+                min-width: 12vw;
+            }
+        }
+   
+        
+
         &:nth-child(5) {
             min-width: calc(18vw - 30px);
             .ellips {
@@ -56,6 +117,10 @@ $thead-height: 46px;
             }
             @media (max-width: 1200px){
                 text-align: right;
+                .ellips {
+                    margin-left: auto;
+                    max-width: 12vw;
+                }
             }
         }
         &:nth-child(6) {
@@ -64,9 +129,11 @@ $thead-height: 46px;
             }
         }
         &:last-child {
-            min-width: 12vw;
             text-align: right;
             padding-right:  20px;
+            @media (max-width: 1200px) {
+                letter-spacing: -.2px;
+            }
         }
     }
 
@@ -157,12 +224,6 @@ $thead-height: 46px;
             background:0;
             color: $gray;
             padding: 0.92857143em 5px;
-            span {
-                cursor: pointer;
-                i {
-                    margin-left: 5px;
-                }          
-            }
         }
     }
 
