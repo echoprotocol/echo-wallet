@@ -8,6 +8,7 @@ import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
 import { amountInput } from '../../actions/AmountActions';
+import { setContractFees } from '../../actions/ContractActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -46,6 +47,7 @@ class AmountField extends React.Component {
 		const { name } = e.target;
 
 		this.props.amountInput(value, currency, name);
+		this.props.setContractFees();
 	}
 
 	onChangeCurrency(e, value) {
@@ -188,6 +190,7 @@ class AmountField extends React.Component {
 						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
+						upward={window.innerHeight < 750}
 						onBlur={() => this.clearSearchText()}
 						options={this.state.options}
 						noResultsMessage="No results are found"
@@ -215,6 +218,8 @@ AmountField.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
+
+	setContractFees: PropTypes.func.isRequired,
 };
 
 AmountField.defaultProps = {
@@ -235,5 +240,6 @@ export default connect(
 		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
+		setContractFees: () => dispatch(setContractFees()),
 	}),
 )(AmountField);

@@ -6,7 +6,7 @@ const DEFAULT_FIELDS = Map({
 	operation: '',
 	keys: null,
 	showOptions: null,
-	comment: {
+	note: {
 		value: '',
 		unlocked: false,
 		error: null,
@@ -47,14 +47,14 @@ export default createModule({
 				return state;
 			},
 		},
-		setComment: {
+		setNote: {
 			reducer: (state, { payload }) => {
-				const comment = DEFAULT_FIELDS.get('comment');
+				const note = DEFAULT_FIELDS.get('note');
 
-				state = state.set('comment', {
-					value: payload.comment ? payload.comment : comment.value,
-					unlocked: payload.unlocked ? payload.unlocked : comment.unlocked,
-					error: payload.error ? payload.error : comment.error,
+				state = state.set('note', {
+					value: payload.note ? payload.note : note.value,
+					unlocked: payload.unlocked ? payload.unlocked : note.unlocked,
+					error: payload.error ? payload.error : note.error,
 				});
 
 				return state;

@@ -20,7 +20,7 @@ class ViewTransaction extends React.Component {
 	}
 
 	render() {
-		const { location: { state }, comment } = this.props;
+		const { location: { state }, note } = this.props;
 
 		if (!state) {
 			this.props.history.goBack();
@@ -33,7 +33,7 @@ class ViewTransaction extends React.Component {
 					<Tab.Pane className="scroll-fix">
 						<TabOverview
 							data={state.data}
-							comment={comment}
+							note={note}
 							unlock={this.props.openUnlock}
 						/>
 					</Tab.Pane>
@@ -81,7 +81,7 @@ class ViewTransaction extends React.Component {
 }
 
 ViewTransaction.propTypes = {
-	comment: PropTypes.object.isRequired,
+	note: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	openUnlock: PropTypes.func.isRequired,
@@ -92,7 +92,7 @@ ViewTransaction.propTypes = {
 
 export default withRouter(connect(
 	(state) => ({
-		comment: state.transaction.get('comment'),
+		note: state.transaction.get('note'),
 	}),
 	(dispatch) => ({
 		openUnlock: (value) => dispatch(openUnlock(value)),

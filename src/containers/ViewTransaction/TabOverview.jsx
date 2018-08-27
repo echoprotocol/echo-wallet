@@ -14,6 +14,7 @@ class TabOverview extends React.Component {
 		return formatAmount(value.amount, value.precision, value.symbol);
 	}
 
+
 	copyBytecode() {
 		const { bytecode } = this.props.data;
 		return (
@@ -75,14 +76,14 @@ class TabOverview extends React.Component {
 		);
 	}
 
-	renderComment() {
-		const { comment, data: { memo } } = this.props;
 
-		return comment.unlocked ?
+	renderNote() {
+		const { note, data: { memo } } = this.props;
+		return note.unlocked ?
 			(
 				<div className="note-wrap">
 					<div className="note">
-						{comment.value}
+						{note.value}
 					</div>
 				</div>
 			) : (
@@ -184,7 +185,7 @@ class TabOverview extends React.Component {
 						data.memo ?
 							<li>
 								<div className="col">Note:</div>
-								<div className="col"> {this.renderComment()} </div>
+								<div className="col"> {this.renderNote()} </div>
 							</li> : null
 					}
 
@@ -201,7 +202,7 @@ class TabOverview extends React.Component {
 TabOverview.propTypes = {
 	bytecodeArgs: PropTypes.array.isRequired,
 	data: PropTypes.object.isRequired,
-	comment: PropTypes.object.isRequired,
+	note: PropTypes.object.isRequired,
 	unlock: PropTypes.func.isRequired,
 };
 

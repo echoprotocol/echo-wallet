@@ -1,0 +1,97 @@
+import React from 'react';
+import { Form, Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import classnames from 'classnames';
+
+import { FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
+
+import { setFormValue, clearForm } from '../../actions/FormActions';
+
+import AmountField from '../../components/AmountField';
+
+import { callContractViaId } from '../../actions/TransactionActions';
+
+class AddContractComponent extends React.Component {
+
+	componentWillUnmount() {
+		this.props.clearForm();
+	}
+
+	onInput(e) {
+		this.props.setFormValue(e.target.name, e.target.value.trim());
+	}
+
+	onClick() {
+		const { id, bytecode } = this.props;
+
+		if (id.error || bytecode.error) {
+			return;
+		}
+
+		this.props.callContract();
+	}
+
+	render() {
+		const { bytecode, id } = this.props;
+
+		return (
+			<Form className="main-form">
+				<div className="form-info">
+					<h3>Call contract via ID</h3>
+				</div>
+				<div className="field-wrap">
+					<Form.Field className={classnames('error-wrap', { error: id.error })}>
+						<label htmlFor="id">ID</label>
+						<input
+							type="text"
+							placeholder="Contract ID"
+							name="id"
+							className="ui input"
+							value={id.value}
+							onInput={(e) => this.onInput(e)}
+						/>
+						<span className="error-message">{id.error}</span>
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+						<label htmlFor="bytecode">Bytecode</label>
+						<textarea
+							type="text"
+							placeholder="Bytecode"
+							name="bytecode"
+							className="ui input"
+							value={bytecode.value}
+							onInput={(e) => this.onInput(e)}
+						/>
+						<span className="error-message">{bytecode.error}</span>
+					</Form.Field>
+					<AmountField form={FORM_CALL_CONTRACT_VIA_ID} />
+				</div>
+
+				<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Call Contract</Button>
+			</Form>
+		);
+	}
+
+}
+
+AddContractComponent.propTypes = {
+	id: PropTypes.object.isRequired,
+	bytecode: PropTypes.object.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	callContract: PropTypes.func.isRequired,
+};
+
+
+export default connect(
+	(state) => ({
+		id: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'id']),
+		bytecode: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']),
+	}),
+	(dispatch) => ({
+		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),
+		setFormValue: (param, value) => dispatch(setFormValue(FORM_CALL_CONTRACT_VIA_ID, param, value)),
+		callContract: () => dispatch(callContractViaId()),
+	}),
+)(AddContractComponent);
