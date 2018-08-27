@@ -5,7 +5,7 @@ import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from '
 import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
-import { setField, setComment } from './TransactionActions';
+import { setField, setNote } from './TransactionActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
@@ -177,7 +177,7 @@ export const unlockAccount = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		const { options, keys, comment } = getState().transaction.toJS();
+		const { options, keys, note } = getState().transaction.toJS();
 		if (options && !keys) {
 			dispatch(setField('keys', {
 				owner: owner.privateKey,
@@ -188,16 +188,16 @@ export const unlockAccount = ({
 			dispatch(openModal(MODAL_DETAILS));
 		}
 
-		if (comment.value && !comment.unlocked) {
+		if (note.value && !note.unlocked) {
 			try {
-				const decodedComment = decodeMemo(comment.value, memo.privateKey);
-				dispatch(setComment({
-					comment: decodedComment,
+				const decodedNote = decodeMemo(note.value, memo.privateKey);
+				dispatch(setNote({
+					note: decodedNote,
 					unlocked: true,
 					error: null,
 				}));
 			} catch (err) {
-				dispatch(setComment({ error: err }));
+				dispatch(setNote({ error: err }));
 			}
 		}
 

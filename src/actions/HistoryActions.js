@@ -9,7 +9,7 @@ import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import { setValue } from './TableActions';
 import { openModal } from './ModalActions';
-import { setComment } from './TransactionActions';
+import { setNote } from './TransactionActions';
 
 import { getContractResult } from '../api/ContractApi';
 
@@ -34,9 +34,9 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 	history.push(VIEW_TRANSACTION_PATH, { data: transaction });
 };
 
-export const openUnlock = (comment) => (dispatch) => {
+export const openUnlock = (note) => (dispatch) => {
 	dispatch(openModal(MODAL_UNLOCK));
-	dispatch(setComment({ comment }));
+	dispatch(setNote({ note }));
 };
 
 const formatOperation = (data) => async (dispatch, getState) => {

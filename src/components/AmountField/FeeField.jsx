@@ -30,10 +30,10 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		const { fee, comment } = this.props;
+		const { fee, note } = this.props;
 
-		if (comment.value !== nextProps.comment.value) {
-			const value = this.props.getFee(fee.asset.id, nextProps.comment.value);
+		if (note.value !== nextProps.note.value) {
+			const value = this.props.getFee(fee.asset.id, nextProps.note.value);
 			this.props.setValue('fee', value);
 		}
 
@@ -45,10 +45,10 @@ class FeeComponent extends React.Component {
 	}
 
 	getOptions() {
-		const { assets, comment } = this.props;
+		const { assets, note } = this.props;
 
 		const options = assets.reduce((arr, asset) => {
-			const fee = this.props.getFee(asset.id, comment.value);
+			const fee = this.props.getFee(asset.id, note.value);
 
 			if (fee) {
 				arr.push({
@@ -122,7 +122,7 @@ FeeComponent.propTypes = {
 	fee: PropTypes.object,
 	assets: PropTypes.array,
 	form: PropTypes.string.isRequired,
-	comment: PropTypes.any.isRequired,
+	note: PropTypes.any.isRequired,
 	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
@@ -141,13 +141,13 @@ export default connect(
 		isSingle,
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
-		comment: state.form.getIn([form, 'comment']) || {},
+		note: state.form.getIn([form, 'note']) || {},
 		fees: state.fee.toArray() || [],
 		form,
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
-		getFee: (asset, comment) => dispatch(getFee(type, asset, comment)),
+		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
 		setContractFees: () => dispatch(setContractFees()),
 	}),

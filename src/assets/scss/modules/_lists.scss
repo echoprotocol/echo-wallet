@@ -160,7 +160,8 @@
         transition: border .3s;
         align-self: flex-start;
         min-height: 15px;
-        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
         .dropdown.icon {
             font-size: 12px;
             padding: 4px;
@@ -417,7 +418,7 @@
         }
         padding: 0 5px;
         max-height: 400px;
-        overflow: auto;
+        overflow-y: auto;
         word-wrap: break-word;
         font-size: 13px;
     }
@@ -429,7 +430,8 @@
     .data-item, {
         max-width: 620px;
         word-wrap: break-word;
-        display: block;
+        display: flex;
+        align-items: center;
         @media (max-width: 900px){
             max-width: 480px;
         }
@@ -437,8 +439,9 @@
             margin-bottom: 10px;
         }
         .num,
-        .arrow {
-            margin-right: 3px;
+        .arrow,
+        .contract-type-dropdown {
+            margin-right: 5px;
         }
 
     }
@@ -447,10 +450,14 @@
 .logs-list {
     li {
         .col {
+            &:nth-child(1) {
+                min-width: 42px;
+            }
             &:nth-child(2) {
                 font-family: source;
                 font-size: 14px;
-                max-width: 620px;
+                max-width: 100%;
+                width: 100%;
                 color: $black;
             }
         }
