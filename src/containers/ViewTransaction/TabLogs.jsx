@@ -32,7 +32,7 @@ class TabLogs extends React.Component {
 									<div className="topic-item" key={`${item.data}${topic}`}>
 										<span className="num">[{i}]</span>
 										{ i !== 0 && <Dropdown data={topic} component={i} variativeOptions={options} />}
-										{convertedTopic ? convertedTopic.value : `0x${topic}`}
+										<span className="topic">{convertedTopic ? convertedTopic.value : `0x${topic}`}</span>
 									</div>
 								);
 							})
@@ -45,7 +45,7 @@ class TabLogs extends React.Component {
 						<div className="data-item">
 							<Dropdown data={item.data} component="dataLog" />
 							<span className="arrow">→</span>
-							{dataLog || `0x${item.data}`}
+							<span className="data">{dataLog || `0x${item.data}`}</span>
 						</div>
 					</div>
 				</li>
