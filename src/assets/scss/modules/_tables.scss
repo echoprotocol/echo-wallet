@@ -1,5 +1,3 @@
-$thead-height: 46px;
-
 .table {
     .sort {
         display: flex;
@@ -23,6 +21,7 @@ $thead-height: 46px;
         }
     }
 }
+$thead-height: 46px;
 
 .table.table-activity {
 
@@ -43,17 +42,36 @@ $thead-height: 46px;
     thead {
         width: 100%;
         background-color: #fff;
-        @media (min-width: 840px){
+
+        @media (min-width: 840px) {
             overflow-y: overlay;
             position: fixed;
             overflow-x: hidden;
-            margin-top: -($thead-height);
+            margin-top: -44px;
 
+        }
+        @media (min-width: 1200px){
+            margin-top: -46px;
         }
         th {
             background:0;
             color: $gray;
             padding: 0.92857143em 5px;
+            @media (min-width: 840px) and (max-width: 1200px)  {
+                &:last-child {
+                    position: relative;
+                    &:after {
+                        width: 100px;
+                        height: 1px;
+                        background-color: #e9e9ed;
+                        content: '';
+                        display: block;
+                        position: absolute;
+                        bottom: -1px;
+                        right: -50px;
+                    }
+                }
+            }
         }
     }
 
