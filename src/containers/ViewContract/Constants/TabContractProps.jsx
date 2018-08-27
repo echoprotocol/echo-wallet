@@ -4,10 +4,21 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import { formatAbi } from '../../../actions/ContractActions';
+import { clearForm } from '../../../actions/FormActions';
+
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 import ConstantLine from './LineComponent';
 
 class TabContractProps extends React.Component {
+
+	componentWillMount() {
+		this.props.formatAbi(this.props.match.params.name);
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm(FORM_VIEW_CONTRACT);
+	}
 
 	getOptions(type) {
 		switch (type) {
@@ -75,6 +86,9 @@ class TabContractProps extends React.Component {
 
 TabContractProps.propTypes = {
 	constants: PropTypes.any,
+	match: PropTypes.object.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 TabContractProps.defaultProps = {
@@ -87,5 +101,6 @@ export default withRouter(connect(
 	}),
 	(dispatch) => ({
 		formatAbi: (name) => dispatch(formatAbi(name)),
+		clearForm: (value) => dispatch(clearForm(value)),
 	}),
 )(TabContractProps));
