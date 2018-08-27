@@ -279,9 +279,24 @@
             .ui.input {
                 &.focused {
                     .assets-tokens-dropdown {
-                        @extend %onFocus;
-                        clip-path: inset(-4px -4px -4px 0);
+                        // @extend %onFocus;
+                        // clip-path: inset(-4px -4px -4px 0);
                         border-color: $inut-hover;
+                        position: relative;
+                        &:before {
+                            top: -5px;
+                            bottom: -5px;
+                            right: -5px;
+                            left: 0;
+                            position: absolute;
+                            display: block;
+                            content: "";
+                            border: 4px solid rgba($inut-color, .4);
+                            border-left: 0;
+                            border-radius: 0.5rem;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0;
+                        }
                     }
                 }
                 &.error {
