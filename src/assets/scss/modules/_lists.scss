@@ -399,6 +399,7 @@
                 font-style: italic;
             }
             &:nth-child(1) {
+                min-width: 80px;
                 margin-right: 40px;
                 color: #aeb4c0;
             }
@@ -428,20 +429,37 @@
     }
     .topic-item,
     .data-item, {
-        max-width: 620px;
         word-wrap: break-word;
         display: flex;
-        align-items: center;
-        @media (max-width: 900px){
-            max-width: 480px;
+        @media (min-width: 950px) {
+            align-items: center;
+
         }
+
         &:not(:last-child) {
             margin-bottom: 10px;
+        }
+        .arrow {
+            align-self: baseline;
         }
         .num,
         .arrow,
         .contract-type-dropdown {
             margin-right: 5px;
+        }
+        @media (max-width: 950px) {
+            .data {
+                max-width: 52vw;
+            }
+            .topic {
+                max-width: 65vw;
+            }
+            .contract-type-dropdown {
+                & + .topic {
+                    max-width: 50vw;
+                }
+            }
+
         }
 
     }
