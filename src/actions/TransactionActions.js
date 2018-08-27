@@ -4,7 +4,12 @@ import { EchoJSActions } from 'echojs-redux';
 import history from '../history';
 
 import operations from '../constants/Operations';
-import { FORM_CREATE_CONTRACT, FORM_TRANSFER, FORM_CALL_CONTRACT } from '../constants/FormConstants';
+import {
+	FORM_CREATE_CONTRACT,
+	FORM_TRANSFER,
+	FORM_CALL_CONTRACT,
+	FORM_CALL_CONTRACT_VIA_ID,
+} from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 
@@ -27,6 +32,7 @@ import {
 	validateByType,
 	validateAmount,
 	validateFee,
+	validateContractId,
 } from '../helpers/ValidateHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
@@ -544,6 +550,96 @@ export const callContract = () => async (dispatch, getState) => {
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
+	if (!privateKey) {
+		dispatch(openModal(MODAL_UNLOCK));
+	} else {
+		dispatch(setField('keys', { active: privateKey }));
+		dispatch(openModal(MODAL_DETAILS));
+	}
+
+};
+
+export const callContractViaId = () => async (dispatch, getState) => {
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const activeUserName = getState().global.getIn(['activeUser', 'name']);
+
+	if (!activeUserId || !activeUserName) return;
+
+	const form = getState().form.get(FORM_CALL_CONTRACT_VIA_ID).toJS();
+	const { bytecode, id } = form;
+
+	const bytecodeError = validateCode(bytecode.value);
+
+	if (bytecodeError) {
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
+		return;
+	}
+
+	const contractIdError = validateContractId(id.value);
+
+	if (contractIdError) {
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', contractIdError));
+		return;
+	}
+
+	dispatch(resetTransaction());
+
+	const { amount, currency } = form;
+	let { fee } = form;
+
+	// if method payable check amount and currency
+	if (!amount || !currency || !fee) return;
+
+	let amountValue = 0;
+
+	if (amount.value) {
+		const amountError = validateAmount(amount.value, currency);
+		if (amountError) {
+			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
+			return;
+		}
+		amountValue = amount.value * (10 ** currency.precision);
+	}
+
+	// validate fee
+	if (!fee.value || !fee.asset) {
+		fee = await dispatch(getFee('contract'));
+	}
+
+	const assets = getState().balance.get('assets').toArray();
+	const feeError = validateFee(amount, currency, fee, assets);
+	if (feeError) {
+		dispatch(setValue(FORM_CALL_CONTRACT, 'amount', feeError));
+		return;
+	}
+
+	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
+
+	if (!pubKey) return;
+
+	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+
+	const options = {
+		registrar: activeUserId,
+		receiver: id.value,
+		asset_id: fee.asset.id,
+		value: amountValue,
+		gasPrice: 0,
+		gas: 4700000,
+		code: bytecode.value,
+	};
+
+	const showOptions = {
+		from: activeUserName,
+		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		code: bytecode.value,
+	};
+
+	showOptions.value = `${amount.value} ${currency.symbol}`;
+
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
 	} else {

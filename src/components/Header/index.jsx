@@ -15,6 +15,7 @@ import {
 	ADD_CONTRACT_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
+	CALL_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -63,7 +64,11 @@ class Header extends React.Component {
 
 	renderLinkToParent() {
 		const { location } = this.props;
-		if ([ADD_CONTRACT_PATH, CREATE_CONTRACT_PATH].includes(`/${location.pathname.split('/')[1]}`)) {
+		if ([
+			ADD_CONTRACT_PATH,
+			CREATE_CONTRACT_PATH,
+			CALL_CONTRACT_PATH,
+		].includes(`/${location.pathname.split('/')[1]}`)) {
 			return (
 				<Link to={CONTRACT_LIST_PATH} className="icon-back" />
 			);

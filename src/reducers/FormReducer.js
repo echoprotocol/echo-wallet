@@ -11,6 +11,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
+	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -126,6 +127,26 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		error: null,
 	}),
+	[FORM_CALL_CONTRACT_VIA_ID]: Map({
+		id: {
+			value: '',
+			error: null,
+		},
+		bytecode: {
+			value: '',
+			error: null,
+		},
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+	}),
 };
 
 export default createModule({
@@ -142,6 +163,8 @@ export default createModule({
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),
 		[FORM_VIEW_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_VIEW_CONTRACT]),
+		[FORM_CALL_CONTRACT_VIA_ID]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT_VIA_ID]),
 	}),
 	transformations: {
 		set: {
