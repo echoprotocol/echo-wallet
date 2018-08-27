@@ -17,10 +17,8 @@ class TabOverview extends React.Component {
 	copyBytecode() {
 		const { bytecode } = this.props.data;
 		return (
-			<CopyToClipboard text={bytecode} className="ui orange icon right button">
-				<button className="ui orange copy icon right button">
-					<i aria-hidden="true" className="copy icon" />
-				</button>
+			<CopyToClipboard text={bytecode}>
+				<Button compact icon="copy" content="Copy" />
 			</CopyToClipboard>
 		);
 	}
@@ -35,9 +33,9 @@ class TabOverview extends React.Component {
 				<li>
 					<div className="col">Bytecode:</div>
 					<div className="col">
-						{this.copyBytecode()}
+
 						<div className="bytecode-wrap">
-							<div className="bytecode">
+							<div className="bytecode-method">
 								Method: 0x{methodHash}
 							</div>
 							{
@@ -45,19 +43,21 @@ class TabOverview extends React.Component {
 									const id = index;
 									const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
 									return (
-										<React.Fragment key={id} >
+										<div className="bytecode-item" key={id} >
 											<Dropdown
 												data={arg}
 												component={`bytecode${id}`}
 											/>
 											<div className="bytecode">
-												Argument[{id + 1}]: {convertedArg ? convertedArg.value : `0x${arg}`}
+                                                [{id + 1}] {convertedArg ? convertedArg.value : `0x${arg}`}
 											</div>
-										</React.Fragment>
+
+										</div>
 									);
 								})
 							}
 						</div>
+						{this.copyBytecode()}
 					</div>
 				</li> :
 				<li>
@@ -68,6 +68,7 @@ class TabOverview extends React.Component {
 								{details.exec_res.output}
 							</div>
 						</div>
+						{this.copyBytecode()}
 					</div>
 				</li>
 

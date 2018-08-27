@@ -124,9 +124,14 @@
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             border-top: 1px solid $bd-gray;
+            & > .item:nth-child(1) {
+                &.header {
+                    margin: 0;
+                }
+            }
             & > .header {
                 height: 30px;
-                margin: 0;
+                margin: 6px 0 0;
                 background-color: transparent;
                 border: 0;
                 color: $bd-gray;
@@ -403,12 +408,12 @@
                 color: #aeb4c0;
             }
             &:nth-child(2) {
-                max-width: 500px;
+                max-width: 580px;
                 width: 100%;
             }
         }
     }
-    .bytecode, // bytecode собираемся переделывать (нужно убрать из стилей)
+    .bytecode,
     .note {
         &-wrap {
             background-color: #f9f9f9;
@@ -417,12 +422,29 @@
 
         }
         padding: 0 5px;
-        max-height: 400px;
+        max-height: 300px;
         overflow-y: auto;
         word-wrap: break-word;
         font-size: 13px;
     }
+    .bytecode {
+        &-wrap {
+            & + .ui.button {
+                margin: 20px 0 0 auto;
+                display: block;
+            } 
+        }
+        &-method {
+            margin-bottom: 10px;
+        }
+        &-item {
+            margin-bottom: 20px;
+            .bytecode {
+                margin: 10px 0 0 0;
+            }
+        }
 
+    }
     .ui.button {
         margin-top: -6px;
     }
