@@ -10,14 +10,14 @@ class TabOverview extends React.Component {
 		return formatAmount(value.amount, value.precision, value.symbol);
 	}
 
-	renderComment() {
-		const { comment, data: { memo } } = this.props;
+	renderNote() {
+		const { note, data: { memo } } = this.props;
 
-		return comment.unlocked ?
+		return note.unlocked ?
 			(
 				<div className="note-wrap">
 					<div className="note">
-						{comment.value}
+						{note.value}
 					</div>
 				</div>
 			) : (
@@ -129,7 +129,7 @@ class TabOverview extends React.Component {
 						data.memo ?
 							<li>
 								<div className="col">Note:</div>
-								<div className="col"> {this.renderComment()} </div>
+								<div className="col"> {this.renderNote()} </div>
 							</li> : null
 					}
 
@@ -145,7 +145,7 @@ class TabOverview extends React.Component {
 
 TabOverview.propTypes = {
 	data: PropTypes.object.isRequired,
-	comment: PropTypes.object.isRequired,
+	note: PropTypes.object.isRequired,
 	unlock: PropTypes.func.isRequired,
 };
 

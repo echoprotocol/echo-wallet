@@ -6,34 +6,34 @@ import { Form } from 'semantic-ui-react';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { setFormValue } from '../../actions/FormActions';
 
-class CommentField extends React.Component {
+class NoteField extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			comment: '',
+			note: '',
 			timeout: null,
 		};
 	}
 
-	onComment(e) {
+	onNote(e) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
 
-		const comment = e.target.value;
+		const note = e.target.value;
 
 		this.setState({
-			comment,
+			note,
 			timeout: setTimeout(() => {
-				this.props.setFormValue('comment', comment);
+				this.props.setFormValue('note', note);
 			}, 300),
 		});
 	}
 
 	render() {
-		const { comment } = this.state;
+		const { note } = this.state;
 		const { currency } = this.props;
 
 		return (
@@ -43,8 +43,8 @@ class CommentField extends React.Component {
 					className="comment"
 					placeholder="Note"
 					control="textarea"
-					value={currency && currency.type === 'tokens' ? '' : comment}
-					onChange={(e) => this.onComment(e)}
+					value={currency && currency.type === 'tokens' ? '' : note}
+					onChange={(e) => this.onNote(e)}
 					disabled={currency ? currency.type === 'tokens' : false}
 				/>
 			</Form.Field>
@@ -53,12 +53,12 @@ class CommentField extends React.Component {
 
 }
 
-CommentField.propTypes = {
+NoteField.propTypes = {
 	currency: PropTypes.object,
 	setFormValue: PropTypes.func.isRequired,
 };
 
-CommentField.defaultProps = {
+NoteField.defaultProps = {
 	currency: null,
 };
 
@@ -69,4 +69,4 @@ export default connect(
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
 	}),
-)(CommentField);
+)(NoteField);
