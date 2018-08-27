@@ -443,6 +443,7 @@ $thead-height: 46px;
             td {
                 &:nth-child(2) {
                     justify-content: flex-end;
+                    white-space: nowrap;
                 }
                 &:last-child {
                     display: none;
