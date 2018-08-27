@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm } from '../../actions/FormActions';
-import { addContract } from '../../actions/ContractActions';
 
+import AmountField from '../../components/AmountField';
+
+import { callContractViaId } from '../../actions/TransactionActions';
 
 class AddContractComponent extends React.Component {
 
@@ -17,40 +19,28 @@ class AddContractComponent extends React.Component {
 	}
 
 	onInput(e) {
-		this.props.setFormValue(e.target.name, e.target.value);
+		this.props.setFormValue(e.target.name, e.target.value.trim());
 	}
 
 	onClick() {
-		const { name, id, abi } = this.props;
+		const { id, bytecode } = this.props;
 
-		if (name.error || id.error || abi.error) {
+		if (id.error || bytecode.error) {
 			return;
 		}
 
-		this.props.addContract(name.value.trim(), id.value.trim(), abi.value.trim());
+		this.props.callContract();
 	}
 
 	render() {
-		const { name, id, abi } = this.props;
+		const { bytecode, id } = this.props;
 
 		return (
 			<Form className="main-form">
 				<div className="form-info">
-					<h3>Add contract to watch list</h3>
+					<h3>Call contract via ID</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: name.error })}>
-						<label htmlFor="name">Name</label>
-						<input
-							type="text"
-							placeholder="Name"
-							name="name"
-							className="ui input"
-							value={name.value}
-							onInput={(e) => this.onInput(e)}
-						/>
-						<span className="error-message">{name.error}</span>
-					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
 						<input
@@ -63,20 +53,22 @@ class AddContractComponent extends React.Component {
 						/>
 						<span className="error-message">{id.error}</span>
 					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
-						<label htmlFor="abi">ABI</label>
+					<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+						<label htmlFor="bytecode">Bytecode</label>
 						<textarea
 							type="text"
-							placeholder="Contract ABI"
-							name="abi"
+							placeholder="Bytecode"
+							name="bytecode"
 							className="ui input"
-							value={abi.value}
+							value={bytecode.value}
 							onInput={(e) => this.onInput(e)}
 						/>
-						<span className="error-message">{abi.error}</span>
+						<span className="error-message">{bytecode.error}</span>
 					</Form.Field>
+					<AmountField form={FORM_CALL_CONTRACT_VIA_ID} />
 				</div>
-				<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Watch Contract</Button>
+
+				<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Call Contract</Button>
 			</Form>
 		);
 	}
@@ -84,24 +76,22 @@ class AddContractComponent extends React.Component {
 }
 
 AddContractComponent.propTypes = {
-	name: PropTypes.object.isRequired,
 	id: PropTypes.object.isRequired,
-	abi: PropTypes.object.isRequired,
+	bytecode: PropTypes.object.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	addContract: PropTypes.func.isRequired,
+	callContract: PropTypes.func.isRequired,
 };
 
 
 export default connect(
 	(state) => ({
-		name: state.form.getIn([FORM_ADD_CONTRACT, 'name']),
-		id: state.form.getIn([FORM_ADD_CONTRACT, 'id']),
-		abi: state.form.getIn([FORM_ADD_CONTRACT, 'abi']),
+		id: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'id']),
+		bytecode: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']),
 	}),
 	(dispatch) => ({
-		clearForm: () => dispatch(clearForm(FORM_ADD_CONTRACT)),
-		setFormValue: (param, value) => dispatch(setFormValue(FORM_ADD_CONTRACT, param, value)),
-		addContract: (name, id, abi) => dispatch(addContract(name, id, abi)),
+		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),
+		setFormValue: (param, value) => dispatch(setFormValue(FORM_CALL_CONTRACT_VIA_ID, param, value)),
+		callContract: () => dispatch(callContractViaId()),
 	}),
 )(AddContractComponent);
