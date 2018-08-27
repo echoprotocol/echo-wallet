@@ -3,7 +3,7 @@ import utf8 from 'utf8';
 import operations from '../constants/Operations';
 import { events } from '../constants/LogEventConstants';
 
-const AREA_FIELDS = ['code', 'comment'];
+const AREA_FIELDS = ['code', 'note'];
 const removeCamelCaseRegEx = /([A-Z]+|[A-Z]?[a-z]+)(?=[A-Z]|\\b)/g;
 const removeSpaceRegEx = /\s\s+/g;
 const removeUnderscoreRegEx = /_/g;
