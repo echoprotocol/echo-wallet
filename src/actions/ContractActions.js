@@ -9,6 +9,7 @@ import {
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 import { estimateFormFee } from './TransactionActions';
+import { convert } from './ConverterActions';
 
 import {
 	getContract,
@@ -273,6 +274,14 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 			constant.showQueryResult = true;
 		}
 		return constant;
+	});
+
+	const convertedConstants = getState().converter.get('convertedConstants').toJS();
+	convertedConstants.map((val) => {
+		if (val.name === method.name) {
+			dispatch(convert(val.type, queryResult, method));
+		}
+		return val;
 	});
 
 	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));

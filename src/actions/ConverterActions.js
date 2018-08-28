@@ -9,6 +9,7 @@ export const resetConverter = () => (dispatch) => {
 export const convert = (type, data, component) => (dispatch, getState) => {
 	let convertedConstants = getState().converter.get('convertedConstants').toJS();
 	let topics = getState().converter.get('topics').toJS();
+	let args = getState().converter.get('bytecodeArgs').toJS();
 
 	const result = converter(type, data);
 
@@ -19,6 +20,7 @@ export const convert = (type, data, component) => (dispatch, getState) => {
 			convertedConstants = convertedConstants.map((val) => {
 				if (val.name === component.name) {
 					val.value = result;
+					val.type = type;
 					isChanged = true;
 				}
 				return val;
@@ -28,18 +30,45 @@ export const convert = (type, data, component) => (dispatch, getState) => {
 				convertedConstants.push({
 					name: component.name,
 					value: result,
+					type,
 				});
 			}
 
 			dispatch(ConverterReducer.actions.set({ field: 'convertedConstants', value: new List(convertedConstants) }));
 		} else if (component === 'dataLog') {
-			dispatch(ConverterReducer.actions.set({ field: 'data', value: result }));
+			const dataLog = {
+				value: result,
+				type,
+			};
+			dispatch(ConverterReducer.actions.set({ field: 'data', value: dataLog }));
+		} else if (component.substr(0, 8) === 'bytecode') {
+			let isChanged = false;
+
+			args = args.map((val) => {
+				if (val.id === component.substr(8)) {
+					val.value = result;
+					val.type = type;
+					isChanged = true;
+				}
+				return val;
+			});
+
+			if (!isChanged) {
+				args.push({
+					id: component.substr(8),
+					value: result,
+					type,
+				});
+			}
+
+			dispatch(ConverterReducer.actions.set({ field: 'bytecodeArgs', value: new List(args) }));
 		} else {
 			let isChanged = false;
 
 			topics = topics.map((val) => {
 				if (val.id === component) {
 					val.value = result;
+					val.type = type;
 					isChanged = true;
 				}
 				return val;
@@ -49,6 +78,7 @@ export const convert = (type, data, component) => (dispatch, getState) => {
 				topics.push({
 					id: component,
 					value: result,
+					type,
 				});
 			}
 
@@ -60,6 +90,10 @@ export const convert = (type, data, component) => (dispatch, getState) => {
 		dispatch(ConverterReducer.actions.set({ field: 'convertedConstants', value: new List(convertedConstants) }));
 	} else if (component === 'dataLog') {
 		dispatch(ConverterReducer.actions.set({ field: 'data', value: '' }));
+	} else if (component.substr(0, 8) === 'bytecode') {
+		args = args.filter((val) => val.id !== component.substr(8));
+
+		dispatch(ConverterReducer.actions.set({ field: 'bytecodeArgs', value: new List(args) }));
 	} else {
 		topics = topics.filter((val) => val.id !== component);
 

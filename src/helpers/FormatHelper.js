@@ -110,3 +110,20 @@ export const formatCallContractField = (value) => String(value)
 	.trim()
 	.replace(removeSpaceRegEx, ' ')
 	.toLowerCase();
+
+
+export const parseBytecode = (bytecode) => {
+	const methodHash = bytecode.substr(0, 8);
+	const argsString = bytecode.substr(8);
+
+	const args = [];
+
+	for (let i = 0; i < argsString.length / 64; i += 1) {
+		args[i] = argsString.substr(64 * i, 64);
+	}
+
+	return {
+		methodHash,
+		args,
+	};
+};

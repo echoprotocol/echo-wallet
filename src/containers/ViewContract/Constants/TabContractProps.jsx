@@ -44,7 +44,7 @@ class TabContractProps extends React.Component {
 				},
 				{
 					text: type === 'address' ? 'id' : type,
-					value: type === 'address' ? 'number' : type,
+					value: type === 'address' ? 'id' : type,
 				},
 			];
 			default: return [
