@@ -2,7 +2,7 @@
   "name": "echo",
   "version": "0.0.1",
   "description": "Echo Wallet",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
   },
   "keywords": [
