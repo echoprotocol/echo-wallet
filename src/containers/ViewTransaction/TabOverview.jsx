@@ -48,6 +48,7 @@ class TabOverview extends React.Component {
 											<Dropdown
 												data={arg}
 												component={`bytecode${id}`}
+												activeType={convertedArg ? convertedArg.type : null}
 											/>
 											<div className="bytecode">
                                                 [{id + 1}] {convertedArg ? convertedArg.value : `0x${arg}`}

@@ -2,7 +2,10 @@ import { createModule } from 'redux-modules';
 import { List, Map } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	data: '',
+	data: {
+		value: '',
+		type: '',
+	},
 	topics: List([]),
 	convertedConstants: List([]),
 	bytecodeArgs: List([]),

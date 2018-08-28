@@ -1,23 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import Dropdown from '../../components/Dropdown';
 
 class TabLogs extends React.Component {
 
 	renderLog(item, key) {
 		const { dataLog, topics } = this.props;
-
-		const options = [
-			{
-				text: 'hex',
-				value: 'hex',
-			},
-			{
-				text: 'id',
-				value: 'id',
-			},
-		];
 
 		return (
 			<React.Fragment key={key}>
@@ -33,9 +23,13 @@ class TabLogs extends React.Component {
 										<span className="num">[{i}]</span>
 										{
 											i !== 0 &&
-											<Dropdown data={topic} component={i.toString()} variativeOptions={options} />
+											<Dropdown
+												data={topic}
+												component={i.toString()}
+												activeType={convertedTopic ? convertedTopic.type : null}
+											/>
 										}
-										{convertedTopic ? convertedTopic.value : `0x${topic}`}
+										<span className="topic">{convertedTopic ? convertedTopic.value : `0x${topic}`}</span>
 									</div>
 								);
 							})
@@ -46,9 +40,9 @@ class TabLogs extends React.Component {
 					<div className="col data">Data:</div>
 					<div className="col">
 						<div className="data-item">
-							<Dropdown data={item.data} component="dataLog" />
+							<Dropdown data={item.data} component="dataLog" activeType={dataLog ? dataLog.type : null} />
 							<span className="arrow">→</span>
-							{dataLog || `0x${item.data}`}
+							<span className="data">{dataLog.value || `0x${item.data}`}</span>
 						</div>
 					</div>
 				</li>

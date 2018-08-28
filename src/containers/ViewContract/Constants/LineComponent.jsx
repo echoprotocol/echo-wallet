@@ -83,7 +83,8 @@ class LineComponent extends React.Component {
 	}
 
 	render() {
-		const { constant, typeOptions } = this.props;
+		const { constant, typeOptions, convertedConstants } = this.props;
+		const convertedConstant = convertedConstants.find((val) => constant.name === val.name);
 
 		return (
 			<div className="watchlist-line">
@@ -99,6 +100,7 @@ class LineComponent extends React.Component {
 							data={constant.constantValue}
 							variativeOptions={typeOptions}
 							component={constant}
+							activeType={convertedConstant ? convertedConstant.type : null}
 						/>
 						{
 							constant.inputs.length
