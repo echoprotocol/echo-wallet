@@ -166,9 +166,20 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 		contracts[accountId] = {};
 	}
 
+	const newContracts = {};
+	Object.entries(contracts).forEach((account) => {
+		newContracts[account[0]] = {};
+		Object.entries(account[1]).forEach((contract) => {
+			if (contract[0] === oldName) {
+				[, newContracts[account[0]][newName]] = contract;
+			} else {
+				[, newContracts[account[0]][contract[0]]] = contract;
+			}
+		});
+	});
+
 	contracts[accountId][newName] = contracts[accountId][oldName];
-	delete contracts[accountId][oldName];
-	localStorage.setItem('contracts', JSON.stringify(contracts));
+	localStorage.setItem('contracts', JSON.stringify(newContracts));
 
 	dispatch(remove('contracts', oldName));
 	dispatch(push('contracts', newName, {
