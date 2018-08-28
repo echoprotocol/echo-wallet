@@ -101,6 +101,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	result.color = result.from === accountName ? 'yellow' : 'green';
+
+	if (operation.code) {
+		result.bytecode = operation.code;
+	}
+
 	return result;
 };
 

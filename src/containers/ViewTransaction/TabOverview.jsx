@@ -1,8 +1,12 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { formatAmount } from '../../helpers/FormatHelper';
+import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
+
+import Dropdown from '../../components/Dropdown';
 
 class TabOverview extends React.Component {
 
@@ -10,9 +14,72 @@ class TabOverview extends React.Component {
 		return formatAmount(value.amount, value.precision, value.symbol);
 	}
 
+
+	copyBytecode() {
+		const { bytecode } = this.props.data;
+		return (
+			<CopyToClipboard text={bytecode}>
+				<Button compact icon="copy" content="Copy" />
+			</CopyToClipboard>
+		);
+	}
+
+	renderBytecode(isContract) {
+		const { bytecode, details } = this.props.data;
+		const { bytecodeArgs } = this.props;
+		const { methodHash, args } = parseBytecode(bytecode);
+
+		return (
+			!isContract ?
+				<li>
+					<div className="col">Bytecode:</div>
+					<div className="col">
+
+						<div className="bytecode-wrap">
+							<div className="bytecode-method">
+								Method: 0x{methodHash}
+							</div>
+							{
+								args.map((arg, index) => {
+									const id = index;
+									const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
+									return (
+										<div className="bytecode-item" key={id} >
+											<Dropdown
+												data={arg}
+												component={`bytecode${id}`}
+												activeType={convertedArg ? convertedArg.type : null}
+											/>
+											<div className="bytecode">
+                                                [{id + 1}] {convertedArg ? convertedArg.value : `0x${arg}`}
+											</div>
+
+										</div>
+									);
+								})
+							}
+						</div>
+						{this.copyBytecode()}
+					</div>
+				</li> :
+				<li>
+					<div className="col">Bytecode:</div>
+					<div className="col">
+						<div className="bytecode-wrap">
+							<div className="bytecode">
+								{details.exec_res.output}
+							</div>
+						</div>
+						{this.copyBytecode()}
+					</div>
+				</li>
+
+		);
+	}
+
+
 	renderNote() {
 		const { note, data: { memo } } = this.props;
-
 		return note.unlocked ?
 			(
 				<div className="note-wrap">
@@ -36,7 +103,7 @@ class TabOverview extends React.Component {
 	}
 
 	renderContractOptions() {
-		const { details, contract } = this.props.data;
+		const { details, contract, bytecode } = this.props.data;
 
 		return (
 			<React.Fragment>
@@ -63,17 +130,7 @@ class TabOverview extends React.Component {
 						</li> : null
 				}
 				{
-					parseInt(details.exec_res.output, 16) ?
-						<li>
-							<div className="col">Bytecode:</div>
-							<div className="col">
-								<div className="bytecode-wrap">
-									<div className="bytecode">
-										{details.exec_res.output}
-									</div>
-								</div>
-							</div>
-						</li> : null
+					bytecode ? this.renderBytecode(parseInt(details.exec_res.new_address, 16)) : null
 				}
 			</React.Fragment>
 		);
@@ -144,9 +201,15 @@ class TabOverview extends React.Component {
 }
 
 TabOverview.propTypes = {
+	bytecodeArgs: PropTypes.array.isRequired,
 	data: PropTypes.object.isRequired,
 	note: PropTypes.object.isRequired,
 	unlock: PropTypes.func.isRequired,
 };
 
-export default TabOverview;
+export default connect(
+	(state) => ({
+		bytecodeArgs: state.converter.get('bytecodeArgs').toJS(),
+	}),
+	() => ({}),
+)(TabOverview);
