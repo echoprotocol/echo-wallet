@@ -44,7 +44,7 @@ export const validateCode = (code) => {
 };
 
 export const validateContractName = (name) => {
-	if (!name.trim()) {
+	if (!name) {
 		return 'Contract name should not be empty';
 	}
 
