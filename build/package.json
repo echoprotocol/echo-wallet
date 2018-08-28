@@ -1,0 +1,15 @@
+{
+  "name": "echo",
+  "version": "0.0.1",
+  "description": "Echo Wallet",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "echo"
+  ],
+  "author": "PixelPlex",
+  "license": "CC0-1.0",
+  "devDependencies": {
+  }
+}

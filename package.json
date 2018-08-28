@@ -91,9 +91,9 @@
   "build": {
     "appId": "org.echo",
     "files": [
-      "build/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "*.js",
+      "build",
+      "node_modules"
     ],
     "directories": {
       "buildResources": "src/assets/app_resources",
