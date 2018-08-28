@@ -338,11 +338,11 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-export const setContractFees = () => async (dispatch, getState) => {
+export const setContractFees = (form) => async (dispatch, getState) => {
 	const assets = getState().balance.get('assets').toArray();
 
 	let fees = assets.reduce((arr, asset) => {
-		const value = dispatch(estimateFormFee(asset));
+		const value = dispatch(estimateFormFee(asset, form));
 		arr.push(value);
 		return arr;
 	}, []);

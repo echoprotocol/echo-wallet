@@ -240,6 +240,6 @@ export default connect(
 		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
-		setContractFees: () => dispatch(setContractFees()),
+		setContractFees: () => dispatch(setContractFees(form)),
 	}),
 )(AmountField);

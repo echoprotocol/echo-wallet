@@ -285,37 +285,56 @@ export const transfer = () => async (dispatch, getState) => {
 
 };
 
-export const estimateFormFee = (asset) => async (dispatch, getState) => {
+export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
-	const contractId = getState().contract.get('id');
 
-	if (!activeUserId || !contractId) return 0;
-	const functions = getState().contract.get('functions').toJS();
-	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
 
-	const targetFunction = functions.find((f) => f.name === functionForm.functionName);
-	if (!targetFunction) return 0;
+	if (!activeUserId) return 0;
 
-	const args = targetFunction.inputs.map((i) => {
-		const { name: field } = i;
-		const { value } = functionForm.inputs[field];
-		return value;
-	});
-
-	const bytecode = getMethod(targetFunction, args);
-
-	const { amount, currency } = functionForm;
-	let { payable } = functionForm;
-
-	if ((payable && (!amount || !currency)) || !asset) {
-		payable = false;
-	}
-
+	let contractId = '1.16.1';
 	let amountValue = 0;
+	let bytecode = '';
 
-	if (payable && !validateAmount(amount, currency)) {
-		amountValue = amount.value * (10 ** currency.precision);
+	if (form === FORM_CALL_CONTRACT) {
+		contractId = getState().contract.get('id') || contractId;
+		const functions = getState().contract.get('functions').toJS();
+		const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
+
+		const targetFunction = functions.find((f) => f.name === functionForm.functionName);
+		if (!targetFunction) return 0;
+
+		const args = targetFunction.inputs.map((i) => {
+			const { name: field } = i;
+			const { value } = functionForm.inputs[field];
+			return value;
+		});
+
+		bytecode = getMethod(targetFunction, args);
+
+		const { amount, currency } = functionForm;
+		let { payable } = functionForm;
+
+		if ((payable && (!amount || !currency)) || !asset) {
+			payable = false;
+		}
+
+		if (payable && !validateAmount(amount, currency)) {
+			amountValue = amount.value * (10 ** currency.precision);
+		}
+	} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
+		const formValues = getState().form.get(FORM_CALL_CONTRACT_VIA_ID).toJS();
+		contractId = formValues.id.value || contractId;
+		bytecode = formValues.bytecode.value;
+
+		const { amount, currency } = formValues;
+
+		if (amount.value) {
+			const amountError = validateAmount(amount.value, currency);
+			if (!amountError) {
+				amountValue = amount.value * (10 ** currency.precision);
+			}
+		}
 	}
 
 	const options = {
@@ -630,9 +649,11 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		code: bytecode.value,
 	};
 
+	const feeValue = await estimateCallContractFee('contract', options);
+
 	const showOptions = {
 		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode.value,
 	};
 
