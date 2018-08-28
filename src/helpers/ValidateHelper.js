@@ -52,6 +52,10 @@ export const validateContractName = (name) => {
 		return 'Contract name must be 2 characters or more';
 	}
 
+	if (name.length > 32) {
+		return 'Contract name must be 32 characters or less';
+	}
+
 	if (!name.match(/^[a-zA-Z0-9._ ]+$/)) {
 		return 'Invalid symbols';
 	}
