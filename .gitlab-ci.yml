@@ -69,7 +69,7 @@ build.windows:
     - web
     - tags
   tags:
-    - echo-windows
+    - echo-linux
   artifacts:
      paths:
      - build/binaries/PixelPlex-app Setup 0.1.0.exe
