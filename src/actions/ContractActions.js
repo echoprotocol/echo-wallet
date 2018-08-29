@@ -9,6 +9,7 @@ import {
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 import { estimateFormFee } from './TransactionActions';
+import { convert } from './ConverterActions';
 
 import {
 	getContract,
@@ -166,9 +167,20 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 		contracts[accountId] = {};
 	}
 
+	const newContracts = {};
+	Object.entries(contracts).forEach((account) => {
+		newContracts[account[0]] = {};
+		Object.entries(account[1]).forEach((contract) => {
+			if (contract[0] === oldName) {
+				[, newContracts[account[0]][newName]] = contract;
+			} else {
+				[, newContracts[account[0]][contract[0]]] = contract;
+			}
+		});
+	});
+
 	contracts[accountId][newName] = contracts[accountId][oldName];
-	delete contracts[accountId][oldName];
-	localStorage.setItem('contracts', JSON.stringify(contracts));
+	localStorage.setItem('contracts', JSON.stringify(newContracts));
 
 	dispatch(remove('contracts', oldName));
 	dispatch(push('contracts', newName, {
@@ -262,6 +274,14 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 			constant.showQueryResult = true;
 		}
 		return constant;
+	});
+
+	const convertedConstants = getState().converter.get('convertedConstants').toJS();
+	convertedConstants.map((val) => {
+		if (val.name === method.name) {
+			dispatch(convert(val.type, queryResult, method));
+		}
+		return val;
 	});
 
 	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));

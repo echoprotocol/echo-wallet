@@ -13,7 +13,7 @@ class DropdownComponent extends React.Component {
 	}
 
 	render() {
-		const { variativeOptions } = this.props;
+		const { variativeOptions, activeType } = this.props;
 		const options = [
 			{
 				text: 'hex',
@@ -35,7 +35,7 @@ class DropdownComponent extends React.Component {
 
 		return (
 			<Dropdown
-				placeholder="hex"
+				placeholder={activeType || 'hex'}
 				compact
 				selection
 				className="item contract-type-dropdown air"
@@ -51,10 +51,12 @@ DropdownComponent.propTypes = {
 	variativeOptions: PropTypes.any,
 	component: PropTypes.any.isRequired,
 	data: PropTypes.any,
+	activeType: PropTypes.any,
 	convert: PropTypes.func.isRequired,
 };
 
 DropdownComponent.defaultProps = {
+	activeType: null,
 	data: null,
 	variativeOptions: null,
 };

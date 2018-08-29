@@ -22,7 +22,7 @@ module.exports = {
 	},
 	output: {
 		publicPath: process.env.ELECTRON ? './' : '/',
-		path: path.resolve('dist'),
+		path: process.env.ELECTRON ? path.resolve('build') : path.resolve('dist'),
 		filename: `[name].${version}.js`,
 		pathinfo: process.env.NODE_ENV === 'local',
 		sourceMapFilename: '[name].js.map',

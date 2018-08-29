@@ -70,7 +70,7 @@ class ContractSettings extends React.Component {
 		const newName = this.props.newName.value;
 
 		if (newName) {
-			const newNameError = validateContractName(newName);
+			const newNameError = validateContractName(newName.trim());
 
 			if (newNameError) {
 				this.props.setFormError('newName', newNameError);

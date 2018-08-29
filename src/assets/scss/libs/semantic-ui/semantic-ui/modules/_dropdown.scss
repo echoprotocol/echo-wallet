@@ -523,8 +523,10 @@ select.ui.dropdown {
 
 /* Connecting Border */
 .ui.active.selection.dropdown {
-  border-bottom-left-radius: 0em;
-  border-bottom-right-radius: 0em;
+    &:not(.no-choice) {
+        border-bottom-left-radius: 0em;
+        border-bottom-right-radius: 0em;
+    }
 }
 
 /* Empty Connecting Border */

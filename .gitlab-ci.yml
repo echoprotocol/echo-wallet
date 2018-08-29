@@ -33,8 +33,7 @@ build.macos:
   stage: deploy
   script:
     - npm install
-    - npm run package-prepare
-    - npm run package-osx
+    - npm run package-mac
   only:
     - web
     - tags
@@ -42,7 +41,7 @@ build.macos:
     - echo-mac
   artifacts:
      paths:
-     - dist/installers/Echo.dmg
+     - build/binares/PixelPlex-app-0.1.0.dmg
      expire_in: 1 week
 
 
@@ -50,8 +49,7 @@ build.linux:
   stage: deploy
   script:
     - npm install
-    - npm run package-prepare
-    - npm run package-linux
+    - npm run package-deb
   only:
     - web
     - tags
@@ -59,5 +57,20 @@ build.linux:
     - echo-linux
   artifacts:
      paths:
-     - dist/installers/echo_0.0.1_amd64.deb
+     - build/binares/PixelPlex-app_0.1.0_amd64.deb
+     expire_in: 1 week
+
+build.windows:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-win
+  only:
+    - web
+    - tags
+  tags:
+    - echo-windows
+  artifacts:
+     paths:
+     - build/binares/PixelPlex-app Setup 0.1.0.exe
      expire_in: 1 week

@@ -44,12 +44,20 @@ export const validateCode = (code) => {
 };
 
 export const validateContractName = (name) => {
-	if (!name.trim()) {
+	if (!name) {
 		return 'Contract name should not be empty';
 	}
 
 	if (name.length < 2) {
 		return 'Contract name must be 2 characters or more';
+	}
+
+	if (name.length > 32) {
+		return 'Contract name must be 32 characters or less';
+	}
+
+	if (!name.match(/^[a-zA-Z0-9._ ]+$/)) {
+		return 'Invalid symbols';
 	}
 
 	return null;
