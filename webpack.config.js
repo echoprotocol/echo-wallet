@@ -83,7 +83,7 @@ module.exports = {
 		extensions: ['.js', '.jsx', '.json'],
 	},
 	plugins: [
-		new CleanWebpackPlugin(['dist']),
+		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
 		extractSass,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),

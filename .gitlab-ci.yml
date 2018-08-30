@@ -41,7 +41,7 @@ build.macos:
     - echo-mac
   artifacts:
      paths:
-     - build/binaries/PixelPlex-app-0.1.0.dmg
+     - build/binaries/Echo Wallet-0.1.0.dmg
      expire_in: 1 week
 
 
@@ -57,7 +57,7 @@ build.linux:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/PixelPlex-app_0.1.0_amd64.deb
+     - build/binaries/EchoWallet_0.1.0_amd64.deb
      expire_in: 1 week
 
 build.windows:
@@ -72,5 +72,5 @@ build.windows:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/PixelPlex-app Setup 0.1.0.exe
+     - build/binaries/Echo Wallet Setup 0.1.0.exe
      expire_in: 1 week
