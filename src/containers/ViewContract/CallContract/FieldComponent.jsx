@@ -58,6 +58,6 @@ export default connect(
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
-		setContractFees: () => dispatch(setContractFees()),
+		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
 )(TabCallContracts);
