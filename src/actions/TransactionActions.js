@@ -125,7 +125,6 @@ export const checkFeePool = (echo, asset, fee) => {
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
 	if (!accountName) {
-		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));
 		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 		return;
 	}
