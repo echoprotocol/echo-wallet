@@ -40,6 +40,7 @@ export const connection = () => async (dispatch) => {
 				history.push(SIGN_IN_PATH);
 			}
 		} else {
+			if (process.env.NODE_ENV !== 'development') history.push(INDEX_PATH);
 			await dispatch(initAccount(accountName));
 		}
 
