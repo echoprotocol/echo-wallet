@@ -24,13 +24,13 @@ class TabOverview extends React.Component {
 		);
 	}
 
-	renderBytecode(isContract) {
+	renderBytecode() {
 		const { bytecode, details } = this.props.data;
 		const { bytecodeArgs } = this.props;
 		const { methodHash, args } = parseBytecode(bytecode);
 
 		return (
-			!isContract ?
+			!parseInt(details.exec_res.new_address, 16) && details.exec_res.excepted !== 'Unknown' ?
 				<li>
 					<div className="col">Bytecode:</div>
 					<div className="col">
@@ -67,7 +67,7 @@ class TabOverview extends React.Component {
 					<div className="col">
 						<div className="bytecode-wrap">
 							<div className="bytecode">
-								{details.exec_res.output}
+								{bytecode}
 							</div>
 						</div>
 						{this.copyBytecode()}
@@ -130,7 +130,7 @@ class TabOverview extends React.Component {
 						</li> : null
 				}
 				{
-					bytecode ? this.renderBytecode(parseInt(details.exec_res.new_address, 16)) : null
+					bytecode ? this.renderBytecode() : null
 				}
 			</React.Fragment>
 		);

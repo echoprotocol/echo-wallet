@@ -202,14 +202,6 @@
         
         
         &.no-choice {
-            &.active {
-                & > .text {
-                    cursor: pointer;
-                    color: $orange;
-                    text-decoration: underline;
-
-                }
-            }
             & > .text {
                 margin-right: 0;
             }
@@ -416,17 +408,20 @@
     }
     .bytecode,
     .note {
+        padding: 0 5px;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        word-wrap: break-word;
+        font-size: 13px;
+
         &-wrap {
             background-color: #f9f9f9;
             border: 1px solid $bd-gray;
             padding: 10px 5px;
 
         }
-        padding: 0 5px;
-        max-height: 300px;
-        overflow-y: auto;
-        word-wrap: break-word;
-        font-size: 13px;
+
     }
     .bytecode {
         &-wrap {

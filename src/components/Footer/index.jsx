@@ -5,7 +5,13 @@ import PropTypes from 'prop-types';
 
 import { version } from '../../../package.json';
 
+import { connection } from '../../actions/GlobalActions';
+
 class Footer extends React.PureComponent {
+
+	onReconnect() {
+		this.props.connection();
+	}
 
 	render() {
 		const { isConnect, latency, lastBlock } = this.props;
@@ -32,7 +38,7 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>
                         Check Your Connection
-						<Button type="submit" size="tiny" color="black">Ok</Button>
+						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
 					</li>
 					<li>
 						<span className="status white">Disconnected</span>
@@ -50,6 +56,7 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any,
 	isConnect: PropTypes.any,
 	latency: PropTypes.any,
+	connection: PropTypes.func.isRequired,
 };
 
 Footer.defaultProps = {
@@ -68,5 +75,7 @@ export default connect(
 		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
 	}),
-	() => ({}),
+	(dispatch) => ({
+		connection: () => dispatch(connection()),
+	}),
 )(Footer);

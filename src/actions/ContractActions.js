@@ -44,7 +44,13 @@ export const loadContracts = (accountId) => (dispatch) => {
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
-	if (!contracts[accountId]) { return; }
+	if (!contracts[accountId]) {
+		dispatch(GlobalReducer.actions.set({
+			field: 'contracts',
+			value: new Map({}),
+		}));
+		return;
+	}
 
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
@@ -358,11 +364,11 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-export const setContractFees = () => async (dispatch, getState) => {
+export const setContractFees = (form) => async (dispatch, getState) => {
 	const assets = getState().balance.get('assets').toArray();
 
 	let fees = assets.reduce((arr, asset) => {
-		const value = dispatch(estimateFormFee(asset));
+		const value = dispatch(estimateFormFee(asset, form));
 		arr.push(value);
 		return arr;
 	}, []);

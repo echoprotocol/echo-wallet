@@ -11,7 +11,7 @@ import { setValue } from '../../actions/FormActions';
 import { getFee, fetchFee } from '../../actions/TransactionActions';
 import { setContractFees } from '../../actions/ContractActions';
 
-import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -22,7 +22,6 @@ class FeeComponent extends React.Component {
 			props.setValue('fee', fee);
 		});
 	}
-
 	componentDidMount() {
 		this.props.setContractFees();
 	}
@@ -78,6 +77,13 @@ class FeeComponent extends React.Component {
 			return arr;
 		}, []);
 
+		if (this.props.fee && this.props.fee.asset && this.props.fee.asset.symbol) {
+			const feeAsset = this.props.fee.asset.symbol;
+
+			const newFee = options.find((fee) => (fee.key === feeAsset));
+			if (newFee) this.onFee(JSON.parse(newFee.value));
+		}
+
 		return options;
 	}
 
@@ -93,8 +99,8 @@ class FeeComponent extends React.Component {
 
 	render() {
 		const { form } = this.props;
-
-		const options = form === FORM_CALL_CONTRACT ? this.getOptionsCallContract() : this.getOptions();
+		const options = [FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID].includes(form)
+			? this.getOptionsCallContract() : this.getOptions();
 		const text = this.getText(options);
 		return (
 			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
@@ -149,6 +155,6 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
-		setContractFees: () => dispatch(setContractFees()),
+		setContractFees: () => dispatch(setContractFees(form)),
 	}),
 )(FeeComponent);
