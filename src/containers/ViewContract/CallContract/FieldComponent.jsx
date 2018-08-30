@@ -53,8 +53,7 @@ TabCallContracts.propTypes = {
 export default connect(
 	(state, ownProps) => {
 		const { field, type } = ownProps;
-		let data = state.form.getIn([FORM_CALL_CONTRACT, 'inputs']);
-		data = data.get(field) || { value: '', error: null };
+		const data = state.form.getIn([FORM_CALL_CONTRACT, 'inputs', field]);
 		return { field, data, type };
 	},
 	(dispatch) => ({
