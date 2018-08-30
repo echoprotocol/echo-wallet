@@ -10,7 +10,7 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		dispatch(setFormError(
 			form,
 			'amount',
-			`Amount should be more than ${1 / (10 ** currency.precision)}`,
+			`Amount should be more than 0 (${currency.symbol} precision is ${currency.precision} symbols)`,
 		));
 	}
 
