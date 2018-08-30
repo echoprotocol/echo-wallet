@@ -4,9 +4,11 @@ import ToastInfo from '../components/Toast/ToastInfo';
 
 export const toastSuccess = (text) => {
 	toast.success(text, {
-		position: 'bottom-right',
 		autoClose: 5000,
+		position: 'bottom-right',
 		hideProgressBar: true,
+		pauseOnHover: true,
+		pauseOnFocusLoss: false,
 	});
 };
 
@@ -16,6 +18,7 @@ export const toastInfo = (text, onUndo, onClose) => {
 		position: 'bottom-right',
 		hideProgressBar: true,
 		pauseOnHover: true,
+		pauseOnFocusLoss: false,
 		onClose,
 	});
 };
@@ -25,5 +28,7 @@ export const toastError = (text) => {
 		autoClose: 5000,
 		position: 'bottom-right',
 		hideProgressBar: true,
+		pauseOnHover: true,
+		pauseOnFocusLoss: false,
 	});
 };
