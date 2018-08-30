@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 
 import { callContract } from '../../../actions/TransactionActions';
-import { clearForm } from '../../../actions/FormActions';
 
 class ButtonComponent extends React.Component {
 
@@ -60,6 +59,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		callContract: (fn, fnForm) => dispatch(callContract(fn, fnForm)),
-		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT)),
 	}),
 )(ButtonComponent);

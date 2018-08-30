@@ -20,7 +20,7 @@ class SelectMethod extends React.Component {
 	componentWillMount() {
 
 		if (!this.props.functions.size) return;
-		this.setFunction(this.props.functions.get(0).name);
+		if (!this.props.functionName) this.setFunction(this.props.functions.get(0).name);
 
 		const options = this.renderList();
 		this.setState({
