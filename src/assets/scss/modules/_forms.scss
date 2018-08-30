@@ -182,6 +182,16 @@
             font-size: 14px;
         }
     }
+    .btn-wrap {
+        display: flex;
+        .ui {
+            &.button {
+                &:not(:last-child) {
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
 }
 
 .main-form {

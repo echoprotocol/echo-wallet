@@ -39,16 +39,25 @@ class ButtonComponent extends React.Component {
 
 	renderSubmit() {
 		return (
-			<Button
-				basic
-				type="submit"
-				color="orange"
-				disabled={this.isDisabledSubmit()}
-				className={classnames({ disabled: this.isDisabledSubmit() })}
-				onClick={(e) => this.onClick(e)}
-			>
+			<div className="btn-wrap">
+				<Button
+					basic
+					type="submit"
+					color="orange"
+				>
+				Cancel
+				</Button>
+				<Button
+					basic
+					type="submit"
+					color="orange"
+					disabled={this.isDisabledSubmit()}
+					className={classnames({ disabled: this.isDisabledSubmit() })}
+					onClick={(e) => this.onClick(e)}
+				>
 				Create account
-			</Button>
+				</Button>
+			</div>
 		);
 	}
 
