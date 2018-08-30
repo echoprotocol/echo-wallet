@@ -403,6 +403,9 @@
             &:nth-child(2) {
                 max-width: 580px;
                 width: 100%;
+                @media (max-width: 1200px) {
+                    margin: auto;
+                }
             }
         }
     }
@@ -426,8 +429,9 @@
     .bytecode {
         &-wrap {
             & + .ui.button {
-                margin: 20px 0 0 auto;
-                display: block;
+                margin: 15px 0 0 auto;
+                display: flex;
+                align-items: center;
             } 
         }
         &-method {

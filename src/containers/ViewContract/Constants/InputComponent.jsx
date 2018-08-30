@@ -30,7 +30,7 @@ class InputComponent extends React.Component {
 				size="mini"
 				value={value}
 				onChange={(e) => this.onChange(e)}
-				placeholder={`${inputData.name} (${inputData.type.replace(/address/g, 'id')})`}
+				placeholder={`${inputData.name}(${inputData.type.replace(/address/g, 'id')})`}
 			/>
 		);
 	}
