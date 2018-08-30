@@ -140,7 +140,10 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 			return;
 		}
 
-		dispatch(setIn(FORM_TRANSFER, 'to', { checked: true }));
+		dispatch(setIn(FORM_TRANSFER, 'to', {
+			checked: true,
+			error: null,
+		}));
 	} catch (err) {
 		dispatch(setValue(FORM_TRANSFER, 'error', err));
 	} finally {
