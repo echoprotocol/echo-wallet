@@ -72,5 +72,5 @@ build.windows:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/EchoWallet Setup 0.1.0.exe
+     - build/binaries/Echo Wallet Setup 0.1.0.exe
      expire_in: 1 week

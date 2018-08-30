@@ -1,5 +1,5 @@
 {
-  "name": "EchoWallet",
+  "name": "ECHOWallet",
   "author": "PixelPlex <info@pixelplex.by>",
   "description": "PixelPlex React Redux app",
   "homepage": "https://pixelplex.by/",
@@ -84,6 +84,7 @@
     "webpack-dev-server": "^3.1.6"
   },
   "build": {
+    "productName": "ECHO Wallet",
     "appId": "org.echo",
     "files": [
       "*.js",
@@ -95,6 +96,8 @@
       "output": "build/binaries"
     },
     "dmg": {
+      "title": "ECHOWallet",
+      "artifactName": "ECHO Wallet",
       "contents": [
         {
           "x": 130,
@@ -124,7 +127,9 @@
       "target": [
         "deb"
       ],
-      "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
+      "executableName": "ECHO Wallet",
+      "desktop": "ECHO Wallet",
+      "synopsis": "ECHO Wallet: Cryptocurrency wallet for ECHO platform"
     }
   }
 }
