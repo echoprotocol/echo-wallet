@@ -6,11 +6,11 @@ import classnames from 'classnames';
 
 import { FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
-import { setFormValue, clearForm } from '../../actions/FormActions';
-
 import AmountField from '../../components/AmountField';
 
+import { setFormValue, clearForm } from '../../actions/FormActions';
 import { callContractViaId } from '../../actions/TransactionActions';
+import { setContractFees } from '../../actions/ContractActions';
 
 class AddContractComponent extends React.Component {
 
@@ -20,6 +20,7 @@ class AddContractComponent extends React.Component {
 
 	onInput(e) {
 		this.props.setFormValue(e.target.name, e.target.value.trim());
+		if (e.target.name === 'bytecode') this.props.setContractFees();
 	}
 
 	onClick() {
@@ -81,6 +82,7 @@ AddContractComponent.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	callContract: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 };
 
 
@@ -93,5 +95,6 @@ export default connect(
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),
 		setFormValue: (param, value) => dispatch(setFormValue(FORM_CALL_CONTRACT_VIA_ID, param, value)),
 		callContract: () => dispatch(callContractViaId()),
+		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 	}),
 )(AddContractComponent);
