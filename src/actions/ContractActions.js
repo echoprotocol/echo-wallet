@@ -44,7 +44,13 @@ export const loadContracts = (accountId) => (dispatch) => {
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
-	if (!contracts[accountId]) { return; }
+	if (!contracts[accountId]) {
+		dispatch(GlobalReducer.actions.set({
+			field: 'contracts',
+			value: new Map({}),
+		}));
+		return;
+	}
 
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
