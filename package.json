@@ -96,8 +96,6 @@
       "output": "build/binaries"
     },
     "dmg": {
-      "title": "ECHOWallet",
-      "artifactName": "ECHO Wallet",
       "contents": [
         {
           "x": 130,
