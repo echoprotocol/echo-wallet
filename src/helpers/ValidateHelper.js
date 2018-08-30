@@ -3,6 +3,8 @@ import BN from 'bignumber.js';
 
 const reg = /^[0-9a-fA-F]+$/;
 
+export const contractIdRegex = /^[0-9.]*$/;
+
 export const validateAccountName = (accountName) => {
 	if (!accountName) { return 'Account name should not be empty'; }
 

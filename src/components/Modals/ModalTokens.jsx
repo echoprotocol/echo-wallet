@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { setParamValue, closeModal } from '../../actions/ModalActions';
 import { addToken } from '../../actions/BalanceActions';
+
+import { MODAL_TOKENS } from '../../constants/ModalConstants';
+
+import { contractIdRegex } from '../../helpers/ValidateHelper';
 
 class ModalTokens extends React.Component {
 
@@ -16,6 +19,9 @@ class ModalTokens extends React.Component {
 	}
 
 	onInput(e) {
+		if (!e.target.value.match(contractIdRegex)) {
+			return;
+		}
 		this.props.setParamValue('contractId', e.target.value);
 	}
 

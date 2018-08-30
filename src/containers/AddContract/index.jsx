@@ -9,6 +9,8 @@ import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
 import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
 
+import { contractIdRegex } from '../../helpers/ValidateHelper';
+
 
 class AddContractComponent extends React.Component {
 
@@ -17,7 +19,11 @@ class AddContractComponent extends React.Component {
 	}
 
 	onInput(e) {
-		this.props.setFormValue(e.target.name, e.target.value);
+		if (e.target.name === 'id' && e.target.value.match(contractIdRegex)) {
+			this.props.setFormValue(e.target.name, e.target.value);
+		} else if (e.target.name === 'name' || e.target.name === 'abi') {
+			this.props.setFormValue(e.target.name, e.target.value);
+		}
 	}
 
 	onClick() {
