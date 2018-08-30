@@ -4,20 +4,30 @@
         flex-direction: column;
         max-width: 10px;
         margin: -2px 0 0 5px;
+
         i {
             margin: 0;
             width: 10px;
             line-height: 8px;
             font-size: 4px;
+            opacity: .4;
+            transition: opacity $speed;
             &.active {
                 color: $link-gray;
+                opacity: 1;
             }
         }
         &-wrap {
             display: flex;
             align-items: center;
             cursor: pointer;
-            
+            &:hover {
+                .sort {
+                    i {
+                        opacity: 1;
+                    }
+                }
+            }
         }
     }
 }

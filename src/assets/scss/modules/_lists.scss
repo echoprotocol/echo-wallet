@@ -165,8 +165,8 @@
         transition: border .3s;
         align-self: flex-start;
         min-height: 15px;
-        min-width: 120px;
-        max-width: 120px;
+        min-width: 100px;
+        max-width: 100px;
         .dropdown.icon {
             font-size: 12px;
             padding: 4px;
@@ -408,21 +408,21 @@
     }
     .bytecode,
     .note {
-        padding: 0 5px;
         max-height: 300px;
         overflow-y: auto;
         overflow-x: hidden;
         word-wrap: break-word;
         font-size: 13px;
-
+        padding: 0 8px 0 0;
         &-wrap {
             background-color: #f9f9f9;
             border: 1px solid $bd-gray;
-            padding: 10px 5px;
-
+            padding: 12px;
+            letter-spacing: -.1px;
         }
 
     }
+
     .bytecode {
         &-wrap {
             & + .ui.button {
@@ -432,6 +432,8 @@
         }
         &-method {
             margin-bottom: 10px;
+            font-size: 13px;
+            font-family: proximanovaSemibold;
         }
         &-item {
             margin-bottom: 20px;
@@ -457,7 +459,8 @@
             margin-bottom: 10px;
         }
         .arrow {
-            align-self: baseline;
+            font-family: proxima;
+            line-height: 22px;
         }
         .num,
         .arrow,
