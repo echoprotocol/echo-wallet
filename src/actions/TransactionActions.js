@@ -195,13 +195,13 @@ export const transfer = () => async (dispatch, getState) => {
 		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
 
 		if (total.gt(currency.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
 			return;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
-			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds'));
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
 			return;
 		}
 	}
