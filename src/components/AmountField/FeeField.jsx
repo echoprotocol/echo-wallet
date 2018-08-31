@@ -21,9 +21,33 @@ class FeeComponent extends React.Component {
 		props.fetchFee().then((fee) => {
 			props.setValue('fee', fee);
 		});
+
+		this.state = {
+			isChanged: false,
+		};
 	}
 	componentDidMount() {
 		this.props.setContractFees();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (_.isEqual(this.props, nextProps)) { return; }
+
+		const {
+			note, assets, selectedSymbol,
+		} = this.props;
+
+		if (assets.length && !this.state.isChanged) {
+			assets.forEach((asset) => {
+				if (asset.symbol === selectedSymbol) {
+					const resultFee = this.props.getFee(asset.id, note.value);
+					if (resultFee) {
+						this.props.setValue('fee', resultFee);
+						this.setState({ isChanged: true });
+					}
+				}
+			});
+		}
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -115,6 +139,7 @@ class FeeComponent extends React.Component {
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
 					text={text}
+					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
 			</Form.Field>
@@ -127,6 +152,7 @@ FeeComponent.propTypes = {
 	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
+	selectedSymbol: PropTypes.string,
 	form: PropTypes.string.isRequired,
 	note: PropTypes.any.isRequired,
 	fees: PropTypes.array.isRequired,
@@ -140,6 +166,7 @@ FeeComponent.defaultProps = {
 	isSingle: false,
 	fee: {},
 	assets: [],
+	selectedSymbol: '',
 };
 
 export default connect(
@@ -148,6 +175,7 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
 		note: state.form.getIn([form, 'note']) || {},
+		selectedSymbol: state.form.getIn([form, 'selectedSymbol']),
 		fees: state.fee.toArray() || [],
 		form,
 	}),
