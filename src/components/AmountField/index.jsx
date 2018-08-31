@@ -67,9 +67,9 @@ class AmountField extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (typeof e.target.value === 'undefined') { // if click
+		if (typeof e.target.value === 'undefined') {
 			this.onChangeCurrency(e, value);
-		} else if (e.keyCode === 13) { // if enter
+		} else if (e.keyCode === 13) {
 			this.onChangeCurrency(e, value);
 			setTimeout(() => { e.target.blur(); }, 0);
 		}

@@ -68,6 +68,7 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
+		selectedSymbol: '',
 		note: {
 			value: '',
 			error: null,
