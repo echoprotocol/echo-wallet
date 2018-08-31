@@ -168,7 +168,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
-		toastSuccess('Token successfully added');
+		toastSuccess('Token was successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
 	} finally {
