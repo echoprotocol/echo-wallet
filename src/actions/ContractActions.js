@@ -176,13 +176,14 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 	const newContracts = {};
 	Object.entries(contracts).forEach((account) => {
 		newContracts[account[0]] = {};
-		Object.entries(account[1]).forEach((contract) => {
-			if (contract[0] === oldName) {
-				[, newContracts[account[0]][newName]] = contract;
-			} else {
-				[, newContracts[account[0]][contract[0]]] = contract;
-			}
-		});
+		Object.entries(account[1])
+			.forEach((contract) => {
+				if (contract[0] === oldName && accountId === account[0]) {
+					[, newContracts[account[0]][newName]] = contract;
+				} else {
+					[, newContracts[account[0]][contract[0]]] = contract;
+				}
+			});
 	});
 
 	contracts[accountId][newName] = contracts[accountId][oldName];
