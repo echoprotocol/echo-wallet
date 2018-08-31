@@ -6,14 +6,17 @@ import PropTypes from 'prop-types';
 import { version } from '../../../package.json';
 
 import { connection } from '../../actions/GlobalActions';
+import Network from './NetworkDropdown';
 
 class Footer extends React.PureComponent {
+
 
 	onReconnect() {
 		this.props.connection();
 	}
 
 	render() {
+
 		const { isConnect, latency, lastBlock } = this.props;
 
 		const connected = (
@@ -27,7 +30,10 @@ class Footer extends React.PureComponent {
 						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
-						<span className="status green">Connected</span>
+						<span className="status green">
+                            Connected
+						</span>
+						<Network />
 					</li>
 				</ul>
 			</div>

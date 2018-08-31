@@ -14,6 +14,9 @@
             &:first-child {
                 margin: 0 auto 0 0;
             }
+            &:last-child {
+                display: flex;
+            }
         }
     }
     &.disconnected {
@@ -27,6 +30,7 @@
                     text-transform: uppercase;
                     color: $white;
                 }
+
                 .button {
                     margin: 0 0 0 15px;
                     background-color: rgb(81, 84, 89);
@@ -69,5 +73,8 @@
         &:before {
             background-color: $white;
         }
+    }
+    & + .network-dropdown {
+        margin-left: 5px;
     }
 }

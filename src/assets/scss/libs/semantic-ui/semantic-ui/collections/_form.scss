@@ -52,14 +52,14 @@
         Labels
 ---------------------*/
 
-.ui.form .field > label {
-  display: flex;
-  justify-content: space-between;
-  min-height: 20px;
-  color: $gray;
-  font-size: 0.75857143em;
-  font-family: proximanovaSemibold;
-  text-transform: uppercase;
+.field > label {
+    display: flex;
+    justify-content: space-between;
+    min-height: 20px;
+    color: $gray;
+    font-size: 0.75857143em;
+    font-family: proximanovaSemibold;
+    text-transform: uppercase;
 }
 
 /*--------------------
