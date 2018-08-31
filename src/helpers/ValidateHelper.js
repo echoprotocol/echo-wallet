@@ -221,7 +221,7 @@ export const validateByType = (value, type) => {
 
 export const validateAmount = (value, { symbol, precision, balance }) => {
 	if (!Math.floor(value * (10 ** precision))) {
-		return `Amount should be more than ${1 / (10 ** precision)}`;
+		return `Amount should be more than 0 (${symbol} precision is ${precision} symbols)`;
 	}
 
 	const amount = new BN(value).times(10 ** precision);
