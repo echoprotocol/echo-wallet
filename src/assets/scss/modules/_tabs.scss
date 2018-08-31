@@ -7,7 +7,7 @@
         .scroll-fix {
             max-height: calc(100vh - 155px);
         }
-        .menu {
+        & > .menu {
             display: none;
         }
     }
