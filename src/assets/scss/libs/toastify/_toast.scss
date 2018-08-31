@@ -57,25 +57,18 @@
         &-icon + .toast-text {
             margin-left: 10px;
         }
-        &-loading + .toast-text {
-            margin-left: 10px;
-        }
+
         &-text {
-            max-width: 300px;
+            max-width: 320px;
             display: block;
             margin-right: auto;
         }
     }
    .ui {
-       &.loading.button.toast-loading {
-        padding: 0;
-        margin: 5px;
-       }
        &.button.black {
-           margin: -6px 0 0 15px;
-       }
-       &.loading.button {
-           min-height: .7em;
+            margin: -3px 0 -20px 15px;
+            padding: 13px 8px 11px;
+            line-height: 0;
        }
    }
     

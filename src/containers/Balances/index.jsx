@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
 

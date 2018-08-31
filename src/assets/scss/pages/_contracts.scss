@@ -4,6 +4,13 @@
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 100px);
+    .contract-navigator {
+        text-align: center;
+        padding: 0 20px;
+        @media (min-height: 800px) {
+            margin: 350px 0 auto 0;
+        }
+    }
     .btns {
         display: flex;
         align-items: center;

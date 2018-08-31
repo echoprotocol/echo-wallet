@@ -69,7 +69,7 @@ class SignIn extends React.Component {
 					</div>
 					{
 						loading ?
-							<Button basic type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
+							<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
 							<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
 					}
 					<span className="sign-nav">

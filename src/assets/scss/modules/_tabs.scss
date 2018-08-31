@@ -7,7 +7,7 @@
         .scroll-fix {
             max-height: calc(100vh - 155px);
         }
-        .menu {
+        & > .menu {
             display: none;
         }
     }
@@ -21,6 +21,10 @@
         &-panel {
             max-width: 900px;
             margin: auto;
+            @media (max-width: 1200px) {
+                margin: 0;
+                max-width: 100%;
+            }
             display: flex;
             align-items: center;
             padding: 10px 20px;
@@ -92,7 +96,10 @@
         margin: auto;
         border-bottom: 2px solid rgb(247, 247, 247);
         position: relative;
-
+        @media (max-width: 1200px) {
+            margin: 0;
+            max-width: 100%;
+        }
         &:after {
             content: "";
             height: 2px;
@@ -175,7 +182,10 @@
         padding: 30px 45px 20px; 
         // overflow: initial;
         overflow: -webkit-paged-x;
-
+        @media (max-width: 1200px) {
+            margin: 0;
+            max-width: 100%;
+        }
     }
 }
 
