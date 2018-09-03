@@ -71,7 +71,8 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const logout = () => (dispatch, getState) => {
+export const logout = () => async (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	let accounts = localStorage.getItem('accounts');
 	try {
@@ -88,7 +89,7 @@ export const logout = () => (dispatch, getState) => {
 	}
 
 	if (accounts.length) {
-		dispatch(initAccount(accounts[0]));
+		await dispatch(initAccount(accounts[0]));
 	} else {
 		localStorage.removeItem('current_account');
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
@@ -96,4 +97,5 @@ export const logout = () => (dispatch, getState) => {
 		dispatch(resetBalance());
 		history.push(SIGN_IN_PATH);
 	}
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 };
