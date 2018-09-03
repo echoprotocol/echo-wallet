@@ -4,6 +4,8 @@ import { Map, List } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	tokens: List([]),
 	assets: List([]),
+	core: {}, // { precision, symbol }
+	accountsBalances: List([]),
 });
 
 export default createModule({

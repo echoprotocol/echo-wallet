@@ -11,6 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
+		isAddAccount: false,
 		visibleBar: false,
 		contracts: new Map({}),
 	}),

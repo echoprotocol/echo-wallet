@@ -7,7 +7,7 @@ import classnames from 'classnames';
 
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
-import { authUser } from '../../actions/AuthActions';
+import { authUser, cancelAddAccount } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
@@ -38,6 +38,10 @@ class SignIn extends React.Component {
 		}
 	}
 
+	onCancel() {
+		this.props.cancelAddAccount();
+	}
+
 	isDisabledSubmit() {
 		const { accountName, password } = this.props;
 
@@ -45,7 +49,9 @@ class SignIn extends React.Component {
 	}
 
 	render() {
-		const { accountName, password, loading } = this.props;
+		const {
+			accountName, password, loading, isAddAccount,
+		} = this.props;
 
 		return (
 			<div className="sign-scroll-fix">
@@ -67,11 +73,33 @@ class SignIn extends React.Component {
 							<span className="error-message">{password.error}</span>
 						</Form.Field>
 					</div>
-					{
-						loading ?
-							<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
-							<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
-					}
+					<div className="btn-wrap">
+						{
+							isAddAccount &&
+							<Button
+								basic
+								type="submit"
+								color="orange"
+								onClick={(e) => this.onCancel(e)}
+							>
+							Cancel
+							</Button>
+						}
+						{
+							loading ?
+								<Button type="submit" color="orange" className="load">Loading...</Button> :
+								<Button
+									basic
+									type="submit"
+									color="orange"
+									disabled={this.isDisabledSubmit()}
+									onClick={(e) => this.onClick(e)}
+									className={classnames({ disabled: this.isDisabledSubmit() })}
+								>
+								Login
+								</Button>
+						}
+					</div>
 					<span className="sign-nav">
 						Don’t have an account?
 						<Link className="link orange" to="/sign-up">Sign Up</Link>
@@ -89,7 +117,9 @@ SignIn.propTypes = {
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	cancelAddAccount: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	isAddAccount: PropTypes.bool.isRequired,
 };
 
 SignIn.defaultProps = {
@@ -101,10 +131,12 @@ export default connect(
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
 		password: state.form.getIn([FORM_SIGN_IN, 'password']),
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
+		isAddAccount: state.global.get('isAddAccount'),
 	}),
 	(dispatch) => ({
 		authUser: (value) => dispatch(authUser(value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
+		cancelAddAccount: () => dispatch(cancelAddAccount()),
 	}),
 )(SignIn);

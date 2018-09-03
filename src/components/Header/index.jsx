@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-import { logout } from '../../actions/GlobalActions';
+import { logout, addAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -26,11 +26,16 @@ class Header extends React.Component {
 		this.props.logout();
 	}
 
+	onAddAccount() {
+		this.props.addAccount();
+	}
+
 	onSend(e) {
 		e.preventDefault();
 
 		this.props.history.push(TRANSFER_PATH);
 	}
+
 	onDropdownChange(e, value) {
 		if (e.keyCode === 13) {
 			switch (value) {
@@ -48,6 +53,7 @@ class Header extends React.Component {
 		}
 
 	}
+
 	getTitle() {
 		const { location } = this.props;
 
@@ -80,33 +86,48 @@ class Header extends React.Component {
 		);
 	}
 
+	renderAccounts() {
+		const { core, accounts } = this.props;
+		return (
+			accounts.toJS().map((account, index) => {
+				const id = index;
+				const balance = formatAmount(account.balance, core.precision);
+
+				return (
+					{
+						value: `account${id}`,
+						key: `account${id}`,
+						content: (
+							<a className="user-item" key={id}>
+								<span>{account.name}</span>
+								<div className="balance">
+									<span>{balance || '0'}</span>
+									<span>{core ? core.symbol : 'ECHO'}</span>
+								</div>
+							</a>
+						),
+					}
+				);
+			})
+		);
+	}
+
 	render() {
-		const { location } = this.props;
+		const { location, accounts, core } = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
-		const options = [
-			{
-				value: 'current_account',
-				key: 'current_account',
-				content: (
-					<a className="user-item">
-						<span>{localStorage.getItem('current_account')}</span>
-						<div className="balance">
-							<span>{balance}</span>
-							<span>{symbol}</span>
-						</div>
-					</a>
-				),
-			},
+		const accs = (accounts && core) && this.renderAccounts();
+
+		let options = [
 			{
 				value: 'add-account',
 				key: 'add-account',
 				className: 'add-account',
 				content: 'Add account',
-				onClick: (e) => this.onLogout(e),
+				onClick: (e) => this.onAddAccount(e),
 			},
 			{
 				value: 'logout',
@@ -120,6 +141,9 @@ class Header extends React.Component {
 				onClick: (e) => this.onLogout(e),
 			},
 		];
+
+		options = accs.concat(options);
+
 		return (
 			<div className="header">
 				{
@@ -161,20 +185,28 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	assets: PropTypes.any,
+	core: PropTypes.any,
+	accounts: PropTypes.any,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
+	addAccount: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	assets: null,
+	core: null,
+	accounts: null,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		assets: state.balance.get('assets'),
+		core: state.balance.get('core'),
+		accounts: state.balance.get('accountsBalances'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
+		addAccount: () => dispatch(addAccount()),
 	}),
 )(Header));

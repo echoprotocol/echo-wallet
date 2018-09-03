@@ -4,10 +4,15 @@ import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
-import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
+import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES, SIGN_UP_PATH } from '../constants/RouterConstants';
 import { HISTORY_DATA } from '../constants/TableConstants';
 
-import { initBalances, getObject, resetBalance } from '../actions/BalanceActions';
+import {
+	initBalances,
+	getObject,
+	resetBalance,
+	initAccountsBalances,
+} from '../actions/BalanceActions';
 import { initSorts } from '../actions/SortActions';
 import { loadContracts } from '../actions/ContractActions';
 import { clear } from '../actions/TableActions';
@@ -17,6 +22,15 @@ export const initAccount = (accountName) => async (dispatch) => {
 
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
+	let accounts = localStorage.getItem('accounts');
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	if (!accounts.find((account) => account.name === accountName)) {
+		accounts.push({ id, name: accountName });
+		localStorage.setItem('accounts', JSON.stringify(accounts));
+	}
+
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
 	if (AUTH_ROUTES.includes(history.location.pathname)) {
@@ -24,6 +38,7 @@ export const initAccount = (accountName) => async (dispatch) => {
 	}
 
 	await dispatch(initBalances(id));
+	await dispatch(initAccountsBalances(accounts));
 	dispatch(initSorts());
 	dispatch(loadContracts(id));
 };
@@ -73,8 +88,18 @@ export const remove = (field, param) => (dispatch) => {
 
 export const logout = () => (dispatch) => {
 	localStorage.removeItem('current_account');
+	localStorage.removeItem('accounts');
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
 	dispatch(clear(HISTORY_DATA));
 	dispatch(resetBalance());
 	history.push(SIGN_IN_PATH);
+};
+
+export const addAccount = () => (dispatch) => {
+	dispatch(clear(HISTORY_DATA));
+	dispatch(resetBalance());
+
+	dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: true }));
+
+	history.push(SIGN_UP_PATH);
 };
