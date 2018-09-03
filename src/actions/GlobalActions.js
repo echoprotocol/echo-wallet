@@ -5,12 +5,12 @@ import GlobalReducer from '../reducers/GlobalReducer';
 import history from '../history';
 
 import { SIGN_IN_PATH, INDEX_PATH, AUTH_ROUTES } from '../constants/RouterConstants';
-import { HISTORY_DATA } from '../constants/TableConstants';
+import { HISTORY } from '../constants/TableConstants';
 
-import { initBalances, getObject, resetBalance } from '../actions/BalanceActions';
-import { initSorts } from '../actions/SortActions';
-import { loadContracts } from '../actions/ContractActions';
-import { clear } from '../actions/TableActions';
+import { initBalances, getObject, resetBalance } from './BalanceActions';
+import { initSorts } from './SortActions';
+import { loadContracts } from './ContractActions';
+import { clearTable } from './TableActions';
 
 export const initAccount = (accountName) => async (dispatch) => {
 	localStorage.setItem('current_account', accountName);
@@ -28,11 +28,11 @@ export const initAccount = (accountName) => async (dispatch) => {
 	dispatch(loadContracts(id));
 };
 
-export const connection = () => async (dispatch) => {
+export const saveConnection = (address) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		await dispatch(EchoJSActions.connect(undefined, { types: ['objects', 'block'], method: getObject }));
+		await dispatch(EchoJSActions.connect(address, { types: ['objects', 'block'], method: getObject }));
 		const accountName = localStorage.getItem('current_account');
 
 		if (!accountName) {
@@ -49,6 +49,13 @@ export const connection = () => async (dispatch) => {
 	} finally {
 		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}
+};
+
+export const resetConnection = (address) => (dispatch) => {
+	dispatch(EchoJSActions.disconnect(address));
+	dispatch(clearTable(HISTORY));
+	dispatch(resetBalance());
+	dispatch(GlobalReducer.actions.clear());
 };
 
 export const toggleBar = (value) => (dispatch) => {
@@ -74,7 +81,7 @@ export const remove = (field, param) => (dispatch) => {
 export const logout = () => (dispatch) => {
 	localStorage.removeItem('current_account');
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
-	dispatch(clear(HISTORY_DATA));
+	dispatch(clearTable(HISTORY));
 	dispatch(resetBalance());
 	history.push(SIGN_IN_PATH);
 };
