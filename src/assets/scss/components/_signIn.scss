@@ -9,5 +9,6 @@
 
 .sign-scroll-fix {
     max-height: calc(100vh - 50px);
+    height: 100vh;
     overflow: overlay;
 }

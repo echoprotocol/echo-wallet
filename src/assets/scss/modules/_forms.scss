@@ -46,7 +46,7 @@
     .shrink {
         &-wrap {
             position: relative;
-            margin-top: 40px;
+            margin-top: 25px;
             .check {
                 max-width: 300px;
             }
@@ -67,70 +67,13 @@
                 }
                 .ui.button {
                     position: relative;
-                    margin: 40px 0 0 auto;
+                    margin: 25px 0 0 auto;
                 }
             }
         }
     }
 }
 
-
-.check {
-    &-list {
-        margin-top: 25px;
-        .check {
-            &:not(:last-child) {
-                margin-bottom: 15px;
-            }
-        }
-    }
-
-    .label {
-        display: flex;
-        align-items: center;
-        position: relative;
-        cursor: pointer;
-        &-text {
-            color: rgba($black,.7);
-            font-size: 1em;
-            transition: color .4s;
-        }
-        &:before {
-            text-align: center;
-            font-family: 'Icons';
-            display: block;
-            color: #fff;
-            min-width: 22px;
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            border: 2px solid $black;
-            margin-right: 15px;
-            content: "\f00c";
-            transition: border .4s, background-color .4s, color .4s;
-            font-weight: 300;
-            font-size: 12px;
-        }
-    }
-    &.orange {
-        input {
-            &:disabled ~ .label {
-                opacity: .6;
-            }
-            &:checked ~ .label {
-                &:before {
-                    background-color: $orange;
-                    border: 2px solid $orange;
-                }
-            }
-        }
-        .label {
-            &:before {
-                border: 2px solid $orange;
-            }
-        }
-    }
-}
 
 .field,
 .textarea-wrap {
@@ -154,7 +97,6 @@
             display: flex;
         }
         .input {
-            // border: 1px solid $err-red;
             &:focus {
                 border: 1px solid $err-red;
             }
@@ -355,7 +297,7 @@
     width: 100%;
     input {
         min-width: 360px;
-        padding-right: 50px;
+        padding-right: 55px;
     }
     .label {
         color: $bd-gray;
@@ -431,24 +373,5 @@
 input {
     &:focus {
         @extend %onFocus;
-    }
-}
-.check {
-    input {
-        position: absolute;
-        opacity: 0;
-        &:focus {
-            & ~ .label {
-                &:before {
-                    @extend %onFocus;
-                }
-
-            }
-        }
-        &:checked ~ .label {
-            .label-text {
-                color: $black;
-            }
-        }
     }
 }

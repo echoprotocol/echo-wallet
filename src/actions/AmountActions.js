@@ -21,6 +21,7 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		value = value ? Number(value).toString() : value;
 	}
 
+	dispatch(setFormError(form, 'fee', null));
 	dispatch(setFormValue(form, name, value));
 };
 

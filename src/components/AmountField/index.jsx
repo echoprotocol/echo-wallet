@@ -67,9 +67,9 @@ class AmountField extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (typeof e.target.value === 'undefined') { // if click
+		if (typeof e.target.value === 'undefined') {
 			this.onChangeCurrency(e, value);
-		} else if (e.keyCode === 13) { // if enter
+		} else if (e.keyCode === 13) {
 			this.onChangeCurrency(e, value);
 			setTimeout(() => { e.target.blur(); }, 0);
 		}
@@ -190,7 +190,6 @@ class AmountField extends React.Component {
 						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
-						upward={window.innerHeight < 750}
 						onBlur={() => this.clearSearchText()}
 						options={this.state.options}
 						noResultsMessage="No results are found"

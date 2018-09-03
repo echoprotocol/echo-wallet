@@ -5,7 +5,7 @@ $stripe-width: 10px;
     position: relative;
     &:after {
         position: absolute;
-        bottom: 0;
+        bottom: -2px;
         right: 0;
         left: 0;
         height: 4px;
