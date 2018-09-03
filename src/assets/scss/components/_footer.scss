@@ -74,6 +74,9 @@
             background-color: $white;
         }
     }
+    & + .network-link {
+        margin-left: 5px;
+    }
     & + .network-dropdown {
         margin-left: 5px;
     }

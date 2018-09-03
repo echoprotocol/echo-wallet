@@ -66,8 +66,21 @@
 }
 
 
-.radio {
 
+.radio {
+    &-list {
+        margin-bottom: 30px;
+        .radio {
+            &:not(:last-child) {
+                margin-bottom: 15px;
+            } 
+        }
+        .label {
+            &-text {
+                display: block;
+            }
+        }
+    }
     .label {
         display: flex;
         align-items: center;

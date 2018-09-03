@@ -532,7 +532,8 @@
 
 .ui.form .field :disabled {
     opacity: 1;
-    background-color: rgba($bg-gray,.5);
+    background-color: rgba($bg-gray, .5);
+    transition: background-color $speed;
 }
 
 .ui.form .field.disabled :disabled {

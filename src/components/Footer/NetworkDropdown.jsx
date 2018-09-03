@@ -1,5 +1,7 @@
+// Удалить этот файл, если не перейдем обратно к нетворкам в дропдауне
+
 import React from 'react';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown, Input, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 
@@ -20,6 +22,8 @@ class Network extends React.PureComponent {
 
 	onDropdownChange(e, value) {
 		e.preventDefault();
+		e.stopPropagation();
+
 		if (value === 'netCustom') {
 			this.setState({ checked: value });
 			this.nameInput.focus();
@@ -69,26 +73,27 @@ class Network extends React.PureComponent {
 			className: 'radio',
 			tabIndex: 0,
 			content: (
-				<div className="field error-wrap" >
-					<label htmlFor="Address">Custom Address</label>
-					<Input
-						type="text"
-						name="newName"
-						ref={(input) => { this.nameInput = input; }}
-						className="label-in-left"
-					>
-						<input />
-						<button
-							className="edit-option icon-edit-checked"
-						/>
-						<button
-							className="edit-option icon-edit-close"
-						/>
-					</Input>
+				<Form onClick={(e) => e.stopPropagation()}>
+					<Form.Field className="error-wrap">
+						<label htmlFor="Address">Custom Address</label>
+						<Input
+							type="text"
+							name="newName"
+							ref={(input) => { this.nameInput = input; }}
+							className="label-in-left"
+						>
+							<input />
+							<button
+								className="edit-option icon-edit-checked"
+							/>
+							<button
+								className="edit-option icon-edit-close"
+							/>
+						</Input>
 
-					<span className="error-message">Some error</span>
-				</div>
-
+						<span className="error-message">Some error</span>
+					</Form.Field>
+				</Form>
 			),
 		});
 
@@ -101,7 +106,6 @@ class Network extends React.PureComponent {
 				text="wss://echo-tmp-wallet.pixelplex.io"
 				className="network-dropdown"
 				icon={false}
-				closeOnChange={false}
 			/>
 		);
 

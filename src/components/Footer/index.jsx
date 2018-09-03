@@ -2,11 +2,11 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { version } from '../../../package.json';
-
+import { NETWORKS_PATH } from '../../constants/RouterConstants';
 import { connection } from '../../actions/GlobalActions';
-import Network from './NetworkDropdown';
 
 class Footer extends React.PureComponent {
 
@@ -31,9 +31,9 @@ class Footer extends React.PureComponent {
 					</li>
 					<li>
 						<span className="status green">
-                            Connected
+                            Connected to
 						</span>
-						<Network />
+						<Link className="network-link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
 					</li>
 				</ul>
 			</div>
