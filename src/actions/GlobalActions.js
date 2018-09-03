@@ -71,10 +71,29 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const logout = () => (dispatch) => {
-	localStorage.removeItem('current_account');
-	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
-	dispatch(clear(HISTORY_DATA));
-	dispatch(resetBalance());
-	history.push(SIGN_IN_PATH);
+export const logout = () => (dispatch, getState) => {
+	const accountName = getState().global.getIn(['activeUser', 'name']);
+	let accounts = localStorage.getItem('accounts');
+	try {
+		accounts = JSON.parse(accounts);
+	} catch (e) {
+		accounts = [];
+	}
+
+	const currAccountIndex = accounts.findIndex((i) => i === accountName);
+
+	if (currAccountIndex !== -1) {
+		accounts.splice(currAccountIndex, 1);
+		localStorage.setItem('accounts', JSON.stringify(accounts));
+	}
+
+	if (accounts.length) {
+		dispatch(initAccount(accounts[0]));
+	} else {
+		localStorage.removeItem('current_account');
+		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
+		dispatch(clear(HISTORY_DATA));
+		dispatch(resetBalance());
+		history.push(SIGN_IN_PATH);
+	}
 };
