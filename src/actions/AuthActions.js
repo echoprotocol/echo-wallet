@@ -60,7 +60,8 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		dispatch(initAccount(accountName));
+		const networkName = getState().global.getIn(['network', 'name']);
+		dispatch(initAccount(accountName, networkName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -118,7 +119,8 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		dispatch(initAccount(accountName));
+		const networkName = getState().global.getIn(['network', 'name']);
+		dispatch(initAccount(accountName, networkName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {

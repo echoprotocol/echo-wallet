@@ -143,11 +143,10 @@ class ContractSettings extends React.Component {
 	}
 
 	render() {
-		const { location, accountId } = this.props;
+		const { location, contractId } = this.props;
 
 		const contractName = location.pathname.split('/')[2];
 
-		const contractId = JSON.parse(localStorage.getItem('contracts'))[accountId][contractName].id;
 		return (
 			<div className="tab-full">
 				<div className="control-wrap">
@@ -182,7 +181,7 @@ class ContractSettings extends React.Component {
 ContractSettings.propTypes = {
 	newName: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	accountId: PropTypes.string.isRequired,
+	contractId: PropTypes.string.isRequired,
 	updateContractName: PropTypes.func.isRequired,
 	disableContract: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -192,8 +191,8 @@ ContractSettings.propTypes = {
 
 export default withRouter(connect(
 	(state) => ({
-		accountId: state.global.getIn(['activeUser', 'id']),
 		newName: state.form.getIn([FORM_VIEW_CONTRACT, 'newName']),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		updateContractName: (oldName, newName) => dispatch(updateContractName(oldName, newName)),

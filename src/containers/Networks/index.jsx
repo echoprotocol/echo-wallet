@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Form, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+
+import { NETWORKS } from '../../constants/GlobalConstants';
 
 class Networks extends React.Component {
 
@@ -32,6 +35,7 @@ class Networks extends React.Component {
 		};
 
 	}
+
 	onShowCustom(id) {
 		if (id === 'custom') {
 			this.setState({ showCustom: true });
@@ -39,8 +43,11 @@ class Networks extends React.Component {
 			this.setState({ showCustom: false });
 		}
 	}
+
 	render() {
 		const { networksList } = this.state;
+
+		const { history } = this.props;
 
 		return (
 			<div className="sign-scroll-fix">
@@ -99,8 +106,8 @@ class Networks extends React.Component {
 						content="Save"
 					/>
 					<span className="sign-nav">
-                                Return to
-						<Link className="link orange" to="/sign-in">Back</Link>
+                        Return to
+						<a href="#" className="link orange pointer" onClick={history.goBack} onKeyPress={history.goBack}>Back</a>
 					</span>
 				</Form>
 			</div>
@@ -109,7 +116,11 @@ class Networks extends React.Component {
 
 }
 
-export default connect(
+Networks.propTypes = {
+	history: PropTypes.object.isRequired,
+};
+
+export default withRouter(connect(
 	() => ({}),
 	() => ({}),
-)(Networks);
+)(Networks));
