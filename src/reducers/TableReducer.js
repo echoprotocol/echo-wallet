@@ -7,6 +7,7 @@ import { HISTORY_DATA } from '../constants/TableConstants';
 const DEFAULT_FIELDS = {
 	[HISTORY_DATA]: Map({
 		history: null,
+		loading: false,
 	}),
 };
 

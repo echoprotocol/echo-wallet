@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Loading from '../../components/Loading';
 
 import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
+import { setLoading } from '../../actions/TableActions';
 
 import { HISTORY_DATA } from '../../constants/TableConstants';
 
@@ -13,12 +14,18 @@ import RowComponent from './RowComponent';
 
 class Activity extends React.Component {
 
+
+	componentWillMount() {
+		this.props.setLoading(true);
+	}
+
 	componentDidMount() {
 		const account = this.props.account ? this.props.account.toJS() : null;
 
 		if (account && account.history) {
-			this.props.formatHistory(account.history);
+			setImmediate(() => this.props.formatHistory(account.history));
 		}
+		process.nextTick(() => this.props.setLoading(false));
 	}
 
 	componentDidUpdate(prevProps) {
@@ -71,9 +78,8 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		const { account, history } = this.props;
-
-		return account.get('history') && history ? this.renderTable() : <Loading />;
+		const { history, loading } = this.props;
+		return !history || loading ? <Loading /> : this.renderTable();
 	}
 
 }
@@ -83,6 +89,8 @@ Activity.propTypes = {
 	account: PropTypes.any,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
+	setLoading: PropTypes.func.isRequired,
+	loading: PropTypes.bool.isRequired,
 };
 
 Activity.defaultProps = {
@@ -95,11 +103,13 @@ export default connect(
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
 		const history = state.table.getIn([HISTORY_DATA, 'history']);
+		const loading = state.table.getIn([HISTORY_DATA, 'loading']);
 
-		return { account, history };
+		return { account, history, loading };
 	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
 		viewTransaction: (value) => dispatch(viewTransaction(value)),
+		setLoading: (value) => dispatch(setLoading(HISTORY_DATA, value)),
 	}),
 )(Activity);

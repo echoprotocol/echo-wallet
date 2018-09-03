@@ -7,3 +7,8 @@ export const setValue = (table, field, value) => (dispatch) => {
 export const clear = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
 };
+
+
+export const setLoading = (table, value) => (dispatch) => {
+	dispatch(TableReducer.actions.set({ table, field: 'loading', value }));
+};

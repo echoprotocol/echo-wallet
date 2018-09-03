@@ -7,7 +7,7 @@ import { VIEW_TRANSACTION_PATH } from '../constants/RouterConstants';
 import { HISTORY_DATA } from '../constants/TableConstants';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
-import { setValue } from './TableActions';
+import { setValue, setLoading } from './TableActions';
 import { openModal } from './ModalActions';
 import { setNote } from './TransactionActions';
 
