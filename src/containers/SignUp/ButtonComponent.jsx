@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
-import { createAccount, cancelAddAccount } from '../../actions/AuthActions';
+import { createAccount } from '../../actions/AuthActions';
 
 class ButtonComponent extends React.Component {
 
@@ -20,10 +20,6 @@ class ButtonComponent extends React.Component {
 		});
 	}
 
-	onCancel() {
-		this.props.cancelAddAccount();
-	}
-
 	isDisabledSubmit() {
 		const {
 			accepted,
@@ -32,17 +28,18 @@ class ButtonComponent extends React.Component {
 			confirmPassword,
 		} = this.props;
 
-		return (!accountName.value || accountName.error) ||
+		if ((!accountName.value || accountName.error) ||
 			(!generatedPassword.value || generatedPassword.error) ||
-			(!confirmPassword.value || confirmPassword.error) || !accepted;
+			(!confirmPassword.value || confirmPassword.error) || !accepted) {
+			return true;
+		}
+
+		return false;
 	}
 
 	renderLoading() {
 		return (
 			<div className="btn-wrap">
-				{
-					this.props.isAddAccount && <Button basic disabled type="submit" color="orange">Cancel</Button>
-				}
 				<Button type="submit" color="orange" className="load">Creating...</Button>
 			</div>
 		);
@@ -51,17 +48,6 @@ class ButtonComponent extends React.Component {
 	renderSubmit() {
 		return (
 			<div className="btn-wrap">
-				{
-					this.props.isAddAccount &&
-					<Button
-						basic
-						type="submit"
-						color="orange"
-						onClick={(e) => this.onCancel(e)}
-					>
-					Cancel
-					</Button>
-				}
 				<Button
 					basic
 					type="submit"
@@ -69,9 +55,8 @@ class ButtonComponent extends React.Component {
 					disabled={this.isDisabledSubmit()}
 					className={classnames({ disabled: this.isDisabledSubmit() })}
 					onClick={(e) => this.onCreate(e)}
-				>
-				Create account
-				</Button>
+					content={this.props.btnContent}
+				/>
 			</div>
 		);
 	}
@@ -90,9 +75,8 @@ ButtonComponent.propTypes = {
 	accountName: PropTypes.object.isRequired,
 	generatedPassword: PropTypes.object.isRequired,
 	confirmPassword: PropTypes.object.isRequired,
-	isAddAccount: PropTypes.bool.isRequired,
 	createAccount: PropTypes.func.isRequired,
-	cancelAddAccount: PropTypes.func.isRequired,
+	btnContent: PropTypes.string.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -112,6 +96,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		createAccount: (value) => dispatch(createAccount(value)),
-		cancelAddAccount: () => dispatch(cancelAddAccount()),
 	}),
 )(ButtonComponent);

@@ -17,6 +17,7 @@ import {
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 	CALL_CONTRACT_PATH,
+	PERMISSIONS_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -159,7 +160,7 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				{
-					![INDEX_PATH, CONTRACT_LIST_PATH, BALANCES_PATH]
+					![INDEX_PATH, CONTRACT_LIST_PATH, BALANCES_PATH, PERMISSIONS_PATH]
 						.find((url) => url === location.pathname) &&
 						this.renderLinkToParent()
 				}

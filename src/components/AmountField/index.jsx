@@ -190,7 +190,6 @@ class AmountField extends React.Component {
 						onSearchChange={(e) => this.onSearch(e)}
 						text={currency ? currency.symbol : ''}
 						selection
-						upward={window.innerHeight < 750}
 						onBlur={() => this.clearSearchText()}
 						options={this.state.options}
 						noResultsMessage="No results are found"
