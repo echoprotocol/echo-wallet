@@ -8,9 +8,11 @@ export const CONTRACT_LIST_PATH = '/view-contract';
 export const VIEW_CONTRACT_PATH = '/view-contract/:name';
 export const VIEW_TRANSACTION_PATH = '/view-transaction';
 export const CALL_CONTRACT_PATH = '/call-contract';
+export const NETWORKS_PATH = '/networks';
+export const PERMISSIONS_PATH = '/permissions';
 export const INDEX_PATH = '/';
 
-export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH];
+export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH, NETWORKS_PATH];
 export const CENTER_MODE_ROUTES = [
 	CREATE_CONTRACT_PATH,
 	TRANSFER_PATH,
