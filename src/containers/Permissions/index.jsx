@@ -37,7 +37,6 @@ Permissions.propTypes = {
 export default connect((state) => {
 	const accountId = state.global.getIn(['activeUser', 'id']);
 	const account = state.echojs.getIn(['data', 'accounts', accountId]).toJS();
-	// const active = account.;
 	const active = account.active.account_auths.concat(account.active.key_auths);
 	const owner = account.owner.account_auths.concat(account.owner.key_auths);
 	const note = [[account.options.memo_key]];
