@@ -13,6 +13,7 @@ import {
 	VIEW_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	CALL_CONTRACT_PATH,
+	PERMISSIONS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -27,6 +28,7 @@ import Transfer from './containers/Transfer';
 import CreateContract from './containers/CreateContract';
 import ViewTransaction from './containers/ViewTransaction';
 import CallContract from './containers/CallContract';
+import Permissions from './containers/Permissions';
 
 export default class Routes extends React.Component {
 
@@ -45,6 +47,8 @@ export default class Routes extends React.Component {
 					<Route exact path={VIEW_CONTRACT_PATH} component={ViewContract} />
 					<Route exact path={VIEW_TRANSACTION_PATH} component={ViewTransaction} />
 					<Route exact path={CALL_CONTRACT_PATH} component={CallContract} />
+					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
+
 				</div>
 			</App>
 		);

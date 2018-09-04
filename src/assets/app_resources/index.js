@@ -60,9 +60,9 @@ function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: 1100,
-		height: 700,
-		minWidth: 700,
-		minHeight: 700,
+		height: 800,
+		minWidth: 980,
+		minHeight: 800,
 	});
 
 	// and load the index.html of the app.
