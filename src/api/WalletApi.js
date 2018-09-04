@@ -32,12 +32,12 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const createWallet = async (faucet, account, password) => {
+export const createWallet = async (registrator, account, password) => {
 	const owner = generateKeyFromPassword(account, 'owner', password);
 	const active = generateKeyFromPassword(account, 'active', password);
 	const memo = generateKeyFromPassword(account, 'memo', password);
 
-	let response = await fetch(faucet, {
+	let response = await fetch(registrator, {
 		method: 'post',
 		mode: 'cors',
 		headers: {

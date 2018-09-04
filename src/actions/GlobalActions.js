@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 
 import GlobalReducer from '../reducers/GlobalReducer';
@@ -48,6 +48,12 @@ export const connection = () => async (dispatch) => {
 
 	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(network) }));
 
+	let networks = localStorage.getItem('custom_networks');
+	networks = networks ? JSON.parse(networks) : [];
+	networks = NETWORKS.concat(networks);
+
+	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+
 	try {
 		await dispatch(EchoJSActions.connect(
 			network.url,
@@ -86,10 +92,6 @@ export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
 };
 
-export const hideBar = () => (dispatch) => {
-	dispatch(GlobalReducer.actions.hideBar());
-};
-
 export const push = (field, param, value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.push({ field, param, value }));
 };
@@ -109,21 +111,41 @@ export const logout = () => (dispatch, getState) => {
 
 	dispatch(clearTable(HISTORY));
 	dispatch(resetBalance());
-	dispatch(GlobalReducer.actions.clear());
+	dispatch(GlobalReducer.actions.logout());
 
 	history.push(SIGN_IN_PATH);
 };
 
 export const saveNetwork = (network) => (dispatch, getState) => {
-	if (network.name === 'custom') {
-		// TODO add custom logic
-		return;
-	}
-
 	const oldNetwork = getState().global.get('network').toJS();
 
 	dispatch(disconnection(oldNetwork.url));
 
 	localStorage.setItem('current_network', JSON.stringify(network));
 	dispatch(connection());
+};
+
+export const addNetwork = (address, name, registrator) => (dispatch, getState) => {
+	//	TODO validate params
+
+	const network = {
+		address: address.value,
+		name: name.value,
+		registrator: registrator.value,
+	};
+
+	let customNetworks = localStorage.getItem('custom_networks');
+	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
+	customNetworks.push(network);
+
+	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	const networks = getState().global.get('networks').toJS();
+	networks.push(network);
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
+
 };

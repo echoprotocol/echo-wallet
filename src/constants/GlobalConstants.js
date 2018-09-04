@@ -49,12 +49,12 @@ export const SORT_CONTRACTS = 'contracts';
 export const NETWORKS = [
 	{
 		name: 'mainnet',
-		faucet: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
+		registrator: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
 		url: 'wss://echo-devnet-node.pixelplex.io/ws',
 	},
 	{
 		name: 'testnet',
-		faucet: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
+		registrator: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
 		url: 'wss://echo-devnet-node.pixelplex.io/ws',
 	},
 ];
