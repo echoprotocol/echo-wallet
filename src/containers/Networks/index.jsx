@@ -7,47 +7,42 @@ import classnames from 'classnames';
 
 import { NETWORKS } from '../../constants/GlobalConstants';
 
+import { saveNetwork } from '../../actions/GlobalActions';
+
+import AddCustomForm from './AddCustomForm';
+
 class Networks extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
+			network: props.network,
 			showCustom: false,
-			networksList: [
-				{
-					id: 1,
-					value: 'MainNet',
-				},
-				{
-					id: 2,
-					value: 'TestNet',
-				},
-				{
-					id: 3,
-					value: 'DevNet',
-				},
-				{
-					id: 'custom',
-					value: 'Custom Network',
-				},
-			],
 		};
-
 	}
 
-	onShowCustom(id) {
-		if (id === 'custom') {
-			this.setState({ showCustom: true });
-		} else {
-			this.setState({ showCustom: false });
+	onChangeNetwork(network) {
+		this.setState({ network, showCustom: false });
+	}
+
+	onSaveNetwork(e) {
+		e.preventDefault();
+
+		if (this.state.network.name === this.props.network.name) {
+			return;
 		}
+
+		this.props.saveNetwork(this.state.network);
+	}
+
+	onShowCustom() {
+		this.setState({ network: { name: 'custom' }, showCustom: true });
 	}
 
 	render() {
-		const { networksList } = this.state;
-
 		const { history } = this.props;
+		const { network: { name }, showCustom } = this.state;
 
 		return (
 			<div className="sign-scroll-fix">
@@ -58,45 +53,35 @@ class Networks extends React.Component {
 					<div className="field-wrap">
 						<div className="radio-list">
 							{
-								networksList.map(({ id, value }) => (
-									<div className="radio" key={id} >
+								NETWORKS.map((network) => (
+									<div className="radio" key={network.name} >
 										<input
 											type="radio"
-											id={id}
+											id={network.name}
 											name="network"
-											onChange={() => this.onShowCustom(id)}
+											onChange={(e) => this.onChangeNetwork(network, e)}
+											checked={name === network.name}
 										/>
-										<label
-											className="label"
-											htmlFor={id}
-										>
-											<span className="label-text">{value}</span>
+										<label className="label" htmlFor={network.name}>
+											<span className="label-text">{network.name}</span>
 										</label>
 									</div>
 								))
 							}
+							<div className="radio">
+								<input
+									type="radio"
+									id="custom"
+									name="network"
+									onChange={(e) => this.onShowCustom(e)}
+									checked={name === 'custom'}
+								/>
+								<label className="label" htmlFor="custom">
+									<span className="label-text">custom</span>
+								</label>
+							</div>
 						</div>
-						<div className={classnames('custom-network', { active: this.state.showCustom })}>
-
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="address">Address</label>
-								<input placeholder="Address" disabled={!this.state.showCustom} name="address" className="ui input" />
-								<span className="error-message">asdasd</span>
-							</Form.Field>
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="name">Name</label>
-								<input placeholder="Name" disabled={!this.state.showCustom} name="name" className="ui input" />
-								<span className="error-message">asdasd</span>
-							</Form.Field>
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="registrator">Registrator</label>
-								<input placeholder="Registrator" disabled={!this.state.showCustom} name="registrator" className="ui input" />
-								<span className="error-message">Registrator error</span>
-							</Form.Field>
-
-						</div>
-
-
+						<AddCustomForm showCustom={showCustom} />
 					</div>
 					<Button
 						basic
@@ -104,6 +89,8 @@ class Networks extends React.Component {
 						color="orange"
 						className={classnames('error-wrap')}
 						content="Save"
+						onClick={(e) => this.onSaveNetwork(e)}
+						disabled={name === this.props.network.name}
 					/>
 					<span className="sign-nav">
                         Return to
@@ -118,9 +105,15 @@ class Networks extends React.Component {
 
 Networks.propTypes = {
 	history: PropTypes.object.isRequired,
+	network: PropTypes.object.isRequired,
+	saveNetwork: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
-	() => ({}),
-	() => ({}),
+	(state) => ({
+		network: state.global.getIn(['network']).toJS(),
+	}),
+	(dispatch) => ({
+		saveNetwork: (network) => dispatch(saveNetwork(network)),
+	}),
 )(Networks));
