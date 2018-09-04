@@ -21,10 +21,10 @@ class SignUp extends React.Component {
 		return (
 			<Form className="main-form">
 				<div className="form-info">
-					<div className="back-link">
+					<a href="#" className="back-link">
 						<span className="icon-back" />
                         back
-					</div>
+					</a>
 					<h3>Add Account</h3>
 				</div>
 				<FormComponent />
@@ -40,27 +40,28 @@ class SignUp extends React.Component {
 
 	renderSignUp() {
 		return (
-			<div className="sign-scroll-fix">
-				<Form className="main-form">
-					<div className="form-info">
-						<h3>Welcome to Echo</h3>
-					</div>
-					<FormComponent />
-					<CheckComponent />
-					<ButtonComponent btnContent="Create Account" />
-					<span className="sign-nav">
+
+			<Form className="main-form">
+				<div className="form-info">
+					<h3>Welcome to Echo</h3>
+				</div>
+				<FormComponent />
+				<CheckComponent />
+				<ButtonComponent btnContent="Create Account" />
+				<span className="sign-nav">
                     Have an account?
-						<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
-					</span>
-				</Form>
-			</div>
+					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
+				</span>
+			</Form>
 		);
 	}
 	render() {
 
 		return (
-			// this.renderSignUp()
-			this.renderAddAccount()
+			<div className="sign-scroll-fix">
+				{ this.renderAddAccount()}
+				{/* { this.renderSignUp() } */}
+			</div>
 		);
 	}
 
