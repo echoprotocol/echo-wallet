@@ -1,5 +1,5 @@
 import { createModule } from 'redux-modules';
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 
 export default createModule({
 	name: 'global',
@@ -11,6 +11,7 @@ export default createModule({
 			id: '',
 			name: '',
 		}),
+		accounts: List([]),
 		isAddAccount: false,
 		visibleBar: false,
 		contracts: new Map({}),

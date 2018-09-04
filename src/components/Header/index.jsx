@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
-import { logout, addAccount } from '../../actions/GlobalActions';
+import { logout, addAccount, initAccountsBalances } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -21,6 +22,15 @@ import {
 import { formatAmount } from '../../helpers/FormatHelper';
 
 class Header extends React.Component {
+
+	componentWillReceiveProps(nextProps) {
+		if (_.isEqual(this.props, nextProps)) {
+			return;
+		}
+
+		this.props.initAccounts();
+	}
+
 
 	onLogout() {
 		this.props.logout();
@@ -91,7 +101,7 @@ class Header extends React.Component {
 		return (
 			accounts.toJS().map((account, index) => {
 				const id = index;
-				const balance = formatAmount(account.balance, core.precision);
+				const balance = formatAmount(account.balance, core.toJS().precision);
 
 				return (
 					{
@@ -102,7 +112,7 @@ class Header extends React.Component {
 								<span>{account.name}</span>
 								<div className="balance">
 									<span>{balance || '0'}</span>
-									<span>{core ? core.symbol : 'ECHO'}</span>
+									<span>{core.toJS().symbol || 'ECHO'}</span>
 								</div>
 							</a>
 						),
@@ -113,13 +123,15 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { location, accounts, core } = this.props;
+		const {
+			location, accounts, core, accountName,
+		} = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
-		const accs = (accounts && core) && this.renderAccounts();
+		const renderedAccounts = (accounts && core) && this.renderAccounts();
 
 		let options = [
 			{
@@ -142,7 +154,7 @@ class Header extends React.Component {
 			},
 		];
 
-		options = accs.concat(options);
+		options = renderedAccounts.concat(options);
 
 		return (
 			<div className="header">
@@ -171,7 +183,7 @@ class Header extends React.Component {
 
 						<Dropdown
 							options={options}
-							text={localStorage.getItem('current_account')}
+							text={accountName}
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						/>
 
@@ -187,26 +199,32 @@ Header.propTypes = {
 	assets: PropTypes.any,
 	core: PropTypes.any,
 	accounts: PropTypes.any,
+	accountName: PropTypes.string,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	addAccount: PropTypes.func.isRequired,
+	initAccounts: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	assets: null,
 	core: null,
 	accounts: null,
+	accountName: '',
 };
 
 export default withRouter(connect(
 	(state) => ({
 		assets: state.balance.get('assets'),
-		core: state.balance.get('core'),
-		accounts: state.balance.get('accountsBalances'),
+		core: state.balance.getIn(['core']),
+		accounts: state.global.get('accounts'),
+		accountName: state.global.getIn(['activeUser', 'name']),
+		systemAccounts: state.echojs.getIn(['data', 'accounts']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		addAccount: () => dispatch(addAccount()),
+		initAccounts: () => dispatch(initAccountsBalances()),
 	}),
 )(Header));

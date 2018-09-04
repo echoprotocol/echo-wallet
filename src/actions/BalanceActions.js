@@ -102,34 +102,19 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 };
 
 export const initBalances = (accountId) => async (dispatch) => {
+	const { precision, symbol } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
+
+	dispatch(BalanceReducer.actions.setIn({
+		field: 'core',
+		params: { precision, symbol },
+	}));
+	// dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
 	await dispatch(getTokenBalances(accountId));
 
 	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
 
 	await dispatch(getAssetsBalances(account.balances));
-};
-
-export const initAccountsBalances = (accounts) => async (dispatch) => {
-	const { precision, symbol } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
-
-	dispatch(BalanceReducer.actions.set({
-		field: 'core',
-		value: { precision, symbol },
-	}));
-
-	let accountsBalances = accounts.map(async (account) => {
-		const accountData = (await dispatch(EchoJSActions.fetch(account.id))).toJS();
-		const stats = (await dispatch(EchoJSActions.fetch(accountData.balances['1.3.0']))).toJS();
-		return { name: account.name, balance: stats.balance };
-	});
-
-	accountsBalances = await Promise.all(accountsBalances);
-
-	dispatch(BalanceReducer.actions.set({
-		field: 'accountsBalances',
-		value: new List(accountsBalances),
-	}));
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {

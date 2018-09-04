@@ -4,8 +4,10 @@ import { Map, List } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	tokens: List([]),
 	assets: List([]),
-	core: {}, // { precision, symbol }
-	accountsBalances: List([]),
+	core: new Map({
+		precision: '',
+		symbol: '',
+	}),
 });
 
 export default createModule({
@@ -15,6 +17,16 @@ export default createModule({
 		set: {
 			reducer: (state, { payload }) => {
 				state = state.set(payload.field, payload.value);
+
+				return state;
+			},
+		},
+
+		setIn: {
+			reducer: (state, { payload }) => {
+				Object.keys(payload.params).forEach((field) => {
+					state = state.setIn([payload.field, field], payload.params[field]);
+				});
 
 				return state;
 			},
