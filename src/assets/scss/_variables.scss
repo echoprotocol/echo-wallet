@@ -1,5 +1,6 @@
 // Colors
 // -------------------------
+$mainColor:             rgba(77, 102, 205, 1); // #4d66cd
 $white:					#fff;
 $black:					rgb(59, 59, 59);
 $gray:					rgb(173, 177, 190); // #adb1be
@@ -8,7 +9,8 @@ $gray-dark:             rgb(125, 129, 138);
 $bd-gray:               rgba(233, 233, 237, 1); // #e9e9ed
 $bg-gray:               rgb(233, 233, 237);
 $bg-hover:              rgba(197, 201, 210, 0.2);
-$orange:                rgb(255, 107, 72);
+$orange:                  $mainColor; // rgb(255, 107, 72);
+$yellow:                rgb(255, 249, 181); // #fff9b5
 $green:                 rgb(122, 211, 141);
 $blue:                  rgb(77, 161, 255);
 $blue-light:            rgb(112, 165, 224);
@@ -27,7 +29,6 @@ $angulars: 0.28571429rem;
 
 // tables 
 $t-row-color:           #fbfbfb;
-
 
 // MIXINS
 
