@@ -18,7 +18,6 @@ class TabCallContracts extends React.Component {
 
 	renderFields(functionForm, functions) {
 		const targetFunction = functions.find((f) => f.name === functionForm.get('functionName'));
-
 		return targetFunction ?
 			targetFunction.inputs.map(({ name, type }) => (
 				<Field key={name} field={name} type={type} />
@@ -29,9 +28,9 @@ class TabCallContracts extends React.Component {
 	}
 
 	renderAmount(functionForm) {
+
 		const payable = functionForm.get('payable');
 		const functionName = functionForm.get('functionName');
-
 		if (functionName) {
 			return payable ?
 				<AmountField form={FORM_CALL_CONTRACT} />

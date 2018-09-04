@@ -20,6 +20,8 @@ export const estimateCallContractFee = async (operation, options) => {
 };
 
 export const encodeMemo = (fromAccount, toAccount, memo, privateKey) => {
+	memo = Buffer.from(memo, 'utf-8');
+
 	const nonce = TransactionHelper.unique_nonce_uint64();
 
 	return {

@@ -168,7 +168,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
-		toastSuccess('Token successfully added');
+		toastSuccess('Token was successfully added');
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', err));
 	} finally {
@@ -257,6 +257,7 @@ export const disableToken = (name, contractId) => (dispatch) => {
 export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
+	dispatch(setValue(FORM_TRANSFER, 'selectedSymbol', asset.symbol));
 	history.push(TRANSFER_PATH);
 };
 

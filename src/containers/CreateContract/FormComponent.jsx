@@ -16,8 +16,7 @@ class FormComponent extends React.Component {
 
 	onChange(e) {
 		const field = e.target.name;
-		let { value } = e.target;
-		value = value.trim();
+		const { value } = e.target;
 		if (field) {
 			this.props.setFormValue(field, value);
 		}

@@ -127,11 +127,13 @@ class ContractList extends React.Component {
 	renderEmpty() {
 		return (
 			<div className="empty-contracts">
-				<h3>Start watch contract or create a new one</h3>
-				<div className="btns">
-					<Button content="watch contract" onClick={(e) => this.onLink(ADD_CONTRACT_PATH, e)} />
-					<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
-					<Button content="call contract" color="orange" onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)} />
+				<div className="contract-navigator">
+					<h3>Start watch contract or create a new one</h3>
+					<div className="btns">
+						<Button content="watch contract" onClick={(e) => this.onLink(ADD_CONTRACT_PATH, e)} />
+						<Button content="create new contract" color="orange" onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)} />
+						<Button content="call contract" color="orange" onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)} />
+					</div>
 				</div>
 			</div>
 		);

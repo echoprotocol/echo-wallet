@@ -11,7 +11,7 @@ import { setValue } from '../../actions/FormActions';
 import { getFee, fetchFee } from '../../actions/TransactionActions';
 import { setContractFees } from '../../actions/ContractActions';
 
-import { FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
@@ -21,10 +21,33 @@ class FeeComponent extends React.Component {
 		props.fetchFee().then((fee) => {
 			props.setValue('fee', fee);
 		});
-	}
 
+		this.state = {
+			isChanged: false,
+		};
+	}
 	componentDidMount() {
 		this.props.setContractFees();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (_.isEqual(this.props, nextProps)) { return; }
+
+		const {
+			note, assets, selectedSymbol,
+		} = this.props;
+
+		if (assets.length && !this.state.isChanged) {
+			assets.forEach((asset) => {
+				if (asset.symbol === selectedSymbol) {
+					const resultFee = this.props.getFee(asset.id, note.value);
+					if (resultFee) {
+						this.props.setValue('fee', resultFee);
+						this.setState({ isChanged: true });
+					}
+				}
+			});
+		}
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -78,6 +101,13 @@ class FeeComponent extends React.Component {
 			return arr;
 		}, []);
 
+		if (this.props.fee && this.props.fee.asset && this.props.fee.asset.symbol) {
+			const feeAsset = this.props.fee.asset.symbol;
+
+			const newFee = options.find((fee) => (fee.key === feeAsset));
+			if (newFee) this.onFee(JSON.parse(newFee.value));
+		}
+
 		return options;
 	}
 
@@ -93,8 +123,8 @@ class FeeComponent extends React.Component {
 
 	render() {
 		const { form } = this.props;
-
-		const options = form === FORM_CALL_CONTRACT ? this.getOptionsCallContract() : this.getOptions();
+		const options = [FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID].includes(form)
+			? this.getOptionsCallContract() : this.getOptions();
 		const text = this.getText(options);
 		return (
 			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
@@ -109,6 +139,7 @@ class FeeComponent extends React.Component {
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
 					text={text}
+					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
 			</Form.Field>
@@ -121,6 +152,7 @@ FeeComponent.propTypes = {
 	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
+	selectedSymbol: PropTypes.string,
 	form: PropTypes.string.isRequired,
 	note: PropTypes.any.isRequired,
 	fees: PropTypes.array.isRequired,
@@ -134,6 +166,7 @@ FeeComponent.defaultProps = {
 	isSingle: false,
 	fee: {},
 	assets: [],
+	selectedSymbol: '',
 };
 
 export default connect(
@@ -142,6 +175,7 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
 		note: state.form.getIn([form, 'note']) || {},
+		selectedSymbol: state.form.getIn([form, 'selectedSymbol']),
 		fees: state.fee.toArray() || [],
 		form,
 	}),
@@ -149,6 +183,6 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
-		setContractFees: () => dispatch(setContractFees()),
+		setContractFees: () => dispatch(setContractFees(form)),
 	}),
 )(FeeComponent);

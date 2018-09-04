@@ -7,7 +7,7 @@ import { convert } from '../../actions/ConverterActions';
 
 class DropdownComponent extends React.Component {
 
-	onChange(e, type) {
+	onChange(e, { value: type }) {
 		const { data, component } = this.props;
 		this.props.convert(type, data, component);
 	}
@@ -38,9 +38,9 @@ class DropdownComponent extends React.Component {
 				placeholder={activeType || 'hex'}
 				compact
 				selection
-				className="item contract-type-dropdown air"
+				className="contract-type-dropdown air"
 				options={variativeOptions || options}
-				onChange={(e, data) => this.onChange(e, data.value)}
+				onChange={(e, data) => this.onChange(e, data)}
 			/>
 		);
 	}

@@ -44,7 +44,13 @@ export const loadContracts = (accountId) => (dispatch) => {
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
-	if (!contracts[accountId]) { return; }
+	if (!contracts[accountId]) {
+		dispatch(GlobalReducer.actions.set({
+			field: 'contracts',
+			value: new Map({}),
+		}));
+		return;
+	}
 
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
@@ -170,13 +176,14 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 	const newContracts = {};
 	Object.entries(contracts).forEach((account) => {
 		newContracts[account[0]] = {};
-		Object.entries(account[1]).forEach((contract) => {
-			if (contract[0] === oldName) {
-				[, newContracts[account[0]][newName]] = contract;
-			} else {
-				[, newContracts[account[0]][contract[0]]] = contract;
-			}
-		});
+		Object.entries(account[1])
+			.forEach((contract) => {
+				if (contract[0] === oldName && accountId === account[0]) {
+					[, newContracts[account[0]][newName]] = contract;
+				} else {
+					[, newContracts[account[0]][contract[0]]] = contract;
+				}
+			});
 	});
 
 	contracts[accountId][newName] = contracts[accountId][oldName];
@@ -358,11 +365,11 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-export const setContractFees = () => async (dispatch, getState) => {
+export const setContractFees = (form) => async (dispatch, getState) => {
 	const assets = getState().balance.get('assets').toArray();
 
 	let fees = assets.reduce((arr, asset) => {
-		const value = dispatch(estimateFormFee(asset));
+		const value = dispatch(estimateFormFee(asset, form));
 		arr.push(value);
 		return arr;
 	}, []);

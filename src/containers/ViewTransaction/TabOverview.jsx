@@ -24,55 +24,41 @@ class TabOverview extends React.Component {
 		);
 	}
 
-	renderBytecode(isContract) {
-		const { bytecode, details } = this.props.data;
+	renderBytecode() {
+		const { bytecode, details, contract } = this.props.data;
 		const { bytecodeArgs } = this.props;
 		const { methodHash, args } = parseBytecode(bytecode);
 
 		return (
-			!isContract ?
-				<li>
-					<div className="col">Bytecode:</div>
-					<div className="col">
 
-						<div className="bytecode-wrap">
-							<div className="bytecode-method">
-								Method: 0x{methodHash}
-							</div>
-							{
-								args.map((arg, index) => {
-									const id = index;
-									const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
-									return (
-										<div className="bytecode-item" key={id} >
-											<Dropdown
-												data={arg}
-												component={`bytecode${id}`}
-												activeType={convertedArg ? convertedArg.type : null}
-											/>
-											<div className="bytecode">
-                                                [{id + 1}] {convertedArg ? convertedArg.value : `0x${arg}`}
-											</div>
+			parseInt(details.exec_res.new_address, 16) || !contract ?
+				<div className="bytecode">
+					{bytecode}
+				</div> :
+				<React.Fragment>
+					<div className="bytecode-method">
+						Method: 0x{methodHash}
+					</div>
+					{
+						args.map((arg, index) => {
+							const id = index;
+							const convertedArg = bytecodeArgs.find((val) => val.id === id.toString());
+							return (
+								<div className="bytecode-item" key={id} >
+									<Dropdown
+										data={arg}
+										component={`bytecode${id}`}
+										activeType={convertedArg ? convertedArg.type : null}
+									/>
+									<div className="bytecode">
+										[{id + 1}] {convertedArg ? convertedArg.value : `0x${arg}`}
+									</div>
 
-										</div>
-									);
-								})
-							}
-						</div>
-						{this.copyBytecode()}
-					</div>
-				</li> :
-				<li>
-					<div className="col">Bytecode:</div>
-					<div className="col">
-						<div className="bytecode-wrap">
-							<div className="bytecode">
-								{details.exec_res.output}
-							</div>
-						</div>
-						{this.copyBytecode()}
-					</div>
-				</li>
+								</div>
+							);
+						})
+					}
+				</React.Fragment>
 
 		);
 	}
@@ -130,7 +116,18 @@ class TabOverview extends React.Component {
 						</li> : null
 				}
 				{
-					bytecode ? this.renderBytecode(parseInt(details.exec_res.new_address, 16)) : null
+					bytecode ?
+						<li>
+							<div className="col">Bytecode:</div>
+							<div className="col">
+
+								<div className="bytecode-wrap">
+									{this.renderBytecode()}
+								</div>
+								{this.copyBytecode()}
+							</div>
+						</li>
+						: null
 				}
 			</React.Fragment>
 		);

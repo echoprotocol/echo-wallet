@@ -20,13 +20,13 @@ class TabCallContracts extends React.Component {
 		}
 	}
 	render() {
-		const { data, type } = this.props;
-		const field = formatCallContractField(this.props.field);
+		const { data, type, field } = this.props;
+		const formatedField = formatCallContractField(field);
 
 		return (
 
 			<Form.Field className={classnames('error-wrap', { error: data.error })}>
-				<label htmlFor={field}>{field}</label>
+				<label htmlFor={formatedField}>{formatedField}</label>
 
 				<input
 					placeholder={`(${type.replace(/address/g, 'id')})`}
@@ -58,6 +58,6 @@ export default connect(
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
-		setContractFees: () => dispatch(setContractFees()),
+		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
 )(TabCallContracts);
