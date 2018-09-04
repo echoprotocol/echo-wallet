@@ -52,14 +52,14 @@
         Labels
 ---------------------*/
 
-.ui.form .field > label {
-  display: flex;
-  justify-content: space-between;
-  min-height: 20px;
-  color: $gray;
-  font-size: 0.75857143em;
-  font-family: proximanovaSemibold;
-  text-transform: uppercase;
+.field > label {
+    display: flex;
+    justify-content: space-between;
+    min-height: 20px;
+    color: $gray;
+    font-size: 0.75857143em;
+    font-family: proximanovaSemibold;
+    text-transform: uppercase;
 }
 
 /*--------------------
@@ -532,7 +532,8 @@
 
 .ui.form .field :disabled {
     opacity: 1;
-    background-color: rgba($bg-gray,.5);
+    background-color: rgba($bg-gray, .5);
+    transition: background-color $speed;
 }
 
 .ui.form .field.disabled :disabled {
