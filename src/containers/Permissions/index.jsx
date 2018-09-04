@@ -1,11 +1,14 @@
 import React from 'react';
-import ActiveTable from './ActiveTable';
-import OwnerTable from './OwnerTable';
-import NoteTable from './NoteTable';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import PermissionTable from './PermissionTable';
 
 class Permissions extends React.Component {
 
 	render() {
+
+		const { active, owner, note } = this.props;
 		return (
 			<div className="permissions-wrap">
 				<div className="permissions-info">
@@ -15,9 +18,9 @@ class Permissions extends React.Component {
                     scheme, see <a className="link" href="#"> permissions</a> for more details.
 				</div>
 
-				<ActiveTable />
-				<OwnerTable />
-				<NoteTable />
+				<PermissionTable table="Active" data={active} />
+				<PermissionTable table="Owner" data={owner} />
+				<PermissionTable table="Note" data={note} />
 
 			</div>
 		);
@@ -25,5 +28,20 @@ class Permissions extends React.Component {
 
 }
 
+Permissions.propTypes = {
+	active: PropTypes.array.isRequired,
+	owner: PropTypes.array.isRequired,
+	note: PropTypes.array.isRequired,
+};
 
-export default Permissions;
+export default connect((state) => {
+	const accountId = state.global.getIn(['activeUser', 'id']);
+	const account = state.echojs.getIn(['data', 'accounts', accountId]).toJS();
+	// const active = account.;
+	const active = account.active.account_auths.concat(account.active.key_auths);
+	const owner = account.owner.account_auths.concat(account.owner.key_auths);
+	const note = [[account.options.memo_key]];
+
+	return { active, owner, note };
+})(Permissions);
+
