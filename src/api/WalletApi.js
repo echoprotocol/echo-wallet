@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import { PrivateKey, PublicKey } from 'echojs-lib';
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
@@ -105,4 +105,10 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 	});
 
 	return keys;
+};
+
+export const pubKeyToAddress = (pubKey) => {
+	const address = PublicKey.fromPublicKeyString(pubKey).toAddressString()
+	console.log(address);
+	return address;
 };

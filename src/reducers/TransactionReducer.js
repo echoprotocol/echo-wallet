@@ -11,6 +11,12 @@ const DEFAULT_FIELDS = Map({
 		unlocked: false,
 		error: null,
 	},
+	permissionKey: {
+		payload: '',
+		payloadType: '',
+		role: '',
+		value: '',
+	},
 });
 
 export default createModule({

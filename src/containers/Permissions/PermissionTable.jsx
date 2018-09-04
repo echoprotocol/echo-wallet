@@ -1,8 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 class PermissionTable extends React.Component {
+
+	onClick() {
+
+	}
 
 	render() {
 
@@ -24,16 +29,18 @@ class PermissionTable extends React.Component {
 					<Table.Body>
 						{
 							data.map((k) => {
-								const key = k[0];
-								// key-show
+								const { key } = k;
 								return (
 									<Table.Row key={key}>
 										<Table.Cell>
 											{key}
 										</Table.Cell>
-										<Table.Cell className="key-hide">
+										<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
 											<div className="cell-wrap">
-												<button className="icon icon-hide" />
+												<button
+													className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
+													onClick={() => this.onClick(k)}
+												/>
 												<span className="key">{key}</span>
 											</div>
 										</Table.Cell>

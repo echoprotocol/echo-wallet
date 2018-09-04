@@ -9,6 +9,7 @@ import contractReducer from './ContractReducer';
 import converterReducer from './ConverterReducer';
 import sortReducer from './SortReducer';
 import contractFeeReducer from './ContractFeeReducer';
+import permissionReducer from './PermissionReducer';
 
 
 export default {
@@ -23,4 +24,5 @@ export default {
 	converter: converterReducer.reducer,
 	sort: sortReducer.reducer,
 	fee: contractFeeReducer.reducer,
+	permission: permissionReducer.reducer,
 };

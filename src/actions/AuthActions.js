@@ -12,7 +12,7 @@ import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
-import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
+import { validateAccountExist, createWallet, unlockWallet, pubKeyToAddress } from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
 
 export const generatePassword = () => (dispatch) => {
@@ -131,7 +131,7 @@ export const unlockAccount = ({
 	accountName,
 	password,
 }) => async (dispatch, getState) => {
-
+    pubKeyToAddress('ECHO6tZ4VhCYfUdkspXqS18CnMCkARrBaKFbGg2ngj6tzeahGxGsix');
 	try {
 		dispatch(setDisable(MODAL_UNLOCK, true));
 
@@ -200,6 +200,9 @@ export const unlockAccount = ({
 				dispatch(setNote({ error: err }));
 			}
 		}
+
+
+
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));
