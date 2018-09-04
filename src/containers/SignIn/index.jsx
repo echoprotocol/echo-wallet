@@ -49,7 +49,7 @@ class SignIn extends React.Component {
 
 		return (
 			<div className="sign-scroll-fix">
-				<Form className="user-form">
+				<Form className="main-form">
 					<div className="form-info">
 						<h3>Welcome to Echo</h3>
 					</div>

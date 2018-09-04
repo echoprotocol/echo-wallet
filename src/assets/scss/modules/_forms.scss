@@ -356,6 +356,21 @@
             }
         }
     }
+    .form-line {
+        margin-top: 30px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .btn-wrap {
+            .button[type=submit] {
+                margin-top: 0;
+            }
+        }
+        .sign-nav {
+            margin-top: 0;
+        }
+    }
 }
 
 .ui.input.label-in-left {

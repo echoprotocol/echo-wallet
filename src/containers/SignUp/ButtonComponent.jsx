@@ -44,19 +44,11 @@ class ButtonComponent extends React.Component {
 					basic
 					type="submit"
 					color="orange"
-				>
-				Cancel
-				</Button>
-				<Button
-					basic
-					type="submit"
-					color="orange"
 					disabled={this.isDisabledSubmit()}
 					className={classnames({ disabled: this.isDisabledSubmit() })}
 					onClick={(e) => this.onClick(e)}
-				>
-				Create account
-				</Button>
+					content={this.props.btnContent}
+				/>
 			</div>
 		);
 	}
@@ -76,6 +68,7 @@ ButtonComponent.propTypes = {
 	generatedPassword: PropTypes.object.isRequired,
 	confirmPassword: PropTypes.object.isRequired,
 	createAccount: PropTypes.func.isRequired,
+	btnContent: PropTypes.string.isRequired,
 };
 
 ButtonComponent.defaultProps = {

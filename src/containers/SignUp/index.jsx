@@ -17,24 +17,50 @@ class SignUp extends React.Component {
 	componentDidMount() {
 		this.props.generatePassword();
 	}
+	renderAddAccount() {
+		return (
+			<Form className="main-form">
+				<div className="form-info">
+					<div className="back-link">
+						<span className="icon-back" />
+                        back
+					</div>
+					<h3>Add Account</h3>
+				</div>
+				<FormComponent />
+				<CheckComponent />
+				<ButtonComponent btnContent="Add Account" />
+				<span className="sign-nav">
+                    Have an account?
+					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
+				</span>
+			</Form>
+		);
+	}
 
-	render() {
-
+	renderSignUp() {
 		return (
 			<div className="sign-scroll-fix">
-				<Form className="user-form">
+				<Form className="main-form">
 					<div className="form-info">
 						<h3>Welcome to Echo</h3>
 					</div>
 					<FormComponent />
 					<CheckComponent />
-					<ButtonComponent />
+					<ButtonComponent btnContent="Create Account" />
 					<span className="sign-nav">
-						Have an account?
+                    Have an account?
 						<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
 					</span>
 				</Form>
 			</div>
+		);
+	}
+	render() {
+
+		return (
+			// this.renderSignUp()
+			this.renderAddAccount()
 		);
 	}
 
