@@ -1,6 +1,6 @@
 import {
 	INDEX_PATH,
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
@@ -13,11 +13,11 @@ import {
 export const HEADER_TITLE = [
 	{
 		path: INDEX_PATH,
-		title: 'Recent Activity',
+		title: 'Wallet',
 	},
 	{
-		path: BALANCES_PATH,
-		title: 'Wallet',
+		path: ACTIVITY_PATH,
+		title: 'Recent Activity',
 	},
 	{
 		path: TRANSFER_PATH,

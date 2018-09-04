@@ -9,13 +9,10 @@ import { logout } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
-	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
-	CALL_CONTRACT_PATH,
 	PERMISSIONS_PATH,
 } from '../../constants/RouterConstants';
 
@@ -49,6 +46,12 @@ class Header extends React.Component {
 		}
 
 	}
+	onReturnToBack(e) {
+		e.target.blur();
+		this.props.history.goBack();
+
+
+	}
 	getTitle() {
 		const { location } = this.props;
 
@@ -63,29 +66,29 @@ class Header extends React.Component {
 		return item ? item.title : '';
 	}
 
-	renderLinkToParent() {
-		const { location } = this.props;
-		if ([
-			ADD_CONTRACT_PATH,
-			CREATE_CONTRACT_PATH,
-			CALL_CONTRACT_PATH,
-		].includes(`/${location.pathname.split('/')[1]}`)) {
-			return (
-				<Link to={CONTRACT_LIST_PATH} className="icon-back" />
-			);
-		}
-		return (
-			location.pathname.split('/').length > 2 ?
-				<Link to={`/${location.pathname.split('/')[1]}`} className="icon-back" /> :
-				<Link to={INDEX_PATH} className="icon-back" />
-		);
+	renderLinkToParent(location) {
+
+		return [
+			INDEX_PATH,
+			CONTRACT_LIST_PATH,
+			ACTIVITY_PATH,
+			PERMISSIONS_PATH,
+		].includes(`/${location.pathname.split('/')[1]}`) ?
+			<button
+				className="icon-back"
+				onClick={(e) => this.onReturnToBack(e)}
+			/> :
+			<button
+				className="icon-back sub"
+				onClick={(e) => this.onReturnToBack(e)}
+			/>;
+
 	}
 
 	render() {
-		const { location } = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
-
+		const { location } = this.props;
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
 		const options = [
@@ -124,10 +127,11 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				{
-					![INDEX_PATH, CONTRACT_LIST_PATH, BALANCES_PATH, PERMISSIONS_PATH]
-						.find((url) => url === location.pathname) &&
-						this.renderLinkToParent()
+					// ![INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH]
+					// 	.find((url) => url === location.pathname) &&
+					this.renderLinkToParent(location)
 				}
+
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button
@@ -137,7 +141,7 @@ class Header extends React.Component {
 						onClick={(e) => this.onSend(e)}
 					/>
 					<div className="user-section">
-						<Link className="balance" to={BALANCES_PATH}>
+						<Link className="balance" to={INDEX_PATH}>
 							<span>
 								{balance}
 							</span>

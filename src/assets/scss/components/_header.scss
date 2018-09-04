@@ -12,6 +12,9 @@
         margin: 0 10px 0 0;
         transition: color .3s;
         display: block;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
         &:focus {
             border-radius: 0.28571429rem;
             @extend %onFocus;
@@ -23,7 +26,7 @@
         &:active {
             box-shadow: none;
         }
-        & + .page-title {
+        &.sub + .page-title {
             font-size: 16px;
         }
     }
