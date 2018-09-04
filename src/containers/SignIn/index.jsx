@@ -43,40 +43,85 @@ class SignIn extends React.Component {
 
 		return (!accountName.value || accountName.error) || (!password.value || password.error);
 	}
+	renderAddAccount() {
+		const { accountName, password, loading } = this.props;
+		return (
+
+			<Form className="main-form">
+				<div className="form-info">
+					<a href="#" className="back-link">
+						<span className="icon-back" />
+                        back
+					</a>
+					<h3>Add Account</h3>
+				</div>
+				<div className="field-wrap">
+					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
+						<label htmlFor="AccountName">Account name</label>
+
+						<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
+						<span className="error-message">{accountName.error}</span>
+
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: password.error })}>
+						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
+						<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+						<span className="error-message">{password.error}</span>
+					</Form.Field>
+				</div>
+				{
+					loading ?
+						<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
+						<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Add Account</Button>
+				}
+				<span className="sign-nav">
+                Don’t have an account?
+					<Link className="link orange" to="/sign-up">Sign Up</Link>
+				</span>
+			</Form>
+		);
+	}
+	renderSignIn() {
+		const { accountName, password, loading } = this.props;
+		return (
+
+			<Form className="main-form">
+				<div className="form-info">
+					<h3>Welcome to Echo</h3>
+				</div>
+				<div className="field-wrap">
+					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
+						<label htmlFor="AccountName">Account name</label>
+
+						<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
+						<span className="error-message">{accountName.error}</span>
+
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: password.error })}>
+						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
+						<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+						<span className="error-message">{password.error}</span>
+					</Form.Field>
+				</div>
+				{
+					loading ?
+						<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
+						<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
+				}
+				<span className="sign-nav">
+                Don’t have an account?
+					<Link className="link orange" to="/sign-up">Sign Up</Link>
+				</span>
+			</Form>
+		);
+	}
 
 	render() {
-		const { accountName, password, loading } = this.props;
 
 		return (
 			<div className="sign-scroll-fix">
-				<Form className="user-form">
-					<div className="form-info">
-						<h3>Welcome to Echo</h3>
-					</div>
-					<div className="field-wrap">
-						<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
-							<label htmlFor="AccountName">Account name</label>
-
-							<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
-							<span className="error-message">{accountName.error}</span>
-
-						</Form.Field>
-						<Form.Field className={classnames('error-wrap', { error: password.error })}>
-							<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
-							<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-							<span className="error-message">{password.error}</span>
-						</Form.Field>
-					</div>
-					{
-						loading ?
-							<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
-							<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
-					}
-					<span className="sign-nav">
-						Don’t have an account?
-						<Link className="link orange" to="/sign-up">Sign Up</Link>
-					</span>
-				</Form>
+				{/* { this.renderSignIn() } */}
+				{ this.renderAddAccount() }
 			</div>
 		);
 	}
