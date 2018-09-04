@@ -54,7 +54,7 @@ class CheckComponent extends React.Component {
 			<div className="check-list">
 				{
 					checkList.map(({ id, text, checked }, index) => (
-						<div className="check orange" key={id}>
+						<div className="check" key={id}>
 							<input type="checkbox" id={id} checked={checked} onChange={(e) => this.onChange(e, index)} disabled={loading} />
 							<label className="label" htmlFor={id}>
 								<span className="label-text">{text}</span>
