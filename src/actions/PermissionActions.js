@@ -25,34 +25,37 @@ export const formPermissionKeys = () => (dispatch, getState) => {
 
 	// save active accounts
 	let target = account.active.account_auths.map((a) => ({
-		key: a[0], weight: a[1], unlocked: false, privateKey: '',
+		key: a[0], weight: a[1], unlocked: false, privateKey: '', role: 'active', type: 'accounts',
 	}));
 	dispatch(setIn(['active', 'accounts'], new List(target)));
 
 	// save active keys
 	target = account.active.key_auths.map((a) => ({
-		key: a[0], weight: a[1], unlocked: false, privateKey: '',
+		key: a[0], weight: a[1], unlocked: false, privateKey: '', role: 'active', type: 'keys',
 	}));
 	dispatch(setIn(['active', 'keys'], new List(target)));
 
 	// save owner accounts
 	target = account.owner.account_auths.map((a) => ({
-		key: a[0], weight: a[1], unlocked: false, privateKey: '',
+		key: a[0], weight: a[1], unlocked: false, privateKey: '', role: 'owner', type: 'accounts',
 	}));
 	dispatch(setIn(['owner', 'accounts'], new List(target)));
 
 	// save owner keys
 	target = account.owner.key_auths.map((a) => ({
-		key: a[0], weight: a[1], unlocked: false, privateKey: '',
+		key: a[0], weight: a[1], unlocked: false, privateKey: '', role: 'owner', type: 'keys',
 	}));
 	dispatch(setIn(['owner', 'keys'], new List(target)));
 
 	// save note
-	target = { key: account.options.memo_key, unlocked: false, privateKey: '' };
+	target = {
+		key: account.options.memo_key, unlocked: false, privateKey: '', role: 'note', type: 'keys',
+	};
 	dispatch(setIn(['note', 'keys'], new List([target])));
 };
 
-export const unlockPrivateKey = () => () => {
+export const unlockPrivateKey = (k) => (dispatch) => {
 
-}
+};
+
 
