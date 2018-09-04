@@ -6,7 +6,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
-import { logout, addAccount, initAccountsBalances } from '../../actions/GlobalActions';
+import { logout, addAccount, initAccountsBalances, initAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -32,7 +32,6 @@ class Header extends React.Component {
 		this.props.initAccounts();
 	}
 
-
 	onLogout() {
 		this.props.logout();
 	}
@@ -45,6 +44,16 @@ class Header extends React.Component {
 		e.preventDefault();
 
 		this.props.history.push(TRANSFER_PATH);
+	}
+
+	onchangeAccount(e, name) {
+		const { accountName } = this.props;
+
+		if (accountName === name) {
+			return;
+		}
+
+		this.props.initAccount(name);
 	}
 
 	onDropdownChange(e, value) {
@@ -109,13 +118,13 @@ class Header extends React.Component {
 						value: `account${id}`,
 						key: `account${id}`,
 						content: (
-							<a className="user-item" key={id}>
+							<button className="user-item" key={id} onClick={(e) => this.onchangeAccount(e, account.name)}>
 								<span>{account.name}</span>
 								<div className="balance">
 									<span>{balance || '0'}</span>
 									<span>{core.toJS().symbol || 'ECHO'}</span>
 								</div>
-							</a>
+							</button>
 						),
 					}
 				);
@@ -206,6 +215,7 @@ Header.propTypes = {
 	logout: PropTypes.func.isRequired,
 	addAccount: PropTypes.func.isRequired,
 	initAccounts: PropTypes.func.isRequired,
+	initAccount: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
@@ -227,5 +237,6 @@ export default withRouter(connect(
 		logout: () => dispatch(logout()),
 		addAccount: () => dispatch(addAccount()),
 		initAccounts: () => dispatch(initAccountsBalances()),
+		initAccount: (value) => dispatch(initAccount(value)),
 	}),
 )(Header));
