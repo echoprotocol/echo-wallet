@@ -2,18 +2,21 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { version } from '../../../package.json';
-
+import { NETWORKS_PATH } from '../../constants/RouterConstants';
 import { connection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
+
 
 	onReconnect() {
 		this.props.connection();
 	}
 
 	render() {
+
 		const { isConnect, latency, lastBlock } = this.props;
 
 		const connected = (
@@ -27,7 +30,10 @@ class Footer extends React.PureComponent {
 						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
-						<span className="status green">Connected</span>
+						<span className="status green">
+                            Connected to
+						</span>
+						<Link className="network-link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
 					</li>
 				</ul>
 			</div>

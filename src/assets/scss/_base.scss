@@ -62,6 +62,10 @@ div,span {
 	}
 }
 .link {
+    color: $mainColor;
+    &:hover {
+        color: $mainColor;
+    } 
     &:focus {
         text-decoration: underline;
     }

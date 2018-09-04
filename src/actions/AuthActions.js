@@ -9,11 +9,14 @@ import { setField, setNote } from './TransactionActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
+import { INDEX_PATH } from '../constants/RouterConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
 import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
+
+import history from '../history';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -210,4 +213,12 @@ export const unlockAccount = ({
 		dispatch(setDisable(MODAL_UNLOCK, false));
 	}
 
+};
+
+export const cancelAddAccount = () => (dispatch, getState) => {
+	const accountName = getState().global.getIn(['activeUser', 'name']);
+
+	dispatch(initAccount(accountName));
+
+	history.push(INDEX_PATH);
 };
