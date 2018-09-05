@@ -58,7 +58,7 @@ export const getMemoFee = (globalObject, memo, privateKey = '5KGG3tFb5F4h3aiUSKN
 	const memoFromKey = 'ECHO7WBUN97NJfSXbDVDqLDQDKu8FasTb7YBdpbWoJF3RYo6qYY6aX';
 	const memoToKey = 'ECHO7WBUN97NJfSXbDVDqLDQDKu8FasTb7YBdpbWoJF3RYo6qYY6aX';
 
-	const message = Aes.encryptWithChecksum(pKey, memoToKey, nonce, memo);
+	const message = Aes.encryptWithChecksum(pKey, memoToKey, nonce, Buffer.from(memo, 'utf-8'));
 
 	const memoObject = {
 		from: memoFromKey,
