@@ -86,9 +86,12 @@ class Networks extends React.Component {
 	}
 
 	render() {
+
+		// network: oldNetwork,
 		const {
-			history, address, name, registrator, network: oldNetwork,
+			history, address, name, registrator,
 		} = this.props;
+
 
 		const { network, showCustom } = this.state;
 
@@ -99,7 +102,15 @@ class Networks extends React.Component {
 			<div className="sign-scroll-fix">
 				<Form className="main-form">
 					<div className="form-info">
-						<h3>Networks</h3>
+						<a
+							href="#"
+							onClick={history.goBack}
+							className="back-link"
+						>
+							<span className="icon-back" />
+                        back
+						</a>
+						<h3>Create new Network</h3>
 					</div>
 					<div className="field-wrap">
 						<div className="radio-list">
@@ -126,29 +137,23 @@ class Networks extends React.Component {
 						/>
 					</div>
 					<div className="form-panel">
-						<Button
-							basic
-							type="submit"
-							className="main-btn"
-							content="Save"
-							onClick={(e) => this.onSaveNetwork(e)}
-							disabled={network.name === oldNetwork.name || network.name === 'custom'}
-						/>
-
+						<div className="check">
+							<input type="checkbox" id="addToNetworks" />
+							<label className="label" htmlFor="addToNetworks">
+								<span className="label-text">Switch to this Network upon creating</span>
+							</label>
+						</div>
+						{/* onClick={(e) => this.onSaveNetwork(e)} */}
 						<Button
 							basic
 							type="submit"
 							className="main-btn"
 							content="Add Custom"
 							onClick={(e) => this.onAddNetwork(e)}
-							disabled={!showCustom || !isFormValid}
+							disabled={!isFormValid}
 						/>
 					</div>
 
-					<span className="sign-nav">
-						Return to
-						<a href="#" className="link pointer" onClick={history.goBack} onKeyPress={history.goBack}>Back</a>
-					</span>
 				</Form>
 			</div>
 		);

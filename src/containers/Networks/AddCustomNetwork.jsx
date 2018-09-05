@@ -42,12 +42,6 @@ class AddCustomNetwork extends React.Component {
 					{this.renderField('name', name)}
 					{this.renderField('registrator', registrator)}
 				</div>
-				<div className="check">
-					<input type="checkbox" id="addToNetworks" />
-					<label className="label" htmlFor="addToNetworks">
-						<span className="label-text">lkdjaklsdafsaf</span>
-					</label>
-				</div>
 			</React.Fragment>
 		);
 	}

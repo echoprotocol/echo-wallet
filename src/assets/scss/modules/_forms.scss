@@ -189,7 +189,11 @@
     .form-panel {
         display: flex;
         align-items: center;
-        margin: 15px 0 0;
+        margin: 25px 0 0;
+        width: 100%;
+        .check {
+            margin-right: auto;
+        }
         .button[type=submit],
         .button[type=button] {
             white-space: nowrap;
