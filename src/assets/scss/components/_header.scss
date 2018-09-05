@@ -12,6 +12,9 @@
         margin: 0 10px 0 0;
         transition: color .3s;
         display: block;
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
         &:focus {
             border-radius: 0.28571429rem;
             @extend %onFocus;
@@ -23,26 +26,23 @@
         &:active {
             box-shadow: none;
         }
-        & + .page-title {
+        &.sub + .page-title {
             font-size: 16px;
         }
     }
     .page-title {
-        color: $link-gray;
+        color: $text-dark;
         font-size: 20px;
         font-family: proximanovaSemibold;
     }
     .show-sidebar-btn {
-        color: $link-gray;
+        color: $text-dark;
         cursor: pointer;
         transition: color .3s;
         display: block;
         margin-right: 20px;
         .icon-menu {
             line-height: 19px;
-        }
-        &:hover {
-            color: $black;
         }
     }
     .panel-right {
@@ -80,7 +80,7 @@
                 &:hover {
                     background-color: transparent;
                     .user-item {
-                        background-color: $orange;
+                        background-color: $main-сolor;
                         color: #fff;
                         .balance {
                             color: #fff;
@@ -105,7 +105,7 @@
                 }
             }
             .logout {
-                color: $orange;
+                color: $main-сolor;
                 font-family: proximanovaSemibold;
                 margin: 0 10px 0 auto;
                 padding: 3px 5px;
@@ -122,7 +122,7 @@
                 } 
                 &:hover {
                     &:after {
-                        background-color: rgba($orange, .4);
+                        background-color: rgba($main-сolor, .4);
                     }
                 }
                 &-wrap {
@@ -156,7 +156,7 @@
             color: $link-gray;
         }
         & > .text {
-            color: $orange;
+            color: $main-сolor;
             font-family: proximanovaSemibold;            
         }
         .add-account {
