@@ -1,99 +1,66 @@
 // Удалить этот файл, если не перейдем обратно к нетворкам в дропдауне
 
 import React from 'react';
-import { Dropdown, Input, Form } from 'semantic-ui-react';
+import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 class Network extends React.PureComponent {
 
 	constructor() {
 		super();
 		this.state = {
-			checked: 0,
 			options: [
 				{ text: 'MainNet' },
 				{ text: 'TestNet' },
 				{ text: 'DevNet' },
 			],
 		};
-
 	}
 
 	onDropdownChange(e, value) {
 		e.preventDefault();
 		e.stopPropagation();
-
+		console.log(e.target);
 		if (value === 'netCustom') {
-			this.setState({ checked: value });
-			this.nameInput.focus();
+			// this.setState({});
 		}
 		if (e.type === 'click') {
-			this.setState({ checked: value });
+			// this.setState({ });
 			return;
 		}
 		if (e.keyCode === 13) {
-			this.setState({ checked: value });
+			// this.setState({});
 		}
 	}
 
 	render() {
-
-		let options = [
-			{
-				value: 'networks-header',
-				key: 'networks-header',
-				className: 'networks-header',
-				disabled: true,
-				content: 'Choose Network',
-			},
-		];
+		const {
+			instance,
+		} = this.props;
+		let options = [];
 
 		const networks = this.state.options.map(({ text }, index) => ({
 			value: index,
 			key: index,
-			selected: this.state.checked === index,
-			className: 'radio',
-			tabIndex: 0,
 			content: (
 				<React.Fragment>
-					<input type="radio" onChange={() => {}} checked={this.state.checked === index} name="network" />
-					<label className="label" htmlFor="net0">
-						<span className="label-text">{text}</span>
-					</label>
+					<span className="label-text">{text}</span>
+					<Button className="icon-remove" />
 				</React.Fragment>
 			),
 		}));
 
 		options = options.concat(networks);
 		options.push({
-			value: 'netCustom',
-			key: 'netCustom',
-			selected: this.state.checked === 'netCustom',
-			className: 'radio',
-			tabIndex: 0,
+			value: 'network-link',
+			key: 'network-link',
 			content: (
-				<Form onClick={(e) => e.stopPropagation()}>
-					<Form.Field className="error-wrap">
-						<label htmlFor="Address">Custom Address</label>
-						<Input
-							type="text"
-							name="newName"
-							ref={(input) => { this.nameInput = input; }}
-							className="label-in-left"
-						>
-							<input />
-							<button
-								className="edit-option icon-edit-checked"
-							/>
-							<button
-								className="edit-option icon-edit-close"
-							/>
-						</Input>
-
-						<span className="error-message">Some error</span>
-					</Form.Field>
-				</Form>
+				<Link className="network-link" to={NETWORKS_PATH} >
+					{instance ? instance.url : ''}
+				</Link>
 			),
 		});
 
@@ -103,7 +70,10 @@ class Network extends React.PureComponent {
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
-				text="wss://echo-tmp-wallet.pixelplex.io"
+				closeOnChange={false}
+				trigger={
+					<span className="status connected"> TestNet </span>
+				}
 				className="network-dropdown"
 				icon={false}
 			/>
@@ -113,9 +83,17 @@ class Network extends React.PureComponent {
 	}
 
 }
+Network.propTypes = {
+	instance: PropTypes.any,
+};
 
+Network.defaultProps = {
+	instance: null,
+};
 
 export default connect(
-	() => ({ }),
+	(state) => ({
+		instance: state.echojs.getIn(['system', 'instance']),
+	}),
 	() => ({ }),
 )(Network);

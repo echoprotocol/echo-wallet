@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Form, Button } from 'semantic-ui-react';
-import classnames from 'classnames';
 
 import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 
@@ -110,8 +109,7 @@ class Networks extends React.Component {
 						<Button
 							basic
 							type="submit"
-							color="orange"
-							className={classnames('error-wrap')}
+							className="main-btn"
 							content="Save"
 							onClick={(e) => this.onSaveNetwork(e)}
 							disabled={network.name === oldNetwork.name || network.name === 'custom'}
@@ -120,8 +118,7 @@ class Networks extends React.Component {
 						<Button
 							basic
 							type="submit"
-							color="orange"
-							className={classnames('error-wrap')}
+							className="main-btn"
 							content="Add Custom"
 							onClick={(e) => this.onAddNetwork(e)}
 							disabled={!showCustom && !isFormValid}
@@ -130,7 +127,7 @@ class Networks extends React.Component {
 
 					<span className="sign-nav">
 						Return to
-						<a href="#" className="link orange pointer" onClick={history.goBack} onKeyPress={history.goBack}>Back</a>
+						<a href="#" className="link pointer" onClick={history.goBack} onKeyPress={history.goBack}>Back</a>
 					</span>
 				</Form>
 			</div>

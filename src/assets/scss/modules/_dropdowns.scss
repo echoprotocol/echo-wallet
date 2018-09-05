@@ -19,7 +19,7 @@
         }
         & > .text {
             margin-right: 5px;
-            color: $orange;
+            color: $main-сolor;
         }
         .dropdown.icon {
             font-size: 12px;
@@ -113,7 +113,7 @@
             & > input.search {
                 &:focus {
                     & + .text {
-                        color: $orange;
+                        color: $main-сolor;
                     }
                 }
             }
@@ -209,43 +209,42 @@
             min-width: 280px;
             .item {
                 padding: 0;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                color: $black;
+                transition: color $speed, background-color $speed;
                 &:hover {
-                    background-color: transparent;
+                    background-color: $main-сolor;
+                    color: #fff;
+                    .icon-remove {
+                        color: #fff;
+                    }
                 }
                 &.selected {
-                    background-color: transparent;
+                    // background-color: transparent;
                 }
                 &.active {
-
                     .label {
                         &:before {
                             @extend %onFocus;
                         }
                     }
-
-
                 }
-
-                &.networks-header {
-                    content: "Choose Network";
-                    text-transform: uppercase;
-                    font-family: proximanovaSemibold;
-                    display: flex;
-                    align-items: center;
-                    line-height: 1;
-                    padding: 18px 18px 16px;
-                    color: $gray;
-                    opacity: 1;
-                    &:hover,
-                    &:active,
-                    &:focus {
-                        background-color: transparent;
-                        color: $gray;
+                .icon-remove {
+                    margin: 0 0 0 auto;
+                    border-radius: 0;
+                    padding: 0 16px;
+                    height: 36px;
+                    &:hover {
+                        background-color: #4258b5;
                     }
-
                 }
                 .label {
-                    padding: 6px 18px;
+                    
+                    &-text {
+                        padding: 0 0 0 18px;
+                    }
                 }
                 .error-wrap {
                     margin: 0;
@@ -254,20 +253,6 @@
                 .field {
                     label {
                         padding: 18px 18px 5px;
-                    }
-                }
-                .label-in-left {
-                    input {
-                        margin: 0 18px;
-                        min-width: auto;
-                    }
-                    .edit-option {
-                        &.icon-edit-checked {
-                            right: 40px;
-                        }
-                        &.icon-edit-close {
-                            right: 20px;
-                        }
                     }
                 }
             }

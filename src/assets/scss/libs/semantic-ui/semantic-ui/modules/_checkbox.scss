@@ -79,7 +79,7 @@
 
 .ui.checkbox.orange .box:before,
 .ui.checkbox.orange label:before {
-  border: 1px solid $orange;
+  border: 1px solid $main-сolor;
 }
 
 /*--------------
@@ -143,7 +143,7 @@
 // Orange
 .ui.checkbox.orange .box:hover::before,
 .ui.checkbox.orange label:hover:before {
-  border: 1px solid $orange;
+  border: 1px solid $main-сolor;
 }
 
 /*--------------
@@ -165,7 +165,7 @@
 // Orange
 .ui.checkbox.orange .box:active::before,
 .ui.checkbox.orange label:active:before {
-  border-color: $orange;
+  border-color: $main-сolor;
 }
 
 /*--------------
@@ -202,8 +202,8 @@
 
 .ui.checkbox.orange input:checked ~ .box:before,
 .ui.checkbox.orange input:checked ~ label:before {
-  background:  $orange;
-  border-color: $orange;
+  background:  $main-сolor;
+  border-color: $main-сolor;
 }
 .ui.checkbox.orange input:checked ~ .box:after,
 .ui.checkbox.orange input:checked ~ label:after {

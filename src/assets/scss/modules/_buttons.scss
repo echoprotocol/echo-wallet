@@ -41,9 +41,18 @@ $stripe-width: 10px;
         }
         &.copy {
             &:focus {
-                background-color: rgba($orange,.185);
-                color: $orange;
+                box-shadow: none;
+                background-color: rgba($main-сolor,.185);
+                color: $main-сolor;
             }
+        }
+        &.icon-remove {
+            box-shadow: none;
+            background-color: transparent;
+            border: 0;
+            color: #bcbcbc;
+            transition: color $speed,
+                        background-color $speed;
         }
         &.send {
             font-family: proximanovaSemibold;
@@ -67,7 +76,7 @@ $stripe-width: 10px;
                     display: block;
                 }
                 font-size: 1.3rem;    
-                color: rgba($orange, .9);
+                color: rgba($main-сolor, .9);
                 transition: .3s;
             }
             &:focus,
@@ -75,7 +84,7 @@ $stripe-width: 10px;
                 box-shadow: none;
                 background-color: $bg-gray;
                 i { 
-                    color: $orange;
+                    color: $main-сolor;
                 }
             }
         }

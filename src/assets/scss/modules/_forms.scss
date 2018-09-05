@@ -7,147 +7,134 @@
     }
 }
 
-.form.user-form,
-.form.main-form {
-    @media only screen and (max-height: 600px) {
-        padding: 30px 0; 
-    }
-    @media only screen and (min-height: 600px) {
-        padding: 65px 0 30px; 
-    }
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: 500px;
-    width: 100%;
-    margin: auto;
-    .field {
-        width: 100%;
-    }
-
-    .button[type=submit],
-    .button[type=button] {
-        margin: 30px 0 0;
-        min-width: 160px;
-        min-height: 35px;
-        display: flex;
-        justify-content: center;
-        line-height: normal;
-        text-transform: uppercase;
-        letter-spacing:.2px;
-    }
-    
-    h3 {
-        font-size: 1.5em;
-        margin-bottom: 25px;
-        text-align: center;
-    }
-    .shrink {
-        &-wrap {
-            position: relative;
-            margin-top: 25px;
-            .check {
-                max-width: 300px;
-            }
-            .shrink {
-                display: none;
-            }
-            .ui.button {
-                right: 0;
-                top: -6px;
-                position: absolute;
-                margin: 0;
-            }
-            &.active {
-                .shrink {
-                    display: block;
-                    margin: 20px 0;
-                    animation: fadeIn .5s;
-                }
-                .ui.button {
-                    position: relative;
-                    margin: 25px 0 0 auto;
-                }
-            }
-        }
-    }
-}
-
-
-.field,
-.textarea-wrap {
-    .error-message {
-        display: none;
-        position: absolute;
-        right: 0;
-        margin-right: 5px;
-        background-color: $err-red;
-        padding: 0 5px;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        font-size: 12px;
-        color: $white;
-        z-index: 5;
-    }
-    &.error,
-    .error {
-        position: relative;
-        .error-message {
-            display: flex;
-        }
-        .input {
-            &:focus {
-                border: 1px solid $err-red;
-            }
-        }
-    }
-}
-.textarea-wrap {
-    .error-message {
-        margin-top: 2px;
-    }
-}
-
-.user-form {
-    .ui.right.button {
-        width: 38px;
+.form {
+    &-info {
         display: flex;
         align-items: center;
-        justify-content: center;
-        .icon {
-            width: 16px;
-            height: 16px;
-            display: flex;
+        width: 100%;
+        margin-bottom: 28px;
+        .back-link {
+            margin-right: -40px;
+            transform: translate(0);
+            color:rgb(156, 160, 176);
             align-items: center;
-            justify-content: center;
-            font-size: 14px;
+            line-height: 1;
+            text-transform: uppercase;
+            font-family: proximanovaSemibold;
+            font-size: .9em;
+            &:focus {
+                &:not(:active) {
+                    .icon-back {
+                        @extend %onTextFocus;
+                    }
+                }
+            }
+            &:hover {
+                .icon-back {
+                    color: $main-сolor;
+                }
+            }
+            .icon-back {
+                transition: color $speed;
+                margin: 0 5px 0 -5px;
+                padding: 5px 6px 5px 5px;
+                border-radius: $angulars;
+            }
+        }
+        h3 {
+            font-size: 1.5em;
+            margin: 0 auto;
+            text-align: center;
         }
     }
-}
+    &.main-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-width: 500px;
+        width: 100%;
+        margin: auto;
 
-.main-form {
-    .visible.transition {
-        display: block !important;
-    }
-    .dropdown {
-        &.assets-tokens-dropdown {
-            max-width: 150px;
-            min-width: 150px;
+        @media only screen and (max-height: 600px) {
+            padding: 30px 0; 
         }
-        &.icon {
-            color: $bd-gray;
+        @media only screen and (min-height: 600px) {
+            padding: 65px 0 30px; 
+        }
+
+
+        .field {
+            width: 100%;
+        }
+
+        .dropdown {
+            &.assets-tokens-dropdown {
+                max-width: 150px;
+                min-width: 150px;
+            }
+            &.icon {
+                color: $bd-gray;
+            }
+        }
+        .visible.transition {
+            display: block !important;
+        }
+        .button[type=submit],
+        .button[type=button] {
+            margin: 30px 0 0;
+            min-width: 160px;
+            min-height: 34px;
+            display: flex;
+            justify-content: center;
+            line-height: normal;
+            text-transform: uppercase;
+            letter-spacing:.2px;
+        }
+        
+
+
+        label {
+            display: flex;
+        }
+
+        .shrink {
+            &-wrap {
+                position: relative;
+                margin-top: 25px;
+                .check {
+                    max-width: 300px;
+                }
+                .shrink {
+                    display: none;
+                }
+                .ui.button {
+                    right: 0;
+                    top: -6px;
+                    position: absolute;
+                    margin: 0;
+                }
+                &.active {
+                    .shrink {
+                        display: block;
+                        margin: 20px 0;
+                        animation: fadeIn .5s;
+                    }
+                    .ui.button {
+                        position: relative;
+                        margin: 25px 0 0 auto;
+                    }
+                }
+            }
         }
     }
+
     &.ui.form {
         textarea {
             resize: none;
         }
     }
 
-    label {
-        display: flex;
-    }
     .action-wrap {
         position: relative;
         transition: margin .3s;
@@ -198,6 +185,7 @@
             width: 25px;
         }
     }
+    
     .form-panel {
         display: flex;
         align-items: center;
@@ -213,10 +201,11 @@
         .total-sum {
             span {
                 margin-left: 5px;
-                color: $orange;
+                color: $main-сolor;
             }
         }
     }
+
     .field-wrap {
         .field {
             .ui.input {
@@ -289,6 +278,40 @@
         }
     }
 }
+
+.field,
+.textarea-wrap {
+    .error-message {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-right: 5px;
+        background-color: $err-red;
+        padding: 0 5px;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        color: $white;
+        z-index: 5;
+    }
+    &.error,
+    .error {
+        position: relative;
+        .error-message {
+            display: flex;
+        }
+        .input {
+            &:focus {
+                border: 1px solid $err-red;
+            }
+        }
+    }
+}
+.textarea-wrap {
+    .error-message {
+        margin-top: 2px;
+    }
+}
+
 
 .ui.input.label-in-left {
     display: flex;
@@ -366,7 +389,7 @@
         font-size: 12px;
         color: $white;
         animation: fadeIn .3s;
-
+        line-height: 1.1;
     }
 }
 

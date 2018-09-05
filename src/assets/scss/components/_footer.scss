@@ -42,7 +42,7 @@
 }
 .pipeline {
     &-block {
-        color: $blue;
+        color: $main-сolor;
     }
     &-latency {
         color: $gray-dark;
@@ -62,10 +62,10 @@
         border-radius: 50%;
         margin-right: 8px;
     }
-    &.green {
-        color: $green;
+    &.connected {
+        color: $main-сolor;
         &:before {
-            background-color: $green;
+            background-color: $main-сolor;
         }
     }
     &.white {
@@ -74,6 +74,7 @@
             background-color: $white;
         }
     }
+
     & + .network-link {
         margin-left: 5px;
     }
