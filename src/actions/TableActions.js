@@ -8,7 +8,7 @@ import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import TableReducer from '../reducers/TableReducer';
 
-const zeroPrivateKey = '00000000000000000000000000000000';
+const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
 export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
@@ -83,16 +83,8 @@ export const unlockPrivateKey = (k) => (dispatch) => {
 		return;
 	}
 
-	const permissionKey = {
-		key, type, role,
-	};
+	dispatch(setIn(PERMISSION_TABLE, ['permissionKey'], { key, type, role }));
 
-	dispatch(setIn(PERMISSION_TABLE, ['permissionKey'], permissionKey));
-
-	const value = { unlocked: true, privateKey: key };
-	dispatch(update(PERMISSION_TABLE, [role, type], key, value));
 	dispatch(openModal(MODAL_UNLOCK));
-
-	console.log(k);
 };
 

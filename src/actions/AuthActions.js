@@ -143,8 +143,6 @@ export const unlockAccount = ({
 	try {
 		dispatch(setDisable(MODAL_UNLOCK, true));
 
-		let { key } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']).toJS();
-
 		let accountNameError = validateAccountName(accountName);
 		const passwordError = validatePassword(password);
 
@@ -152,7 +150,6 @@ export const unlockAccount = ({
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
 			return;
 		}
-		console.log(1111111111111)
 		if (passwordError) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
 			return;
@@ -170,11 +167,12 @@ export const unlockAccount = ({
 
 		const { owner, active, memo } = await unlockWallet(account, password);
 
-		if (!owner && !active && !memo) {
+		let { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
+
+		if (!owner && !active && !memo && !permissionKey) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
 			return;
 		}
-        console.log(22222222)
 		if (owner) {
 			dispatch(setKey(owner, accountName, password, 'owner'));
 		}
@@ -197,7 +195,6 @@ export const unlockAccount = ({
 
 			dispatch(openModal(MODAL_DETAILS));
 		}
-        console.log(3333333333)
 		if (note.value && !note.unlocked) {
 			try {
 				const decodedNote = decodeMemo(note.value, memo.privateKey);
@@ -210,13 +207,18 @@ export const unlockAccount = ({
 				dispatch(setNote({ error: err }));
 			}
 		}
-        console.log(4444444444444)
-		const { type, role } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']).toJS();
+		const { type, role } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
 
-		if (key) {
-			if (role === 'memo') key = accountName;
-			const { privateKey } = generateKeyFromPassword(key, role, password);
-			console.log(privateKey);
+		if (permissionKey) {
+			const param = permissionKey;
+			if (role === 'memo') permissionKey = accountName;
+
+			const { privateKey } = generateKeyFromPassword(permissionKey, role, password);
+			const value = {
+				privateKey: privateKey ? privateKey.toHex() : '',
+				unlocked: true,
+			};
+			dispatch(update(PERMISSION_TABLE, [role, type], param, value));
 		}
 
 
