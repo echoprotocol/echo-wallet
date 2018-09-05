@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import { setInFormValue } from '../../../actions/FormActions';
 
+import { formatCallContractField } from '../../../helpers/FormatHelper';
+
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 class InputComponent extends React.Component {
@@ -30,7 +32,7 @@ class InputComponent extends React.Component {
 				size="mini"
 				value={value}
 				onChange={(e) => this.onChange(e)}
-				placeholder={`${inputData.name}(${inputData.type.replace(/address/g, 'id')})`}
+				placeholder={`${formatCallContractField(inputData.name)}(${inputData.type.replace(/address/g, 'id')})`}
 			/>
 		);
 	}
