@@ -36,11 +36,19 @@ class AddCustomNetwork extends React.Component {
 		} = this.props;
 
 		return (
-			<div className={classnames('custom-network', { active: showCustom })}>
-				{this.renderField('address', address)}
-				{this.renderField('name', name)}
-				{this.renderField('registrator', registrator)}
-			</div>
+			<React.Fragment>
+				<div className={classnames('custom-network', { active: showCustom })}>
+					{this.renderField('address', address)}
+					{this.renderField('name', name)}
+					{this.renderField('registrator', registrator)}
+				</div>
+				<div className="check">
+					<input type="checkbox" id="addToNetworks" />
+					<label className="label" htmlFor="addToNetworks">
+						<span className="label-text">lkdjaklsdafsaf</span>
+					</label>
+				</div>
+			</React.Fragment>
 		);
 	}
 

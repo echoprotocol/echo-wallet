@@ -4,7 +4,7 @@ import React from 'react';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 class Network extends React.PureComponent {
@@ -23,7 +23,6 @@ class Network extends React.PureComponent {
 	onDropdownChange(e, value) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log(e.target);
 		if (value === 'netCustom') {
 			// this.setState({});
 		}
@@ -37,9 +36,6 @@ class Network extends React.PureComponent {
 	}
 
 	render() {
-		const {
-			instance,
-		} = this.props;
 		let options = [];
 
 		const networks = this.state.options.map(({ text }, index) => ({
@@ -57,9 +53,10 @@ class Network extends React.PureComponent {
 		options.push({
 			value: 'network-link',
 			key: 'network-link',
+			className: 'link-item',
 			content: (
 				<Link className="network-link" to={NETWORKS_PATH} >
-					{instance ? instance.url : ''}
+					+ Add custom Network
 				</Link>
 			),
 		});
@@ -71,11 +68,13 @@ class Network extends React.PureComponent {
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
 				closeOnChange={false}
-				trigger={
-					<span className="status connected"> TestNet </span>
-				}
 				className="network-dropdown"
-				icon={false}
+				trigger={
+					<React.Fragment>
+						<span className="description">Network:</span>
+						<span className="status connected"> TestNet </span>
+					</React.Fragment>
+				}
 			/>
 		);
 
@@ -84,16 +83,16 @@ class Network extends React.PureComponent {
 
 }
 Network.propTypes = {
-	instance: PropTypes.any,
+	// instance: PropTypes.any,
 };
 
 Network.defaultProps = {
-	instance: null,
+	// instance: null,
 };
 
 export default connect(
-	(state) => ({
-		instance: state.echojs.getIn(['system', 'instance']),
+	() => ({
+		// instance: state.echojs.getIn(['system', 'instance']),
 	}),
 	() => ({ }),
 )(Network);
