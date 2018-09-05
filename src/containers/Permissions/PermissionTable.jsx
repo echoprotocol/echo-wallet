@@ -2,11 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+
+import { unlockPrivateKey } from '../../actions/TableActions';
 
 class PermissionTable extends React.Component {
 
-	onClick() {
+	onClick(k) {
+		this.props.unlockPrivateKey(k);
+	}
 
+	renderPrivateKeyCell(k) {
+		return k.type !== 'keys' || k.role === 'memo' ?
+			(
+				<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
+					<div className="cell-wrap">
+						<button
+							className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
+							onClick={() => this.onClick(k)}
+						/>
+						{
+							!k.unlocked ?
+								<input type="password" readOnly className="key-input" value={k.privateKey} />
+								: <span className="key">{k.privateKey}</span>
+						}
+
+					</div>
+				</Table.Cell>
+			) : (
+				<Table.Cell />
+			);
 	}
 
 	render() {
@@ -28,25 +53,14 @@ class PermissionTable extends React.Component {
 
 					<Table.Body>
 						{
-							data.map((k) => {
-								const { key } = k;
-								return (
-									<Table.Row key={key}>
-										<Table.Cell>
-											{key}
-										</Table.Cell>
-										<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
-											<div className="cell-wrap">
-												<button
-													className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
-													onClick={() => this.onClick(k)}
-												/>
-												<span className="key">{key}</span>
-											</div>
-										</Table.Cell>
-									</Table.Row>
-								);
-							})
+							data.map((k) => (
+								<Table.Row key={k.key}>
+									<Table.Cell>{k.key}</Table.Cell>
+									{
+										this.renderPrivateKeyCell(k)
+									}
+								</Table.Row>
+							))
 						}
 					</Table.Body>
 				</Table>
@@ -59,6 +73,13 @@ class PermissionTable extends React.Component {
 PermissionTable.propTypes = {
 	table: PropTypes.string.isRequired,
 	data: PropTypes.array.isRequired,
+	unlockPrivateKey: PropTypes.func.isRequired,
 };
 
-export default PermissionTable;
+
+export default connect(
+	() => ({}),
+	(dispatch) => ({
+		unlockPrivateKey: (value) => dispatch(unlockPrivateKey(value)),
+	}),
+)(PermissionTable);

@@ -6,13 +6,21 @@ import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
+import { update } from './TableActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
+import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
-import { validateAccountExist, createWallet, unlockWallet, pubKeyToAddress } from '../api/WalletApi';
+import {
+	validateAccountExist,
+	createWallet,
+	unlockWallet,
+	generateKeyFromPassword,
+	getKeyFromWif,
+} from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
 
 export const generatePassword = () => (dispatch) => {
@@ -131,9 +139,11 @@ export const unlockAccount = ({
 	accountName,
 	password,
 }) => async (dispatch, getState) => {
-    pubKeyToAddress('ECHO6tZ4VhCYfUdkspXqS18CnMCkARrBaKFbGg2ngj6tzeahGxGsix');
+
 	try {
 		dispatch(setDisable(MODAL_UNLOCK, true));
+
+		let { key } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']).toJS();
 
 		let accountNameError = validateAccountName(accountName);
 		const passwordError = validatePassword(password);
@@ -142,7 +152,7 @@ export const unlockAccount = ({
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
 			return;
 		}
-
+		console.log(1111111111111)
 		if (passwordError) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
 			return;
@@ -164,7 +174,7 @@ export const unlockAccount = ({
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
 			return;
 		}
-
+        console.log(22222222)
 		if (owner) {
 			dispatch(setKey(owner, accountName, password, 'owner'));
 		}
@@ -187,7 +197,7 @@ export const unlockAccount = ({
 
 			dispatch(openModal(MODAL_DETAILS));
 		}
-
+        console.log(3333333333)
 		if (note.value && !note.unlocked) {
 			try {
 				const decodedNote = decodeMemo(note.value, memo.privateKey);
@@ -200,8 +210,14 @@ export const unlockAccount = ({
 				dispatch(setNote({ error: err }));
 			}
 		}
+        console.log(4444444444444)
+		const { type, role } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']).toJS();
 
-
+		if (key) {
+			if (role === 'memo') key = accountName;
+			const { privateKey } = generateKeyFromPassword(key, role, password);
+			console.log(privateKey);
+		}
 
 
 		dispatch(closeModal(MODAL_UNLOCK));

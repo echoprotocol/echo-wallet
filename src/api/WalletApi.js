@@ -107,8 +107,3 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 	return keys;
 };
 
-export const pubKeyToAddress = (pubKey) => {
-	const address = PublicKey.fromPublicKeyString(pubKey).toAddressString()
-	console.log(address);
-	return address;
-};

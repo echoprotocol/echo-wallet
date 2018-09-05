@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 
 import PermissionTable from './PermissionTable';
 
-import { formPermissionKeys, clear } from '../../actions/PermissionActions';
+import { formPermissionKeys, clear } from '../../actions/TableActions';
+import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 class Permissions extends React.Component {
 
@@ -23,7 +24,7 @@ class Permissions extends React.Component {
 
 		const active = permissionsKeys.active.keys.concat(permissionsKeys.active.accounts);
 		const owner = permissionsKeys.owner.keys.concat(permissionsKeys.owner.accounts);
-		const note = permissionsKeys.note.keys;
+		const note = permissionsKeys.memo.keys;
 
 		return (
 			<React.Fragment>
@@ -35,7 +36,6 @@ class Permissions extends React.Component {
 	}
 
 	render() {
-
 
 		return (
 			<div className="permissions-wrap">
@@ -63,11 +63,11 @@ Permissions.propTypes = {
 
 export default connect(
 	(state) => ({
-		permissionsKeys: state.permission,
+		permissionsKeys: state.table.get(PERMISSION_TABLE),
 	}),
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
-		clear: () => dispatch(clear()),
+		clear: () => dispatch(clear(PERMISSION_TABLE)),
 	}),
 )(Permissions);
 
