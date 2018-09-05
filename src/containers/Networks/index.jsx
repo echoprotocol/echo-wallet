@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Form, Button } from 'semantic-ui-react';
 
+import { NETWORKS } from '../../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 
-import { setFormValue } from '../../actions/FormActions';
-import { saveNetwork, addNetwork } from '../../actions/GlobalActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
+import { saveNetwork, addNetwork, deleteNetwork } from '../../actions/GlobalActions';
 
 import AddCustomNetwork from './AddCustomNetwork';
 
@@ -20,6 +21,10 @@ class Networks extends React.Component {
 			network: props.network,
 			showCustom: false,
 		};
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm();
 	}
 
 	onChangeNetwork(network) {
@@ -46,13 +51,43 @@ class Networks extends React.Component {
 		this.props.addNetwork(address, name, registrator);
 	}
 
+	onDeleteNetwork(network) {
+		this.props.deleteNetwork(network);
+	}
+
 	onShowCustom() {
 		this.setState({ network: { name: 'custom' }, showCustom: true });
 	}
 
+	renderNetworks() {
+		const { networks } = this.props;
+		const { name } = this.state.network;
+
+		return networks.map((i) => (
+			<div className="radio" key={i.name} >
+				<input
+					type="radio"
+					id={i.name}
+					name="network"
+					onChange={(e) => this.onChangeNetwork(i, e)}
+					checked={name === i.name}
+				/>
+				<label className="label" htmlFor={i.name}>
+					<span className="label-text">{i.name}</span>
+				</label>
+				{
+					!NETWORKS.find((n) => n.name === i.name) ?
+						<button onClick={(e) => this.onDeleteNetwork(i, e)}>
+							delete
+						</button> : null
+				}
+			</div>
+		));
+	}
+
 	render() {
 		const {
-			history, address, name, registrator, network: oldNetwork, networks,
+			history, address, name, registrator, network: oldNetwork,
 		} = this.props;
 
 		const { network, showCustom } = this.state;
@@ -68,22 +103,7 @@ class Networks extends React.Component {
 					</div>
 					<div className="field-wrap">
 						<div className="radio-list">
-							{
-								networks.map((i) => (
-									<div className="radio" key={i.name} >
-										<input
-											type="radio"
-											id={i.name}
-											name="network"
-											onChange={(e) => this.onChangeNetwork(i, e)}
-											checked={network.name === i.name}
-										/>
-										<label className="label" htmlFor={i.name}>
-											<span className="label-text">{i.name}</span>
-										</label>
-									</div>
-								))
-							}
+							{ this.renderNetworks() }
 							<div className="radio">
 								<input
 									type="radio"
@@ -121,7 +141,7 @@ class Networks extends React.Component {
 							className="main-btn"
 							content="Add Custom"
 							onClick={(e) => this.onAddNetwork(e)}
-							disabled={!showCustom && !isFormValid}
+							disabled={!showCustom || !isFormValid}
 						/>
 					</div>
 
@@ -144,8 +164,10 @@ Networks.propTypes = {
 	name: PropTypes.object.isRequired,
 	registrator: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	addNetwork: PropTypes.func.isRequired,
+	deleteNetwork: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -159,6 +181,8 @@ export default withRouter(connect(
 	(dispatch) => ({
 		addNetwork: (address, name, registrator) => dispatch(addNetwork(address, name, registrator)),
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
+		deleteNetwork: (network) => dispatch(deleteNetwork(network)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_ADD_CUSTOM_NETWORK, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK)),
 	}),
 )(Networks));
