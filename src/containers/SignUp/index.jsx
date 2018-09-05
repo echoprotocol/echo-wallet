@@ -11,43 +11,38 @@ import ButtonComponent from './ButtonComponent';
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 
 import { generatePassword } from '../../actions/AuthActions';
+import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 class SignUp extends React.Component {
 
 	componentDidMount() {
 		this.props.generatePassword();
 	}
-	renderAddAccount() {
-		return (
-			<Form className="main-form">
-				<div className="form-info">
-					<a href="#" className="back-link">
-						<span className="icon-back" />
-                        back
-					</a>
-					<h3>Add Account</h3>
-				</div>
-				<FormComponent />
-				<CheckComponent />
-				<ButtonComponent btnContent="Add Account" />
-				<span className="sign-nav">
-                    Have an account?
-					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
-				</span>
-			</Form>
-		);
+
+	onCancel() {
+		this.props.history.goBack();
 	}
 
 	renderSignUp() {
+		const { isAddAccount, loading } = this.props;
 		return (
-
 			<Form className="main-form">
-				<div className="form-info">
-					<h3>Welcome to Echo</h3>
-				</div>
+				{
+					isAddAccount ?
+						<div className="form-info">
+							<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+								<span className="icon-back" />
+								back
+							</button>
+							<h3>Add Account</h3>
+						</div> :
+						<div className="form-info">
+							<h3>Welcome to Echo</h3>
+						</div>
+				}
 				<FormComponent />
 				<CheckComponent />
-				<ButtonComponent btnContent="Create Account" />
+				<ButtonComponent btnContent={isAddAccount ? 'Add Account' : 'Create Account'} />
 				<span className="sign-nav">
                     Have an account?
 					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
@@ -59,8 +54,7 @@ class SignUp extends React.Component {
 
 		return (
 			<div className="sign-scroll-fix">
-				{ this.renderAddAccount()}
-				{/* { this.renderSignUp() } */}
+				{ this.renderSignUp() }
 			</div>
 		);
 	}
@@ -68,12 +62,21 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
+	history: PropTypes.object.isRequired,
+	isAddAccount: PropTypes.bool.isRequired,
+	loading: PropTypes.bool,
 	generatePassword: PropTypes.func.isRequired,
 };
 
+SignUp.defaultProps = {
+	loading: false,
+};
 
 export default connect(
-	() => ({}),
+	(state) => ({
+		isAddAccount: state.global.get('isAddAccount'),
+		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+	}),
 	(dispatch) => ({
 		generatePassword: () => dispatch(generatePassword()),
 	}),

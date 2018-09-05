@@ -78,6 +78,7 @@ export const authUser = ({
 	accountName,
 	password,
 }) => async (dispatch, getState) => {
+	const isAddAccount = getState().global.get('isAddAccount');
 	let accountNameError = validateAccountName(accountName);
 	const passwordError = validatePassword(password);
 
@@ -89,6 +90,17 @@ export const authUser = ({
 	if (passwordError) {
 		dispatch(setFormError(FORM_SIGN_IN, 'password', passwordError));
 		return;
+	}
+
+	if (isAddAccount) {
+		let accounts = localStorage.getItem('accounts');
+
+		accounts = accounts ? JSON.parse(accounts) : [];
+
+		if (accounts.find((account) => account.name === accountName)) {
+			dispatch(setFormError(FORM_SIGN_IN, 'accountName', 'Account already added'));
+			return;
+		}
 	}
 
 	try {
@@ -141,24 +153,10 @@ export const unlockAccount = ({
 	try {
 		dispatch(setDisable(MODAL_UNLOCK, true));
 
-		let accountNameError = validateAccountName(accountName);
 		const passwordError = validatePassword(password);
-
-		if (accountNameError) {
-			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
-			return;
-		}
 
 		if (passwordError) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
-			return;
-		}
-
-		const instance = getState().echojs.getIn(['system', 'instance']);
-		accountNameError = await validateAccountExist(instance, accountName, true);
-
-		if (accountNameError) {
-			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
 			return;
 		}
 
