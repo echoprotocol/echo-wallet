@@ -73,10 +73,21 @@ class ModalDetails extends React.Component {
 								{ showOptions ? this.renderOptions() : null }
 							</div>
 							<div className="form-panel">
-								<Button basic type="button" color="grey" onClick={() => this.onClose()}>Cancel</Button>
-								<Button basic type="button" color="orange" onClick={() => this.onConfirm()} disabled={disabled}>
-									Confirm
-								</Button>
+								<Button
+									basic
+									type="button"
+									className="main-btn"
+									onClick={() => this.onClose()}
+									content="Cancel"
+								/>
+								<Button
+									basic
+									type="button"
+									className="main-btn"
+									onClick={() => this.onConfirm()}
+									disabled={disabled}
+									content="Confirm"
+								/>
 							</div>
 						</Form>
 					</div>

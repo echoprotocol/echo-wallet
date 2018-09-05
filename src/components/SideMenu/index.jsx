@@ -10,6 +10,7 @@ import { toggleBar, hideBar } from '../../actions/GlobalActions';
 import {
 	CONTRACT_LIST_PATH,
 	BALANCES_PATH,
+	PERMISSIONS_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
 
@@ -72,6 +73,17 @@ class SidebarMenu extends React.Component {
 								>
 									<span className="icon icon-contractSearch" />
 									<span className="sidebar-nav-text">Smart Contracts</span>
+								</NavLink>
+							</li>
+							<li>
+								<NavLink
+									exact
+									className="sidebar-nav-link"
+									onClick={() => this.props.hideBar()}
+									to={PERMISSIONS_PATH}
+								>
+									<span className="icon icon-permission" />
+									<span className="sidebar-nav-text">Permissions</span>
 								</NavLink>
 							</li>
 						</ul>

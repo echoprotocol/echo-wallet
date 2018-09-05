@@ -1970,35 +1970,35 @@
 
 /*--- Orange ---*/
 .ui {
-    &.orange {
+    &.main-btn {
         &.buttons .button,
         &.button {
-            border: 1px solid $orange;
+            border: 1px solid $main-сolor;
             color: #FFFFFF;
             text-shadow: none;
-            background-color: $orange;
+            background-color: $main-сolor;
             &:focus {
                 text-shadow: none;
             }
             &:hover {
                 text-shadow: none;
-                background-color: #f26202;
+                background-color: $main-сolor;
             }
         }
     }
     &.basic {
-        &.orange {
+        &.main-btn {
             &.buttons .button,
             &.button {
-                border: 1px solid $orange;
+                border: 1px solid $main-сolor;
                 background-color: transparent;
-                color: $orange;
+                color: $main-сolor;
                 &:focus {
-                    color: #f26202;
+                    color: $main-сolor;
             
                 }
                 &:hover {
-                    background-color: $orange;
+                    background-color: $main-сolor;
                     color: #fff;
                 }
             }
@@ -2007,80 +2007,80 @@
 
 }
 
-.ui.buttons:not(.vertical) > .basic.orange.button:not(:first-child) {
+.ui.buttons:not(.vertical) > .basic.main-btn.button:not(:first-child) {
   margin-left: -1px;
 }
 
 /* Inverted */
-.ui.inverted.orange.buttons .button,
-.ui.inverted.orange.button {
+.ui.inverted.main-btn.buttons .button,
+.ui.inverted.main-btn.button {
   background-color: transparent;
   -webkit-box-shadow: 0px 0px 0px 2px #FF851B inset !important;
           box-shadow: 0px 0px 0px 2px #FF851B inset !important;
   color: #FF851B;
 }
-.ui.inverted.orange.buttons .button:hover,
-.ui.inverted.orange.button:hover,
-.ui.inverted.orange.buttons .button:focus,
-.ui.inverted.orange.button:focus,
-.ui.inverted.orange.buttons .button.active,
-.ui.inverted.orange.button.active,
-.ui.inverted.orange.buttons .button:active,
-.ui.inverted.orange.button:active {
+.ui.inverted.main-btn.buttons .button:hover,
+.ui.inverted.main-btn.button:hover,
+.ui.inverted.main-btn.buttons .button:focus,
+.ui.inverted.main-btn.button:focus,
+.ui.inverted.main-btn.buttons .button.active,
+.ui.inverted.main-btn.button.active,
+.ui.inverted.main-btn.buttons .button:active,
+.ui.inverted.main-btn.button:active {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
   color: #FFFFFF;
 }
-.ui.inverted.orange.buttons .button:hover,
-.ui.inverted.orange.button:hover {
+.ui.inverted.main-btn.buttons .button:hover,
+.ui.inverted.main-btn.button:hover {
   background-color: #ff7701;
 }
-.ui.inverted.orange.buttons .button:focus,
-.ui.inverted.orange.button:focus {
+.ui.inverted.main-btn.buttons .button:focus,
+.ui.inverted.main-btn.button:focus {
   background-color: #f17000;
 }
-.ui.inverted.orange.buttons .active.button,
-.ui.inverted.orange.active.button {
+.ui.inverted.main-btn.buttons .active.button,
+.ui.inverted.main-btn.active.button {
   background-color: #ff7701;
 }
-.ui.inverted.orange.buttons .button:active,
-.ui.inverted.orange.button:active {
+.ui.inverted.main-btn.buttons .button:active,
+.ui.inverted.main-btn.button:active {
   background-color: #e76b00;
 }
 
 /* Inverted Basic */
-.ui.inverted.orange.basic.buttons .button,
-.ui.inverted.orange.buttons .basic.button,
-.ui.inverted.orange.basic.button {
+.ui.inverted.main-btn.basic.buttons .button,
+.ui.inverted.main-btn.buttons .basic.button,
+.ui.inverted.main-btn.basic.button {
   background-color: transparent;
   -webkit-box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.5) inset !important;
           box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.5) inset !important;
   color: #FFFFFF !important;
 }
-.ui.inverted.orange.basic.buttons .button:hover,
-.ui.inverted.orange.buttons .basic.button:hover,
-.ui.inverted.orange.basic.button:hover {
+.ui.inverted.main-btn.basic.buttons .button:hover,
+.ui.inverted.main-btn.buttons .basic.button:hover,
+.ui.inverted.main-btn.basic.button:hover {
   -webkit-box-shadow: 0px 0px 0px 2px #ff7701 inset !important;
           box-shadow: 0px 0px 0px 2px #ff7701 inset !important;
   color: #FF851B !important;
 }
-.ui.inverted.orange.basic.buttons .button:focus,
-.ui.inverted.orange.basic.buttons .button:focus,
-.ui.inverted.orange.basic.button:focus {
+.ui.inverted.main-btn.basic.buttons .button:focus,
+.ui.inverted.main-btn.basic.buttons .button:focus,
+.ui.inverted.main-btn.basic.button:focus {
   -webkit-box-shadow: 0px 0px 0px 2px #f17000 inset !important;
           box-shadow: 0px 0px 0px 2px #f17000 inset !important;
   color: #FF851B !important;
 }
-.ui.inverted.orange.basic.buttons .active.button,
-.ui.inverted.orange.buttons .basic.active.button,
-.ui.inverted.orange.basic.active.button {
+.ui.inverted.main-btn.basic.buttons .active.button,
+.ui.inverted.main-btn.buttons .basic.active.button,
+.ui.inverted.main-btn.basic.active.button {
   -webkit-box-shadow: 0px 0px 0px 2px #ff7701 inset !important;
           box-shadow: 0px 0px 0px 2px #ff7701 inset !important;
   color: #FF851B !important;
 }
-.ui.inverted.orange.basic.buttons .button:active,
-.ui.inverted.orange.buttons .basic.button:active,
-.ui.inverted.orange.basic.button:active {
+.ui.inverted.main-btn.basic.buttons .button:active,
+.ui.inverted.main-btn.buttons .basic.button:active,
+.ui.inverted.main-btn.basic.button:active {
   -webkit-box-shadow: 0px 0px 0px 2px #e76b00 inset !important;
           box-shadow: 0px 0px 0px 2px #e76b00 inset !important;
   color: #FF851B !important;
