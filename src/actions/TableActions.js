@@ -35,13 +35,12 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	const privateKey = zeroPrivateKey;
 
 	// save active accounts
-	let target = account.active.account_auths.map((a) => dispatch(EchoJSActions.fetch(a[0]))
-		.then((r) => {
-			const { name } = r.toJS();
-			return {
-				key: name, weight: a[1], unlocked: false, privateKey, role: 'active', type: 'accounts',
-			};
-		}));
+	let target = account.active.account_auths.map(async (a) => {
+		const { name } = (await dispatch(EchoJSActions.fetch(a[0]))).toJS();
+		return {
+			key: name, weight: a[1], unlocked: false, privateKey, role: 'active', type: 'accounts',
+		};
+	});
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'accounts'], new List(await Promise.all(target))));
 
 	// save active keys
@@ -51,13 +50,12 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
 
 	// save owner accounts
-	target = account.owner.account_auths.map((a) => dispatch(EchoJSActions.fetch(a[0]))
-		.then((r) => {
-			const { name } = r.toJS();
-			return {
-				key: name, weight: a[1], unlocked: false, privateKey, role: 'owner', type: 'accounts',
-			};
-		}));
+	target = account.owner.account_auths.map(async (a) => {
+		const { name } = (await dispatch(EchoJSActions.fetch(a[0]))).toJS();
+		return {
+			key: name, weight: a[1], unlocked: false, privateKey, role: 'owner', type: 'accounts',
+		};
+	});
 	dispatch(setIn(PERMISSION_TABLE, ['owner', 'accounts'], new List(await Promise.all(target))));
 
 	// save owner keys

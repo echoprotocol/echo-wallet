@@ -41,7 +41,7 @@ class PermissionTable extends React.Component {
 
 			<div className="permissions-table-wrap">
 				<h3>{`${table} Permissions`}</h3>
-				<Table structured className="permissions-table">
+				<Table structured fixed className="permissions-table">
 
 					<Table.Header>
 						<Table.Row>
