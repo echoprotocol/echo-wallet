@@ -52,3 +52,11 @@ export const HEADER_TITLE = [
 export const FAUCET_ADDRESS = 'https://echo-tmp-wallet.pixelplex.io/faucet';
 
 export const SORT_CONTRACTS = 'contracts';
+
+export const NETWORKS = [
+	{
+		name: 'testnet',
+		faucet: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
+		url: 'wss://echo-devnet-node.pixelplex.io/ws',
+	},
+];

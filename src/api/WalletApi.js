@@ -1,7 +1,5 @@
 import { PrivateKey } from 'echojs-lib';
 
-import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
-
 export const generateKeyFromPassword = (accountName, role, password) => {
 	const seed = `${accountName}${role}${password}`;
 	const privateKey = PrivateKey.fromSeed(seed);
@@ -34,12 +32,12 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const createWallet = async (account, password) => {
+export const createWallet = async (faucet, account, password) => {
 	const owner = generateKeyFromPassword(account, 'owner', password);
 	const active = generateKeyFromPassword(account, 'active', password);
 	const memo = generateKeyFromPassword(account, 'memo', password);
 
-	let response = await fetch(`${FAUCET_ADDRESS}/registration`, {
+	let response = await fetch(faucet, {
 		method: 'post',
 		mode: 'cors',
 		headers: {

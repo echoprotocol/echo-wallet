@@ -1,5 +1,6 @@
 import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
+import _ from 'lodash';
 
 const DEFAULT_FIELDS = Map({
 	globalLoading: false,
@@ -11,6 +12,7 @@ const DEFAULT_FIELDS = Map({
 	}),
 	visibleBar: false,
 	contracts: new Map({}),
+	network: new Map({}),
 });
 
 export default createModule({
@@ -81,6 +83,14 @@ export default createModule({
 		},
 
 		clear: {
+			reducer: (state) => {
+				const network = state.get('network');
+
+				return _.cloneDeep(DEFAULT_FIELDS).merge({ network });
+			},
+		},
+
+		disconnect: {
 			reducer: () => DEFAULT_FIELDS,
 		},
 	},

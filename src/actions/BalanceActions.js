@@ -45,7 +45,7 @@ export const getAssetsBalances = (assets) => async (dispatch) => {
 	}
 };
 
-export const getTokenBalances = (accountId) => async (dispatch, getState) => {
+export const getTokenBalances = (accountId, networkName) => async (dispatch, getState) => {
 
 	/**
      *  Tokens structure
@@ -59,7 +59,7 @@ export const getTokenBalances = (accountId) => async (dispatch, getState) => {
 
 	if (!instance) return;
 
-	let tokens = localStorage.getItem('tokens');
+	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
 
 	if (tokens && tokens[accountId]) {
@@ -101,9 +101,9 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	}));
 };
 
-export const initBalances = (accountId) => async (dispatch) => {
+export const initBalances = (accountId, networkName) => async (dispatch) => {
 
-	await dispatch(getTokenBalances(accountId));
+	await dispatch(getTokenBalances(accountId, networkName));
 
 	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
 
@@ -114,6 +114,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	dispatch(setDisable(MODAL_TOKENS, true));
 
@@ -143,7 +144,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		let tokens = localStorage.getItem('tokens');
+		let tokens = localStorage.getItem(`tokens_${networkName}`);
 		tokens = tokens ? JSON.parse(tokens) : {};
 
 		if (!tokens[accountId]) {
@@ -156,7 +157,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}
 
 		tokens[accountId].push(contractId);
-		localStorage.setItem('tokens', JSON.stringify(tokens));
+		localStorage.setItem(`tokens_${networkName}`, JSON.stringify(tokens));
 
 		const balance = await getTokenBalance(instance, accountId, contractId);
 
@@ -225,8 +226,9 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	if (!targetToken || !targetToken.disabled) return;
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
-	let tokens = localStorage.getItem('tokens');
+	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
 
 	if (!tokens[accountId]) {
@@ -234,7 +236,7 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	}
 
 	tokens[accountId] = tokens[accountId].filter((i) => i !== contractId);
-	localStorage.setItem('tokens', JSON.stringify(tokens));
+	localStorage.setItem(`tokens_${networkName}`, JSON.stringify(tokens));
 
 	const index = getState().balance.get('tokens').findIndex((i) => i.id === contractId);
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
