@@ -6,13 +6,20 @@ import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { initAccount } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
+import { update } from './TableActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
+import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
-import { validateAccountExist, createWallet, unlockWallet } from '../api/WalletApi';
+import {
+	validateAccountExist,
+	createWallet,
+	unlockWallet,
+	generateKeyFromPassword,
+} from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
 
 export const generatePassword = () => (dispatch) => {
@@ -158,11 +165,12 @@ export const unlockAccount = ({
 
 		const { owner, active, memo } = await unlockWallet(account, password);
 
-		if (!owner && !active && !memo) {
+		let { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
+
+		if (!owner && !active && !memo && !permissionKey) {
 			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
 			return;
 		}
-
 		if (owner) {
 			dispatch(setKey(owner, accountName, password, 'owner'));
 		}
@@ -185,7 +193,6 @@ export const unlockAccount = ({
 
 			dispatch(openModal(MODAL_DETAILS));
 		}
-
 		if (note.value && !note.unlocked) {
 			try {
 				const decodedNote = decodeMemo(note.value, memo.privateKey);
@@ -198,6 +205,37 @@ export const unlockAccount = ({
 				dispatch(setNote({ error: err }));
 			}
 		}
+		const { type, role } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
+
+		if (permissionKey) {
+			const param = permissionKey;
+			if (role === 'memo') permissionKey = accountName;
+
+			const { privateKey, publicKey } = generateKeyFromPassword(permissionKey, role, password);
+
+			const targetAccount = (await dispatch(EchoJSActions.fetch(permissionKey))).toJS();
+
+			let publicKeyError = null;
+
+			if (role === 'active') {
+				if (!targetAccount.active.key_auths.find((k) => k[0] === publicKey)) publicKeyError = 'Invalid password for active keys';
+			} else if (role === 'owner') {
+				if (!targetAccount.owner.key_auths.find((k) => k[0] === publicKey)) publicKeyError = 'Invalid password for owner keys';
+			} else if (targetAccount.options.memo_key !== publicKey) publicKeyError = 'Invalid password for note key';
+
+			if (publicKeyError) {
+				dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', publicKeyError));
+				return;
+			}
+
+			const value = {
+				privateKey: privateKey ? privateKey.toHex() : '',
+				unlocked: true,
+			};
+
+			dispatch(update(PERMISSION_TABLE, [role, type], param, value));
+		}
+
 
 		dispatch(closeModal(MODAL_UNLOCK));
 		dispatch(clearForm(FORM_UNLOCK_MODAL));

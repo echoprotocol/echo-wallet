@@ -4,11 +4,39 @@ import PropTypes from 'prop-types';
 
 import PermissionTable from './PermissionTable';
 
+import { formPermissionKeys, clear } from '../../actions/TableActions';
+import { PERMISSION_TABLE } from '../../constants/TableConstants';
+
 class Permissions extends React.Component {
+
+	componentWillMount() {
+		this.props.formPermissionKeys();
+	}
+
+	componentWillUnmount() {
+		this.props.clear();
+	}
+
+	renderTables() {
+		let { permissionsKeys } = this.props;
+
+		permissionsKeys = permissionsKeys.toJS();
+
+		const active = permissionsKeys.active.keys.concat(permissionsKeys.active.accounts);
+		const owner = permissionsKeys.owner.keys.concat(permissionsKeys.owner.accounts);
+		const note = permissionsKeys.memo.keys;
+
+		return (
+			<React.Fragment>
+				<PermissionTable table="Active" data={active} />
+				<PermissionTable table="Owner" data={owner} />
+				<PermissionTable table="Note" data={note} />
+			</React.Fragment>
+		);
+	}
 
 	render() {
 
-		const { active, owner, note } = this.props;
 		return (
 			<div className="permissions-wrap">
 				<div className="permissions-info">
@@ -17,10 +45,9 @@ class Permissions extends React.Component {
                     They can be used to easily setup a multi-signature
                     scheme, see <a className="link" href="#"> permissions</a> for more details.
 				</div>
-
-				<PermissionTable table="Active" data={active} />
-				<PermissionTable table="Owner" data={owner} />
-				<PermissionTable table="Note" data={note} />
+				{
+					this.renderTables()
+				}
 
 			</div>
 		);
@@ -29,18 +56,18 @@ class Permissions extends React.Component {
 }
 
 Permissions.propTypes = {
-	active: PropTypes.array.isRequired,
-	owner: PropTypes.array.isRequired,
-	note: PropTypes.array.isRequired,
+	permissionsKeys: PropTypes.object.isRequired,
+	formPermissionKeys: PropTypes.func.isRequired,
+	clear: PropTypes.func.isRequired,
 };
 
-export default connect((state) => {
-	const accountId = state.global.getIn(['activeUser', 'id']);
-	const account = state.echojs.getIn(['data', 'accounts', accountId]).toJS();
-	const active = account.active.account_auths.concat(account.active.key_auths);
-	const owner = account.owner.account_auths.concat(account.owner.key_auths);
-	const note = [[account.options.memo_key]];
-
-	return { active, owner, note };
-})(Permissions);
+export default connect(
+	(state) => ({
+		permissionsKeys: state.table.get(PERMISSION_TABLE),
+	}),
+	(dispatch) => ({
+		formPermissionKeys: () => dispatch(formPermissionKeys()),
+		clear: () => dispatch(clear(PERMISSION_TABLE)),
+	}),
+)(Permissions);
 
