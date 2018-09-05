@@ -73,7 +73,7 @@ class Activity extends React.Component {
 	render() {
 		const { account, history } = this.props;
 
-		return account.get('history') && history ? this.renderTable() : <Loading />;
+		return account.get('history') && history ? this.renderTable() : <Loading text="Load history..." />;
 	}
 
 }

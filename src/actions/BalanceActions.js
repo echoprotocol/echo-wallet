@@ -102,6 +102,12 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 };
 
 export const initBalances = (accountId) => async (dispatch) => {
+	const { precision, symbol } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
+
+	dispatch(BalanceReducer.actions.setIn({
+		field: 'core',
+		params: { precision, symbol },
+	}));
 
 	await dispatch(getTokenBalances(accountId));
 
