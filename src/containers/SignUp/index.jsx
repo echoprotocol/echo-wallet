@@ -11,6 +11,7 @@ import ButtonComponent from './ButtonComponent';
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 
 import { generatePassword } from '../../actions/AuthActions';
+import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 class SignUp extends React.Component {
 
@@ -18,22 +19,42 @@ class SignUp extends React.Component {
 		this.props.generatePassword();
 	}
 
+	onCancel() {
+		this.props.history.goBack();
+	}
+
+	renderSignUp() {
+		const { isAddAccount, loading } = this.props;
+		return (
+			<Form className="main-form">
+				{
+					isAddAccount ?
+						<div className="form-info">
+							<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+								<span className="icon-back" />
+								back
+							</button>
+							<h3>Add Account</h3>
+						</div> :
+						<div className="form-info">
+							<h3>Welcome to Echo</h3>
+						</div>
+				}
+				<FormComponent />
+				<CheckComponent />
+				<ButtonComponent btnContent={isAddAccount ? 'Add Account' : 'Create Account'} />
+				<span className="sign-nav">
+                    Have an account?
+					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
+				</span>
+			</Form>
+		);
+	}
 	render() {
 
 		return (
 			<div className="sign-scroll-fix">
-				<Form className="user-form">
-					<div className="form-info">
-						<h3>Welcome to Echo</h3>
-					</div>
-					<FormComponent />
-					<CheckComponent />
-					<ButtonComponent />
-					<span className="sign-nav">
-						Have an account?
-						<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
-					</span>
-				</Form>
+				{ this.renderSignUp() }
 			</div>
 		);
 	}
@@ -41,12 +62,21 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
+	history: PropTypes.object.isRequired,
+	isAddAccount: PropTypes.bool.isRequired,
+	loading: PropTypes.bool,
 	generatePassword: PropTypes.func.isRequired,
 };
 
+SignUp.defaultProps = {
+	loading: false,
+};
 
 export default connect(
-	() => ({}),
+	(state) => ({
+		isAddAccount: state.global.get('isAddAccount'),
+		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+	}),
 	(dispatch) => ({
 		generatePassword: () => dispatch(generatePassword()),
 	}),

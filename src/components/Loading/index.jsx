@@ -1,15 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
-export default class Loading extends React.PureComponent {
+class Loading extends React.PureComponent {
 
 	render() {
-
+		const { text } = this.props;
 		return (
 			<Dimmer inverted active>
-				<Loader inverted content="" />
+				<Loader inverted content={text} />
 			</Dimmer>
 		);
 	}
 
 }
+
+Loading.propTypes = {
+	text: PropTypes.string,
+};
+
+Loading.defaultProps = {
+	text: '',
+};
+
+export default Loading;

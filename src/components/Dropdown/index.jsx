@@ -5,6 +5,7 @@ import { Dropdown } from 'semantic-ui-react';
 
 import { convert } from '../../actions/ConverterActions';
 
+//	TODO endure all dropdowns in that component!!
 class DropdownComponent extends React.Component {
 
 	onChange(e, { value: type }) {
