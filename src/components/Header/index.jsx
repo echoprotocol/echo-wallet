@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
-import { logout } from '../../actions/GlobalActions';
+import { logout, addAccount, formatAccountsBalances, initAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -23,8 +24,20 @@ import { formatAmount } from '../../helpers/FormatHelper';
 
 class Header extends React.Component {
 
+	componentWillReceiveProps(nextProps) {
+		if (_.isEqual(this.props, nextProps)) {
+			return;
+		}
+
+		this.props.formatAccounts();
+	}
+
 	onLogout() {
 		this.props.logout();
+	}
+
+	onAddAccount() {
+		this.props.addAccount();
 	}
 
 	onSend(e) {
@@ -32,6 +45,17 @@ class Header extends React.Component {
 
 		this.props.history.push(TRANSFER_PATH);
 	}
+
+	onchangeAccount(e, name) {
+		const { accountName } = this.props;
+
+		if (accountName === name) {
+			return;
+		}
+
+		this.props.initAccount(name);
+	}
+
 	onDropdownChange(e, value) {
 		if (e.keyCode === 13) {
 			switch (value) {
@@ -49,6 +73,7 @@ class Header extends React.Component {
 		}
 
 	}
+
 	getTitle() {
 		const { location } = this.props;
 
@@ -81,33 +106,50 @@ class Header extends React.Component {
 		);
 	}
 
+	renderAccounts() {
+		const { core, accounts } = this.props;
+		return (
+			accounts.toJS().map((account, index) => {
+				const id = index;
+				const balance = formatAmount(account.balance, core.toJS().precision);
+
+				return (
+					{
+						value: `account${id}`,
+						key: `account${id}`,
+						content: (
+							<button className="user-item" key={id} onClick={(e) => this.onchangeAccount(e, account.name)}>
+								<span>{account.name}</span>
+								<div className="balance">
+									<span>{balance || '0'}</span>
+									<span>{core.toJS().symbol || 'ECHO'}</span>
+								</div>
+							</button>
+						),
+					}
+				);
+			})
+		);
+	}
+
 	render() {
-		const { location } = this.props;
+		const {
+			location, accounts, core, accountName,
+		} = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
-		const options = [
-			{
-				value: 'current_account',
-				key: 'current_account',
-				content: (
-					<a className="user-item">
-						<span>{localStorage.getItem('current_account')}</span>
-						<div className="balance">
-							<span>{balance}</span>
-							<span>{symbol}</span>
-						</div>
-					</a>
-				),
-			},
+		const renderedAccounts = (accounts && core) && this.renderAccounts();
+
+		let options = [
 			{
 				value: 'add-account',
 				key: 'add-account',
 				className: 'add-account',
 				content: 'Add account',
-				onClick: (e) => this.onLogout(e),
+				onClick: (e) => this.onAddAccount(e),
 			},
 			{
 				value: 'logout',
@@ -121,6 +163,9 @@ class Header extends React.Component {
 				onClick: (e) => this.onLogout(e),
 			},
 		];
+
+		options = renderedAccounts.concat(options);
+
 		return (
 			<div className="header">
 				{
@@ -148,7 +193,7 @@ class Header extends React.Component {
 
 						<Dropdown
 							options={options}
-							text={localStorage.getItem('current_account')}
+							text={accountName}
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						/>
 
@@ -162,20 +207,36 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	assets: PropTypes.any,
+	core: PropTypes.any,
+	accounts: PropTypes.any,
+	accountName: PropTypes.string,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
+	addAccount: PropTypes.func.isRequired,
+	formatAccounts: PropTypes.func.isRequired,
+	initAccount: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
 	assets: null,
+	core: null,
+	accounts: null,
+	accountName: '',
 };
 
 export default withRouter(connect(
 	(state) => ({
 		assets: state.balance.get('assets'),
+		core: state.balance.getIn(['core']),
+		accounts: state.global.get('accounts'),
+		accountName: state.global.getIn(['activeUser', 'name']),
+		systemAccounts: state.echojs.getIn(['data', 'accounts']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
+		addAccount: () => dispatch(addAccount()),
+		formatAccounts: () => dispatch(formatAccountsBalances()),
+		initAccount: (value) => dispatch(initAccount(value)),
 	}),
 )(Header));
