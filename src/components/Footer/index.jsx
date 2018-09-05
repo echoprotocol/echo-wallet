@@ -5,14 +5,16 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { version } from '../../../package.json';
+
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
-import { connection } from '../../actions/GlobalActions';
+
+import { saveConnection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
 
 
 	onReconnect() {
-		this.props.connection();
+		this.props.saveConnection();
 	}
 
 	render() {
@@ -62,7 +64,7 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any,
 	isConnect: PropTypes.any,
 	latency: PropTypes.any,
-	connection: PropTypes.func.isRequired,
+	saveConnection: PropTypes.func.isRequired,
 };
 
 Footer.defaultProps = {
@@ -82,6 +84,6 @@ export default connect(
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
 	}),
 	(dispatch) => ({
-		connection: () => dispatch(connection()),
+		saveConnection: () => dispatch(saveConnection()),
 	}),
 )(Footer);

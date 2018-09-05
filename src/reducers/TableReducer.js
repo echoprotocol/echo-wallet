@@ -2,17 +2,19 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import { HISTORY_DATA } from '../constants/TableConstants';
+import { HISTORY } from '../constants/TableConstants';
 
-const DEFAULT_FIELDS = {
-	[HISTORY_DATA]: Map({
-		history: null,
-	}),
-};
+const DEFAULT_FIELDS = Map({
+	data: null,
+	loading: false,
+	error: null,
+});
 
 export default createModule({
 	name: 'table',
-	initialState: Map(_.cloneDeep(DEFAULT_FIELDS)),
+	initialState: Map({
+		[HISTORY]: _.cloneDeep(DEFAULT_FIELDS),
+	}),
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
@@ -24,7 +26,7 @@ export default createModule({
 
 		clear: {
 			reducer: (state, { payload }) => {
-				state = state.set(payload.table, DEFAULT_FIELDS[payload.table]);
+				state = state.set(payload.table, _.cloneDeep(DEFAULT_FIELDS));
 
 				return state;
 			},

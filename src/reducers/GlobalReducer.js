@@ -1,19 +1,21 @@
 import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 
+const DEFAULT_FIELDS = Map({
+	globalLoading: false,
+	loading: false,
+	error: null,
+	activeUser: new Map({
+		id: '',
+		name: '',
+	}),
+	visibleBar: false,
+	contracts: new Map({}),
+});
+
 export default createModule({
 	name: 'global',
-	initialState: Map({
-		globalLoading: true,
-		loading: false,
-		error: null,
-		activeUser: new Map({
-			id: '',
-			name: '',
-		}),
-		visibleBar: false,
-		contracts: new Map({}),
-	}),
+	initialState: DEFAULT_FIELDS,
 	transformations: {
 		setGlobalLoading: {
 			reducer: (state, { payload }) => {
@@ -76,6 +78,10 @@ export default createModule({
 
 				return state;
 			},
+		},
+
+		clear: {
+			reducer: () => DEFAULT_FIELDS,
 		},
 	},
 });

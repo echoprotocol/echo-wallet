@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 
-import { connection, hideBar } from '../actions/GlobalActions';
+import { saveConnection, hideBar } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -19,7 +19,7 @@ import { AUTH_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
 class App extends React.Component {
 
 	componentDidMount() {
-		this.props.connection();
+		this.props.saveConnection();
 	}
 
 	onPusher() {
@@ -79,7 +79,7 @@ App.propTypes = {
 	globalLoading: PropTypes.bool.isRequired,
 	children: PropTypes.element.isRequired,
 	visibleBar: PropTypes.bool.isRequired,
-	connection: PropTypes.func.isRequired,
+	saveConnection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
 };
 
@@ -90,7 +90,7 @@ export default withRouter(connect(
 		visibleBar: state.global.get('visibleBar'),
 	}),
 	(dispatch) => ({
-		connection: () => dispatch(connection()),
+		saveConnection: () => dispatch(saveConnection()),
 		hideBar: () => dispatch(hideBar()),
 	}),
 )(App));

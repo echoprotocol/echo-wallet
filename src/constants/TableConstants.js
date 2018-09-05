@@ -1,3 +1,3 @@
-export const HISTORY_DATA = 'historyData';
+export const HISTORY = 'historyData';
 
 export default {};
