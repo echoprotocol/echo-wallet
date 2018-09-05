@@ -45,7 +45,7 @@ class ModalTokens extends React.Component {
 					/>
 					<div className="modal-header" />
 					<div className="modal-body">
-						<Form className="user-form">
+						<Form className="main-form">
 							<div className="form-info">
 								<h3>Add ERC20 token to watch list</h3>
 							</div>
@@ -63,9 +63,14 @@ class ModalTokens extends React.Component {
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
-							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)} disabled={disabled}>
-								Watch Token
-							</Button>
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={(e) => this.onClick(e)}
+								disabled={disabled}
+								content="Watch Token"
+							/>
 						</Form>
 					</div>
 				</div>

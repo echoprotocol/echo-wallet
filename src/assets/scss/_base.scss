@@ -62,11 +62,15 @@ div,span {
 	}
 }
 .link {
+    color: $main-сolor;
+    &:hover {
+        color: $main-сolor;
+    } 
     &:focus {
         text-decoration: underline;
     }
-    &.orange {
-        color: $orange;
+    &.main-link {
+        color: $main-сolor;
     }
 }
 

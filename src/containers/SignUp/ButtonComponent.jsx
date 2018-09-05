@@ -34,21 +34,25 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (<Button type="submit" color="orange" className="load">Creating...</Button>);
+		return (<Button
+			type="submit"
+			className="main-btn load"
+			content="Creating..."
+		/>);
 	}
 
 	renderSubmit() {
 		return (
-			<Button
-				basic
-				type="submit"
-				color="orange"
-				disabled={this.isDisabledSubmit()}
-				className={classnames({ disabled: this.isDisabledSubmit() })}
-				onClick={(e) => this.onClick(e)}
-			>
-				Create account
-			</Button>
+			<div className="btn-wrap">
+				<Button
+					basic
+					type="submit"
+					disabled={this.isDisabledSubmit()}
+					className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+					onClick={(e) => this.onClick(e)}
+					content={this.props.btnContent}
+				/>
+			</div>
 		);
 	}
 
@@ -67,6 +71,7 @@ ButtonComponent.propTypes = {
 	generatedPassword: PropTypes.object.isRequired,
 	confirmPassword: PropTypes.object.isRequired,
 	createAccount: PropTypes.func.isRequired,
+	btnContent: PropTypes.string.isRequired,
 };
 
 ButtonComponent.defaultProps = {

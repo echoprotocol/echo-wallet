@@ -7,6 +7,7 @@ import {
 	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
+	PERMISSIONS_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -41,6 +42,10 @@ export const HEADER_TITLE = [
 	{
 		path: VIEW_TRANSACTION_PATH,
 		title: 'Transaction',
+	},
+	{
+		path: PERMISSIONS_PATH,
+		title: 'Permissions',
 	},
 ];
 

@@ -35,7 +35,7 @@ class Footer extends React.PureComponent {
 						<span className="status green">
                             Connected to
 						</span>
-						<Link className="network-link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
+						<Link className="network-link link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
 					</li>
 				</ul>
 			</div>
