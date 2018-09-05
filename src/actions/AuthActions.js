@@ -92,8 +92,10 @@ export const authUser = ({
 		return;
 	}
 
+	const networkName = getState().global.getIn(['network', 'name']);
+
 	if (isAddAccount) {
-		let accounts = localStorage.getItem('accounts');
+		let accounts = localStorage.getItem(`accounts_${networkName}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
@@ -135,7 +137,6 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		const networkName = getState().global.getIn(['network', 'name']);
 		dispatch(initAccount(accountName, networkName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));

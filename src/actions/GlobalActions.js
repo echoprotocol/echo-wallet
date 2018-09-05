@@ -32,7 +32,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
-	let accounts = localStorage.getItem('accounts');
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
 	accounts = accounts ? JSON.parse(accounts) : [];
 
@@ -59,7 +59,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 	if (!isChange) {
 		accounts.unshift({ id, name: accountName });
 	}
-	localStorage.setItem('accounts', JSON.stringify(accounts));
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
@@ -160,8 +160,10 @@ export const remove = (field, param) => (dispatch) => {
 // 	history.push(SIGN_IN_PATH);
 // };
 
-export const formatAccountsBalances = () => async (dispatch) => {
-	let accounts = localStorage.getItem('accounts');
+export const formatAccountsBalances = () => async (dispatch, getState) => {
+	const networkName = getState().global.getIn(['network', 'name']);
+
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
 	accounts = accounts ? JSON.parse(accounts) : [];
 
@@ -184,8 +186,12 @@ export const formatAccountsBalances = () => async (dispatch) => {
 
 export const logout = () => async (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
 	const accountName = getState().global.getIn(['activeUser', 'name']);
-	let accounts = localStorage.getItem('accounts');
+	const networkName = getState().global.getIn(['network', 'name']);
+
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
 	try {
 		accounts = JSON.parse(accounts);
 	} catch (e) {
@@ -196,7 +202,7 @@ export const logout = () => async (dispatch, getState) => {
 
 	if (currAccountIndex !== -1) {
 		accounts.splice(currAccountIndex, 1);
-		localStorage.setItem('accounts', JSON.stringify(accounts));
+		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 		dispatch(formatAccountsBalances());
 	}
 
@@ -204,7 +210,7 @@ export const logout = () => async (dispatch, getState) => {
 		await dispatch(initAccount(accounts[0].name));
 	} else {
 		dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: false }));
-		localStorage.removeItem('accounts');
+		localStorage.removeItem(`accounts_${networkName}`);
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
 		dispatch(clearTable(HISTORY));
 		dispatch(resetBalance());
