@@ -1,3 +1,14 @@
+.icon-hide:before {
+    content: "\e920";
+}
+
+.icon-permission:before {
+    content: "\e921";
+}
+
+.icon-show:before {
+    content: "\e922";
+}
 
 .icon-edit:before {
     content: "\e91f";
@@ -134,8 +145,4 @@
 
 .icon-top_1:before {
     content: "\e911";
-}
-
-.icon-hide:before {
-    content: "\e913";
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form } from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
 
@@ -52,10 +52,8 @@ class FormComponent extends React.Component {
 					<label htmlFor="generatedPassword">Generated password</label>
 					<div className="ui action input">
 						<input name="generatedPassword" className="ui input" placeholder="Genereted password" value={generatedPassword.value} readOnly />
-						<CopyToClipboard text={generatedPassword.value} className="ui orange icon right button">
-							<button className="ui orange copy icon right button">
-								<i aria-hidden="true" className="copy icon" />
-							</button>
+						<CopyToClipboard text={generatedPassword.value}>
+							<Button icon="copy" className="main-btn right" />
 						</CopyToClipboard>
 					</div>
 				</Form.Field>

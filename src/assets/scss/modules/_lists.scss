@@ -23,7 +23,7 @@
             &:last-child {
                 span {
                     margin-left: 4px;
-                    color: $orange;
+                    color: $main-сolor;
                     cursor: pointer;
                     &:focus {
                         text-decoration: underline;
@@ -62,9 +62,12 @@
             display: flex;
         }
         span {
-            font-size: 1em;
-            color: $black;
-            letter-spacing: -.2px;
+            &:not(.error-message) {
+                font-size: 1em;
+                color: $black;
+                letter-spacing: -.2px;
+            }
+
             &:not(:last-child) {
                 &:not(.comma) {
                     margin-right: 5px;

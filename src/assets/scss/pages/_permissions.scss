@@ -1,0 +1,28 @@
+.permissions {
+    &-table {
+        &-wrap {
+            margin-bottom: 25px;
+            h3 {
+                color: rgba(92, 99, 125, 1);
+                font-size: 1.4em;
+                font-weight: normal;
+                line-height: 1;
+                letter-spacing: .01px;
+            }
+        }
+
+    }
+    &-wrap {
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+    }
+    &-info {
+        color: $black;
+        margin: 10px 0 20px 0;
+        max-width: 774px;
+        .link {
+            font-family: 'proximanovaSemibold'
+        }
+    }
+}
