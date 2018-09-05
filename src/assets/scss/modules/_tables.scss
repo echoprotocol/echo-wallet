@@ -383,6 +383,8 @@ $thead-height: 46px;
                 width: 100%;
                 color: $main-сolor;
                 transition: color $speed;
+                font-size: .85em;
+                letter-spacing: -.2px;
                 &:focus {
                     background-color: transparent;
                     box-shadow: none;
