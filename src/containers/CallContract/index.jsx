@@ -69,7 +69,13 @@ class AddContractComponent extends React.Component {
 					<AmountField form={FORM_CALL_CONTRACT_VIA_ID} />
 				</div>
 
-				<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)}>Call Contract</Button>
+				<Button
+					basic
+					type="button"
+					className="main-btn"
+					onClick={(e) => this.onClick(e)}
+					content="Call Contract"
+				/>
 			</Form>
 		);
 	}

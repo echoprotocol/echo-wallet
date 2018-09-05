@@ -63,9 +63,14 @@ class ModalTokens extends React.Component {
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
-							<Button basic type="button" color="orange" onClick={(e) => this.onClick(e)} disabled={disabled}>
-								Watch Token
-							</Button>
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={(e) => this.onClick(e)}
+								disabled={disabled}
+								content="Watch Token"
+							/>
 						</Form>
 					</div>
 				</div>

@@ -97,7 +97,7 @@ class FormComponent extends React.Component {
 					<span className="error-message">{bytecode.error}</span>
 				</div>
 				<div className={classnames({ active: this.props.addToWatchList, 'shrink-wrap': true })}>
-					<div className="check orange">
+					<div className="check">
 						<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.props.addToWatchList} />
 						<label className="label" htmlFor="addToWatchList">
 							<span className="label-text">Add to watch list</span>
@@ -109,8 +109,7 @@ class FormComponent extends React.Component {
 					<Button
 						basic
 						type="submit"
-						color="orange"
-						className={classnames({ disabled: this.isDisabledSubmit() })}
+						className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 						onClick={(e) => this.onClick(e)}
 						content="Create"
 					/>

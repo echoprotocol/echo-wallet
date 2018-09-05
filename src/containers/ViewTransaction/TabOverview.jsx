@@ -19,7 +19,12 @@ class TabOverview extends React.Component {
 		const { bytecode } = this.props.data;
 		return (
 			<CopyToClipboard text={bytecode}>
-				<Button compact icon="copy" content="Copy" />
+				<Button
+					basic
+					compact
+					icon="copy"
+					content="Copy"
+				/>
 			</CopyToClipboard>
 		);
 	}
@@ -75,15 +80,12 @@ class TabOverview extends React.Component {
 				</div>
 			) : (
 				<Button
+					basic
 					content="Show note"
-					type="button"
 					icon="comment"
 					size="mini"
-					className="light"
-					color="grey"
+					className="main-btn"
 					onClick={() => this.props.unlock(memo)}
-					onKeyPress={() => this.props.unlock(memo)}
-					tabIndex="0"
 				/>
 			);
 	}
