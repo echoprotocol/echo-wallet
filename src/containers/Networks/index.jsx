@@ -11,7 +11,7 @@ import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 import { setFormValue, clearForm } from '../../actions/FormActions';
 import { saveNetwork, addNetwork, deleteNetwork } from '../../actions/GlobalActions';
 
-import AddCustomNetwork from './AddCustomNetwork';
+import AddCustomNetwork from './AddCustomForm';
 
 class Networks extends React.Component {
 

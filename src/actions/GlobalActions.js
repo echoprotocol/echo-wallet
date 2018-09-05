@@ -113,3 +113,17 @@ export const logout = () => (dispatch, getState) => {
 
 	history.push(SIGN_IN_PATH);
 };
+
+export const saveNetwork = (network) => (dispatch, getState) => {
+	if (network.name === 'custom') {
+		// TODO add custom logic
+		return;
+	}
+
+	const oldNetwork = getState().global.get('network').toJS();
+
+	dispatch(disconnection(oldNetwork.url));
+
+	localStorage.setItem('current_network', JSON.stringify(network));
+	dispatch(connection());
+};

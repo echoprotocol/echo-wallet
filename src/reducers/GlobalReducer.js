@@ -12,7 +12,11 @@ const DEFAULT_FIELDS = Map({
 	}),
 	visibleBar: false,
 	contracts: new Map({}),
-	network: new Map({}),
+	network: new Map({
+		name: '',
+		faucet: '',
+		url: '',
+	}),
 });
 
 export default createModule({
