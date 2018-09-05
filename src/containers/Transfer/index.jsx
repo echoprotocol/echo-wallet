@@ -48,7 +48,13 @@ class Transfer extends React.Component {
 								<span>0.0009287 BTC</span>
 							</div>
 						*/}
-						<Button basic type="submit" color="orange" content="Send" onClick={(e) => this.onSend(e)} />
+						<Button
+							basic
+							type="submit"
+							className="main-btn"
+							content="Send"
+							onClick={(e) => this.onSend(e)}
+						/>
 					</div>
 				</div>
 			</Form>

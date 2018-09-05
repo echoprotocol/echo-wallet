@@ -109,8 +109,7 @@ class FormComponent extends React.Component {
 					<Button
 						basic
 						type="submit"
-						color="orange"
-						className={classnames({ disabled: this.isDisabledSubmit() })}
+						className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 						onClick={(e) => this.onClick(e)}
 						content="Create"
 					/>
