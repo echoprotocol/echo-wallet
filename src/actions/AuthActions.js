@@ -56,7 +56,7 @@ export const createAccount = ({
 
 		const network = getState().global.getIn(['network']).toJS();
 		const { owner, active, memo } = await createWallet(
-			network.faucet,
+			network.registrator,
 			accountName,
 			generatedPassword,
 		);

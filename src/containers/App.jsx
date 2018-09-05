@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 
-import { connection, hideBar } from '../actions/GlobalActions';
+import { connection, toggleBar } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -86,11 +86,10 @@ App.propTypes = {
 export default withRouter(connect(
 	(state) => ({
 		globalLoading: state.global.get('globalLoading'),
-		loading: state.global.get('loading'),
 		visibleBar: state.global.get('visibleBar'),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
-		hideBar: () => dispatch(hideBar()),
+		hideBar: () => dispatch(toggleBar(true)),
 	}),
 )(App));

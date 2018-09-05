@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 
 import GlobalReducer from '../reducers/GlobalReducer';
@@ -12,11 +12,19 @@ import {
 } from '../constants/RouterConstants';
 import { HISTORY } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
+import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
+
+import {
+	validateNetworkName,
+	validateNetworkAddress,
+	validateNetworkRegistrator,
+} from '../helpers/ValidateHelper';
 
 import { initBalances, getObject, resetBalance } from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
+import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	localStorage.setItem(`current_account_${networkName}`, accountName);
@@ -48,6 +56,12 @@ export const connection = () => async (dispatch) => {
 
 	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(network) }));
 
+	let networks = localStorage.getItem('custom_networks');
+	networks = networks ? JSON.parse(networks) : [];
+	networks = NETWORKS.concat(networks);
+
+	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+
 	try {
 		await dispatch(EchoJSActions.connect(
 			network.url,
@@ -75,8 +89,13 @@ export const connection = () => async (dispatch) => {
 	}
 };
 
-export const disconnection = (address) => (dispatch) => {
-	dispatch(EchoJSActions.disconnect(address));
+export const disconnection = (address) => (dispatch, getState) => {
+	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
+
+	if (isConnected) {
+		dispatch(EchoJSActions.disconnect(address));
+	}
+
 	dispatch(clearTable(HISTORY));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
@@ -84,10 +103,6 @@ export const disconnection = (address) => (dispatch) => {
 
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
-};
-
-export const hideBar = () => (dispatch) => {
-	dispatch(GlobalReducer.actions.hideBar());
 };
 
 export const push = (field, param, value) => (dispatch) => {
@@ -109,21 +124,87 @@ export const logout = () => (dispatch, getState) => {
 
 	dispatch(clearTable(HISTORY));
 	dispatch(resetBalance());
-	dispatch(GlobalReducer.actions.clear());
+	dispatch(GlobalReducer.actions.logout());
 
 	history.push(SIGN_IN_PATH);
 };
 
 export const saveNetwork = (network) => (dispatch, getState) => {
-	if (network.name === 'custom') {
-		// TODO add custom logic
-		return;
-	}
-
 	const oldNetwork = getState().global.get('network').toJS();
 
 	dispatch(disconnection(oldNetwork.url));
 
 	localStorage.setItem('current_network', JSON.stringify(network));
 	dispatch(connection());
+};
+
+export const addNetwork = (address, name, registrator) => (dispatch, getState) => {
+	const network = {
+		url: address.value.trim(),
+		name: name.value.trim(),
+		registrator: registrator.value.trim(),
+	};
+
+	let nameError = validateNetworkName(network.name);
+
+	if (NETWORKS.find((i) => i.name === network.name)) {
+		nameError = `Network "${network.name}" already exists`;
+	}
+
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'name', nameError));
+	}
+
+	const addressError = validateNetworkAddress(network.url);
+
+	if (addressError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'address', addressError));
+	}
+
+	const registratorError = validateNetworkRegistrator(network.registrator);
+
+	if (registratorError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'registrator', registratorError));
+	}
+
+	if (nameError || addressError || registratorError) { return; }
+
+	let customNetworks = localStorage.getItem('custom_networks');
+	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
+	customNetworks.push(network);
+
+	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	const networks = getState().global.get('networks').toJS();
+	networks.push(network);
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
+
+	dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK));
+};
+
+export const deleteNetwork = (network) => (dispatch, getState) => {
+	let customNetworks = localStorage.getItem('custom_networks');
+	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
+	customNetworks = customNetworks.filter((i) => i.name !== network.name);
+
+	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	const currentNetwork = getState().global.get('network').toJS();
+	if (currentNetwork.name === network.name) {
+		localStorage.removeItem('current_network');
+		dispatch(connection());
+		return;
+	}
+
+	let networks = getState().global.get('networks').toJS();
+	networks = networks.filter((i) => i.name !== network.name);
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
 };

@@ -1,10 +1,9 @@
 import { createModule } from 'redux-modules';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import _ from 'lodash';
 
 const DEFAULT_FIELDS = Map({
 	globalLoading: false,
-	loading: false,
 	error: null,
 	activeUser: new Map({
 		id: '',
@@ -14,9 +13,10 @@ const DEFAULT_FIELDS = Map({
 	contracts: new Map({}),
 	network: new Map({
 		name: '',
-		faucet: '',
+		registrator: '',
 		url: '',
 	}),
+	networks: new List([]),
 });
 
 export default createModule({
@@ -30,12 +30,7 @@ export default createModule({
 				return state;
 			},
 		},
-		setLoading: {
-			reducer: (state, { payload }) => {
-				state = state.set('loading', !!payload);
-				return state;
-			},
-		},
+
 		set: {
 			reducer: (state, { payload }) => {
 				state = state.set(payload.field, payload.value);
@@ -43,6 +38,7 @@ export default createModule({
 				return state;
 			},
 		},
+
 		setIn: {
 			reducer: (state, { payload }) => {
 				Object.keys(payload.params).forEach((field) => {
@@ -57,10 +53,6 @@ export default createModule({
 			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
 		},
 
-		hideBar: {
-			reducer: (state) => state.set('visibleBar', false),
-		},
-
 		push: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.field, payload.param], payload.value);
@@ -72,6 +64,7 @@ export default createModule({
 		update: {
 			reducer: (state, { payload }) => {
 				const param = state.getIn([payload.field, payload.param]);
+
 				state = state.setIn([payload.field, payload.param], { ...param, ...payload.value });
 
 				return state;
@@ -86,11 +79,12 @@ export default createModule({
 			},
 		},
 
-		clear: {
+		logout: {
 			reducer: (state) => {
 				const network = state.get('network');
+				const networks = state.get('networks');
 
-				return _.cloneDeep(DEFAULT_FIELDS).merge({ network });
+				return _.cloneDeep(DEFAULT_FIELDS).merge({ network, networks });
 			},
 		},
 
