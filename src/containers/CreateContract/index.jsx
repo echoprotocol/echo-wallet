@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { clearForm } from '../../actions/FormActions';
 
 import FormComponent from './FormComponent';
-// import ButtonComponent from './ButtonComponent';
 
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 

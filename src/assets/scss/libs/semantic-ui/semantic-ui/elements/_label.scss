@@ -551,16 +551,16 @@ a.ui.basic.red.label:hover {
 
 .ui.orange.labels .label,
 .ui.orange.label {
-  background-color: $orange !important;
-  border-color: $orange !important;
+  background-color: $main-сolor !important;
+  border-color: $main-сolor !important;
   color: #FFFFFF !important;
 }
 
 /* Link */
 .ui.orange.labels .label:hover,
 a.ui.orange.label:hover {
-  background-color: #f26202 !important;
-  border-color: #f26202 !important;
+  background-color: $main-сolor !important;
+  border-color: $main-сolor !important;
   color: #FFFFFF !important;
 }
 
@@ -578,14 +578,14 @@ a.ui.orange.label:hover {
 /* Basic */
 .ui.basic.orange.label {
   background-color: #FFFFFF !important;
-  color: $orange !important;
-  border-color: $orange !important;
+  color: $main-сolor !important;
+  border-color: $main-сolor !important;
 }
 .ui.basic.orange.labels a.label:hover,
 a.ui.basic.orange.label:hover {
   background-color: #FFFFFF !important;
-  color: #f26202 !important;
-  border-color: #f26202 !important;
+  color: $main-сolor !important;
+  border-color: $main-сolor !important;
 }
 
 /*--- Yellow ---*/

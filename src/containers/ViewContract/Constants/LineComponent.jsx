@@ -57,7 +57,13 @@ class LineComponent extends React.Component {
 						);
 					})
 				}
-				<Button className="item" size="mini" content="call" onClick={() => this.onQuery()} />
+				<Button
+					basic
+					className="item main-btn"
+					size="mini"
+					content="call"
+					onClick={() => this.onQuery()}
+				/>
 			</React.Fragment>
 		);
 

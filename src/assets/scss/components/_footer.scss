@@ -14,6 +14,9 @@
             &:first-child {
                 margin: 0 auto 0 0;
             }
+            &:last-child {
+                display: flex;
+            }
         }
     }
     &.disconnected {
@@ -27,6 +30,7 @@
                     text-transform: uppercase;
                     color: $white;
                 }
+
                 .button {
                     margin: 0 0 0 15px;
                     background-color: rgb(81, 84, 89);
@@ -38,7 +42,7 @@
 }
 .pipeline {
     &-block {
-        color: $blue;
+        color: $main-сolor;
     }
     &-latency {
         color: $gray-dark;
@@ -69,5 +73,12 @@
         &:before {
             background-color: $white;
         }
+    }
+
+    & + .network-link {
+        margin-left: 5px;
+    }
+    & + .network-dropdown {
+        margin-left: 5px;
     }
 }
