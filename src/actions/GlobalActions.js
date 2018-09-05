@@ -24,10 +24,30 @@ export const initAccount = (accountName) => async (dispatch) => {
 
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	if (!accounts.find((account) => account.name === accountName)) {
-		accounts.push({ id, name: accountName });
-		localStorage.setItem('accounts', JSON.stringify(accounts));
+	// if (!accounts.find((account) => account.name === accountName)) {
+	// 	accounts.unshift({ id, name: accountName });
+	// } else {
+	// 	accounts.forEach((account, i) => {
+	// 		if (account.name === accountName) {
+	// 			accounts.splice(i, 1);
+	// 			accounts.unshift(account);
+	// 		}
+	// 	});
+	// }
+	let isChange = false;
+
+	accounts.forEach((account, i) => {
+		if (account.name === accountName) {
+			accounts.splice(i, 1);
+			accounts.unshift(account);
+			isChange = true;
+		}
+	});
+
+	if (!isChange) {
+		accounts.unshift({ id, name: accountName });
 	}
+	localStorage.setItem('accounts', JSON.stringify(accounts));
 
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
@@ -48,7 +68,7 @@ export const connection = () => async (dispatch) => {
 		await dispatch(EchoJSActions.connect(undefined, { types: ['objects', 'block'], method: getObject }));
 		let accounts = localStorage.getItem('accounts');
 
-		accounts = accounts ? JSON.parse(accounts) : null;
+		accounts = accounts ? JSON.parse(accounts) : [];
 
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname)) {
