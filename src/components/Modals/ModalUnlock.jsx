@@ -68,7 +68,7 @@ class ModalUnlockWallet extends React.Component {
 					/>
 					<div className="modal-header" />
 					<div className="modal-body">
-						<Form className="user-form">
+						<Form className="main-form">
 							<div className="form-info">
 								<h3>Unlock Wallet</h3>
 							</div>
@@ -80,8 +80,19 @@ class ModalUnlockWallet extends React.Component {
 								</Form.Field>
 							</div>
 							{loading
-								? <Button type="submit" color="orange" className="load" >Loading...</Button>
-								: <Button basic type="submit" color="orange" onClick={(e) => this.onSuccess(e)} disabled={disabled}>Unlock Wallet</Button>
+								? <Button
+									type="submit"
+									className="load main-btn"
+									content="Loading..."
+								/>
+								: <Button
+									basic
+									type="submit"
+									className="main-btn"
+									onClick={(e) => this.onSuccess(e)}
+									disabled={disabled}
+									content="Unlock Wallet"
+								/>
 							}
 						</Form>
 					</div>

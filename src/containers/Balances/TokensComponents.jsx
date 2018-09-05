@@ -28,7 +28,13 @@ class Tokens extends React.Component {
 			<div className="table-tokens">
 				<div className="msg-empty">
 					<h3>You have no tokens</h3>
-					<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+					<Button
+						basic
+						onClick={() => this.showTokensModal()}
+						compact
+						content="Watch Tokens"
+						className="main-btn"
+					/>
 				</div>
 			</div>
 		);
@@ -73,7 +79,13 @@ class Tokens extends React.Component {
 				<div className="thead-wrap">
 					<div className="thead-info">
 						<div className="table-title">Tokens</div>
-						<Button onClick={() => this.showTokensModal()} compact>Watch Tokens</Button>
+						<Button
+							basic
+							onClick={() => this.showTokensModal()}
+							compact
+							content="Watch Tokens"
+							className="main-btn"
+						/>
 					</div>
 					<Table className="thead" unstackable>
 						<Table.Body>
