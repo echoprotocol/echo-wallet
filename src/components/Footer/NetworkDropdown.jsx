@@ -76,6 +76,7 @@ class Network extends React.PureComponent {
 		options.push({
 			disabled: true,
 			selected: false,
+			key: 'divider',
 			className: 'item-divider',
 		});
 

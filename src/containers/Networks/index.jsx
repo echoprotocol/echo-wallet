@@ -148,7 +148,7 @@ class Networks extends React.Component {
 							basic
 							type="submit"
 							className="main-btn"
-							content="Add Custom"
+							content="Create"
 							onClick={(e) => this.onAddNetwork(e)}
 							disabled={!isFormValid}
 						/>
