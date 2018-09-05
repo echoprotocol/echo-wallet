@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { version } from '../../../package.json';
+
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
+
 import { connection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
@@ -16,8 +18,9 @@ class Footer extends React.PureComponent {
 	}
 
 	render() {
-
-		const { isConnect, latency, lastBlock } = this.props;
+		const {
+			isConnect, latency, lastBlock, instance,
+		} = this.props;
 
 		const connected = (
 			<div className="footer">
@@ -33,7 +36,7 @@ class Footer extends React.PureComponent {
 						<span className="status green">
                             Connected to
 						</span>
-						<Link className="network-link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
+						<Link className="network-link" to={NETWORKS_PATH}> {instance ? instance.url : ''}</Link>
 					</li>
 				</ul>
 			</div>
@@ -62,6 +65,7 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any,
 	isConnect: PropTypes.any,
 	latency: PropTypes.any,
+	instance: PropTypes.any,
 	connection: PropTypes.func.isRequired,
 };
 
@@ -72,6 +76,7 @@ Footer.defaultProps = {
 		value: 0,
 		error: null,
 	},
+	instance: null,
 };
 
 
@@ -80,6 +85,7 @@ export default connect(
 		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		instance: state.echojs.getIn(['system', 'instance']),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),

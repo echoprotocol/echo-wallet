@@ -82,7 +82,7 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { location } = this.props;
+		const { location, accountName } = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 
@@ -94,7 +94,7 @@ class Header extends React.Component {
 				key: 'current_account',
 				content: (
 					<a className="user-item">
-						<span>{localStorage.getItem('current_account')}</span>
+						<span>{accountName}</span>
 						<div className="balance">
 							<span>{balance}</span>
 							<span>{symbol}</span>
@@ -148,7 +148,7 @@ class Header extends React.Component {
 
 						<Dropdown
 							options={options}
-							text={localStorage.getItem('current_account')}
+							text={accountName}
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						/>
 
@@ -162,6 +162,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	assets: PropTypes.any,
+	accountName: PropTypes.string.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
@@ -173,6 +174,7 @@ Header.defaultProps = {
 
 export default withRouter(connect(
 	(state) => ({
+		accountName: state.global.getIn(['activeUser', 'name']),
 		assets: state.balance.get('assets'),
 	}),
 	(dispatch) => ({

@@ -54,13 +54,18 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const { owner, active, memo } = await createWallet(accountName, generatedPassword);
+		const network = getState().global.getIn(['network']).toJS();
+		const { owner, active, memo } = await createWallet(
+			network.registrator,
+			accountName,
+			generatedPassword,
+		);
 
 		dispatch(setKey(owner, accountName, generatedPassword, 'owner'));
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		dispatch(initAccount(accountName));
+		dispatch(initAccount(accountName, network.name));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -118,7 +123,8 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		dispatch(initAccount(accountName));
+		const networkName = getState().global.getIn(['network', 'name']);
+		dispatch(initAccount(accountName, networkName));
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {

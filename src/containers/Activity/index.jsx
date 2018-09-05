@@ -6,8 +6,9 @@ import PropTypes from 'prop-types';
 import Loading from '../../components/Loading';
 
 import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
+import { clearTable } from '../../actions/TableActions';
 
-import { HISTORY_DATA } from '../../constants/TableConstants';
+import { HISTORY } from '../../constants/TableConstants';
 
 import RowComponent from './RowComponent';
 
@@ -39,10 +40,22 @@ class Activity extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.props.clearTable();
+	}
+
+	renderEmpty() {
+		return (
+			<div className="msg-empty">
+				<h3>You have no actions</h3>
+			</div>
+		);
+	}
+
 	renderTable() {
 		const { history } = this.props;
 
-		return (
+		return history ? (
 			<Table className="table-activity">
 				<Table.Header>
 					<Table.Row>
@@ -67,13 +80,13 @@ class Activity extends React.Component {
 					}
 				</Table.Body>
 			</Table>
-		);
+		) : this.renderEmpty();
 	}
 
 	render() {
-		const { account, history } = this.props;
+		const { loading } = this.props;
 
-		return account.get('history') && history ? this.renderTable() : <Loading />;
+		return loading ? <Loading /> : this.renderTable();
 	}
 
 }
@@ -81,25 +94,30 @@ class Activity extends React.Component {
 Activity.propTypes = {
 	history: PropTypes.any,
 	account: PropTypes.any,
+	loading: PropTypes.bool,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
+	clearTable: PropTypes.func.isRequired,
 };
 
 Activity.defaultProps = {
 	account: null,
 	history: null,
+	loading: false,
 };
 
 export default connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
-		const history = state.table.getIn([HISTORY_DATA, 'history']);
+		const history = state.table.getIn([HISTORY, 'data']);
+		const loading = state.table.getIn([HISTORY, 'loading']);
 
-		return { account, history };
+		return { account, history, loading };
 	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
 		viewTransaction: (value) => dispatch(viewTransaction(value)),
+		clearTable: () => dispatch(clearTable(HISTORY)),
 	}),
 )(Activity);
