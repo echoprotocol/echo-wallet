@@ -12,11 +12,19 @@ import {
 } from '../constants/RouterConstants';
 import { HISTORY } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
+import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
+
+import {
+	validateNetworkName,
+	validateNetworkAddress,
+	validateNetworkRegistrator,
+} from '../helpers/ValidateHelper';
 
 import { initBalances, getObject, resetBalance } from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
+import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	localStorage.setItem(`current_account_${networkName}`, accountName);
@@ -81,8 +89,13 @@ export const connection = () => async (dispatch) => {
 	}
 };
 
-export const disconnection = (address) => (dispatch) => {
-	dispatch(EchoJSActions.disconnect(address));
+export const disconnection = (address) => (dispatch, getState) => {
+	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
+
+	if (isConnected) {
+		dispatch(EchoJSActions.disconnect(address));
+	}
+
 	dispatch(clearTable(HISTORY));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
@@ -126,13 +139,35 @@ export const saveNetwork = (network) => (dispatch, getState) => {
 };
 
 export const addNetwork = (address, name, registrator) => (dispatch, getState) => {
-	//	TODO validate params
-
 	const network = {
-		address: address.value,
-		name: name.value,
-		registrator: registrator.value,
+		url: address.value.trim(),
+		name: name.value.trim(),
+		registrator: registrator.value.trim(),
 	};
+
+	let nameError = validateNetworkName(network.name);
+
+	if (NETWORKS.find((i) => i.name === network.name)) {
+		nameError = `Network "${network.name}" already exists`;
+	}
+
+	if (nameError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'name', nameError));
+	}
+
+	const addressError = validateNetworkAddress(network.url);
+
+	if (addressError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'address', addressError));
+	}
+
+	const registratorError = validateNetworkRegistrator(network.registrator);
+
+	if (registratorError) {
+		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'registrator', registratorError));
+	}
+
+	if (nameError || addressError || registratorError) { return; }
 
 	let customNetworks = localStorage.getItem('custom_networks');
 	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
@@ -148,4 +183,28 @@ export const addNetwork = (address, name, registrator) => (dispatch, getState) =
 		value: new List(networks),
 	}));
 
+	dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK));
+};
+
+export const deleteNetwork = (network) => (dispatch, getState) => {
+	let customNetworks = localStorage.getItem('custom_networks');
+	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
+	customNetworks = customNetworks.filter((i) => i.name !== network.name);
+
+	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	const currentNetwork = getState().global.get('network').toJS();
+	if (currentNetwork.name === network.name) {
+		localStorage.removeItem('current_network');
+		dispatch(connection());
+		return;
+	}
+
+	let networks = getState().global.get('networks').toJS();
+	networks = networks.filter((i) => i.name !== network.name);
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
 };
