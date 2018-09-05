@@ -19,7 +19,6 @@ import {
 	createWallet,
 	unlockWallet,
 	generateKeyFromPassword,
-	getKeyFromWif,
 } from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
 

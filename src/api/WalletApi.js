@@ -1,4 +1,4 @@
-import { PrivateKey, PublicKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 
 import { FAUCET_ADDRESS } from '../constants/GlobalConstants';
 
