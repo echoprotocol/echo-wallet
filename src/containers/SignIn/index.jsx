@@ -7,7 +7,7 @@ import classnames from 'classnames';
 
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
-import { authUser, cancelAddAccount } from '../../actions/AuthActions';
+import { authUser } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
@@ -39,7 +39,7 @@ class SignIn extends React.Component {
 	}
 
 	onCancel() {
-		this.props.cancelAddAccount();
+		this.props.history.goBack();
 	}
 
 	isDisabledSubmit() {
@@ -88,21 +88,25 @@ class SignIn extends React.Component {
 				</div>
 				{
 					loading ?
-						<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
+						<Button
+							type="submit"
+							color="orange"
+							className="load main-btn"
+							onSubmit={(e) => this.onClick(e)}
+							content="Loading..."
+						/> :
 						<Button
 							basic
 							type="submit"
-							color="orange"
 							disabled={this.isDisabledSubmit()}
 							onClick={(e) => this.onClick(e)}
-							className={classnames({ disabled: this.isDisabledSubmit() })}
-						>
-							{isAddAccount ? 'Add Account' : 'Login'}
-						</Button>
+							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+							content={isAddAccount ? 'Add Account' : 'Login'}
+						/>
 				}
 				<span className="sign-nav">
                 Don’t have an account?
-					<Link className="link orange" to="/sign-up">Sign Up</Link>
+					<Link className="link main-link" to="/sign-up">Sign Up</Link>
 				</span>
 			</Form>
 		);
@@ -122,10 +126,10 @@ class SignIn extends React.Component {
 SignIn.propTypes = {
 	accountName: PropTypes.object.isRequired,
 	password: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	cancelAddAccount: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
 	isAddAccount: PropTypes.bool.isRequired,
 };
@@ -145,6 +149,5 @@ export default connect(
 		authUser: (value) => dispatch(authUser(value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
-		cancelAddAccount: () => dispatch(cancelAddAccount()),
 	}),
 )(SignIn);

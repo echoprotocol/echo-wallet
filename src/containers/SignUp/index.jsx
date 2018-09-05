@@ -10,7 +10,7 @@ import ButtonComponent from './ButtonComponent';
 
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 
-import { cancelAddAccount, generatePassword } from '../../actions/AuthActions';
+import { generatePassword } from '../../actions/AuthActions';
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 class SignUp extends React.Component {
@@ -20,7 +20,7 @@ class SignUp extends React.Component {
 	}
 
 	onCancel() {
-		this.props.cancelAddAccount();
+		this.props.history.goBack();
 	}
 
 	renderSignUp() {
@@ -62,10 +62,10 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-	generatePassword: PropTypes.func.isRequired,
+	history: PropTypes.object.isRequired,
 	isAddAccount: PropTypes.bool.isRequired,
-	cancelAddAccount: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	generatePassword: PropTypes.func.isRequired,
 };
 
 SignUp.defaultProps = {
@@ -79,6 +79,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		generatePassword: () => dispatch(generatePassword()),
-		cancelAddAccount: () => dispatch(cancelAddAccount()),
 	}),
 )(SignUp);

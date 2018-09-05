@@ -19,7 +19,7 @@
         }
         & > .text {
             margin-right: 5px;
-            color: $orange;
+            color: $main-сolor;
         }
         .dropdown.icon {
             font-size: 12px;
@@ -113,7 +113,7 @@
             & > input.search {
                 &:focus {
                     & + .text {
-                        color: $orange;
+                        color: $main-сolor;
                     }
                 }
             }

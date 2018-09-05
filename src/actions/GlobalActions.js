@@ -46,17 +46,17 @@ export const connection = () => async (dispatch) => {
 
 	try {
 		await dispatch(EchoJSActions.connect(undefined, { types: ['objects', 'block'], method: getObject }));
-		const accounts = localStorage.getItem('accounts');
+		let accounts = localStorage.getItem('accounts');
 
-		const accountName = accounts ? JSON.parse(accounts).slice(-1)[0].name : null;
+		accounts = accounts ? JSON.parse(accounts) : null;
 
-		if (!accountName) {
+		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname)) {
 				history.push(SIGN_IN_PATH);
 			}
 		} else {
 			if (process.env.NODE_ENV !== 'development') history.push(INDEX_PATH);
-			await dispatch(initAccount(accountName));
+			await dispatch(initAccount(accounts[0].name));
 		}
 
 	} catch (err) {
@@ -86,7 +86,7 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const initAccountsBalances = () => async (dispatch) => {
+export const formatAccountsBalances = () => async (dispatch) => {
 	let accounts = localStorage.getItem('accounts');
 
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -123,7 +123,7 @@ export const logout = () => async (dispatch, getState) => {
 	if (currAccountIndex !== -1) {
 		accounts.splice(currAccountIndex, 1);
 		localStorage.setItem('accounts', JSON.stringify(accounts));
-		dispatch(initAccountsBalances());
+		dispatch(formatAccountsBalances());
 	}
 
 	if (accounts.length) {
@@ -139,9 +139,6 @@ export const logout = () => async (dispatch, getState) => {
 };
 
 export const addAccount = () => (dispatch) => {
-	dispatch(clear(HISTORY_DATA));
-	dispatch(resetBalance());
-
 	dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: true }));
 
 	history.push(SIGN_UP_PATH);

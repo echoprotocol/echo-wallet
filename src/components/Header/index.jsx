@@ -6,7 +6,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
-import { logout, addAccount, initAccountsBalances, initAccount } from '../../actions/GlobalActions';
+import { logout, addAccount, formatAccountsBalances, initAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -29,7 +29,7 @@ class Header extends React.Component {
 			return;
 		}
 
-		this.props.initAccounts();
+		this.props.formatAccounts();
 	}
 
 	onLogout() {
@@ -214,7 +214,7 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	addAccount: PropTypes.func.isRequired,
-	initAccounts: PropTypes.func.isRequired,
+	formatAccounts: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
 };
 
@@ -236,7 +236,7 @@ export default withRouter(connect(
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		addAccount: () => dispatch(addAccount()),
-		initAccounts: () => dispatch(initAccountsBalances()),
+		formatAccounts: () => dispatch(formatAccountsBalances()),
 		initAccount: (value) => dispatch(initAccount(value)),
 	}),
 )(Header));

@@ -94,13 +94,12 @@ class Networks extends React.Component {
 					<Button
 						basic
 						type="submit"
-						color="orange"
-						className={classnames('error-wrap')}
+						className="main-btn"
 						content="Save"
 					/>
 					<span className="sign-nav">
-                                Return to
-						<Link className="link orange" to="/sign-in">Back</Link>
+                        Return to
+						<Link className="link main-link" to="/sign-in">Back</Link>
 					</span>
 				</Form>
 			</div>

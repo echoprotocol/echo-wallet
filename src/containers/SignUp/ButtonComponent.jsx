@@ -38,11 +38,11 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (
-			<div className="btn-wrap">
-				<Button type="submit" color="orange" className="load">Creating...</Button>
-			</div>
-		);
+		return (<Button
+			type="submit"
+			className="main-btn load"
+			content="Creating..."
+		/>);
 	}
 
 	renderSubmit() {
@@ -51,9 +51,8 @@ class ButtonComponent extends React.Component {
 				<Button
 					basic
 					type="submit"
-					color="orange"
 					disabled={this.isDisabledSubmit()}
-					className={classnames({ disabled: this.isDisabledSubmit() })}
+					className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 					onClick={(e) => this.onCreate(e)}
 					content={this.props.btnContent}
 				/>

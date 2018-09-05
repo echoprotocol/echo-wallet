@@ -14,7 +14,11 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (<Button type="submit" color="orange" className="load">Sending...</Button>);
+		return (<Button
+			type="submit"
+			content="Sending..."
+			className="main-btn load"
+		/>);
 	}
 
 	renderSubmit() {
@@ -25,11 +29,10 @@ class ButtonComponent extends React.Component {
 				<Button
 					basic
 					type="submit"
-					color="orange"
+					className="main-btn"
 					onClick={() => this.onClick()}
-				>
-                    Send
-				</Button>
+					content="Send"
+				/>
 			</div>
 		);
 	}
