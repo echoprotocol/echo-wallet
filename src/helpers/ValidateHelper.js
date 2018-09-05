@@ -16,14 +16,6 @@ export const validateAccountName = (accountName) => {
 		return 'Enter a name containing least one dash, a number or no vowels';
 	}
 
-	let accounts = localStorage.getItem('accounts');
-
-	accounts = accounts ? JSON.parse(accounts) : [];
-
-	if (accounts.find((account) => account.name === accountName)) {
-		return 'Account already added';
-	}
-
 	return null;
 };
 

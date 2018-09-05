@@ -149,6 +149,7 @@ export const logout = () => async (dispatch, getState) => {
 	if (accounts.length) {
 		await dispatch(initAccount(accounts[0].name));
 	} else {
+		dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: false }));
 		localStorage.removeItem('accounts');
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
 		dispatch(clear(HISTORY_DATA));
