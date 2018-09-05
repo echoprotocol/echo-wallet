@@ -82,7 +82,13 @@ class AddContractComponent extends React.Component {
 						<span className="error-message">{abi.error}</span>
 					</Form.Field>
 					<div className="form-panel">
-						<Button basic type="button" color="orange" content="Watch Contract" onClick={(e) => this.onClick(e)} />
+						<Button
+							basic
+							type="button"
+							className="main-btn"
+							content="Watch Contract"
+							onClick={(e) => this.onClick(e)}
+						/>
 					</div>
 				</div>
 

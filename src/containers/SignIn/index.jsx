@@ -71,12 +71,24 @@ class SignIn extends React.Component {
 				</div>
 				{
 					loading ?
-						<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
-						<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Add Account</Button>
+						<Button
+							type="submit"
+							className="main-btn"
+							onSubmit={(e) => this.onClick(e)}
+							content="Loading..."
+						/> :
+						<Button
+							basic
+							type="submit"
+							disabled={this.isDisabledSubmit()}
+							onClick={(e) => this.onClick(e)}
+							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+							content="Add Account"
+						/>
 				}
 				<span className="sign-nav">
-                Don’t have an account?
-					<Link className="link orange" to="/sign-up">Sign Up</Link>
+                    Don’t have an account?
+					<Link className="link main-link" to="/sign-up">Sign Up</Link>
 				</span>
 			</Form>
 		);
@@ -105,12 +117,24 @@ class SignIn extends React.Component {
 				</div>
 				{
 					loading ?
-						<Button type="submit" color="orange" className="load" onSubmit={(e) => this.onClick(e)}>Loading...</Button> :
-						<Button basic type="submit" color="orange" disabled={this.isDisabledSubmit()} onClick={(e) => this.onClick(e)} className={classnames({ disabled: this.isDisabledSubmit() })}>Login</Button>
+						<Button
+							type="submit"
+							className="load main-btn"
+							onSubmit={(e) => this.onClick(e)}
+							content="Loading..."
+						/> :
+						<Button
+							basic
+							type="submit"
+							disabled={this.isDisabledSubmit()}
+							onClick={(e) => this.onClick(e)}
+							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+							content="Login"
+						/>
 				}
 				<span className="sign-nav">
                 Don’t have an account?
-					<Link className="link orange" to="/sign-up">Sign Up</Link>
+					<Link className="link main-link" to="/sign-up">Sign Up</Link>
 				</span>
 			</Form>
 		);
