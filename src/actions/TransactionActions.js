@@ -451,8 +451,11 @@ export const sendTransaction = () => async (dispatch, getState) => {
 
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 		})
-		.catch(() => {
-			toastError(`${operations[operation].name} transaction wasn't completed`);
+		.catch((error) => {
+			error = error.toString();
+			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
+			message = message.charAt(0).toUpperCase() + message.slice(1);
+			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 		})
 		.finally(() => dispatch(setDisable(MODAL_DETAILS, false)));
 	toastSuccess(`${operations[operation].name} transaction was sent`);

@@ -1,5 +1,6 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
+import BN from 'bignumber.js';
 
 import {
 	getContractResult,
@@ -29,7 +30,7 @@ import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
 
-export const getAssetsBalances = (assets) => async (dispatch) => {
+export const getAssetsBalances = (assets, update = false) => async (dispatch, getState) => {
 
 	if (assets && Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
@@ -37,7 +38,19 @@ export const getAssetsBalances = (assets) => async (dispatch) => {
 			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
 			return { balance: stats.balance, ...asset };
 		});
+
 		balances = await Promise.all(balances);
+		if (update) {
+			const oldBalances = getState().balance.get('assets').toJS();
+			balances.map((nb) => {
+				const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
+				if (!oldBalance) return null;
+				const diff = new BN(nb.balance).minus(oldBalance.balance);
+				if (diff.lte(0)) return null;
+
+				return toastSuccess(`You receive ${diff.toString()} assets of ${nb.symbol}`);
+			});
+		}
 		dispatch(BalanceReducer.actions.set({
 			field: 'assets',
 			value: new List(balances),
@@ -94,7 +107,15 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	});
 
 	balances = await Promise.all(balances);
+	const oldBalances = getState().balance.get('tokens').toJS();
+	balances.map((nb) => {
+		const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
+		if (!oldBalance) return null;
+		const diff = new BN(nb.balance).minus(oldBalance.balance);
+		if (diff.lte(0)) return null;
 
+		return toastSuccess(`You receive ${diff.toString()} tokens of ${nb.symbol}`);
+	});
 	dispatch(BalanceReducer.actions.set({
 		field: 'tokens',
 		value: new List(balances),
@@ -102,6 +123,12 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 };
 
 export const initBalances = (accountId, networkName) => async (dispatch) => {
+	const { precision, symbol } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
+
+	dispatch(BalanceReducer.actions.setIn({
+		field: 'core',
+		params: { precision, symbol },
+	}));
 
 	await dispatch(getTokenBalances(accountId, networkName));
 
@@ -214,7 +241,7 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 
 			if (!Object.values(balances.toJS()).includes(objectId)) { return; }
 
-			dispatch(getAssetsBalances(balances.toJS()));
+			dispatch(getAssetsBalances(balances.toJS(), true));
 			break;
 		}
 		default:

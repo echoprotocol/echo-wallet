@@ -29,40 +29,47 @@ class App extends React.Component {
 	}
 
 	renderWrapper() {
-		const { globalLoading, children, location } = this.props;
+		const { children, location } = this.props;
 
 		return (
 			<Segment basic className="wrapper">
 				{ !PUBLIC_ROUTES.includes(location.pathname) ? <Header /> : null }
 				<div className={classnames('content', { 'center-mode': CENTER_MODE_ROUTES.includes(location.pathname) })}>
-					{ globalLoading ? <Loading /> : children }
+					{children}
 				</div>
 				<Footer />
 			</Segment>
 		);
 	}
 
-	render() {
+	renderSidebar() {
 		const { location } = this.props;
+		return (
+			<Sidebar.Pushable as={Segment}>
+				{
+					!PUBLIC_ROUTES.includes(location.pathname) ?
+						[
+							<SidebarMenu key="sidebar" />,
+							<Sidebar.Pusher
+								key="sidebar-pusher"
+								dimmed={this.props.visibleBar}
+								onClick={() => this.onPusher()}
+							>
+								{ this.renderWrapper() }
+							</Sidebar.Pusher>,
+						] : this.renderWrapper()
+				}
+			</Sidebar.Pushable>
+		);
+	}
+
+	render() {
+		const { globalLoading } = this.props;
 
 		return (
 			<div className="global-wrapper">
 				<Segment>
-					<Sidebar.Pushable as={Segment}>
-						{
-							!PUBLIC_ROUTES.includes(location.pathname) ?
-								[
-									<SidebarMenu key="sidebar" />,
-									<Sidebar.Pusher
-										key="sidebar-pusher"
-										dimmed={this.props.visibleBar}
-										onClick={() => this.onPusher()}
-									>
-										{ this.renderWrapper() }
-									</Sidebar.Pusher>,
-								] : this.renderWrapper()
-						}
-					</Sidebar.Pushable>
+					{globalLoading ? <Loading text="Loading account..." /> : this.renderSidebar()}
 				</Segment>
 
 				<Modals />
