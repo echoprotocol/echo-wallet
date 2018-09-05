@@ -20,6 +20,7 @@ import {
 	validateNetworkAddress,
 	validateNetworkRegistrator,
 } from '../helpers/ValidateHelper';
+import { toastSuccess } from '../helpers/ToastHelper';
 
 import { initBalances, getObject, resetBalance } from './BalanceActions';
 import { initSorts } from './SortActions';
@@ -28,7 +29,7 @@ import { clearTable } from './TableActions';
 import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
-	localStorage.setItem(`current_account_${networkName}`, accountName);
+	// localStorage.setItem(`current_account_${networkName}`, accountName);
 
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
@@ -88,7 +89,7 @@ export const connection = () => async (dispatch) => {
 
 	let networks = localStorage.getItem('custom_networks');
 	networks = networks ? JSON.parse(networks) : [];
-	networks = NETWORKS.concat(networks);
+	// networks = NETWORKS.concat(networks);
 
 	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
 
@@ -234,7 +235,12 @@ export const saveNetwork = (network) => (dispatch, getState) => {
 	dispatch(connection());
 };
 
-export const addNetwork = (address, name, registrator) => (dispatch, getState) => {
+export const addNetwork = () => (dispatch, getState) => {
+	const networks = getState().global.get('networks').toJS();
+	const {
+		address, name, registrator, autoswitch,
+	} = getState().form.get(FORM_ADD_CUSTOM_NETWORK).toJS();
+
 	const network = {
 		url: address.value.trim(),
 		name: name.value.trim(),
@@ -243,7 +249,7 @@ export const addNetwork = (address, name, registrator) => (dispatch, getState) =
 
 	let nameError = validateNetworkName(network.name);
 
-	if (NETWORKS.find((i) => i.name === network.name)) {
+	if (NETWORKS.concat(networks).find((i) => i.name === network.name)) {
 		nameError = `Network "${network.name}" already exists`;
 	}
 
@@ -271,7 +277,6 @@ export const addNetwork = (address, name, registrator) => (dispatch, getState) =
 
 	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
 
-	const networks = getState().global.get('networks').toJS();
 	networks.push(network);
 
 	dispatch(GlobalReducer.actions.set({
@@ -280,6 +285,10 @@ export const addNetwork = (address, name, registrator) => (dispatch, getState) =
 	}));
 
 	dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK));
+
+	if (autoswitch.value) { dispatch(saveNetwork(network)); }
+
+	toastSuccess(`${network.name} network added successfully!`);
 };
 
 export const deleteNetwork = (network) => (dispatch, getState) => {
