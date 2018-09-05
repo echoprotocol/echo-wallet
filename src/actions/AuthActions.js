@@ -212,11 +212,28 @@ export const unlockAccount = ({
 			const param = permissionKey;
 			if (role === 'memo') permissionKey = accountName;
 
-			const { privateKey } = generateKeyFromPassword(permissionKey, role, password);
+			const { privateKey, publicKey } = generateKeyFromPassword(permissionKey, role, password);
+
+			const targetAccount = (await dispatch(EchoJSActions.fetch(permissionKey))).toJS();
+
+			let publicKeyError = null;
+
+			if (role === 'active') {
+				if (!targetAccount.active.key_auths.find((k) => k[0] === publicKey)) publicKeyError = 'Invalid password for active keys';
+			} else if (role === 'owner') {
+				if (!targetAccount.owner.key_auths.find((k) => k[0] === publicKey)) publicKeyError = 'Invalid password for owner keys';
+			} else if (targetAccount.options.memo_key !== publicKey) publicKeyError = 'Invalid password for note key';
+
+			if (publicKeyError) {
+				dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', publicKeyError));
+				return;
+			}
+
 			const value = {
 				privateKey: privateKey ? privateKey.toHex() : '',
 				unlocked: true,
 			};
+
 			dispatch(update(PERMISSION_TABLE, [role, type], param, value));
 		}
 
