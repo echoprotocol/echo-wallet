@@ -32,6 +32,8 @@
       -ms-user-select: text;
           user-select: text;
   will-change: top, left, margin, transform, opacity;
+  animation: fadeIn $speed;
+  
 }
 .ui.modal > :first-child:not(.icon),
 .ui.modal > .icon:first-child + * {
