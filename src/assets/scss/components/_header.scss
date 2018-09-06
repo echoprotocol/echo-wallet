@@ -94,6 +94,10 @@
                     align-items: center;
                 }
                 .user-item {
+                    background-color: transparent;
+                    width: 100%;
+                    border: 0;
+                    cursor: pointer;
                     color: $black;
                     transition: background-color .4s, color .4s;
                     padding: 0.78571429rem 1.14285714rem;

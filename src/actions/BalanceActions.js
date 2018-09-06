@@ -30,7 +30,19 @@ import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
 
-export const getAssetsBalances = (assets, update = false) => async (dispatch, getState) => {
+const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
+	const oldBalances = getState().balance.get(type).toJS();
+	balances.map((nb) => {
+		const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
+		if (!oldBalance) return null;
+		let diff = new BN(nb.balance).minus(oldBalance.balance);
+		if (diff.lte(0)) return null;
+		diff = diff.dividedBy(new BN(10).pow(nb.precision));
+		return toastSuccess(`You receive ${diff.toString()} ${type} of ${nb.symbol}`);
+	});
+};
+
+export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
 
 	if (assets && Object.keys(assets).length) {
 		let balances = Object.entries(assets).map(async (asset) => {
@@ -41,15 +53,7 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch, ge
 
 		balances = await Promise.all(balances);
 		if (update) {
-			const oldBalances = getState().balance.get('assets').toJS();
-			balances.map((nb) => {
-				const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
-				if (!oldBalance) return null;
-				const diff = new BN(nb.balance).minus(oldBalance.balance);
-				if (diff.lte(0)) return null;
-
-				return toastSuccess(`You receive ${diff.toString()} assets of ${nb.symbol}`);
-			});
+			dispatch(diffBalanceChecker('assets', balances));
 		}
 		dispatch(BalanceReducer.actions.set({
 			field: 'assets',
@@ -107,15 +111,9 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	});
 
 	balances = await Promise.all(balances);
-	const oldBalances = getState().balance.get('tokens').toJS();
-	balances.map((nb) => {
-		const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
-		if (!oldBalance) return null;
-		const diff = new BN(nb.balance).minus(oldBalance.balance);
-		if (diff.lte(0)) return null;
 
-		return toastSuccess(`You receive ${diff.toString()} tokens of ${nb.symbol}`);
-	});
+	dispatch(diffBalanceChecker('tokens', balances));
+
 	dispatch(BalanceReducer.actions.set({
 		field: 'tokens',
 		value: new List(balances),
