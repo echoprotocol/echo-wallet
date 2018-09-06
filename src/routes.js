@@ -5,7 +5,7 @@ import {
 	INDEX_PATH,
 	SIGN_UP_PATH,
 	SIGN_IN_PATH,
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	ADD_CONTRACT_PATH,
 	CREATE_CONTRACT_PATH,
@@ -38,10 +38,10 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					<Route exact path={INDEX_PATH} component={Activity} />
+					<Route exact path={INDEX_PATH} component={Balances} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
-					<Route exact path={BALANCES_PATH} component={Balances} />
+					<Route exact path={ACTIVITY_PATH} component={Activity} />
 					<Route exact path={TRANSFER_PATH} component={Transfer} />
 					<Route exact path={ADD_CONTRACT_PATH} component={AddContract} />
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
@@ -51,7 +51,6 @@ export default class Routes extends React.Component {
 					<Route exact path={CALL_CONTRACT_PATH} component={CallContract} />
 					<Route exact path={NETWORKS_PATH} component={Networks} />
 					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
-
 				</div>
 			</App>
 		);
