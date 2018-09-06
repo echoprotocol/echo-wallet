@@ -12,8 +12,6 @@ class AddCustomNetwork extends React.Component {
 	}
 
 	renderField(name, { value, error }) {
-		const { showCustom } = this.props;
-
 		return (
 			<Form.Field className={classnames('error-wrap', { error })}>
 				<label htmlFor="address">{name}</label>
@@ -21,7 +19,6 @@ class AddCustomNetwork extends React.Component {
 					className="ui input"
 					placeholder={name}
 					name={name}
-					disabled={!showCustom}
 					value={value}
 					onChange={(e) => this.onChange(e)}
 				/>
@@ -31,23 +28,22 @@ class AddCustomNetwork extends React.Component {
 	}
 
 	render() {
-		const {
-			showCustom, address, name, registrator,
-		} = this.props;
+		const { address, name, registrator } = this.props;
 
 		return (
-			<div className={classnames('custom-network', { active: showCustom })}>
-				{this.renderField('address', address)}
-				{this.renderField('name', name)}
-				{this.renderField('registrator', registrator)}
-			</div>
+			<React.Fragment>
+				<div className="custom-network active">
+					{this.renderField('address', address)}
+					{this.renderField('name', name)}
+					{this.renderField('registrator', registrator)}
+				</div>
+			</React.Fragment>
 		);
 	}
 
 }
 
 AddCustomNetwork.propTypes = {
-	showCustom: PropTypes.bool.isRequired,
 	address: PropTypes.object.isRequired,
 	name: PropTypes.object.isRequired,
 	registrator: PropTypes.object.isRequired,

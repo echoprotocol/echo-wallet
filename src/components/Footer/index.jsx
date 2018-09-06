@@ -2,11 +2,10 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import NetworkDropdown from './NetworkDropdown';
 
 import { version } from '../../../package.json';
 
-import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 import { connection } from '../../actions/GlobalActions';
 
@@ -19,7 +18,7 @@ class Footer extends React.PureComponent {
 
 	render() {
 		const {
-			isConnect, latency, lastBlock, instance,
+			isConnect, latency, lastBlock,
 		} = this.props;
 
 		const connected = (
@@ -33,10 +32,7 @@ class Footer extends React.PureComponent {
 						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
-						<span className="status green">
-                            Connected to
-						</span>
-						<Link className="network-link" to={NETWORKS_PATH}> {instance ? instance.url : ''}</Link>
+						<NetworkDropdown />
 					</li>
 				</ul>
 			</div>
@@ -50,12 +46,11 @@ class Footer extends React.PureComponent {
 						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
 					</li>
 					<li>
-						<span className="status white">Disconnected</span>
+						<NetworkDropdown disconnected />
 					</li>
 				</ul>
 			</div>
 		);
-
 		return isConnect && !latency.error ? connected : disconnected;
 	}
 
@@ -65,7 +60,6 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any,
 	isConnect: PropTypes.any,
 	latency: PropTypes.any,
-	instance: PropTypes.any,
 	connection: PropTypes.func.isRequired,
 };
 
@@ -76,7 +70,6 @@ Footer.defaultProps = {
 		value: 0,
 		error: null,
 	},
-	instance: null,
 };
 
 
@@ -85,7 +78,6 @@ export default connect(
 		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
-		instance: state.echojs.getIn(['system', 'instance']),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),

@@ -162,6 +162,9 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		autoswitch: {
+			value: false,
+		},
 	}),
 };
 
