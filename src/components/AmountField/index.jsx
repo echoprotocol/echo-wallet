@@ -61,7 +61,6 @@ class AmountField extends React.Component {
 		if (target) {
 			this.setCurrency(target, 'assets');
 		}
-
 	}
 
 	onDropdownChange(e, value) {
