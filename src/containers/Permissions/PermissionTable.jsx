@@ -13,25 +13,23 @@ class PermissionTable extends React.Component {
 	}
 
 	renderPrivateKeyCell(k) {
-		return k.type !== 'keys' || k.role === 'memo' ?
-			(
-				<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
-					<div className="cell-wrap">
-						<button
-							className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
-							onClick={() => this.onClick(k)}
-						/>
-						{
-							!k.unlocked ?
-								<input type="password" readOnly className="key-input" value={k.privateKey} />
-								: <span className="key">{k.privateKey}</span>
-						}
+		return (
+			<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
+				<div className="cell-wrap">
+					<button
+						className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
+						onClick={() => this.onClick(k)}
+					/>
+					{
+						!k.unlocked ?
+							<input type="password" readOnly className="key-input" value={k.privateKey} />
+							: <span className="key">{k.privateKey}</span>
+					}
 
-					</div>
-				</Table.Cell>
-			) : (
-				<Table.Cell />
-			);
+				</div>
+			</Table.Cell>
+		);
+
 	}
 
 	render() {
