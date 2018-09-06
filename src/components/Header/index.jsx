@@ -70,16 +70,14 @@ class Header extends React.Component {
 		}
 
 	}
-<<<<<<< HEAD
+
 	onReturnToBack(e) {
 		e.target.blur();
 		this.props.history.goBack();
 
 
 	}
-=======
 
->>>>>>> 5f862bf8087d8ede87ba1088ab746b696cd26774
 	getTitle() {
 		const { location } = this.props;
 
@@ -140,15 +138,12 @@ class Header extends React.Component {
 	}
 
 	render() {
-<<<<<<< HEAD
-=======
+
 		const {
 			location, accounts, core, accountName,
 		} = this.props;
->>>>>>> 5f862bf8087d8ede87ba1088ab746b696cd26774
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
-		const { location } = this.props;
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
 		const renderedAccounts = (accounts && core) && this.renderAccounts();
