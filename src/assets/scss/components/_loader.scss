@@ -10,6 +10,7 @@
     margin: 1px;
     justify-content: space-between;
     &-wrap {
+        animation: fadeIn $speed;
         background-color:  #5e79e8;
         position: fixed;
         top: 0;
