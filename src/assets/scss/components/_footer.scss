@@ -55,11 +55,11 @@
     display: flex;
     line-height: 1;
     &:before {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
         content: "";
         border-radius: 50%;
-        margin-right: 8px;
+        margin-right: 6px;
     }
     &.connected {
         color: $main-сolor;

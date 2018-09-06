@@ -77,12 +77,9 @@ class Network extends React.PureComponent {
 		let options = this.getList(NETWORKS);
 
 		if (networks.length) {
-			options.push(this.getDivider('divider-1'));
+			options.push(this.getDivider('divider'));
 			options = options.concat(this.getList(networks));
 		}
-
-		options.push(this.getDivider('divider-2'));
-
 		options.push({
 			value: 'custom',
 			key: 'custom',
@@ -97,11 +94,12 @@ class Network extends React.PureComponent {
 
 		return (
 			<Dropdown
-				upward
+
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
 				icon={false}
+				upward
 				className={classnames('network-dropdown', {
 					disconnected: this.props.disconnected,
 				})}
