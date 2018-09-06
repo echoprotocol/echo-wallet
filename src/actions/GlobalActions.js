@@ -29,24 +29,12 @@ import { clearTable } from './TableActions';
 import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
-	// localStorage.setItem(`current_account_${networkName}`, accountName);
-
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	// if (!accounts.find((account) => account.name === accountName)) {
-	// 	accounts.unshift({ id, name: accountName });
-	// } else {
-	// 	accounts.forEach((account, i) => {
-	// 		if (account.name === accountName) {
-	// 			accounts.splice(i, 1);
-	// 			accounts.unshift(account);
-	// 		}
-	// 	});
-	// }
 	let isChange = false;
 
 	accounts.forEach((account, i) => {
@@ -60,6 +48,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 	if (!isChange) {
 		accounts.unshift({ id, name: accountName });
 	}
+
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
@@ -149,18 +138,6 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-// export const logout = () => (dispatch, getState) => {
-// 	const networkName = getState().global.getIn(['network', 'name']);
-//
-// 	localStorage.removeItem(`current_account_${networkName}`);
-//
-// 	dispatch(clearTable(HISTORY));
-// 	dispatch(resetBalance());
-// 	dispatch(GlobalReducer.actions.logout());
-//
-// 	history.push(SIGN_IN_PATH);
-// };
-
 export const formatAccountsBalances = () => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
@@ -210,11 +187,10 @@ export const logout = () => async (dispatch, getState) => {
 	if (accounts.length) {
 		await dispatch(initAccount(accounts[0].name));
 	} else {
-		dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: false }));
 		localStorage.removeItem(`accounts_${networkName}`);
-		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id: '', name: '' } }));
 		dispatch(clearTable(HISTORY));
 		dispatch(resetBalance());
+		dispatch(GlobalReducer.actions.logout());
 		history.push(SIGN_IN_PATH);
 	}
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
