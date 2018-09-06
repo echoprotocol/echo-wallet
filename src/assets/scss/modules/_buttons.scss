@@ -46,6 +46,14 @@ $stripe-width: 10px;
                 color: $main-сolor;
             }
         }
+        &.icon-remove {
+            box-shadow: none;
+            background-color: transparent;
+            border: 0;
+            color: #bcbcbc;
+            transition: color $speed,
+                        background-color $speed;
+        }
         &.send {
             font-family: proximanovaSemibold;
             background-color: transparent;

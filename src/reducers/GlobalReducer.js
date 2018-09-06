@@ -1,21 +1,29 @@
 import { createModule } from 'redux-modules';
-import { List, Map } from 'immutable';
+import { Map, List } from 'immutable';
+import _ from 'lodash';
+
+const DEFAULT_FIELDS = Map({
+	globalLoading: false,
+	error: null,
+	activeUser: new Map({
+		id: '',
+		name: '',
+	}),
+	visibleBar: false,
+	contracts: new Map({}),
+	network: new Map({
+		name: '',
+		registrator: '',
+		url: '',
+	}),
+	networks: new List([]),
+	accounts: new List([]),
+	isAddAccount: false,
+});
 
 export default createModule({
 	name: 'global',
-	initialState: Map({
-		globalLoading: true,
-		loading: false,
-		error: null,
-		activeUser: new Map({
-			id: '',
-			name: '',
-		}),
-		accounts: List([]),
-		isAddAccount: false,
-		visibleBar: false,
-		contracts: new Map({}),
-	}),
+	initialState: DEFAULT_FIELDS,
 	transformations: {
 		setGlobalLoading: {
 			reducer: (state, { payload }) => {
@@ -24,12 +32,7 @@ export default createModule({
 				return state;
 			},
 		},
-		setLoading: {
-			reducer: (state, { payload }) => {
-				state = state.set('loading', !!payload);
-				return state;
-			},
-		},
+
 		set: {
 			reducer: (state, { payload }) => {
 				state = state.set(payload.field, payload.value);
@@ -37,6 +40,7 @@ export default createModule({
 				return state;
 			},
 		},
+
 		setIn: {
 			reducer: (state, { payload }) => {
 				Object.keys(payload.params).forEach((field) => {
@@ -51,10 +55,6 @@ export default createModule({
 			reducer: (state, { payload }) => state.set('visibleBar', !payload.value),
 		},
 
-		hideBar: {
-			reducer: (state) => state.set('visibleBar', false),
-		},
-
 		push: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.field, payload.param], payload.value);
@@ -66,6 +66,7 @@ export default createModule({
 		update: {
 			reducer: (state, { payload }) => {
 				const param = state.getIn([payload.field, payload.param]);
+
 				state = state.setIn([payload.field, payload.param], { ...param, ...payload.value });
 
 				return state;
@@ -78,6 +79,19 @@ export default createModule({
 
 				return state;
 			},
+		},
+
+		logout: {
+			reducer: (state) => {
+				const network = state.get('network');
+				const networks = state.get('networks');
+
+				return _.cloneDeep(DEFAULT_FIELDS).merge({ network, networks });
+			},
+		},
+
+		disconnect: {
+			reducer: () => DEFAULT_FIELDS,
 		},
 	},
 });

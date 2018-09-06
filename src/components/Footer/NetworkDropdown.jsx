@@ -1,111 +1,119 @@
-// Удалить этот файл, если не перейдем обратно к нетворкам в дропдауне
-
 import React from 'react';
-import { Dropdown, Input, Form } from 'semantic-ui-react';
+import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import classnames from 'classnames';
+import { NETWORKS } from '../../constants/GlobalConstants';
 
+import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
+import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 class Network extends React.PureComponent {
 
-	constructor() {
-		super();
-		this.state = {
-			checked: 0,
-			options: [
-				{ text: 'MainNet' },
-				{ text: 'TestNet' },
-				{ text: 'DevNet' },
-			],
-		};
+	onDropdownChange(e, value) {
+		if (value === 'custom' || e.target.id === 'btn-dlt') { return; }
 
+		if (e.type === 'click' || e.keyCode === 13) {
+			this.onSaveNetwork(value);
+		}
 	}
 
-	onDropdownChange(e, value) {
+	onDeleteNetwork(network, e) {
 		e.preventDefault();
-		e.stopPropagation();
 
-		if (value === 'netCustom') {
-			this.setState({ checked: value });
-			this.nameInput.focus();
-		}
-		if (e.type === 'click') {
-			this.setState({ checked: value });
+		this.props.deleteNetwork(network);
+	}
+
+	onSaveNetwork(name) {
+		const { networks, network: oldNetwork } = this.props;
+
+		if (name === oldNetwork.name || name === 'custom') {
 			return;
 		}
-		if (e.keyCode === 13) {
-			this.setState({ checked: value });
-		}
+
+		const network = NETWORKS.concat(networks).find((i) => i.name === name);
+
+		this.props.saveNetwork(network);
+	}
+
+	getList(networks) {
+		const { name } = this.props.network;
+
+		return networks.map((i) => (
+			{
+				value: i.name,
+				key: i.name,
+				selected: name === i.name,
+				content: (
+
+					<React.Fragment>
+						<span className="label-text">{i.name}</span>
+						{ !NETWORKS.find((n) => n.name === i.name) ?
+							<Button
+								id="btn-dlt"
+								onClick={(e) => this.onDeleteNetwork(i, e)}
+								className="icon-remove"
+							/> : null
+						}
+					</React.Fragment>
+				),
+			}));
+	}
+
+	getDivider(key) {
+		return {
+			key,
+			disabled: true,
+			selected: false,
+			className: 'item-divider',
+		};
 	}
 
 	render() {
+		const { networks, network } = this.props;
 
-		let options = [
-			{
-				value: 'networks-header',
-				key: 'networks-header',
-				className: 'networks-header',
-				disabled: true,
-				content: 'Choose Network',
-			},
-		];
+		let options = this.getList(NETWORKS);
 
-		const networks = this.state.options.map(({ text }, index) => ({
-			value: index,
-			key: index,
-			selected: this.state.checked === index,
-			className: 'radio',
-			tabIndex: 0,
-			content: (
-				<React.Fragment>
-					<input type="radio" onChange={() => {}} checked={this.state.checked === index} name="network" />
-					<label className="label" htmlFor="net0">
-						<span className="label-text">{text}</span>
-					</label>
-				</React.Fragment>
-			),
-		}));
-
-		options = options.concat(networks);
+		if (networks.length) {
+			options.push(this.getDivider('divider'));
+			options = options.concat(this.getList(networks));
+		}
 		options.push({
-			value: 'netCustom',
-			key: 'netCustom',
-			selected: this.state.checked === 'netCustom',
-			className: 'radio',
-			tabIndex: 0,
+			value: 'custom',
+			key: 'custom',
+			className: 'item-link',
+			selected: false,
 			content: (
-				<Form onClick={(e) => e.stopPropagation()}>
-					<Form.Field className="error-wrap">
-						<label htmlFor="Address">Custom Address</label>
-						<Input
-							type="text"
-							name="newName"
-							ref={(input) => { this.nameInput = input; }}
-							className="label-in-left"
-						>
-							<input />
-							<button
-								className="edit-option icon-edit-checked"
-							/>
-							<button
-								className="edit-option icon-edit-close"
-							/>
-						</Input>
-
-						<span className="error-message">Some error</span>
-					</Form.Field>
-				</Form>
+				<Link className="network-link" to={NETWORKS_PATH} >
+					+ Add custom Network
+				</Link>
 			),
 		});
 
 		return (
 			<Dropdown
-				upward
+
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
-				text="wss://echo-tmp-wallet.pixelplex.io"
-				className="network-dropdown"
 				icon={false}
+				upward
+				className={classnames('network-dropdown', {
+					disconnected: this.props.disconnected,
+				})}
+				trigger={
+					<div className="network-dropdown-trigger">
+						<span className="description">
+							{ this.props.disconnected ? 'Disconnected:' : 'Network:' }
+						</span>
+						<span className="status connected">
+							<div className="ellipsis">{network.name}</div>
+						</span>
+						<span className="icon-dropdown_arrow" />
+					</div>
+				}
 			/>
 		);
 
@@ -115,7 +123,25 @@ class Network extends React.PureComponent {
 }
 
 
-export default connect(
-	() => ({ }),
-	() => ({ }),
-)(Network);
+Network.propTypes = {
+	network: PropTypes.object.isRequired,
+	networks: PropTypes.array.isRequired,
+	saveNetwork: PropTypes.func.isRequired,
+	deleteNetwork: PropTypes.func.isRequired,
+	disconnected: PropTypes.bool,
+};
+
+Network.defaultProps = {
+	disconnected: false,
+};
+
+export default withRouter(connect(
+	(state) => ({
+		network: state.global.get('network').toJS(),
+		networks: state.global.get('networks').toJS(),
+	}),
+	(dispatch) => ({
+		saveNetwork: (network) => dispatch(saveNetwork(network)),
+		deleteNetwork: (network) => dispatch(deleteNetwork(network)),
+	}),
+)(Network));

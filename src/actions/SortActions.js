@@ -7,8 +7,9 @@ export const toggleSort = (container, sortType) => (dispatch, getState) => {
 	dispatch(SortReducer.actions.set({ container, value: { sortType, sortInc } }));
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
-	let sorts = localStorage.getItem('sorts');
+	let sorts = localStorage.getItem(`sorts_${networkName}`);
 	sorts = sorts ? JSON.parse(sorts) : {};
 
 	if (!sorts[accountId]) {
@@ -16,16 +17,16 @@ export const toggleSort = (container, sortType) => (dispatch, getState) => {
 	}
 
 	sorts[accountId][container] = { sortType, sortInc };
-	localStorage.setItem('sorts', JSON.stringify(sorts));
+	localStorage.setItem(`sorts_${networkName}`, JSON.stringify(sorts));
 };
 
-export const initSorts = () => (dispatch, getState) => {
+export const initSorts = (networkName) => (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	if (!accountId) return;
 
-	let sorts = localStorage.getItem('sorts');
+	let sorts = localStorage.getItem(`sorts_${networkName}`);
 	sorts = sorts ? JSON.parse(sorts) : {};
 
 	if (!sorts[accountId]) {

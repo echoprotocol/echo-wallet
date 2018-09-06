@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 
-import { connection, hideBar } from '../actions/GlobalActions';
+import { connection, toggleBar } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -14,7 +14,7 @@ import Header from '../components/Header/index';
 import Footer from '../components/Footer/index';
 import Toast from '../components/Toast';
 
-import { AUTH_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
+import { PUBLIC_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
 
 class App extends React.Component {
 
@@ -33,7 +33,7 @@ class App extends React.Component {
 
 		return (
 			<Segment basic className="wrapper">
-				{ !AUTH_ROUTES.includes(location.pathname) ? <Header /> : null }
+				{ !PUBLIC_ROUTES.includes(location.pathname) ? <Header /> : null }
 				<div className={classnames('content', { 'center-mode': CENTER_MODE_ROUTES.includes(location.pathname) })}>
 					{children}
 				</div>
@@ -47,7 +47,7 @@ class App extends React.Component {
 		return (
 			<Sidebar.Pushable as={Segment}>
 				{
-					!AUTH_ROUTES.includes(location.pathname) ?
+					!PUBLIC_ROUTES.includes(location.pathname) ?
 						[
 							<SidebarMenu key="sidebar" />,
 							<Sidebar.Pusher
@@ -93,11 +93,10 @@ App.propTypes = {
 export default withRouter(connect(
 	(state) => ({
 		globalLoading: state.global.get('globalLoading'),
-		loading: state.global.get('loading'),
 		visibleBar: state.global.get('visibleBar'),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
-		hideBar: () => dispatch(hideBar()),
+		hideBar: () => dispatch(toggleBar(true)),
 	}),
 )(App));

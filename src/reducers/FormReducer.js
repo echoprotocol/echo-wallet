@@ -12,6 +12,7 @@ import {
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
+	FORM_ADD_CUSTOM_NETWORK,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -148,6 +149,23 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 	}),
+	[FORM_ADD_CUSTOM_NETWORK]: Map({
+		address: {
+			value: '',
+			error: null,
+		},
+		name: {
+			value: '',
+			error: null,
+		},
+		registrator: {
+			value: '',
+			error: null,
+		},
+		autoswitch: {
+			value: false,
+		},
+	}),
 };
 
 export default createModule({
@@ -166,6 +184,8 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_VIEW_CONTRACT]),
 		[FORM_CALL_CONTRACT_VIA_ID]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT_VIA_ID]),
+		[FORM_ADD_CUSTOM_NETWORK]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_ADD_CUSTOM_NETWORK]),
 	}),
 	transformations: {
 		set: {

@@ -39,8 +39,8 @@ export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
 };
 
-export const loadContracts = (accountId) => (dispatch) => {
-	let contracts = localStorage.getItem('contracts');
+export const loadContracts = (accountId, networkName) => (dispatch) => {
+	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
@@ -80,6 +80,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	try {
 		const contract = await getContract(instance, id);
@@ -89,7 +90,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 			return;
 		}
 
-		let contracts = localStorage.getItem('contracts');
+		let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 		contracts = contracts ? JSON.parse(contracts) : {};
 
@@ -108,7 +109,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		}
 
 		contracts[accountId][name] = { abi, id };
-		localStorage.setItem('contracts', JSON.stringify(contracts));
+		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
 		dispatch(push('contracts', name, { disabled: false, abi, id }));
 
@@ -126,8 +127,9 @@ export const removeContract = (name) => (dispatch, getState) => {
 	dispatch(remove('contracts', name));
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
-	let contracts = localStorage.getItem('contracts');
+	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
@@ -136,7 +138,7 @@ export const removeContract = (name) => (dispatch, getState) => {
 	}
 
 	delete contracts[accountId][name];
-	localStorage.setItem('contracts', JSON.stringify(contracts));
+	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 };
 
 export const enableContract = (name) => (dispatch) => {
@@ -164,8 +166,9 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 	}
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
-	let contracts = localStorage.getItem('contracts');
+	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
@@ -187,7 +190,7 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 	});
 
 	contracts[accountId][newName] = contracts[accountId][oldName];
-	localStorage.setItem('contracts', JSON.stringify(newContracts));
+	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
 
 	dispatch(remove('contracts', oldName));
 	dispatch(push('contracts', newName, {
@@ -206,12 +209,13 @@ export const addContractByName = (
 	abi,
 ) => async (dispatch, getState) => {
 	const instance = getState().echojs.getIn(['system', 'instance']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
 
 	const id = `1.16.${getContractId(address)}`;
 
-	let contracts = localStorage.getItem('contracts');
+	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
 
@@ -223,7 +227,7 @@ export const addContractByName = (
 		abi,
 		id,
 	};
-	localStorage.setItem('contracts', JSON.stringify(contracts));
+	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
 	dispatch(push('contracts', name, { disabled: false, abi, id }));
 };
@@ -297,10 +301,10 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
-
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
-	const contracts = JSON.parse(localStorage.getItem('contracts'));
+	const contracts = JSON.parse(localStorage.getItem(`contracts_${networkName}`));
 	const abi = JSON.parse(contracts[accountId][contractName].abi);
 	const contractId = contracts[accountId][contractName].id;
 

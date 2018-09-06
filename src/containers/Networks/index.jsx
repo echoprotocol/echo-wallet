@@ -1,106 +1,89 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Form, Button } from 'semantic-ui-react';
-import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+
+import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
+
+import { setFormValue, clearForm } from '../../actions/FormActions';
+import { addNetwork } from '../../actions/GlobalActions';
+
+import AddCustomNetwork from './AddCustomNetwork';
 
 class Networks extends React.Component {
 
-	constructor() {
-		super();
-
-		this.state = {
-			showCustom: false,
-			networksList: [
-				{
-					id: 1,
-					value: 'MainNet',
-				},
-				{
-					id: 2,
-					value: 'TestNet',
-				},
-				{
-					id: 3,
-					value: 'DevNet',
-				},
-				{
-					id: 'custom',
-					value: 'Custom Network',
-				},
-			],
-		};
-
+	componentWillUnmount() {
+		this.props.clearForm();
 	}
-	onShowCustom(id) {
-		if (id === 'custom') {
-			this.setState({ showCustom: true });
-		} else {
-			this.setState({ showCustom: false });
-		}
+
+	onAddNetwork(e) {
+		e.preventDefault();
+
+		this.props.addNetwork();
 	}
+
+	onToggleSwitch(e) {
+		e.preventDefault();
+
+		const { autoswitch } = this.props;
+
+		this.props.setFormValue('autoswitch', !autoswitch.value);
+	}
+
 	render() {
-		const { networksList } = this.state;
+		const {
+			history, address, name, registrator, autoswitch,
+		} = this.props;
+
+
+		const isFormValid = (address.value && name.value && registrator.value) &&
+			(!address.error && !name.error && !registrator.error);
 
 		return (
 			<div className="sign-scroll-fix">
 				<Form className="main-form">
 					<div className="form-info">
-						<h3>Networks</h3>
+						<a
+							href="#"
+							onClick={history.goBack}
+							className="back-link"
+						>
+							<span className="icon-back" />
+                        back
+						</a>
+						<h3>Create new Network</h3>
 					</div>
 					<div className="field-wrap">
-						<div className="radio-list">
-							{
-								networksList.map(({ id, value }) => (
-									<div className="radio" key={id} >
-										<input
-											type="radio"
-											id={id}
-											name="network"
-											onChange={() => this.onShowCustom(id)}
-										/>
-										<label
-											className="label"
-											htmlFor={id}
-										>
-											<span className="label-text">{value}</span>
-										</label>
-									</div>
-								))
-							}
-						</div>
-						<div className={classnames('custom-network', { active: this.state.showCustom })}>
-
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="address">Address</label>
-								<input placeholder="Address" disabled={!this.state.showCustom} name="address" className="ui input" />
-								<span className="error-message">asdasd</span>
-							</Form.Field>
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="name">Name</label>
-								<input placeholder="Name" disabled={!this.state.showCustom} name="name" className="ui input" />
-								<span className="error-message">asdasd</span>
-							</Form.Field>
-							<Form.Field className={classnames('error-wrap')}>
-								<label htmlFor="registrator">Registrator</label>
-								<input placeholder="Registrator" disabled={!this.state.showCustom} name="registrator" className="ui input" />
-								<span className="error-message">Registrator error</span>
-							</Form.Field>
-
-						</div>
-
-
+						<AddCustomNetwork
+							address={address}
+							name={name}
+							registrator={registrator}
+							setFormValue={this.props.setFormValue}
+						/>
 					</div>
-					<Button
-						basic
-						type="submit"
-						className="main-btn"
-						content="Save"
-					/>
-					<span className="sign-nav">
-                        Return to
-						<Link className="link main-link" to="/sign-in">Back</Link>
-					</span>
+					<div className="form-panel">
+						<div className="check">
+							<input
+								type="checkbox"
+								id="addToNetworks"
+								checked={autoswitch.value}
+								onInput={(e) => this.onToggleSwitch(e)}
+							/>
+							<label className="label" htmlFor="addToNetworks">
+								<span className="label-text">Switch to this Network upon creating</span>
+							</label>
+						</div>
+						<Button
+							basic
+							type="submit"
+							className="main-btn"
+							content="Create"
+							onClick={(e) => this.onAddNetwork(e)}
+							disabled={!isFormValid}
+						/>
+					</div>
+
 				</Form>
 			</div>
 		);
@@ -108,7 +91,27 @@ class Networks extends React.Component {
 
 }
 
-export default connect(
-	() => ({}),
-	() => ({}),
-)(Networks);
+Networks.propTypes = {
+	history: PropTypes.object.isRequired,
+	address: PropTypes.object.isRequired,
+	name: PropTypes.object.isRequired,
+	registrator: PropTypes.object.isRequired,
+	autoswitch: PropTypes.object.isRequired,
+	addNetwork: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+};
+
+export default withRouter(connect(
+	(state) => ({
+		address: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'address']),
+		name: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'name']),
+		registrator: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'registrator']),
+		autoswitch: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'autoswitch']),
+	}),
+	(dispatch) => ({
+		addNetwork: () => dispatch(addNetwork()),
+		setFormValue: (field, value) => dispatch(setFormValue(FORM_ADD_CUSTOM_NETWORK, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK)),
+	}),
+)(Networks));

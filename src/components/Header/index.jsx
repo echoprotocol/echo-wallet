@@ -127,11 +127,12 @@ class Header extends React.Component {
 	render() {
 
 		const {
-			location, accounts, core, accountName,
+			location, accountName, accounts, core,
 		} = this.props;
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
+
 		const renderedAccounts = (accounts && core) && this.renderAccounts();
 
 		let options = [
@@ -225,10 +226,10 @@ Header.defaultProps = {
 
 export default withRouter(connect(
 	(state) => ({
+		accountName: state.global.getIn(['activeUser', 'name']),
 		assets: state.balance.get('assets'),
 		core: state.balance.getIn(['core']),
 		accounts: state.global.get('accounts'),
-		accountName: state.global.getIn(['activeUser', 'name']),
 		systemAccounts: state.echojs.getIn(['data', 'accounts']),
 	}),
 	(dispatch) => ({

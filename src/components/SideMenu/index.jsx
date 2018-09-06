@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classnames from 'classnames';
 
-
-import { toggleBar, hideBar } from '../../actions/GlobalActions';
+import { toggleBar } from '../../actions/GlobalActions';
 import {
 	CONTRACT_LIST_PATH,
 	ADD_CONTRACT_PATH,
@@ -124,7 +123,6 @@ export default withRouter(connect(
 	}),
 	(dispatch) => ({
 		toggleBar: (value) => dispatch(toggleBar(value)),
-		hideBar: () => dispatch(hideBar()),
+		hideBar: () => dispatch(toggleBar(true)),
 	}),
 )(SidebarMenu));
-
