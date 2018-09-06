@@ -55,15 +55,13 @@ class AmountField extends React.Component {
 		let target = tokens.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'tokens');
-			this.setState({ searchText: '' });
 			return;
 		}
 		target = assets.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'assets');
-			this.setState({ searchText: '' });
 		}
-		this.props.setFormError('amount', null);
+
 	}
 
 	onDropdownChange(e, value) {
@@ -80,7 +78,10 @@ class AmountField extends React.Component {
 	}
 
 	setCurrency(currency, type) {
+		this.props.setFormError('amount', null);
+		this.props.setFormError('tokens', null);
 		this.props.setValue('currency', { ...currency, type });
+		this.setState({ searchText: '' });
 	}
 
 	getAvailableAmount(currency) {
