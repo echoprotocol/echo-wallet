@@ -46,12 +46,11 @@ class Footer extends React.PureComponent {
 						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
 					</li>
 					<li>
-						<span className="status white">Disconnected</span>
+						<NetworkDropdown disconnected />
 					</li>
 				</ul>
 			</div>
 		);
-
 		return isConnect && !latency.error ? connected : disconnected;
 	}
 

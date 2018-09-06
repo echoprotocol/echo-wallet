@@ -205,6 +205,23 @@
 
     &.network-dropdown {
         margin-right: -15px;
+        &.disconnected {
+            .network-dropdown-trigger {
+                &:hover {
+                    background-color: transparent;
+                }
+                .status.connected {
+                    color: #fff;
+                    &:before {
+                        background-color: #fff;
+                    }
+                }
+                .icon-dropdown_arrow,
+                .description {
+                    color: #fff;
+                }
+            }
+        }
         .network-dropdown-trigger {
             height: 49px;
             display: flex;

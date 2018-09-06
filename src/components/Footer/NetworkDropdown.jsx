@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-
+import classnames from 'classnames';
 import { NETWORKS } from '../../constants/GlobalConstants';
 
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
@@ -102,10 +102,14 @@ class Network extends React.PureComponent {
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
 				icon={false}
-				className="network-dropdown"
+				className={classnames('network-dropdown', {
+					disconnected: this.props.disconnected,
+				})}
 				trigger={
 					<div className="network-dropdown-trigger">
-						<span className="description">Network:</span>
+						<span className="description">
+							{ this.props.disconnected ? 'Disconnected:' : 'Network:' }
+						</span>
 						<span className="status connected">
 							<div className="ellipsis">{network.name}</div>
 						</span>
@@ -120,11 +124,17 @@ class Network extends React.PureComponent {
 
 }
 
+
 Network.propTypes = {
 	network: PropTypes.object.isRequired,
 	networks: PropTypes.array.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
+	disconnected: PropTypes.bool,
+};
+
+Network.defaultProps = {
+	disconnected: false,
 };
 
 export default withRouter(connect(
