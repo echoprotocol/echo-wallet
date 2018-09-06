@@ -4,10 +4,10 @@ import _ from 'lodash';
 import operations from '../constants/Operations';
 
 import { VIEW_TRANSACTION_PATH } from '../constants/RouterConstants';
-import { HISTORY_DATA } from '../constants/TableConstants';
+import { HISTORY } from '../constants/TableConstants';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
-import { setValue } from './TableActions';
+import { setValue, toggleLoading, setError } from './TableActions';
 import { openModal } from './ModalActions';
 import { setNote } from './TransactionActions';
 
@@ -109,7 +109,14 @@ const formatOperation = (data) => async (dispatch, getState) => {
 };
 
 export const formatHistory = (activity) => async (dispatch) => {
-	let rows = activity.map((h) => dispatch(formatOperation(h)));
-	rows = await Promise.all(rows);
-	dispatch(setValue(HISTORY_DATA, 'history', rows));
+	dispatch(toggleLoading(HISTORY, true));
+	try {
+		let rows = activity.map((h) => dispatch(formatOperation(h)));
+		rows = await Promise.all(rows);
+		dispatch(setValue(HISTORY, 'data', rows));
+	} catch (err) {
+		dispatch(setError(HISTORY, err));
+	} finally {
+		dispatch(toggleLoading(HISTORY, false));
+	}
 };

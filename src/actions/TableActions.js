@@ -14,6 +14,18 @@ export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
 };
 
+export const clearTable = (table) => (dispatch) => {
+	dispatch(TableReducer.actions.clear({ table }));
+};
+
+export const toggleLoading = (table, value) => (dispatch) => {
+	dispatch(TableReducer.actions.set({ table, field: 'loading', value }));
+};
+
+export const setError = (table, value) => (dispatch) => {
+	dispatch(TableReducer.actions.set({ table, field: 'error', value }));
+};
+
 export const setIn = (table, fields, value) => (dispatch) => {
 	dispatch(TableReducer.actions.setIn({ table, fields, value }));
 };
@@ -85,4 +97,3 @@ export const unlockPrivateKey = (k) => (dispatch) => {
 
 	dispatch(openModal(MODAL_UNLOCK));
 };
-

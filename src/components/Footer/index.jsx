@@ -2,10 +2,11 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import NetworkDropdown from './NetworkDropdown';
 
 import { version } from '../../../package.json';
-import { NETWORKS_PATH } from '../../constants/RouterConstants';
+
+
 import { connection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
@@ -16,8 +17,9 @@ class Footer extends React.PureComponent {
 	}
 
 	render() {
-
-		const { isConnect, latency, lastBlock } = this.props;
+		const {
+			isConnect, latency, lastBlock,
+		} = this.props;
 
 		const connected = (
 			<div className="footer">
@@ -30,10 +32,7 @@ class Footer extends React.PureComponent {
 						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
-						<span className="status green">
-                            Connected to
-						</span>
-						<Link className="network-link link" to={NETWORKS_PATH}> https://echo-tmp-wallet.pixelplex.io</Link>
+						<NetworkDropdown />
 					</li>
 				</ul>
 			</div>
@@ -47,12 +46,11 @@ class Footer extends React.PureComponent {
 						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
 					</li>
 					<li>
-						<span className="status white">Disconnected</span>
+						<NetworkDropdown disconnected />
 					</li>
 				</ul>
 			</div>
 		);
-
 		return isConnect && !latency.error ? connected : disconnected;
 	}
 

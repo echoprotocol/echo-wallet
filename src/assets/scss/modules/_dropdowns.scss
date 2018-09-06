@@ -10,8 +10,8 @@
         text-align: right;
         min-width: auto;
         min-height: auto;
-        
-        
+
+
         &.no-choice {
             & > .text {
                 margin-right: 0;
@@ -157,7 +157,7 @@
                 }
             }
         }
-    
+
         .assets_header {
             .text {
                 &:before {
@@ -204,48 +204,167 @@
     }
 
     &.network-dropdown {
-        & > .menu {
-            border-radius: 0;
-            min-width: 280px;
-            .item {
-                padding: 0;
+        margin-right: -15px;
+        &.disconnected {
+            .network-dropdown-trigger {
                 &:hover {
                     background-color: transparent;
                 }
+                .status.connected {
+                    color: #fff;
+                    &:before {
+                        background-color: #fff;
+                    }
+                }
+                .icon-dropdown_arrow,
+                .description {
+                    color: #fff;
+                }
+            }
+        }
+        .network-dropdown-trigger {
+            height: 49px;
+            display: flex;
+            align-items: center;
+            min-width: 220px;
+            padding: 0 13px 0 18px;
+            border-left: 1px solid $bd-gray;
+            background-color: transparent;
+            transition: background-color $speed;
+
+            &:hover {
+                background-color: #f7f7f7;
+
+            }
+            .icon-dropdown_arrow {
+                margin-left: auto;
+                margin-right: 2px;
+                font-size: 4px;
+            }
+        }
+        .description {
+            margin-right: 6px;
+            line-height: 1;
+        }
+        .status {
+            .ellipsis {
+                max-width: 85px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                display: block;
+                overflow: hidden;
+            }
+
+        }
+        & > .dropdown.icon {
+            margin: 0em 0em 0em auto;
+        }
+        .network-link {
+            color: $main-сolor;
+            transition: color $speed;
+        }
+        & > .menu {
+            padding-top: 6px;
+            border-radius: 0;
+            min-width: 220px;
+            .item {
+                padding: 0;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                color: $black;
+                transition: color $speed, background-color $speed;
+                &-divider {
+                    height: 1px;
+                    background-color: $bd-gray;
+                    margin: 6px 0;
+                    &.disabled {
+                        opacity: 1;
+                    }
+                }
+                &:hover {
+                    &.selected {
+                        &:before {
+                            background-color: #fff;
+                        }
+                    }
+                }
                 &.selected {
                     background-color: transparent;
+                    &:before {
+                        width: 4px;
+                        height: 4px;
+                        content: "";
+                        border-radius: 50%;
+                        margin: 0;
+                        background-color: $main-сolor;
+                        transition: background-color $speed;
+                        margin-left: 8px;
+                    }
+                    .label-text {
+                        padding-left: 6px;
+                    }
                 }
-                &.active {
-
-                    .label {
-                        &:before {
-                            @extend %onFocus;
+                &-link {
+                    height: auto;
+                    color: $main-сolor;
+                    margin-bottom: 20px;
+                    &:hover {
+                        background-color: $main-сolor;
+                        .network-link {
+                            color: #fff;
+                        }
+                    }
+                    &.active {
+                        text-decoration: underline;
+                    }
+                    .network-link {
+                        width: 100%;
+                        padding: 10px 18px;
+                        height: 36px;
+                        align-items: flex-start;
+                    }
+                }
+                &:not(.item-link):not(.item-divider) {
+                    &.active {
+                        background-color: #f8f8f8;
+                    }
+                    &:hover {
+                        background-color: $main-сolor;
+                        color: #fff;
+                        .icon-remove,
+                        .network-link {
+                            color: #fff;
                         }
                     }
 
 
-                }
-
-                &.networks-header {
-                    content: "Choose Network";
-                    text-transform: uppercase;
-                    font-family: proximanovaSemibold;
-                    display: flex;
-                    align-items: center;
-                    line-height: 1;
-                    padding: 18px 18px 16px;
-                    color: $gray;
-                    opacity: 1;
-                    &:hover,
-                    &:active,
-                    &:focus {
-                        background-color: transparent;
-                        color: $gray;
+                    &.active {
+                        .label {
+                            &:before {
+                                @extend %onFocus;
+                            }
+                        }
                     }
 
                 }
+                .icon-remove {
+                    margin: 0 0 0 auto;
+                    border-radius: 0;
+                    padding: 0 16px;
+                    height: 36px;
+                    &:hover {
+                        background-color: #4258b5;
+                    }
+                }
                 .label {
-                    padding: 6px 18px;
+
+                    &-text {
+                        padding: 0 0 0 18px;
+                        max-width: 155px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
                 }
                 .error-wrap {
                     margin: 0;
@@ -256,22 +375,9 @@
                         padding: 18px 18px 5px;
                     }
                 }
-                .label-in-left {
-                    input {
-                        margin: 0 18px;
-                        min-width: auto;
-                    }
-                    .edit-option {
-                        &.icon-edit-checked {
-                            right: 40px;
-                        }
-                        &.icon-edit-close {
-                            right: 20px;
-                        }
-                    }
-                }
             }
-            
+
+
 
         }
     }

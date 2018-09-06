@@ -2,11 +2,16 @@ import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 import _ from 'lodash';
 
-import { HISTORY_DATA, PERMISSION_TABLE } from '../constants/TableConstants';
+import { HISTORY, PERMISSION_TABLE } from '../constants/TableConstants';
 
-const DEFAULT_FIELDS = {
-	[HISTORY_DATA]: Map({
-		history: null,
+const DEFAULT_FIELDS = Map({
+	loading: false,
+	error: null,
+});
+
+const DEFAULT_TABLE_FIELDS = {
+	[HISTORY]: Map({
+		data: null,
 	}),
 	[PERMISSION_TABLE]: Map({
 		active: new Map({
@@ -30,7 +35,10 @@ const DEFAULT_FIELDS = {
 
 export default createModule({
 	name: 'table',
-	initialState: Map(_.cloneDeep(DEFAULT_FIELDS)),
+	initialState: Map({
+		[HISTORY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[HISTORY]),
+		[PERMISSION_TABLE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[PERMISSION_TABLE]),
+	}),
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
@@ -65,7 +73,7 @@ export default createModule({
 
 		clear: {
 			reducer: (state, { payload }) => {
-				state = state.set(payload.table, DEFAULT_FIELDS[payload.table]);
+				state = state.set(payload.table, _.cloneDeep(DEFAULT_FIELDS));
 
 				return state;
 			},
