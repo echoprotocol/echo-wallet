@@ -7,7 +7,6 @@ import history from '../history';
 
 import {
 	SIGN_IN_PATH,
-	SIGN_UP_PATH,
 	INDEX_PATH,
 	AUTH_ROUTES,
 } from '../constants/RouterConstants';
@@ -30,26 +29,6 @@ import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
-
-	let accounts = localStorage.getItem(`accounts_${networkName}`);
-
-	accounts = accounts ? JSON.parse(accounts) : [];
-
-	let isChange = false;
-
-	accounts.forEach((account, i) => {
-		if (account.name === accountName) {
-			accounts.splice(i, 1);
-			accounts.unshift(account);
-			isChange = true;
-		}
-	});
-
-	if (!isChange) {
-		accounts.unshift({ id, name: accountName });
-	}
-
-	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 
@@ -78,7 +57,6 @@ export const connection = () => async (dispatch) => {
 
 	let networks = localStorage.getItem('custom_networks');
 	networks = networks ? JSON.parse(networks) : [];
-	// networks = NETWORKS.concat(networks);
 
 	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
 
@@ -100,7 +78,7 @@ export const connection = () => async (dispatch) => {
 				history.push(INDEX_PATH);
 			}
 
-			await dispatch(initAccount(accounts[0].name, network.name));
+			await dispatch(initAccount(accounts[0], network.name));
 		}
 
 	} catch (err) {
@@ -138,30 +116,6 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const formatAccountsBalances = () => async (dispatch, getState) => {
-	const networkName = getState().global.getIn(['network', 'name']);
-
-	let accounts = localStorage.getItem(`accounts_${networkName}`);
-
-	accounts = accounts ? JSON.parse(accounts) : [];
-
-	let accountsBalances = accounts.map(async (account) => {
-		const accountData = (await dispatch(EchoJSActions.fetch(account.id))).toJS();
-		let stats = null;
-		if (accountData.balances) {
-			stats = (await dispatch(EchoJSActions.fetch(accountData.balances['1.3.0']))).toJS();
-		}
-		return { name: account.name, balance: stats ? stats.balance : null };
-	});
-
-	accountsBalances = await Promise.all(accountsBalances);
-
-	dispatch(GlobalReducer.actions.set({
-		field: 'accounts',
-		value: new List(accountsBalances),
-	}));
-};
-
 export const logout = () => async (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
@@ -169,37 +123,42 @@ export const logout = () => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
 
-	try {
-		accounts = JSON.parse(accounts);
-	} catch (e) {
-		accounts = [];
-	}
+	accounts = accounts.filter((name) => name !== accountName);
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-	const currAccountIndex = accounts.findIndex((account) => account.name === accountName);
-
-	if (currAccountIndex !== -1) {
-		accounts.splice(currAccountIndex, 1);
-		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
-		dispatch(formatAccountsBalances());
-	}
-
-	if (accounts.length) {
-		await dispatch(initAccount(accounts[0].name));
+	if (accounts[0]) {
+		await dispatch(initAccount(accounts[0], networkName));
 	} else {
-		localStorage.removeItem(`accounts_${networkName}`);
 		dispatch(clearTable(HISTORY));
 		dispatch(resetBalance());
 		dispatch(GlobalReducer.actions.logout());
 		history.push(SIGN_IN_PATH);
 	}
+
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 };
 
-export const addAccount = () => (dispatch) => {
-	dispatch(GlobalReducer.actions.set({ field: 'isAddAccount', value: true }));
+export const isAccountAdded = (accountName, networkName) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
 
-	history.push(SIGN_UP_PATH);
+	if (accounts.includes(accountName)) {
+		return 'Account already added';
+	}
+
+	return null;
+};
+
+export const addAccount = (accountName, networkName) => (dispatch) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+	accounts.push(accountName);
+
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+
+	dispatch(initAccount(accountName, networkName));
 };
 
 export const saveNetwork = (network) => (dispatch, getState) => {

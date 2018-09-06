@@ -23,38 +23,35 @@ class SignUp extends React.Component {
 		this.props.history.goBack();
 	}
 
-	renderSignUp() {
-		const { isAddAccount, loading } = this.props;
-		return (
-			<Form className="main-form">
-				{
-					isAddAccount ?
-						<div className="form-info">
-							<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
-								<span className="icon-back" />
-								back
-							</button>
-							<h3>Add Account</h3>
-						</div> :
-						<div className="form-info">
-							<h3>Welcome to Echo</h3>
-						</div>
-				}
-				<FormComponent />
-				<CheckComponent />
-				<ButtonComponent btnContent={isAddAccount ? 'Add Account' : 'Create Account'} />
-				<span className="sign-nav">
-                    Have an account?
-					<Link className="link orange" to={SIGN_IN_PATH}>Login</Link>
-				</span>
-			</Form>
-		);
-	}
 	render() {
+		const { location, loading } = this.props;
+
+		const isAddAccount = location.state ? location.state.isAddAccount : false;
 
 		return (
 			<div className="sign-scroll-fix">
-				{ this.renderSignUp() }
+				<Form className="main-form">
+					{
+						isAddAccount ?
+							<div className="form-info">
+								<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+									<span className="icon-back" />
+									back
+								</button>
+								<h3>Add Account</h3>
+							</div> :
+							<div className="form-info">
+								<h3>Welcome to Echo</h3>
+							</div>
+					}
+					<FormComponent />
+					<CheckComponent />
+					<ButtonComponent isAddAccount={isAddAccount} />
+					<span className="sign-nav">
+						Have an account?
+						<Link className="link orange" to={{ pathname: SIGN_IN_PATH, state: { isAddAccount } }}>Login</Link>
+					</span>
+				</Form>
 			</div>
 		);
 	}
@@ -62,9 +59,9 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-	history: PropTypes.object.isRequired,
-	isAddAccount: PropTypes.bool.isRequired,
 	loading: PropTypes.bool,
+	history: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	generatePassword: PropTypes.func.isRequired,
 };
 
@@ -74,7 +71,6 @@ SignUp.defaultProps = {
 
 export default connect(
 	(state) => ({
-		isAddAccount: state.global.get('isAddAccount'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({

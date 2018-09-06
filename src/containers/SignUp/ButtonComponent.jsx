@@ -11,13 +11,15 @@ import { createAccount } from '../../actions/AuthActions';
 class ButtonComponent extends React.Component {
 
 	onCreate() {
-		const { accountName, generatedPassword, confirmPassword } = this.props;
+		const {
+			accountName, generatedPassword, confirmPassword, isAddAccount,
+		} = this.props;
 
 		this.props.createAccount({
 			accountName: accountName.value.trim(),
 			generatedPassword: generatedPassword.value.trim(),
 			confirmPassword: confirmPassword.value.trim(),
-		});
+		}, isAddAccount);
 	}
 
 	isDisabledSubmit() {
@@ -38,14 +40,18 @@ class ButtonComponent extends React.Component {
 	}
 
 	renderLoading() {
-		return (<Button
-			type="submit"
-			className="main-btn load"
-			content="Creating..."
-		/>);
+		return (
+			<Button
+				type="submit"
+				className="main-btn load"
+				content="Creating..."
+			/>
+		);
 	}
 
 	renderSubmit() {
+		const { isAddAccount } = this.props;
+
 		return (
 			<div className="btn-wrap">
 				<Button
@@ -54,7 +60,7 @@ class ButtonComponent extends React.Component {
 					disabled={this.isDisabledSubmit()}
 					className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 					onClick={(e) => this.onCreate(e)}
-					content={this.props.btnContent}
+					content={isAddAccount ? 'Add Account' : 'Create Account'}
 				/>
 			</div>
 		);
@@ -71,16 +77,17 @@ class ButtonComponent extends React.Component {
 ButtonComponent.propTypes = {
 	accepted: PropTypes.bool,
 	loading: PropTypes.bool,
+	isAddAccount: PropTypes.any,
 	accountName: PropTypes.object.isRequired,
 	generatedPassword: PropTypes.object.isRequired,
 	confirmPassword: PropTypes.object.isRequired,
 	createAccount: PropTypes.func.isRequired,
-	btnContent: PropTypes.string.isRequired,
 };
 
 ButtonComponent.defaultProps = {
 	accepted: false,
 	loading: false,
+	isAddAccount: false,
 };
 
 
@@ -91,9 +98,8 @@ export default connect(
 		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),
 		generatedPassword: state.form.getIn([FORM_SIGN_UP, 'generatedPassword']),
 		confirmPassword: state.form.getIn([FORM_SIGN_UP, 'confirmPassword']),
-		isAddAccount: state.global.get('isAddAccount'),
 	}),
 	(dispatch) => ({
-		createAccount: (value) => dispatch(createAccount(value)),
+		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
 	}),
 )(ButtonComponent);
