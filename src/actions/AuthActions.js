@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
-import { initAccount } from './GlobalActions';
+import { initAccount, addAccount, isAccountAdded } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
 import { update } from './TableActions';
 
@@ -29,10 +29,8 @@ export const generatePassword = () => (dispatch) => {
 };
 
 export const createAccount = ({
-	accountName,
-	generatedPassword,
-	confirmPassword,
-}) => async (dispatch, getState) => {
+	accountName, generatedPassword, confirmPassword,
+}, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	let confirmPasswordError = validatePassword(confirmPassword);
 
@@ -52,7 +50,13 @@ export const createAccount = ({
 
 	try {
 		const instance = getState().echojs.getIn(['system', 'instance']);
+		const network = getState().global.getIn(['network']).toJS();
+
 		accountNameError = await validateAccountExist(instance, accountName, false);
+
+		if (isAddAccount && !accountNameError) {
+			accountNameError = isAccountAdded(accountName, network.name);
+		}
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
@@ -61,7 +65,6 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const network = getState().global.getIn(['network']).toJS();
 		const { owner, active, memo } = await createWallet(
 			network.registrator,
 			accountName,
@@ -72,7 +75,12 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		dispatch(initAccount(accountName, network.name));
+		if (isAddAccount) {
+			dispatch(addAccount(accountName, network.name));
+		} else {
+			dispatch(initAccount(accountName, network.name));
+		}
+
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
 	} finally {
@@ -81,11 +89,7 @@ export const createAccount = ({
 
 };
 
-export const authUser = ({
-	accountName,
-	password,
-}) => async (dispatch, getState) => {
-	const isAddAccount = getState().global.get('isAddAccount');
+export const authUser = ({ accountName, password }, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	const passwordError = validatePassword(password);
 
@@ -101,20 +105,13 @@ export const authUser = ({
 
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	if (isAddAccount) {
-		let accounts = localStorage.getItem(`accounts_${networkName}`);
-
-		accounts = accounts ? JSON.parse(accounts) : [];
-
-		if (accounts.find((account) => account.name === accountName)) {
-			dispatch(setFormError(FORM_SIGN_IN, 'accountName', 'Account already added'));
-			return;
-		}
-	}
-
 	try {
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
+
+		if (isAddAccount && !accountNameError) {
+			accountNameError = isAccountAdded(accountName, networkName);
+		}
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
@@ -144,7 +141,12 @@ export const authUser = ({
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		dispatch(initAccount(accountName, networkName));
+		if (isAddAccount) {
+			dispatch(addAccount(accountName, networkName));
+		} else {
+			dispatch(initAccount(accountName, networkName));
+		}
+
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {

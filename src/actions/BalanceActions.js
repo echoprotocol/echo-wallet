@@ -43,9 +43,10 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 };
 
 export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+	let balances = [];
 
 	if (assets && Object.keys(assets).length) {
-		let balances = Object.entries(assets).map(async (asset) => {
+		balances = Object.entries(assets).map(async (asset) => {
 			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
 			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
 			return { balance: stats.balance, ...asset };
@@ -55,11 +56,12 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 		if (update) {
 			dispatch(diffBalanceChecker('assets', balances));
 		}
-		dispatch(BalanceReducer.actions.set({
-			field: 'assets',
-			value: new List(balances),
-		}));
 	}
+
+	dispatch(BalanceReducer.actions.set({
+		field: 'assets',
+		value: new List(balances),
+	}));
 };
 
 export const getTokenBalances = (accountId, networkName) => async (dispatch, getState) => {
@@ -79,8 +81,9 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
 
+	let balances = [];
 	if (tokens && tokens[accountId]) {
-		let balances = tokens[accountId].map(async (contractId) => {
+		balances = tokens[accountId].map(async (contractId) => {
 			const balance = await getTokenBalance(instance, accountId, contractId);
 			const precision = await getTokenPrecision(instance, accountId, contractId);
 			const symbol = await getTokenSymbol(instance, accountId, contractId);
@@ -90,12 +93,12 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 		});
 
 		balances = await Promise.all(balances);
-
-		dispatch(BalanceReducer.actions.set({
-			field: 'tokens',
-			value: new List(balances),
-		}));
 	}
+
+	dispatch(BalanceReducer.actions.set({
+		field: 'tokens',
+		value: new List(balances),
+	}));
 };
 
 export const updateTokenBalances = () => async (dispatch, getState) => {
@@ -120,19 +123,49 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	}));
 };
 
+export const getPreviewBalances = (networkName) => async (dispatch) => {
+	/**
+     *  Preview structure
+     *  preview: [{
+     *  	balance,
+     *  	id,
+     *  	name,
+     *  	symbol,
+     *  	precision,
+     *  }]
+     */
+
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const { symbol, precision } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
+
+	let balances = accounts.map(async (name) => {
+		const account = (await dispatch(EchoJSActions.fetch(name))).toJS();
+
+		let stats = {};
+		if (account && account.balances && account.balances['1.3.0']) {
+			stats = (await dispatch(EchoJSActions.fetch(account.balances['1.3.0']))).toJS();
+		}
+
+		return {
+			balance: stats.balance || 0, name, symbol, precision,
+		};
+	});
+
+	balances = await Promise.all(balances);
+
+	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(balances) }));
+};
+
 export const initBalances = (accountId, networkName) => async (dispatch) => {
-	const { precision, symbol } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
-
-	dispatch(BalanceReducer.actions.setIn({
-		field: 'core',
-		params: { precision, symbol },
-	}));
-
 	await dispatch(getTokenBalances(accountId, networkName));
 
 	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
 
 	await dispatch(getAssetsBalances(account.balances));
+
+	await dispatch(getPreviewBalances(networkName));
 };
 
 export const addToken = (contractId) => async (dispatch, getState) => {
