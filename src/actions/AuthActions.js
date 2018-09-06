@@ -227,9 +227,9 @@ export const unlockAccount = ({
 			if (role !== 'memo') {
 				if (type === 'accounts') {
 					publicKeyError = !targetAccount[role].key_auths.find((k) => k[0] === publicKey) ?
-						`Invalid password for ${type} keys` : null;
+						`Invalid password for ${permissionKey} keys` : null;
 				} else {
-					publicKeyError = param !== publicKey ? `Invalid password for ${type} keys` : null;
+					publicKeyError = param !== publicKey ? `Invalid password for ${param} key` : null;
 				}
 			} else if (targetAccount.options.memo_key !== publicKey) publicKeyError = 'Invalid password for note key';
 
