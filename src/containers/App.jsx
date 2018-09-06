@@ -69,7 +69,7 @@ class App extends React.Component {
 		return (
 			<div className="global-wrapper">
 				<Segment>
-					{globalLoading ? <Loading text="Loading account..." /> : this.renderSidebar()}
+					{globalLoading ? <Loading /> : this.renderSidebar()}
 				</Segment>
 
 				<Modals />

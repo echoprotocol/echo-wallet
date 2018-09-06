@@ -3,7 +3,7 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Loading from '../../components/Loading';
+import Loading from '../../components/Loader/LoadingData';
 
 import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
 
