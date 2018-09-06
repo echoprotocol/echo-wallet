@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
+import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -10,13 +11,10 @@ import { logout, addAccount, formatAccountsBalances, initAccount } from '../../a
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
-	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
-	CALL_CONTRACT_PATH,
 	PERMISSIONS_PATH,
 } from '../../constants/RouterConstants';
 
@@ -74,6 +72,14 @@ class Header extends React.Component {
 
 	}
 
+	onReturnToBack(e) {
+		e.preventDefault();
+		e.target.blur();
+		this.props.history.goBack();
+
+
+	}
+
 	getTitle() {
 		const { location } = this.props;
 
@@ -86,24 +92,6 @@ class Header extends React.Component {
 			return false;
 		});
 		return item ? item.title : '';
-	}
-
-	renderLinkToParent() {
-		const { location } = this.props;
-		if ([
-			ADD_CONTRACT_PATH,
-			CREATE_CONTRACT_PATH,
-			CALL_CONTRACT_PATH,
-		].includes(`/${location.pathname.split('/')[1]}`)) {
-			return (
-				<Link to={CONTRACT_LIST_PATH} className="icon-back" />
-			);
-		}
-		return (
-			location.pathname.split('/').length > 2 ?
-				<Link to={`/${location.pathname.split('/')[1]}`} className="icon-back" /> :
-				<Link to={INDEX_PATH} className="icon-back" />
-		);
 	}
 
 	renderAccounts() {
@@ -133,16 +121,19 @@ class Header extends React.Component {
 	}
 
 	render() {
+
 		const {
 			location, accountName, accounts, core,
 		} = this.props;
 
 		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
-
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
 
 		const renderedAccounts = (accounts && core) && this.renderAccounts();
+		const isSub = [
+			INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH,
+		].includes(`/${location.pathname.split('/')[1]}`);
 
 		let options = [
 			{
@@ -169,11 +160,11 @@ class Header extends React.Component {
 
 		return (
 			<div className="header">
-				{
-					![INDEX_PATH, CONTRACT_LIST_PATH, BALANCES_PATH, PERMISSIONS_PATH]
-						.find((url) => url === location.pathname) &&
-						this.renderLinkToParent()
-				}
+				<button
+					className={classnames('icon-back', { sub: !isSub })}
+					onClick={(e) => this.onReturnToBack(e)}
+				/>
+
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 					<Button
@@ -183,7 +174,7 @@ class Header extends React.Component {
 						onClick={(e) => this.onSend(e)}
 					/>
 					<div className="user-section">
-						<Link className="balance" to={BALANCES_PATH}>
+						<Link className="balance" to={INDEX_PATH}>
 							<span>
 								{balance}
 							</span>

@@ -1,0 +1,56 @@
+@keyframes boxAnimation {
+    0% {opacity: .2;}
+    50% {opacity: 1;}
+    100% {opacity: .2;}
+}
+
+.loader {
+    display: flex;
+    padding: 2px;
+    margin: 1px;
+    justify-content: space-between;
+    &-wrap {
+        animation: fadeIn $speed;
+        background-color:  #5e79e8;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 9055;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: #fff;
+    }
+    &-header {
+        font-weight: 700;
+        font-size: 1.4em;
+        margin: 0 0 5px;
+        letter-spacing: .1px;
+    }
+    &-description {
+        font-size: 1em;
+        margin: 0 0 30px;
+        letter-spacing: .2px;
+    }
+    &-item {
+        display: inline-block;
+        background: white;
+        width: 8px;
+        height: 8px;
+        animation: 1000ms boxAnimation infinite;
+        border-radius: 50%;
+        margin: 0 5px;
+        &:nth-of-type(2) {
+            animation-delay: 200ms;
+        }
+        &:nth-of-type(3) {
+            animation-delay: 400ms;
+        }
+        &:nth-of-type(4) {
+            animation-delay: 600ms;
+        }
+    }
+}

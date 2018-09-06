@@ -32,6 +32,8 @@
       -ms-user-select: text;
           user-select: text;
   will-change: top, left, margin, transform, opacity;
+  animation: fadeIn $speed;
+  
 }
 .ui.modal > :first-child:not(.icon),
 .ui.modal > .icon:first-child + * {
@@ -284,8 +286,7 @@
 ---------------*/
 
 .ui.inverted.dimmer > .ui.modal {
-  -webkit-box-shadow: 1px 3px 10px 2px rgba(0, 0, 0, 0.2);
-          box-shadow: 1px 3px 10px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
 }
 
 

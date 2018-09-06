@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import { toggleBar } from '../../actions/GlobalActions';
 import {
 	CONTRACT_LIST_PATH,
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	PERMISSIONS_PATH,
 	INDEX_PATH,
 } from '../../constants/RouterConstants';
@@ -46,7 +46,7 @@ class SidebarMenu extends React.Component {
 									exact
 									className="sidebar-nav-link"
 									onClick={() => this.props.hideBar()}
-									to={BALANCES_PATH}
+									to={INDEX_PATH}
 								>
 									<span className="icon icon-menu-wallet" />
 									<span className="sidebar-nav-text">Wallet</span>
@@ -56,7 +56,7 @@ class SidebarMenu extends React.Component {
 								<NavLink
 									className="sidebar-nav-link"
 									exact
-									to={INDEX_PATH}
+									to={ACTIVITY_PATH}
 									onClick={() => this.props.hideBar()}
 								>
 									<span className="icon icon-recent-activity" />

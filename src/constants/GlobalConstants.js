@@ -1,11 +1,12 @@
 import {
 	INDEX_PATH,
-	BALANCES_PATH,
+	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
+	CALL_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	PERMISSIONS_PATH,
 } from './RouterConstants';
@@ -13,11 +14,11 @@ import {
 export const HEADER_TITLE = [
 	{
 		path: INDEX_PATH,
-		title: 'Recent Activity',
+		title: 'Wallet',
 	},
 	{
-		path: BALANCES_PATH,
-		title: 'Wallet',
+		path: ACTIVITY_PATH,
+		title: 'Recent Activity',
 	},
 	{
 		path: TRANSFER_PATH,
@@ -25,6 +26,10 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: CREATE_CONTRACT_PATH,
+		title: 'Smart Contracts',
+	},
+	{
+		path: CALL_CONTRACT_PATH,
 		title: 'Smart Contracts',
 	},
 	{
