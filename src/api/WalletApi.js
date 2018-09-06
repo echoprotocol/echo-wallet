@@ -106,3 +106,4 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 
 	return keys;
 };
+

@@ -38,69 +38,40 @@ class SignIn extends React.Component {
 		}
 	}
 
+	onCancel() {
+		this.props.history.goBack();
+	}
+
 	isDisabledSubmit() {
 		const { accountName, password } = this.props;
 
-		return (!accountName.value || accountName.error) || (!password.value || password.error);
+		if ((!accountName.value || accountName.error) || (!password.value || password.error)) {
+			return true;
+		}
+
+		return false;
 	}
-	renderAddAccount() {
-		const { accountName, password, loading } = this.props;
-		return (
 
-			<Form className="main-form">
-				<div className="form-info">
-					<a href="#" className="back-link">
-						<span className="icon-back" />
-                        back
-					</a>
-					<h3>Add Account</h3>
-				</div>
-				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
-						<label htmlFor="AccountName">Account name</label>
-
-						<input placeholder="Account name" name="accountName" className="ui input" value={accountName.value} onChange={(e) => this.onChange(e, true)} />
-						<span className="error-message">{accountName.error}</span>
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: password.error })}>
-						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
-						<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-						<span className="error-message">{password.error}</span>
-					</Form.Field>
-				</div>
-				{
-					loading ?
-						<Button
-							type="submit"
-							className="main-btn"
-							onSubmit={(e) => this.onClick(e)}
-							content="Loading..."
-						/> :
-						<Button
-							basic
-							type="submit"
-							disabled={this.isDisabledSubmit()}
-							onClick={(e) => this.onClick(e)}
-							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
-							content="Add Account"
-						/>
-				}
-				<span className="sign-nav">
-                    Don’t have an account?
-					<Link className="link main-link" to="/sign-up">Sign Up</Link>
-				</span>
-			</Form>
-		);
-	}
 	renderSignIn() {
-		const { accountName, password, loading } = this.props;
+		const {
+			accountName, password, loading, isAddAccount,
+		} = this.props;
 		return (
 
 			<Form className="main-form">
-				<div className="form-info">
-					<h3>Welcome to Echo</h3>
-				</div>
+				{
+					isAddAccount ?
+						<div className="form-info">
+							<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+								<span className="icon-back" />
+								back
+							</button>
+							<h3>Add Account</h3>
+						</div> :
+						<div className="form-info">
+							<h3>Welcome to Echo</h3>
+						</div>
+				}
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
 						<label htmlFor="AccountName">Account name</label>
@@ -119,6 +90,7 @@ class SignIn extends React.Component {
 					loading ?
 						<Button
 							type="submit"
+							color="orange"
 							className="load main-btn"
 							onSubmit={(e) => this.onClick(e)}
 							content="Loading..."
@@ -129,7 +101,7 @@ class SignIn extends React.Component {
 							disabled={this.isDisabledSubmit()}
 							onClick={(e) => this.onClick(e)}
 							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
-							content="Login"
+							content={isAddAccount ? 'Add Account' : 'Login'}
 						/>
 				}
 				<span className="sign-nav">
@@ -144,8 +116,7 @@ class SignIn extends React.Component {
 
 		return (
 			<div className="sign-scroll-fix">
-				{/* { this.renderSignIn() } */}
-				{ this.renderAddAccount() }
+				{ this.renderSignIn() }
 			</div>
 		);
 	}
@@ -155,10 +126,12 @@ class SignIn extends React.Component {
 SignIn.propTypes = {
 	accountName: PropTypes.object.isRequired,
 	password: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
+	isAddAccount: PropTypes.bool.isRequired,
 };
 
 SignIn.defaultProps = {
@@ -170,6 +143,7 @@ export default connect(
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
 		password: state.form.getIn([FORM_SIGN_IN, 'password']),
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
+		isAddAccount: state.global.get('isAddAccount'),
 	}),
 	(dispatch) => ({
 		authUser: (value) => dispatch(authUser(value)),
