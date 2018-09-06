@@ -82,6 +82,21 @@ $stripe-width: 10px;
         }
     }
 }
+.nav-link.active {
+    pointer-events: none;
+    .ui {
+        &.button {
+            &.send {
+                box-shadow: none;
+                background-color: $bg-gray;
+                i { 
+                    color: $main-сolor;
+                }
+            }
+        }
+    }
+ 
+}
 
 @keyframes loading-stripes {
     0% {background-position: 0px}

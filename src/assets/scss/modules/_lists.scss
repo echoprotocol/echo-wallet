@@ -178,6 +178,14 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+        .button {
+            i {
+                &:before {
+                    font-size: 1.05em;
+                    vertical-align: middle  ;
+                }
+            }
+        }
         &:not(:last-child) {
             margin-bottom: 30px;
         }

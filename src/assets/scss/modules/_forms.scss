@@ -24,6 +24,7 @@
             text-transform: uppercase;
             font-family: proximanovaSemibold;
             font-size: .9em;
+            cursor: pointer;
             &:focus {
                 &:not(:active) {
                     .icon-back {
@@ -93,7 +94,16 @@
             text-transform: uppercase;
             letter-spacing:.2px;
         }
-
+        .form-panel {
+            .button[type=submit],
+            .button[type=button] {
+                white-space: nowrap;
+                margin: 0 0 0 auto;
+                &:not(:last-child) {
+                    margin-right: 20px;
+                }
+            }
+        }
 
 
         label {
@@ -187,19 +197,11 @@
             width: 25px;
         }
     }
-
-    .form-panel {
+    &-panel {
         display: flex;
         align-items: center;
-        margin: 15px 0 0;
-        .button[type=submit],
-        .button[type=button] {
-            white-space: nowrap;
-            margin: 0 0 0 auto;
-            &:not(:last-child) {
-                margin-right: 20px;
-            }
-        }
+        margin: 30px 0 0;
+
         .total-sum {
             span {
                 margin-left: 5px;
