@@ -20,7 +20,7 @@ import {
 	validateNetworkAddress,
 	validateNetworkRegistrator,
 } from '../helpers/ValidateHelper';
-import { toastSuccess } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
 import { initBalances, getObject, resetBalance } from './BalanceActions';
 import { initSorts } from './SortActions';
@@ -289,6 +289,25 @@ export const addNetwork = () => (dispatch, getState) => {
 	if (autoswitch.value) { dispatch(saveNetwork(network)); }
 
 	toastSuccess(`${network.name} network added successfully!`);
+
+	history.goBack();
+};
+
+export const enableNetwork = (network) => (dispatch, getState) => {
+	let customNetworks = localStorage.getItem('custom_networks');
+	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];
+	customNetworks.push(network);
+
+	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	const networks = getState().global.get('networks').toJS();
+	networks.push(network);
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
+
 };
 
 export const deleteNetwork = (network) => (dispatch, getState) => {
@@ -297,6 +316,12 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	customNetworks = customNetworks.filter((i) => i.name !== network.name);
 
 	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
+
+	toastInfo(
+		`You have removed ${network.name} from networks list`,
+		() => dispatch(enableNetwork(network)),
+		() => {},
+	);
 
 	const currentNetwork = getState().global.get('network').toJS();
 	if (currentNetwork.name === network.name) {
