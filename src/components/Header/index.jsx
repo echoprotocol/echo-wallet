@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
+import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -72,6 +73,7 @@ class Header extends React.Component {
 	}
 
 	onReturnToBack(e) {
+		e.preventDefault();
 		e.target.blur();
 		this.props.history.goBack();
 
@@ -90,25 +92,6 @@ class Header extends React.Component {
 			return false;
 		});
 		return item ? item.title : '';
-	}
-
-	renderLinkToParent(location) {
-
-		return [
-			INDEX_PATH,
-			CONTRACT_LIST_PATH,
-			ACTIVITY_PATH,
-			PERMISSIONS_PATH,
-		].includes(`/${location.pathname.split('/')[1]}`) ?
-			<button
-				className="icon-back"
-				onClick={(e) => this.onReturnToBack(e)}
-			/> :
-			<button
-				className="icon-back sub"
-				onClick={(e) => this.onReturnToBack(e)}
-			/>;
-
 	}
 
 	renderAccounts() {
@@ -147,6 +130,9 @@ class Header extends React.Component {
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
 		const renderedAccounts = (accounts && core) && this.renderAccounts();
+		const isSub = [
+			INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH,
+		].includes(`/${location.pathname.split('/')[1]}`);
 
 		let options = [
 			{
@@ -173,11 +159,10 @@ class Header extends React.Component {
 
 		return (
 			<div className="header">
-				{
-					// ![INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH]
-					// 	.find((url) => url === location.pathname) &&
-					this.renderLinkToParent(location)
-				}
+				<button
+					className={classnames('icon-back', { sub: !isSub })}
+					onClick={(e) => this.onReturnToBack(e)}
+				/>
 
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
