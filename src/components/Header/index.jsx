@@ -5,12 +5,13 @@ import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';
-import _ from 'lodash';
 
-import { logout, addAccount, formatAccountsBalances, initAccount } from '../../actions/GlobalActions';
+
+import { logout, initAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
+	SIGN_IN_PATH,
 	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
@@ -22,14 +23,6 @@ import {
 import { formatAmount } from '../../helpers/FormatHelper';
 
 class Header extends React.Component {
-
-	componentWillReceiveProps(nextProps) {
-		if (_.isEqual(this.props, nextProps)) {
-			return;
-		}
-
-		this.props.formatAccounts();
-	}
 
 	onLogout() {
 		this.props.logout();
@@ -45,17 +38,21 @@ class Header extends React.Component {
 		].includes(`/${location.pathname.split('/')[1]}`);
 	}
 
-	onAddAccount() {
-		this.props.addAccount();
+	onAddAccount(e) {
+		e.preventDefault();
+
+		this.props.history.push(SIGN_IN_PATH, { isAddAccount: true });
 	}
-	onchangeAccount(e, name) {
-		const { accountName } = this.props;
+
+
+	onChangeAccount(e, name) {
+		const { accountName, networkName } = this.props;
 
 		if (accountName === name) {
 			return;
 		}
 
-		this.props.initAccount(name);
+		this.props.initAccount(name, networkName);
 	}
 
 	onDropdownChange(e, value) {
@@ -80,8 +77,6 @@ class Header extends React.Component {
 		e.preventDefault();
 		e.target.blur();
 		this.props.history.goBack();
-
-
 	}
 
 	getTitle() {
@@ -98,42 +93,37 @@ class Header extends React.Component {
 		return item ? item.title : '';
 	}
 
-	renderAccounts() {
-		const { core, accounts } = this.props;
-		return (
-			accounts.toJS().map((account, index) => {
-				const id = index;
-				const balance = formatAmount(account.balance, core.toJS().precision);
+	renderList() {
+		const { preview } = this.props;
 
-				return (
-					{
-						value: `account${id}`,
-						key: `account${id}`,
-						content: (
-							<button className="user-item" key={id} onClick={(e) => this.onchangeAccount(e, account.name)}>
-								<span>{account.name}</span>
-								<div className="balance">
-									<span>{balance || '0'}</span>
-									<span>{core.toJS().symbol || 'ECHO'}</span>
-								</div>
-							</button>
-						),
-					}
-				);
-			})
-		);
+		return preview.map(({
+			name, balance, precision, symbol,
+		}) => {
+			const content = (
+				<button
+					key={name}
+					className="user-item"
+					onClick={(e) => this.onChangeAccount(e, name)}
+				>
+					<span>{name}</span>
+					<div className="balance">
+						<span>{formatAmount(balance, precision) || '0'}</span>
+						<span>{symbol || 'ECHO'}</span>
+					</div>
+				</button>
+			);
+
+			return ({ value: name, key: name, content });
+		});
 	}
 
 	render() {
+		const { location, accountName, assets } = this.props;
 
-		const {
-			location, accountName, accounts, core,
-		} = this.props;
-		const asset = this.props.assets.find((check) => check.symbol === 'ECHO');
+
+		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
-
-		const renderedAccounts = (accounts && core) && this.renderAccounts();
 
 		let options = [
 			{
@@ -156,7 +146,7 @@ class Header extends React.Component {
 			},
 		];
 
-		options = renderedAccounts.concat(options);
+		options = this.renderList().concat(options);
 
 		return (
 			<div className="header">
@@ -190,6 +180,7 @@ class Header extends React.Component {
 							</span>
 						</NavLink>
 
+
 						<Dropdown
 							options={options}
 							text={accountName}
@@ -205,37 +196,25 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-	assets: PropTypes.any,
-	core: PropTypes.any,
-	accounts: PropTypes.any,
-	accountName: PropTypes.string,
+	accountName: PropTypes.string.isRequired,
+	networkName: PropTypes.string.isRequired,
+	preview: PropTypes.array.isRequired,
+	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
-	addAccount: PropTypes.func.isRequired,
-	formatAccounts: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
-};
-
-Header.defaultProps = {
-	assets: null,
-	core: null,
-	accounts: null,
-	accountName: '',
 };
 
 export default withRouter(connect(
 	(state) => ({
 		accountName: state.global.getIn(['activeUser', 'name']),
-		assets: state.balance.get('assets'),
-		core: state.balance.getIn(['core']),
-		accounts: state.global.get('accounts'),
-		systemAccounts: state.echojs.getIn(['data', 'accounts']),
+		networkName: state.global.getIn(['network', 'name']),
+		assets: state.balance.get('assets').toJS(),
+		preview: state.balance.get('preview').toJS(),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
-		addAccount: () => dispatch(addAccount()),
-		formatAccounts: () => dispatch(formatAccountsBalances()),
-		initAccount: (value) => dispatch(initAccount(value)),
+		initAccount: (name, network) => dispatch(initAccount(name, network)),
 	}),
 )(Header));

@@ -2,12 +2,9 @@ import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	tokens: List([]),
-	assets: List([]),
-	core: new Map({
-		precision: '',
-		symbol: '',
-	}),
+	tokens: new List([]),
+	assets: new List([]),
+	preview: new List([]),
 });
 
 export default createModule({
