@@ -17,7 +17,7 @@ class Permissions extends React.Component {
 		this.props.clear();
 	}
 
-	renderTables() {
+	render() {
 		let { permissionsKeys } = this.props;
 
 		permissionsKeys = permissionsKeys.toJS();
@@ -27,28 +27,16 @@ class Permissions extends React.Component {
 		const note = permissionsKeys.memo.keys;
 
 		return (
-			<React.Fragment>
-				<PermissionTable table="Active" data={active} />
-				<PermissionTable table="Owner" data={owner} />
-				<PermissionTable table="Note" data={note} />
-			</React.Fragment>
-		);
-	}
-
-	render() {
-
-		return (
 			<div className="permissions-wrap">
 				<div className="permissions-info">
                     Active permissions define the accounts that
                     have permission to spend funds for this account.
                     They can be used to easily setup a multi-signature
-                    scheme, see <a className="link" href="#"> permissions</a> for more details.
+                    scheme, see permissions for more details.
 				</div>
-				{
-					this.renderTables()
-				}
-
+				<PermissionTable table="Active" data={active} />
+				<PermissionTable table="Owner" data={owner} />
+				<PermissionTable table="Note" data={note} />
 			</div>
 		);
 	}
@@ -70,4 +58,3 @@ export default connect(
 		clear: () => dispatch(clear(PERMISSION_TABLE)),
 	}),
 )(Permissions);
-

@@ -10,7 +10,7 @@ import {
 	INDEX_PATH,
 	AUTH_ROUTES,
 } from '../constants/RouterConstants';
-import { HISTORY } from '../constants/TableConstants';
+import { HISTORY_TABLE } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
 
@@ -102,7 +102,7 @@ export const disconnection = (address) => (dispatch, getState) => {
 		dispatch(EchoJSActions.disconnect(address));
 	}
 
-	dispatch(clearTable(HISTORY));
+	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
 };
@@ -138,7 +138,7 @@ export const logout = () => async (dispatch, getState) => {
 	if (accounts[0]) {
 		await dispatch(initAccount(accounts[0].name, networkName));
 	} else {
-		dispatch(clearTable(HISTORY));
+		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());
 		dispatch(GlobalReducer.actions.logout());
 		history.push(SIGN_IN_PATH);
