@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 
+import { SIGN_UP_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { authUser } from '../../actions/AuthActions';
@@ -16,13 +17,13 @@ class SignIn extends React.Component {
 		this.props.clearForm();
 	}
 
-	onClick() {
+	onClick(isAddAccount) {
 		const { accountName, password } = this.props;
 
 		this.props.authUser({
 			accountName: accountName.value.trim(),
 			password: password.value.trim(),
-		});
+		}, isAddAccount);
 	}
 
 	onChange(e, lowerCase) {
@@ -54,24 +55,23 @@ class SignIn extends React.Component {
 
 	renderSignIn() {
 		const {
-			accountName, password, loading, isAddAccount,
+			accountName, password, loading, location,
 		} = this.props;
+
+		const isAddAccount = location.state ? location.state.isAddAccount : false;
+
 		return (
 
 			<Form className="main-form">
-				{
-					isAddAccount ?
-						<div className="form-info">
-							<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
-								<span className="icon-back" />
-								back
-							</button>
-							<h3>Add Account</h3>
-						</div> :
-						<div className="form-info">
-							<h3>Welcome to Echo</h3>
-						</div>
-				}
+				<div className="form-info">
+					{ isAddAccount ?
+						<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+							<span className="icon-back" />
+							back
+						</button> : null
+					}
+					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
+				</div>
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
 						<label htmlFor="AccountName">Account name</label>
@@ -92,21 +92,20 @@ class SignIn extends React.Component {
 							type="submit"
 							color="orange"
 							className="load main-btn"
-							onSubmit={(e) => this.onClick(e)}
 							content="Loading..."
 						/> :
 						<Button
 							basic
 							type="submit"
 							disabled={this.isDisabledSubmit()}
-							onClick={(e) => this.onClick(e)}
+							onClick={(e) => this.onClick(isAddAccount, e)}
 							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 							content={isAddAccount ? 'Add Account' : 'Login'}
 						/>
 				}
 				<span className="sign-nav">
                 Don’t have an account?
-					<Link className="link main-link" to="/sign-up">Sign Up</Link>
+					<Link className="link main-link" to={{ pathname: SIGN_UP_PATH, state: { isAddAccount } }}>Sign Up</Link>
 				</span>
 			</Form>
 		);
@@ -124,14 +123,14 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
+	loading: PropTypes.bool,
 	accountName: PropTypes.object.isRequired,
 	password: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	loading: PropTypes.bool,
-	isAddAccount: PropTypes.bool.isRequired,
 };
 
 SignIn.defaultProps = {
@@ -143,10 +142,9 @@ export default connect(
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
 		password: state.form.getIn([FORM_SIGN_IN, 'password']),
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
-		isAddAccount: state.global.get('isAddAccount'),
 	}),
 	(dispatch) => ({
-		authUser: (value) => dispatch(authUser(value)),
+		authUser: (value, isAdd) => dispatch(authUser(value, isAdd)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
 	}),
