@@ -8,9 +8,10 @@
     display: flex;
     justify-content: space-between;
     max-height: $rt-toast-max-height;
+    max-width: 450px;
     overflow: hidden;
     font-family: $rt-font-family;
-    border-radius: 3px;
+    border-radius: $angulars;
     cursor: pointer;
     direction: ltr;
     &--rtl {
