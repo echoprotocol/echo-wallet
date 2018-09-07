@@ -62,7 +62,7 @@ class SidebarMenu extends React.Component {
 							</li>
 							<li>
 								<NavLink
-									className={classnames('sidebar-nav-link', { active: [VIEW_TRANSACTION_PATH].includes(parsedLocation) })}
+									className={classnames('sidebar-nav-link', { active: VIEW_TRANSACTION_PATH === parsedLocation })}
 									exact
 									to={ACTIVITY_PATH}
 									onClick={() => this.props.hideBar()}
