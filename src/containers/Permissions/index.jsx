@@ -9,8 +9,14 @@ import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 class Permissions extends React.Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		this.props.formPermissionKeys();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.accountName !== this.props.accountName) {
+			this.props.formPermissionKeys();
+		}
 	}
 
 	componentWillUnmount() {
@@ -44,6 +50,7 @@ class Permissions extends React.Component {
 }
 
 Permissions.propTypes = {
+	accountName: PropTypes.string.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	formPermissionKeys: PropTypes.func.isRequired,
 	clear: PropTypes.func.isRequired,
@@ -51,6 +58,7 @@ Permissions.propTypes = {
 
 export default connect(
 	(state) => ({
+		accountName: state.global.getIn(['activeUser', 'name']),
 		permissionsKeys: state.table.get(PERMISSION_TABLE),
 	}),
 	(dispatch) => ({
