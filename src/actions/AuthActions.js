@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
-import { initAccount, addAccount, isAccountAdded } from './GlobalActions';
+import { addAccount, isAccountAdded } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
 import { update } from './TableActions';
 
@@ -75,11 +75,7 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		if (isAddAccount) {
-			dispatch(addAccount(accountName, network.name));
-		} else {
-			dispatch(initAccount(accountName, network.name));
-		}
+		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
@@ -141,11 +137,7 @@ export const authUser = ({ accountName, password }, isAddAccount) => async (disp
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		if (isAddAccount) {
-			dispatch(addAccount(accountName, networkName));
-		} else {
-			dispatch(initAccount(accountName, networkName));
-		}
+		dispatch(addAccount(accountName, networkName));
 
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
@@ -229,9 +221,9 @@ export const unlockAccount = ({
 			if (role !== 'memo') {
 				if (type === 'accounts') {
 					publicKeyError = !targetAccount[role].key_auths.find((k) => k[0] === publicKey) ?
-						`Invalid password for ${type} keys` : null;
+						'Invalid password for account' : null;
 				} else {
-					publicKeyError = param !== publicKey ? `Invalid password for ${type} keys` : null;
+					publicKeyError = param !== publicKey ? 'Invalid password for key' : null;
 				}
 			} else if (targetAccount.options.memo_key !== publicKey) publicKeyError = 'Invalid password for note key';
 
