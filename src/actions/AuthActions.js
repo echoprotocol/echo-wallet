@@ -4,7 +4,7 @@ import { EchoJSActions } from 'echojs-redux';
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal, openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
-import { initAccount, addAccount, isAccountAdded } from './GlobalActions';
+import { addAccount, isAccountAdded } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
 import { update } from './TableActions';
 
@@ -75,11 +75,7 @@ export const createAccount = ({
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 
-		if (isAddAccount) {
-			dispatch(addAccount(accountName, network.name));
-		} else {
-			dispatch(initAccount(accountName, network.name));
-		}
+		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_UP, 'error', err));
@@ -141,11 +137,7 @@ export const authUser = ({ accountName, password }, isAddAccount) => async (disp
 			dispatch(setKey(memo, accountName, password, 'memo'));
 		}
 
-		if (isAddAccount) {
-			dispatch(addAccount(accountName, networkName));
-		} else {
-			dispatch(initAccount(accountName, networkName));
-		}
+		dispatch(addAccount(accountName, networkName));
 
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
