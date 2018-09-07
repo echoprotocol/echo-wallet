@@ -44,9 +44,8 @@ export const clear = (table) => (dispatch) => {
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	// const account = getState().echojs.getIn(['data', 'accounts', accountId]).toJS();
-	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
-	console.log(account)
+	if (!accountId) return;
+	const account = getState().echojs.getIn(['data', 'accounts', accountId]).toJS();
 	const privateKey = zeroPrivateKey;
 
 	// save active accounts
