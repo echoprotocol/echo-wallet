@@ -14,10 +14,10 @@ class PermissionTable extends React.Component {
 
 	renderPrivateKeyCell(k) {
 		return (
-			<Table.Cell className={classnames({ 'key-hide': k.unlocked, 'key-show': !k.unlocked })} >
+			<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
 				<div className="cell-wrap">
 					<button
-						className={classnames('icon', { 'icon-hide': k.unlocked, 'icon-show': !k.unlocked })}
+						className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
 						onClick={() => this.onClick(k)}
 					/>
 					{
