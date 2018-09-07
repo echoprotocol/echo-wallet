@@ -2,7 +2,7 @@ $rt-namespace: 'Toastify';
 $rt-toast-width: 320px !default;
 $rt-toast-background: #ffffff !default;
 $rt-toast-min-height: 64px !default;
-$rt-toast-max-height: 800px !default;
+$rt-toast-max-height: 600px !default;
 
 
 $rt-color-default: #fff !default;
@@ -11,7 +11,7 @@ $rt-color-success: rgb(122, 211, 141) !default;
 $rt-color-warning: #f1c40f !default;
 $rt-color-error: rgb(246, 92, 92) !default;
 
-$rt-color-progress-default: linear-gradient(to right, rgb(122, 211, 141), #5ac8fa, #007aff, #34aadc, #5856d6, rgb(246, 92, 92)) !default;
+$rt-color-progress-default: linear-gradient(to right,#767a82, #767a82) !default;
 
 $rt-mobile: "only screen and (max-width : 480px)" !default;
 $rt-font-family: sans-serif !default;
