@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+
 
 import { logout, initAccount } from '../../actions/GlobalActions';
 
@@ -16,6 +17,7 @@ import {
 	INDEX_PATH,
 	CONTRACT_LIST_PATH,
 	PERMISSIONS_PATH,
+	VIEW_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -25,6 +27,16 @@ class Header extends React.Component {
 	onLogout() {
 		this.props.logout();
 	}
+	onSub(location) {
+		return !!location.pathname.split('/')[2] || ![
+			INDEX_PATH,
+			CONTRACT_LIST_PATH,
+			ACTIVITY_PATH,
+			PERMISSIONS_PATH,
+			VIEW_CONTRACT_PATH,
+			TRANSFER_PATH,
+		].includes(`/${location.pathname.split('/')[1]}`);
+	}
 
 	onAddAccount(e) {
 		e.preventDefault();
@@ -32,11 +44,6 @@ class Header extends React.Component {
 		this.props.history.push(SIGN_IN_PATH, { isAddAccount: true });
 	}
 
-	onSend(e) {
-		e.preventDefault();
-
-		this.props.history.push(TRANSFER_PATH);
-	}
 
 	onChangeAccount(e, name) {
 		const { accountName, networkName } = this.props;
@@ -118,13 +125,10 @@ class Header extends React.Component {
 	render() {
 		const { location, accountName, assets } = this.props;
 
+
 		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
-
-		const isSub = [
-			INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH,
-		].includes(`/${location.pathname.split('/')[1]}`);
 
 		let options = [
 			{
@@ -152,24 +156,34 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				<button
-					className={classnames('icon-back', { sub: !isSub })}
+					className={classnames('icon-back', { sub: this.onSub(location) })}
 					onClick={(e) => this.onReturnToBack(e)}
 				/>
 
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
-					<Button
-						icon="send"
-						className="send"
-						content="Send"
-						onClick={(e) => this.onSend(e)}
-					/>
-					<div className="user-section">
-						<Link className="balance" to={INDEX_PATH} onClick={(e) => e.target.blur()}>
-							<span>{balance}</span>
-							<span>{symbol}</span>
-						</Link>
 
+					<NavLink exact className="nav-link" to={TRANSFER_PATH} >
+						<Button
+							icon="send"
+							className="send"
+							content="Send"
+						/>
+					</NavLink>
+					<div className="user-section">
+						<NavLink
+							exact
+							className="nav-link balance"
+							onClick={(e) => e.target.blur()}
+							to={INDEX_PATH}
+						>
+							<span>
+								{balance}
+							</span>
+							<span>
+								{symbol}
+							</span>
+						</NavLink>
 						<Dropdown
 							options={options}
 							text={accountName}

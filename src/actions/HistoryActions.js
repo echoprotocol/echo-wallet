@@ -99,7 +99,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		result.memo = operation.memo;
 	}
 
-	result.color = result.from === accountName ? 'yellow' : 'green';
+	result.color = result.from === accountName ? 'blue' : 'green';
 
 	if (operation.code) {
 		result.bytecode = operation.code;

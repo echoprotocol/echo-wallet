@@ -33,6 +33,14 @@
                 margin-bottom: 0;
             }
             li {
+                .transparent {
+                    i {
+                        &:before {
+                            font-size: 1.05em;
+                            vertical-align: middle;
+                        }
+                    }
+                }
                 &:not(:last-child){
                     margin-right: 40px;
                 }
