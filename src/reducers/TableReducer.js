@@ -73,7 +73,10 @@ export default createModule({
 
 		clear: {
 			reducer: (state, { payload }) => {
-				state = state.set(payload.table, _.cloneDeep(DEFAULT_FIELDS));
+				state = state.set(
+					payload.table,
+					_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[payload.table]),
+				);
 
 				return state;
 			},
