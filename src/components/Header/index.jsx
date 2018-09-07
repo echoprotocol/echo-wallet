@@ -90,7 +90,7 @@ class Header extends React.Component {
 		const { preview } = this.props;
 
 		return preview.map(({
-			name, balance, precision, symbol,
+			name, balance: { amount, precision, symbol },
 		}) => {
 			const content = (
 				<button
@@ -100,7 +100,7 @@ class Header extends React.Component {
 				>
 					<span>{name}</span>
 					<div className="balance">
-						<span>{formatAmount(balance, precision) || '0'}</span>
+						<span>{formatAmount(amount, precision) || '0'}</span>
 						<span>{symbol || 'ECHO'}</span>
 					</div>
 				</button>
