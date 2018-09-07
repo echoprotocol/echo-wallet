@@ -94,10 +94,10 @@ class Header extends React.Component {
 	}
 
 	renderList() {
-		const { preview } = this.props;
+		const { preview, accountName } = this.props;
 
 		return preview.map(({
-			name, balance, precision, symbol,
+			name, balance: { amount, precision, symbol },
 		}) => {
 			const content = (
 				<button
@@ -107,13 +107,18 @@ class Header extends React.Component {
 				>
 					<span>{name}</span>
 					<div className="balance">
-						<span>{formatAmount(balance, precision) || '0'}</span>
+						<span>{formatAmount(amount, precision) || '0'}</span>
 						<span>{symbol || 'ECHO'}</span>
 					</div>
 				</button>
 			);
 
-			return ({ value: name, key: name, content });
+			return ({
+				value: name,
+				key: name,
+				content,
+				selected: accountName === name,
+			});
 		});
 	}
 
@@ -179,8 +184,6 @@ class Header extends React.Component {
 								{symbol}
 							</span>
 						</NavLink>
-
-
 						<Dropdown
 							options={options}
 							text={accountName}

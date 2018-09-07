@@ -127,11 +127,13 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	/**
      *  Preview structure
      *  preview: [{
-     *  	balance,
-     *  	id,
+     *  	balance: {
+	 *  		id,
+	 *  		amount,
+	 *  	 	symbol,
+	 *  		precision,
+     *  	},
      *  	name,
-     *  	symbol,
-     *  	precision,
      *  }]
      */
 
@@ -140,22 +142,34 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 	const { symbol, precision } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
 
-	let balances = accounts.map(async (name) => {
+	const balances = accounts.map(async ({ name }) => {
 		const account = (await dispatch(EchoJSActions.fetch(name))).toJS();
 
-		let stats = {};
+		const preview = {
+			balance: {
+				amount: 0,
+				symbol,
+				precision,
+			},
+			name,
+		};
+
 		if (account && account.balances && account.balances['1.3.0']) {
-			stats = (await dispatch(EchoJSActions.fetch(account.balances['1.3.0']))).toJS();
+			const stats = (await dispatch(EchoJSActions.fetch(account.balances['1.3.0']))).toJS();
+			preview.balance.amount = stats.balance || 0;
+			preview.balance.id = account.balances['1.3.0'];
 		}
 
-		return {
-			balance: stats.balance || 0, name, symbol, precision,
-		};
+		return preview;
 	});
 
-	balances = await Promise.all(balances);
-
-	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(balances) }));
+	balances.reduce(
+		(resolved, balance) =>
+			resolved.then((array) => balance.then((result) => [...array, result]).catch(() => array)),
+		Promise.resolve([]),
+	).then((result) => {
+		dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(result) }));
+	});
 };
 
 export const initBalances = (accountId, networkName) => async (dispatch) => {
@@ -268,11 +282,18 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 			const objectId = subscribeObject.value.get('id');
 			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
 
-			if (!balances) { return; }
+			if (balances && Object.values(balances.toJS()).includes(objectId)) {
+				dispatch(getAssetsBalances(balances.toJS(), true));
+				return;
+			}
 
-			if (!Object.values(balances.toJS()).includes(objectId)) { return; }
+			const preview = getState().balance.get('preview').toJS();
+			const networkName = getState().global.getIn(['network', 'name']);
 
-			dispatch(getAssetsBalances(balances.toJS(), true));
+			if (preview.find((i) => i.balance.id === objectId)) {
+				dispatch(getPreviewBalances(networkName));
+			}
+
 			break;
 		}
 		default:
