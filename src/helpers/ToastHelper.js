@@ -7,7 +7,6 @@ export const toastSuccess = (text) => {
 		autoClose: 5000,
 		position: 'bottom-right',
 		pauseOnHover: true,
-		pauseOnFocusLoss: false,
 	});
 };
 
@@ -16,7 +15,6 @@ export const toastInfo = (text, onUndo, onClose) => {
 		autoClose: 5000,
 		position: 'bottom-right',
 		pauseOnHover: true,
-		pauseOnFocusLoss: false,
 		onClose,
 	});
 };
@@ -26,6 +24,5 @@ export const toastError = (text) => {
 		autoClose: 5000,
 		position: 'bottom-right',
 		pauseOnHover: true,
-		pauseOnFocusLoss: false,
 	});
 };
