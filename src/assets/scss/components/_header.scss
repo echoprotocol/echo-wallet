@@ -87,6 +87,33 @@
                         }
                     }
                 }
+
+                &.selected {
+                    background-color: transparent;
+                    &:hover {
+                        .user-item {
+                            color: #fff;
+                            font-weight: 700;
+                            .balance {
+                                color: #fff;
+
+                            }
+                        }
+                    }
+                    .user-item {
+                        color: $main-сolor;
+                        font-weight: 700;
+                        .balance {
+                            color: $main-сolor;
+                            span:nth-child(1) {
+                                font-family: proxima;
+                            }
+                        }
+                    }
+                }
+                &.active {
+                    background-color: #f8f8f8;
+                }
                 .user-item,
                 .user-panel {
                     display: flex;
@@ -123,7 +150,7 @@
                     content: '';
                     background-color: transparent;
                     transition: background $speed;
-                } 
+                }
                 &:hover {
                     &:after {
                         background-color: rgba($main-сolor, .4);
@@ -155,13 +182,13 @@
                 }
             }
         }
-        
+
         .dropdown.icon {
             color: $link-gray;
         }
         & > .text {
             color: $main-сolor;
-            font-family: proximanovaSemibold;            
+            font-family: proximanovaSemibold;
         }
         .add-account {
             text-transform: uppercase;
@@ -248,4 +275,3 @@
         }
     }
 }
-

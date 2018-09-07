@@ -142,7 +142,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 	const { symbol, precision } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
 
-	const balances = accounts.map(async (name) => {
+	const balances = accounts.map(async ({ name }) => {
 		const account = (await dispatch(EchoJSActions.fetch(name))).toJS();
 
 		const preview = {

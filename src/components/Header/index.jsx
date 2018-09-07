@@ -87,7 +87,7 @@ class Header extends React.Component {
 	}
 
 	renderList() {
-		const { preview } = this.props;
+		const { preview, accountName } = this.props;
 
 		return preview.map(({
 			name, balance: { amount, precision, symbol },
@@ -106,7 +106,12 @@ class Header extends React.Component {
 				</button>
 			);
 
-			return ({ value: name, key: name, content });
+			return ({
+				value: name,
+				key: name,
+				content,
+				selected: accountName === name,
+			});
 		});
 	}
 
@@ -160,7 +165,7 @@ class Header extends React.Component {
 						onClick={(e) => this.onSend(e)}
 					/>
 					<div className="user-section">
-						<Link className="balance" to={INDEX_PATH}>
+						<Link className="balance" to={INDEX_PATH} onClick={(e) => e.target.blur()}>
 							<span>{balance}</span>
 							<span>{symbol}</span>
 						</Link>

@@ -28,6 +28,16 @@ import { clearTable } from './TableActions';
 import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+	accounts = accounts.map((i) => {
+		i.active = i.name === accountName;
+		return i;
+	});
+
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+
 	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
 	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
@@ -78,7 +88,8 @@ export const connection = () => async (dispatch) => {
 				history.push(INDEX_PATH);
 			}
 
-			await dispatch(initAccount(accounts[0], network.name));
+			const active = accounts.find((i) => i.active);
+			await dispatch(initAccount(active.name, network.name));
 		}
 
 	} catch (err) {
@@ -125,11 +136,11 @@ export const logout = () => async (dispatch, getState) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	accounts = accounts.filter((name) => name !== accountName);
+	accounts = accounts.filter(({ name }) => name !== accountName);
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 	if (accounts[0]) {
-		await dispatch(initAccount(accounts[0], networkName));
+		await dispatch(initAccount(accounts[0].name, networkName));
 	} else {
 		dispatch(clearTable(HISTORY));
 		dispatch(resetBalance());
@@ -144,7 +155,7 @@ export const isAccountAdded = (accountName, networkName) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	if (accounts.includes(accountName)) {
+	if (accounts.find(({ name }) => name === accountName)) {
 		return 'Account already added';
 	}
 
@@ -154,7 +165,7 @@ export const isAccountAdded = (accountName, networkName) => {
 export const addAccount = (accountName, networkName) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
-	accounts.push(accountName);
+	accounts.push({ name: accountName, active: false });
 
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
