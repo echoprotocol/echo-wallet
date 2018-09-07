@@ -5,7 +5,7 @@ import { Form, Button } from 'semantic-ui-react';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { clearForm } from '../../actions/FormActions';
-import { transfer } from '../../actions/TransactionActions';
+import { transfer, resetTransaction } from '../../actions/TransactionActions';
 
 import ToAccountField from './ToAccountField';
 import AmountField from '../../components/AmountField';
@@ -19,6 +19,7 @@ class Transfer extends React.Component {
 
 	componentWillUnmount() {
 		this.props.clearForm();
+		this.props.resetTransaction();
 	}
 
 	onSend() {
@@ -67,6 +68,7 @@ Transfer.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
+	resetTransaction: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -76,5 +78,6 @@ export default connect(
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
 		transfer: (params) => dispatch(transfer(params)),
+		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(Transfer);

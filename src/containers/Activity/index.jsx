@@ -8,7 +8,7 @@ import Loading from '../../components/Loader/LoadingData';
 import { formatHistory, viewTransaction } from '../../actions/HistoryActions';
 import { clearTable } from '../../actions/TableActions';
 
-import { HISTORY } from '../../constants/TableConstants';
+import { HISTORY_TABLE } from '../../constants/TableConstants';
 
 import RowComponent from './RowComponent';
 
@@ -110,14 +110,14 @@ export default connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
-		const history = state.table.getIn([HISTORY, 'data']);
-		const loading = state.table.getIn([HISTORY, 'loading']);
+		const history = state.table.getIn([HISTORY_TABLE, 'data']);
+		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
 
 		return { account, history, loading };
 	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
 		viewTransaction: (value) => dispatch(viewTransaction(value)),
-		clearTable: () => dispatch(clearTable(HISTORY)),
+		clearTable: () => dispatch(clearTable(HISTORY_TABLE)),
 	}),
 )(Activity);
