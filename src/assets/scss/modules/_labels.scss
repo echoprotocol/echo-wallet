@@ -11,15 +11,19 @@
         transition: border $speed;
         font-size: 0.85em;
         &.yellow {
-            border-left: 2px solid $lbl-yellow;
+            border-left: 2px solid;
             color: $lbl-yellow;
         }
+        &.blue {
+            border-left: 2px solid;
+            color: $lbl-blue;
+        }
         &.green {
-            border-left: 2px solid $lbl-green;
+            border-left: 2px solid;
             color: $lbl-green;
         }
         &.red {
-            border-left: 2px solid $lbl-red;
+            border-left: 2px solid;
             color: $lbl-red;
         }
     }
