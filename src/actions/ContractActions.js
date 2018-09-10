@@ -199,7 +199,7 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 		id: contracts[accountId][newName].id,
 	}));
 
-	history.push(VIEW_CONTRACT_PATH.replace(/:name/, newName));
+	history.replace(VIEW_CONTRACT_PATH.replace(/:name/, newName));
 };
 
 export const addContractByName = (
