@@ -14,14 +14,6 @@ import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.accountId !== this.props.accountId) {
-			this.props.history.goBack();
-			this.props.resetTransaction();
-			this.props.resetConverter();
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.resetTransaction();
 		this.props.resetConverter();
@@ -89,7 +81,6 @@ class ViewTransaction extends React.Component {
 }
 
 ViewTransaction.propTypes = {
-	accountId: PropTypes.string.isRequired,
 	note: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
@@ -102,7 +93,6 @@ ViewTransaction.propTypes = {
 export default withRouter(connect(
 	(state) => ({
 		note: state.transaction.get('note'),
-		accountId: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
 		openUnlock: (value) => dispatch(openUnlock(value)),
