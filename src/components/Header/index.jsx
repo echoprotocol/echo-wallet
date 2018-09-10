@@ -127,6 +127,7 @@ class Header extends React.Component {
 			location, accountName, assets, showBackButton,
 		} = this.props;
 
+		const parsedLocation = `/${location.pathname.split('/')[1]}`;
 		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
@@ -170,7 +171,12 @@ class Header extends React.Component {
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
 
-					<NavLink exact className="nav-link" to={TRANSFER_PATH} >
+					<NavLink
+						exact
+						className="nav-link"
+						replace={TRANSFER_PATH === parsedLocation}
+						to={TRANSFER_PATH}
+					>
 						<Button
 							icon="send"
 							className="send"
@@ -182,6 +188,7 @@ class Header extends React.Component {
 							exact
 							className="nav-link balance"
 							onClick={(e) => e.target.blur()}
+							replace={INDEX_PATH === parsedLocation}
 							to={INDEX_PATH}
 						>
 							<span>
