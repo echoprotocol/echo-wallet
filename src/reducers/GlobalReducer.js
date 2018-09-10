@@ -17,7 +17,7 @@ const DEFAULT_FIELDS = Map({
 		url: '',
 	}),
 	networks: new List([]),
-	showBackButton: false,
+	history: new List([]),
 });
 
 export default createModule({

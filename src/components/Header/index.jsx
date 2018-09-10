@@ -7,11 +7,12 @@ import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';
 
 
-import { logout, initAccount } from '../../actions/GlobalActions';
+import { logout, initAccount, historyMove } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
 	SIGN_IN_PATH,
+	SIGN_UP_PATH,
 	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
@@ -27,6 +28,7 @@ class Header extends React.Component {
 	onLogout() {
 		this.props.logout();
 	}
+
 	onSub(location) {
 		return !!location.pathname.split('/')[2] || ![
 			INDEX_PATH,
@@ -76,6 +78,7 @@ class Header extends React.Component {
 	onReturnToBack(e) {
 		e.preventDefault();
 		e.target.blur();
+		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
@@ -91,6 +94,18 @@ class Header extends React.Component {
 			return false;
 		});
 		return item ? item.title : '';
+	}
+
+	isShowBackButton() {
+		const { globalHistory } = this.props;
+		const authPaths = [SIGN_IN_PATH, SIGN_UP_PATH];
+
+		if (!globalHistory.get(-2)) {
+			return false;
+		} else if (authPaths.includes(globalHistory.get(-2))) {
+			return false;
+		}
+		return true;
 	}
 
 	renderList() {
@@ -124,7 +139,7 @@ class Header extends React.Component {
 
 	render() {
 		const {
-			location, accountName, assets, showBackButton,
+			location, accountName, assets,
 		} = this.props;
 
 		const parsedLocation = `/${location.pathname.split('/')[1]}`;
@@ -158,7 +173,7 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				{
-					showBackButton ?
+					this.isShowBackButton() ?
 						(
 							<button
 								className={classnames('icon-back', { sub: this.onSub(location) })}
@@ -222,6 +237,8 @@ Header.propTypes = {
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
 	showBackButton: PropTypes.bool.isRequired,
+	historyPop: PropTypes.func.isRequired,
+	globalHistory: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(
@@ -231,9 +248,11 @@ export default withRouter(connect(
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
 		showBackButton: state.global.get('showBackButton'),
+		globalHistory: state.global.get('history'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
+		historyPop: () => dispatch(historyMove()),
 	}),
 )(Header));
