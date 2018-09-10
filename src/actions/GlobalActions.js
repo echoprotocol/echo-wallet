@@ -165,6 +165,9 @@ export const addAccount = (accountName, networkName) => (dispatch) => {
 
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
+	dispatch(clearTable(HISTORY_TABLE));
+	dispatch(resetBalance());
+
 	dispatch(initAccount(accountName, networkName));
 };
 
