@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 
-import { connection, toggleBar } from '../actions/GlobalActions';
+import { connection, toggleBar, toggleBackButton } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -20,6 +20,10 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.props.connection();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.location !== this.props.location) this.props.toggleBackButton();
 	}
 
 	onPusher() {
@@ -88,6 +92,7 @@ App.propTypes = {
 	visibleBar: PropTypes.bool.isRequired,
 	connection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
+	toggleBackButton: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -98,5 +103,6 @@ export default withRouter(connect(
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
 		hideBar: () => dispatch(toggleBar(true)),
+		toggleBackButton: () => dispatch(toggleBackButton()),
 	}),
 )(App));

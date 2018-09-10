@@ -107,6 +107,12 @@ export const disconnection = (address) => (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.disconnect());
 };
 
+export const toggleBackButton = () => (dispatch, getState) => {
+	const showBackButton = getState().global.get('showBackButton');
+	if (showBackButton) return;
+	dispatch(GlobalReducer.actions.set({ field: 'showBackButton', value: true }));
+};
+
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
 };

@@ -123,8 +123,9 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { location, accountName, assets } = this.props;
-
+		const {
+			location, accountName, assets, showBackButton,
+		} = this.props;
 
 		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
@@ -155,10 +156,16 @@ class Header extends React.Component {
 
 		return (
 			<div className="header">
-				<button
-					className={classnames('icon-back', { sub: this.onSub(location) })}
-					onClick={(e) => this.onReturnToBack(e)}
-				/>
+				{
+					showBackButton ?
+						(
+							<button
+								className={classnames('icon-back', { sub: this.onSub(location) })}
+								onClick={(e) => this.onReturnToBack(e)}
+							/>
+						) : null
+				}
+
 
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
@@ -207,6 +214,7 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
+	showBackButton: PropTypes.bool.isRequired,
 };
 
 export default withRouter(connect(
@@ -215,6 +223,7 @@ export default withRouter(connect(
 		networkName: state.global.getIn(['network', 'name']),
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
+		showBackButton: state.global.get('showBackButton'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
