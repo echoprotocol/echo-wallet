@@ -24,13 +24,6 @@ class AmountField extends React.Component {
 		};
 	}
 
-	componentWillMount() {
-		const options = this.renderList('assets').concat(this.renderList('tokens'));
-		this.setState({
-			options,
-		});
-	}
-
 	componentDidUpdate() {
 		if (this.props.assets.length && !this.props.currency) {
 			this.props.setValue('currency', this.props.assets[0]);
@@ -143,7 +136,7 @@ class AmountField extends React.Component {
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const type = form === FORM_TRANSFER && currency.type !== 'tokens' ? 'transfer' : 'contract';
+		const type = form === FORM_TRANSFER && currency && currency.type !== 'tokens' ? 'transfer' : 'contract';
 
 		return (
 			<Form.Field>
@@ -191,7 +184,7 @@ class AmountField extends React.Component {
 						text={currency ? currency.symbol : ''}
 						selection
 						onBlur={() => this.clearSearchText()}
-						options={this.state.options}
+						options={this.renderList('assets').concat(this.renderList('tokens'))}
 						noResultsMessage="No results are found"
 						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
 					/>
