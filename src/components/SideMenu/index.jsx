@@ -55,6 +55,7 @@ class SidebarMenu extends React.Component {
 									className="sidebar-nav-link"
 									onClick={() => this.props.hideBar()}
 									to={INDEX_PATH}
+									replace={INDEX_PATH === parsedLocation}
 								>
 									<span className="icon icon-menu-wallet" />
 									<span className="sidebar-nav-text">Wallet</span>
@@ -66,6 +67,7 @@ class SidebarMenu extends React.Component {
 									exact
 									to={ACTIVITY_PATH}
 									onClick={() => this.props.hideBar()}
+									replace={ACTIVITY_PATH === parsedLocation}
 								>
 									<span className="icon icon-recent-activity" />
 									<span className="sidebar-nav-text">Recent Activity</span>
@@ -83,7 +85,7 @@ class SidebarMenu extends React.Component {
 									})}
 									onClick={() => this.props.hideBar()}
 									to={CONTRACT_LIST_PATH}
-
+									replace={CONTRACT_LIST_PATH === parsedLocation}
 								>
 									<span className="icon icon-contractSearch" />
 									<span className="sidebar-nav-text">Smart Contracts</span>
@@ -94,6 +96,7 @@ class SidebarMenu extends React.Component {
 									exact
 									className="sidebar-nav-link"
 									onClick={() => this.props.hideBar()}
+									replace={PERMISSIONS_PATH === parsedLocation}
 									to={PERMISSIONS_PATH}
 								>
 									<span className="icon icon-permission" />
