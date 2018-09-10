@@ -117,11 +117,6 @@ export const disconnection = (address) => (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.disconnect());
 };
 
-export const toggleBackButton = () => (dispatch, getState) => {
-	const showBackButton = getState().global.get('showBackButton');
-	if (showBackButton) return;
-	dispatch(GlobalReducer.actions.set({ field: 'showBackButton', value: true }));
-};
 
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
@@ -297,5 +292,21 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.set({
 		field: 'networks',
 		value: new List(networks),
+	}));
+};
+
+export const historyMove = (path) => (dispatch, getState) => {
+
+	let globalHistory = getState().global.get('history');
+	if (path) {
+		const lastPath = globalHistory.get(-1);
+		if (lastPath !== path) globalHistory = globalHistory.push(path);
+	} else {
+		globalHistory = globalHistory.pop();
+	}
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'history',
+		value: new List(globalHistory),
 	}));
 };

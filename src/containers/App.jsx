@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 
-import { connection, toggleBar, toggleBackButton } from '../actions/GlobalActions';
+import { connection, toggleBar, historyMove } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -18,12 +18,18 @@ import { PUBLIC_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants'
 
 class App extends React.Component {
 
+	componentWillMount() {
+		this.props.historyPush(this.props.location.pathname);
+	}
+
 	componentDidMount() {
 		this.props.connection();
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.location !== this.props.location) this.props.toggleBackButton();
+		if (nextProps.location.pathname !== this.props.location.pathname) {
+			this.props.historyPush(nextProps.location.pathname);
+		}
 	}
 
 	onPusher() {
@@ -92,7 +98,7 @@ App.propTypes = {
 	visibleBar: PropTypes.bool.isRequired,
 	connection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
-	toggleBackButton: PropTypes.func.isRequired,
+	historyPush: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -103,6 +109,6 @@ export default withRouter(connect(
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
 		hideBar: () => dispatch(toggleBar(true)),
-		toggleBackButton: () => dispatch(toggleBackButton()),
+		historyPush: (path) => dispatch(historyMove(path)),
 	}),
 )(App));
