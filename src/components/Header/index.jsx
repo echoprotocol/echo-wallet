@@ -214,7 +214,7 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
-    showBackButton: PropTypes.bool.isRequired,
+	showBackButton: PropTypes.bool.isRequired,
 };
 
 export default withRouter(connect(
@@ -223,7 +223,7 @@ export default withRouter(connect(
 		networkName: state.global.getIn(['network', 'name']),
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
-        showBackButton: state.global.get('showBackButton'),
+		showBackButton: state.global.get('showBackButton'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
