@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { withRouter } from 'react-router';
+import { withRouter, matchPath } from 'react-router';
 
 import { connection, toggleBar, toggleBackButton } from '../actions/GlobalActions';
 
@@ -14,7 +14,12 @@ import Header from '../components/Header/index';
 import Footer from '../components/Footer/index';
 import Toast from '../components/Toast';
 
-import { PUBLIC_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants';
+import {
+	PUBLIC_ROUTES,
+	CENTER_MODE_ROUTES,
+	VIEW_CONTRACT_PATH,
+	VIEW_TRANSACTION_PATH,
+} from '../constants/RouterConstants';
 
 class App extends React.Component {
 
@@ -23,7 +28,26 @@ class App extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.location !== this.props.location) this.props.toggleBackButton();
+		const { location, accountId, networkName } = this.props;
+		const {
+			location: nextLocation,
+			accountId: nextAccountId,
+			networkName: nextNetworkName,
+		} = nextProps;
+
+		if (nextLocation !== location) this.props.toggleBackButton();
+
+		const isInnerPath = [
+			VIEW_TRANSACTION_PATH,
+			VIEW_CONTRACT_PATH,
+		].find((path) => matchPath(
+			location.pathname,
+			{ path, exact: true, strict: false },
+		));
+
+		if (isInnerPath && (nextAccountId !== accountId || nextNetworkName !== networkName)) {
+			this.props.history.goBack();
+		}
 	}
 
 	onPusher() {
@@ -87,7 +111,10 @@ class App extends React.Component {
 
 App.propTypes = {
 	location: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	globalLoading: PropTypes.bool.isRequired,
+	accountId: PropTypes.string.isRequired,
+	networkName: PropTypes.string.isRequired,
 	children: PropTypes.element.isRequired,
 	visibleBar: PropTypes.bool.isRequired,
 	connection: PropTypes.func.isRequired,
@@ -99,6 +126,8 @@ export default withRouter(connect(
 	(state) => ({
 		globalLoading: state.global.get('globalLoading'),
 		visibleBar: state.global.get('visibleBar'),
+		accountId: state.global.getIn(['activeUser', 'id']),
+		networkName: state.global.getIn(['network', 'name']),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
