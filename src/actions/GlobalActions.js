@@ -28,27 +28,37 @@ import { clearTable } from './TableActions';
 import { setFormError, clearForm } from './FormActions';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
-	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
-	accounts = accounts ? JSON.parse(accounts) : [];
-	accounts = accounts.map((i) => {
-		i.active = i.name === accountName;
-		return i;
-	});
+	try {
+		let accounts = localStorage.getItem(`accounts_${networkName}`);
 
-	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+		accounts = accounts ? JSON.parse(accounts) : [];
+		accounts = accounts.map((i) => {
+			i.active = i.name === accountName;
+			return i;
+		});
 
-	const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
+		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-	dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
+		const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
-	if (AUTH_ROUTES.includes(history.location.pathname)) {
-		history.push(INDEX_PATH);
+		if (AUTH_ROUTES.includes(history.location.pathname)) {
+			history.push(INDEX_PATH);
+		}
+
+		await dispatch(initBalances(id, networkName));
+		dispatch(initSorts(networkName));
+		dispatch(loadContracts(id, networkName));
+
+		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
+	} catch (err) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
+	} finally {
+		setTimeout(() => {
+			dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+		}, 1000);
 	}
-
-	await dispatch(initBalances(id, networkName));
-	dispatch(initSorts(networkName));
-	dispatch(loadContracts(id, networkName));
 };
 
 export const connection = () => async (dispatch) => {

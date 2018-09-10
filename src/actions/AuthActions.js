@@ -8,7 +8,12 @@ import { addAccount, isAccountAdded } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
 import { update } from './TableActions';
 
-import { FORM_SIGN_UP, FORM_SIGN_IN, FORM_UNLOCK_MODAL } from '../constants/FormConstants';
+import {
+	FORM_SIGN_UP,
+	FORM_SIGN_IN,
+	FORM_UNLOCK_MODAL,
+	FORM_TRANSFER,
+} from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
@@ -158,6 +163,11 @@ export const signTransaction = (owner, active, memo) => (dispatch, getState) => 
 			memo: memo ? memo.privateKey : memo,
 		}));
 
+		if (options.memo && !memo) {
+			dispatch(setFormError(FORM_TRANSFER, 'note', 'Note permission is required'));
+			return;
+		}
+
 		dispatch(openModal(MODAL_DETAILS));
 	}
 };
@@ -225,6 +235,8 @@ export const showPermissions = (
 	};
 
 	dispatch(update(PERMISSION_TABLE, [role, type], param, value));
+	dispatch(closeModal(MODAL_UNLOCK));
+	dispatch(clearForm(FORM_UNLOCK_MODAL));
 
 };
 
@@ -271,8 +283,10 @@ export const unlockAccount = ({
 
 		dispatch(showPermissions(accountName, password, permissionKey));
 
-		dispatch(closeModal(MODAL_UNLOCK));
-		dispatch(clearForm(FORM_UNLOCK_MODAL));
+		if (!permissionKey) {
+			dispatch(closeModal(MODAL_UNLOCK));
+			dispatch(clearForm(FORM_UNLOCK_MODAL));
+		}
 
 	} catch (err) {
 		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
