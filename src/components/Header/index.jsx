@@ -236,7 +236,6 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
-	showBackButton: PropTypes.bool.isRequired,
 	historyPop: PropTypes.func.isRequired,
 	globalHistory: PropTypes.object.isRequired,
 };
