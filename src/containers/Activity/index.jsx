@@ -112,7 +112,6 @@ export default connect(
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
 		const history = state.table.getIn([HISTORY_TABLE, 'data']);
 		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
-
 		return { account, history, loading };
 	},
 	(dispatch) => ({
