@@ -23,8 +23,8 @@ class Networks extends React.Component {
 		this.props.addNetwork();
 	}
 
-	onToggleSwitch(e) {
-		e.preventDefault();
+	onToggleSwitch() {
+		// e.preventDefault();
 
 		const { autoswitch } = this.props;
 
@@ -68,7 +68,7 @@ class Networks extends React.Component {
 								type="checkbox"
 								id="addToNetworks"
 								checked={autoswitch.value}
-								onInput={(e) => this.onToggleSwitch(e)}
+								onChange={(e) => this.onToggleSwitch(e)}
 							/>
 							<label className="label" htmlFor="addToNetworks">
 								<span className="label-text">Switch to this Network upon creating</span>

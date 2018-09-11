@@ -52,7 +52,7 @@ class App extends React.Component {
 		));
 
 		if (isInnerPath && (nextAccountId !== accountId || nextNetworkName !== networkName)) {
-			this.props.historyMove(this.props.location);
+			this.props.historyMove();
 			this.props.history.goBack();
 		}
 	}
