@@ -1,56 +1,57 @@
 // Modules to control application life and create native browser window
 const {
-	app, BrowserWindow, Menu,
+	app, BrowserWindow,
+	// Menu,
 	// shell,
 // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
 
-const template = [
-	// {
-	// 	label: 'Edit',
-	// 	submenu: [
-	// 		{ role: 'undo' },
-	// 		{ role: 'redo' },
-	// 		{ type: 'separator' },
-	// 		{ role: 'cut' },
-	// 		{ role: 'copy' },
-	// 		{ role: 'paste' },
-	// 		{ role: 'pasteandmatchstyle' },
-	// 		{ role: 'delete' },
-	// 		{ role: 'selectall' },
-	// 	],
-	// },
-	// {
-	// 	label: 'View',
-	// 	submenu: [
-	// 		{ role: 'reload' },
-	// 		{ role: 'forcereload' },
-	// 		{ role: 'toggledevtools' },
-	// 		{ type: 'separator' },
-	// 		{ role: 'resetzoom' },
-	// 		{ role: 'zoomin' },
-	// 		{ role: 'zoomout' },
-	// 		{ type: 'separator' },
-	// 		{ role: 'togglefullscreen' },
-	// 	],
-	// },
-	// {
-	// 	role: 'window',
-	// 	submenu: [
-	// 		{ role: 'minimize' },
-	// 		{ role: 'close' },
-	// 	],
-	// },
-	// {
-	// 	role: 'help',
-	// 	submenu: [
-	// 		{
-	// 			label: 'Learn More',
-	// 			click() { shell.openExternal('https://myecho.app'); },
-	// 		},
-	// 	],
-	// },
-];
+// const template = [
+// 	{
+// 		label: 'Edit',
+// 		submenu: [
+// 			{ role: 'undo' },
+// 			{ role: 'redo' },
+// 			{ type: 'separator' },
+// 			{ role: 'cut' },
+// 			{ role: 'copy' },
+// 			{ role: 'paste' },
+// 			{ role: 'pasteandmatchstyle' },
+// 			{ role: 'delete' },
+// 			{ role: 'selectall' },
+// 		],
+// 	},
+// 	{
+// 		label: 'View',
+// 		submenu: [
+// 			{ role: 'reload' },
+// 			{ role: 'forcereload' },
+// 			{ role: 'toggledevtools' },
+// 			{ type: 'separator' },
+// 			{ role: 'resetzoom' },
+// 			{ role: 'zoomin' },
+// 			{ role: 'zoomout' },
+// 			{ type: 'separator' },
+// 			{ role: 'togglefullscreen' },
+// 		],
+// 	},
+// 	{
+// 		role: 'window',
+// 		submenu: [
+// 			{ role: 'minimize' },
+// 			{ role: 'close' },
+// 		],
+// 	},
+// 	{
+// 		role: 'help',
+// 		submenu: [
+// 			{
+// 				label: 'Learn More',
+// 				click() { shell.openExternal('https://myecho.app'); },
+// 			},
+// 		],
+// 	},
+// ];
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -118,8 +119,8 @@ function createWindow() {
 		// ];
 	}
 
-	const menu = Menu.buildFromTemplate(template);
-	Menu.setApplicationMenu(menu);
+	// const menu = Menu.buildFromTemplate(template);
+	// Menu.setApplicationMenu(menu);
 }
 
 // This method will be called when Electron has finished
