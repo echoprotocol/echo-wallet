@@ -1,5 +1,6 @@
 import { Map, List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
+import qs from 'query-string';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -8,7 +9,7 @@ import history from '../history';
 import {
 	SIGN_IN_PATH,
 	INDEX_PATH,
-	AUTH_ROUTES,
+	AUTH_ROUTES, SIGN_UP_PATH,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
@@ -295,10 +296,16 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	}));
 };
 
-export const historyMove = (path) => (dispatch, getState) => {
-
+export const historyMove = (location) => (dispatch, getState) => {
 	let globalHistory = getState().global.get('history');
-	if (path) {
+	if (location && location.pathname) {
+
+		let path = location.pathname;
+		if ([SIGN_IN_PATH, SIGN_UP_PATH].includes(path)) {
+			const { isAddAccount } = qs.parse(location.search);
+			path = isAddAccount ? `${path}?isAddAccount=true` : path;
+		}
+
 		const lastPath = globalHistory.get(-1);
 		if (lastPath !== path) globalHistory = globalHistory.push(path);
 	} else {

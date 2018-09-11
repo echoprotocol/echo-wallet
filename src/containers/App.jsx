@@ -24,7 +24,7 @@ import {
 class App extends React.Component {
 
 	componentWillMount() {
-		this.props.historyPush(this.props.location.pathname);
+		this.props.historyMove(this.props.location);
 	}
 
 	componentDidMount() {
@@ -39,8 +39,8 @@ class App extends React.Component {
 			networkName: nextNetworkName,
 		} = nextProps;
 
-		if (nextLocation.pathname !== location.pathname) {
-			this.props.historyPush(nextProps.location.pathname);
+		if (nextLocation.pathname !== this.props.location.pathname) {
+			this.props.historyMove(nextLocation);
 		}
 
 		const isInnerPath = [
@@ -52,6 +52,7 @@ class App extends React.Component {
 		));
 
 		if (isInnerPath && (nextAccountId !== accountId || nextNetworkName !== networkName)) {
+			this.props.historyMove(this.props.location);
 			this.props.history.goBack();
 		}
 	}
@@ -125,7 +126,7 @@ App.propTypes = {
 	visibleBar: PropTypes.bool.isRequired,
 	connection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
-	historyPush: PropTypes.func.isRequired,
+	historyMove: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -138,6 +139,6 @@ export default withRouter(connect(
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
 		hideBar: () => dispatch(toggleBar(true)),
-		historyPush: (path) => dispatch(historyMove(path)),
+		historyMove: (path) => dispatch(historyMove(path)),
 	}),
 )(App));
