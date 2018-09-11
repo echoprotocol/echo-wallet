@@ -37,16 +37,12 @@ class ModalUnlockWallet extends React.Component {
 		this.props.clearForm(FORM_UNLOCK_MODAL);
 	}
 
-	onChange(e, lowerCase) {
+	onChange(e) {
 		const field = e.target.name;
-		let { value } = e.target;
-
-		if (lowerCase) {
-			value = value.toLowerCase();
-		}
+		const { value } = e.target;
 
 		if (field) {
-			this.props.setFormValue(field, value);
+			this.props.setFormValue(field, value.trim());
 		}
 	}
 
@@ -75,7 +71,14 @@ class ModalUnlockWallet extends React.Component {
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: password.error })}>
 									<label htmlFor="Password">Password</label>
-									<input type="password" placeholder="Password" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
+									<input
+										type="password"
+										placeholder="Password"
+										name="password"
+										className="ui input"
+										value={password.value}
+										onChange={(e) => this.onChange(e)}
+									/>
 									<span className="error-message">{password.error}</span>
 								</Form.Field>
 							</div>
