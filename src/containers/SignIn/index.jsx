@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import qs from 'query-string';
 
 import { SIGN_UP_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { authUser } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
+import { historyMove } from '../../actions/GlobalActions';
 
 class SignIn extends React.Component {
 
@@ -40,6 +42,7 @@ class SignIn extends React.Component {
 	}
 
 	onCancel() {
+		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
@@ -58,7 +61,7 @@ class SignIn extends React.Component {
 			accountName, password, loading, location,
 		} = this.props;
 
-		const isAddAccount = location.state ? location.state.isAddAccount : false;
+		const { isAddAccount } = qs.parse(location.search);
 
 		return (
 
@@ -105,7 +108,7 @@ class SignIn extends React.Component {
 				}
 				<span className="sign-nav">
                 Don’t have an account?
-					<Link className="link main-link" to={{ pathname: SIGN_UP_PATH, state: { isAddAccount } }}>Sign Up</Link>
+					<Link className="link main-link" to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}>Sign Up</Link>
 				</span>
 			</Form>
 		);
@@ -131,6 +134,7 @@ SignIn.propTypes = {
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	historyPop: PropTypes.func.isRequired,
 };
 
 SignIn.defaultProps = {
@@ -147,5 +151,6 @@ export default connect(
 		authUser: (value, isAdd) => dispatch(authUser(value, isAdd)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
+		historyPop: () => dispatch(historyMove()),
 	}),
 )(SignIn);

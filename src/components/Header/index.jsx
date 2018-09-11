@@ -43,7 +43,7 @@ class Header extends React.Component {
 	onAddAccount(e) {
 		e.preventDefault();
 
-		this.props.history.push(SIGN_IN_PATH, { isAddAccount: true });
+		this.props.history.push(`${SIGN_IN_PATH}?isAddAccount=true`);
 	}
 
 

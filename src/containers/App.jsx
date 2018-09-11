@@ -19,7 +19,7 @@ import { PUBLIC_ROUTES, CENTER_MODE_ROUTES } from '../constants/RouterConstants'
 class App extends React.Component {
 
 	componentWillMount() {
-		this.props.historyPush(this.props.location.pathname);
+		this.props.historyPush(this.props.location);
 	}
 
 	componentDidMount() {
@@ -28,7 +28,7 @@ class App extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.location.pathname !== this.props.location.pathname) {
-			this.props.historyPush(nextProps.location.pathname);
+			this.props.historyPush(nextProps.location);
 		}
 	}
 

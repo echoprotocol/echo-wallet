@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
+import qs from 'query-string';
 
 import FormComponent from './FormComponent';
 import CheckComponent from './CheckComponent';
@@ -11,6 +12,8 @@ import ButtonComponent from './ButtonComponent';
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 
 import { generatePassword } from '../../actions/AuthActions';
+import { historyMove } from '../../actions/GlobalActions';
+
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 class SignUp extends React.Component {
@@ -20,13 +23,14 @@ class SignUp extends React.Component {
 	}
 
 	onCancel() {
+		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
 	render() {
 		const { location, loading } = this.props;
 
-		const isAddAccount = location.state ? location.state.isAddAccount : false;
+		const { isAddAccount } = qs.parse(location.search);
 
 		return (
 			<div className="sign-scroll-fix">
@@ -49,7 +53,7 @@ class SignUp extends React.Component {
 					<ButtonComponent isAddAccount={isAddAccount} />
 					<span className="sign-nav">
 						Have an account?
-						<Link className="link orange" to={{ pathname: SIGN_IN_PATH, state: { isAddAccount } }}>Login</Link>
+						<Link className="link orange" to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}>Login</Link>
 					</span>
 				</Form>
 			</div>
@@ -63,6 +67,7 @@ SignUp.propTypes = {
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	generatePassword: PropTypes.func.isRequired,
+	historyPop: PropTypes.func.isRequired,
 };
 
 SignUp.defaultProps = {
@@ -75,5 +80,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		generatePassword: () => dispatch(generatePassword()),
+		historyPop: () => dispatch(historyMove()),
 	}),
 )(SignUp);
