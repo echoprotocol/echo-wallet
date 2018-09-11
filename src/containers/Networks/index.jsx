@@ -23,7 +23,7 @@ class Networks extends React.Component {
 		this.props.addNetwork();
 	}
 
-	onToggleSwitch(e) {
+	onToggleSwitch() {
 		// e.preventDefault();
 
 		const { autoswitch } = this.props;
