@@ -22,18 +22,7 @@ class ViewContract extends React.Component {
 		this.props.formatAbi(this.props.match.params.name);
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.accountId !== this.props.accountId) {
-			this.props.history.goBack();
-			this.clear();
-		}
-	}
-
 	componentWillUnmount() {
-		this.clear();
-	}
-
-	clear() {
 		this.props.clearForm(FORM_CALL_CONTRACT);
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
@@ -70,8 +59,6 @@ class ViewContract extends React.Component {
 }
 
 ViewContract.propTypes = {
-	accountId: PropTypes.string.isRequired,
-	history: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
@@ -80,9 +67,7 @@ ViewContract.propTypes = {
 };
 
 export default withRouter(connect(
-	(state) => ({
-		accountId: state.global.getIn(['activeUser', 'id']),
-	}),
+	() => ({}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
