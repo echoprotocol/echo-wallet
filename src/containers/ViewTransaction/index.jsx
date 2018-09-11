@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { openUnlock } from '../../actions/HistoryActions';
 import { resetTransaction } from '../../actions/TransactionActions';
 import { resetConverter } from '../../actions/ConverterActions';
+import { historyMove } from '../../actions/GlobalActions';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
@@ -23,6 +24,7 @@ class ViewTransaction extends React.Component {
 		const { location: { state }, note } = this.props;
 
 		if (!state) {
+			this.props.historyPop();
 			this.props.history.goBack();
 			return null;
 		}
@@ -87,6 +89,7 @@ ViewTransaction.propTypes = {
 	openUnlock: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
+	historyPop: PropTypes.func.isRequired,
 };
 
 
@@ -98,5 +101,6 @@ export default withRouter(connect(
 		openUnlock: (value) => dispatch(openUnlock(value)),
 		resetTransaction: () => dispatch(resetTransaction()),
 		resetConverter: () => dispatch(resetConverter()),
+		historyPop: () => dispatch(historyMove()),
 	}),
 )(ViewTransaction));
