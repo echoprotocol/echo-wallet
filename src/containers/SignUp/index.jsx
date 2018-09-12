@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
+import classnames from 'classnames';
 import qs from 'query-string';
 
 import FormComponent from './FormComponent';
@@ -53,7 +54,11 @@ class SignUp extends React.Component {
 					<ButtonComponent isAddAccount={isAddAccount} />
 					<span className="sign-nav">
 						Have an account?
-						<Link className="link orange" to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}>Login</Link>
+						<Link
+							className={classnames('link', 'orange', { disabled: loading })}
+							to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
+						>Login
+						</Link>
 					</span>
 				</Form>
 			</div>
