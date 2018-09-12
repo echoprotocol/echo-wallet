@@ -53,10 +53,10 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		const { fee, note } = this.props;
+		const { fee, note, type } = this.props;
 
-		if (note.value !== nextProps.note.value) {
-			const value = this.props.getFee(fee.asset.id, nextProps.note.value);
+		if (note.value !== nextProps.note.value || type !== nextProps.type) {
+			const value = this.props.getFee(fee.asset.id, nextProps.type !== 'contract' && nextProps.note.value);
 			this.props.setValue('fee', value);
 		}
 
@@ -160,6 +160,7 @@ FeeComponent.propTypes = {
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	type: PropTypes.string.isRequired,
 };
 
 FeeComponent.defaultProps = {
