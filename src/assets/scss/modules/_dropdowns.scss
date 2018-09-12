@@ -13,6 +13,18 @@
 
 
         &.no-choice {
+            cursor: auto;
+            input.search {
+                position: absolute;
+                z-index: -1;
+                opacity: 0;
+            }
+            .menu {
+                display: none !important;
+            }
+            .dropdown.icon {
+                display: none;
+            }
             & > .text {
                 margin-right: 0;
             }
@@ -110,6 +122,18 @@
             padding-left: 1em;
         }
         &.no-choice {
+            cursor: auto;
+            input.search {
+                position: absolute;
+                z-index: -1;
+                opacity: 0;
+            }
+            .menu {
+                display: none !important;
+            }
+            .dropdown.icon {
+                display: none;
+            }
             & > input.search {
                 &:focus {
                     & + .text {

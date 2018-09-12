@@ -108,6 +108,7 @@ class AmountField extends React.Component {
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
+
 		const list = (searchText !== '' || search || this.props[type].length === 0) ? [] : [
 			{
 				key: `${type}_header`,
