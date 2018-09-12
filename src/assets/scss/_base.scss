@@ -72,6 +72,9 @@ div,span {
     &.main-link {
         color: $main-сolor;
     }
+    &.disabled {
+      pointer-events: none;
+    }
 }
 
 // ANIMATIONS 

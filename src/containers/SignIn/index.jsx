@@ -107,8 +107,12 @@ class SignIn extends React.Component {
 						/>
 				}
 				<span className="sign-nav">
-                Don’t have an account?
-					<Link className="link main-link" to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}>Sign Up</Link>
+					Don’t have an account?
+					<Link
+						className={classnames('link', 'main-link', { disabled: loading })}
+						to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
+					>Sign Up
+					</Link>
 				</span>
 			</Form>
 		);
