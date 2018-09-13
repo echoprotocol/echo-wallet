@@ -105,7 +105,7 @@ Networks.propTypes = {
 	addNetwork: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-    historyPop: PropTypes.func.isRequired,
+	historyPop: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
