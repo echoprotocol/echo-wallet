@@ -6,6 +6,14 @@ const {
 // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
 
+require('electron-context-menu')({
+	labels: {
+		cut: 'cut',
+		copy: 'copy',
+		paste: 'paste',
+	},
+});
+
 // const template = [
 // 	{
 // 		label: 'Edit',

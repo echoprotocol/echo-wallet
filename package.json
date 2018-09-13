@@ -27,6 +27,7 @@
     "echojs-lib": "^0.1.3",
     "echojs-redux": "^0.1.6",
     "echojs-ws": "^0.1.10",
+    "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.6.4",
     "file-loader": "^1.1.11",
     "history": "^4.7.2",
