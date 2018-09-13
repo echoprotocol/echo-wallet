@@ -91,7 +91,7 @@ export const createAccount = ({
 
 };
 
-export const authUser = ({ accountName, password }, isAddAccount) => async (dispatch, getState) => {
+export const authUser = ({ accountName, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	const passwordError = validatePassword(password);
 
@@ -111,7 +111,7 @@ export const authUser = ({ accountName, password }, isAddAccount) => async (disp
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
-		if (isAddAccount && !accountNameError) {
+		if (!accountNameError) {
 			accountNameError = isAccountAdded(accountName, networkName);
 		}
 
