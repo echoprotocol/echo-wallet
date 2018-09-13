@@ -152,8 +152,8 @@ export const logout = () => async (dispatch, getState) => {
 	} else {
 		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());
-		dispatch(GlobalReducer.actions.logout());
 		history.push(SIGN_IN_PATH);
+		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
 	}
 
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
