@@ -57,7 +57,7 @@ class Networks extends React.Component {
 							<span className="icon-back" />
                         back
 						</a>
-						<h3>Create new Network</h3>
+						<h3>Add connection</h3>
 					</div>
 					<div className="field-wrap">
 						<AddCustomNetwork
