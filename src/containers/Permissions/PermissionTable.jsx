@@ -17,7 +17,6 @@ class PermissionTable extends React.Component {
 			<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
 				<div className="cell-wrap">
 					<Button
-						type="submit"
 						className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
 						onClick={() => this.onClick(k)}
 					/>

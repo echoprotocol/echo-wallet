@@ -8,8 +8,7 @@ import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import TableReducer from '../reducers/TableReducer';
 
-// const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
-const zeroPrivateKey = '****************************************************************';
+const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
 export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
