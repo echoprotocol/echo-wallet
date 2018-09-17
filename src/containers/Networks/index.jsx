@@ -7,7 +7,7 @@ import { Form, Button } from 'semantic-ui-react';
 import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm } from '../../actions/FormActions';
-import { addNetwork } from '../../actions/GlobalActions';
+import { addNetwork, historyMove } from '../../actions/GlobalActions';
 
 import AddCustomNetwork from './AddCustomNetwork';
 
@@ -31,9 +31,14 @@ class Networks extends React.Component {
 		this.props.setFormValue('autoswitch', !autoswitch.value);
 	}
 
+	goBack() {
+		this.props.historyPop();
+		this.props.history.goBack();
+	}
+
 	render() {
 		const {
-			history, address, name, registrator, autoswitch,
+			address, name, registrator, autoswitch,
 		} = this.props;
 
 
@@ -46,13 +51,13 @@ class Networks extends React.Component {
 					<div className="form-info">
 						<a
 							href="#"
-							onClick={history.goBack}
+							onClick={() => this.goBack()}
 							className="back-link"
 						>
 							<span className="icon-back" />
                         back
 						</a>
-						<h3>Create new Network</h3>
+						<h3>Add connection</h3>
 					</div>
 					<div className="field-wrap">
 						<AddCustomNetwork
@@ -100,6 +105,7 @@ Networks.propTypes = {
 	addNetwork: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	historyPop: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -113,5 +119,6 @@ export default withRouter(connect(
 		addNetwork: () => dispatch(addNetwork()),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_ADD_CUSTOM_NETWORK, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK)),
+		historyPop: () => dispatch(historyMove()),
 	}),
 )(Networks));

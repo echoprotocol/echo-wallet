@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import PermissionTable from './PermissionTable';
 
@@ -9,12 +10,31 @@ import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 class Permissions extends React.Component {
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.formPermissionKeys();
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.accountName !== this.props.accountName) {
+		const { accountName: prevAccountName } = prevProps;
+		const { accountName } = this.props;
+		const prevAccount = prevProps.account.toJS();
+		const account = this.props.account.toJS();
+
+		if (!prevAccount && account) {
+			this.props.formPermissionKeys();
+			return;
+		}
+
+		if (prevAccountName !== accountName) {
+			this.props.formPermissionKeys();
+			return;
+		}
+
+		if (
+			!_.isEqual(prevAccount.active, account.active) ||
+            !_.isEqual(prevAccount.owner, account.owner) ||
+            prevAccount.options.memo_key !== account.options.memo_key
+		) {
 			this.props.formPermissionKeys();
 		}
 	}
@@ -52,15 +72,20 @@ class Permissions extends React.Component {
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
+	account: PropTypes.object.isRequired,
 	formPermissionKeys: PropTypes.func.isRequired,
 	clear: PropTypes.func.isRequired,
 };
 
 export default connect(
-	(state) => ({
-		accountName: state.global.getIn(['activeUser', 'name']),
-		permissionsKeys: state.table.get(PERMISSION_TABLE),
-	}),
+	(state) => {
+		const accountId = state.global.getIn(['activeUser', 'id']);
+		return {
+			accountName: state.global.getIn(['activeUser', 'name']),
+			account: state.echojs.getIn(['data', 'accounts', accountId]),
+			permissionsKeys: state.table.get(PERMISSION_TABLE),
+		};
+	},
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
 		clear: () => dispatch(clear(PERMISSION_TABLE)),

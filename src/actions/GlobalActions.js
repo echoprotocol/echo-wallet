@@ -106,11 +106,11 @@ export const connection = () => async (dispatch) => {
 	}
 };
 
-export const disconnection = (address) => (dispatch, getState) => {
+export const disconnection = (address) => async (dispatch, getState) => {
 	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
 
 	if (isConnected) {
-		dispatch(EchoJSActions.disconnect(address));
+		await dispatch(EchoJSActions.disconnect(address));
 	}
 
 	dispatch(clearTable(HISTORY_TABLE));
@@ -152,8 +152,8 @@ export const logout = () => async (dispatch, getState) => {
 	} else {
 		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());
-		dispatch(GlobalReducer.actions.logout());
 		history.push(SIGN_IN_PATH);
+		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
 	}
 
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
@@ -205,10 +205,12 @@ export const addAccount = (accountName, networkName) => (dispatch) => {
 	dispatch(initAccount(accountName, networkName));
 };
 
-export const saveNetwork = (network) => (dispatch, getState) => {
+export const saveNetwork = (network) => async (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
 	const oldNetwork = getState().global.get('network').toJS();
 
-	dispatch(disconnection(oldNetwork.url));
+	await dispatch(disconnection(oldNetwork.url));
 
 	localStorage.setItem('current_network', JSON.stringify(network));
 	dispatch(connection());
