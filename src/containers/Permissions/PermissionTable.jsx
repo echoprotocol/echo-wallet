@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
+import { Button, Table } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
@@ -16,14 +16,16 @@ class PermissionTable extends React.Component {
 		return (
 			<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
 				<div className="cell-wrap">
-					<button
+					<Button
+						type="submit"
 						className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
 						onClick={() => this.onClick(k)}
 					/>
 					{
-						!k.unlocked ?
-							<input type="password" readOnly className="key-input" value={k.privateKey} />
-							: <span className="key">{k.privateKey}</span>
+						k.unlocked ?
+							<span className="key">{k.privateKey}</span> :
+							<input tabIndex="-1" type="password" readOnly className="key-input" value={k.privateKey} />
+
 					}
 
 				</div>
