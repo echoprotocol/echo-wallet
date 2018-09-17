@@ -1,6 +1,5 @@
 import { Map, List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
-import qs from 'query-string';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -9,7 +8,7 @@ import history from '../history';
 import {
 	SIGN_IN_PATH,
 	INDEX_PATH,
-	AUTH_ROUTES, SIGN_UP_PATH,
+	AUTH_ROUTES,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
@@ -159,28 +158,6 @@ export const logout = () => async (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 };
 
-export const historyMove = (location) => (dispatch, getState) => {
-	let globalHistory = getState().global.get('history');
-	if (location && location.pathname) {
-
-		let path = location.pathname;
-		if ([SIGN_IN_PATH, SIGN_UP_PATH].includes(path)) {
-			const { isAddAccount } = qs.parse(location.search);
-			path = isAddAccount ? `${path}?isAddAccount=true` : path;
-		}
-
-		const lastPath = globalHistory.get(-1);
-		if (lastPath !== path) globalHistory = globalHistory.push(path);
-	} else {
-		globalHistory = globalHistory.pop();
-	}
-
-	dispatch(GlobalReducer.actions.set({
-		field: 'history',
-		value: new List(globalHistory),
-	}));
-};
-
 export const isAccountAdded = (accountName, networkName) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -271,7 +248,6 @@ export const addNetwork = () => (dispatch, getState) => {
 
 	toastSuccess(`${network.name} network added successfully!`);
 
-	historyMove();
 	history.goBack();
 };
 

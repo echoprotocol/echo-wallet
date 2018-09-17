@@ -5,7 +5,7 @@ import { Segment, Sidebar } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { withRouter, matchPath } from 'react-router';
 
-import { connection, toggleBar, historyMove } from '../actions/GlobalActions';
+import { connection, toggleBar } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -23,10 +23,6 @@ import {
 
 class App extends React.Component {
 
-	componentWillMount() {
-		this.props.historyMove(this.props.location);
-	}
-
 	componentDidMount() {
 		this.props.connection();
 	}
@@ -34,14 +30,9 @@ class App extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		const { location, accountId, networkName } = this.props;
 		const {
-			location: nextLocation,
 			accountId: nextAccountId,
 			networkName: nextNetworkName,
 		} = nextProps;
-
-		if (nextLocation.pathname !== this.props.location.pathname) {
-			this.props.historyMove(nextLocation);
-		}
 
 		const isInnerPath = [
 			VIEW_TRANSACTION_PATH,
@@ -52,7 +43,6 @@ class App extends React.Component {
 		));
 
 		if (isInnerPath && (nextAccountId !== accountId || nextNetworkName !== networkName)) {
-			this.props.historyMove();
 			this.props.history.goBack();
 		}
 	}
@@ -126,7 +116,6 @@ App.propTypes = {
 	visibleBar: PropTypes.bool.isRequired,
 	connection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
-	historyMove: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -139,6 +128,5 @@ export default withRouter(connect(
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
 		hideBar: () => dispatch(toggleBar(true)),
-		historyMove: (path) => dispatch(historyMove(path)),
 	}),
 )(App));

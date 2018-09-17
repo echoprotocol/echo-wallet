@@ -3,41 +3,41 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown, Button } from 'semantic-ui-react';
-import classnames from 'classnames';
+
 import { NavLink } from 'react-router-dom';
 
 
-import { logout, initAccount, historyMove } from '../../actions/GlobalActions';
+import { logout, initAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
 	SIGN_IN_PATH,
-	SIGN_UP_PATH,
 	ACTIVITY_PATH,
 	TRANSFER_PATH,
 	INDEX_PATH,
 	CONTRACT_LIST_PATH,
 	PERMISSIONS_PATH,
 	VIEW_CONTRACT_PATH,
+	ADD_CONTRACT_PATH,
+	CREATE_CONTRACT_PATH,
+	CALL_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+
+const primaryPaths = [
+	INDEX_PATH,
+	CONTRACT_LIST_PATH,
+	ACTIVITY_PATH,
+	PERMISSIONS_PATH,
+	VIEW_CONTRACT_PATH,
+	TRANSFER_PATH,
+];
 
 class Header extends React.Component {
 
 	onLogout() {
 		this.props.logout();
-	}
-
-	onSub(location) {
-		return !!location.pathname.split('/')[2] || ![
-			INDEX_PATH,
-			CONTRACT_LIST_PATH,
-			ACTIVITY_PATH,
-			PERMISSIONS_PATH,
-			VIEW_CONTRACT_PATH,
-			TRANSFER_PATH,
-		].includes(`/${location.pathname.split('/')[1]}`);
 	}
 
 	onAddAccount(e) {
@@ -75,13 +75,6 @@ class Header extends React.Component {
 
 	}
 
-	onReturnToBack(e) {
-		e.preventDefault();
-		e.target.blur();
-		this.props.historyPop();
-		this.props.history.goBack();
-	}
-
 	getTitle() {
 		const { location } = this.props;
 
@@ -96,17 +89,28 @@ class Header extends React.Component {
 		return item ? item.title : '';
 	}
 
-	isShowBackButton() {
-		const { globalHistory } = this.props;
-		const authPaths = [SIGN_IN_PATH, SIGN_UP_PATH];
+	renderLinkToParent() {
+		const { location } = this.props;
 
-		if (!globalHistory.get(-2)) {
-			return false;
-		} else if (authPaths.includes(globalHistory.get(-2))) {
-			return false;
+		if (primaryPaths.includes(location.pathname)) return null;
+
+		let to = CONTRACT_LIST_PATH;
+
+		const splittedLocation = location.pathname.split('/');
+		if (![
+			ADD_CONTRACT_PATH,
+			CREATE_CONTRACT_PATH,
+			CALL_CONTRACT_PATH,
+			VIEW_CONTRACT_PATH.replace('/:name', ''),
+		].includes(`/${splittedLocation[1]}`)) {
+			to = splittedLocation.length > 2 ? `/${splittedLocation[1]}` : INDEX_PATH;
 		}
-		return true;
+
+		return (
+			<NavLink to={to} className="icon-back sub" />
+		);
 	}
+
 
 	renderList() {
 		const { preview, accountName } = this.props;
@@ -173,15 +177,8 @@ class Header extends React.Component {
 		return (
 			<div className="header">
 				{
-					this.isShowBackButton() ?
-						(
-							<button
-								className={classnames('icon-back', { sub: this.onSub(location) })}
-								onClick={(e) => this.onReturnToBack(e)}
-							/>
-						) : null
+					this.renderLinkToParent()
 				}
-
 
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
@@ -236,8 +233,6 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
-	historyPop: PropTypes.func.isRequired,
-	globalHistory: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(
@@ -247,11 +242,9 @@ export default withRouter(connect(
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
 		showBackButton: state.global.get('showBackButton'),
-		globalHistory: state.global.get('history'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
-		historyPop: () => dispatch(historyMove()),
 	}),
 )(Header));

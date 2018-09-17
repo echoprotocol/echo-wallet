@@ -7,7 +7,7 @@ import { Form, Button } from 'semantic-ui-react';
 import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm } from '../../actions/FormActions';
-import { addNetwork, historyMove } from '../../actions/GlobalActions';
+import { addNetwork } from '../../actions/GlobalActions';
 
 import AddCustomNetwork from './AddCustomNetwork';
 
@@ -32,7 +32,6 @@ class Networks extends React.Component {
 	}
 
 	goBack() {
-		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
@@ -105,7 +104,6 @@ Networks.propTypes = {
 	addNetwork: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	historyPop: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -119,6 +117,5 @@ export default withRouter(connect(
 		addNetwork: () => dispatch(addNetwork()),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_ADD_CUSTOM_NETWORK, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_ADD_CUSTOM_NETWORK)),
-		historyPop: () => dispatch(historyMove()),
 	}),
 )(Networks));
