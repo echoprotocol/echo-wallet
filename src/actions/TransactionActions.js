@@ -11,7 +11,7 @@ import {
 	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
-import {INDEX_PATH, CONTRACT_LIST_PATH, ACTIVITY_PATH} from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH} from '../constants/RouterConstants';
 
 import { openModal, closeModal, setDisable } from './ModalActions';
 import {
