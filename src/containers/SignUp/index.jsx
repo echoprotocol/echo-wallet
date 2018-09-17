@@ -13,7 +13,6 @@ import ButtonComponent from './ButtonComponent';
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 
 import { generatePassword } from '../../actions/AuthActions';
-import { historyMove } from '../../actions/GlobalActions';
 
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
@@ -24,7 +23,6 @@ class SignUp extends React.Component {
 	}
 
 	onCancel() {
-		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
@@ -72,7 +70,6 @@ SignUp.propTypes = {
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	generatePassword: PropTypes.func.isRequired,
-	historyPop: PropTypes.func.isRequired,
 };
 
 SignUp.defaultProps = {
@@ -85,6 +82,5 @@ export default connect(
 	}),
 	(dispatch) => ({
 		generatePassword: () => dispatch(generatePassword()),
-		historyPop: () => dispatch(historyMove()),
 	}),
 )(SignUp);
