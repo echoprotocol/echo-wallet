@@ -13,9 +13,13 @@ import { NETWORKS_PATH } from '../../constants/RouterConstants';
 class Network extends React.PureComponent {
 
 	onDropdownChange(e, value) {
-		if (value === 'custom' || e.target.id === 'btn-dlt') { return; }
+		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
+			return;
+		}
 
-		if (e.type === 'click' || e.keyCode === 13) {
+		if (value === 'custom') {
+			this.props.history.push(NETWORKS_PATH);
+		} else {
 			this.onSaveNetwork(value);
 		}
 	}
@@ -94,7 +98,6 @@ class Network extends React.PureComponent {
 
 		return (
 			<Dropdown
-
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
@@ -126,6 +129,7 @@ class Network extends React.PureComponent {
 Network.propTypes = {
 	network: PropTypes.object.isRequired,
 	networks: PropTypes.array.isRequired,
+	history: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
 	disconnected: PropTypes.bool,
