@@ -29,7 +29,7 @@ class TabCallContracts extends React.Component {
 				<label htmlFor={formatedField}>{formatedField}</label>
 
 				<input
-					placeholder={`(${type.replace(/address/g, 'id')})`}
+					placeholder={`${type.replace(/address/g, 'id')}`}
 					name={field}
 					className="ui input"
 					value={data.value}
