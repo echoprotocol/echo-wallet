@@ -25,6 +25,8 @@ class InputComponent extends React.Component {
 		} = this.props;
 
 		const { value } = inputs.toJS()[currentField.name][currentField.id];
+		let placeholder = `${inputData.type.replace(/address/g, 'id')}`;
+		if (inputData.name) placeholder = `${formatCallContractField(inputData.name)}(${placeholder})`;
 
 		return (
 			<Input
@@ -32,7 +34,7 @@ class InputComponent extends React.Component {
 				size="mini"
 				value={value}
 				onChange={(e) => this.onChange(e)}
-				placeholder={`${formatCallContractField(inputData.name)}(${inputData.type.replace(/address/g, 'id')})`}
+				placeholder={placeholder}
 			/>
 		);
 	}
