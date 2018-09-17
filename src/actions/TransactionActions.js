@@ -11,7 +11,7 @@ import {
 	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
-import { INDEX_PATH } from '../constants/RouterConstants';
+import { INDEX_PATH, CONTRACT_LIST_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal, setDisable } from './ModalActions';
 import {
@@ -437,6 +437,9 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+	const bytecode =
+		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
+		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
 	buildAndSendTransaction(operation, options, keys.active)
 		.then((res) => {
@@ -462,7 +465,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 
 	dispatch(closeModal(MODAL_DETAILS));
 
-	history.push(INDEX_PATH);
+	history.push(bytecode ? CONTRACT_LIST_PATH : INDEX_PATH);
 
 	dispatch(resetTransaction());
 };
