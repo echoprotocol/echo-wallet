@@ -34,6 +34,13 @@ const primaryPaths = [
 	TRANSFER_PATH,
 ];
 
+const secondaryContractPaths = [
+	ADD_CONTRACT_PATH,
+	CREATE_CONTRACT_PATH,
+	CALL_CONTRACT_PATH,
+	VIEW_CONTRACT_PATH.replace('/:name', ''),
+];
+
 class Header extends React.Component {
 
 	onLogout() {
@@ -94,23 +101,14 @@ class Header extends React.Component {
 
 		if (primaryPaths.includes(location.pathname)) return null;
 
-		let to = CONTRACT_LIST_PATH;
+		let to = ACTIVITY_PATH;
 
-		const splittedLocation = location.pathname.split('/');
-		if (![
-			ADD_CONTRACT_PATH,
-			CREATE_CONTRACT_PATH,
-			CALL_CONTRACT_PATH,
-			VIEW_CONTRACT_PATH.replace('/:name', ''),
-		].includes(`/${splittedLocation[1]}`)) {
-			to = splittedLocation.length > 2 ? `/${splittedLocation[1]}` : INDEX_PATH;
-		}
+		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) to = CONTRACT_LIST_PATH;
 
 		return (
 			<NavLink to={to} className="icon-back sub" />
 		);
 	}
-
 
 	renderList() {
 		const { preview, accountName } = this.props;
