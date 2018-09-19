@@ -370,7 +370,6 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 };
 
 export const setContractFees = (form) => async (dispatch, getState) => {
-	console.log('setContractFees')
 	const assets = getState().balance.get('assets').toArray();
 
 	let fees = assets.reduce((arr, asset) => {
