@@ -356,8 +356,6 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 			},
 			['1.2.1', amount * (10 ** currency.precision)],
 		);
-
-		contractId = currency.id;
 	}
 
 	const options = {
