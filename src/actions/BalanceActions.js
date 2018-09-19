@@ -251,7 +251,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 };
 
 const checkTransactionLogs = async (r, instance, accountId) => {
-	if (typeof r[1] === 'object') return false;
+	if (typeof r[1] === 'object' || !r[1].startsWith('1.17')) return false;
 
 	const result = await getContractResult(instance, r[1]);
 
