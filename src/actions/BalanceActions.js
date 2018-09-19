@@ -281,8 +281,13 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 		case 'objects': {
 			const objectId = subscribeObject.value.get('id');
 			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
+			const assets = getState().balance.get('assets');
 
-			if (balances && Object.values(balances.toJS()).includes(objectId)) {
+			if (
+				balances && (
+					Object.values(balances.toJS()).includes(objectId) || balances.size !== assets.size
+				)
+			) {
 				dispatch(getAssetsBalances(balances.toJS(), true));
 				return;
 			}
