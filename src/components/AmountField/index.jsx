@@ -48,6 +48,7 @@ class AmountField extends React.Component {
 		let target = tokens.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'tokens');
+			this.props.setContractFees();
 			return;
 		}
 		target = assets.find((el) => el.id === value);

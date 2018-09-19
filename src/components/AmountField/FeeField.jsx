@@ -67,7 +67,7 @@ class FeeComponent extends React.Component {
 		this.props.setValue('fee', fee);
 	}
 
-	getOptions() {
+	getOptionsTransfer() {
 		const { assets, note } = this.props;
 
 		const options = assets.reduce((arr, asset) => {
@@ -111,6 +111,13 @@ class FeeComponent extends React.Component {
 		return options;
 	}
 
+	getOptions() {
+		const { form, currency } = this.props;
+
+		return [FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID].includes(form) || currency.type === 'tokens'
+			? this.getOptionsCallContract() : this.getOptionsTransfer();
+	}
+
 	getText(options) {
 		const { fee } = this.props;
 
@@ -122,9 +129,8 @@ class FeeComponent extends React.Component {
 	}
 
 	render() {
-		const { form } = this.props;
-		const options = [FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID].includes(form)
-			? this.getOptionsCallContract() : this.getOptions();
+
+		const options = this.getOptions();
 		const text = this.getText(options);
 		return (
 			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
@@ -161,6 +167,7 @@ FeeComponent.propTypes = {
 	fetchFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
+	currency: PropTypes.any,
 };
 
 FeeComponent.defaultProps = {
@@ -168,6 +175,7 @@ FeeComponent.defaultProps = {
 	fee: {},
 	assets: [],
 	selectedSymbol: '',
+	currency: {},
 };
 
 export default connect(
@@ -176,6 +184,7 @@ export default connect(
 		assets: state.balance.get('assets').toArray(),
 		fee: state.form.getIn([form, 'fee']),
 		note: state.form.getIn([form, 'note']) || {},
+		currency: state.form.getIn([form, 'currency']) || {},
 		selectedSymbol: state.form.getIn([form, 'selectedSymbol']),
 		fees: state.fee.toArray() || [],
 		form,

@@ -291,7 +291,6 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
-
 	if (!activeUserId) return 0;
 
 	let contractId = '1.16.1';
@@ -337,6 +336,25 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 				amountValue = amount.value * (10 ** currency.precision);
 			}
 		}
+	} else if (form === FORM_TRANSFER) {
+
+		const formValues = getState().form.get(FORM_TRANSFER).toJS();
+
+		const { currency } = formValues;
+
+		if (!currency || !currency.precision) return 0;
+
+		const amount = Number(formValues.amount.value || 0).toString();
+
+		bytecode = getMethod(
+			{
+				name: 'transfer',
+				inputs: [{ type: 'address' }, { type: 'uint256' }],
+			},
+			['1.2.1', amount * (10 ** currency.precision)],
+		);
+
+		contractId = currency.id;
 	}
 
 	const options = {
