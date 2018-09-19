@@ -30,6 +30,8 @@ import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
 
+BN.config({ EXPONENTIAL_AT: 1e+9 });
+
 const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
 	balances.map((nb) => {
