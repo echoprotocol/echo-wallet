@@ -124,18 +124,21 @@ export const checkFeePool = (echo, asset, fee) => {
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
-	if (!accountName) {
-		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
-		return;
-	}
-
 	try {
+		if (!accountName) return;
+
+		const fromAccount = getState().global.getIn(['activeUser', 'name']);
+
+		if (fromAccount === accountName) {
+			dispatch(setFormError(FORM_TRANSFER, 'to', 'You can not send funds to yourself'));
+			return;
+		}
+
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		const accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
-			dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 			return;
 		}
 

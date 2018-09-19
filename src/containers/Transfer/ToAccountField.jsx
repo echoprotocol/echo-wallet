@@ -28,7 +28,7 @@ class ToAccountComponent extends React.Component {
 
 		this.props.setIn('to', {
 			loading: true,
-			error: this.props.fromAccount === value ? 'You can not send funds to yourself' : null,
+			error: null,
 			checked: false,
 			value,
 		});
@@ -61,7 +61,6 @@ class ToAccountComponent extends React.Component {
 }
 
 ToAccountComponent.propTypes = {
-	fromAccount: PropTypes.any.isRequired,
 	to: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
@@ -69,7 +68,6 @@ ToAccountComponent.propTypes = {
 
 export default connect(
 	(state) => ({
-		fromAccount: state.global.getIn(['activeUser', 'name']),
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
 	}),
 	(dispatch) => ({

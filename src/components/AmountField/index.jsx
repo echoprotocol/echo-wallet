@@ -40,7 +40,7 @@ class AmountField extends React.Component {
 		const { name } = e.target;
 
 		this.props.amountInput(value, currency, name);
-		this.props.setContractFees();
+		if (currency && currency.type === 'tokens') this.props.setContractFees();
 	}
 
 	onChangeCurrency(e, value) {
