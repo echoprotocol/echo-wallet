@@ -94,7 +94,7 @@ export const connection = () => async (dispatch) => {
 				history.push(SIGN_IN_PATH);
 			}
 		} else {
-			const active = accounts.find((i) => i.active);
+			const active = accounts.find((i) => i.active) || accounts[0];
 			await dispatch(initAccount(active.name, network.name));
 		}
 
