@@ -10,7 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --display-error-details --colors --mode production",
     "build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
-    "build-electron": "cross-env DEBUG=TRUE ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
+    "build-electron": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
     "postbuild-electron": "npm run prepare-electron",
     "prepare-electron": "copyfiles -f src/assets/app_resources/index.js build/electron/",
     "prepackage": "npm run build-electron",
