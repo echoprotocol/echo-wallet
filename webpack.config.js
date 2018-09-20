@@ -15,7 +15,7 @@ const extractSass = new ExtractTextPlugin({
 	disable: process.env.NODE_ENV === 'local',
 });
 const { version } = require('./package.json');
-
+console.log(process.env.DEBUG)
 module.exports = {
 	entry: {
 		app: path.resolve('src/index.js'),
