@@ -7,6 +7,9 @@ stages:
   - prepare
   - deploy
 
+  variables:
+     - $DEBUG
+
 eslint:
   stage: lint
   script:
