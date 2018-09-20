@@ -1,3 +1,6 @@
+variables:
+  DEBUG: $DEBUG
+
 cache:
   paths:
   - node_modules/
@@ -6,9 +9,6 @@ stages:
   - lint
   - prepare
   - deploy
-
-  variables:
-     DEBUG: $DEBUG
 
 eslint:
   stage: lint
