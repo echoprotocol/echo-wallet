@@ -2,6 +2,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import Loading from '../../components/Loader/LoadingData';
 
@@ -14,34 +15,35 @@ import RowComponent from './RowComponent';
 
 class Activity extends React.Component {
 
-	componentDidMount() {
-		const account = this.props.account ? this.props.account.toJS() : null;
+	constructor(props) {
+		super(props);
 
-		if (account && account.history) {
-			this.props.formatHistory(account.history);
-		}
+		this.state = {
+			history: [],
+		};
 	}
 
-	componentDidUpdate(prevProps) {
-		const account = this.props.account ? this.props.account.toJS() : null;
-		const oldAccount = prevProps.account ? prevProps.account.toJS() : null;
+	static getDerivedStateFromProps(props, state) {
+		const history = props.account ? props.account.toJS().history : [];
+		return _.isEqual(state.history, history) ? null : { history };
+	}
 
-		if (!account || !account.history) {
-			return;
-		}
+	componentDidMount() {
+		this.format(this.state.history);
+	}
 
-		if (!oldAccount || !oldAccount.history) {
-			this.props.formatHistory(account.history);
-			return;
-		}
-
-		if (oldAccount.history[0].id !== account.history[0].id) {
-			this.props.formatHistory(account.history);
+	componentDidUpdate(prevProps, prevState) {
+		if (!_.isEqual(prevState.history, this.state.history)) {
+			this.format(this.state.history);
 		}
 	}
 
 	componentWillUnmount() {
 		this.props.clearTable();
+	}
+
+	format(data) {
+		setTimeout(() => this.props.formatHistory(data), 1 * 1000);
 	}
 
 	renderEmpty() {
@@ -93,17 +95,14 @@ class Activity extends React.Component {
 
 Activity.propTypes = {
 	history: PropTypes.any,
-	account: PropTypes.any,
-	loading: PropTypes.bool,
+	loading: PropTypes.bool.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
 	clearTable: PropTypes.func.isRequired,
 };
 
 Activity.defaultProps = {
-	account: null,
 	history: null,
-	loading: false,
 };
 
 export default connect(
