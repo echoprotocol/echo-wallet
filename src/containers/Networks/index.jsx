@@ -32,6 +32,7 @@ class Networks extends React.Component {
 	}
 
 	goBack() {
+		console.log(this.props.history)
 		this.props.history.goBack();
 	}
 
@@ -48,14 +49,10 @@ class Networks extends React.Component {
 			<div className="sign-scroll-fix">
 				<Form className="main-form">
 					<div className="form-info">
-						<a
-							href="#"
-							onClick={() => this.goBack()}
-							className="back-link"
-						>
+						<button className="back-link" onClick={(e) => this.goBack(e)}>
 							<span className="icon-back" />
-                        back
-						</a>
+							back
+						</button>
 						<h3>Add connection</h3>
 					</div>
 					<div className="field-wrap">
