@@ -30,6 +30,8 @@ import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
 
+BN.config({ EXPONENTIAL_AT: 1e+9 });
+
 const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
 	balances.map((nb) => {
@@ -251,7 +253,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 };
 
 const checkTransactionLogs = async (r, instance, accountId) => {
-	if (typeof r[1] === 'object') return false;
+	if (typeof r[1] === 'object' || !r[1].startsWith('1.17')) return false;
 
 	const result = await getContractResult(instance, r[1]);
 
@@ -281,8 +283,13 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 		case 'objects': {
 			const objectId = subscribeObject.value.get('id');
 			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
+			const assets = getState().balance.get('assets');
 
-			if (balances && Object.values(balances.toJS()).includes(objectId)) {
+			if (
+				balances && (
+					Object.values(balances.toJS()).includes(objectId) || balances.size !== assets.size
+				)
+			) {
 				dispatch(getAssetsBalances(balances.toJS(), true));
 				return;
 			}

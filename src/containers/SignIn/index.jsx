@@ -11,7 +11,6 @@ import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { authUser } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
-import { historyMove } from '../../actions/GlobalActions';
 
 class SignIn extends React.Component {
 
@@ -42,7 +41,6 @@ class SignIn extends React.Component {
 	}
 
 	onCancel() {
-		this.props.historyPop();
 		this.props.history.goBack();
 	}
 
@@ -138,7 +136,6 @@ SignIn.propTypes = {
 	authUser: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	historyPop: PropTypes.func.isRequired,
 };
 
 SignIn.defaultProps = {
@@ -155,6 +152,5 @@ export default connect(
 		authUser: (value, isAdd) => dispatch(authUser(value, isAdd)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
-		historyPop: () => dispatch(historyMove()),
 	}),
 )(SignIn);

@@ -11,7 +11,7 @@ import {
 	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
-import { INDEX_PATH } from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 
 import { openModal, closeModal, setDisable } from './ModalActions';
 import {
@@ -124,18 +124,21 @@ export const checkFeePool = (echo, asset, fee) => {
 };
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
-	if (!accountName) {
-		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
-		return;
-	}
-
 	try {
+		if (!accountName) return;
+
+		const fromAccount = getState().global.getIn(['activeUser', 'name']);
+
+		if (fromAccount === accountName) {
+			dispatch(setFormError(FORM_TRANSFER, 'to', 'You can not send funds to yourself'));
+			return;
+		}
+
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		const accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
-			dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 			return;
 		}
 
@@ -291,7 +294,6 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
-
 	if (!activeUserId) return 0;
 
 	let contractId = '1.16.1';
@@ -337,6 +339,23 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 				amountValue = amount.value * (10 ** currency.precision);
 			}
 		}
+	} else if (form === FORM_TRANSFER) {
+
+		const formValues = getState().form.get(FORM_TRANSFER).toJS();
+
+		const { currency } = formValues;
+
+		if (!currency || !currency.precision) return 0;
+
+		const amount = Number(formValues.amount.value || 0).toString();
+
+		bytecode = getMethod(
+			{
+				name: 'transfer',
+				inputs: [{ type: 'address' }, { type: 'uint256' }],
+			},
+			['1.2.1', amount * (10 ** currency.precision)],
+		);
 	}
 
 	const options = {
@@ -437,6 +456,9 @@ export const sendTransaction = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+	const bytecode =
+		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
+		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
 	buildAndSendTransaction(operation, options, keys.active)
 		.then((res) => {
@@ -462,7 +484,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 
 	dispatch(closeModal(MODAL_DETAILS));
 
-	history.push(INDEX_PATH);
+	history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 
 	dispatch(resetTransaction());
 };
