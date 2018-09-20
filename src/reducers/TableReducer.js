@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { HISTORY_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 
 const DEFAULT_FIELDS = Map({
-	loading: false,
+	loading: true,
 	error: null,
 });
 
