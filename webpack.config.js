@@ -15,7 +15,9 @@ const extractSass = new ExtractTextPlugin({
 	disable: process.env.NODE_ENV === 'local',
 });
 const { version } = require('./package.json');
-console.log(process.env.DEBUG)
+
+const electronConfigPath = `src/assets/app_resources${process.env.DEBUG ? '_debug' : ''}`;
+
 module.exports = {
 	entry: {
 		app: path.resolve('src/index.js'),
@@ -86,7 +88,7 @@ module.exports = {
 		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
 		extractSass,
-		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
+		new CopyWebpackPlugin([{ from: electronConfigPath, to: '' }]),
 	],
 	node: {
 		fs: 'empty',
