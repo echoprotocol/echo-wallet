@@ -17,7 +17,7 @@ const extractSass = new ExtractTextPlugin({
 const { version } = require('./package.json');
 
 const electronConfigPath = `src/assets/app_resources${process.env.DEBUG ? '_debug' : ''}`;
-
+console.log(electronConfigPath)
 module.exports = {
 	entry: {
 		app: path.resolve('src/index.js'),
