@@ -26,9 +26,15 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>Echo.{version}</li>
 					<li className="pipeline">
-                        Latency
-						<span className="pipeline-latency"> {latency.value} ms </span>
-                        / Block
+						{
+							false &&
+							<React.Fragment>
+								Latency
+								<span className="pipeline-latency"> {latency.value} ms </span>
+								/
+							</React.Fragment>
+						}
+                        Block
 						<span className="pipeline-block"> #{lastBlock}</span>
 					</li>
 					<li>
