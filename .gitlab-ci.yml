@@ -1,3 +1,6 @@
+variables:
+  DEBUG: $DEBUG
+
 cache:
   paths:
   - node_modules/
