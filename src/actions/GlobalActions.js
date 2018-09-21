@@ -43,6 +43,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
+		EchoJSActions.setSubscribe({ types: ['objects', 'block'], method: getObject });
+
 		if (AUTH_ROUTES.includes(history.location.pathname)) {
 			history.push(INDEX_PATH);
 		}
@@ -81,10 +83,7 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
 
 	try {
-		await dispatch(EchoJSActions.connect(
-			network.url,
-			{ types: ['objects', 'block'], method: getObject },
-		));
+		await dispatch(EchoJSActions.connect(network.url));
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
@@ -153,6 +152,8 @@ export const logout = () => async (dispatch, getState) => {
 		dispatch(resetBalance());
 		history.push(SIGN_IN_PATH);
 		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
+		EchoJSActions.resetSubscribe();
+		dispatch(EchoJSActions.clearStore());
 	}
 
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
