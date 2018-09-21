@@ -1,8 +1,10 @@
 import utf8 from 'utf8';
+import BN from 'bignumber.js';
 
 import operations from '../constants/Operations';
 import { events } from '../constants/LogEventConstants';
 
+BN.config({ EXPONENTIAL_AT: 1e+9 });
 const AREA_FIELDS = ['code', 'note'];
 const removeCamelCaseRegEx = /([A-Z]+|[A-Z]?[a-z]+)(?=[A-Z]|\\b)/g;
 const removeSpaceRegEx = /\s\s+/g;
@@ -61,11 +63,12 @@ export const toUtf8 = (hex) => {
 };
 
 export const toInt = (hex) => parseInt(hex, 16);
+export const toIntBN = (hex) => new BN(hex, 16).toString();
 
 export const converter = (toType, constantValue) => {
 	switch (toType) {
 		case 'id':
-		case 'number': return toInt(constantValue).toString();
+		case 'number': return toIntBN(constantValue);
 		case 'string': return toUtf8(constantValue);
 		case 'bool': return (!!toInt(constantValue)).toString();
 		default: return null;
