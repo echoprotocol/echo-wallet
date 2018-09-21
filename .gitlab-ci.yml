@@ -41,7 +41,7 @@ build.macos:
     - echo-mac
   artifacts:
      paths:
-     - build/binaries/Echo Wallet-0.1.0.dmg
+     - build/binaries/ECHO Wallet-0.1.0.dmg
      expire_in: 1 week
 
 
