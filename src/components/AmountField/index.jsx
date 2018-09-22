@@ -99,10 +99,16 @@ class AmountField extends React.Component {
 		this.setState({ searchText: '' });
 	}
 
-	amountFocusToggle(e, value) {
+	amountFocusToggle(e, focus) {
 		this.setState({
-			amountFocus: !value,
+			amountFocus: !focus,
 		});
+
+		const { currency } = this.props;
+		const value = e.target.value.trim();
+		const { name } = e.target;
+
+		this.props.amountInput(value, currency, name);
 	}
 
 
