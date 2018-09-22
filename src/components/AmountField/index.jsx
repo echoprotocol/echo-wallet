@@ -189,6 +189,7 @@ class AmountField extends React.Component {
 						options={this.renderList('assets').concat(this.renderList('tokens'))}
 						noResultsMessage="No results are found"
 						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
+						onClose={() => this.clearSearchText()}
 					/>
 
 				</Input>
