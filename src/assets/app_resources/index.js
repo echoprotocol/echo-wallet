@@ -79,7 +79,7 @@ function createWindow() {
 		// ];
 	}
 
-	if (process.env.DEBUG) {
+	if (process.env.DEBUG || process.platform === 'darwin') {
 		const template = [
 			{
 				label: 'Edit',
