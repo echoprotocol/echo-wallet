@@ -87,31 +87,34 @@ class SignIn extends React.Component {
 						<span className="error-message">{password.error}</span>
 					</Form.Field>
 				</div>
-				{
-					loading ?
-						<Button
-							type="submit"
-							color="orange"
-							className="load main-btn"
-							content="Loading..."
-						/> :
-						<Button
-							basic
-							type="submit"
-							disabled={this.isDisabledSubmit()}
-							onClick={(e) => this.onClick(isAddAccount, e)}
-							className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
-							content={isAddAccount ? 'Add Account' : 'Login'}
-						/>
-				}
-				<span className="sign-nav">
+				<div className="form-panel">
+					<span className="sign-nav">
 					Don’t have an account?
-					<Link
-						className={classnames('link', 'main-link', { disabled: loading })}
-						to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
-					>Sign Up
-					</Link>
-				</span>
+						<Link
+							className={classnames('link', 'main-link', { disabled: loading })}
+							to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
+						>Sign Up
+						</Link>
+					</span>
+					{
+						loading ?
+							<Button
+								type="submit"
+								color="orange"
+								className="load main-btn"
+								content="Loading..."
+							/> :
+							<Button
+								basic
+								type="submit"
+								disabled={this.isDisabledSubmit()}
+								onClick={(e) => this.onClick(isAddAccount, e)}
+								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+								content={isAddAccount ? 'Add Account' : 'Login'}
+							/>
+					}
+
+				</div>
 			</Form>
 		);
 	}

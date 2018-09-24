@@ -1,6 +1,7 @@
 
 .check {
     &-list {
+        width: 100%;
         margin-top: 25px;
         .check {
             &:not(:last-child) {

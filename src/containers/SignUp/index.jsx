@@ -49,15 +49,17 @@ class SignUp extends React.Component {
 					}
 					<FormComponent />
 					<CheckComponent />
-					<ButtonComponent isAddAccount={isAddAccount} />
-					<span className="sign-nav">
+					<div className="form-panel">
+						<span className="sign-nav">
 						Have an account?
-						<Link
-							className={classnames('link', 'orange', { disabled: loading })}
-							to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
-						>Login
-						</Link>
-					</span>
+							<Link
+								className={classnames('link', 'orange', { disabled: loading })}
+								to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
+							>Login
+							</Link>
+						</span>
+						<ButtonComponent isAddAccount={isAddAccount} />
+					</div>
 				</Form>
 			</div>
 		);

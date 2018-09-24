@@ -7,7 +7,10 @@
     .contract-navigator {
         text-align: center;
         padding: 0 20px;
-        @media (min-height: 800px) {
+        @media (max-height: 950px) {
+            margin: 200px 0 auto 0;
+        }
+        @media (min-height: 950px) {
             margin: 350px 0 auto 0;
         }
     }

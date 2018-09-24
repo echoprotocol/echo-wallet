@@ -53,7 +53,7 @@ class FormComponent extends React.Component {
 					<div className="ui action input">
 						<input name="generatedPassword" className="ui input" placeholder="Genereted password" value={generatedPassword.value} readOnly />
 						<CopyToClipboard text={generatedPassword.value}>
-							<Button icon="copy" className="main-btn right" />
+							<Button icon="copy" className="main-btn" />
 						</CopyToClipboard>
 					</div>
 				</Form.Field>

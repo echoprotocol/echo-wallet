@@ -59,11 +59,11 @@
         width: 100%;
         margin: auto;
 
-        @media only screen and (max-height: 600px) {
+        @media only screen and (max-height: 800px) {
             padding: 30px 0;
         }
-        @media only screen and (min-height: 600px) {
-            padding: 65px 0 30px;
+        @media only screen and (min-height: 800px) {
+            padding: 100px 0 30px;
         }
 
 
@@ -85,7 +85,7 @@
         }
         .button[type=submit],
         .button[type=button] {
-            margin: 30px 0 0;
+            margin: 30px 0 0 auto;
             min-width: 160px;
             min-height: 34px;
             display: flex;
@@ -94,7 +94,9 @@
             text-transform: uppercase;
             letter-spacing:.2px;
         }
+
         .form-panel {
+            width: 100%;
             .button[type=submit],
             .button[type=button] {
                 white-space: nowrap;
@@ -102,6 +104,9 @@
                 &:not(:last-child) {
                     margin-right: 20px;
                 }
+            }
+            .sign-nav {
+                margin: 0 auto 0 0;
             }
         }
 
