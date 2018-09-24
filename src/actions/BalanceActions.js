@@ -36,10 +36,18 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
 	balances.map((nb) => {
 		const oldBalance = oldBalances.find((ob) => ob.id === nb.id);
-		if (!oldBalance) return null;
-		let diff = new BN(nb.balance).minus(oldBalance.balance);
-		if (diff.lte(0)) return null;
+
+		let diff = new BN(nb.balance).minus(oldBalance ? oldBalance.balance : '0');
 		diff = diff.dividedBy(new BN(10).pow(nb.precision));
+
+		if (!oldBalance) {
+			return toastSuccess(`You receive ${diff.toString()} ${type} of ${nb.symbol}`);
+		}
+
+		if (diff.lte(0)) {
+			return null;
+		}
+
 		return toastSuccess(`You receive ${diff.toString()} ${type} of ${nb.symbol}`);
 	});
 };
@@ -290,15 +298,26 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 					Object.values(balances.toJS()).includes(objectId) || balances.size !== assets.size
 				)
 			) {
-				dispatch(getAssetsBalances(balances.toJS(), true));
-				return;
+				await dispatch(getAssetsBalances(balances.toJS(), true));
 			}
 
 			const preview = getState().balance.get('preview').toJS();
 			const networkName = getState().global.getIn(['network', 'name']);
 
 			if (preview.find((i) => i.balance.id === objectId)) {
-				dispatch(getPreviewBalances(networkName));
+				await dispatch(getPreviewBalances(networkName));
+			}
+
+			break;
+		}
+		case 'accounts': {
+			const name = subscribeObject.value.get('name');
+			const balances = subscribeObject.value.get('balances').toJS();
+
+			const accountName = getState().global.getIn(['activeUser', 'name']);
+
+			if (accountName === name) {
+				dispatch(getAssetsBalances(balances, true));
 			}
 
 			break;
