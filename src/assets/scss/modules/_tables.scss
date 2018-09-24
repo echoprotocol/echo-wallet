@@ -53,13 +53,13 @@ $thead-height: 46px;
         thead {
             width: 100%;
             background-color: #fff;
-    
+
             @media (min-width: 840px) {
                 overflow-y: overlay;
                 position: fixed;
                 overflow-x: hidden;
                 margin-top: -44px;
-    
+
             }
             @media (min-width: 1200px){
                 margin-top: -46px;
@@ -85,9 +85,9 @@ $thead-height: 46px;
                 }
             }
         }
-    
+
         // WIDTH OF CELLS
-    
+
         th, td {
             min-width: 11vw;
             padding: 0.82857143em 5px;
@@ -104,7 +104,7 @@ $thead-height: 46px;
                     min-width: calc(23vw - 30px);
                 }
             }
-    
+
             &:nth-child(2) {
                 @media (max-width: 980px) {
                     min-width: 12vw;
@@ -125,8 +125,8 @@ $thead-height: 46px;
                     }
                 }
             }
-       
-    
+
+
             &:nth-child(5) {
                 min-width: calc(18vw - 30px);
                 .ellips {
@@ -142,7 +142,7 @@ $thead-height: 46px;
                     }
                 }
             }
-    
+
             &:nth-child(6) {
                 max-width: 11vw;
                 @media (max-width: 1200px){
@@ -159,8 +159,9 @@ $thead-height: 46px;
                 }
             }
         }
-    
+
         tbody {
+            overflow-x:auto;
             tr {
                 transition: background-color .3s;
                 &:nth-child(2n) {
@@ -191,7 +192,7 @@ $thead-height: 46px;
                         .fall {
                             color: #fff;
                         }
-    
+
                     }
                 }
                 td {
@@ -244,7 +245,7 @@ $thead-height: 46px;
                 position: fixed;
                 overflow-x: hidden;
                 margin-top: -($thead-height);
-    
+
             }
             th {
                 background:0;
@@ -252,7 +253,7 @@ $thead-height: 46px;
                 padding: 0.92857143em 5px;
             }
         }
-    
+
         // WIDTH OF CELLS
         tr {
             th, td {
@@ -260,19 +261,19 @@ $thead-height: 46px;
                     min-width: 25vw;
                     padding-left:  20px;
                 }
-        
+
                 &:last-child {
                     min-width: calc(75vw - 1px);
                     padding-right:  20px;
                 }
             }
         }
-    
-    
+
+
         tbody {
             tr {
                 transition: background-color .3s;
-    
+
                 &:nth-child(2n) {
                     &:hover {
                         background-color: $main-сolor;
@@ -304,7 +305,7 @@ $thead-height: 46px;
     }
 
     &.permissions-table {
- 
+
 
         thead {
             th {
@@ -337,7 +338,7 @@ $thead-height: 46px;
                     .icon-hide {
                         color: $yellow;
                     }
-    
+
                     .key-input {
                         color: $yellow;
                     }
