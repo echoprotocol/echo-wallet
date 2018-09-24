@@ -211,6 +211,7 @@ class Header extends React.Component {
 						<Dropdown
 							options={options}
 							text={accountName}
+							selectOnBlur={false}
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						/>
 
