@@ -102,6 +102,7 @@ class Network extends React.PureComponent {
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
 				icon={false}
+				selectOnBlur={false}
 				upward
 				className={classnames('network-dropdown', {
 					disconnected: this.props.disconnected,
