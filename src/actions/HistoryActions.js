@@ -9,7 +9,7 @@ import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import { setValue, toggleLoading, setError } from './TableActions';
 import { openModal } from './ModalActions';
-import { setNote } from './TransactionActions';
+import { setNote, setField } from './TransactionActions';
 
 import { getContractResult } from '../api/ContractApi';
 
@@ -30,7 +30,10 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 		transaction.details = await getContractResult(instance, transaction.subject);
 		[transaction.contract] = (await dispatch(fetch(transaction.subject))).toJS().contracts_id;
 	}
-	history.push(VIEW_TRANSACTION_PATH, { data: transaction });
+
+	dispatch(setField('details', transaction));
+
+	history.push(VIEW_TRANSACTION_PATH);
 };
 
 export const openUnlock = (note) => (dispatch) => {

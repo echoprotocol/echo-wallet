@@ -1,6 +1,4 @@
-import createHistory from 'history/createBrowserHistory';
+import createHistory from 'history/createHashHistory';
 
 // Create a history of your choosing (we're using a browser history in this case)
-export default createHistory({
-	basename: window.location.pathname,
-});
+export default createHistory({});
