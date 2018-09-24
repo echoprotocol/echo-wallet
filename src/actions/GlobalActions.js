@@ -43,7 +43,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
 
-		EchoJSActions.setSubscribe({ types: ['objects', 'block'], method: getObject });
+		EchoJSActions.setSubscribe({ types: ['objects', 'block', 'accounts'], method: getObject });
 
 		if (AUTH_ROUTES.includes(history.location.pathname)) {
 			history.push(INDEX_PATH);

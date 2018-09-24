@@ -291,6 +291,8 @@
             padding-top: 6px;
             border-radius: 0;
             min-width: 220px;
+            max-height: 278px;
+            overflow: auto;
             .item {
                 padding: 0;
                 height: 36px;
