@@ -11,6 +11,7 @@ const DEFAULT_FIELDS = Map({
 		unlocked: false,
 		error: null,
 	},
+	details: null,
 });
 
 export default createModule({
