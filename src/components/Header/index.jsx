@@ -117,17 +117,22 @@ class Header extends React.Component {
 			name, balance: { amount, precision, symbol },
 		}) => {
 			const content = (
-				<button
-					key={name}
-					className="user-item"
-					onClick={(e) => this.onChangeAccount(e, name)}
-				>
-					<span>{name}</span>
-					<div className="balance">
-						<span>{formatAmount(amount, precision) || '0'}</span>
-						<span>{symbol || 'ECHO'}</span>
-					</div>
-				</button>
+				<div key={name} className="user-item-wrap">
+					<button
+						className="user-item"
+						onClick={(e) => this.onChangeAccount(e, name)}
+					>
+						<span>{name}</span>
+						<div className="balance">
+							<span>{formatAmount(amount, precision) || '0'}</span>
+							<span>{symbol || 'ECHO'}</span>
+						</div>
+					</button>
+					<button
+						className="logout-user-btn"
+						onClick={(e) => this.onChangeAccount(e, name)}
+					/>
+				</div>
 			);
 
 			return ({
