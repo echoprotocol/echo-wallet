@@ -64,6 +64,11 @@
     align-items: flex-end;
 
     .ui.dropdown {
+        &.active {
+            .dropdown.icon {
+                line-height: 11px;
+            } 
+        }
         .menu {
             right: 0;
             left: auto;

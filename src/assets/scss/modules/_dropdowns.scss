@@ -1,5 +1,15 @@
 .ui.dropdown {
-
+    &.active {
+        .dropdown.icon,
+        .icon-dropdown_arrow {
+            transform: rotate(180deg);
+        }
+        &.compact {
+            .dropdown.icon {
+               line-height: 17px;
+            }
+        }
+    }
     &.fee-dropdown {
         display: flex;
         align-items: center;
@@ -44,8 +54,7 @@
         &.active {
             box-shadow: none;
             .dropdown.icon {
-                transform: rotate(180deg);
-                margin-top: 1px;
+                margin-top: -1px;
             }
             &:hover {
                 box-shadow: none;
@@ -122,8 +131,8 @@
                 display: none;
             }
             .dropdown.icon {
-                transform: rotate(180deg);
                 margin-top: -7px;
+                margin-right: -10px;
             }  
         }
         .dropdown.icon {
@@ -237,6 +246,7 @@
 
     &.network-dropdown {
         margin-right: -15px;
+
         &.disconnected {
             .network-dropdown-trigger {
                 &:hover {
