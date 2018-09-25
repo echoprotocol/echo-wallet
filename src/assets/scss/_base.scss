@@ -53,7 +53,7 @@ div,span {
 	&.center-mode {
 		display: flex;
         justify-content: center;
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 90px);
         overflow: auto;
         overflow-y: overlay;
 		div {

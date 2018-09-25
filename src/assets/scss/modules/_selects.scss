@@ -1,6 +1,7 @@
 
 .check {
     &-list {
+        width: 100%;
         margin-top: 25px;
         .check {
             &:not(:last-child) {
@@ -19,10 +20,18 @@
             font-size: 1em;
             transition: color  $speed;
             pointer-events: none;
+            line-height: 1;
         }
         &:before {
             text-align: center;
-            font-family: 'Icons';
+            font-family: 'icomoon';
+            src:  url('../fonts/iconmoon/icomoon.eot?h46e29');
+            src:  url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+              url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+              url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+              url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+            font-weight: normal;
+            font-style: normal;
             display: block;
             color: #fff;
             min-width: 22px;
@@ -30,11 +39,10 @@
             height: 22px;
             border-radius: 4px;
             border: 2px solid $main-сolor;
-            margin-right: 15px;
-            content: "\f00c";
+            margin-right: 10px;
+            content: "\e924";
             transition: border  $speed, background-color  $speed, color  $speed;
-            font-weight: 300;
-            font-size: 12px;
+            font-size: 7px;
         }
     }
     input[type="checkbox"] {
