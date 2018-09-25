@@ -48,14 +48,10 @@ class Networks extends React.Component {
 			<div className="sign-scroll-fix">
 				<Form className="main-form">
 					<div className="form-info">
-						<a
-							href="#"
-							onClick={() => this.goBack()}
-							className="back-link"
-						>
+						<button className="back-link" onClick={() => this.goBack()}>
 							<span className="icon-back" />
-                        back
-						</a>
+							back
+						</button>
 						<h3>Add connection</h3>
 					</div>
 					<div className="field-wrap">

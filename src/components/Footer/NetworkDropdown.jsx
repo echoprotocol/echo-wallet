@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import classnames from 'classnames';
@@ -89,11 +88,7 @@ class Network extends React.PureComponent {
 			key: 'custom',
 			className: 'item-link',
 			selected: false,
-			content: (
-				<Link className="network-link" to={NETWORKS_PATH} >
-					+ Add custom Network
-				</Link>
-			),
+			content: (<div className="network-link">+ Add custom Network</div>),
 		});
 
 		return (
@@ -115,6 +110,10 @@ class Network extends React.PureComponent {
 						<span className="status connected">
 							<div className="ellipsis">{network.name}</div>
 						</span>
+						<span className="pipeline-block">
+                            Block
+							<span>{this.props.lastBlock}</span>
+						</span>
 						<span className="icon-dropdown_arrow" />
 					</div>
 				}
@@ -133,6 +132,7 @@ Network.propTypes = {
 	history: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
+	lastBlock: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 };
 

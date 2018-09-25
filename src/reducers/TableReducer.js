@@ -5,12 +5,13 @@ import _ from 'lodash';
 import { HISTORY_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 
 const DEFAULT_FIELDS = Map({
-	loading: true,
+	loading: false,
 	error: null,
 });
 
 const DEFAULT_TABLE_FIELDS = {
 	[HISTORY_TABLE]: Map({
+		loading: true,
 		data: null,
 		activeTransaction: '',
 	}),

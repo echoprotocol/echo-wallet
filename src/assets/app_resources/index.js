@@ -1,9 +1,6 @@
 // Modules to control application life and create native browser window
 const {
-	app, BrowserWindow,
-	Menu,
-	shell,
-// eslint-disable-next-line import/no-extraneous-dependencies
+	app, BrowserWindow, Menu, shell,
 } = require('electron');
 
 require('electron-context-menu')({

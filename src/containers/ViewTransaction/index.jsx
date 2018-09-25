@@ -20,9 +20,9 @@ class ViewTransaction extends React.Component {
 	}
 
 	render() {
-		const { location: { state }, note } = this.props;
+		const { data, note } = this.props;
 
-		if (!state) {
+		if (!data) {
 			this.props.history.goBack();
 			return null;
 		}
@@ -32,7 +32,7 @@ class ViewTransaction extends React.Component {
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabOverview
-							data={state.data}
+							data={data}
 							note={note}
 							unlock={this.props.openUnlock}
 						/>
@@ -41,7 +41,7 @@ class ViewTransaction extends React.Component {
 			},
 		];
 
-		const isLogData = state.data.name === 'Contract' && state.data.details.tr_receipt.log.length;
+		const isLogData = data.name === 'Contract' && data.details.tr_receipt.log.length;
 		if (isLogData) {
 			panes[0].menuItem = <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Overview" key={0} />;
 
@@ -49,7 +49,7 @@ class ViewTransaction extends React.Component {
 				menuItem: <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Event Logs" key={1} />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabLogs data={state.data} />
+						<TabLogs data={data} />
 					</Tab.Pane>
 				),
 			});
@@ -63,7 +63,7 @@ class ViewTransaction extends React.Component {
 							<li className="name">
 								<span className="label">Transaction:</span>
 								<span className="value pointer">
-									{state.data.id}
+									{data.id}
 								</span>
 							</li>
 						</ul>
@@ -81,18 +81,22 @@ class ViewTransaction extends React.Component {
 }
 
 ViewTransaction.propTypes = {
+	data: PropTypes.any,
 	note: PropTypes.object.isRequired,
-	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	openUnlock: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
 };
 
+ViewTransaction.defaultProps = {
+	data: null,
+};
 
 export default withRouter(connect(
 	(state) => ({
 		note: state.transaction.get('note'),
+		data: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
 		openUnlock: (value) => dispatch(openUnlock(value)),
