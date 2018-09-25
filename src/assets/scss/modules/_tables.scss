@@ -39,14 +39,14 @@ $thead-height: 46px;
         display: flex;
         flex-direction: column;
         margin: 0;
-        height: calc(100vh - 100px);
+        height: calc(100vh - 90px);
         overflow-y: overlay;
         overflow-x: hidden;
         @media (min-width: 840px){
             overflow-y: overlay;
             overflow-x: hidden;
             margin: 46px 0 0 0;
-            height: calc(100vh - 146px);
+            height: calc(100vh - 136px);
         }
         border: 0;
         border-radius: 0;
@@ -325,6 +325,9 @@ $thead-height: 46px;
         tbody {
             tr {
                 transition: background-color $speed;
+                &:nth-child(2n-1) {
+                    background-color: #f5f5f6;
+                }
                 &:hover {
                     background-color: $main-сolor;
                     td {

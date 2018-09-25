@@ -1,11 +1,11 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 186px);
+        max-height: calc(100vh - 176px);
         overflow: overlay;
     }
     &.hide-menu {
         .scroll-fix {
-            max-height: calc(100vh - 146px);
+            max-height: calc(100vh - 136px);
         }
         & > .menu {
             display: none;
