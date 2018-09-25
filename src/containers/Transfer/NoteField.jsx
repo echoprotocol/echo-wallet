@@ -28,7 +28,7 @@ class NoteField extends React.Component {
 		this.setState({
 			note,
 			timeout: setTimeout(() => {
-				this.props.setFormValue('note', note);
+				this.props.setFormValue('note', note.trim());
 			}, 300),
 		});
 	}
