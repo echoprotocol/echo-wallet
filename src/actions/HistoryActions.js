@@ -30,7 +30,6 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 		transaction.details = await getContractResult(instance, transaction.subject);
 		[transaction.contract] = (await dispatch(fetch(transaction.subject))).toJS().contracts_id;
 	}
-	dispatch(setValue(HISTORY_TABLE, 'activeTransaction', transaction.id));
 
 	dispatch(setField('details', transaction));
 

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { scroller } from 'react-scroll';
-import { withRouter } from 'react-router';
 
 import Loading from '../../components/Loader/LoadingData';
 
@@ -38,24 +37,20 @@ class Activity extends React.Component {
 		if (!_.isEqual(prevState.history, this.state.history)) {
 			this.format(this.state.history);
 		}
-		if (this.props.activeTransaction) {
-			scroller.scrollTo(`tx_${this.props.activeTransaction}`, {
-				duration: 1500,
+		const { loading, activeTransaction } = this.props;
+		if (!loading && activeTransaction.active) {
+			scroller.scrollTo(`tx_${this.props.activeTransaction.value}`, {
+				duration: 500,
 				delay: 100,
 				smooth: true,
-				offset: -100,
+				offset: -115,
 				containerId: 'activityContainer',
 			});
 		}
 	}
 
 	componentWillUnmount() {
-		console.log(this.props.location.pathname);
-		// this.props.clearTable();
-	}
-
-	onTransaction(e, data) {
-		this.props.viewTransaction(data);
+		this.props.clearTable();
 	}
 
 	format(data) {
@@ -115,8 +110,7 @@ class Activity extends React.Component {
 Activity.propTypes = {
 	history: PropTypes.any,
 	loading: PropTypes.bool.isRequired,
-	activeTransaction: PropTypes.string.isRequired,
-	location: PropTypes.object.isRequired,
+	activeTransaction: PropTypes.object.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
 	clearTable: PropTypes.func.isRequired,
@@ -126,7 +120,7 @@ Activity.defaultProps = {
 	history: null,
 };
 
-export default withRouter(connect(
+export default connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
@@ -142,4 +136,4 @@ export default withRouter(connect(
 		viewTransaction: (value) => dispatch(viewTransaction(value)),
 		clearTable: () => dispatch(clearTable(HISTORY_TABLE)),
 	}),
-)(Activity));
+)(Activity);

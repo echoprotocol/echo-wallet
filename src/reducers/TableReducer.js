@@ -13,7 +13,10 @@ const DEFAULT_TABLE_FIELDS = {
 	[HISTORY_TABLE]: Map({
 		loading: true,
 		data: null,
-		activeTransaction: '',
+		activeTransaction: {
+			value: '',
+			active: false,
+		},
 	}),
 	[PERMISSION_TABLE]: Map({
 		active: new Map({

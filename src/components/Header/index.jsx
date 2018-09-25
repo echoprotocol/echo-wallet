@@ -6,8 +6,8 @@ import { Dropdown, Button } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
 
-
 import { logout, initAccount } from '../../actions/GlobalActions';
+import { setIn } from '../../actions/TableActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -24,6 +24,7 @@ import {
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+import { HISTORY_TABLE } from '../../constants/TableConstants';
 
 const primaryPaths = [
 	INDEX_PATH,
@@ -97,16 +98,27 @@ class Header extends React.Component {
 	}
 
 	renderLinkToParent() {
-		const { location } = this.props;
+		const { location, activeTransaction } = this.props;
 
 		if (primaryPaths.includes(location.pathname)) return null;
 
 		let to = ACTIVITY_PATH;
+		let active = false;
+		let value = null;
 
-		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) to = CONTRACT_LIST_PATH;
+		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) {
+			to = CONTRACT_LIST_PATH;
+		} else {
+			({ value } = activeTransaction);
+			active = true;
+		}
 
 		return (
-			<NavLink to={to} className="icon-back sub" />
+			<NavLink
+				to={to}
+				onClick={() => this.props.setIn(['activeTransaction'], { value, active })}
+				className="icon-back sub"
+			/>
 		);
 	}
 
@@ -230,8 +242,10 @@ Header.propTypes = {
 	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
+	activeTransaction: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
+	setIn: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -241,9 +255,11 @@ export default withRouter(connect(
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
 		showBackButton: state.global.get('showBackButton'),
+		activeTransaction: state.table.getIn([HISTORY_TABLE, 'activeTransaction']),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
+		setIn: (fields, value) => dispatch(setIn(HISTORY_TABLE, fields, value)),
 	}),
 )(Header));
