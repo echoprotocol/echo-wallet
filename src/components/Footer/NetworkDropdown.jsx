@@ -110,6 +110,10 @@ class Network extends React.PureComponent {
 						<span className="status connected">
 							<div className="ellipsis">{network.name}</div>
 						</span>
+						<span className="pipeline-block">
+                            Block
+							<span>{this.props.lastBlock}</span>
+						</span>
 						<span className="icon-dropdown_arrow" />
 					</div>
 				}
@@ -128,6 +132,7 @@ Network.propTypes = {
 	history: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
+	lastBlock: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 };
 
