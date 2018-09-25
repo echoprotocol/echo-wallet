@@ -69,33 +69,30 @@ class Activity extends React.Component {
 		const { history } = this.props;
 
 		return history ? (
-			<React.Fragment>
-				<Table className="table-activity">
-					<Table.Header>
-						<Table.Row>
-							<Table.HeaderCell>Operation</Table.HeaderCell>
-							<Table.HeaderCell>Block</Table.HeaderCell>
-							<Table.HeaderCell>From</Table.HeaderCell>
-							<Table.HeaderCell>Subject</Table.HeaderCell>
-							<Table.HeaderCell>Value</Table.HeaderCell>
-							<Table.HeaderCell>Fee</Table.HeaderCell>
-							<Table.HeaderCell>Time</Table.HeaderCell>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body id="activityContainer">
-						{
-							history.map((i) => (
-								<RowComponent
-									key={i.id}
-									data={i}
-									viewTransaction={this.props.viewTransaction}
-								/>
-							))
-						}
-					</Table.Body>
-				</Table>
-
-			</React.Fragment>
+			<Table className="table-activity">
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell>Operation</Table.HeaderCell>
+						<Table.HeaderCell>Block</Table.HeaderCell>
+						<Table.HeaderCell>From</Table.HeaderCell>
+						<Table.HeaderCell>Subject</Table.HeaderCell>
+						<Table.HeaderCell>Value</Table.HeaderCell>
+						<Table.HeaderCell>Fee</Table.HeaderCell>
+						<Table.HeaderCell>Time</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body id="activityContainer">
+					{
+						history.map((i) => (
+							<RowComponent
+								key={i.id}
+								data={i}
+								viewTransaction={this.props.viewTransaction}
+							/>
+						))
+					}
+				</Table.Body>
+			</Table>
 		) : this.renderEmpty();
 	}
 
