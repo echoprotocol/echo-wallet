@@ -284,9 +284,6 @@ $thead-height: 46px;
                     background-color: $main-сolor;
                     td {
                         color: #fff;
-                        &:last-child {
-                            color: $yellow;
-                        }
                     }
                 }
                 td {
@@ -295,7 +292,6 @@ $thead-height: 46px;
                     padding: 0.82857143em 5px;
                     color: $black;
                     &:last-child {
-                        color: $main-сolor;
                         span {
                             display: block;
                         }
@@ -422,11 +418,7 @@ $thead-height: 46px;
     }
 }
 
-@media (max-width: 1200px){
-    .wallet-wrap {
-        padding: 0 20px;
-    }
-}
+
 .ui {
 
 
