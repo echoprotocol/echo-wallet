@@ -161,7 +161,8 @@ $thead-height: 46px;
         }
 
         tbody {
-            overflow-x:auto;
+            overflow-x: hidden;
+            overflow-y: overlay;
             tr {
                 transition: background-color .3s;
                 &:nth-child(2n) {
