@@ -7,7 +7,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
 
-import { logout, initAccount } from '../../actions/GlobalActions';
+import { logout, initAccount, removeAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -62,6 +62,12 @@ class Header extends React.Component {
 		}
 
 		this.props.initAccount(name, networkName);
+	}
+
+	onRemoveAccount(e, name) {
+		const { networkName } = this.props;
+
+		this.props.removeAccount(name, networkName);
 	}
 
 	onDropdownChange(e, value) {
@@ -128,10 +134,14 @@ class Header extends React.Component {
 							<span>{symbol || 'ECHO'}</span>
 						</div>
 					</button>
-					<button
-						className="logout-user-btn"
-						onClick={(e) => this.onChangeAccount(e, name)}
-					/>
+					{
+						preview.length < 2 ? null : (
+							<button
+								className="logout-user-btn"
+								onClick={(e) => this.onRemoveAccount(e, name)}
+							/>
+						)
+					}
 				</div>
 			);
 
@@ -237,6 +247,7 @@ Header.propTypes = {
 	location: PropTypes.object.isRequired,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
+	removeAccount: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -250,5 +261,6 @@ export default withRouter(connect(
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
+		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
 	}),
 )(Header));
