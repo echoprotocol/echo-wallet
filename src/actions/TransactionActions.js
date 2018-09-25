@@ -74,6 +74,7 @@ export const fetchFee = (type) => async (dispatch) => {
 };
 
 export const getFee = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
+	note = note.trim();
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
@@ -160,6 +161,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 	const { to, currency, note } = form;
 	let { fee } = form;
+	note.value = note.value.trim();
 	const amount = Number(form.amount.value).toString();
 
 	if (to.error || form.amount.error || fee.error || note.error) {
