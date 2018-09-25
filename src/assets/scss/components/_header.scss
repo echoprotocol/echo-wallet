@@ -64,6 +64,11 @@
     align-items: flex-end;
 
     .ui.dropdown {
+        &.active {
+            .dropdown.icon {
+                line-height: 11px;
+            } 
+        }
         .menu {
             right: 0;
             left: auto;
@@ -77,6 +82,7 @@
 
             & > .item {
                 padding: 0;
+                color: #6d7178;
                 &:hover {
                     background-color: transparent;
                     .user-item {

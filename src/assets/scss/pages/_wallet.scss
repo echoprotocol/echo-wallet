@@ -3,5 +3,14 @@
     margin: 10px auto 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 20px;
+    .table-title {
+        & + .main-btn {
+            &.ui.button {
+                margin: 0;
+                padding: 6px 10px 4px;
+                font-size: .82rem;
+            }
+        }
+    }
 }

@@ -5,7 +5,7 @@
         align-items: center;
         width: 100%;
         padding: 0 15px;
-        min-height: 49px;
+        min-height: 39px;
 
         li {
             font-size: 1em;
@@ -42,10 +42,13 @@
 }
 .pipeline {
     &-block {
-        color: $main-сolor;
-    }
-    &-latency {
-        color: $gray-dark;
+        line-height: 0;
+        margin: 1px 10px 0 15px;
+        span {
+            font-family: source;
+            margin-left: 5px;
+            letter-spacing: -.2px;
+        }
     }
 }
 

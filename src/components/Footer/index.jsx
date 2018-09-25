@@ -25,20 +25,8 @@ class Footer extends React.PureComponent {
 			<div className="footer">
 				<ul>
 					<li>Echo.{version}</li>
-					<li className="pipeline">
-						{
-							false &&
-							<React.Fragment>
-								Latency
-								<span className="pipeline-latency"> {latency.value} ms </span>
-								/
-							</React.Fragment>
-						}
-                        Block
-						<span className="pipeline-block"> #{lastBlock}</span>
-					</li>
 					<li>
-						<NetworkDropdown />
+						<NetworkDropdown lastBlock={lastBlock} />
 					</li>
 				</ul>
 			</div>
@@ -52,7 +40,7 @@ class Footer extends React.PureComponent {
 						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
 					</li>
 					<li>
-						<NetworkDropdown disconnected />
+						<NetworkDropdown lastBlock={lastBlock} disconnected />
 					</li>
 				</ul>
 			</div>

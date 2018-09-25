@@ -1,5 +1,15 @@
 .ui.dropdown {
-
+    &.active {
+        .dropdown.icon,
+        .icon-dropdown_arrow {
+            transform: rotate(180deg);
+        }
+        &.compact {
+            .dropdown.icon {
+               line-height: 17px;
+            }
+        }
+    }
     &.fee-dropdown {
         display: flex;
         align-items: center;
@@ -43,6 +53,9 @@
         }
         &.active {
             box-shadow: none;
+            .dropdown.icon {
+                margin-top: -1px;
+            }
             &:hover {
                 box-shadow: none;
             }
@@ -117,6 +130,10 @@
             .filtered {
                 display: none;
             }
+            .dropdown.icon {
+                margin-top: -7px;
+                margin-right: -10px;
+            }  
         }
         .dropdown.icon {
             padding-left: 1em;
@@ -168,7 +185,7 @@
                 margin: 6px 0 0;
                 background-color: transparent;
                 border: 0;
-                color: $bd-gray;
+                color: #c4c4c4;
             }
         }
 
@@ -229,6 +246,7 @@
 
     &.network-dropdown {
         margin-right: -15px;
+
         &.disconnected {
             .network-dropdown-trigger {
                 &:hover {
@@ -240,6 +258,7 @@
                         background-color: #fff;
                     }
                 }
+                .pipeline-block,
                 .icon-dropdown_arrow,
                 .description {
                     color: #fff;
@@ -247,10 +266,9 @@
             }
         }
         .network-dropdown-trigger {
-            height: 49px;
+            height: 39px;
             display: flex;
             align-items: center;
-            min-width: 220px;
             padding: 0 13px 0 18px;
             border-left: 1px solid $bd-gray;
             background-color: transparent;
@@ -290,8 +308,9 @@
         & > .menu {
             padding-top: 6px;
             border-radius: 0;
-            min-width: 220px;
-            max-height: 278px;
+            min-width: 100%;
+            width: 100%;
+            max-height: 245px;
             overflow: auto;
             .item {
                 padding: 0;
@@ -387,7 +406,7 @@
 
                     &-text {
                         padding: 0 0 0 18px;
-                        max-width: 155px;
+                        max-width: 200px;
                         overflow: hidden;
                         text-overflow: ellipsis;
                     }
