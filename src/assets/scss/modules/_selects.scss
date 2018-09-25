@@ -20,6 +20,7 @@
             font-size: 1em;
             transition: color  $speed;
             pointer-events: none;
+            line-height: 1;
         }
         &:before {
             text-align: center;
@@ -31,7 +32,7 @@
             height: 22px;
             border-radius: 4px;
             border: 2px solid $main-сolor;
-            margin-right: 15px;
+            margin-right: 10px;
             content: "\f00c";
             transition: border  $speed, background-color  $speed, color  $speed;
             font-weight: 300;
