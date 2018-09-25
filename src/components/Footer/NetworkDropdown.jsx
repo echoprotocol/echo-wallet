@@ -6,6 +6,8 @@ import { withRouter } from 'react-router';
 import classnames from 'classnames';
 import { NETWORKS } from '../../constants/GlobalConstants';
 
+import { FORM_SIGN_UP } from '../../constants/FormConstants';
+
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
@@ -75,11 +77,10 @@ class Network extends React.PureComponent {
 	}
 
 	render() {
-		const { networks, network } = this.props;
-
+		const { networks, network, loading } = this.props;
 		let options = this.getList(NETWORKS);
 
-		if (networks.length) {
+		if (networks.length || networks.length === 0) {
 			options.push(this.getDivider('divider'));
 			options = options.concat(this.getList(networks));
 		}
@@ -99,6 +100,7 @@ class Network extends React.PureComponent {
 				icon={false}
 				selectOnBlur={false}
 				upward
+				disabled={loading}
 				className={classnames('network-dropdown', {
 					disconnected: this.props.disconnected,
 				})}
@@ -127,6 +129,7 @@ class Network extends React.PureComponent {
 
 
 Network.propTypes = {
+	loading: PropTypes.bool,
 	network: PropTypes.object.isRequired,
 	networks: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
@@ -138,12 +141,14 @@ Network.propTypes = {
 
 Network.defaultProps = {
 	disconnected: false,
+	loading: false,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		network: state.global.get('network').toJS(),
 		networks: state.global.get('networks').toJS(),
+		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
