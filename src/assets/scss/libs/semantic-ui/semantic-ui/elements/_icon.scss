@@ -412,6 +412,9 @@ i.small.icons {
 i.icon,
 i.icons {
   font-size: 1em;
+  &.copy {
+      font-size: 1.1em;
+  }
 }
 i.large.icon,
 i.large.icons {

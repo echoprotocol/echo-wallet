@@ -26,7 +26,6 @@
         text-align: center;
         line-height: 20px;
         font-size: 20px;
-        margin-right: 10px;
         &.icon-menu-wallet {
             font-size: 17px;
         }
@@ -53,16 +52,25 @@
         justify-content: flex-start;
         align-items: center;
         height: 50px;
-        .icon-menu {
-            animation: fadeIn 1.3s;
-        }
+
         .icon-menu,
         .icon-close {
             background-color: transparent;
             border: 0;
-            transition: background-color $speed;
+            transition: background-color $speed, color $speed;
             cursor: pointer;
+        }
+        .icon-menu {
+            animation: fadeIn 1.3s;
             color: $text-dark;
+        }
+
+        .icon-close {
+            color: #c4c5ca;
+            &:hover,
+            &:focus {
+                color: $text-dark;
+            }
         }
 
     }
@@ -89,7 +97,7 @@
             .sidebar-nav-link {
                 display: flex;
                 min-height: 45px;
-                padding: 8px 15px;
+                padding: 8px 17px;
                 color: $text-dark;
                 align-items: center;
                 justify-content: flex-start;
@@ -109,7 +117,7 @@
             }
         }
         &-text {
-            margin-left: 10px;
+            margin-left: 12px;
             opacity: 0;
             transition: opacity .3s;       
         }
