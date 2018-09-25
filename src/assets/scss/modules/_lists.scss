@@ -6,21 +6,13 @@
         text-transform: none;
         font-size: 1.1em;
         font-family: proxima;
+        margin-bottom: 5px;
         li {
             height: 10px;
             display: flex;
             align-items: center;
-            &:not(:last-child) {
-                &:after {
-                        content: "";
-                        width: 1px;
-                        height: 15px;
-                        background-color: $bd-gray;
-                        display: block;
-                        margin: 0 10px;
-                }
-            }
             &:last-child {
+                margin-left: 20px;
                 span {
                     margin-left: 4px;
                     color: $main-сolor;
