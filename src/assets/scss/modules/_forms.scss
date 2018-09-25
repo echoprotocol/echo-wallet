@@ -16,9 +16,10 @@
         .back-link {
             background-color: transparent;
             border: 0;
-            margin-right: -40px;
+            margin-right: -45px;
             transform: translate(0);
             color:rgb(156, 160, 176);
+            display: flex;
             align-items: center;
             line-height: 1;
             text-transform: uppercase;
@@ -39,7 +40,7 @@
             }
             .icon-back {
                 transition: color $speed;
-                margin: 0 5px 0 -5px;
+                margin: -2px 5px 0 -5px;
                 padding: 5px 6px 5px 5px;
                 border-radius: $angulars;
             }
@@ -326,10 +327,13 @@
     display: flex;
     position: relative;
     max-width: 350px;
+    
     width: 100%;
     input {
         min-width: 360px;
         padding-right: 55px;
+        height: 34px;
+        padding: 0 1em;
     }
     .label {
         color: $bd-gray;
@@ -343,7 +347,7 @@
         line-height: 38px;
     }
     .edit-option {
-        top: 9px;
+        top: 7.5px;
         height: 20px;
         min-width: 20px;
         display: flex;

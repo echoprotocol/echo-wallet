@@ -1,11 +1,11 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 195px);
+        max-height: calc(100vh - 186px);
         overflow: overlay;
     }
     &.hide-menu {
         .scroll-fix {
-            max-height: calc(100vh - 155px);
+            max-height: calc(100vh - 146px);
         }
         & > .menu {
             display: none;
@@ -28,7 +28,7 @@
             display: flex;
             align-items: center;
             padding: 10px 20px;
-            height: 54px;
+            height: 45px;
             .error-wrap {
                 margin-bottom: 0;
             }
@@ -51,7 +51,7 @@
                 &.name {
                     display: flex;
                     align-items: center;
-                    margin-right: auto;
+                    margin: -1px auto 0 0;
                 }
             }
             .label {
