@@ -80,7 +80,7 @@ class Network extends React.PureComponent {
 		const { networks, network, loading } = this.props;
 		let options = this.getList(NETWORKS);
 
-		if (networks.length) {
+		if (networks.length || networks.length === 0) {
 			options.push(this.getDivider('divider'));
 			options = options.concat(this.getList(networks));
 		}
