@@ -66,7 +66,7 @@ class SignIn extends React.Component {
 			<Form className="main-form">
 				<div className="form-info">
 					{ isAddAccount ?
-						<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+						<button type="button" className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
 							<span className="icon-back" />
 							back
 						</button> : null

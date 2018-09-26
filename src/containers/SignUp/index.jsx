@@ -37,7 +37,7 @@ class SignUp extends React.Component {
 					{
 						isAddAccount ?
 							<div className="form-info">
-								<button className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+								<button type="button" className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
 									<span className="icon-back" />
 									back
 								</button>
