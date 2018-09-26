@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 const {
-	app, BrowserWindow, Menu, shell,
+	app, BrowserWindow, Menu, shell, ipcMain,
 } = require('electron');
 
 require('electron-context-menu')({
@@ -22,6 +22,11 @@ function createWindow() {
 		height: 650,
 		minWidth: 1000,
 		minHeight: 650,
+		webPreferences: {
+			nodeIntegration: false,
+			preload: `${__dirname}/preload.js`,
+		},
+		frame: false,
 	});
 
 	// and load the index.html of the app.
@@ -105,6 +110,22 @@ app.on('activate', () => {
 	if (mainWindow === null) {
 		createWindow();
 	}
+});
+
+ipcMain.on('close-app', () => {
+	app.quit();
+});
+
+ipcMain.on('max-app', () => {
+	if (!mainWindow.isMaximized()) {
+		mainWindow.maximize();
+	} else {
+		mainWindow.unmaximize();
+	}
+});
+
+ipcMain.on('min-app', () => {
+	mainWindow.minimize();
 });
 
 // In this file you can include the rest of your app's specific main process

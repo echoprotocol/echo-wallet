@@ -12,7 +12,7 @@
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
     "build-electron": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
     "postbuild-electron": "npm run prepare-electron",
-    "prepare-electron": "copyfiles -f src/assets/app_resources/index.js build/electron/",
+    "prepare-electron": "copyfiles -f src/assets/app_resources/index.js src/assets/app_resources/preload.js build/electron/",
     "prepackage": "npm run build-electron",
     "package": "build -p never",
     "package-win": "npm run prepackage && build  -p never --windows",
@@ -20,7 +20,7 @@
     "package-mac": "npm run prepackage && build  -p never --mac dmg",
 
     "build-electron-debug": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
-    "postbuild-electron-debug": "copyfiles -f src/assets/app_resources/debug.js build/electron/ && mv build/electron/debug.js build/electron/index.js",
+    "postbuild-electron-debug": "copyfiles -f src/assets/app_resources/debug.js src/assets/app_resources/preload.js build/electron/ && mv build/electron/debug.js build/electron/index.js",
     "package-win-debug": "npm run build-electron-debug && build -p never --windows",
     "package-deb-debug": "npm run build-electron-debug && build -p never --linux deb"
   },

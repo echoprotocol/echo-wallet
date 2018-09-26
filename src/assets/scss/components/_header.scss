@@ -13,8 +13,6 @@
         color: #fff;
         height: 30px;
         padding: 0 18px;
-        border-top-left-radius: $angulars;
-        border-top-right-radius: $angulars;
         position: absolute;
         z-index: 9999999;
         right: 0;
@@ -41,7 +39,7 @@
                     &:before {
                         content: '\e913';
                     }
-                    
+
                 }
                 &.global-max {
                     &:before {
@@ -119,7 +117,7 @@
         &.active {
             .dropdown.icon {
                 line-height: 11px;
-            } 
+            }
         }
         .menu {
             right: 0;
