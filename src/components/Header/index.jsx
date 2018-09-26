@@ -6,8 +6,11 @@ import { Dropdown, Button } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
 
-import { logout, initAccount, removeAccount } from '../../actions/GlobalActions';
+
+import { initAccount, removeAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
+import { MODAL_LOGOUT } from '../../constants/ModalConstants';
+import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -44,8 +47,8 @@ const secondaryContractPaths = [
 
 class Header extends React.Component {
 
-	onLogout() {
-		this.props.logout();
+	onOpenLogout() {
+		this.props.openModal();
 	}
 
 	onAddAccount(e) {
@@ -191,7 +194,8 @@ class Header extends React.Component {
 						<span className="logout">Logout</span>
 					</a>
 				),
-				onClick: (e) => this.onLogout(e),
+				onClick: (e) => this.onOpenLogout(e),
+
 			},
 		];
 
@@ -255,8 +259,8 @@ Header.propTypes = {
 	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
+	openModal: PropTypes.func.isRequired,
 	transactionData: PropTypes.object,
-	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	removeAccount: PropTypes.func.isRequired,
@@ -276,7 +280,7 @@ export default withRouter(connect(
 		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
-		logout: () => dispatch(logout()),
+		openModal: () => dispatch(openModal(MODAL_LOGOUT)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
