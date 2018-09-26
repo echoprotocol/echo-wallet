@@ -65,7 +65,7 @@ class ModalTokens extends React.Component {
 							</div>
 							<Button
 								basic
-								type="button"
+								type="submit"
 								className="main-btn"
 								onClick={(e) => this.onClick(e)}
 								disabled={disabled}
