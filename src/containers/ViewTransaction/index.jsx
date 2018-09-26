@@ -8,21 +8,11 @@ import { connect } from 'react-redux';
 import { openUnlock } from '../../actions/HistoryActions';
 import { resetTransaction } from '../../actions/TransactionActions';
 import { resetConverter } from '../../actions/ConverterActions';
-import { setIn } from '../../actions/TableActions';
-
-import { HISTORY_TABLE } from '../../constants/TableConstants';
 
 import TabOverview from './TabOverview';
 import TabLogs from './TabLogs';
 
 class ViewTransaction extends React.Component {
-
-	componentDidMount() {
-		const { data } = this.props;
-		if (data) {
-			this.props.setIn(['activeTransaction'], { value: data.id, active: false });
-		}
-	}
 
 	componentWillUnmount() {
 		this.props.resetTransaction();
@@ -97,7 +87,6 @@ ViewTransaction.propTypes = {
 	openUnlock: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
-	setIn: PropTypes.func.isRequired,
 };
 
 ViewTransaction.defaultProps = {
@@ -113,6 +102,5 @@ export default withRouter(connect(
 		openUnlock: (value) => dispatch(openUnlock(value)),
 		resetTransaction: () => dispatch(resetTransaction()),
 		resetConverter: () => dispatch(resetConverter()),
-		setIn: (field, value) => dispatch(setIn(HISTORY_TABLE, field, value)),
 	}),
 )(ViewTransaction));

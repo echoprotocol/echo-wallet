@@ -64,11 +64,16 @@
     align-items: flex-end;
 
     .ui.dropdown {
+        &.active {
+            .dropdown.icon {
+                line-height: 11px;
+            } 
+        }
         .menu {
             right: 0;
             left: auto;
             margin-top: 10px;
-            min-width: 300px;
+            min-width: 320px;
             border-radius: 0;
             overflow: hidden;
             .balance {
@@ -77,6 +82,7 @@
 
             & > .item {
                 padding: 0;
+                color: #6d7178;
                 &:hover {
                     background-color: transparent;
                     .user-item {
@@ -85,6 +91,13 @@
                         .balance {
                             color: #fff;
                         }
+                    }
+                    .logout-user-btn {
+                        color: transparent;
+                        width: auto;
+                        padding: 0 1.14285714rem 0 0;
+                        background-color: $main-сolor;
+
                     }
                 }
 
@@ -184,9 +197,44 @@
                     border: 0;
                     cursor: pointer;
                     color: $black;
-                    transition: background-color .4s, color .4s;
+                    transition: background-color $speed, color $speed;
                     padding: 0.78571429rem 1.14285714rem;
                     font-size: .95em;
+                    &-wrap {
+                        display: flex;
+                    }
+                }
+                .logout-user-btn {
+                    overflow: hidden;
+                    width: 0;
+                    padding: 0;
+                    font-family: 'icomoon';
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    line-height: 1;
+                    cursor: pointer;
+                    /* Better Font Rendering =========== */
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+
+                    border: 0;
+                    transition:
+                        background-color $speed,
+                        width $speed,
+                        padding $speed;
+                    &:before {
+                        content: "\e923";
+                        color: #fff;
+                        transition: color $speed;
+                    }
+                    &:hover {
+                        &:before {
+                            color: $yellow;
+                        }
+                    }
                 }
                 .user-panel {
                     padding: 0;
@@ -253,7 +301,7 @@
 
     }
     .balance {
-        transition: color .4s;
+        transition: color $speed;
         color: $link-gray;
         position: relative;
 

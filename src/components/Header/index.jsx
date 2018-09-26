@@ -6,8 +6,8 @@ import { Dropdown, Button } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
 
-import { logout, initAccount } from '../../actions/GlobalActions';
-import { setIn } from '../../actions/TableActions';
+import { logout, initAccount, removeAccount } from '../../actions/GlobalActions';
+import { setValue } from '../../actions/TableActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -65,6 +65,12 @@ class Header extends React.Component {
 		this.props.initAccount(name, networkName);
 	}
 
+	onRemoveAccount(e, name) {
+		const { networkName } = this.props;
+
+		this.props.removeAccount(name, networkName);
+	}
+
 	onDropdownChange(e, value) {
 		if (e.keyCode === 13) {
 			switch (value) {
@@ -98,25 +104,23 @@ class Header extends React.Component {
 	}
 
 	renderLinkToParent() {
-		const { location, activeTransaction } = this.props;
+		const { location, transactionData } = this.props;
 
 		if (primaryPaths.includes(location.pathname)) return null;
 
 		let to = ACTIVITY_PATH;
-		let active = false;
 		let value = null;
 
 		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) {
 			to = CONTRACT_LIST_PATH;
 		} else {
-			({ value } = activeTransaction);
-			active = true;
+			value = transactionData.id;
 		}
 
 		return (
 			<NavLink
 				to={to}
-				onClick={() => this.props.setIn(['activeTransaction'], { value, active })}
+				onClick={() => this.props.setValue('activeTransaction', value)}
 				className="icon-back sub"
 			/>
 		);
@@ -129,17 +133,26 @@ class Header extends React.Component {
 			name, balance: { amount, precision, symbol },
 		}) => {
 			const content = (
-				<button
-					key={name}
-					className="user-item"
-					onClick={(e) => this.onChangeAccount(e, name)}
-				>
-					<span>{name}</span>
-					<div className="balance">
-						<span>{formatAmount(amount, precision) || '0'}</span>
-						<span>{symbol || 'ECHO'}</span>
-					</div>
-				</button>
+				<div key={name} className="user-item-wrap">
+					<button
+						className="user-item"
+						onClick={(e) => this.onChangeAccount(e, name)}
+					>
+						<span>{name}</span>
+						<div className="balance">
+							<span>{formatAmount(amount, precision) || '0'}</span>
+							<span>{symbol || 'ECHO'}</span>
+						</div>
+					</button>
+					{
+						preview.length < 2 ? null : (
+							<button
+								className="logout-user-btn"
+								onClick={(e) => this.onRemoveAccount(e, name)}
+							/>
+						)
+					}
+				</div>
 			);
 
 			return ({
@@ -242,10 +255,15 @@ Header.propTypes = {
 	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	activeTransaction: PropTypes.object.isRequired,
+	transactionData: PropTypes.object,
 	logout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
-	setIn: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	removeAccount: PropTypes.func.isRequired,
+};
+
+Header.defaultProps = {
+	transactionData: null,
 };
 
 export default withRouter(connect(
@@ -255,11 +273,12 @@ export default withRouter(connect(
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
 		showBackButton: state.global.get('showBackButton'),
-		activeTransaction: state.table.getIn([HISTORY_TABLE, 'activeTransaction']),
+		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
 		logout: () => dispatch(logout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
-		setIn: (fields, value) => dispatch(setIn(HISTORY_TABLE, fields, value)),
+		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
+		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
 	}),
 )(Header));

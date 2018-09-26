@@ -71,7 +71,7 @@ class RowComponent extends React.Component {
 					</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="date">{moment.utc(timestamp).local().format('MMMM D, YYYY')}</span>
+					<span className="date">{moment.utc(timestamp).local().format('MMM D, YYYY')}</span>
 					<span className="time">{moment.utc(timestamp).local().format('h:mm:ss A')}</span>
 				</Table.Cell>
 			</Table.Row>

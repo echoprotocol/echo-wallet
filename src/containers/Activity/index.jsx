@@ -38,12 +38,12 @@ class Activity extends React.Component {
 			this.format(this.state.history);
 		}
 		const { loading, activeTransaction } = this.props;
-		if (!loading && activeTransaction.active) {
-			scroller.scrollTo(`tx_${this.props.activeTransaction.value}`, {
+		if (!loading && activeTransaction) {
+			scroller.scrollTo(`tx_${this.props.activeTransaction}`, {
 				duration: 500,
 				delay: 100,
 				smooth: true,
-				offset: -115,
+				offset: -116,
 				containerId: 'activityContainer',
 			});
 		}
@@ -107,7 +107,7 @@ class Activity extends React.Component {
 Activity.propTypes = {
 	history: PropTypes.any,
 	loading: PropTypes.bool.isRequired,
-	activeTransaction: PropTypes.object.isRequired,
+	activeTransaction: PropTypes.string.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
 	clearTable: PropTypes.func.isRequired,

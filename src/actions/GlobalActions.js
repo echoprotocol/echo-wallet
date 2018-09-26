@@ -21,7 +21,12 @@ import {
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
-import { initBalances, getObject, resetBalance } from './BalanceActions';
+import {
+	initBalances,
+	getObject,
+	resetBalance,
+	getPreviewBalances,
+} from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
@@ -133,11 +138,8 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const logout = () => async (dispatch, getState) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-
-	const accountName = getState().global.getIn(['activeUser', 'name']);
-	const networkName = getState().global.getIn(['network', 'name']);
+export const removeAccount = (accountName, networkName) => async (dispatch, getState) => {
+	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -145,16 +147,28 @@ export const logout = () => async (dispatch, getState) => {
 	accounts = accounts.filter(({ name }) => name !== accountName);
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-	if (accounts[0]) {
-		await dispatch(initAccount(accounts[0].name, networkName));
+	if (activeAccountName === accountName && accounts[0]) {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
+		dispatch(initAccount(accounts[0].name, networkName));
 	} else {
-		dispatch(clearTable(HISTORY_TABLE));
-		dispatch(resetBalance());
-		history.push(SIGN_IN_PATH);
-		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
-		EchoJSActions.resetSubscribe();
-		dispatch(EchoJSActions.clearStore());
+		dispatch(getPreviewBalances(networkName));
 	}
+};
+
+export const logout = () => async (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
+	const networkName = getState().global.getIn(['network', 'name']);
+
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify([]));
+
+	dispatch(clearTable(HISTORY_TABLE));
+	dispatch(resetBalance());
+	history.push(SIGN_IN_PATH);
+	process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
+	EchoJSActions.resetSubscribe();
+	dispatch(EchoJSActions.clearStore());
 
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 };
