@@ -42,10 +42,12 @@ div,span {
 .pointer {
     cursor: pointer;
 }
-
+.global-wrapper {
+    padding-top: 30px;
+}
 .wrapper {
 	display: flex;
-	min-height: 100vh;
+	min-height: calc(100vh - 30px);
 	flex-direction: column;
 }
 .content {
@@ -53,7 +55,7 @@ div,span {
 	&.center-mode {
 		display: flex;
         justify-content: center;
-        max-height: calc(100vh - 90px);
+        max-height: calc(100vh - 120px);
         overflow: auto;
         overflow-y: overlay;
 		div {

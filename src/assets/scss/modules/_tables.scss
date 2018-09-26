@@ -39,14 +39,14 @@ $thead-height: 46px;
         display: flex;
         flex-direction: column;
         margin: 0;
-        height: calc(100vh - 90px);
+        height: calc(100vh - 120px);
         overflow-y: overlay;
         overflow-x: hidden;
         @media (min-width: 840px){
             overflow-y: overlay;
             overflow-x: hidden;
             margin: 46px 0 0 0;
-            height: calc(100vh - 136px);
+            height: calc(100vh - 166px);
         }
         border: 0;
         border-radius: 0;
@@ -488,7 +488,7 @@ $thead-height: 46px;
             }
         }
         .tbody {
-            height: calc(100vh - 210px);
+            height: calc(100vh - 230px);
             border-left: 1px solid $bd-gray;
             border-right: 1px solid $bd-gray;
             border-bottom: 1px solid $bd-gray;
