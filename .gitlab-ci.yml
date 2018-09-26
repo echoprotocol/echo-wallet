@@ -26,6 +26,9 @@ deploy:
     - npm run build-dev
   only:
     - master
+  except:
+    variables:
+      - $DEBUG
   tags:
     - pp-projects
 
@@ -39,6 +42,9 @@ build.macos:
     - tags
   tags:
     - echo-mac
+  except:
+    variables:
+      - $DEBUG
   artifacts:
      paths:
      - build/binaries/ECHO Wallet-0.1.0.dmg
@@ -55,6 +61,9 @@ build.linux:
     - tags
   tags:
     - echo-linux
+  except:
+    variables:
+      - $DEBUG
   artifacts:
      paths:
      - build/binaries/ECHOWallet_0.1.0_amd64.deb
@@ -68,6 +77,41 @@ build.windows:
   only:
     - web
     - tags
+  tags:
+    - echo-linux
+  except:
+    variables:
+      - $DEBUG
+  artifacts:
+     paths:
+     - build/binaries/ECHO Wallet Setup 0.1.0.exe
+     expire_in: 1 week
+
+build.linux-debug:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-deb-debug
+  only:
+    - web
+    variables:
+      - $DEBUG
+  tags:
+    - echo-linux
+  artifacts:
+     paths:
+     - build/binaries/ECHOWallet_0.1.0_amd64.deb
+     expire_in: 1 week
+
+build.linux-debug:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-win-debug
+  only:
+    - web
+    variables:
+      - $DEBUG
   tags:
     - echo-linux
   artifacts:
