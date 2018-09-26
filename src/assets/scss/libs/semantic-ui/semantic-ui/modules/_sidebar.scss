@@ -134,6 +134,7 @@ body.pushable {
   transition: transform 500ms ease, -webkit-transform 500ms ease;
   z-index: 2;
   max-width: calc(100vw - 60px);
+  max-height: calc(100vh - 30px);
   margin-left: auto;
 }
 body.pushable > .pusher {

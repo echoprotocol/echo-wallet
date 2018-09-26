@@ -5,6 +5,56 @@
     padding: 0 20px;
     background-color: rgb(247, 247, 247);
     border-bottom: 1px solid rgb(247, 247, 247);
+    &-global {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $main-сolor;
+        color: #fff;
+        height: 30px;
+        padding: 0 18px;
+        position: absolute;
+        z-index: 9999999;
+        right: 0;
+        left: 0;
+        top: 0;
+        .app-nav {
+            button {
+                background-color: transparent;
+                border: 0;
+                color: #fff;
+                font-family: 'icomoon';
+                src:  url('../fonts/iconmoon/icomoon.eot?h46e29');
+                src:  url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+                  url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+                  url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+                  url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+                font-weight: normal;
+                font-style: normal;
+                font-size: .85em;
+                &:not(:last-child){
+                    margin-right: 20px;
+                }
+                &.global-min {
+                    &:before {
+                        content: '\e913';
+                    }
+
+                }
+                &.global-max {
+                    &:before {
+                        content: '\e926';
+                    }
+                }
+                &.global-close {
+                    &:before {
+                        content: '\e911';
+                    }
+                }
+            }
+        }
+
+    }
     .icon-back {
         line-height: 15px;
         padding: 5px;
@@ -67,7 +117,7 @@
         &.active {
             .dropdown.icon {
                 line-height: 11px;
-            } 
+            }
         }
         .menu {
             right: 0;

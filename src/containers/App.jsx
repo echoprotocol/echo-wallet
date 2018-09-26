@@ -11,6 +11,8 @@ import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
 import SidebarMenu from '../components/SideMenu/index';
 import Header from '../components/Header/index';
+import GlobalHeader from '../components/GlobalHeader';
+
 import Footer from '../components/Footer/index';
 import Toast from '../components/Toast';
 
@@ -92,15 +94,19 @@ class App extends React.Component {
 		const { globalLoading } = this.props;
 
 		return (
-			<div className="global-wrapper">
-				<Segment>
-					{globalLoading ? <Loading /> : this.renderSidebar()}
-				</Segment>
+			<React.Fragment>
+				{ ELECTRON ? <GlobalHeader /> : null }
 
-				<Modals />
-				<Toast />
+				<div className="global-wrapper">
+					<Segment>
+						{globalLoading ? <Loading /> : this.renderSidebar()}
+					</Segment>
 
-			</div>
+					<Modals />
+					<Toast />
+
+				</div>
+			</React.Fragment>
 		);
 	}
 

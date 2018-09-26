@@ -57,5 +57,8 @@
 				"SwitchCase": 1
 			}
 		]
+	},
+	"globals": {
+		"ELECTRON": true
 	}
 }

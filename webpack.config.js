@@ -3,6 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 	template: `${__dirname}/src/assets/index.html`,
@@ -87,6 +88,7 @@ module.exports = {
 		HTMLWebpackPluginConfig,
 		extractSass,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
+		new webpack.DefinePlugin({ ELECTRON: !!process.env.ELECTRON }),
 	],
 	node: {
 		fs: 'empty',
