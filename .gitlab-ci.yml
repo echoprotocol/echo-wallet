@@ -74,3 +74,31 @@ build.windows:
      paths:
      - build/binaries/ECHO Wallet Setup 0.1.0.exe
      expire_in: 1 week
+
+build.linux-debug:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-deb-debug
+  only:
+    - web
+  tags:
+    - echo-linux
+  artifacts:
+     paths:
+     - build/binaries/ECHOWallet_0.1.0_amd64.deb
+     expire_in: 1 week
+
+build.linux-debug:
+  stage: deploy
+  script:
+    - npm install
+    - npm run package-win-debug
+  only:
+    - web
+  tags:
+    - echo-linux
+  artifacts:
+     paths:
+     - build/binaries/ECHO Wallet Setup 0.1.0.exe
+     expire_in: 1 week
