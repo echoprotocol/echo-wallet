@@ -70,9 +70,6 @@ build.windows:
     - tags
   tags:
     - echo-linux
-  except:
-    variables:
-      - $DEBUG
   artifacts:
      paths:
      - build/binaries/ECHO Wallet Setup 0.1.0.exe
