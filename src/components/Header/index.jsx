@@ -7,7 +7,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
 
-import { logout, initAccount, removeAccount } from '../../actions/GlobalActions';
+import { openLogout, initAccount, removeAccount } from '../../actions/GlobalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -43,8 +43,8 @@ const secondaryContractPaths = [
 
 class Header extends React.Component {
 
-	onLogout() {
-		this.props.logout();
+	onOpenLogout() {
+		this.props.openLogout();
 	}
 
 	onAddAccount(e) {
@@ -181,7 +181,8 @@ class Header extends React.Component {
 						<span className="logout">Logout</span>
 					</a>
 				),
-				onClick: (e) => this.onLogout(e),
+				onClick: (e) => this.onOpenLogout(e),
+
 			},
 		];
 
@@ -245,7 +246,7 @@ Header.propTypes = {
 	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	logout: PropTypes.func.isRequired,
+	openLogout: PropTypes.func.isRequired,
 	initAccount: PropTypes.func.isRequired,
 	removeAccount: PropTypes.func.isRequired,
 };
@@ -259,7 +260,7 @@ export default withRouter(connect(
 		showBackButton: state.global.get('showBackButton'),
 	}),
 	(dispatch) => ({
-		logout: () => dispatch(logout()),
+		openLogout: () => dispatch(openLogout()),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
 	}),
