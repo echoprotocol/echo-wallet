@@ -13,8 +13,7 @@ import {
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
-import { MODAL_LOGOUT } from '../constants/ModalConstants';
-import { openModal } from './ModalActions';
+
 
 import {
 	validateNetworkName,
@@ -156,10 +155,6 @@ export const removeAccount = (accountName, networkName) => async (dispatch, getS
 	} else {
 		dispatch(getPreviewBalances(networkName));
 	}
-};
-export const openLogout = () => (dispatch) => {
-	console.log('here');
-	dispatch(openModal(MODAL_LOGOUT));
 };
 
 export const logout = () => async (dispatch, getState) => {

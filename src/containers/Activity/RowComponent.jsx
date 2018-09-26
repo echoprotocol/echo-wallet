@@ -3,6 +3,7 @@ import { Table } from 'semantic-ui-react';
 import moment from 'moment';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { Element } from 'react-scroll/modules/index';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -14,6 +15,7 @@ class RowComponent extends React.Component {
 
 	render() {
 		const {
+			id,
 			color,
 			name,
 			block,
@@ -37,6 +39,11 @@ class RowComponent extends React.Component {
 				onClick={(e) => this.onTransaction(e)}
 			>
 				<Table.Cell>
+					<Element
+						key={id}
+						id={`tx_${id}`}
+						name={`tx_${id}`}
+					/>
 					<span className={classnames('label-operation', color)}>{name}</span>
 				</Table.Cell>
 				<Table.Cell>

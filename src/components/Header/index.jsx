@@ -7,7 +7,10 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
 
-import { openLogout, initAccount, removeAccount } from '../../actions/GlobalActions';
+import { initAccount, removeAccount } from '../../actions/GlobalActions';
+import { setValue } from '../../actions/TableActions';
+import { MODAL_LOGOUT } from '../../constants/ModalConstants';
+import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
 import {
@@ -24,6 +27,7 @@ import {
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+import { HISTORY_TABLE } from '../../constants/TableConstants';
 
 const primaryPaths = [
 	INDEX_PATH,
@@ -44,7 +48,7 @@ const secondaryContractPaths = [
 class Header extends React.Component {
 
 	onOpenLogout() {
-		this.props.openLogout();
+		this.props.openModal();
 	}
 
 	onAddAccount(e) {
@@ -103,16 +107,25 @@ class Header extends React.Component {
 	}
 
 	renderLinkToParent() {
-		const { location } = this.props;
+		const { location, transactionData } = this.props;
 
 		if (primaryPaths.includes(location.pathname)) return null;
 
 		let to = ACTIVITY_PATH;
+		let value = null;
 
-		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) to = CONTRACT_LIST_PATH;
+		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) {
+			to = CONTRACT_LIST_PATH;
+		} else {
+			value = transactionData.id;
+		}
 
 		return (
-			<NavLink to={to} className="icon-back sub" />
+			<NavLink
+				to={to}
+				onClick={() => this.props.setValue('activeTransaction', value)}
+				className="icon-back sub"
+			/>
 		);
 	}
 
@@ -246,9 +259,15 @@ Header.propTypes = {
 	assets: PropTypes.array.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	openLogout: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
+	transactionData: PropTypes.object,
 	initAccount: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	removeAccount: PropTypes.func.isRequired,
+};
+
+Header.defaultProps = {
+	transactionData: null,
 };
 
 export default withRouter(connect(
@@ -258,10 +277,12 @@ export default withRouter(connect(
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
 		showBackButton: state.global.get('showBackButton'),
+		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
-		openLogout: () => dispatch(openLogout()),
+		openModal: () => dispatch(openModal(MODAL_LOGOUT)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
+		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
 	}),
 )(Header));
