@@ -3,6 +3,7 @@ import { Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { scroller } from 'react-scroll';
 
 import Loading from '../../components/Loader/LoadingData';
 
@@ -35,6 +36,16 @@ class Activity extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (!_.isEqual(prevState.history, this.state.history)) {
 			this.format(this.state.history);
+		}
+		const { loading, activeTransaction } = this.props;
+		if (!loading && activeTransaction) {
+			scroller.scrollTo(`tx_${this.props.activeTransaction}`, {
+				duration: 500,
+				delay: 100,
+				smooth: true,
+				offset: -116,
+				containerId: 'activityContainer',
+			});
 		}
 	}
 
@@ -70,7 +81,7 @@ class Activity extends React.Component {
 						<Table.HeaderCell>Time</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
-				<Table.Body>
+				<Table.Body id="activityContainer">
 					{
 						history.map((i) => (
 							<RowComponent
@@ -96,6 +107,7 @@ class Activity extends React.Component {
 Activity.propTypes = {
 	history: PropTypes.any,
 	loading: PropTypes.bool.isRequired,
+	activeTransaction: PropTypes.string.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
 	clearTable: PropTypes.func.isRequired,
@@ -111,7 +123,10 @@ export default connect(
 		const account = state.echojs.getIn(['data', 'accounts', accountId]);
 		const history = state.table.getIn([HISTORY_TABLE, 'data']);
 		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
-		return { account, history, loading };
+		const activeTransaction = state.table.getIn([HISTORY_TABLE, 'activeTransaction']);
+		return {
+			account, history, loading, activeTransaction,
+		};
 	},
 	(dispatch) => ({
 		formatHistory: (value) => dispatch(formatHistory(value)),
