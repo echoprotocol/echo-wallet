@@ -39,7 +39,7 @@ class ModalLogout extends React.Component {
 							<div className="form-info">
 								<h3>Confirm logout</h3>
 							</div>
-							{ accounts.length < 2 ? 'You will be logged out of your account.' : 'You will be logged out of all your accounts.' }
+							{ accounts.length < 2 ? 'You will be signed out of your account.' : 'You will be signed out of all your accounts.' }
 
 
 							<div className="form-panel">
