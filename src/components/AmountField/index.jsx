@@ -116,17 +116,22 @@ class AmountField extends React.Component {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
-		const list = (searchText !== '' || search || this.props[type].length === 0) ? [] : [
-			{
-				key: `${type}_header`,
-				text: '',
-				value: type.toUpperCase(),
-				className: `${type}_header header`,
-				disabled: true,
-			},
-		];
+		const list = (
+			searchText !== ''
+			|| search
+			|| !this.props[type].length
+			|| this.props[type].filter((i) => i.disabled).length === this.props[type].length
+		) ? [] : [
+				{
+					key: `${type}_header`,
+					text: '',
+					value: type.toUpperCase(),
+					className: `${type}_header header`,
+					disabled: true,
+				},
+			];
 		return this.props[type].reduce((arr, a, i) => {
-			if (!search || a.symbol.toLowerCase().match(search)) {
+			if ((!search || a.symbol.toLowerCase().match(search)) && !a.disabled) {
 				const id = i;
 				arr.push({
 					key: a ? a.id : id,
