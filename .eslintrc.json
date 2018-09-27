@@ -48,6 +48,7 @@
 				"allowChildren": false
 			}
 		],
+		"jsx-a11y/no-autofocus": 0,
 		"no-param-reassign": 0,
 		"no-tabs": 0,
 		"indent": [

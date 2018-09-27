@@ -15,7 +15,6 @@ class FormComponent extends React.Component {
 		this.props.clearForm();
 	}
 
-
 	onChange(e, lowerCase) {
 		const field = e.target.name;
 		let { value } = e.target;
@@ -45,6 +44,7 @@ class FormComponent extends React.Component {
 						value={accountName.value}
 						onChange={(e) => this.onChange(e, true)}
 						disabled={loading}
+						autoFocus
 					/>
 					<span className="error-message">{accountName.error}</span>
 				</Form.Field>
