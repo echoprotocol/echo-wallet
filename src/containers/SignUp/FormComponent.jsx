@@ -11,10 +11,6 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
-
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -48,7 +44,7 @@ class FormComponent extends React.Component {
 						value={accountName.value}
 						onChange={(e) => this.onChange(e, true)}
 						disabled={loading}
-						ref={(c) => { this.inputFocus = c; }}
+						autoFocus
 					/>
 					<span className="error-message">{accountName.error}</span>
 				</Form.Field>

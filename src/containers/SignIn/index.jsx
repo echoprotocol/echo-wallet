@@ -14,10 +14,6 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
-
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -87,7 +83,7 @@ class SignIn extends React.Component {
 							className="ui input"
 							value={accountName.value}
 							onChange={(e) => this.onChange(e, true)}
-							ref={(c) => { this.inputFocus = c; }}
+							autoFocus
 						/>
 						<span className="error-message">{accountName.error}</span>
 

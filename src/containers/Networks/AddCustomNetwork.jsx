@@ -6,9 +6,9 @@ import classnames from 'classnames';
 
 class AddCustomNetwork extends React.Component {
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
+	// componentDidMount() {
+	// 	this.inputFocus.focus();
+	// }
 
 	onChange(e) {
 		const { name, value } = e.target;
@@ -27,7 +27,8 @@ class AddCustomNetwork extends React.Component {
 							name={name}
 							value={value}
 							onChange={(e) => this.onChange(e)}
-							ref={(c) => { this.inputFocus = c; }}
+							autoFocus
+							// ref={(c) => { this.inputFocus = c; }}
 						/>
 						:
 						<input

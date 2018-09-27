@@ -14,10 +14,6 @@ import { setContractFees } from '../../actions/ContractActions';
 
 class AddContractComponent extends React.Component {
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
-
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -55,7 +51,7 @@ class AddContractComponent extends React.Component {
 							className="ui input"
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
-							ref={(c) => { this.inputFocus = c; }}
+							autoFocus
 						/>
 						<span className="error-message">{id.error}</span>
 					</Form.Field>

@@ -14,10 +14,6 @@ class FormComponent extends React.Component {
 		this.props.clearForm();
 	}
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
-
 	onChange(e) {
 		const field = e.target.name;
 		const { value } = e.target;
@@ -95,7 +91,7 @@ class FormComponent extends React.Component {
 						className="ui input"
 						value={bytecode.value}
 						onChange={(e) => this.onChange(e)}
-						ref={(c) => { this.inputFocus = c; }}
+						autoFocus
 					/>
 					<span className="error-message">{bytecode.error}</span>
 				</Form.Field>

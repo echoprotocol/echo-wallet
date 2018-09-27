@@ -19,10 +19,6 @@ class ToAccountComponent extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		this.inputFocus.focus();
-	}
-
 	onInput(e) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -51,7 +47,7 @@ class ToAccountComponent extends React.Component {
 			<Form.Field className={classnames('error-wrap', { error: to.error })}>
 
 				<label htmlFor="accountTo">To</label>
-				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error })} ref={(c) => { this.inputFocus = c; }}>
+				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error })} autoFocus>
 					<input name="accountTo" value={to.value} onInput={(e) => this.onInput(e)} />
 					{ to.checked && !to.error ? <span className="icon-checked_1 value-status" /> : null }
 					{ to.error ? <span className="icon-error-red value-status" /> : null }
