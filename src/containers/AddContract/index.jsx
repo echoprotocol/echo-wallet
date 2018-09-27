@@ -14,6 +14,10 @@ import { contractIdRegex } from '../../helpers/ValidateHelper';
 
 class AddContractComponent extends React.Component {
 
+	componentDidMount() {
+		this.inputFocus.focus();
+	}
+
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -53,7 +57,8 @@ class AddContractComponent extends React.Component {
 							name="name"
 							className="ui input"
 							value={name.value}
-							onInput={(e) => this.onInput(e)}
+							onChange={(e) => this.onInput(e)}
+							ref={(c) => { this.inputFocus = c; }}
 						/>
 						<span className="error-message">{name.error}</span>
 					</Form.Field>
@@ -65,7 +70,7 @@ class AddContractComponent extends React.Component {
 							name="id"
 							className="ui input"
 							value={id.value}
-							onInput={(e) => this.onInput(e)}
+							onChange={(e) => this.onInput(e)}
 						/>
 						<span className="error-message">{id.error}</span>
 					</Form.Field>
@@ -77,7 +82,7 @@ class AddContractComponent extends React.Component {
 							name="abi"
 							className="ui input"
 							value={abi.value}
-							onInput={(e) => this.onInput(e)}
+							onChange={(e) => this.onInput(e)}
 						/>
 						<span className="error-message">{abi.error}</span>
 					</Form.Field>

@@ -14,6 +14,10 @@ import { setContractFees } from '../../actions/ContractActions';
 
 class AddContractComponent extends React.Component {
 
+	componentDidMount() {
+		this.inputFocus.focus();
+	}
+
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -50,7 +54,8 @@ class AddContractComponent extends React.Component {
 							name="id"
 							className="ui input"
 							value={id.value}
-							onInput={(e) => this.onInput(e)}
+							onChange={(e) => this.onInput(e)}
+							ref={(c) => { this.inputFocus = c; }}
 						/>
 						<span className="error-message">{id.error}</span>
 					</Form.Field>
@@ -62,7 +67,7 @@ class AddContractComponent extends React.Component {
 							name="bytecode"
 							className="ui input"
 							value={bytecode.value}
-							onInput={(e) => this.onInput(e)}
+							onChange={(e) => this.onInput(e)}
 						/>
 						<span className="error-message">{bytecode.error}</span>
 					</Form.Field>

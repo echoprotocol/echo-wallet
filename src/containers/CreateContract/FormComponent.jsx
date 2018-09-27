@@ -14,6 +14,10 @@ class FormComponent extends React.Component {
 		this.props.clearForm();
 	}
 
+	componentDidMount() {
+		this.inputFocus.focus();
+	}
+
 	onChange(e) {
 		const field = e.target.name;
 		const { value } = e.target;
@@ -82,20 +86,19 @@ class FormComponent extends React.Component {
 				<div className="form-info">
 					<h3>Create Smart Contract</h3>
 				</div>
-				<div className={classnames({ error: bytecode.error, 'error-wrap': true })}>
-					<div className="action-wrap">
-						<Form.Field
-							label="Byte Code"
-							placeholder="Byte Code"
-							control="textarea"
-							name="bytecode"
-							value={bytecode.value}
-							onChange={(e) => this.onChange(e)}
-						/>
-
-					</div>
+				<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+					<label htmlFor="bytecode">Bytecode</label>
+					<textarea
+						type="text"
+						placeholder="Bytecode"
+						name="bytecode"
+						className="ui input"
+						value={bytecode.value}
+						onChange={(e) => this.onChange(e)}
+						ref={(c) => { this.inputFocus = c; }}
+					/>
 					<span className="error-message">{bytecode.error}</span>
-				</div>
+				</Form.Field>
 				<div className={classnames({ active: this.props.addToWatchList, 'shrink-wrap': true })}>
 					<div className="check">
 						<input type="checkbox" id="addToWatchList" onChange={() => this.onToggle()} checked={this.props.addToWatchList} />

@@ -6,6 +6,10 @@ import classnames from 'classnames';
 
 class AddCustomNetwork extends React.Component {
 
+	componentDidMount() {
+		this.inputFocus.focus();
+	}
+
 	onChange(e) {
 		const { name, value } = e.target;
 		this.props.setFormValue(name, value);
@@ -15,13 +19,25 @@ class AddCustomNetwork extends React.Component {
 		return (
 			<Form.Field className={classnames('error-wrap', { error })}>
 				<label htmlFor="address">{name}</label>
-				<input
-					className="ui input"
-					placeholder={name}
-					name={name}
-					value={value}
-					onChange={(e) => this.onChange(e)}
-				/>
+				{
+					name === 'address' ?
+						<input
+							className="ui input"
+							placeholder={name}
+							name={name}
+							value={value}
+							onChange={(e) => this.onChange(e)}
+							ref={(c) => { this.inputFocus = c; }}
+						/>
+						:
+						<input
+							className="ui input"
+							placeholder={name}
+							name={name}
+							value={value}
+							onChange={(e) => this.onChange(e)}
+						/>
+				}
 				<span className="error-message">{error}</span>
 			</Form.Field>
 		);
