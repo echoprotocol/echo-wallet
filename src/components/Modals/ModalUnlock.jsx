@@ -78,6 +78,7 @@ class ModalUnlockWallet extends React.Component {
 										className="ui input"
 										value={password.value}
 										onChange={(e) => this.onChange(e)}
+										autoFocus
 									/>
 									<span className="error-message">{password.error}</span>
 								</Form.Field>
