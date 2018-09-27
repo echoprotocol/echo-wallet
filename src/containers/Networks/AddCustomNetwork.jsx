@@ -6,39 +6,23 @@ import classnames from 'classnames';
 
 class AddCustomNetwork extends React.Component {
 
-	// componentDidMount() {
-	// 	this.inputFocus.focus();
-	// }
-
 	onChange(e) {
 		const { name, value } = e.target;
 		this.props.setFormValue(name, value);
 	}
 
-	renderField(name, { value, error }) {
+	renderField(name, { value, error }, isFocus) {
 		return (
 			<Form.Field className={classnames('error-wrap', { error })}>
 				<label htmlFor="address">{name}</label>
-				{
-					name === 'address' ?
-						<input
-							className="ui input"
-							placeholder={name}
-							name={name}
-							value={value}
-							onChange={(e) => this.onChange(e)}
-							autoFocus
-							// ref={(c) => { this.inputFocus = c; }}
-						/>
-						:
-						<input
-							className="ui input"
-							placeholder={name}
-							name={name}
-							value={value}
-							onChange={(e) => this.onChange(e)}
-						/>
-				}
+				<input
+					className="ui input"
+					placeholder={name}
+					name={name}
+					value={value}
+					onChange={(e) => this.onChange(e)}
+					autoFocus={isFocus}
+				/>
 				<span className="error-message">{error}</span>
 			</Form.Field>
 		);
@@ -50,9 +34,9 @@ class AddCustomNetwork extends React.Component {
 		return (
 			<React.Fragment>
 				<div className="custom-network active">
-					{this.renderField('address', address)}
-					{this.renderField('name', name)}
-					{this.renderField('registrator', registrator)}
+					{this.renderField('address', address, true)}
+					{this.renderField('name', name, false)}
+					{this.renderField('registrator', registrator, false)}
 				</div>
 			</React.Fragment>
 		);
