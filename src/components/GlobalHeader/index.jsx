@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export default class GlobalHeader extends React.Component {
 
 	onCloseApp() {
@@ -26,6 +27,7 @@ export default class GlobalHeader extends React.Component {
 			<div className="header-global">
 				<div className="app-title">Echo</div>
 				<nav className="app-nav" >
+
 					<button className="global-min" onClick={() => this.onMinApp()} />
 					<button className="global-max" onClick={() => this.onMaxApp()} />
 					<button className="global-close" onClick={() => this.onCloseApp()} />

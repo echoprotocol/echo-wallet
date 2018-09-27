@@ -97,6 +97,7 @@ class App extends React.Component {
 			<React.Fragment>
 				{ ELECTRON ? <GlobalHeader /> : null }
 
+
 				<div className="global-wrapper">
 					<Segment>
 						{globalLoading ? <Loading /> : this.renderSidebar()}
