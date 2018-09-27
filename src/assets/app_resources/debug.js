@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 const {
-	app, BrowserWindow, Menu, ipcMain,
+	app, BrowserWindow, Menu, shell, ipcMain,
 } = require('electron');
 
 require('electron-context-menu')({
@@ -19,9 +19,9 @@ function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: 1000,
-		height: 760,
+		height: 650,
 		minWidth: 1000,
-		minHeight: 760,
+		minHeight: 650,
 		webPreferences: {
 			nodeIntegration: false,
 			preload: `${__dirname}/preload.js`,
@@ -43,23 +43,54 @@ function createWindow() {
 		mainWindow = null;
 	});
 
-	if (process.platform === 'darwin') {
-		const template = [
-			{
-				label: 'Edit',
-				submenu: [
-					{ role: 'cut' },
-					{ role: 'copy' },
-					{ role: 'paste' },
-					{ role: 'pasteandmatchstyle' },
-					{ role: 'delete' },
-					{ role: 'selectall' },
-				],
-			},
-		];
-		const menu = Menu.buildFromTemplate(template);
-		Menu.setApplicationMenu(menu);
-	}
+	const template = [
+		{
+			label: 'Edit',
+			submenu: [
+				{ role: 'undo' },
+				{ role: 'redo' },
+				{ type: 'separator' },
+				{ role: 'cut' },
+				{ role: 'copy' },
+				{ role: 'paste' },
+				{ role: 'pasteandmatchstyle' },
+				{ role: 'delete' },
+				{ role: 'selectall' },
+			],
+		},
+		{
+			label: 'View',
+			submenu: [
+				{ role: 'reload' },
+				{ role: 'forcereload' },
+				{ role: 'toggledevtools' },
+				{ type: 'separator' },
+				{ role: 'resetzoom' },
+				{ role: 'zoomin' },
+				{ role: 'zoomout' },
+				{ type: 'separator' },
+				{ role: 'togglefullscreen' },
+			],
+		},
+		{
+			role: 'window',
+			submenu: [
+				{ role: 'minimize' },
+				{ role: 'close' },
+			],
+		},
+		{
+			role: 'help',
+			submenu: [
+				{
+					label: 'Learn More',
+					click() { shell.openExternal('https://myecho.app'); },
+				},
+			],
+		},
+	];
+	const menu = Menu.buildFromTemplate(template);
+	Menu.setApplicationMenu(menu);
 
 }
 

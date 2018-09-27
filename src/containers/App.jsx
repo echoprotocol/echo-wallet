@@ -96,6 +96,8 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				<GlobalHeader />
+				{ ELECTRON ? <GlobalHeader /> : null }
+
 
 				<div className="global-wrapper">
 					<Segment>

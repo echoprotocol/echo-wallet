@@ -12,12 +12,16 @@
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
     "build-electron": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
     "postbuild-electron": "npm run prepare-electron",
-    "prepare-electron": "copyfiles -f src/assets/app_resources/index.js build/electron/",
+    "prepare-electron": "copyfiles -f src/assets/app_resources/index.js src/assets/app_resources/preload.js build/electron/",
     "prepackage": "npm run build-electron",
     "package": "build -p never",
     "package-win": "npm run prepackage && build  -p never --windows",
     "package-deb": "npm run prepackage && build  -p never --linux deb",
-    "package-mac": "npm run prepackage && build  -p never --mac dmg"
+    "package-mac": "npm run prepackage && build  -p never --mac dmg",
+    "build-electron-debug": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
+    "postbuild-electron-debug": "copyfiles -f src/assets/app_resources/debug.js src/assets/app_resources/preload.js build/electron/ && mv build/electron/debug.js build/electron/index.js",
+    "package-win-debug": "npm run build-electron-debug && build -p never --windows",
+    "package-deb-debug": "npm run build-electron-debug && build -p never --linux deb"
   },
   "dependencies": {
     "autoprefixer": "^8.1.0",
@@ -28,7 +32,7 @@
     "echojs-redux": "^0.1.10",
     "echojs-ws": "^0.1.10",
     "electron-context-menu": "^0.10.0",
-    "electron-winstaller": "^2.6.4",
+    "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
@@ -46,7 +50,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scroll": "^1.7.10",
-    "react-toastify": "^4.3.1",
+    "react-toastify": "^4.3.2",
     "redux": "^3.7.2",
     "redux-modules": "^1.1.1",
     "redux-thunk": "^2.3.0",
@@ -79,10 +83,10 @@
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.2",
     "url-loader": "^1.1.1",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^2.0.10",
-    "webpack-dev-middleware": "^3.3.0",
-    "webpack-dev-server": "^3.1.8"
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-dev-server": "^3.1.9"
   },
   "build": {
     "productName": "ECHO Wallet",

@@ -58,14 +58,14 @@ class ModalTokens extends React.Component {
 										name="contractId"
 										className="ui input"
 										value={contractId.value}
-										onInput={(e) => this.onInput(e)}
+										onChange={(e) => this.onInput(e)}
 									/>
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
 							<Button
 								basic
-								type="button"
+								type="submit"
 								className="main-btn"
 								onClick={(e) => this.onClick(e)}
 								disabled={disabled}
