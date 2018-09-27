@@ -59,6 +59,7 @@ class ModalTokens extends React.Component {
 										className="ui input"
 										value={contractId.value}
 										onChange={(e) => this.onInput(e)}
+										autoFocus
 									/>
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
