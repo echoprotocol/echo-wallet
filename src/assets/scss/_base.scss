@@ -26,8 +26,11 @@ div,span {
 .app-nav {
     position: absolute;
     z-index: 9999999;
-    right: 18px;
+    right: 0px;
     top: 0;
+    display: flex;
+    background-color: $main-сolor;
+    width: 150px;
     button {
         background-color: transparent;
         border: 0;
@@ -42,7 +45,7 @@ div,span {
         font-style: normal;
         font-size: .85em;
         height: 30px;
-        width: 45px;
+        width: 50px;
         transition: background-color $speed;
 
         &:hover {
