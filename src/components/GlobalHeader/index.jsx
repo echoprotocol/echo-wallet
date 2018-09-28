@@ -24,15 +24,18 @@ export default class GlobalHeader extends React.Component {
 	render() {
 
 		return (
-			<div className="header-global">
-				<div className="app-title">Echo</div>
+			<React.Fragment>
+				<div className="header-global">
+					<div className="app-title">Echo</div>
+
+				</div>
 				<nav className="app-nav" >
 
 					<button className="global-min" onClick={() => this.onMinApp()} />
 					<button className="global-max" onClick={() => this.onMaxApp()} />
 					<button className="global-close" onClick={() => this.onCloseApp()} />
 				</nav>
-			</div>
+			</React.Fragment>
 		);
 	}
 
