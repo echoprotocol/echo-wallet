@@ -30,7 +30,7 @@
     "classnames": "^2.2.6",
     "echojs-lib": "^0.1.5",
     "echojs-redux": "^0.1.10",
-    "echojs-ws": "^0.1.10",
+    "echojs-ws": "^0.1.11",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
