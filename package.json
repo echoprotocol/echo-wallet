@@ -137,7 +137,7 @@
       "target": [
         "deb"
       ],
-      "icon": "32x32.png",
+      "icon": "icon.png",
       "executableName": "ECHO Wallet",
       "desktop": "ECHO Wallet",
       "synopsis": "ECHO Wallet: Cryptocurrency wallet for ECHO platform"
