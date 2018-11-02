@@ -1,4 +1,5 @@
 import { keccak256 } from 'js-sha3';
+import BN from 'bignumber.js';
 
 import operations from '../constants/Operations';
 import { getLog, logParser } from './FormatHelper';
@@ -30,7 +31,17 @@ const to64HexString = (v, type) => {
 			return v.replace('0x', '').padEnd(64, '0');
 		}
 		case 'address': {
-			return Number(v.substr(v.lastIndexOf('.') + 1)).toString(16).padStart(64, '0');
+			const sourceAddress = v || '1.2.0';
+			if (!/^1\.(2|16)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
+			const preRes = new BN(sourceAddress.split('.')[2]).toString(16);
+			if (preRes.length > 38) throw new Error('invalid address id');
+			const isContract = sourceAddress.split('.')[1] === '16';
+			return [
+				new Array(25).fill(null).map(() => 0).join(''),
+				isContract ? '1' : '0',
+				new Array(38 - preRes.length).fill(null).map(() => 0).join(''),
+				preRes,
+			].join('');
 		}
 		default:
 			return zero64String;
@@ -106,7 +117,27 @@ export const getMethod = (method, args) => {
 			const result = encode(arg, 'bool', isArray);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);
-
+		} else if (type.search('bytes32') !== -1) {
+			const comprehension = (count, map) => new Array(count).fill(null)
+				.map((_, index) => map(index));
+			const bytesCount = 32;
+			if (bytesCount <= 0) throw new Error('bytes count is not positive');
+			if (!Number.isSafeInteger(bytesCount)) throw new Error('bytes count is not a integer');
+			let input = arg;
+			if (!input) return comprehension(bytesCount, () => 0).join('');
+			if (typeof input === 'string') {
+				if (/^0x([a-f\d]{2}){1,32}$/.test(input)) input = Buffer.from(input.substr(2), 'hex');
+				else input = Buffer.from(input);
+			}
+			if (input.length !== bytesCount) {
+				if (input.length > bytesCount) throw new Error('buffer is too large');
+				const arr = Array.from(input);
+				const align = 'left';
+				if (align === 'none') throw new Error('buffer is too short');
+				if (align === 'left') input = Buffer.from([...arr, ...comprehension(bytesCount - arr.length, () => 0)]);
+				else input = Buffer.from([...comprehension(bytesCount - arr.length, () => 0), ...arr]);
+			}
+			hexStrings = input.toString('hex');
 		} else if (type.search('byte') !== -1) {
 
 

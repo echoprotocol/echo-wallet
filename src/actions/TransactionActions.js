@@ -549,7 +549,7 @@ export const callContract = () => async (dispatch, getState) => {
 		// validate amount
 		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
-			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
+			dispatch(setFormError(FORM_CALL_CONTRACT, 'amount', amountError));
 			dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 			return;
 		}
@@ -564,7 +564,7 @@ export const callContract = () => async (dispatch, getState) => {
 	const assets = getState().balance.get('assets').toArray();
 	const feeError = validateFee(amount, currency, fee, assets);
 	if (feeError) {
-		dispatch(setValue(FORM_CALL_CONTRACT, 'amount', feeError));
+		dispatch(setFormError(FORM_CALL_CONTRACT, 'amount', feeError));
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 		return;
 	}
