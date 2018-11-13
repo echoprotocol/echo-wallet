@@ -440,7 +440,7 @@ export default {
 		},
 	},
 	contract_transfer: {
-		value: 45,
+		value: 48,
 		name: 'Contract transfer',
 		options: {
 			from: 'from',

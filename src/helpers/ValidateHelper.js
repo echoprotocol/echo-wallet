@@ -168,7 +168,6 @@ const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null :
 const validateBool = (value) => (typeof value === 'boolean' ? null : 'value should be a boolean');
 const validateArray = (value) => (Array.isArray(value) ? null : 'value should be an array');
 const validateBytes = (value) => ((typeof value === 'string' && reg.test(value)) ? null : 'value should be a hex string');
-const validateBytes32 = (value) => (/^0x[\da-f]{64}$/.test(value) ? null : 'value should be a bytes32 in hex');
 
 
 export const validateByType = (value, type) => {
@@ -180,14 +179,12 @@ export const validateByType = (value, type) => {
 	let isBytesArray = false;
 
 	const intMark = type.search('int');
-	if (type.search('string') !== -1) {
+	if (type.search('string') !== -1 || type.search('bytes32') !== -1) {
 		method = validateString;
 	} else if (type.search('address') !== -1) {
 		method = validateAddress;
 	} else if (type.search('bool') !== -1) {
 		method = validateBool;
-	} else if (type.search('bytes32') !== -1) {
-		method = validateBytes32;
 	} else if (type.search('byte') !== -1) {
 		isBytesArray = type !== 'bytes';
 		method = validateBytes;

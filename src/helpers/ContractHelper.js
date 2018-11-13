@@ -80,9 +80,10 @@ const encode = (value, type, isArray) => {
 };
 
 export const getMethod = (method, args) => {
-	if (!args || !args.length) {
-		return 'Empty field';
-	}
+
+	const code = getMethodId(method);
+
+	if (!args || !args.length) { return code; }
 
 	let hexStrings = '';
 	const defaultOffset = (method.inputs.length * 32);
@@ -111,7 +112,6 @@ export const getMethod = (method, args) => {
 			const result = encode(arg, 'address', isArray);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);
-
 		} else if (type.search('bool') !== -1) {
 
 			const result = encode(arg, 'bool', isArray);
@@ -137,7 +137,7 @@ export const getMethod = (method, args) => {
 				if (align === 'left') input = Buffer.from([...arr, ...comprehension(bytesCount - arr.length, () => 0)]);
 				else input = Buffer.from([...comprehension(bytesCount - arr.length, () => 0), ...arr]);
 			}
-			hexStrings = input.toString('hex');
+			hexArgs = hexArgs.concat(input.toString('hex'));
 		} else if (type.search('byte') !== -1) {
 
 
@@ -156,8 +156,7 @@ export const getMethod = (method, args) => {
 		return hexArgs;
 	}, '');
 
-	method = getMethodId(method);
-	return method.concat(argsString, hexStrings);
+	return code.concat(argsString, hexStrings);
 };
 
 export const checkBlockTransaction = (accountId, op, tokens) => {
