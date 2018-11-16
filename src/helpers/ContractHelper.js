@@ -102,8 +102,15 @@ export const getMethod = (method, args) => {
 		}
 
 		if (type.search('int') !== -1) {
+			const input = new BN(arg);
+			if (input.isNegative()) throw new Error('input is negative');
+			if (!input.isInteger()) throw new Error('input is not integer');
+			if (input.gte(new BN(2).pow(256))) throw new Error('is greater than max value');
+			const preRes = input.toString(16);
+			const comprehension = (count, map) => new Array(count).fill(null)
+				.map((_, index) => map(index));
+			const result = comprehension(64 - preRes.length, () => 0).join('') + preRes;
 
-			const result = encode(arg, 'int', isArray);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);
 

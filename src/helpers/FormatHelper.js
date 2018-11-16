@@ -64,10 +64,14 @@ export const toUtf8 = (hex) => {
 
 export const toInt = (hex) => parseInt(hex, 16);
 export const toIntBN = (hex) => new BN(hex, 16).toString();
+export const toID = (hex) => {
+	const isContract = !!toInt(hex.slice(0, 27), 16);
+	return `1.${isContract ? 16 : 2}.${new BN(hex.substr(26), 16)}`;
+};
 
 export const converter = (toType, constantValue) => {
 	switch (toType) {
-		case 'id':
+		case 'id': return toID(constantValue);
 		case 'number': return toIntBN(constantValue);
 		case 'string': return toUtf8(constantValue);
 		case 'bool': return (!!toInt(constantValue)).toString();
