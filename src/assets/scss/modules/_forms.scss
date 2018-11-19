@@ -250,7 +250,7 @@
                     width: 100%;
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
-                    clip-path: inset(-5px 0px -5px -5px);
+                    // clip-path: inset(-5px 0px -5px -5px);
 
                     &-wrap {
                         width: 100%;
@@ -327,7 +327,7 @@
     display: flex;
     position: relative;
     max-width: 350px;
-    
+
     width: 100%;
     input {
         min-width: 360px;

@@ -179,7 +179,7 @@ export const validateByType = (value, type) => {
 	let isBytesArray = false;
 
 	const intMark = type.search('int');
-	if (type.search('string') !== -1) {
+	if (type.search('string') !== -1 || type.search('bytes32') !== -1) {
 		method = validateString;
 	} else if (type.search('address') !== -1) {
 		method = validateAddress;
@@ -198,6 +198,14 @@ export const validateByType = (value, type) => {
 	}
 
 	const arrayMark = type.search('\\[\\]');
+
+	if (type.search('bool') !== -1) {
+		try {
+			value = JSON.parse(value);
+		} catch (e) {
+			return `value should be a ${type}`;
+		}
+	}
 
 	if (arrayMark !== -1 || isBytesArray) {
 		try {
