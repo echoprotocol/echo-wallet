@@ -101,7 +101,7 @@ export const getMethod = (method, args) => {
 			isArray = true;
 		}
 
-		if (type.search('int') !== -1) {
+		if (type.search('uint') !== -1) {
 			const input = new BN(arg);
 			if (input.isNegative()) throw new Error('input is negative');
 			if (!input.isInteger()) throw new Error('input is not integer');
@@ -111,6 +111,11 @@ export const getMethod = (method, args) => {
 				.map((_, index) => map(index));
 			const result = comprehension(64 - preRes.length, () => 0).join('') + preRes;
 
+			if (isArray) hexStrings = hexStrings.concat(result);
+			else hexArgs = hexArgs.concat(result);
+
+		} else if (type.search('int') !== -1) {
+			const result = encode(arg, 'int', isArray);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);
 
