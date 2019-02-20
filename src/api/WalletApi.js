@@ -63,7 +63,6 @@ export const createWallet = async (registrator, account, password) => {
 
 export const unlockWallet = async (account, password, roles = ['active', 'owner', 'memo']) => {
 
-	const keys = {};
 	const privateKey = getKeyFromWif(password);
 	let key;
 
@@ -74,10 +73,11 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 		};
 	}
 
-	if (!account) { return keys; }
+	if (!account) { return {}; }
 
 	account = account.toJS();
-	roles.forEach((role) => {
+
+	return roles.reduce((keys, role) => {
 		if (!privateKey) {
 			key = generateKeyFromPassword(account.name, role, password);
 		}
@@ -88,20 +88,28 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 					keys.memo = key;
 				}
 				break;
-			case 'active':
-				if (account.active.key_auths[0][0] === key.publicKey) {
+			case 'active': {
+				const activeKey = account.active.key_auths.find(([active]) => active === key.publicKey);
+
+				if (activeKey) {
 					keys.active = key;
 				}
+
 				break;
-			case 'owner':
-				if (account.owner.key_auths[0][0] === key.publicKey) {
+			}
+			case 'owner': {
+				const ownerKey = account.owner.key_auths.find(([owner]) => owner === key.publicKey);
+
+				if (ownerKey) {
 					keys.owner = key;
 				}
+
 				break;
+			}
 			default: break;
 		}
-	});
 
-	return keys;
+		return keys;
+	}, {});
 };
 
