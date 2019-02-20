@@ -276,8 +276,16 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 	switch (subscribeObject.type) {
 		case 'block': {
 			const tokens = getState().balance.get('tokens');
-			const { transactions } = subscribeObject.value;
-			if (!transactions || !tokens.size || !transactions.length) return;
+
+			const { value } = subscribeObject;
+
+			if (!value || typeof value !== 'object' || !tokens.size) {
+				return;
+			}
+
+			const { transactions } = value;
+
+			if (!transactions || !transactions.length) return;
 
 			const isNeedUpdate = transactions.some((tr) =>
 				tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens)) ||
