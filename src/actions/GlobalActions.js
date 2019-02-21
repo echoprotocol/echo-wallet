@@ -18,7 +18,6 @@ import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
 import {
 	validateNetworkName,
 	validateNetworkAddress,
-	validateNetworkRegistrator,
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 
@@ -212,13 +211,12 @@ export const saveNetwork = (network) => async (dispatch, getState) => {
 export const addNetwork = () => (dispatch, getState) => {
 	const networks = getState().global.get('networks').toJS();
 	const {
-		address, name, registrator, autoswitch,
+		address, name, autoswitch,
 	} = getState().form.get(FORM_ADD_CUSTOM_NETWORK).toJS();
 
 	const network = {
 		url: address.value.trim(),
 		name: name.value.trim(),
-		registrator: registrator.value.trim(),
 	};
 
 	let nameError = validateNetworkName(network.name);
@@ -237,13 +235,7 @@ export const addNetwork = () => (dispatch, getState) => {
 		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'address', addressError));
 	}
 
-	const registratorError = validateNetworkRegistrator(network.registrator);
-
-	if (registratorError) {
-		dispatch(setFormError(FORM_ADD_CUSTOM_NETWORK, 'registrator', registratorError));
-	}
-
-	if (nameError || addressError || registratorError) { return; }
+	if (nameError || addressError) { return; }
 
 	let customNetworks = localStorage.getItem('custom_networks');
 	customNetworks = customNetworks ? JSON.parse(customNetworks) : [];

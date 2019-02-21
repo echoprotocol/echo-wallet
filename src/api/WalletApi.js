@@ -32,35 +32,6 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const createWallet = async (registrator, account, password) => {
-	const owner = generateKeyFromPassword(account, 'owner', password);
-	const active = generateKeyFromPassword(account, 'active', password);
-	const memo = generateKeyFromPassword(account, 'memo', password);
-
-	let response = await fetch(registrator, {
-		method: 'post',
-		mode: 'cors',
-		headers: {
-			Accept: 'application/json',
-			'Content-type': 'application/json',
-		},
-		body: JSON.stringify({
-			name: account,
-			owner_key: owner.publicKey,
-			active_key: active.publicKey,
-			memo_key: memo.publicKey,
-		}),
-	});
-
-	response = await response.json();
-
-	if (!response || (response && response.errors)) {
-		throw response.errors.join();
-	}
-
-	return { owner, active, memo };
-};
-
 export const unlockWallet = async (account, password, roles = ['active', 'owner', 'memo']) => {
 
 	const privateKey = getKeyFromWif(password);
