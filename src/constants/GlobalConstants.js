@@ -57,14 +57,8 @@ export const HEADER_TITLE = [
 export const SORT_CONTRACTS = 'contracts';
 
 export const NETWORKS = [
-// 	{
-// 		name: 'mainnet',
-// 		registrator: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
-// 		url: 'wss://echo-devnet-node.pixelplex.io/ws',
-// 	},
 	{
 		name: 'testnet',
-		registrator: 'https://echo-tmp-wallet.pixelplex.io/faucet/registration',
-		url: 'ws://195.201.164.54:6311',
+		url: 'wss://testnet.echo-dev.io/ws',
 	},
 ];

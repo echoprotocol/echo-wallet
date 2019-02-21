@@ -37,12 +37,11 @@ class Networks extends React.Component {
 
 	render() {
 		const {
-			address, name, registrator, autoswitch,
+			address, name, autoswitch,
 		} = this.props;
 
 
-		const isFormValid = (address.value && name.value && registrator.value) &&
-			(!address.error && !name.error && !registrator.error);
+		const isFormValid = (address.value && name.value) && (!address.error && !name.error);
 
 		return (
 			<div className="sign-scroll-fix">
@@ -58,7 +57,6 @@ class Networks extends React.Component {
 						<AddCustomNetwork
 							address={address}
 							name={name}
-							registrator={registrator}
 							setFormValue={this.props.setFormValue}
 						/>
 					</div>
@@ -95,7 +93,6 @@ Networks.propTypes = {
 	history: PropTypes.object.isRequired,
 	address: PropTypes.object.isRequired,
 	name: PropTypes.object.isRequired,
-	registrator: PropTypes.object.isRequired,
 	autoswitch: PropTypes.object.isRequired,
 	addNetwork: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -106,7 +103,6 @@ export default withRouter(connect(
 	(state) => ({
 		address: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'address']),
 		name: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'name']),
-		registrator: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'registrator']),
 		autoswitch: state.form.getIn([FORM_ADD_CUSTOM_NETWORK, 'autoswitch']),
 	}),
 	(dispatch) => ({

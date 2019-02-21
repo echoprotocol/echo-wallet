@@ -300,15 +300,3 @@ export const validateNetworkAddress = (address) => {
 
 	return null;
 };
-
-export const validateNetworkRegistrator = (registrator) => {
-	if (!registrator) {
-		return 'Network registrator should not be empty';
-	}
-
-	if (!(/http:\/\/|https:\/\//i).test(registrator)) {
-		return 'Network registrator should be start with \'http://\' or \'https://\'';
-	}
-
-	return null;
-};

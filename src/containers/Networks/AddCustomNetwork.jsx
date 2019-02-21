@@ -29,14 +29,13 @@ class AddCustomNetwork extends React.Component {
 	}
 
 	render() {
-		const { address, name, registrator } = this.props;
+		const { address, name } = this.props;
 
 		return (
 			<React.Fragment>
 				<div className="custom-network active">
 					{this.renderField('address', address, true)}
 					{this.renderField('name', name, false)}
-					{this.renderField('registrator', registrator, false)}
 				</div>
 			</React.Fragment>
 		);
@@ -47,7 +46,6 @@ class AddCustomNetwork extends React.Component {
 AddCustomNetwork.propTypes = {
 	address: PropTypes.object.isRequired,
 	name: PropTypes.object.isRequired,
-	registrator: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 };
 
