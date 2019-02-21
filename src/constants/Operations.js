@@ -439,24 +439,36 @@ export default {
 			asset: 'amount_to_claim.asset_id',
 		},
 	},
-	contract_transfer: {
+	create_contract: {
+		value: 47,
+		name: 'Create contract',
+		options: {
+			from: 'registrar',
+			subject: null,
+			value: 'value.amount',
+			asset: 'value.asset_id',
+			code: 'code',
+		},
+	},
+	call_contract: {
 		value: 48,
+		name: 'Call contract',
+		options: {
+			from: 'registrar',
+			subject: ['callee', null],
+			value: 'value.amount',
+			asset: 'value.asset_id',
+			code: 'code',
+		},
+	},
+	contract_transfer: {
+		value: 49,
 		name: 'Contract transfer',
 		options: {
 			from: 'from',
 			subject: ['to', 'name'],
 			value: 'amount.amount',
 			asset: 'amount.asset_id',
-		},
-	},
-	contract: {
-		value: 47,
-		name: 'Contract',
-		options: {
-			from: 'registrar',
-			subject: null,
-			value: 'value',
-			asset: 'asset_id',
 		},
 	},
 };
