@@ -1,5 +1,6 @@
 import { keccak256 } from 'js-sha3';
-import BN from 'bignumber.js';
+import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 
 import operations from '../constants/Operations';
 import { getLog, logParser } from './FormatHelper';
@@ -14,11 +15,11 @@ export const getMethodId = (method) => {
 	return getHash(`${method.name}(${inputs})`).substr(0, 8);
 };
 
-const to64HexString = (v, type) => {
+const to64HexString = (v, type, mode = 256) => {
 
 	switch (type) {
 		case 'int': {
-			return Number(v).toString(16).padStart(64, '0');
+			return new BN(v).toTwos(mode).toString(16).padStart(64, '0');
 		}
 		case 'bool': {
 			const tmpValue = v.toLowerCase() === 'false' ? 0 : Boolean(v);
@@ -33,7 +34,7 @@ const to64HexString = (v, type) => {
 		case 'address': {
 			const sourceAddress = v || '1.2.0';
 			if (!/^1\.(2|16)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
-			const preRes = new BN(sourceAddress.split('.')[2]).toString(16);
+			const preRes = new BigNumber(sourceAddress.split('.')[2]).toString(16);
 			if (preRes.length > 38) throw new Error('invalid address id');
 			const isContract = sourceAddress.split('.')[1] === '16';
 			return [
@@ -48,7 +49,7 @@ const to64HexString = (v, type) => {
 	}
 };
 
-const encode = (value, type, isArray) => {
+const encode = (value, type, isArray, mode) => {
 	let arg = '';
 	if (isArray) {
 		try {
@@ -75,7 +76,8 @@ const encode = (value, type, isArray) => {
 			arg.concat(value.padEnd(chunksLength * 64), '0') :
 			chunks.reduce((newArg, v) => (newArg.concat(to64HexString(v, type))), arg);
 	}
-	return to64HexString(value, type);
+
+	return to64HexString(value, type, mode);
 
 };
 
@@ -102,10 +104,10 @@ export const getMethod = (method, args) => {
 		}
 
 		if (type.search('uint') !== -1) {
-			const input = new BN(arg);
+			const input = new BigNumber(arg);
 			if (input.isNegative()) throw new Error('input is negative');
 			if (!input.isInteger()) throw new Error('input is not integer');
-			if (input.gte(new BN(2).pow(256))) throw new Error('is greater than max value');
+			if (input.gte(new BigNumber(2).pow(256))) throw new Error('is greater than max value');
 			const preRes = input.toString(16);
 			const comprehension = (count, map) => new Array(count).fill(null)
 				.map((_, index) => map(index));
@@ -115,7 +117,9 @@ export const getMethod = (method, args) => {
 			else hexArgs = hexArgs.concat(result);
 
 		} else if (type.search('int') !== -1) {
-			const result = encode(arg, 'int', isArray);
+			let mode = type.split('int')[1];
+			mode = mode === '' ? 256 : parseInt(mode);
+			const result = encode(arg, 'int', isArray, mode);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);
 
