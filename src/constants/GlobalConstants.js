@@ -58,6 +58,10 @@ export const SORT_CONTRACTS = 'contracts';
 
 export const NETWORKS = [
 	{
+		name: 'devnet',
+		url: 'wss://devnet.echo-dev.io/ws',
+	},
+	{
 		name: 'testnet',
 		url: 'wss://testnet.echo-dev.io/ws',
 	},
