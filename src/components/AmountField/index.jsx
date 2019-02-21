@@ -149,7 +149,7 @@ class AmountField extends React.Component {
 		} = this.props;
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const type = form === FORM_TRANSFER && currency && currency.type !== 'tokens' ? 'transfer' : 'contract';
+		const type = form === FORM_TRANSFER && currency && currency.type !== 'tokens' ? 'transfer' : 'call_contract';
 
 		return (
 			<Form.Field>

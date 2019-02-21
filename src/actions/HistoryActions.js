@@ -95,7 +95,24 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	if (type === 47) {
-		[, result.subject] = data.result;
+
+		const [, resultId] = data.result;
+
+		result.subject = resultId;
+
+		const instance = getState().echojs.getIn(['system', 'instance']);
+
+		if (!instance) return;
+
+		const contractResult = await getContractResult(instance, resultId);
+
+		const [contractResultType, contractResultData] = contractResult;
+
+		if (contractResultType === 0) {
+			const { exec_res: { new_address: hexAddress } } = contractResultData;
+
+			result.subject = `1.16.${parseInt(hexAddress.slice(2), 16)}`;
+		}
 	}
 
 	if (type === 0 && operation.memo && operation.memo.message) {

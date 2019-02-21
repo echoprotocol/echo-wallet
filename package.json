@@ -28,7 +28,7 @@
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
-    "echojs-lib": "^0.1.5",
+    "echojs-lib": "git+ssh://git@gitlab.pixelplex.by/645.echo/echojs/echojs-lib.git#feature-new-devnet",
     "echojs-redux": "^0.1.10",
     "echojs-ws": "^0.1.11",
     "electron-context-menu": "^0.10.0",
