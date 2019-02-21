@@ -305,13 +305,11 @@ export const transfer = () => async (dispatch, getState) => {
 		showOptions.note = note.value;
 	}
 
-	const activePubKey = fromAccount.active.key_auths[0][0];
 	const memoPubKey = fromAccount.options.memo_key;
-	if (!activePubKey || !memoPubKey) return;
 
 	dispatch(resetTransaction());
+	const activePrivateKey = fromAccount.active.key_auths.find((active) => getState().keychain.getIn([active[0], 'privateKey']));
 
-	const activePrivateKey = getState().keychain.getIn([activePubKey, 'privateKey']);
 	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
 	dispatch(TransactionReducer.actions.setOperation({
