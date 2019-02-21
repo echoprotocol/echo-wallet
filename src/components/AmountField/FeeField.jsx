@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue } from '../../actions/FormActions';
-import { getFee, fetchFee } from '../../actions/TransactionActions';
+import { getFeeSync, fetchFee, getFee } from '../../actions/TransactionActions';
 import { setContractFees } from '../../actions/ContractActions';
 
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
@@ -40,11 +40,12 @@ class FeeComponent extends React.Component {
 		if (assets.length && !this.state.isChanged) {
 			assets.forEach((asset) => {
 				if (asset.symbol === selectedSymbol) {
-					const resultFee = this.props.getFee(asset.id, note.value);
-					if (resultFee) {
-						this.props.setValue('fee', resultFee);
-						this.setState({ isChanged: true });
-					}
+					this.props.getFee(note.value).then((resultFee) => {
+						if (resultFee) {
+							this.props.setValue('fee', resultFee);
+							this.setState({ isChanged: true });
+						}
+					});
 				}
 			});
 		}
@@ -53,11 +54,14 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		const { fee, note, type } = this.props;
+		const { note, type } = this.props;
 
 		if (note.value !== nextProps.note.value || type !== nextProps.type) {
-			const value = this.props.getFee(fee.asset.id, (nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value);
-			this.props.setValue('fee', value);
+			this.props.getFee((nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value).then((value) => {
+				if (value) {
+					this.props.setValue('fee', value);
+				}
+			});
 		}
 
 		return true;
@@ -71,7 +75,7 @@ class FeeComponent extends React.Component {
 		const { assets, note } = this.props;
 
 		const options = assets.reduce((arr, asset) => {
-			const fee = this.props.getFee(asset.id, note.value);
+			const fee = this.props.getFeeSync(asset.id, note.value);
 
 			if (fee) {
 				arr.push({
@@ -163,9 +167,10 @@ FeeComponent.propTypes = {
 	note: PropTypes.any.isRequired,
 	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
-	getFee: PropTypes.func.isRequired,
+	getFeeSync: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	getFee: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
 	currency: PropTypes.any,
 };
@@ -191,8 +196,9 @@ export default connect(
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
-		getFee: (asset, note) => dispatch(getFee(type, asset, note)),
+		getFeeSync: (asset, note) => dispatch(getFeeSync(type, asset, note)),
 		fetchFee: () => dispatch(fetchFee(type)),
 		setContractFees: () => dispatch(setContractFees(form)),
+		getFee: (note) => dispatch(getFee(type, note)),
 	}),
 )(FeeComponent);

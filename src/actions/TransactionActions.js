@@ -41,6 +41,7 @@ import {
 	estimateCallContractFee,
 	encodeMemo,
 	getMemoFee,
+	getOperationFee,
 } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
@@ -73,7 +74,50 @@ export const fetchFee = (type) => async (dispatch) => {
 	return { value, asset: asset.toJS() };
 };
 
-export const getFee = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
+export const getFee = (type, note = null) => async (dispatch, getState) => {
+	const formOptions = getState().form.get(FORM_TRANSFER);
+
+	if (!formOptions.get('amount').value || !formOptions.get('to').value) {
+		return null;
+	}
+
+	const toAccountId = (await dispatch(EchoJSActions.fetch(formOptions.get('to').value))).get('id');
+	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
+
+	const options = {
+		amount: {
+			amount: formOptions.get('amount').value,
+			asset_id: formOptions.get('currency').id,
+		},
+		from: fromAccountId,
+		to: toAccountId,
+	};
+
+	if (note) {
+		options.memo = note;
+	}
+
+	const fee = getState().echojs.getIn(['data', 'assets', formOptions.get('fee').asset.id]);
+	const core = getState().echojs.getIn(['data', 'assets', '1.3.0']);
+
+	let amount = await getOperationFee(type, options, core);
+
+	if (fee.get('id') !== '1.3.0') {
+		const price = new BN(fee.getIn(['options', 'core_exchange_rate', 'quote', 'amount']))
+			.div(fee.getIn(['options', 'core_exchange_rate', 'base', 'amount']))
+			.times(10 ** (core.precision - fee.get('precision')));
+
+		amount = new BN(amount).div(10 ** core.precision);
+		amount = price.times(amount).times(10 ** fee.get('precision'));
+	}
+
+	return {
+		value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
+		asset: fee.toJS(),
+	};
+};
+
+export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
@@ -135,6 +179,7 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 		}
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
+
 		const accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
@@ -179,7 +224,7 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', note.value) : getFee('call_contract'));
+		fee = dispatch(currency.type === 'tokens' ? getFeeSync('transfer', '1.3.0', note.value) : getFeeSync('call_contract'));
 	}
 
 	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
@@ -550,7 +595,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	// validate fee
 	if (!fee.value || !fee.asset) {
-		fee = await dispatch(getFee('call_contract'));
+		fee = await dispatch(getFeeSync('call_contract'));
 	}
 
 	const assets = getState().balance.get('assets').toArray();
@@ -643,7 +688,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	// validate fee
 	if (!fee.value || !fee.asset) {
-		fee = await dispatch(getFee('call_contract'));
+		fee = await dispatch(getFeeSync('call_contract'));
 	}
 
 	const assets = getState().balance.get('assets').toArray();
