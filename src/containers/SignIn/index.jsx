@@ -9,7 +9,7 @@ import qs from 'query-string';
 import { SIGN_UP_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
-import { authUser } from '../../actions/AuthActions';
+import { importAccount } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class SignIn extends React.Component {
@@ -18,13 +18,12 @@ class SignIn extends React.Component {
 		this.props.clearForm();
 	}
 
-	onClick(isAddAccount) {
+	onClick() {
 		const { accountName, password } = this.props;
-
-		this.props.authUser({
+		this.props.importAccount({
 			accountName: accountName.value.trim(),
 			password: password.value.trim(),
-		}, isAddAccount);
+		});
 	}
 
 	onChange(e, lowerCase) {
@@ -45,9 +44,11 @@ class SignIn extends React.Component {
 	}
 
 	isDisabledSubmit() {
-		const { accountName, password } = this.props;
+		const {
+			password,
+		} = this.props;
 
-		if ((!accountName.value || accountName.error) || (!password.value || password.error)) {
+		if (!password.value || password.error) {
 			return true;
 		}
 
@@ -61,12 +62,18 @@ class SignIn extends React.Component {
 
 		const { isAddAccount } = qs.parse(location.search);
 
+
 		return (
 
 			<Form className="main-form">
 				<div className="form-info">
 					{ isAddAccount ?
-						<button type="button" className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+						<button
+							type="button"
+							className="back-link"
+							onClick={() => this.onCancel()}
+							disabled={loading}
+						>
 							<span className="icon-back" />
 							back
 						</button> : null
@@ -115,7 +122,7 @@ class SignIn extends React.Component {
 								basic
 								type="submit"
 								disabled={this.isDisabledSubmit()}
-								onClick={(e) => this.onClick(isAddAccount, e)}
+								onClick={() => this.onClick()}
 								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 								content={isAddAccount ? 'Add Account' : 'Login'}
 							/>
@@ -143,7 +150,7 @@ SignIn.propTypes = {
 	password: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
-	authUser: PropTypes.func.isRequired,
+	importAccount: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };
@@ -159,7 +166,7 @@ export default connect(
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
 	}),
 	(dispatch) => ({
-		authUser: (value, isAdd) => dispatch(authUser(value, isAdd)),
+		importAccount: (value) => dispatch(importAccount(value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
 	}),

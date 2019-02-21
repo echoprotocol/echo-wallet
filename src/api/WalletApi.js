@@ -44,10 +44,10 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 		};
 	}
 
+
 	if (!account) { return {}; }
 
 	account = account.toJS();
-
 	return roles.reduce((keys, role) => {
 		if (!privateKey) {
 			key = generateKeyFromPassword(account.name, role, password);
