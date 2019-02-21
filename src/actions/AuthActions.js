@@ -1,5 +1,5 @@
-import { key } from 'echojs-lib';
-import { EchoJSActions } from 'echojs-redux';
+import { key, PrivateKey } from 'echojs-lib';
+import { EchoJSActions, ChainStore } from 'echojs-redux';
 
 import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
 import { closeModal, openModal, setDisable } from './ModalActions';
@@ -7,6 +7,7 @@ import { set as setKey } from './KeyChainActions';
 import { addAccount, isAccountAdded } from './GlobalActions';
 import { setField, setNote } from './TransactionActions';
 import { update } from './TableActions';
+
 
 import {
 	FORM_SIGN_UP,
@@ -94,18 +95,20 @@ export const createAccount = ({
 
 };
 
+
 export const authUser = ({ accountName, password }) => async (dispatch, getState) => {
+
 	let accountNameError = validateAccountName(accountName);
 	const passwordError = validatePassword(password);
 
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
-		return;
+		return false;
 	}
 
 	if (passwordError) {
 		dispatch(setFormError(FORM_SIGN_IN, 'password', passwordError));
-		return;
+		return false;
 	}
 
 	const networkName = getState().global.getIn(['network', 'name']);
@@ -120,7 +123,7 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
-			return;
+			return false;
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
@@ -131,7 +134,7 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
-			return;
+			return false;
 		}
 
 		if (owner) {
@@ -147,14 +150,60 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 		}
 
 		dispatch(addAccount(accountName, networkName));
-
+		return true;
 	} catch (err) {
 		dispatch(setValue(FORM_SIGN_IN, 'error', err));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
+	return false;
 
 };
+
+/**
+ *  @method importAccount
+ *
+ * 	Import account from bridge app or sign in
+ *
+ * 	@param {Object}
+ *
+ */
+export const importAccount = ({ accountName, password }) =>
+	async (dispatch) => {
+
+		if (accountName) {
+			const added = await dispatch(authUser({ accountName, password }));
+			if (added) {
+				return;
+			}
+		}
+		if (getKeyFromWif(password)) {
+
+			const active = PrivateKey.fromWif(password).toPublicKey().toString();
+			try {
+				const accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
+				if (!accountIDs.size) {
+					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
+					return;
+				}
+
+				const account = await ChainStore.FetchChain('getAccount', accountIDs.toArray()[0]);
+
+				if (accountName && account.get('name') !== accountName) {
+					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
+					return;
+				}
+
+				dispatch(authUser({ accountName: account.get('name'), password }));
+				return;
+
+			} catch (error) {
+				dispatch(setValue(FORM_SIGN_IN, 'error', error));
+			}
+
+		}
+		dispatch(authUser({ accountName, password }));
+	};
 
 export const signTransaction = (owner, active, memo) => (dispatch, getState) => {
 	const { options, keys } = getState().transaction.toJS();
