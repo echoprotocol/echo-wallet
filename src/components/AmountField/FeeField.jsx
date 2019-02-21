@@ -56,7 +56,7 @@ class FeeComponent extends React.Component {
 		const { fee, note, type } = this.props;
 
 		if (note.value !== nextProps.note.value || type !== nextProps.type) {
-			const value = this.props.getFee(fee.asset.id, nextProps.type !== 'contract' && nextProps.note.value);
+			const value = this.props.getFee(fee.asset.id, (nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value);
 			this.props.setValue('fee', value);
 		}
 

@@ -179,7 +179,7 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', note.value) : getFee('contract'));
+		fee = dispatch(currency.type === 'tokens' ? getFee('transfer', '1.3.0', note.value) : getFee('call_contract'));
 	}
 
 	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
@@ -227,13 +227,11 @@ export const transfer = () => async (dispatch, getState) => {
 		);
 
 		options = {
+			fee: { asset_id: '1.3.0', amount: 0 },
 			registrar: fromAccountId,
-			receiver: currency.id,
-			asset_id: fee.asset.id,
-			value: 0,
-			gasPrice: 0,
-			gas: 4700000,
+			value: { amount: 0, asset_id: '1.3.0' },
 			code,
+			callee: currency.id,
 		};
 	} else {
 		options = {
@@ -272,7 +270,7 @@ export const transfer = () => async (dispatch, getState) => {
 	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
 	dispatch(TransactionReducer.actions.setOperation({
-		operation: currency.type === 'tokens' ? 'contract' : 'transfer',
+		operation: currency.type === 'tokens' ? 'call_contract' : 'transfer',
 		options,
 		showOptions,
 	}));
@@ -359,22 +357,19 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	}
 
 	const options = {
+		fee: { asset_id: asset.id, amount: 0 },
 		registrar: activeUserId,
-		receiver: contractId,
-		asset_id: asset.id,
-		value: amountValue,
-		gasPrice: 0,
-		gas: 4700000,
+		value: { amount: amountValue, asset_id: '1.3.0' },
 		code: bytecode,
+		callee: contractId,
 	};
 
-	const feeValue = await estimateCallContractFee('contract', options);
+	const feeValue = await estimateCallContractFee('call_contract', options);
 
 	return feeValue;
 };
 
 export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
-
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
 	if (!activeUserId || !activeUserName) return;
@@ -410,17 +405,16 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
-		registrar: activeUserId,
 		asset_id: '1.3.0',
-		value: 0,
-		gasPrice: 0,
-		gas: 4700000,
+		registrar: activeUserId,
+		value: { amount: 0, asset_id: '1.3.0' },
 		code: bytecode,
+		eth_accuracy: true,
+		supported_asset_id: '1.3.0',
 	};
 
-	const fee = await dispatch(fetchFee('contract'));
-
-	const feeValue = await estimateCallContractFee('contract', options);
+	const fee = await dispatch(fetchFee('create_contract'));
+	const feeValue = await estimateCallContractFee('create_contract', options);
 
 	const showOptions = {
 		from: activeUserName,
@@ -428,7 +422,7 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 		code: bytecode,
 	};
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
@@ -536,7 +530,6 @@ export const callContract = () => async (dispatch, getState) => {
 	}
 
 	dispatch(resetTransaction());
-
 	const { amount, currency, payable } = functionForm;
 	let { fee } = functionForm;
 
@@ -544,7 +537,6 @@ export const callContract = () => async (dispatch, getState) => {
 	if ((payable && (!amount || !currency)) || !fee) return;
 
 	let amountValue = 0;
-
 	if (payable) {
 		// validate amount
 		const amountError = validateAmount(amount.value, currency);
@@ -558,7 +550,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	// validate fee
 	if (!fee.value || !fee.asset) {
-		fee = await dispatch(getFee('contract'));
+		fee = await dispatch(getFee('call_contract'));
 	}
 
 	const assets = getState().balance.get('assets').toArray();
@@ -573,15 +565,15 @@ export const callContract = () => async (dispatch, getState) => {
 	const bytecode = getMethod(targetFunction, args);
 
 	const options = {
-		registrar: activeUserId,
-		receiver: contractId,
 		asset_id: fee.asset.id,
-		value: amountValue,
-		gasPrice: 0,
-		gas: 4700000,
+		registrar: activeUserId,
+		value: { amount: amountValue, asset_id: '1.3.0' },
 		code: bytecode,
+		callee: contractId,
 	};
-	const feeValue = await estimateCallContractFee('contract', options);
+
+
+	const feeValue = await estimateCallContractFee('call_contract', options);
 
 	const showOptions = {
 		from: activeUserName,
@@ -593,7 +585,7 @@ export const callContract = () => async (dispatch, getState) => {
 		showOptions.value = `${amount.value} ${currency.symbol}`;
 	}
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 	if (!privateKey) {
@@ -613,6 +605,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	if (!activeUserId || !activeUserName) return;
 
 	const form = getState().form.get(FORM_CALL_CONTRACT_VIA_ID).toJS();
+
 	const { bytecode, id } = form;
 
 	const bytecodeError = validateCode(bytecode.value);
@@ -650,7 +643,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	// validate fee
 	if (!fee.value || !fee.asset) {
-		fee = await dispatch(getFee('contract'));
+		fee = await dispatch(getFee('call_contract'));
 	}
 
 	const assets = getState().balance.get('assets').toArray();
@@ -667,16 +660,14 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
-		registrar: activeUserId,
-		receiver: id.value,
 		asset_id: fee.asset.id,
-		value: amountValue,
-		gasPrice: 0,
-		gas: 4700000,
+		registrar: activeUserId,
+		value: { amount: amountValue, asset_id: '1.3.0' },
 		code: bytecode.value,
+		callee: id.value,
 	};
 
-	const feeValue = await estimateCallContractFee('contract', options);
+	const feeValue = await estimateCallContractFee('call_contract', options);
 
 	const showOptions = {
 		from: activeUserName,
@@ -686,7 +677,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	showOptions.value = `${amount.value} ${currency.symbol}`;
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
 
 	if (!privateKey) {
 		dispatch(openModal(MODAL_UNLOCK));
