@@ -12,9 +12,10 @@ export const buildAndSendTransaction = async (operation, options, privateKey) =>
 
 export const estimateCallContractFee = async (operation, options) => {
 	const tr = new TransactionBuilder();
+
 	tr.add_type_operation(operation, options);
 
-	await tr.set_required_fees(options.asset_id);
+	await tr.set_required_fees(options.asset_id || options.fee.asset_id);
 
 	return tr.operations[0][1].fee.amount;
 };

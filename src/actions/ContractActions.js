@@ -211,7 +211,7 @@ export const addContractByName = (
 	const instance = getState().echojs.getIn(['system', 'instance']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	const address = (await getContractResult(instance, contractResultId)).exec_res.new_address;
+	const address = (await getContractResult(instance, contractResultId))[1].exec_res.new_address;
 
 	const id = `1.16.${getContractId(address)}`;
 

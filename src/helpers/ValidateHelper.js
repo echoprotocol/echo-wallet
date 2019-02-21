@@ -228,11 +228,17 @@ export const validateByType = (value, type) => {
 };
 
 export const validateAmount = (value, { symbol, precision, balance }) => {
+	let amount = new BN(value);
+
+	if (amount.eq(0)) {
+		return null;
+	}
+
 	if (!Math.floor(value * (10 ** precision))) {
 		return `Amount should be more than 0 (${symbol} precision is ${precision} symbols)`;
 	}
 
-	const amount = new BN(value).times(10 ** precision);
+	amount = amount.times(10 ** precision);
 
 	if (!amount.isInteger()) {
 		return `${symbol} precision is ${precision} symbols`;
