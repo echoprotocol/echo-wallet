@@ -173,7 +173,7 @@ export const getMethod = (method, args) => {
 
 export const checkBlockTransaction = (accountId, op, tokens) => {
 	const operation = op[0];
-	if (operation !== operations.contract.value) return false;
+	if (operation !== operations.call_contract.value) return false;
 
 	const contractId = op[1].receiver;
 	if (!contractId) return false;

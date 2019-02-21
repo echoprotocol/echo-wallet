@@ -35,7 +35,7 @@ class TabCallContracts extends React.Component {
 			return payable ?
 				<AmountField form={FORM_CALL_CONTRACT} />
 				:
-				<FeeField form={FORM_CALL_CONTRACT} isSingle feeLabel="contract" type="contract" />;
+				<FeeField form={FORM_CALL_CONTRACT} isSingle feeLabel="contract" type="call_contract" />;
 		}
 		return null;
 	}
