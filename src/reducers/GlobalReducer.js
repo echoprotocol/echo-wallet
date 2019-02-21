@@ -13,7 +13,6 @@ const DEFAULT_FIELDS = Map({
 	contracts: new Map({}),
 	network: new Map({
 		name: '',
-		registrator: '',
 		url: '',
 	}),
 	networks: new List([]),

@@ -21,12 +21,12 @@ import { validateAccountName, validatePassword } from '../helpers/ValidateHelper
 
 import {
 	validateAccountExist,
-	createWallet,
 	unlockWallet,
 	generateKeyFromPassword,
 	getKeyFromWif,
 } from '../api/WalletApi';
 import { decodeMemo } from '../api/TransactionApi';
+import AuthApi from '../api/AuthApi';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -71,8 +71,10 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const { owner, active, memo } = await createWallet(
-			network.registrator,
+		const {
+			owner, active, memo, echoRandKey,
+		} = await AuthApi.registerAccount(
+			instance,
 			accountName,
 			generatedPassword,
 		);
@@ -80,6 +82,7 @@ export const createAccount = ({
 		dispatch(setKey(owner, accountName, generatedPassword, 'owner'));
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
 		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
+		dispatch(setKey(echoRandKey, accountName, generatedPassword, 'echoRand'));
 
 		dispatch(addAccount(accountName, network.name));
 
