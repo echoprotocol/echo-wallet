@@ -205,7 +205,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 	const { to, currency, note } = form;
 	let { fee } = form;
-	const amount = Number(form.amount.value).toString();
+	const amount = new BN(form.amount.value).toString();
 
 	if (to.error || form.amount.error || fee.error || note.error) {
 		return;
@@ -268,7 +268,7 @@ export const transfer = () => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			[toAccount.id, amount * (10 ** currency.precision)],
+			[toAccount.id, new BN(amount).times(10 ** currency.precision).toString()],
 		);
 
 		options = {
