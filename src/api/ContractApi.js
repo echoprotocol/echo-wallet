@@ -1,3 +1,5 @@
+import BN from 'bignumber.js';
+
 import {
 	getMethodId,
 	getMethod,
@@ -31,7 +33,7 @@ export const getTokenBalance = async (instance, accountId, contractId) => {
 		getMethod(method, args),
 	);
 
-	return toInt(result);
+	return new BN(result, 16).toString(10);
 };
 
 export const getTokenSymbol = async (instance, accountId, contractId) => {
