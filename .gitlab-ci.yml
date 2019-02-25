@@ -49,7 +49,6 @@ build.linux:
   stage: deploy
   script:
     - rm  -rf node_modules/
-    - rm package-lock.json
     - npm install
     - npm run package-deb
   only:
