@@ -19,6 +19,7 @@ class TabCallContracts extends React.Component {
 			this.props.setContractFees();
 		}
 	}
+
 	render() {
 		const { data, type, field } = this.props;
 		const formatedField = formatCallContractField(field);

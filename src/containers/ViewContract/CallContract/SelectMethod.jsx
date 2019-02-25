@@ -4,7 +4,7 @@ import { Dropdown, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
-import { setFunction } from '../../../actions/ContractActions';
+import { setContractFees, setFunction } from '../../../actions/ContractActions';
 import { formatCallContractField } from '../../../helpers/FormatHelper';
 
 class SelectMethod extends React.Component {
@@ -47,6 +47,7 @@ class SelectMethod extends React.Component {
 
 	setFunction(functionName) {
 		this.props.setFunction(functionName);
+		this.props.setContractFees();
 	}
 
 
@@ -94,6 +95,7 @@ class SelectMethod extends React.Component {
 SelectMethod.propTypes = {
 	functions: PropTypes.object,
 	setFunction: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 	functionName: PropTypes.string.isRequired,
 };
 
@@ -108,5 +110,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		setFunction: (value) => dispatch(setFunction(value)),
+		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
 )(SelectMethod);

@@ -105,6 +105,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		functionName: '',
 		payable: false,
+		feeError: null,
 	}),
 	[FORM_ADD_CONTRACT]: Map({
 		name: {
