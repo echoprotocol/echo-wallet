@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue } from '../../actions/FormActions';
-import { getFeeSync, fetchFee, getFee } from '../../actions/TransactionActions';
+import { getFeeSync, getFee, fetchFee } from '../../actions/TransactionActions';
 import { setContractFees } from '../../actions/ContractActions';
 
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
@@ -54,7 +54,10 @@ class FeeComponent extends React.Component {
 	shouldComponentUpdate(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return false; }
 
-		const { note, type } = this.props;
+		const {
+			note, type,
+		} = this.props;
+
 
 		if (note.value !== nextProps.note.value || type !== nextProps.type) {
 			this.props.getFee((nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value).then((value) => {
@@ -133,14 +136,19 @@ class FeeComponent extends React.Component {
 	}
 
 	render() {
-
 		const options = this.getOptions();
 		const text = this.getText(options);
+
 		return (
-			<Form.Field className={classnames({ 'fee-dropdown-wrap': !this.props.isSingle })}>
-				{this.props.isSingle ? <label htmlFor="Method">fee</label> : null}
+			<Form.Field className={classnames({
+				'fee-dropdown-wrap': !this.props.isSingle,
+				error: this.props.feeError,
+			})}
+			>
+				{this.props.isSingle && <label htmlFor="Method">fee</label> }
 				<Dropdown
 					className={classnames({
+						'fee-default-dropdown': this.props.isSingle,
 						'fee-dropdown': !this.props.isSingle,
 						'no-choice': options.length < 2,
 					})}
@@ -148,10 +156,11 @@ class FeeComponent extends React.Component {
 					fluid
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
-					text={text}
+					text={options.length ? text : '0 ECHO'}
 					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
+				<span className="error-message">{this.props.feeError}</span>
 			</Form.Field>
 		);
 	}
@@ -168,10 +177,11 @@ FeeComponent.propTypes = {
 	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFeeSync: PropTypes.func.isRequired,
-	fetchFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
+	fetchFee: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
+	feeError: PropTypes.string,
 	currency: PropTypes.any,
 };
 
@@ -181,6 +191,7 @@ FeeComponent.defaultProps = {
 	assets: [],
 	selectedSymbol: '',
 	currency: {},
+	feeError: '',
 };
 
 export default connect(
@@ -191,14 +202,15 @@ export default connect(
 		note: state.form.getIn([form, 'note']) || {},
 		currency: state.form.getIn([form, 'currency']) || {},
 		selectedSymbol: state.form.getIn([form, 'selectedSymbol']),
+		feeError: state.form.getIn([form, 'feeError']),
 		fees: state.fee.toArray() || [],
 		form,
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFeeSync: (asset, note) => dispatch(getFeeSync(type, asset, note)),
-		fetchFee: () => dispatch(fetchFee(type)),
 		setContractFees: () => dispatch(setContractFees(form)),
 		getFee: (note) => dispatch(getFee(type, note)),
+		fetchFee: () => dispatch(fetchFee(type)),
 	}),
 )(FeeComponent);

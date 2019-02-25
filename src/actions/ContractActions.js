@@ -31,7 +31,7 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
-import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
+import {CALL_CONTRACT_PATH, CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH} from '../constants/RouterConstants';
 
 import history from '../history';
 
@@ -380,13 +380,26 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	fees = await Promise.all(fees);
 
+	if (fees.some((value) => value === null)) {
+		if (form === FORM_CALL_CONTRACT) {
+			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+		} else {
+			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
+		}
+	} else {
+		dispatch(setValue(form, 'feeError', null));
+		dispatch(setFormError(form, 'amount', null));
+	}
+
 	fees = fees.reduce((arr, value, i) => {
-		arr.push({
-			value,
-			asset: assets[i],
-		});
+		if (value) {
+			arr.push({
+				value,
+				asset: assets[i],
+			});
+		}
 		return arr;
 	}, []);
 
-	dispatch(ContractFeeReducer.actions.set({ value: fees }));
+	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
 };

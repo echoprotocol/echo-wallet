@@ -1,3 +1,5 @@
+
+
 .ui.dropdown {
     &.active {
         .dropdown.icon,
@@ -9,7 +11,21 @@
                line-height: 17px;
             }
         }
-    }
+	}
+	&.fee-default-dropdown {
+		&.no-choice {
+            cursor: auto;
+            .menu {
+                display: none !important;
+            }
+            .dropdown.icon {
+                display: none;
+            }
+            & > .text {
+                margin-right: 0;
+            }
+        }
+	}
     &.fee-dropdown {
         display: flex;
         align-items: center;
@@ -442,4 +458,12 @@
         }
     }
 
+}
+
+.error {
+	.ui.dropdown {
+		&.fee-default-dropdown {
+			border: 1px solid #ff4848; 
+		}
+	}
 }

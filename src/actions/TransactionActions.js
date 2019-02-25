@@ -407,7 +407,12 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		callee: contractId,
 	};
 
-	const feeValue = await estimateCallContractFee('call_contract', options);
+	let feeValue;
+	try {
+		feeValue = await estimateCallContractFee('call_contract', options);
+	} catch (error) {
+		return null;
+	}
 
 	return feeValue;
 };
@@ -615,8 +620,13 @@ export const callContract = () => async (dispatch, getState) => {
 		callee: contractId,
 	};
 
-
-	const feeValue = await estimateCallContractFee('call_contract', options);
+	let feeValue;
+	try {
+		feeValue = await estimateCallContractFee('call_contract', options);
+	} catch (error) {
+		dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
+		return;
+	}
 
 	const showOptions = {
 		from: activeUserName,
@@ -710,7 +720,13 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		callee: id.value,
 	};
 
-	const feeValue = await estimateCallContractFee('call_contract', options);
+	let feeValue;
+	try {
+		feeValue = await estimateCallContractFee('call_contract', options);
+	} catch (error) {
+		dispatch(setInFormError(FORM_CALL_CONTRACT_VIA_ID, ['fee', 'error'], 'Can\'t be calculated'));
+		return;
+	}
 
 	const showOptions = {
 		from: activeUserName,
