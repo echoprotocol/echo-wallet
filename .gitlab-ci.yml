@@ -41,7 +41,7 @@ build.macos:
     - echo-mac
   artifacts:
      paths:
-     - build/binaries/ECHO Wallet-0.1.1.dmg
+     - build/binaries/ECHO Wallet-0.9.0.dmg
      expire_in: 1 week
 
 
@@ -57,7 +57,7 @@ build.linux:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHOWallet_0.1.1_amd64.deb
+     - build/binaries/ECHOWallet_0.9.0_amd64.deb
      expire_in: 1 week
 
 build.windows:
@@ -72,7 +72,7 @@ build.windows:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHO Wallet Setup 0.1.1.exe.blockmap
+     - build/binaries/ECHO Wallet Setup 0.9.0.exe.blockmap
      expire_in: 1 week
 
 build.linux-debug:
@@ -86,7 +86,7 @@ build.linux-debug:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHOWallet_0.1.1_amd64.deb
+     - build/binaries/ECHOWallet_0.9.0_amd64.deb
      expire_in: 1 week
 
 build.windows-debug:
@@ -100,5 +100,5 @@ build.windows-debug:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHO Wallet Setup 0.1.1.exe.blockmap
+     - build/binaries/ECHO Wallet Setup 0.9.0.exe.blockmap
      expire_in: 1 week
