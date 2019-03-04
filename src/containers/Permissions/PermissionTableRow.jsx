@@ -37,7 +37,7 @@ class PermissionTableRow extends Component {
 		return (
 			<React.Fragment>
 				<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
-					<div className={`cell-wrap key-td ${(this.state.edit ? 'edit-i-container' : '')}`}>
+					<div className={`field cell-wrap key-td ${(this.state.edit ? 'edit-i-container' : '')}`}>
 						<Button
 							className={classnames('icon', { 'icon-e-show': !k.unlocked, 'icon-e-hide': k.unlocked })}
 							onClick={() => this.onClick(k)}
@@ -52,14 +52,17 @@ class PermissionTableRow extends Component {
 				<Table.Cell>
 					{
 						(this.state.edit) ? (
-							<input
-								type="text"
-								name="name"
-								className="ui input"
-								value={1}
-								onChange={(e) => this.onInput(e)}
-								autoFocus
-							/>
+							<div className="field error">
+								<input
+									type="text"
+									name="name"
+									className="ui input"
+									value={1}
+									onChange={(e) => this.onInput(e)}
+									autoFocus
+								/>
+								<span className="error-message">This name is already in use</span>
+							</div>
 						) : (
 							<div className="td-txt">1</div>
 						)
@@ -100,7 +103,10 @@ class PermissionTableRow extends Component {
 							<Table.Cell>
 								{
 									(this.state.edit) ? (
-										<textarea className="i-textarea">{k.key}</textarea>
+										<div className="field error">
+											<textarea className="i-textarea">{k.key}</textarea>
+											<span className="error-message">This name is already in use</span>
+										</div>
 									) : (
 										<div className="td-txt">{k.key}</div>
 									)

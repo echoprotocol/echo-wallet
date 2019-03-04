@@ -21,12 +21,13 @@
             .treshhold-input {
 
                 .field {
-                    display: flex;
+                    display: inline-flex;
                     align-items: center;
 
                     input {
                         padding: 4px 10px;
                         font-size: 15px;
+                        min-width: 320px;
                         max-width: 320px;
                         
                         &::placeholder {
@@ -124,6 +125,10 @@
                     &.is-edit {
                         background-color: #f5f5f6 !important;
 
+                        td {
+                            overflow: visible;
+                        }
+
                         .icon-e-hide, .icon-e-show {
                             color: #adb1be !important;
                         }
@@ -136,6 +141,15 @@
                             .key {
                                 color: #4d66cd !important;
                             }
+                        }
+
+                        .error-message {
+                            left: 0;
+                            bottom: -19px;
+                        }
+
+                        .field {
+                            display: flex;
                         }
                     }
                     
@@ -273,6 +287,33 @@
                 font-size: 12px;
                 padding: 6px 10px;
                 margin-right: 25px;
+            }
+        }
+
+        .field {
+            &.error {
+                position: relative;
+
+                input {
+                    border-color: #ff4848 !important;
+                }
+
+                textarea {
+                    border-color: #ff4848 !important;
+                }
+
+                &.edit-i-container {
+                    border-color: #ff4848 !important;
+                }
+            }
+
+            .error-message {
+                border-radius: 3px;
+                padding: 2px 5px;
+                right: auto;
+                left: calc(100% + 10px);
+                flex-shrink: 0;
+                white-space: nowrap;
             }
         }
     }

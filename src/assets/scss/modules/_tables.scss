@@ -308,10 +308,7 @@ $thead-height: 46px;
             th {
                 padding: 0 22px;
                 
-                @media (max-width: 950px){
-                    padding-right: 9px;
-                    padding-left: 9px;
-                }
+
                 height: 30px;
                 font-family: proximanovaSemibold;
                 color: rgba(173, 177, 190, 1);

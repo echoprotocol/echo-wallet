@@ -24,7 +24,7 @@ class PermissionTable extends React.Component {
 				{
 					(!noInput) && (
 						<Form className="treshhold-input">
-							<Form.Field>
+							<Form.Field className="error">
 								<p className="i-title">TRESHHOLD</p>
 								<input
 									type="text"
@@ -35,7 +35,7 @@ class PermissionTable extends React.Component {
 									onChange={(e) => this.onInput(e)}
 									autoFocus
 								/>
-								{/* <span className="error-message">{name.error}</span> */}
+								<span className="error-message">This name is already in use</span>
 							</Form.Field>
 						</Form>
 					)
