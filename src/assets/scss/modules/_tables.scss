@@ -306,7 +306,8 @@ $thead-height: 46px;
 
         thead {
             th {
-                padding: 0 18px;
+                padding: 0 22px;
+                
                 @media (max-width: 950px){
                     padding-right: 9px;
                     padding-left: 9px;
@@ -334,13 +335,19 @@ $thead-height: 46px;
                             }
                         }
                     }
-                    .icon-show,
-                    .icon-hide {
+                    .icon-e-show,
+                    .icon-e-hide {
                         color: $yellow;
                     }
 
                     .key-input {
                         color: $yellow;
+                    }
+
+                    .key-show {
+                        .key {
+                            color: $yellow;
+                        }
                     }
                 }
             }
@@ -392,8 +399,8 @@ $thead-height: 46px;
 
                 }
             }
-            .icon-show,
-            .icon-hide {
+            .icon-e-show,
+            .icon-e-hide {
                 color: rgba(173, 177, 190, 1);
                 transition: color $speed;
                 margin-right: 8px;

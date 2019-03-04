@@ -1,68 +1,70 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table } from 'semantic-ui-react';
-import classnames from 'classnames';
+import { Button, Table, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import { unlockPrivateKey } from '../../actions/TableActions';
 
+import PermissionTableRow from './PermissionTableRow';
+
 class PermissionTable extends React.Component {
 
-	onClick(k) {
-		this.props.unlockPrivateKey(k);
-	}
-
-	renderPrivateKeyCell(k) {
-		return (
-			<Table.Cell className={classnames({ 'key-hide': !k.unlocked, 'key-show': k.unlocked })} >
-				<div className="cell-wrap">
-					<Button
-						className={classnames('icon', { 'icon-hide': !k.unlocked, 'icon-show': k.unlocked })}
-						onClick={() => this.onClick(k)}
-					/>
-					{
-						k.unlocked ?
-							<span className="key">{k.privateKey}</span> :
-							<input tabIndex="-1" type="password" readOnly className="key-input" value={k.privateKey} />
-
-					}
-
-				</div>
-			</Table.Cell>
-		);
-
-	}
 
 	render() {
 
-		const { table, data } = this.props;
+		const {
+			table, description, data, noInput, noBtn,
+		} = this.props;
+
 		return (
 
 			<div className="permissions-table-wrap">
-				<h3>{`${table} Permissions`}</h3>
+				<h3>{`${table}`}</h3>
+				<p className="description">{description}</p>
+				{
+					(!noInput) && (
+						<Form className="treshhold-input">
+							<Form.Field>
+								<p className="i-title">TRESHHOLD</p>
+								<input
+									type="text"
+									placeholder="Enter threshold"
+									name="name"
+									className="ui input"
+									// value={name.value}
+									onChange={(e) => this.onInput(e)}
+									autoFocus
+								/>
+								{/* <span className="error-message">{name.error}</span> */}
+							</Form.Field>
+						</Form>
+					)
+				}
 				<Table structured fixed className="permissions-table">
-
 					<Table.Header>
 						<Table.Row>
-							<Table.HeaderCell> Account / Key </Table.HeaderCell>
-							<Table.HeaderCell> Private Key </Table.HeaderCell>
-
+							<Table.HeaderCell>Account / Key</Table.HeaderCell>
+							<Table.HeaderCell>Private Key</Table.HeaderCell>
+							<Table.HeaderCell>Weight</Table.HeaderCell>
+							<Table.HeaderCell></Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
-
 					<Table.Body>
-						{
-							data.map((k) => (
-								<Table.Row key={k.key}>
-									<Table.Cell>{k.key}</Table.Cell>
-									{
-										this.renderPrivateKeyCell(k)
-									}
-								</Table.Row>
-							))
-						}
+						<PermissionTableRow data={data} />
+						<PermissionTableRow data={data} />
 					</Table.Body>
 				</Table>
+				{
+					(!noBtn) && (
+						<div className="btn-container">
+							<Button
+								basic
+								className="main-btn"
+								content="ADD KEY"
+							/>
+						</div>
+					)
+				}
 			</div>
 		);
 	}
@@ -72,7 +74,15 @@ class PermissionTable extends React.Component {
 PermissionTable.propTypes = {
 	table: PropTypes.string.isRequired,
 	data: PropTypes.array.isRequired,
-	unlockPrivateKey: PropTypes.func.isRequired,
+	noInput: PropTypes.bool,
+	noBtn: PropTypes.bool,
+	description: PropTypes.string,
+};
+
+PermissionTable.defaultProps = {
+	noInput: false,
+	noBtn: false,
+	description: null,
 };
 
 
