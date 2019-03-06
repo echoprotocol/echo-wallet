@@ -54,7 +54,7 @@ class ModalDetails extends React.Component {
 		const { showOptions, show, disabled } = this.props;
 
 		return (
-			<Modal className="small" open={show} dimmer="inverted">
+			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
 				<div className="modal-content">
 					<span
 						className="icon-close"
@@ -71,6 +71,12 @@ class ModalDetails extends React.Component {
 							</div>
 							<div className="field-wrap">
 								{ showOptions ? this.renderOptions() : null }
+								<Form.Field className="field-block">
+									<p className="field-block_title">Test</p>
+									<div className="field-block_edit">
+										<span>ECHO123123123123123123</span><span>,1</span>
+									</div>
+								</Form.Field>
 							</div>
 							<div className="form-panel">
 								<Button
