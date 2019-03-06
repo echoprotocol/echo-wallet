@@ -4,7 +4,7 @@ import ModalUnlockWallet from './ModalUnlock';
 import ModalTokens from './ModalTokens';
 import ModalDetails from './ModalDetails';
 import ModalLogout from './ModalLogout';
-
+import ModalChooseAccount from './ModalChooseAccount';
 
 export default class ModalsComponent extends React.Component {
 
@@ -15,6 +15,7 @@ export default class ModalsComponent extends React.Component {
 				<ModalTokens />
 				<ModalDetails />
 				<ModalLogout />
+				<ModalChooseAccount />
 			</div>
 		);
 	}
