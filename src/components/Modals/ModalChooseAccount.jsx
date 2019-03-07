@@ -1,25 +1,135 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Form, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
-import { closeModal } from '../../actions/ModalActions';
+import { importSelectedAccounts } from '../../actions/AuthActions';
+import { closeModal, update } from '../../actions/ModalActions';
+import { toggleSort } from '../../actions/SortActions';
 
+import { FORM_SIGN_IN } from '../../constants/FormConstants';
 import { MODAL_CHOOSE_ACCOUNT } from '../../constants/ModalConstants';
+import { SORT_ACCOUNTS } from '../../constants/GlobalConstants';
 
+import { formatAmount } from '../../helpers/FormatHelper';
 
 class ModalChooseAccount extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			checkedAll: false,
+		};
+	}
+
+
 	onClose() {
+		this.setState({ checkedAll: false });
 		this.props.closeModal();
 	}
 
-	onConfirm() {
-		this.props.closeModal();
+
+	onConfirm(accounts, password) {
+		this.props.importAccounts(accounts, password);
+		this.onClose();
+	}
+
+	onSort(sortType) {
+		this.props.toggleSort(sortType);
+	}
+
+	sortList() {
+		const { accounts } = this.props;
+		const { sortType, sortInc } = this.props.sort.toJS();
+
+		if (sortType === 'balance') {
+			return accounts.sort((a, b) => {
+				if (a.balances[sortType] < b.balances[sortType]) {
+					return 1 * (sortInc ? 1 : -1);
+				}
+				if (a.balances[sortType] > b.balances[sortType]) {
+					return -1 * (sortInc ? 1 : -1);
+				}
+				return 0;
+			});
+		}
+
+		return accounts.sort((a, b) => {
+			if (a[sortType] > b[sortType]) {
+				return -1 * (sortInc ? 1 : -1);
+			}
+			if (a[sortType] < b[sortType]) {
+				return 1 * (sortInc ? 1 : -1);
+			}
+			return 0;
+		});
+
+	}
+
+	toggleAllChecked(e, accounts) {
+		this.setState({ checkedAll: !this.state.checkedAll });
+		if (e.target.checked) {
+			accounts = accounts.map((account) => {
+				account.checked = true;
+				return account;
+			});
+		} else {
+			accounts = accounts.map((account) => {
+				account.checked = false;
+				return account;
+			});
+		}
+
+		this.props.toggleChecked('accounts', accounts);
+
+	}
+
+	toggleChecked(accounts, id) {
+		const index = accounts.findIndex((a) => a.id === id);
+		if (this.state.checkedAll) {
+			this.setState({ checkedAll: false });
+		}
+		accounts = accounts.update(index, (account) => ({ ...account, checked: !account.checked }));
+
+		if (accounts.every((account) => account.checked)) {
+			this.setState({ checkedAll: true });
+		}
+
+		this.props.toggleChecked('accounts', accounts);
+	}
+	renderAccounts(account) {
+		const { accounts } = this.props;
+
+		return (
+			<div className="line" key={account.id}>
+				<div className="check">
+					<input
+						type="checkbox"
+						checked={account.checked}
+						onChange={() => this.toggleChecked(accounts, account.id)}
+						id={account.name}
+					/>
+					<label
+						className="label"
+						htmlFor={account.name}
+					>
+						<span className="label-text">{account.name}</span>
+					</label>
+				</div>
+				<div className="value">
+					{formatAmount(account.balances.balance, account.balances.precision, ' ')}
+					{account.balances.symbol}
+				</div>
+			</div>
+		);
 	}
 
 	render() {
-		const { show } = this.props;
+
+		const { show, accounts, password } = this.props;
+		const { checkedAll } = this.state;
+		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return (
 			<Modal className="choose-account" open={show} dimmer="inverted">
@@ -34,28 +144,52 @@ class ModalChooseAccount extends React.Component {
 								<div className="accounts-list_header">
 									<div className="check-container">
 										<div className="check">
-											<input type="checkbox" id={1} />
-											<label className="label" htmlFor={1}>
+											<input
+												onChange={(e) => this.toggleAllChecked(e, accounts)}
+												checked={checkedAll}
+												type="checkbox"
+												id="check-all"
+											/>
+											<label
+												className="label"
+												htmlFor="check-all"
+											>
 												<span className="label-text">Accounts</span>
 											</label>
 										</div>
-										<button className="sort-icon" />
+										<button className="sort" onClick={() => this.onSort('name')}>
+											<Icon
+												name="dropdown"
+												flipped="vertically"
+												className={classnames({ active: sortType === 'name' && sortInc })}
+											/>
+											<Icon
+												name="dropdown"
+												flipped="horizontally"
+												className={classnames({ active: sortType === 'name' && !sortInc })}
+											/>
+										</button>
 									</div>
 									<div className="check-container">
 										<div className="txt">Balance</div>
-										<button className="sort-icon" />
+										<button className="sort" onClick={() => this.onSort('balance')}>
+											<Icon
+												name="dropdown"
+												flipped="vertically"
+												className={classnames({ active: sortType === 'balance' && sortInc })}
+											/>
+											<Icon
+												name="dropdown"
+												flipped="horizontally"
+												className={classnames({ active: sortType === 'balance' && !sortInc })}
+											/>
+										</button>
 									</div>
 								</div>
 								<div className="accounts-list_list">
-									<div className="line">
-										<div className="check">
-											<input type="checkbox" id={2} />
-											<label className="label" htmlFor={2}>
-												<span className="label-text">valentine_prusski</span>
-											</label>
-										</div>
-										<div className="value">0.000083 ECHO</div>
-									</div>
+									{
+										this.sortList().map((account) => this.renderAccounts(account))
+									}
 								</div>
 							</section>
 							<div className="form-panel">
@@ -70,7 +204,7 @@ class ModalChooseAccount extends React.Component {
 									basic
 									type="button"
 									className="main-btn"
-									onClick={() => this.onConfirm()}
+									onClick={() => this.onConfirm(accounts, password)}
 									content="Continue"
 								/>
 							</div>
@@ -86,17 +220,31 @@ class ModalChooseAccount extends React.Component {
 ModalChooseAccount.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
+	toggleChecked: PropTypes.func.isRequired,
+	importAccounts: PropTypes.func.isRequired,
+	toggleSort: PropTypes.func.isRequired,
+	accounts: PropTypes.any,
+	password: PropTypes.string,
+	sort: PropTypes.object.isRequired,
 };
 
 ModalChooseAccount.defaultProps = {
 	show: false,
+	accounts: [],
+	password: '',
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'show']),
+		accounts: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'accounts']),
+		password: state.form.getIn([FORM_SIGN_IN, 'password']).value,
+		sort: state.sort.get(SORT_ACCOUNTS),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_CHOOSE_ACCOUNT)),
+		toggleChecked: (param, value) => dispatch(update(MODAL_CHOOSE_ACCOUNT, param, value)),
+		importAccounts: (accounts, password) => dispatch(importSelectedAccounts(accounts, password)),
+		toggleSort: (type) => dispatch(toggleSort(SORT_ACCOUNTS, type)),
 	}),
 )(ModalChooseAccount);

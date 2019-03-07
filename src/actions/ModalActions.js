@@ -1,13 +1,15 @@
 import ModalReducer from './../reducers/ModalReducer';
 
-export const openModal = (type) => (dispatch) => {
-	dispatch(ModalReducer.actions.open({ type }));
+export const openModal = (type, field, value) => (dispatch) => {
+	dispatch(ModalReducer.actions.open({ type, field, value }));
 };
 
 export const closeModal = (type) => (dispatch) => {
 	dispatch(ModalReducer.actions.close({ type }));
 };
-
+export const update = (type, param, value) => (dispatch) => {
+	dispatch(ModalReducer.actions.update({ type, param, value }));
+};
 export const setParamValue = (type, param, value) => (dispatch) => {
 	dispatch(ModalReducer.actions.setParamValue({ type, param, value }));
 };

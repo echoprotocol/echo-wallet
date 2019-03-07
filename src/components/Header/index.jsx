@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 
 import { initAccount, removeAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
-import { MODAL_LOGOUT, MODAL_CHOOSE_ACCOUNT } from '../../constants/ModalConstants';
+import { MODAL_LOGOUT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
@@ -49,10 +49,6 @@ class Header extends React.Component {
 
 	onOpenLogout() {
 		this.props.openModal();
-	}
-
-	onOpenChooseAccount() {
-		this.props.openAccountModal();
 	}
 
 	onAddAccount(e) {
@@ -211,7 +207,6 @@ class Header extends React.Component {
 				}
 
 				<div className="page-title">{this.getTitle()}</div>
-				<button style={{ marginLeft: '20px' }} onClick={() => this.onOpenChooseAccount()}>Open Choose Account Modal</button>
 				<div className="panel-right">
 
 					<NavLink
@@ -264,7 +259,6 @@ Header.propTypes = {
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
-	openAccountModal: PropTypes.func.isRequired,
 	transactionData: PropTypes.object,
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
@@ -286,7 +280,6 @@ export default withRouter(connect(
 	}),
 	(dispatch) => ({
 		openModal: () => dispatch(openModal(MODAL_LOGOUT)),
-		openAccountModal: () => dispatch(openModal(MODAL_CHOOSE_ACCOUNT)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
