@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import PrivateKeyScenario from '../PrivateKeyScenario';
+
 import PermissionTable from './PermissionTable';
 
 import { formPermissionKeys, clear } from '../../actions/TableActions';
@@ -60,9 +62,17 @@ class Permissions extends React.Component {
                     They can be used to easily setup a multi-signature
                     scheme, see permissions for more details.
 				</div>
-				<PermissionTable table="Active" data={active} />
-				<PermissionTable table="Owner" data={owner} />
-				<PermissionTable table="Note" data={note} />
+				<PrivateKeyScenario>
+					{
+						(keys, submit) => (
+							<React.Fragment>
+								<PermissionTable table="Active" data={active} keys={keys.active} submit={submit} />
+								<PermissionTable table="Owner" data={owner} keys={keys.owner} submit={submit} />
+								<PermissionTable table="Note" data={note} keys={keys.note} submit={submit} />
+							</React.Fragment>
+						)
+					}
+				</PrivateKeyScenario>
 			</div>
 		);
 	}

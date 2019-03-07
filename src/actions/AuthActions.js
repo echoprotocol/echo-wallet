@@ -304,25 +304,18 @@ export const unlockAccount = (account, password) => (dispatch) => {
 			return { error: passwordError };
 		}
 
-		const { owner, active, memo } = unlockWallet(account, password);
+		const keys = unlockWallet(account, password);
 
 		// const { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
 
-		if (!owner && !active && !memo) { // && !permissionKey
+		if (!keys.owner && !keys.active && !keys.memo) { // && !permissionKey
 			// dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
 			return { error: 'Invalid password' };
 		}
-		if (owner) {
-			dispatch(setKey(owner, account.get('name'), password, 'owner'));
-		}
 
-		if (active) {
-			dispatch(setKey(active, account.get('name'), password, 'active'));
-		}
-
-		if (memo) {
-			dispatch(setKey(memo, account.get('name'), password, 'memo'));
-		}
+		Object.entries(keys).forEach(([role, value]) => {
+			dispatch(setKey(value, account.get('name'), password, role));
+		});
 
 		// dispatch(signTransaction(owner, active, memo));
 		//
@@ -335,7 +328,7 @@ export const unlockAccount = (account, password) => (dispatch) => {
 		// 	dispatch(clearForm(FORM_UNLOCK_MODAL));
 		// }
 
-		return { keys: { owner, active, memo } };
+		return { keys };
 	} catch (err) {
 		return { error: err instanceof Error ? err.message : err };
 		// dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));

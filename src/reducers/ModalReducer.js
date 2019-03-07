@@ -17,12 +17,16 @@ const DEFAULT_MODAL_FIELDS = {
 		},
 		error: null,
 	}),
+	[MODAL_UNLOCK]: Map({
+		role: null,
+		publicKey: null,
+	}),
 };
 
 export default createModule({
 	name: 'modal',
 	initialState: Map({
-		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS),
+		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_UNLOCK]),
 		[MODAL_DETAILS]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_TOKENS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_TOKENS]),
 	}),
@@ -30,6 +34,13 @@ export default createModule({
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
+
+				if (payload.params) {
+					Object.entries(payload.params).forEach(([field, value]) => {
+						state = state.setIn([payload.type, field], value);
+					});
+				}
+
 				return state;
 			},
 		},
