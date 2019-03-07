@@ -31,7 +31,7 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
-import {CALL_CONTRACT_PATH, CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH} from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
 

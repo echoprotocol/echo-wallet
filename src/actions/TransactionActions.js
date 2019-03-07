@@ -72,6 +72,7 @@ export const fetchFee = (type) => async (dispatch) => {
 		'fee',
 	]);
 	return { value, asset: asset.toJS() };
+
 };
 
 export const getFee = (type, note = null) => async (dispatch, getState) => {
@@ -118,6 +119,7 @@ export const getFee = (type, note = null) => async (dispatch, getState) => {
 };
 
 export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
+
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
@@ -154,6 +156,18 @@ export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, g
 	return { value: new BN(fee).integerValue(BN.ROUND_UP).toString(), asset: feeAsset };
 };
 
+export const updateFee = (type, note = null) => async (dispatch) => {
+	if (note) {
+		const fee = dispatch(getFee(type, note));
+		fee.then((value) => {
+			if (value) {
+				dispatch(setValue(FORM_TRANSFER, 'fee', value));
+			}
+		});
+	}
+
+};
+
 export const checkFeePool = (echo, asset, fee) => {
 	if (echo.id === asset.id) { return true; }
 
@@ -169,35 +183,34 @@ export const checkFeePool = (echo, asset, fee) => {
 
 export const checkAccount = (accountName) => async (dispatch, getState) => {
 	try {
-		if (!accountName) return;
+		if (!accountName) return false;
 
 		const fromAccount = getState().global.getIn(['activeUser', 'name']);
 
 		if (fromAccount === accountName) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'You can not send funds to yourself'));
-			return;
+			return false;
 		}
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
-
 		const accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
-			return;
+			return false;
 		}
 
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
 			error: null,
 		}));
+
 	} catch (err) {
 		dispatch(setValue(FORM_TRANSFER, 'error', err));
 	} finally {
 		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 	}
-
-
+	return true;
 };
 
 export const transfer = () => async (dispatch, getState) => {

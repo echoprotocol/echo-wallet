@@ -18,15 +18,14 @@ class FeeComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
-		props.fetchFee().then((fee) => {
-			props.setValue('fee', fee);
-		});
-
 		this.state = {
 			isChanged: false,
 		};
 	}
 	componentDidMount() {
+		this.props.fetchFee().then((fee) => {
+			this.props.setValue('fee', fee);
+		});
 		this.props.setContractFees();
 	}
 
@@ -38,6 +37,7 @@ class FeeComponent extends React.Component {
 		} = this.props;
 
 		if (assets.length && !this.state.isChanged) {
+
 			assets.forEach((asset) => {
 				if (asset.symbol === selectedSymbol) {
 					this.props.getFee(note.value).then((resultFee) => {
@@ -57,7 +57,6 @@ class FeeComponent extends React.Component {
 		const {
 			note, type,
 		} = this.props;
-
 
 		if (note.value !== nextProps.note.value || type !== nextProps.type) {
 			this.props.getFee((nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value).then((value) => {

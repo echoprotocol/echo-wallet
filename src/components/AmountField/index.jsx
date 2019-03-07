@@ -10,6 +10,7 @@ import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
+import { updateFee, fetchFee } from '../../actions/TransactionActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -17,11 +18,13 @@ import FeeField from './FeeField';
 
 class AmountField extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+
 		this.state = {
 			searchText: '',
 			amountFocus: false,
+			timeout: null,
 		};
 	}
 
@@ -34,12 +37,29 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
-		const { currency } = this.props;
+		const { currency, note } = this.props;
 		const value = e.target.value.trim();
 		const { name } = e.target;
-
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
 		this.props.amountInput(value, currency, name);
 		if (currency && currency.type === 'tokens') this.props.setContractFees();
+
+
+		this.setState({
+			timeout: setTimeout(() => {
+				if (value) {
+					this.props.updateFee('transfer', note.value);
+				} else {
+					this.props.fetchFee('transfer').then((fee) => {
+						this.props.setValue('fee', fee);
+					});
+				}
+			}, 300),
+		});
+
+
 	}
 
 	onChangeCurrency(e, value) {
@@ -224,14 +244,19 @@ AmountField.propTypes = {
 
 	currency: PropTypes.object,
 	fee: PropTypes.object,
+
 	assets: PropTypes.any.isRequired,
 	tokens: PropTypes.any.isRequired,
+	note: PropTypes.any.isRequired,
+
 	amount: PropTypes.object.isRequired,
 
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
+	updateFee: PropTypes.func.isRequired,
+	fetchFee: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 };
@@ -248,6 +273,7 @@ export default connect(
 		currency: state.form.getIn([form, 'currency']),
 		fee: state.form.getIn([form, 'fee']),
 		tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
+		note: state.form.getIn([form, 'note']) || {},
 	}),
 	(dispatch, { form }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
@@ -255,6 +281,8 @@ export default connect(
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 		setContractFees: () => dispatch(setContractFees(form)),
+		updateFee: (type, note) => dispatch(updateFee(type, note)),
+		fetchFee: (type) => dispatch(fetchFee(type)),
 		setDefaultAsset: (currency) => dispatch(setDefaultAsset(form, currency)),
 	}),
 )(AmountField);
