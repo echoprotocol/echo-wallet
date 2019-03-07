@@ -25,6 +25,7 @@ import { validateContractId } from '../helpers/ValidateHelper';
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { TRANSFER_PATH } from '../constants/RouterConstants';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -54,8 +55,15 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 
 export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
 	let balances = [];
-
-	if (assets && Object.keys(assets).length) {
+	if (!Object.keys(assets).length) {
+		const defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+		balances.push({
+			balance: 0,
+			id: defaultAsset.get('id'),
+			symbol: defaultAsset.get('symbol'),
+			precision: defaultAsset.get('precision'),
+		});
+	} else {
 		balances = Object.entries(assets).map(async (asset) => {
 			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
 			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();

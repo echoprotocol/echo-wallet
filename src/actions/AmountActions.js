@@ -1,4 +1,6 @@
-import { setFormValue, setFormError } from './FormActions';
+import { EchoJSActions } from 'echojs-redux';
+import { setFormValue, setFormError, setValue } from './FormActions';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
@@ -25,4 +27,15 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 	dispatch(setFormValue(form, name, value));
 };
 
-export default {};
+export const setDefaultAsset = (form) => async (dispatch, getState) => {
+	let defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+	const asset = getState().balance.get('assets').find((value) => 	value.id === ECHO_ASSET_ID);
+	defaultAsset = {
+		balance: asset ? asset.balance : 0,
+		id: defaultAsset.get('id'),
+		symbol: defaultAsset.get('symbol'),
+		precision: defaultAsset.get('precision'),
+	};
+	dispatch(setValue(form, 'currency', defaultAsset));
+
+};

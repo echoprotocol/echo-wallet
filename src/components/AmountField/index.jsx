@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
+
 import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
-import { amountInput } from '../../actions/AmountActions';
+import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -24,10 +25,8 @@ class AmountField extends React.Component {
 		};
 	}
 
-	componentDidUpdate() {
-		if (this.props.assets.length && !this.props.currency) {
-			this.props.setValue('currency', this.props.assets[0]);
-		}
+	componentDidMount() {
+		this.props.setDefaultAsset();
 	}
 
 	onSearch(e) {
@@ -147,9 +146,13 @@ class AmountField extends React.Component {
 		const {
 			assets, amount, form, fee,
 		} = this.props;
+
+
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
+
 		const type = form === FORM_TRANSFER && currency && currency.type !== 'tokens' ? 'transfer' : 'call_contract';
+
 
 		return (
 			<Form.Field>
@@ -162,8 +165,13 @@ class AmountField extends React.Component {
 						</li>
 						<li>
 							Available Balance:
-							<span role="button" onClick={(e) => this.setAvailableAmount(currency, e)} onKeyPress={(e) => this.setAvailableAmount(currency, e)} tabIndex="0">
-								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO' }
+							<span
+								role="button"
+								onClick={(e) => this.setAvailableAmount(currency, e)}
+								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
+								tabIndex="0"
+							>
+								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO'}
 							</span>
 						</li>
 					</ul>
@@ -224,7 +232,7 @@ AmountField.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
-
+	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 };
 
@@ -247,5 +255,6 @@ export default connect(
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 		setContractFees: () => dispatch(setContractFees(form)),
+		setDefaultAsset: (currency) => dispatch(setDefaultAsset(form, currency)),
 	}),
 )(AmountField);
