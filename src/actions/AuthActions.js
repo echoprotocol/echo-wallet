@@ -130,7 +130,7 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 
 		const account = await dispatch(EchoJSActions.fetch(accountName));
 
-		const { owner, active, memo } = await unlockWallet(account, password);
+		const { owner, active, memo } = unlockWallet(account, password);
 
 		if (!owner && !active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
@@ -292,10 +292,7 @@ export const showPermissions = (
 
 };
 
-export const unlockAccount = ({
-	accountName,
-	password,
-}) => async (dispatch, getState) => {
+export const unlockAccount = (account, password) => (dispatch) => {
 
 	try {
 		dispatch(setDisable(MODAL_UNLOCK, true));
@@ -303,45 +300,45 @@ export const unlockAccount = ({
 		const passwordError = validatePassword(password);
 
 		if (passwordError) {
-			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
-			return;
+			// dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
+			return { error: passwordError };
 		}
 
-		const account = await dispatch(EchoJSActions.fetch(accountName));
+		const { owner, active, memo } = unlockWallet(account, password);
 
-		const { owner, active, memo } = await unlockWallet(account, password);
+		// const { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
 
-		const { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
-
-		if (!owner && !active && !memo && !permissionKey) {
-			dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
-			return;
+		if (!owner && !active && !memo) { // && !permissionKey
+			// dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
+			return { error: 'Invalid password' };
 		}
 		if (owner) {
-			dispatch(setKey(owner, accountName, password, 'owner'));
+			dispatch(setKey(owner, account.get('name'), password, 'owner'));
 		}
 
 		if (active) {
-			dispatch(setKey(active, accountName, password, 'active'));
+			dispatch(setKey(active, account.get('name'), password, 'active'));
 		}
 
 		if (memo) {
-			dispatch(setKey(memo, accountName, password, 'memo'));
+			dispatch(setKey(memo, account.get('name'), password, 'memo'));
 		}
 
-		dispatch(signTransaction(owner, active, memo));
+		// dispatch(signTransaction(owner, active, memo));
+		//
+		// dispatch(showNote(memo));
+		//
+		// dispatch(showPermissions(account.get('name'), password, permissionKey));
+		//
+		// if (!permissionKey) {
+		// 	dispatch(closeModal(MODAL_UNLOCK));
+		// 	dispatch(clearForm(FORM_UNLOCK_MODAL));
+		// }
 
-		dispatch(showNote(memo));
-
-		dispatch(showPermissions(accountName, password, permissionKey));
-
-		if (!permissionKey) {
-			dispatch(closeModal(MODAL_UNLOCK));
-			dispatch(clearForm(FORM_UNLOCK_MODAL));
-		}
-
+		return { keys: { owner, active, memo } };
 	} catch (err) {
-		dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
+		return { error: err instanceof Error ? err.message : err };
+		// dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
 	} finally {
 		dispatch(setDisable(MODAL_UNLOCK, false));
 	}

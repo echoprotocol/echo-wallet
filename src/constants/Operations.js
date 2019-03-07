@@ -8,6 +8,7 @@ export default {
 			value: 'amount.amount',
 			asset: 'amount.asset_id',
 		},
+		permission: 'active',
 	},
 	limit_order_create: {
 		value: 1,
@@ -68,6 +69,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		permission: 'owner',
 	},
 	account_whitelist: {
 		value: 7,
@@ -449,6 +451,7 @@ export default {
 			asset: 'value.asset_id',
 			code: 'code',
 		},
+		permission: 'active',
 	},
 	call_contract: {
 		value: 48,
@@ -460,6 +463,7 @@ export default {
 			asset: 'value.asset_id',
 			code: 'code',
 		},
+		permission: 'active',
 	},
 	contract_transfer: {
 		value: 49,

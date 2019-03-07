@@ -50,3 +50,5 @@ export const set = (
 		dispatch(KeyChainReducer.actions.setTimeout(timeoutId));
 	}
 };
+
+export const getPrivateKey = (publicKey) => (dispatch, getState) => getState().keychain.getIn([publicKey, 'privateKey']);

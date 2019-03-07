@@ -10,10 +10,10 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
+import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 
-import { openModal, closeModal, setDisable } from './ModalActions';
+import { closeModal, setDisable } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -208,19 +208,19 @@ export const transfer = () => async (dispatch, getState) => {
 	const amount = new BN(form.amount.value).toString();
 
 	if (to.error || form.amount.error || fee.error || note.error) {
-		return;
+		return false;
 	}
 
 	if (!to.value) {
 		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));
-		return;
+		return false;
 	}
 
 	const amountError = validateAmount(amount, currency);
 
 	if (amountError) {
 		dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
-		return;
+		return false;
 	}
 
 	if (!fee.value || !fee.asset) {
@@ -236,7 +236,7 @@ export const transfer = () => async (dispatch, getState) => {
 			'fee',
 			`${fee.asset.symbol} fee pool balance is less than fee amount`,
 		));
-		return;
+		return false;
 	}
 
 	if (currency.id === fee.asset.id) {
@@ -244,13 +244,13 @@ export const transfer = () => async (dispatch, getState) => {
 
 		if (total.gt(currency.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
-			return;
+			return false;
 		}
 	} else {
 		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
 		if (new BN(fee.value).gt(asset.balance)) {
 			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
-			return;
+			return false;
 		}
 	}
 
@@ -305,12 +305,7 @@ export const transfer = () => async (dispatch, getState) => {
 		showOptions.note = note.value;
 	}
 
-	const memoPubKey = fromAccount.options.memo_key;
-
 	dispatch(resetTransaction());
-	const activePrivateKey = fromAccount.active.key_auths.find((active) => getState().keychain.getIn([active[0], 'privateKey']));
-
-	const memoPrivateKey = getState().keychain.getIn([memoPubKey, 'privateKey']);
 
 	dispatch(TransactionReducer.actions.setOperation({
 		operation: currency.type === 'tokens' ? 'call_contract' : 'transfer',
@@ -318,17 +313,7 @@ export const transfer = () => async (dispatch, getState) => {
 		showOptions,
 	}));
 
-	if (!activePrivateKey || !memoPrivateKey) {
-		dispatch(openModal(MODAL_UNLOCK));
-	} else {
-		dispatch(setField('keys', {
-			active: activePrivateKey,
-			memo: memoPrivateKey,
-		}));
-
-		dispatch(openModal(MODAL_DETAILS));
-	}
-
+	return true;
 };
 
 export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
@@ -417,46 +402,44 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue;
 };
 
-export const createContract = ({ bytecode, name, abi }) => async (dispatch, getState) => {
+export const createContract = () => async (dispatch, getState) => {
+	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
+
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-	if (!activeUserId || !activeUserName) return;
+	if (!activeUserId || !activeUserName) {
+		return false;
+	}
 
-	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
-
-	if (!pubKey) return;
-
-	const error = validateCode(bytecode);
+	const error = validateCode(bytecode.value);
 
 	if (error) {
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
-		return;
+		return false;
 	}
 
 	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
-		const nameError = validateContractName(name);
-		const abiError = validateAbi(abi);
+		const nameError = validateContractName(name.value);
+		const abiError = validateAbi(abi.value);
 
 		if (nameError) {
 			dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
-			return;
+			return false;
 		}
 
 		if (abiError) {
 			dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
-			return;
+			return false;
 		}
 	}
 
 	dispatch(resetTransaction());
 
-	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
-
 	const options = {
 		asset_id: '1.3.0',
 		registrar: activeUserId,
 		value: { amount: 0, asset_id: '1.3.0' },
-		code: bytecode,
+		code: bytecode.value,
 		eth_accuracy: true,
 		supported_asset_id: '1.3.0',
 	};
@@ -467,25 +450,18 @@ export const createContract = ({ bytecode, name, abi }) => async (dispatch, getS
 	const showOptions = {
 		from: activeUserName,
 		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
-		code: bytecode,
+		code: bytecode.value,
 	};
 
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
 
-	if (!privateKey) {
-		dispatch(openModal(MODAL_UNLOCK));
-	} else {
-		dispatch(setField('keys', { active: privateKey }));
-		dispatch(openModal(MODAL_DETAILS));
-	}
-
+	return true;
 };
 
-export const sendTransaction = () => async (dispatch, getState) => {
-
+export const sendTransaction = (keys) => async (dispatch, getState) => {
 	dispatch(setDisable(MODAL_DETAILS, true));
 
-	const { operation, keys, options } = getState().transaction.toJS();
+	const { operation, options } = getState().transaction.toJS();
 
 	if (options.memo) {
 		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
@@ -502,7 +478,7 @@ export const sendTransaction = () => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	buildAndSendTransaction(operation, options, keys.active)
+	buildAndSendTransaction(operation, options, keys.active[0][0])
 		.then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
@@ -512,7 +488,6 @@ export const sendTransaction = () => async (dispatch, getState) => {
 					abi,
 				));
 			}
-
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 		})
 		.catch((error) => {
@@ -539,7 +514,7 @@ export const callContract = () => async (dispatch, getState) => {
 	// check exist account and contract
 	if (!activeUserId || !activeUserName || !contractId) {
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-		return;
+		return false;
 	}
 	const functions = getState().contract.get('functions').toJS();
 	const functionForm = getState().form.get(FORM_CALL_CONTRACT).toJS();
@@ -549,7 +524,7 @@ export const callContract = () => async (dispatch, getState) => {
 	// check our function exist
 	if (!targetFunction) {
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-		return;
+		return false;
 	}
 
 	// validate fields
@@ -567,14 +542,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	if (isErrorExist) {
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-		return;
-	}
-
-	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
-
-	if (!pubKey) {
-		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-		return;
+		return false;
 	}
 
 	dispatch(resetTransaction());
@@ -582,7 +550,9 @@ export const callContract = () => async (dispatch, getState) => {
 	let { fee } = functionForm;
 
 	// if method payable check amount and currency
-	if ((payable && (!amount || !currency)) || !fee) return;
+	if ((payable && (!amount || !currency)) || !fee) {
+		return false;
+	}
 
 	let amountValue = 0;
 	if (payable) {
@@ -591,7 +561,7 @@ export const callContract = () => async (dispatch, getState) => {
 		if (amountError) {
 			dispatch(setFormError(FORM_CALL_CONTRACT, 'amount', amountError));
 			dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-			return;
+			return false;
 		}
 		amountValue = amount.value * (10 ** currency.precision);
 	}
@@ -606,10 +576,10 @@ export const callContract = () => async (dispatch, getState) => {
 	if (feeError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT, 'amount', feeError));
 		dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-		return;
+		return false;
 	}
 
-	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
+	// const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 	const bytecode = getMethod(targetFunction, args);
 
 	const options = {
@@ -625,7 +595,7 @@ export const callContract = () => async (dispatch, getState) => {
 		feeValue = await estimateCallContractFee('call_contract', options);
 	} catch (error) {
 		dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
-		return;
+		return false;
 	}
 
 	const showOptions = {
@@ -641,38 +611,38 @@ export const callContract = () => async (dispatch, getState) => {
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
-	if (!privateKey) {
-		dispatch(openModal(MODAL_UNLOCK));
-	} else {
-		dispatch(setField('keys', { active: privateKey }));
-		dispatch(openModal(MODAL_DETAILS));
-	}
 
+	return true;
 };
 
 export const callContractViaId = () => async (dispatch, getState) => {
-
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
 
-	if (!activeUserId || !activeUserName) return;
+	if (!activeUserId || !activeUserName) {
+		return false;
+	}
 
 	const form = getState().form.get(FORM_CALL_CONTRACT_VIA_ID).toJS();
 
 	const { bytecode, id } = form;
 
+	if (id.error || bytecode.error) {
+		return false;
+	}
+
 	const bytecodeError = validateCode(bytecode.value);
 
 	if (bytecodeError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
-		return;
+		return false;
 	}
 
 	const contractIdError = validateContractId(id.value);
 
 	if (contractIdError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', contractIdError));
-		return;
+		return false;
 	}
 
 	dispatch(resetTransaction());
@@ -681,7 +651,9 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	let { fee } = form;
 
 	// if method payable check amount and currency
-	if (!amount || !currency || !fee) return;
+	if (!amount || !currency || !fee) {
+		return false;
+	}
 
 	let amountValue = 0;
 
@@ -689,7 +661,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
 			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
-			return;
+			return false;
 		}
 		amountValue = amount.value * (10 ** currency.precision);
 	}
@@ -703,14 +675,8 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	const feeError = validateFee(amount, currency, fee, assets);
 	if (feeError) {
 		dispatch(setValue(FORM_CALL_CONTRACT, 'amount', feeError));
-		return;
+		return false;
 	}
-
-	const pubKey = getState().echojs.getIn(['data', 'accounts', activeUserId, 'active', 'key_auths', '0', '0']);
-
-	if (!pubKey) return;
-
-	const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 
 	const options = {
 		asset_id: fee.asset.id,
@@ -725,7 +691,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		feeValue = await estimateCallContractFee('call_contract', options);
 	} catch (error) {
 		dispatch(setInFormError(FORM_CALL_CONTRACT_VIA_ID, ['fee', 'error'], 'Can\'t be calculated'));
-		return;
+		return false;
 	}
 
 	const showOptions = {
@@ -738,11 +704,5 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
 
-	if (!privateKey) {
-		dispatch(openModal(MODAL_UNLOCK));
-	} else {
-		dispatch(setField('keys', { active: privateKey }));
-		dispatch(openModal(MODAL_DETAILS));
-	}
-
+	return true;
 };

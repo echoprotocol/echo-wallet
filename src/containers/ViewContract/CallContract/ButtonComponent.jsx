@@ -3,15 +3,13 @@ import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
+import TransactionScenario from '../../TransactionScenario';
+
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 
 import { callContract } from '../../../actions/TransactionActions';
 
 class ButtonComponent extends React.Component {
-
-	onClick() {
-		this.props.callContract();
-	}
 
 	renderLoading() {
 		return (<Button
@@ -25,15 +23,21 @@ class ButtonComponent extends React.Component {
 		if (!this.props.functionName) return null;
 
 		return (
-			<div className="form-panel">
-				<Button
-					basic
-					type="submit"
-					className="main-btn"
-					onClick={() => this.onClick()}
-					content="Send"
-				/>
-			</div>
+			<TransactionScenario handleTransaction={() => this.props.callContract()}>
+				{
+					(submit) => (
+						<div className="form-panel">
+							<Button
+								basic
+								type="submit"
+								className="main-btn"
+								onClick={submit}
+								content="Send"
+							/>
+						</div>
+					)
+				}
+			</TransactionScenario>
 		);
 	}
 
@@ -61,6 +65,6 @@ export default connect(
 		functionName: state.form.getIn([FORM_CALL_CONTRACT, 'functionName']),
 	}),
 	(dispatch) => ({
-		callContract: (fn, fnForm) => dispatch(callContract(fn, fnForm)),
+		callContract: () => dispatch(callContract()),
 	}),
 )(ButtonComponent);

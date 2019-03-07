@@ -1,24 +1,17 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
-import { closeModal } from '../../actions/ModalActions';
-import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
-
-import { MODAL_DETAILS } from '../../constants/ModalConstants';
-
 
 class ModalDetails extends React.Component {
 
 	onClose() {
-		this.props.closeModal();
-		this.props.resetTransaction();
+		this.props.close();
 	}
 
 	onConfirm() {
-		this.props.sendTransaction();
+		this.props.send();
 	}
 
 	getArea(key, data) {
@@ -100,30 +93,18 @@ class ModalDetails extends React.Component {
 
 ModalDetails.propTypes = {
 	show: PropTypes.bool,
-	disabled: PropTypes.bool.isRequired,
+	disabled: PropTypes.bool,
 	showOptions: PropTypes.any,
 	operation: PropTypes.string,
-	closeModal: PropTypes.func.isRequired,
-	resetTransaction: PropTypes.func.isRequired,
-	sendTransaction: PropTypes.func.isRequired,
+	close: PropTypes.func.isRequired,
+	send: PropTypes.func.isRequired,
 };
 
 ModalDetails.defaultProps = {
 	show: false,
+	disabled: false,
 	showOptions: null,
 	operation: '',
 };
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_DETAILS, 'show']),
-		disabled: state.modal.getIn([MODAL_DETAILS, 'disabled']),
-		showOptions: state.transaction.get('showOptions'),
-		operation: state.transaction.get('operation'),
-	}),
-	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_DETAILS)),
-		resetTransaction: () => dispatch(resetTransaction()),
-		sendTransaction: (value) => dispatch(sendTransaction(value)),
-	}),
-)(ModalDetails);
+export default ModalDetails;
