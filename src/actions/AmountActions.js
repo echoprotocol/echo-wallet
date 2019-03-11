@@ -1,6 +1,7 @@
 import { EchoJSActions } from 'echojs-redux';
 import { setFormValue, setFormError, setValue } from './FormActions';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { FORM_TRANSFER } from '../constants/FormConstants';
 
 export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
@@ -8,6 +9,7 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		return;
 	}
 
+	
 	if (value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
 		dispatch(setFormError(
 			form,
@@ -29,7 +31,14 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 
 export const setDefaultAsset = (form) => async (dispatch, getState) => {
 	let defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
-	const asset = getState().balance.get('assets').find((value) => 	value.id === ECHO_ASSET_ID);
+
+	const assets = getState().balance.get('assets');
+	const assetsFromTransfer = getState().form.getIn([FORM_TRANSFER, 'balance', 'assets']);
+	const isWalletAccount = getState().form.getIn([FORM_TRANSFER, 'isWalletAccount']);
+
+	const targetAssets = !isWalletAccount && form === FORM_TRANSFER ? assetsFromTransfer : assets;
+
+	const asset = targetAssets.find((value) => 	value.id === ECHO_ASSET_ID);
 
 	defaultAsset = {
 		balance: asset ? asset.balance : 0,
@@ -37,6 +46,6 @@ export const setDefaultAsset = (form) => async (dispatch, getState) => {
 		symbol: defaultAsset.get('symbol'),
 		precision: defaultAsset.get('precision'),
 	};
-	dispatch(setValue(form, 'currency', defaultAsset));
 
+	dispatch(setValue(form, 'currency', defaultAsset));
 };

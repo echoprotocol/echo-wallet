@@ -53,7 +53,7 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
-export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+export const getBalanceFromAssets = (assets) => async (dispatch) => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
 		const defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
@@ -71,6 +71,19 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 		});
 
 		balances = await Promise.all(balances);
+	}
+
+	return balances;
+};
+
+export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+
+	let balances = [];
+
+	if (assets && Object.keys(assets).length) {
+
+		balances = await dispatch(getBalanceFromAssets(assets));
+
 		if (update) {
 			dispatch(diffBalanceChecker('assets', balances));
 		}
@@ -387,3 +400,4 @@ export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());
 };
+

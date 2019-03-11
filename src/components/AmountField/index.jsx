@@ -63,14 +63,28 @@ class AmountField extends React.Component {
 	}
 
 	onChangeCurrency(e, value) {
-		const { tokens, assets } = this.props;
-		let target = tokens.find((el) => el.id === value);
-		if (target) {
-			this.setCurrency(target, 'tokens');
-			this.props.setContractFees();
-			return;
+		const {
+			tokens,
+			assets,
+			form,
+			assetsFromTransfer,
+			isWalletAccount,
+		} = this.props;
+
+		const targetAsset = !isWalletAccount && form === FORM_TRANSFER ? assetsFromTransfer : assets;
+
+		let target = null;
+
+		if (isWalletAccount && form === FORM_TRANSFER) {
+			target = tokens.find((el) => el.id === value);
+			if (target) {
+				this.setCurrency(target, 'tokens');
+				this.props.setContractFees();
+				return;
+			}
 		}
-		target = assets.find((el) => el.id === value);
+
+		target = targetAsset.find((el) => el.id === value);
 		if (target) {
 			this.setCurrency(target, 'assets');
 		}
@@ -130,16 +144,18 @@ class AmountField extends React.Component {
 		this.props.amountInput(value, currency, name);
 	}
 
-
 	renderList(type) {
 		const { searchText } = this.state;
+		const { form, isWalletAccount } = this.props;
+
+		const target = type === 'assets' && !isWalletAccount && form === FORM_TRANSFER ? 'assetsFromTransfer' : type;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
 		const list = (
 			searchText !== ''
 			|| search
-			|| !this.props[type].length
-			|| this.props[type].filter((i) => i.disabled).length === this.props[type].length
+			|| !this.props[target].length
+			|| this.props[target].filter((i) => i.disabled).length === this.props[type].length
 		) ? [] : [
 				{
 					key: `${type}_header`,
@@ -149,7 +165,7 @@ class AmountField extends React.Component {
 					disabled: true,
 				},
 			];
-		return this.props[type].reduce((arr, a, i) => {
+		return this.props[target].reduce((arr, a, i) => {
 			if ((!search || a.symbol.toLowerCase().match(search)) && !a.disabled) {
 				const id = i;
 				arr.push({
@@ -163,16 +179,21 @@ class AmountField extends React.Component {
 	}
 
 	render() {
+
 		const {
-			assets, amount, form, fee,
+			assets,
+			amount,
+			form,
+			fee,
+			assetsFromTransfer,
+			isWalletAccount,
 		} = this.props;
 
+		const targetAsset = !isWalletAccount && form === FORM_TRANSFER ? assetsFromTransfer : assets;
 
 		const { searchText } = this.state;
-		const currency = this.props.currency || assets[0];
-
-		const type = form === FORM_TRANSFER && currency && currency.type !== 'tokens' ? 'transfer' : 'call_contract';
-
+		const currency = this.props.currency || targetAsset[0];
+		const type = form === FORM_TRANSFER && currency && currency.type === 'tokens' ? 'call_contract' : 'transfer';
 
 		return (
 			<Form.Field>
@@ -191,7 +212,7 @@ class AmountField extends React.Component {
 								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
 								tabIndex="0"
 							>
-								{ currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO'}
+								{currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO'}
 							</span>
 						</li>
 					</ul>
@@ -213,9 +234,9 @@ class AmountField extends React.Component {
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
-						{ amount.error || fee.error ? <span className="icon-error-red value-status" /> : null }
+						{amount.error || fee.error ? <span className="icon-error-red value-status" /> : null}
 					</div>
-					{ amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null }
+					{amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null}
 					<Dropdown
 						search
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
@@ -227,7 +248,7 @@ class AmountField extends React.Component {
 						onBlur={() => this.clearSearchText()}
 						options={this.renderList('assets').concat(this.renderList('tokens'))}
 						noResultsMessage="No results are found"
-						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + this.props.assets.length) <= 1 })}
+						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + targetAsset.length) <= 1 })}
 						onClose={() => this.clearSearchText()}
 					/>
 
@@ -241,11 +262,12 @@ class AmountField extends React.Component {
 
 AmountField.propTypes = {
 	form: PropTypes.string.isRequired,
+	isWalletAccount: PropTypes.bool.isRequired,
 
 	currency: PropTypes.object,
 	fee: PropTypes.object,
-
-	assets: PropTypes.any.isRequired,
+	assets: PropTypes.array,
+	assetsFromTransfer: PropTypes.array,
 	tokens: PropTypes.any.isRequired,
 	note: PropTypes.any.isRequired,
 
@@ -264,25 +286,32 @@ AmountField.propTypes = {
 AmountField.defaultProps = {
 	currency: null,
 	fee: null,
+	assets: [],
+	assetsFromTransfer: [],
 };
 
 export default connect(
-	(state, { form }) => ({
-		assets: state.balance.get('assets').toArray(),
-		amount: state.form.getIn([form, 'amount']),
-		currency: state.form.getIn([form, 'currency']),
-		fee: state.form.getIn([form, 'fee']),
-		tokens: form === FORM_TRANSFER ? state.balance.get('tokens').toArray() : [],
-		note: state.form.getIn([form, 'note']) || {},
-	}),
+	(state, { form }) => {
+		const isWalletAccount = state.form.getIn([FORM_TRANSFER, 'isWalletAccount']);
+		return {
+			assetsFromTransfer: state.form.getIn([FORM_TRANSFER, 'balance']).assets.toArray(),
+			isWalletAccount,
+			assets: state.balance.get('assets').toArray(),
+			amount: state.form.getIn([form, 'amount']),
+			currency: state.form.getIn([form, 'currency']),
+			fee: state.form.getIn([form, 'fee']),
+			tokens: form === FORM_TRANSFER && isWalletAccount ? state.balance.get('tokens').toArray() : [],
+			note: state.form.getIn([form, 'note']) || {},
+		};
+	},
 	(dispatch, { form }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
 		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 		setContractFees: () => dispatch(setContractFees(form)),
+		setDefaultAsset: () => dispatch(setDefaultAsset(form)),
 		updateFee: (type, note) => dispatch(updateFee(type, note)),
 		fetchFee: (type) => dispatch(fetchFee(type)),
-		setDefaultAsset: (currency) => dispatch(setDefaultAsset(form, currency)),
 	}),
 )(AmountField);

@@ -133,7 +133,7 @@ export default connect(
 		disabled: state.modal.getIn([MODAL_UNLOCK, 'disabled']),
 		password: state.form.getIn([FORM_UNLOCK_MODAL, 'password']),
 		loading: state.form.getIn([FORM_UNLOCK_MODAL, 'loading']),
-		accountName: state.global.getIn(['activeUser', 'name']),
+		accountName: state.transaction.getIn(['showOptions', 'from']),
 	}),
 	(dispatch) => ({
 		unlockAccount: (value) => dispatch(unlockAccount(value)),

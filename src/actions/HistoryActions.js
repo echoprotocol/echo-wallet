@@ -102,7 +102,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
 
-		if (!instance) return;
+		if (!instance) return undefined;
 
 		const contractResult = await getContractResult(instance, resultId);
 

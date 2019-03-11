@@ -4,14 +4,20 @@ import { connect } from 'react-redux';
 import { Form, Button } from 'semantic-ui-react';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { clearForm } from '../../actions/FormActions';
+import { clearForm, setIn } from '../../actions/FormActions';
 import { transfer, resetTransaction } from '../../actions/TransactionActions';
 
-import ToAccountField from './ToAccountField';
+import AccountField from './AccountField';
+
 import AmountField from '../../components/AmountField';
 import NoteField from './NoteField';
 
 class Transfer extends React.Component {
+
+	componentDidMount() {
+		const { accountName } = this.props;
+		this.props.setIn('from', { value: accountName, checked: true });
+	}
 
 	shouldComponentUpdate(nextProps) {
 		return nextProps.accountName !== this.props.accountName;
@@ -27,28 +33,14 @@ class Transfer extends React.Component {
 	}
 
 	render() {
-		const { accountName } = this.props;
-
 		return (
 			<Form className="main-form">
 				<div className="field-wrap">
-					<Form.Field>
-						<label htmlFor="accountFrom">From</label>
-						<div className="ui">
-							<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
-							<span className="error-message" />
-						</div>
-					</Form.Field>
-					<ToAccountField />
+					<AccountField subject="from" />
+					<AccountField subject="to" autoFocus />
 					<AmountField form={FORM_TRANSFER} />
 					<NoteField />
 					<div className="form-panel">
-						{/*
-							<div className="total-sum">
-		                        Total Transaction Sum:
-								<span>0.0009287 BTC</span>
-							</div>
-						*/}
 						<Button
 							basic
 							type="submit"
@@ -69,6 +61,7 @@ Transfer.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	setIn: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -79,5 +72,6 @@ export default connect(
 		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
 		transfer: (params) => dispatch(transfer(params)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		setIn: (field, param) => dispatch(setIn(FORM_TRANSFER, field, param)),
 	}),
 )(Transfer);
