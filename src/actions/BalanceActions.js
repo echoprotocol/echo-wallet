@@ -18,6 +18,7 @@ import {
 } from './ModalActions';
 import { setValue } from './FormActions';
 
+import { formatError } from '../helpers/FormatHelper';
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
@@ -253,7 +254,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		dispatch(closeModal(MODAL_TOKENS));
 		toastSuccess('Token was successfully added');
 	} catch (err) {
-		dispatch(setError(MODAL_TOKENS, 'error', err));
+		dispatch(setError(MODAL_TOKENS, 'error', formatError(err)));
 	} finally {
 		dispatch(setDisable(MODAL_TOKENS, false));
 	}

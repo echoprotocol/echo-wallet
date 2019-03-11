@@ -1,32 +1,20 @@
 import { key, PrivateKey } from 'echojs-lib';
 import { EchoJSActions, ChainStore } from 'echojs-redux';
+import { List } from 'immutable';
 
-import { setFormValue, setFormError, toggleLoading, setValue, clearForm } from './FormActions';
-import { closeModal, openModal, setDisable } from './ModalActions';
+import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
+import { openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { addAccount, isAccountAdded } from './GlobalActions';
-import { setField, setNote } from './TransactionActions';
-import { update } from './TableActions';
 
+import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
-import {
-	FORM_SIGN_UP,
-	FORM_SIGN_IN,
-	FORM_UNLOCK_MODAL,
-	FORM_TRANSFER,
-} from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_DETAILS } from '../constants/ModalConstants';
-import { PERMISSION_TABLE } from '../constants/TableConstants';
-
+import { formatError } from '../helpers/FormatHelper';
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
-import {
-	validateAccountExist,
-	unlockWallet,
-	generateKeyFromPassword,
-	getKeyFromWif,
-} from '../api/WalletApi';
-import { decodeMemo } from '../api/TransactionApi';
+import { validateAccountExist, unlockWallet, getKeyFromWif } from '../api/WalletApi';
 import AuthApi from '../api/AuthApi';
 
 export const generatePassword = () => (dispatch) => {
@@ -88,7 +76,7 @@ export const createAccount = ({
 		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
-		dispatch(setValue(FORM_SIGN_UP, 'error', err));
+		dispatch(setValue(FORM_SIGN_UP, 'error', formatError(err)));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -123,7 +111,7 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 
 		if (accountNameError) {
 			dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
-			return false;
+			return true;
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
@@ -150,9 +138,9 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 		}
 
 		dispatch(addAccount(accountName, networkName));
-		return true;
+		return false;
 	} catch (err) {
-		dispatch(setValue(FORM_SIGN_IN, 'error', err));
+		dispatch(setValue(FORM_SIGN_IN, 'error', formatError(err)));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
@@ -161,15 +149,52 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 };
 
 /**
- *  @method importAccount
+ *  @method getAccountsList
  *
- * 	Import account from bridge app or sign in
+ * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
  *
  */
+const getAccountsList = (accounts) => async (dispatch) => {
+
+	const asset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+	accounts = accounts.map(async (acc) => {
+		const account = {
+			name: acc.get('name'),
+			id: acc.get('id'),
+			checked: false,
+			balances: {
+				symbol: asset.get('symbol'),
+				precision: asset.get('precision'),
+			},
+		};
+
+		if (acc.has('balances') && acc.hasIn(['balances', ECHO_ASSET_ID])) {
+			const stats = await dispatch(EchoJSActions.fetch(acc.getIn(['balances', ECHO_ASSET_ID])));
+			account.balances.balance = stats.get('balance');
+		} else {
+			account.balances.balance = 0;
+		}
+
+		return account;
+
+	});
+	accounts = await Promise.all(accounts);
+
+	dispatch(openModal(MODAL_CHOOSE_ACCOUNT, { accounts: new List(accounts) }));
+};
+
+/**
+ *  @method importAccount
+ *  Import account
+ *
+ * 	@param {String} accountName
+ * @param {String} password
+ *
+ */
 export const importAccount = ({ accountName, password }) =>
-	async (dispatch) => {
+	async (dispatch, getState) => {
 
 		if (accountName) {
 			const added = await dispatch(authUser({ accountName, password }));
@@ -177,17 +202,36 @@ export const importAccount = ({ accountName, password }) =>
 				return;
 			}
 		}
+
 		if (getKeyFromWif(password)) {
 
 			const active = PrivateKey.fromWif(password).toPublicKey().toString();
+			const networkName = getState().global.getIn(['network', 'name']);
+
 			try {
-				const accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
+				let accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
+
 				if (!accountIDs.size) {
 					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
 					return;
 				}
+				accountIDs = new Set(accountIDs.toArray());
+				accountIDs = [...accountIDs];
 
-				const account = await ChainStore.FetchChain('getAccount', accountIDs.toArray()[0]);
+				const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
+
+				accounts.forEach((n) => {
+					if (isAccountAdded(n.get('name'), networkName)) {
+						accountIDs = accountIDs.filter((item) => n.get('id') !== item);
+					}
+				});
+
+				if (accountIDs.length > 1) {
+					dispatch(getAccountsList(accounts));
+					return;
+				}
+
+				const account = await ChainStore.FetchChain('getAccount', accountIDs[0]);
 
 				if (accountName && account.get('name') !== accountName) {
 					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
@@ -197,6 +241,7 @@ export const importAccount = ({ accountName, password }) =>
 				dispatch(authUser({ accountName: account.get('name'), password }));
 				return;
 
+
 			} catch (error) {
 				dispatch(setValue(FORM_SIGN_IN, 'error', error));
 			}
@@ -205,91 +250,20 @@ export const importAccount = ({ accountName, password }) =>
 		dispatch(authUser({ accountName, password }));
 	};
 
-export const signTransaction = (owner, active, memo) => (dispatch, getState) => {
-	const { options, keys } = getState().transaction.toJS();
-
-	if (options && !keys) {
-		dispatch(setField('keys', {
-			owner: owner ? owner.privateKey : owner,
-			active: active ? active.privateKey : active,
-			memo: memo ? memo.privateKey : memo,
-		}));
-
-		if (options.memo && !memo) {
-			dispatch(setFormError(FORM_TRANSFER, 'note', 'Note permission is required'));
-			return;
+/**
+ *  @method importSelectedAccounts
+ *
+ *  Log in selected accounts
+ *
+ *  @param {Array} accounts
+ *  @param {String} password
+ */
+export const importSelectedAccounts = (accounts, password) => async (dispatch) => {
+	accounts.forEach((account) => {
+		if (account.checked) {
+			dispatch(authUser({ accountName: account.name, password }));
 		}
-
-		dispatch(openModal(MODAL_DETAILS));
-	}
-};
-
-export const showNote = (memo) => (dispatch, getState) => {
-	const { note } = getState().transaction.toJS();
-
-	if (note.value && !note.unlocked) {
-		try {
-			const decodedNote = decodeMemo(note.value, memo.privateKey);
-			dispatch(setNote({
-				note: decodedNote,
-				unlocked: true,
-				error: null,
-			}));
-		} catch (err) {
-			dispatch(setNote({ error: err }));
-		}
-	}
-};
-
-export const showPermissions = (
-	accountName,
-	password,
-	permissionKey,
-) => async (dispatch, getState) => {
-	const { type, role } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
-
-	if (!permissionKey) { return; }
-
-	const param = permissionKey;
-
-	if (role === 'memo' || type === 'keys') permissionKey = accountName;
-
-	let privateKey = getKeyFromWif(password);
-	let publicKey;
-
-	if (privateKey) {
-		publicKey = privateKey.toPublicKey().toString();
-	} else {
-		({ privateKey, publicKey } = generateKeyFromPassword(permissionKey, role, password));
-	}
-
-	const targetAccount = (await dispatch(EchoJSActions.fetch(permissionKey))).toJS();
-
-	let publicKeyError = null;
-
-	if (role !== 'memo') {
-		if (type === 'accounts') {
-			publicKeyError = !targetAccount[role].key_auths.find((k) => k[0] === publicKey) ?
-				'Invalid password for account' : null;
-		} else {
-			publicKeyError = param !== publicKey ? 'Invalid password for key' : null;
-		}
-	} else if (targetAccount.options.memo_key !== publicKey) publicKeyError = 'Invalid password for note key';
-
-	if (publicKeyError) {
-		dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', publicKeyError));
-		return;
-	}
-
-	const value = {
-		privateKey: privateKey ? privateKey.toWif() : '',
-		unlocked: true,
-	};
-
-	dispatch(update(PERMISSION_TABLE, [role, type], param, value));
-	dispatch(closeModal(MODAL_UNLOCK));
-	dispatch(clearForm(FORM_UNLOCK_MODAL));
-
+	});
 };
 
 export const unlockAccount = (account, password) => (dispatch) => {
@@ -300,16 +274,12 @@ export const unlockAccount = (account, password) => (dispatch) => {
 		const passwordError = validatePassword(password);
 
 		if (passwordError) {
-			// dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', passwordError));
 			return { error: passwordError };
 		}
 
 		const keys = unlockWallet(account, password);
 
-		// const { key: permissionKey } = getState().table.getIn([PERMISSION_TABLE, 'permissionKey']);
-
-		if (!keys.owner && !keys.active && !keys.memo) { // && !permissionKey
-			// dispatch(setFormError(FORM_UNLOCK_MODAL, 'password', 'Invalid password'));
+		if (!keys.owner && !keys.active && !keys.memo) {
 			return { error: 'Invalid password' };
 		}
 
@@ -317,21 +287,9 @@ export const unlockAccount = (account, password) => (dispatch) => {
 			dispatch(setKey(value, account.get('name'), password, role));
 		});
 
-		// dispatch(signTransaction(owner, active, memo));
-		//
-		// dispatch(showNote(memo));
-		//
-		// dispatch(showPermissions(account.get('name'), password, permissionKey));
-		//
-		// if (!permissionKey) {
-		// 	dispatch(closeModal(MODAL_UNLOCK));
-		// 	dispatch(clearForm(FORM_UNLOCK_MODAL));
-		// }
-
 		return { keys };
 	} catch (err) {
-		return { error: err instanceof Error ? err.message : err };
-		// dispatch(setValue(FORM_UNLOCK_MODAL, 'error', err));
+		return { error: formatError(err) };
 	} finally {
 		dispatch(setDisable(MODAL_UNLOCK, false));
 	}

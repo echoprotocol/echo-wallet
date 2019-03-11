@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
@@ -30,8 +29,7 @@ class TabOverview extends React.Component {
 	}
 
 	renderBytecode() {
-		const { bytecode, details, contract } = this.props.data;
-		const { bytecodeArgs } = this.props;
+		const { data: { bytecode, details, contract }, bytecodeArgs } = this.props;
 		const { methodHash, args } = parseBytecode(bytecode);
 
 		return (
@@ -71,11 +69,11 @@ class TabOverview extends React.Component {
 
 	renderNote() {
 		const { note, data: { memo } } = this.props;
-		return note.unlocked ?
+		return note ?
 			(
 				<div className="note-wrap">
 					<div className="note">
-						{note.value}
+						{note}
 					</div>
 				</div>
 			) : (
@@ -200,15 +198,14 @@ class TabOverview extends React.Component {
 }
 
 TabOverview.propTypes = {
-	bytecodeArgs: PropTypes.array.isRequired,
+	note: PropTypes.string,
+	bytecodeArgs: PropTypes.object.isRequired,
 	data: PropTypes.object.isRequired,
-	note: PropTypes.object.isRequired,
 	unlock: PropTypes.func.isRequired,
 };
 
-export default connect(
-	(state) => ({
-		bytecodeArgs: state.converter.get('bytecodeArgs').toJS(),
-	}),
-	() => ({}),
-)(TabOverview);
+TabOverview.defaultProps = {
+	note: null,
+};
+
+export default TabOverview;

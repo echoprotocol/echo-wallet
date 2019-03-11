@@ -7,7 +7,9 @@ export const openModal = (type, params) => (dispatch) => {
 export const closeModal = (type) => (dispatch) => {
 	dispatch(ModalReducer.actions.close({ type }));
 };
-
+export const update = (type, param, value) => (dispatch) => {
+	dispatch(ModalReducer.actions.update({ type, param, value }));
+};
 export const setParamValue = (type, param, value) => (dispatch) => {
 	dispatch(ModalReducer.actions.setParamValue({ type, param, value }));
 };

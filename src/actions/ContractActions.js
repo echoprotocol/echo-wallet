@@ -21,6 +21,7 @@ import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 import ContractFeeReducer from '../reducers/ContractFeeReducer';
 
+import { formatError } from '../helpers/FormatHelper';
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastInfo } from '../helpers/ToastHelper';
 
@@ -31,7 +32,7 @@ import {
 } from '../helpers/ValidateHelper';
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
-import {CALL_CONTRACT_PATH, CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH} from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
 
@@ -115,7 +116,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
-		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
+		dispatch(setValue(FORM_ADD_CONTRACT, 'error', formatError(err)));
 	}
 };
 

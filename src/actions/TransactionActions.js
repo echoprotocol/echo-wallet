@@ -34,6 +34,7 @@ import {
 	validateFee,
 	validateContractId,
 } from '../helpers/ValidateHelper';
+import { formatError } from '../helpers/FormatHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import {
@@ -53,10 +54,6 @@ export const resetTransaction = () => (dispatch) => {
 
 export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
-};
-
-export const setNote = ({ note, unlocked, error }) => (dispatch) => {
-	dispatch(TransactionReducer.actions.setNote({ note, unlocked, error }));
 };
 
 export const fetchFee = (type) => async (dispatch) => {
@@ -192,7 +189,7 @@ export const checkAccount = (accountName) => async (dispatch, getState) => {
 			error: null,
 		}));
 	} catch (err) {
-		dispatch(setValue(FORM_TRANSFER, 'error', err));
+		dispatch(setValue(FORM_TRANSFER, 'error', formatError(err)));
 	} finally {
 		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
 	}

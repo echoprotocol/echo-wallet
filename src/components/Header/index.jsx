@@ -117,7 +117,7 @@ class Header extends React.Component {
 		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) {
 			to = CONTRACT_LIST_PATH;
 		} else {
-			value = transactionData.id;
+			value = transactionData ? transactionData.id : null;
 		}
 
 		return (
@@ -195,7 +195,6 @@ class Header extends React.Component {
 					</a>
 				),
 				onClick: (e) => this.onOpenLogout(e),
-
 			},
 		];
 

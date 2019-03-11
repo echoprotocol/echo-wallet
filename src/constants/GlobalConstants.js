@@ -55,6 +55,8 @@ export const HEADER_TITLE = [
 ];
 
 export const SORT_CONTRACTS = 'contracts';
+export const SORT_ACCOUNTS = 'accounts';
+export const ECHO_ASSET_ID = '1.3.0';
 
 export const NETWORKS = [
 	{
