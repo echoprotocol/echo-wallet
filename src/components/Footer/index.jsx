@@ -11,7 +11,6 @@ import { connection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
 
-
 	onReconnect() {
 		this.props.connection();
 	}
@@ -37,7 +36,7 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>
                         Check Your Connection
-						<Button type="submit" size="tiny" color="black" onClick={(e) => this.onReconnect(e)}>Try again</Button>
+						<Button type="submit" size="tiny" color="black" onClick={() => this.onReconnect()}>Try again</Button>
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} disconnected />

@@ -124,9 +124,8 @@ class TransactionScenario extends React.Component {
 
 		this.setState({ [permission]: stateKeys, weight: totalWeight, threshold });
 
-		if (operations[operation].value === operations.transfer.value && showOptions.get('note')) {
-
-			if (!keys.memo || (keys.memo.publicKey !== account.getIn(['options', 'memo_key']) && !this.state.memo)) {
+		if (operations[operation].value === operations.transfer.value && showOptions.get('note') && !this.state.memo) {
+			if (!keys.memo || (keys.memo.publicKey !== account.getIn(['options', 'memo_key']))) {
 				return this.setState({ error: 'Note permission required' });
 			}
 
@@ -152,7 +151,7 @@ class TransactionScenario extends React.Component {
 
 	close() {
 		this.clear();
-		this.setState({ showUnlockModal: false });
+		this.setState({ showUnlockModal: false, weight: null });
 
 		this.props.closeModal(MODAL_DETAILS);
 	}

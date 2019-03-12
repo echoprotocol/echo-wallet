@@ -150,7 +150,7 @@
     &.ui.form {
         textarea {
             resize: none;
-        }
+		}
     }
 
     .action-wrap {
@@ -231,7 +231,7 @@
                             position: absolute;
                             display: block;
                             content: "";
-                            border: 4px solid rgba($inut-color, .4);
+                            border: 4px solid #f1f1f1;
                             border-left: 0;
                             border-radius: 0.5rem;
                             border-top-left-radius: 0;
@@ -410,4 +410,11 @@ input {
     &:focus {
         @extend %onFocus;
     }
+}
+
+
+.amount-wrap {
+	input:focus {
+		box-shadow: 0 0 0 4px #f1f1f1;
+	}
 }

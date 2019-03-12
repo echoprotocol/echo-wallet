@@ -5,8 +5,9 @@ import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { setIn } from '../../actions/FormActions';
-import { checkAccount } from '../../actions/TransactionActions';
+import { setIn, setValue } from '../../actions/FormActions';
+
+import { checkAccount, fetchFee, updateFee } from '../../actions/TransactionActions';
 
 
 class ToAccountComponent extends React.Component {
@@ -25,6 +26,7 @@ class ToAccountComponent extends React.Component {
 		}
 
 		const value = e.target.value.toLowerCase().trim();
+		const { note } = this.props;
 
 		this.props.setIn('to', {
 			loading: true,
@@ -34,11 +36,20 @@ class ToAccountComponent extends React.Component {
 		});
 
 		this.setState({
-			timeout: setTimeout(() => {
-				this.props.checkAccount(this.props.to.value);
+			timeout: setTimeout(async () => {
+
+				if (await this.props.checkAccount(this.props.to.value) && note.value) {
+					this.props.updateFee('transfer', note.value);
+				} else {
+					this.props.fetchFee('transfer').then((fee) => {
+						this.props.setValue('fee', fee);
+					});
+				}
 			}, 300),
 		});
+
 	}
+
 
 	render() {
 		const { to } = this.props;
@@ -48,7 +59,11 @@ class ToAccountComponent extends React.Component {
 
 				<label htmlFor="accountTo">To</label>
 				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: to.loading && !to.error })} autoFocus>
-					<input name="accountTo" value={to.value} onInput={(e) => this.onInput(e)} />
+					<input
+						name="accountTo"
+						value={to.value}
+						onInput={(e) => this.onInput(e)}
+					/>
 					{ to.checked && !to.error ? <span className="icon-checked_1 value-status" /> : null }
 					{ to.error ? <span className="icon-error-red value-status" /> : null }
 				</Input>
@@ -64,14 +79,22 @@ ToAccountComponent.propTypes = {
 	to: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
+	fetchFee: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	updateFee: PropTypes.func.isRequired,
+	note: PropTypes.any.isRequired,
 };
 
 export default connect(
 	(state) => ({
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
+		note: state.form.getIn(['transfer', 'note']) || {},
 	}),
 	(dispatch) => ({
+		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
 		setIn: (field, param) => dispatch(setIn(FORM_TRANSFER, field, param)),
+		fetchFee: (type) => dispatch(fetchFee(type)),
 		checkAccount: (value) => dispatch(checkAccount(value)),
+		updateFee: (type, note) => dispatch(updateFee(type, note)),
 	}),
 )(ToAccountComponent);

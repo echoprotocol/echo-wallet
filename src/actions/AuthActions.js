@@ -2,10 +2,16 @@ import { key, PrivateKey } from 'echojs-lib';
 import { EchoJSActions, ChainStore } from 'echojs-redux';
 import { List } from 'immutable';
 
-import { setFormValue, setFormError, toggleLoading, setValue } from './FormActions';
 import { openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
 import { addAccount, isAccountAdded } from './GlobalActions';
+
+import {
+	setFormValue,
+	setFormError,
+	toggleLoading,
+	setValue,
+} from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
@@ -14,7 +20,11 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 import { formatError } from '../helpers/FormatHelper';
 import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
 
-import { validateAccountExist, unlockWallet, getKeyFromWif } from '../api/WalletApi';
+import {
+	validateAccountExist,
+	unlockWallet,
+	getKeyFromWif,
+} from '../api/WalletApi';
 import AuthApi from '../api/AuthApi';
 
 export const generatePassword = () => (dispatch) => {
@@ -257,6 +267,7 @@ export const importAccount = ({ accountName, password }) =>
  *
  *  @param {Array} accounts
  *  @param {String} password
+ *
  */
 export const importSelectedAccounts = (accounts, password) => async (dispatch) => {
 	accounts.forEach((account) => {
