@@ -59,6 +59,13 @@ export default createModule({
 				return state;
 			},
 		},
+		reset: {
+			reducer: (state, { payload }) => {
+				const initialState = _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[payload.type]);
+				state = state.set(payload.type, initialState);
+				return state;
+			},
+		},
 		setDisable: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'disabled'], payload.value);

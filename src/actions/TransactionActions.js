@@ -475,7 +475,8 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	buildAndSendTransaction(operation, options, keys.active[0][0])
+	const privateKeys = keys.active.map(([privateKey]) => privateKey);
+	buildAndSendTransaction(operation, options, privateKeys)
 		.then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
