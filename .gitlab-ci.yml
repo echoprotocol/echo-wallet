@@ -14,6 +14,8 @@ eslint:
     - npm run lint
   only:
      - triggers
+     - develop
+     - master
   tags:
     - pp-projects
 
