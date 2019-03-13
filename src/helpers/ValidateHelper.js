@@ -1,9 +1,12 @@
 import { ChainValidation } from 'echojs-lib';
 import BN from 'bignumber.js';
 
+import { ADDRESS_PREFIX, PUBLIC_KEY_LENGTH } from '../constants/GlobalConstants';
+
 const reg = /^[0-9a-fA-F]+$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
+export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 
 export const validateAccountName = (accountName) => {
 	if (!accountName) { return 'Account name should not be empty'; }
@@ -299,4 +302,22 @@ export const validateNetworkAddress = (address) => {
 	}
 
 	return null;
+};
+
+export const isAccountId = (v) => accountIdRegex.test(v);
+
+export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
+	if (typeof v !== 'string' || v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length)) return false;
+
+	const prefix = v.slice(0, addressPrefix.length);
+
+	return addressPrefix === prefix;
+};
+
+export const isWeight = (v) => {
+	if (typeof v === 'number' && (v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER)) return false;
+
+	const bn = new BN(v);
+
+	return bn.isInteger();
 };

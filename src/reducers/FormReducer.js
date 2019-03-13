@@ -12,7 +12,7 @@ import {
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
-	FORM_ADD_CUSTOM_NETWORK,
+	FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -163,6 +163,19 @@ const DEFAULT_FORM_FIELDS = {
 			value: false,
 		},
 	}),
+	[FORM_PERMISSION_KEY]: Map({
+		active: new Map({
+			keys: Map({}),
+			threshold: Map({}),
+		}),
+		owner: new Map({
+			keys: Map({}),
+			threshold: Map({}),
+		}),
+		memo: new Map({
+			keys: Map({}),
+		}),
+	}),
 };
 
 export default createModule({
@@ -183,6 +196,8 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT_VIA_ID]),
 		[FORM_ADD_CUSTOM_NETWORK]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_ADD_CUSTOM_NETWORK]),
+		[FORM_PERMISSION_KEY]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_PERMISSION_KEY]),
 	}),
 	transformations: {
 		set: {

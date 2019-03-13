@@ -12,7 +12,7 @@ import {
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { NETWORKS } from '../constants/GlobalConstants';
-import { FORM_ADD_CUSTOM_NETWORK } from '../constants/FormConstants';
+import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY } from '../constants/FormConstants';
 
 
 import {
@@ -57,6 +57,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		await dispatch(initBalances(id, networkName));
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
+		dispatch(clearForm(FORM_PERMISSION_KEY));
 
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 	} catch (err) {

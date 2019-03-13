@@ -55,6 +55,8 @@ export const HEADER_TITLE = [
 ];
 
 export const SORT_CONTRACTS = 'contracts';
+export const ADDRESS_PREFIX = 'ECHO';
+export const PUBLIC_KEY_LENGTH = 50;
 
 export const NETWORKS = [
 	{

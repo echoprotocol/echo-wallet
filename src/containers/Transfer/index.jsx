@@ -7,6 +7,8 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { clearForm } from '../../actions/FormActions';
 import { transfer, resetTransaction } from '../../actions/TransactionActions';
 
+import TransactionScenario from '../TransactionScenario';
+
 import ToAccountField from './ToAccountField';
 import AmountField from '../../components/AmountField';
 import NoteField from './NoteField';
@@ -22,43 +24,45 @@ class Transfer extends React.Component {
 		this.props.resetTransaction();
 	}
 
-	onSend() {
-		this.props.transfer();
-	}
-
 	render() {
 		const { accountName } = this.props;
 
 		return (
-			<Form className="main-form">
-				<div className="field-wrap">
-					<Form.Field>
-						<label htmlFor="accountFrom">From</label>
-						<div className="ui">
-							<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
-							<span className="error-message" />
-						</div>
-					</Form.Field>
-					<ToAccountField />
-					<AmountField form={FORM_TRANSFER} />
-					<NoteField />
-					<div className="form-panel">
-						{/*
-							<div className="total-sum">
-		                        Total Transaction Sum:
-								<span>0.0009287 BTC</span>
+			<TransactionScenario handleTransaction={() => this.props.transfer()}>
+				{
+					(submit) => (
+						<Form className="main-form">
+							<div className="field-wrap">
+								<Form.Field>
+									<label htmlFor="accountFrom">From</label>
+									<div className="ui">
+										<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={accountName} />
+										<span className="error-message" />
+									</div>
+								</Form.Field>
+								<ToAccountField />
+								<AmountField form={FORM_TRANSFER} />
+								<NoteField />
+								<div className="form-panel">
+									{/*
+										<div className="total-sum">
+										Total Transaction Sum:
+										<span>0.0009287 BTC</span>
+										</div>
+										*/}
+									<Button
+										basic
+										type="submit"
+										className="main-btn"
+										content="Send"
+										onClick={submit}
+									/>
+								</div>
 							</div>
-						*/}
-						<Button
-							basic
-							type="submit"
-							className="main-btn"
-							content="Send"
-							onClick={(e) => this.onSend(e)}
-						/>
-					</div>
-				</div>
-			</Form>
+						</Form>
+					)
+				}
+			</TransactionScenario>
 		);
 	}
 
@@ -77,7 +81,7 @@ export default connect(
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
-		transfer: (params) => dispatch(transfer(params)),
+		transfer: () => dispatch(transfer()),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(Transfer);

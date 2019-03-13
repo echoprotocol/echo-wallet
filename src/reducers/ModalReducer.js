@@ -2,7 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 import _ from 'lodash';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS } from './../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS, MODAL_KEY, MODAL_UNLOCK_PERMISSION } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
 	show: false,
@@ -17,12 +17,22 @@ const DEFAULT_MODAL_FIELDS = {
 		},
 		error: null,
 	}),
+	[MODAL_UNLOCK]: Map({
+		role: null,
+		publicKey: null,
+	}),
+	[MODAL_UNLOCK_PERMISSION]: Map({
+		role: null,
+		publicKey: null,
+	}),
 };
 
 export default createModule({
 	name: 'modal',
 	initialState: Map({
-		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS),
+		[MODAL_UNLOCK]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_UNLOCK]),
+		[MODAL_UNLOCK_PERMISSION]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_MODAL_FIELDS[MODAL_UNLOCK_PERMISSION]),
 		[MODAL_DETAILS]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_TOKENS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_TOKENS]),
 	}),
@@ -30,6 +40,13 @@ export default createModule({
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
+
+				if (payload.params) {
+					Object.entries(payload.params).forEach(([field, value]) => {
+						state = state.setIn([payload.type, field], value);
+					});
+				}
+
 				return state;
 			},
 		},

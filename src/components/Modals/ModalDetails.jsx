@@ -1,24 +1,17 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
-import { closeModal } from '../../actions/ModalActions';
-import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
-
-import { MODAL_DETAILS } from '../../constants/ModalConstants';
-
 
 class ModalDetails extends React.Component {
 
 	onClose() {
-		this.props.closeModal();
-		this.props.resetTransaction();
+		this.props.close();
 	}
 
 	onConfirm() {
-		this.props.sendTransaction();
+		this.props.send();
 	}
 
 	getArea(key, data) {
@@ -31,11 +24,31 @@ class ModalDetails extends React.Component {
 		return (
 			<Form.Field key={key}>
 				<label htmlFor="amount">
-					{key}
+					{key.replace(/([A-Z])/g, ' $1')}
 				</label>
 				<div>
 					<input type="text" name="Fee" disabled className="ui input" value={data} />
 				</div>
+			</Form.Field>
+		);
+	}
+
+	getPermissions(key, data) {
+		return (
+			<Form.Field className="field-block" key={key}>
+				<p className="field-block_title">{key}</p>
+				<div className="field-block_edit">
+					{
+						data.map(([keyPermission, weight]) => (
+							<React.Fragment key={Math.random()}>
+								<div>
+									<span>{keyPermission}</span><span>, {weight}</span>
+								</div>
+							</React.Fragment>
+						))
+					}
+				</div>
+
 			</Form.Field>
 		);
 	}
@@ -45,9 +58,17 @@ class ModalDetails extends React.Component {
 
 		const formatedOptions = getTransactionDetails(operation, showOptions.toJS());
 
-		return Object.entries(formatedOptions).map(([key, value]) => (
-			value.field === 'area' ? this.getArea(key, value.data) : this.getInput(key, value.data)
-		));
+		return Object.entries(formatedOptions).map(([key, value]) => {
+			if (value.field === 'area') {
+				return this.getArea(key, value.data);
+			}
+
+			if (['active', 'owner', 'activeAccounts', 'ownerAccounts'].includes(key)) {
+				return this.getPermissions(key, value.data);
+			}
+
+			return this.getInput(key, value.data);
+		});
 	}
 
 	render() {
@@ -71,12 +92,6 @@ class ModalDetails extends React.Component {
 							</div>
 							<div className="field-wrap">
 								{ showOptions ? this.renderOptions() : null }
-								<Form.Field className="field-block">
-									<p className="field-block_title">Test</p>
-									<div className="field-block_edit">
-										<span>ECHO123123123123123123</span><span>,1</span>
-									</div>
-								</Form.Field>
 							</div>
 							<div className="form-panel">
 								<Button
@@ -106,30 +121,18 @@ class ModalDetails extends React.Component {
 
 ModalDetails.propTypes = {
 	show: PropTypes.bool,
-	disabled: PropTypes.bool.isRequired,
+	disabled: PropTypes.bool,
 	showOptions: PropTypes.any,
 	operation: PropTypes.string,
-	closeModal: PropTypes.func.isRequired,
-	resetTransaction: PropTypes.func.isRequired,
-	sendTransaction: PropTypes.func.isRequired,
+	close: PropTypes.func.isRequired,
+	send: PropTypes.func.isRequired,
 };
 
 ModalDetails.defaultProps = {
 	show: false,
+	disabled: false,
 	showOptions: null,
 	operation: '',
 };
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_DETAILS, 'show']),
-		disabled: state.modal.getIn([MODAL_DETAILS, 'disabled']),
-		showOptions: state.transaction.get('showOptions'),
-		operation: state.transaction.get('operation'),
-	}),
-	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_DETAILS)),
-		resetTransaction: () => dispatch(resetTransaction()),
-		sendTransaction: (value) => dispatch(sendTransaction(value)),
-	}),
-)(ModalDetails);
+export default ModalDetails;

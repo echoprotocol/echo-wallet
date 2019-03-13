@@ -3,18 +3,53 @@ import PropTypes from 'prop-types';
 import { Button, Table, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { unlockPrivateKey } from '../../actions/TableActions';
-
 import PermissionTableRow from './PermissionTableRow';
+import { unlockPrivateKey } from '../../actions/TableActions';
 
 class PermissionTable extends React.Component {
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			addKeys: [],
+		};
+	}
+
+	static getDerivedStateFromProps(nextProps) {
+		if (nextProps.resetAddKeys) {
+			return { addKeys: [] };
+		}
+
+		return null;
+	}
+
+	onAddKey(num) {
+		const { addKeys } = this.state;
+
+		if (num) {
+			addKeys.push(num);
+		} else {
+			addKeys.push(addKeys.length ? addKeys[addKeys.length - 1] + 1 : 0);
+		}
+
+		this.setState({ addKeys });
+	}
+
+	onCancelAddKey(num) {
+		const { addKeys } = this.state;
+
+		addKeys.splice(addKeys.indexOf(num), 1);
+
+		this.setState({ addKeys });
+	}
 
 	render() {
-
 		const {
-			table, description, data, noInput, noBtn,
+			table, description, data, noInput, noBtn, keyRole, keys,
 		} = this.props;
+
+		const { addKeys } = this.state;
 
 		return (
 
@@ -24,7 +59,8 @@ class PermissionTable extends React.Component {
 				{
 					(!noInput) && (
 						<Form className="treshhold-input">
-							<Form.Field className="error">
+							{/* <Form.Field className="error"> */}
+							<Form.Field>
 								<p className="i-title">TRESHHOLD</p>
 								<input
 									type="text"
@@ -35,7 +71,7 @@ class PermissionTable extends React.Component {
 									onChange={(e) => this.onInput(e)}
 									autoFocus
 								/>
-								<span className="error-message">This name is already in use</span>
+								{/* <span className="error-message">This name is already in use</span> */}
 							</Form.Field>
 						</Form>
 					)
@@ -50,8 +86,17 @@ class PermissionTable extends React.Component {
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						<PermissionTableRow data={data} />
-						<PermissionTableRow data={data} />
+						<PermissionTableRow
+							data={data.keys}
+							addKeys={addKeys}
+							cancelEdit={(num) => this.onCancelAddKey(num)}
+							keyRole={keyRole}
+							privateKeys={keys}
+							submit={this.props.submit}
+							setChanged={this.props.setChanged}
+							resetAddKeys={this.props.resetAddKeys}
+							onAddKey={(num) => this.onAddKey(num)}
+						/>
 					</Table.Body>
 				</Table>
 				{
@@ -61,6 +106,7 @@ class PermissionTable extends React.Component {
 								basic
 								className="main-btn"
 								content="ADD KEY"
+								onClick={() => this.onAddKey()}
 							/>
 						</div>
 					)
@@ -73,10 +119,15 @@ class PermissionTable extends React.Component {
 
 PermissionTable.propTypes = {
 	table: PropTypes.string.isRequired,
-	data: PropTypes.array.isRequired,
+	data: PropTypes.object.isRequired,
 	noInput: PropTypes.bool,
 	noBtn: PropTypes.bool,
+	resetAddKeys: PropTypes.bool.isRequired,
 	description: PropTypes.string,
+	keyRole: PropTypes.string.isRequired,
+	keys: PropTypes.array.isRequired,
+	submit: PropTypes.func.isRequired,
+	setChanged: PropTypes.func.isRequired,
 };
 
 PermissionTable.defaultProps = {

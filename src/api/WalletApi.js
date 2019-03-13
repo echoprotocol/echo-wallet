@@ -32,7 +32,7 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const unlockWallet = async (account, password, roles = ['active', 'owner', 'memo']) => {
+export const unlockWallet = (account, password, roles = ['active', 'owner', 'memo']) => {
 
 	const privateKey = getKeyFromWif(password);
 	let key;
@@ -83,4 +83,3 @@ export const unlockWallet = async (account, password, roles = ['active', 'owner'
 		return keys;
 	}, {});
 };
-
