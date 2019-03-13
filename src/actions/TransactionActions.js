@@ -227,6 +227,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			balances = getState().balance.get('assets').toArray();
 			([defaultAsset] = balances);
 			dispatch(setValue(FORM_TRANSFER, 'isWalletAccount', true));
+			dispatch(setValue(FORM_TRANSFER, 'externalAccountId', ''));
 		} else {
 			const account = await dispatch(EchoJSActions.fetch(accountName));
 			const assets = account.get('balances').toJS();
@@ -234,6 +235,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			([defaultAsset] = balances);
 			dispatch(setIn(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 			dispatch(setValue(FORM_TRANSFER, 'isWalletAccount', false));
+			dispatch(setValue(FORM_TRANSFER, 'externalAccountId', account.get('id')));
 		}
 
 		if (!defaultAsset) {
@@ -523,7 +525,14 @@ export const createContract = () => async (dispatch, getState) => {
 	};
 
 	const fee = await dispatch(fetchFee('create_contract'));
-	const feeValue = await estimateCallContractFee('create_contract', options);
+	let feeValue = null;
+
+	try {
+		feeValue = await estimateCallContractFee('create_contract', options);
+	} catch (err) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', 'Incorrect bytecode'));
+		return false;
+	}
 
 	const showOptions = {
 		from: activeUserName,

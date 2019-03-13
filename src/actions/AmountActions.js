@@ -29,6 +29,12 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 };
 
 export const setDefaultAsset = (form) => async (dispatch, getState) => {
+	const currency = getState().form.getIn([form, 'currency']);
+
+	if (currency) {
+		return;
+	}
+
 	let defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
 
 	const assets = getState().balance.get('assets');

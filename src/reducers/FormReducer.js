@@ -77,6 +77,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		selectedSymbol: '',
 		isWalletAccount: true,
+		externalAccountId: '',
 		balance: {
 			assets: new List([]),
 		},

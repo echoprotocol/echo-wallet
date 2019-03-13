@@ -193,6 +193,7 @@ TransactionScenario.propTypes = {
 	account: PropTypes.object,
 	operation: PropTypes.string,
 	showOptions: PropTypes.object,
+	externalAccountId: PropTypes.string, // eslint-disable-line
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	getPrivateKey: PropTypes.func.isRequired,
@@ -207,11 +208,12 @@ TransactionScenario.defaultProps = {
 	account: {},
 	operation: null,
 	showOptions: {},
+	externalAccountId: '',
 };
 
 export default connect(
-	(state) => ({
-		account: state.echojs.getIn(['data', 'accounts', state.global.getIn(['activeUser', 'id'])]),
+	(state, props) => ({
+		account: state.echojs.getIn(['data', 'accounts', props.externalAccountId || state.global.getIn(['activeUser', 'id'])]),
 		operation: state.transaction.get('operation'),
 		showOptions: state.transaction.get('showOptions'),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),

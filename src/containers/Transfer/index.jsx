@@ -9,7 +9,7 @@ import { transfer, resetTransaction } from '../../actions/TransactionActions';
 
 import TransactionScenario from '../TransactionScenario';
 
-import ToAccountField from './ToAccountField';
+import AccountField from './AccountField';
 import AmountField from '../../components/AmountField';
 import NoteField from './NoteField';
 
@@ -21,7 +21,8 @@ class Transfer extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		return nextProps.accountName !== this.props.accountName;
+		return nextProps.accountName !== this.props.accountName
+			|| nextProps.externalAccountId !== this.props.externalAccountId;
 	}
 
 	componentWillUnmount() {
@@ -30,29 +31,21 @@ class Transfer extends React.Component {
 	}
 
 	render() {
+		const { externalAccountId } = this.props;
 		return (
-			<TransactionScenario handleTransaction={() => this.props.transfer()}>
+			<TransactionScenario
+				handleTransaction={() => this.props.transfer()}
+				externalAccountId={externalAccountId}
+			>
 				{
 					(submit) => (
 						<Form className="main-form">
 							<div className="field-wrap">
-								<Form.Field>
-									<label htmlFor="accountFrom">From</label>
-									<div className="ui">
-										<input name="accountFrom" className="ui input" disabled placeholder="Account name" value={this.props.accountName} />
-										<span className="error-message" />
-									</div>
-								</Form.Field>
-								<ToAccountField />
+								<AccountField subject="from" />
+								<AccountField subject="to" autoFocus />
 								<AmountField form={FORM_TRANSFER} />
 								<NoteField />
 								<div className="form-panel">
-									{/*
-										<div className="total-sum">
-										Total Transaction Sum:
-										<span>0.0009287 BTC</span>
-										</div>
-										*/}
 									<Button
 										basic
 										type="submit"
@@ -77,11 +70,17 @@ Transfer.propTypes = {
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
+	externalAccountId: PropTypes.string,
+};
+
+Transfer.defaultProps = {
+	externalAccountId: '',
 };
 
 export default connect(
 	(state) => ({
 		accountName: state.global.getIn(['activeUser', 'name']),
+		externalAccountId: state.form.getIn([FORM_TRANSFER, 'externalAccountId']),
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),

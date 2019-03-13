@@ -271,38 +271,50 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 	};
 
-	if (permissionData.active.keys.length || permissionData.active.threshold) {
+	if (
+		permissionData.active.keys.length
+		|| permissionData.active.accounts.length
+		|| permissionData.active.threshold
+	) {
 		const keysMap = [];
 
 		permissionForm.getIn(['active', 'keys']).forEach((value) => {
+			if (!isPublicKey(value.get('key').value)) {
+				return;
+			}
+
 			keysMap.push([value.get('key').value, parseInt(value.get('weight').value, 10)]);
 		});
 
 		transaction.active = {
 			weight_threshold: currentFullAccount.getIn(['active', 'weight_threshold']),
-			account_auths: currentFullAccount.getIn(['active', 'account_auths']),
+			account_auths: currentFullAccount.getIn(['active', 'account_auths']).toJS(),
 			key_auths: keysMap,
 			address_auths: [],
 		};
 
-		if (permissionData.active.keys.length) {
+		if (permissionData.active.threshold) {
+			showOptions.activeThreshold = permissionData.active.threshold;
+
+			transaction.active.weight_threshold = permissionData.active.threshold;
+		} else {
 			showOptions.activeThreshold = transaction.active.weight_threshold;
-			showOptions.active = permissionData.active.keys;
+		}
+
+		if (permissionData.active.keys.length) {
+			showOptions.activeKeys = permissionData.active.keys;
 
 			transaction.active.key_auths = permissionData.active.keys;
+		} else if (transaction.active.key_auths.length) {
+			showOptions.activeKeys = transaction.active.key_auths;
 		}
 
 		if (permissionData.active.accounts.length) {
 			showOptions.activeAccounts = permissionData.active.accounts;
+
 			transaction.active.account_auths = permissionData.active.accounts;
-		}
-
-		if (permissionData.active.threshold) {
-			showOptions.activeThreshold = permissionData.active.threshold;
-			showOptions.active = transaction.active.key_auths;
+		} else if (transaction.active.account_auths.length) {
 			showOptions.activeAccounts = transaction.active.account_auths;
-
-			transaction.active.weight_threshold = permissionData.active.threshold;
 		}
 	}
 
@@ -320,29 +332,33 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			address_auths: [],
 		};
 
-		if (permissionData.owner.keys.length) {
+		if (permissionData.owner.threshold) {
+			showOptions.ownerThreshold = permissionData.owner.threshold;
+
+			transaction.owner.weight_threshold = permissionData.owner.threshold;
+		} else {
 			showOptions.ownerThreshold = transaction.owner.weight_threshold;
-			showOptions.owner = permissionData.owner.keys;
+		}
+
+		if (permissionData.owner.keys.length) {
+			showOptions.ownerKeys = permissionData.owner.keys;
 
 			transaction.owner.key_auths = permissionData.owner.keys;
+		} else if (transaction.owner.key_auths.length) {
+			showOptions.ownerKeys = transaction.owner.key_auths;
 		}
 
 		if (permissionData.owner.accounts.length) {
 			showOptions.ownerAccounts = permissionData.owner.accounts;
+
 			transaction.owner.account_auths = permissionData.owner.accounts;
-		}
-
-		if (permissionData.owner.threshold) {
-			showOptions.ownerThreshold = permissionData.owner.threshold;
-			showOptions.owner = transaction.owner.key_auths;
+		} else if (transaction.owner.account_auths.length) {
 			showOptions.ownerAccounts = transaction.owner.account_auths;
-
-			transaction.owner.weight_threshold = permissionData.owner.threshold;
 		}
 	}
 
 	if (permissionData.memo.keys.length) {
-		[[showOptions.memo]] = permissionData.memo.keys;
+		[[showOptions.memoKey]] = permissionData.memo.keys;
 		transaction.new_options = {
 			memo_key: permissionData.memo.keys[0][0],
 			voting_account: currentOptions.get('voting_account'),

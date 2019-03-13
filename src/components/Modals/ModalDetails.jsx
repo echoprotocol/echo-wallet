@@ -36,7 +36,7 @@ class ModalDetails extends React.Component {
 	getPermissions(key, data) {
 		return (
 			<Form.Field className="field-block" key={key}>
-				<p className="field-block_title">{key}</p>
+				<p className="field-block_title">{key.replace(/([A-Z])/g, ' $1')}</p>
 				<div className="field-block_edit">
 					{
 						data.map(([keyPermission, weight]) => (

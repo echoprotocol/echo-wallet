@@ -51,10 +51,14 @@ class DropdownComponent extends React.Component {
 DropdownComponent.propTypes = {
 	variativeOptions: PropTypes.any,
 	component: PropTypes.any.isRequired,
-	index: PropTypes.any.isRequired,
+	index: PropTypes.any,
 	data: PropTypes.any,
 	activeType: PropTypes.any,
 	convert: PropTypes.func.isRequired,
+};
+
+DropdownComponent.defaultProps = {
+	index: null,
 };
 
 DropdownComponent.defaultProps = {

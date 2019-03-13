@@ -260,7 +260,7 @@ class PermissionTableRow extends Component {
 		return (
 			<React.Fragment>
 				<Table.Cell className={key ? 'key-hide' : 'key-show'} >
-					<div className={`field cell-wrap key-td ${(isEdit ? 'edit-i-container' : '')}`}>
+					<div className="field cell-wrap key-td">
 						<Button
 							className={classnames('icon', key ? 'icon-e-show' : 'icon-e-hide')}
 							onClick={() => this.props.submit(keyRole, k.key)}

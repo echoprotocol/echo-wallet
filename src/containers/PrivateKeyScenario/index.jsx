@@ -31,6 +31,10 @@ class PrivateKeyScenario extends React.Component {
 	}
 
 	submit(role, publicKey) {
+		if (role === 'memo' && !this.state[role]) {
+			role = 'note';
+		}
+
 		if (this.state[role].find((k) => k.publicKey === publicKey)) {
 			return this.setState({
 				[role]: this.state[role].filter(((k) => k.publicKey !== publicKey)),
