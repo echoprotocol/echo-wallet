@@ -321,3 +321,8 @@ export const isWeight = (v) => {
 
 	return bn.isInteger();
 };
+
+export const isThreshold = (v) => {
+	const thresholdNumber = Number(v);
+	return !(v === '' || !Number.isInteger(thresholdNumber) || thresholdNumber <= 0);
+};

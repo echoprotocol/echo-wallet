@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table, Form } from 'semantic-ui-react';
+import { Button, Table } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import PermissionTableRow from './PermissionTableRow';
+import ThresholdRow from './ThresholdRow';
+
 import { unlockPrivateKey } from '../../actions/TableActions';
 
 class PermissionTable extends React.Component {
@@ -57,24 +59,7 @@ class PermissionTable extends React.Component {
 				<h3>{`${table}`}</h3>
 				<p className="description">{description}</p>
 				{
-					(!noInput) && (
-						<Form className="treshhold-input">
-							{/* <Form.Field className="error"> */}
-							<Form.Field>
-								<p className="i-title">TRESHHOLD</p>
-								<input
-									type="text"
-									placeholder="Enter threshold"
-									name="name"
-									className="ui input"
-									// value={name.value}
-									onChange={(e) => this.onInput(e)}
-									autoFocus
-								/>
-								{/* <span className="error-message">This name is already in use</span> */}
-							</Form.Field>
-						</Form>
-					)
+					(!noInput) && <ThresholdRow keyRole={keyRole} defaultThreshold={data.threshold} />
 				}
 				<Table structured fixed className="permissions-table">
 					<Table.Header>

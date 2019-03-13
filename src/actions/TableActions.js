@@ -9,7 +9,8 @@ import { getFeeSync, resetTransaction } from './TransactionActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
-import { isPublicKey } from '../helpers/ValidateHelper';
+import { isThreshold, isPublicKey } from '../helpers/ValidateHelper';
+import { setInFormError } from './FormActions';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -60,11 +61,15 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	});
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'accounts'], new List(await Promise.all(target))));
 
+
 	// save active keys
 	target = account.active.key_auths.map((a) => ({
 		key: a[0], weight: a[1], role: 'active', type: 'keys',
 	}));
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
+
+	let threshold = account.active.weight_threshold;
+	dispatch(setIn(PERMISSION_TABLE, ['active', 'threshold'], threshold));
 
 	// save owner accounts
 	target = account.owner.account_auths.map(async (a) => {
@@ -80,6 +85,9 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 		key: a[0], weight: a[1], role: 'owner', type: 'keys',
 	}));
 	dispatch(setIn(PERMISSION_TABLE, ['owner', 'keys'], new List(target)));
+
+	threshold = account.owner.weight_threshold;
+	dispatch(setIn(PERMISSION_TABLE, ['owner', 'threshold'], threshold));
 
 	// save note
 	target = {
@@ -110,6 +118,16 @@ export const isChanged = () => (dispatch, getState) => {
 	const roles = ['active', 'owner', 'memo'];
 
 	return roles.some((role) => permissionForm.getIn([role, 'keys']).some((keyForm) => {
+		const threshold = permissionForm.getIn([role, 'threshold']);
+
+		if (!permissionTable.getIn([role, 'threshold']) || !threshold.value) {
+			return false;
+		}
+
+		if (threshold && permissionTable.getIn([role, 'threshold']).toString() !== threshold.value.toString()) {
+			return true;
+		}
+
 		if (!keyForm.get('key') || !keyForm.get('weight')) {
 			return false;
 		}
@@ -129,7 +147,7 @@ export const isChanged = () => (dispatch, getState) => {
 		}
 
 		return !tableAccountsKeys
-			.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value);
+			.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight.toString() === keyForm.get('weight').value.toString());
 	}));
 };
 
@@ -141,6 +159,21 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
 	const roles = ['active', 'owner', 'memo'];
+
+	const isError = ['active', 'owner'].some((role) => {
+		const threshold = permissionForm.getIn([role, 'threshold']).value;
+
+		if (!isThreshold(threshold)) {
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'threshold'], 'Invalide threshold'));
+			return true;
+		}
+
+		return false;
+	});
+
+	if (isError) {
+		return false;
+	}
 
 	const permissionData = {
 		active: {
@@ -166,6 +199,12 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		const accountsPromises = [];
 
 		permissionForm.getIn([role, 'keys']).some((keyForm) => {
+			const threshold = permissionForm.getIn([role, 'threshold']);
+
+			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
+				permissionData[role].threshold = Number(threshold.value);
+			}
+
 			if (
 				!permissionTable
 					.getIn([role, 'keys'])
@@ -208,6 +247,8 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		!permissionData.active.keys.length
 			&& !permissionData.owner.keys.length
 			&& !permissionData.memo.keys.length
+			&& permissionData.active.threshold !== null
+			&& permissionData.owner.threshold !== null
 	) {
 		return false;
 	}
@@ -245,7 +286,9 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		};
 
 		if (permissionData.active.keys.length) {
+			showOptions.activeThreshold = transaction.active.weight_threshold;
 			showOptions.active = permissionData.active.keys;
+
 			transaction.active.key_auths = permissionData.active.keys;
 		}
 
@@ -256,6 +299,9 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 		if (permissionData.active.threshold) {
 			showOptions.activeThreshold = permissionData.active.threshold;
+			showOptions.active = transaction.active.key_auths;
+			showOptions.activeAccounts = transaction.active.account_auths;
+
 			transaction.active.weight_threshold = permissionData.active.threshold;
 		}
 	}
@@ -275,7 +321,9 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		};
 
 		if (permissionData.owner.keys.length) {
+			showOptions.ownerThreshold = transaction.owner.weight_threshold;
 			showOptions.owner = permissionData.owner.keys;
+
 			transaction.owner.key_auths = permissionData.owner.keys;
 		}
 
@@ -286,6 +334,9 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 		if (permissionData.owner.threshold) {
 			showOptions.ownerThreshold = permissionData.owner.threshold;
+			showOptions.owner = transaction.owner.key_auths;
+			showOptions.ownerAccounts = transaction.owner.account_auths;
+
 			transaction.owner.weight_threshold = permissionData.owner.threshold;
 		}
 	}

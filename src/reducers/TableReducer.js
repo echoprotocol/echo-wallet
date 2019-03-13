@@ -17,10 +17,12 @@ const DEFAULT_TABLE_FIELDS = {
 	}),
 	[PERMISSION_TABLE]: Map({
 		active: new Map({
+			threshold: null,
 			accounts: new List(),
 			keys: new List(),
 		}),
 		owner: new Map({
+			threshold: null,
 			accounts: new List(),
 			keys: new List(),
 		}),

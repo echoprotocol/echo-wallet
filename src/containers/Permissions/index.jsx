@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
-
 import PermissionTable from './PermissionTable';
 
 import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
@@ -70,6 +69,10 @@ class Permissions extends React.Component {
 		const roles = ['active', 'owner', 'memo'];
 
 		roles.forEach((role) => {
+			if (data[role].threshold) {
+				this.props.setValue([role, 'threshold'], data[role].threshold);
+			}
+
 			if (!data[role].keys) {
 				return;
 			}
@@ -88,15 +91,14 @@ class Permissions extends React.Component {
 
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-			threshold: null,
+			threshold: permissionsKeys.active.threshold,
 		};
 		const owner = {
 			keys: permissionsKeys.owner.keys.concat(permissionsKeys.owner.accounts),
-			threshold: null,
+			threshold: permissionsKeys.owner.threshold,
 		};
 		const note = {
 			keys: permissionsKeys.memo.keys,
-			threshold: null,
 		};
 
 		return (

@@ -166,11 +166,17 @@ const DEFAULT_FORM_FIELDS = {
 	[FORM_PERMISSION_KEY]: Map({
 		active: new Map({
 			keys: Map({}),
-			threshold: Map({}),
+			threshold: {
+				value: null,
+				error: null,
+			},
 		}),
 		owner: new Map({
 			keys: Map({}),
-			threshold: Map({}),
+			threshold: {
+				value: null,
+				error: null,
+			},
 		}),
 		memo: new Map({
 			keys: Map({}),
