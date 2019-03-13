@@ -9,8 +9,8 @@ import { convert } from '../../actions/ConverterActions';
 class DropdownComponent extends React.Component {
 
 	onChange(e, { value: type }) {
-		const { data, component } = this.props;
-		this.props.convert(type, data, component);
+		const { data, component, index } = this.props;
+		this.props.convert(type, data, component, index);
 	}
 
 	render() {
@@ -51,6 +51,7 @@ class DropdownComponent extends React.Component {
 DropdownComponent.propTypes = {
 	variativeOptions: PropTypes.any,
 	component: PropTypes.any.isRequired,
+	index: PropTypes.any.isRequired,
 	data: PropTypes.any,
 	activeType: PropTypes.any,
 	convert: PropTypes.func.isRequired,
@@ -65,6 +66,6 @@ DropdownComponent.defaultProps = {
 export default connect(
 	() => ({}),
 	(dispatch) => ({
-		convert: (type, data, component) => dispatch(convert(type, data, component)),
+		convert: (type, data, component, key) => dispatch(convert(type, data, component, key)),
 	}),
 )(DropdownComponent);

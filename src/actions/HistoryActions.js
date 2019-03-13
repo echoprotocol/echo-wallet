@@ -2,14 +2,13 @@ import { EchoJSActions } from 'echojs-redux';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
-
 import { VIEW_TRANSACTION_PATH } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { MODAL_UNLOCK } from '../constants/ModalConstants';
+
+import { formatError } from '../helpers/FormatHelper';
 
 import { setValue, toggleLoading, setError } from './TableActions';
-import { openModal } from './ModalActions';
-import { setNote, setField } from './TransactionActions';
+import { setField } from './TransactionActions';
 
 import { getContractResult } from '../api/ContractApi';
 
@@ -21,24 +20,18 @@ const fetch = (request) => async (dispatch) => {
 };
 
 export const viewTransaction = (transaction) => async (dispatch, getState) => {
-
-	if (transaction.name === 'Contract') {
+	if ([operations.create_contract.name, operations.call_contract.name].includes(transaction.name)) {
 		const instance = getState().echojs.getIn(['system', 'instance']);
 
 		if (!instance) return;
 
-		transaction.details = await getContractResult(instance, transaction.subject);
-		[transaction.contract] = (await dispatch(fetch(transaction.subject))).toJS().contracts_id;
+		[, transaction.details] = await getContractResult(instance, transaction.result);
+		transaction.contract = (await dispatch(fetch(transaction.result))).toJS().contracts_id;
 	}
 
 	dispatch(setField('details', transaction));
 
 	history.push(VIEW_TRANSACTION_PATH);
-};
-
-export const openUnlock = (note) => (dispatch) => {
-	dispatch(openModal(MODAL_UNLOCK));
-	dispatch(setNote({ note }));
 };
 
 const formatOperation = (data) => async (dispatch, getState) => {
@@ -94,7 +87,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		};
 	}
 
-	if (type === 47) {
+	if (type === operations.create_contract.value) {
 
 		const [, resultId] = data.result;
 
@@ -102,7 +95,9 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
 
-		if (!instance) return;
+		if (!instance) {
+			return result;
+		}
 
 		const contractResult = await getContractResult(instance, resultId);
 
@@ -113,6 +108,10 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 			result.subject = `1.16.${parseInt(hexAddress.slice(2), 16)}`;
 		}
+	}
+
+	if ([operations.create_contract.value, operations.call_contract.value].includes(type)) {
+		[, result.result] = data.result;
 	}
 
 	if (type === 0 && operation.memo && operation.memo.message) {
@@ -136,7 +135,7 @@ export const formatHistory = (activity) => async (dispatch) => {
 		rows = await Promise.all(rows);
 		dispatch(setValue(HISTORY_TABLE, 'data', rows));
 	} catch (err) {
-		dispatch(setError(HISTORY_TABLE, err));
+		dispatch(setError(HISTORY_TABLE, formatError(err)));
 	} finally {
 		dispatch(toggleLoading(HISTORY_TABLE, false));
 	}

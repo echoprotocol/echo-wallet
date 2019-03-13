@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import Dropdown from '../../components/Dropdown';
 
@@ -16,7 +15,8 @@ class TabLogs extends React.Component {
 					<div className="col">
 						{
 							item.log.map((topic, i) => {
-								const convertedTopic = topics.find((val) => i.toString() === val.id);
+								const convertedTopic = topics
+									.find((val) => i.toString() === val.id && val.key === key.toString());
 
 								return (
 									<div className="topic-item" key={`${item.data}${topic}`}>
@@ -26,6 +26,7 @@ class TabLogs extends React.Component {
 											<Dropdown
 												data={topic}
 												component={i.toString()}
+												index={key.toString()}
 												activeType={convertedTopic ? convertedTopic.type : null}
 											/>
 										}
@@ -40,9 +41,14 @@ class TabLogs extends React.Component {
 					<div className="col data">Data:</div>
 					<div className="col">
 						<div className="data-item">
-							<Dropdown data={item.data} component="dataLog" activeType={dataLog ? dataLog.type : null} />
+							<Dropdown
+								data={item.data}
+								index={key.toString()}
+								component="dataLog"
+								activeType={dataLog && dataLog.key === key.toString() ? dataLog.type : null}
+							/>
 							<span className="arrow">→</span>
-							<span className="data">{dataLog.value || `0x${item.data}`}</span>
+							<span className="data">{(dataLog.key === key.toString() && dataLog.value) || `0x${item.data}`}</span>
 						</div>
 					</div>
 				</li>
@@ -68,17 +74,11 @@ class TabLogs extends React.Component {
 TabLogs.propTypes = {
 	data: PropTypes.object.isRequired,
 	dataLog: PropTypes.any,
-	topics: PropTypes.array.isRequired,
+	topics: PropTypes.object.isRequired,
 };
 
 TabLogs.defaultProps = {
 	dataLog: '',
 };
 
-export default connect(
-	(state) => ({
-		dataLog: state.converter.get('data'),
-		topics: state.converter.get('topics').toJS(),
-	}),
-	() => ({}),
-)(TabLogs);
+export default TabLogs;

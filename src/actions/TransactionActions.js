@@ -1,5 +1,6 @@
 import BN from 'bignumber.js';
 import { EchoJSActions } from 'echojs-redux';
+import { List } from 'immutable';
 
 import history from '../history';
 
@@ -12,6 +13,8 @@ import {
 } from '../constants/FormConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
+import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import { closeModal, setDisable } from './ModalActions';
 import {
@@ -21,7 +24,8 @@ import {
 	setIn,
 	setInFormError,
 } from './FormActions';
-
+import { addContractByName } from './ContractActions';
+import { getBalanceFromAssets } from './BalanceActions';
 
 import { getMethod } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
@@ -34,6 +38,7 @@ import {
 	validateFee,
 	validateContractId,
 } from '../helpers/ValidateHelper';
+import { formatError } from '../helpers/FormatHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import {
@@ -45,7 +50,6 @@ import {
 } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
-import { addContractByName } from './ContractActions';
 
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
@@ -53,10 +57,6 @@ export const resetTransaction = () => (dispatch) => {
 
 export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
-};
-
-export const setNote = ({ note, unlocked, error }) => (dispatch) => {
-	dispatch(TransactionReducer.actions.setNote({ note, unlocked, error }));
 };
 
 export const fetchFee = (type) => async (dispatch) => {
@@ -72,6 +72,7 @@ export const fetchFee = (type) => async (dispatch) => {
 		'fee',
 	]);
 	return { value, asset: asset.toJS() };
+
 };
 
 export const getFee = (type, note = null) => async (dispatch, getState) => {
@@ -118,6 +119,7 @@ export const getFee = (type, note = null) => async (dispatch, getState) => {
 };
 
 export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
+
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
@@ -154,6 +156,18 @@ export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, g
 	return { value: new BN(fee).integerValue(BN.ROUND_UP).toString(), asset: feeAsset };
 };
 
+export const updateFee = (type, note = null) => async (dispatch) => {
+	if (note) {
+		const fee = dispatch(getFee(type, note));
+		fee.then((value) => {
+			if (value) {
+				dispatch(setValue(FORM_TRANSFER, 'fee', value));
+			}
+		});
+	}
+
+};
+
 export const checkFeePool = (echo, asset, fee) => {
 	if (echo.id === asset.id) { return true; }
 
@@ -167,47 +181,112 @@ export const checkFeePool = (echo, asset, fee) => {
 	return feePool.gt(fee);
 };
 
-export const checkAccount = (accountName) => async (dispatch, getState) => {
+export const checkAccount = (accountName, subject) => async (dispatch, getState) => {
 	try {
-		if (!accountName) return;
+		if (!accountName) return false;
 
-		const fromAccount = getState().global.getIn(['activeUser', 'name']);
+		const opositeSubject = subject === 'to' ? 'from' : 'to';
 
-		if (fromAccount === accountName) {
-			dispatch(setFormError(FORM_TRANSFER, 'to', 'You can not send funds to yourself'));
-			return;
-		}
+		const {
+			value: opositeAccountName,
+			error: opositeAccountError,
+		} = getState().form.getIn([FORM_TRANSFER, opositeSubject]);
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
-
 		const accountNameError = await validateAccountExist(instance, accountName, true);
 
-		if (accountNameError) {
-			dispatch(setFormError(FORM_TRANSFER, 'to', accountNameError));
-			return;
+		if (opositeAccountError && opositeAccountError === ERROR_FORM_TRANSFER.ERROR_SEND_TO_YOURSELF) {
+			dispatch(setIn(FORM_TRANSFER, opositeSubject, { error: null }));
 		}
 
-		dispatch(setIn(FORM_TRANSFER, 'to', {
+		dispatch(setIn(FORM_TRANSFER, subject, {
 			checked: true,
 			error: null,
 		}));
+
+		if (accountNameError) {
+			dispatch(setFormError(FORM_TRANSFER, subject, accountNameError));
+			return false;
+		}
+
+		if (opositeAccountName === accountName) {
+			dispatch(setFormError(FORM_TRANSFER, subject, ERROR_FORM_TRANSFER.ERROR_SEND_TO_YOURSELF));
+			return false;
+		}
+
+		if (subject === 'to') {
+			return true;
+		}
+
+		const activeUserName = getState().global.getIn(['activeUser', 'name']);
+
+		let defaultAsset = null;
+		let balances = [];
+
+		if (activeUserName === accountName) {
+			balances = getState().balance.get('assets').toArray();
+			([defaultAsset] = balances);
+			dispatch(setValue(FORM_TRANSFER, 'isWalletAccount', true));
+		} else {
+			const account = await dispatch(EchoJSActions.fetch(accountName));
+			const assets = account.get('balances').toJS();
+			balances = await dispatch(getBalanceFromAssets(assets));
+			([defaultAsset] = balances);
+			dispatch(setIn(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
+			dispatch(setValue(FORM_TRANSFER, 'isWalletAccount', false));
+		}
+
+		if (!defaultAsset) {
+			defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+
+			defaultAsset = {
+				balance: 0,
+				id: defaultAsset.get('id'),
+				symbol: defaultAsset.get('symbol'),
+				precision: defaultAsset.get('precision'),
+			};
+		}
+
+		const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
+		const fee = getState().form.getIn([FORM_TRANSFER, 'fee']);
+
+		if (!balances.find((b) => b.id === fee.asset.id)) {
+			const { value: note } = getState().form.getIn([FORM_TRANSFER, 'note']);
+			const type = 'transfer';
+			const defaultFee = await dispatch(getFeeSync(type, defaultAsset.id, note));
+			dispatch(setValue(FORM_TRANSFER, 'fee', defaultFee));
+		}
+
+		const newAsset = balances.find((b) => b.id === currency.id) || defaultAsset;
+		dispatch(setValue(FORM_TRANSFER, 'currency', newAsset));
+
 	} catch (err) {
-		dispatch(setValue(FORM_TRANSFER, 'error', err));
+		dispatch(setValue(FORM_TRANSFER, 'error', formatError(err)));
 	} finally {
-		dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
+		dispatch(setIn(FORM_TRANSFER, subject, { loading: false }));
 	}
-
-
+	return true;
 };
 
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
-	const { to, currency, note } = form;
+	const {
+		from,
+		to,
+		currency,
+		note,
+	} = form;
+
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString();
 
-	if (to.error || form.amount.error || fee.error || note.error) {
+	if (to.error || from.error || form.amount.error || fee.error || note.error) {
+		return false;
+	}
+
+	if (!from.value) {
+		dispatch(setFormError(FORM_TRANSFER, 'from', 'Account name should not be empty'));
 		return false;
 	}
 
@@ -256,8 +335,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 
-	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
-	const fromAccount = (await dispatch(EchoJSActions.fetch(fromAccountId))).toJS();
+	const fromAccount = (await dispatch(EchoJSActions.fetch(from.value))).toJS();
 	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
 
 	let options = {};
@@ -273,7 +351,7 @@ export const transfer = () => async (dispatch, getState) => {
 
 		options = {
 			fee: { asset_id: '1.3.0', amount: 0 },
-			registrar: fromAccountId,
+			registrar: fromAccount.id,
 			value: { amount: 0, asset_id: '1.3.0' },
 			code,
 			callee: currency.id,
@@ -284,7 +362,7 @@ export const transfer = () => async (dispatch, getState) => {
 				amount: fee.value,
 				asset_id: fee.asset.id,
 			},
-			from: fromAccountId,
+			from: fromAccount.id,
 			to: toAccount.id,
 			amount: {
 				amount: amount * (10 ** currency.precision),
@@ -478,11 +556,10 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	buildAndSendTransaction(
-		operation,
-		options,
-		keys.active.length ? keys.active[0][0] : keys.owner[0][0],
-	)
+	const privateKeys = (keys.active.length ? keys.active : keys.owner)
+		.map(([privateKey]) => privateKey);
+
+	buildAndSendTransaction(operation, options, privateKeys)
 		.then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(

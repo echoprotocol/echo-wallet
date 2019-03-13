@@ -1,8 +1,14 @@
 import { createModule } from 'redux-modules';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import _ from 'lodash';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_TOKENS, MODAL_KEY, MODAL_UNLOCK_PERMISSION } from './../constants/ModalConstants';
+import {
+	MODAL_UNLOCK,
+	MODAL_DETAILS,
+	MODAL_TOKENS,
+	MODAL_UNLOCK_PERMISSION,
+	MODAL_CHOOSE_ACCOUNT,
+} from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
 	show: false,
@@ -24,6 +30,9 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_UNLOCK_PERMISSION]: Map({
 		role: null,
 		publicKey: null,
+	}),
+	[MODAL_CHOOSE_ACCOUNT]: Map({
+		accounts: List([]),
 	}),
 };
 
@@ -57,9 +66,24 @@ export default createModule({
 				return state;
 			},
 		},
+		reset: {
+			reducer: (state, { payload }) => {
+				const initialState = _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[payload.type]);
+				state = state.set(payload.type, initialState);
+				return state;
+			},
+		},
 		setDisable: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'disabled'], payload.value);
+				return state;
+			},
+		},
+		update: {
+			reducer: (state, { payload }) => {
+
+				state = state.setIn([payload.type, payload.param], payload.value);
+
 				return state;
 			},
 		},

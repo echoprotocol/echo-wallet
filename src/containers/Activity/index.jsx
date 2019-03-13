@@ -25,6 +25,7 @@ class Activity extends React.Component {
 	}
 
 	static getDerivedStateFromProps(props, state) {
+
 		const history = props.account ? props.account.toJS().history : [];
 		return _.isEqual(state.history, history) ? null : { history };
 	}
@@ -33,7 +34,11 @@ class Activity extends React.Component {
 		this.format(this.state.history);
 	}
 
+
 	componentDidUpdate(prevProps, prevState) {
+		if (!prevProps.isConnect && this.props.isConnect) {
+			this.format(this.state.history);
+		}
 		if (!_.isEqual(prevState.history, this.state.history)) {
 			this.format(this.state.history);
 		}
@@ -57,10 +62,15 @@ class Activity extends React.Component {
 		setTimeout(() => this.props.formatHistory(data), 1 * 1000);
 	}
 
-	renderEmpty() {
+	renderEmpty(isConnect) {
 		return (
 			<div className="msg-empty">
-				<h3>You have no actions</h3>
+				<h3>
+					{
+						isConnect ? 'You have no actions' : 'Loading...'
+					}
+
+				</h3>
 			</div>
 		);
 	}
@@ -97,9 +107,9 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		const { loading } = this.props;
+		const { loading, isConnect } = this.props;
 
-		return loading ? <Loading text="Load history..." /> : this.renderTable();
+		return loading && isConnect ? <Loading text="History is loading..." /> : this.renderTable(isConnect);
 	}
 
 }
@@ -107,6 +117,7 @@ class Activity extends React.Component {
 Activity.propTypes = {
 	history: PropTypes.any,
 	loading: PropTypes.bool.isRequired,
+	isConnect: PropTypes.any,
 	activeTransaction: PropTypes.string.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
@@ -115,6 +126,7 @@ Activity.propTypes = {
 
 Activity.defaultProps = {
 	history: null,
+	isConnect: false,
 };
 
 export default connect(
@@ -124,8 +136,9 @@ export default connect(
 		const history = state.table.getIn([HISTORY_TABLE, 'data']);
 		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
 		const activeTransaction = state.table.getIn([HISTORY_TABLE, 'activeTransaction']);
+		const isConnect = state.echojs.getIn(['system', 'isConnected']);
 		return {
-			account, history, loading, activeTransaction,
+			account, history, loading, activeTransaction, isConnect,
 		};
 	},
 	(dispatch) => ({

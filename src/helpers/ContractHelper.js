@@ -49,7 +49,7 @@ const to64HexString = (v, type, mode = 256) => {
 	}
 };
 
-const encode = (value, type, isArray, mode) => {
+const encode = (value, type, isArray, modeNumber) => {
 	let arg = '';
 	if (isArray) {
 		try {
@@ -77,7 +77,7 @@ const encode = (value, type, isArray, mode) => {
 			chunks.reduce((newArg, v) => (newArg.concat(to64HexString(v, type))), arg);
 	}
 
-	return to64HexString(value, type, mode);
+	return to64HexString(value, type, modeNumber);
 
 };
 
@@ -118,7 +118,7 @@ export const getMethod = (method, args) => {
 
 		} else if (type.search('int') !== -1) {
 			let mode = type.split('int')[1];
-			mode = mode === '' ? 256 : parseInt(mode);
+			mode = mode === '' ? 256 : parseInt(mode, 10);
 			const result = encode(arg, 'int', isArray, mode);
 			if (isArray) hexStrings = hexStrings.concat(result);
 			else hexArgs = hexArgs.concat(result);

@@ -18,6 +18,7 @@ import {
 } from './ModalActions';
 import { setValue } from './FormActions';
 
+import { formatError } from '../helpers/FormatHelper';
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { validateContractId } from '../helpers/ValidateHelper';
@@ -25,6 +26,7 @@ import { validateContractId } from '../helpers/ValidateHelper';
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { TRANSFER_PATH } from '../constants/RouterConstants';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -52,10 +54,17 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
-export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+export const getBalanceFromAssets = (assets) => async (dispatch) => {
 	let balances = [];
-
-	if (assets && Object.keys(assets).length) {
+	if (!Object.keys(assets).length) {
+		const defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+		balances.push({
+			balance: 0,
+			id: defaultAsset.get('id'),
+			symbol: defaultAsset.get('symbol'),
+			precision: defaultAsset.get('precision'),
+		});
+	} else {
 		balances = Object.entries(assets).map(async (asset) => {
 			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
 			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
@@ -63,6 +72,19 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 		});
 
 		balances = await Promise.all(balances);
+	}
+
+	return balances;
+};
+
+export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+
+	let balances = [];
+
+	if (assets && Object.keys(assets).length) {
+
+		balances = await dispatch(getBalanceFromAssets(assets));
+
 		if (update) {
 			dispatch(diffBalanceChecker('assets', balances));
 		}
@@ -253,7 +275,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		dispatch(closeModal(MODAL_TOKENS));
 		toastSuccess('Token was successfully added');
 	} catch (err) {
-		dispatch(setError(MODAL_TOKENS, 'error', err));
+		dispatch(setError(MODAL_TOKENS, 'error', formatError(err)));
 	} finally {
 		dispatch(setDisable(MODAL_TOKENS, false));
 	}
@@ -379,3 +401,4 @@ export const redirectToTransfer = (asset, type) => (dispatch, getState) => {
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());
 };
+

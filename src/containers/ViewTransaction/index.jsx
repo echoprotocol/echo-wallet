@@ -5,7 +5,10 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
-import { openUnlock } from '../../actions/HistoryActions';
+import NoteScenario from '../NoteScenario';
+
+import operations from '../../constants/Operations';
+
 import { resetTransaction } from '../../actions/TransactionActions';
 import { resetConverter } from '../../actions/ConverterActions';
 
@@ -20,7 +23,9 @@ class ViewTransaction extends React.Component {
 	}
 
 	render() {
-		const { data, note } = this.props;
+		const {
+			data, bytecodeArgs, dataLog, topics,
+		} = this.props;
 
 		if (!data) {
 			this.props.history.goBack();
@@ -31,17 +36,28 @@ class ViewTransaction extends React.Component {
 			{
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabOverview
-							data={data}
-							note={note}
-							unlock={this.props.openUnlock}
-						/>
+						<NoteScenario>
+							{
+								(note, unlock) => (
+									<TabOverview
+										data={data}
+										note={note}
+										bytecodeArgs={bytecodeArgs}
+										unlock={unlock}
+									/>
+								)
+							}
+						</NoteScenario>
 					</Tab.Pane>
 				),
 			},
 		];
 
-		const isLogData = data.name === 'Contract' && data.details.tr_receipt.log.length;
+		const isLogData = [
+			operations.create_contract.name,
+			operations.call_contract.name,
+		].includes(data.name) && data.details.tr_receipt.log.length;
+
 		if (isLogData) {
 			panes[0].menuItem = <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Overview" key={0} />;
 
@@ -49,7 +65,7 @@ class ViewTransaction extends React.Component {
 				menuItem: <Button className="tab-btn" onClick={(e) => e.target.blur()} content="Event Logs" key={1} />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabLogs data={data} />
+						<TabLogs data={data} dataLog={dataLog} topics={topics} />
 					</Tab.Pane>
 				),
 			});
@@ -82,9 +98,10 @@ class ViewTransaction extends React.Component {
 
 ViewTransaction.propTypes = {
 	data: PropTypes.any,
-	note: PropTypes.object.isRequired,
+	bytecodeArgs: PropTypes.object.isRequired,
+	dataLog: PropTypes.any.isRequired,
+	topics: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
-	openUnlock: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
 };
@@ -95,11 +112,12 @@ ViewTransaction.defaultProps = {
 
 export default withRouter(connect(
 	(state) => ({
-		note: state.transaction.get('note'),
 		data: state.transaction.get('details'),
+		dataLog: state.converter.get('data'),
+		topics: state.converter.get('topics'),
+		bytecodeArgs: state.converter.get('bytecodeArgs'),
 	}),
 	(dispatch) => ({
-		openUnlock: (value) => dispatch(openUnlock(value)),
 		resetTransaction: () => dispatch(resetTransaction()),
 		resetConverter: () => dispatch(resetConverter()),
 	}),

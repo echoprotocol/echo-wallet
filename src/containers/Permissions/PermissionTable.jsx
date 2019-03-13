@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Table } from 'semantic-ui-react';
-import { connect } from 'react-redux';
 
 import PermissionTableRow from './PermissionTableRow';
 import ThresholdRow from './ThresholdRow';
 
-import { unlockPrivateKey } from '../../actions/TableActions';
 
 class PermissionTable extends React.Component {
 
@@ -122,9 +120,4 @@ PermissionTable.defaultProps = {
 };
 
 
-export default connect(
-	() => ({}),
-	(dispatch) => ({
-		unlockPrivateKey: (value) => dispatch(unlockPrivateKey(value)),
-	}),
-)(PermissionTable);
+export default PermissionTable;

@@ -57,7 +57,6 @@ class App extends React.Component {
 
 	renderWrapper() {
 		const { children, location } = this.props;
-
 		return (
 			<Segment basic className="wrapper">
 				{ !PUBLIC_ROUTES.includes(location.pathname) ? <Header /> : null }

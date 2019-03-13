@@ -2,7 +2,6 @@ import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 
 import { PERMISSION_TABLE } from '../constants/TableConstants';
-import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 import TableReducer from '../reducers/TableReducer';
 import { getFeeSync, resetTransaction } from './TransactionActions';
@@ -11,6 +10,7 @@ import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
 import { isThreshold, isPublicKey } from '../helpers/ValidateHelper';
 import { setInFormError } from './FormActions';
+import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 

@@ -21,6 +21,7 @@ class TransactionScenario extends React.Component {
 		super(props);
 
 		this.DEFAULT_STATE = {
+			showUnlockModal: false,
 			password: '',
 			error: null,
 			active: [],
@@ -48,8 +49,9 @@ class TransactionScenario extends React.Component {
 		}
 
 		const { account, operation, showOptions } = this.props;
+		const { permission } = operations[operation];
 
-		const permissionPrivateKeys = account.getIn([operations[operation].permission, 'key_auths'])
+		const permissionPrivateKeys = account.getIn([permission, 'key_auths'])
 			.reduce((arr, [publicKey, weight]) => {
 				const privateKey = this.props.getPrivateKey(publicKey);
 				if (privateKey) { arr.push([privateKey, weight]); }
@@ -57,22 +59,31 @@ class TransactionScenario extends React.Component {
 			}, []);
 
 		if (!permissionPrivateKeys.length) {
-			return this.props.openModal(MODAL_UNLOCK);
+			return this.setState({ showUnlockModal: true });
 		}
 
-		this.setState({ [operations[operation].permission]: permissionPrivateKeys });
+		const threshold = account.getIn([permission, 'weight_threshold']);
+		const totalWeight = permissionPrivateKeys.reduce((result, [, weight]) => result + weight, 0);
+
+		this.setState({ [permission]: permissionPrivateKeys, weight: totalWeight, threshold });
 
 		if (operations[operation].value === operations.transfer.value && showOptions.note) {
 			const memoPrivateKey = this.props.getPrivateKey(account.getIn(['options', 'memo_key']));
 
 			if (!memoPrivateKey) {
-				return this.props.openModal(MODAL_UNLOCK);
+				return this.setState({ showUnlockModal: true });
 			}
 
 			this.setState({ memo: memoPrivateKey });
 		}
 
-		return this.props.openModal(MODAL_DETAILS);
+		return this.setState({ showUnlockModal: false, password: this.DEFAULT_STATE.password }, () => {
+			if (totalWeight < threshold) {
+				return this.setState({ showUnlockModal: true });
+			}
+
+			return this.props.openModal(MODAL_DETAILS);
+		});
 	}
 
 	change(value) {
@@ -89,31 +100,48 @@ class TransactionScenario extends React.Component {
 		}
 
 		const { permission } = operations[operation];
-		const permissionPrivateKeys = account.getIn([permission, 'key_auths'])
-			.reduce((arr, [publicKey, weight]) => {
-				if (keys[permission] && keys[permission].publicKey === publicKey) {
-					arr.push([keys[permission].privateKey, weight]);
-				}
-				return arr;
-			}, []);
+		const stateKeys = this.state[permission];
 
-		if (!permissionPrivateKeys.length && !this.state[permission].length) {
-			return this.setState({ error: `${permission} permissions required` });
+		const isKeyAdded = stateKeys.find(([privateKey]) =>
+			keys[permission] && keys[permission].privateKey.toWif() === privateKey.toWif());
+
+		if (isKeyAdded) {
+			return this.setState({ error: 'Key already added' });
 		}
 
-		this.setState({ [permission]: permissionPrivateKeys });
+		const permissionPrivateKey = account.getIn([permission, 'key_auths'])
+			.find(([publicKey]) => keys[permission] && keys[permission].publicKey === publicKey);
 
-		if (operations[operation].value === operations.transfer.value && showOptions.get('note')) {
 
-			if (!keys.memo || (keys.memo.publicKey !== account.getIn(['options', 'memo_key']) && !this.state.memo)) {
+		if (!permissionPrivateKey) {
+			if (this.state[permission].length === 0) {
+				return this.setState({ error: `${permission} permissions required` });
+			}
+		} else {
+			stateKeys.push([keys[permission].privateKey, permissionPrivateKey.get(1)]);
+		}
+
+		const threshold = account.getIn([permission, 'weight_threshold']);
+		const totalWeight = stateKeys.reduce((result, [, weight]) => result + weight, 0);
+
+		this.setState({ [permission]: stateKeys, weight: totalWeight, threshold });
+
+		if (operations[operation].value === operations.transfer.value && showOptions.get('note') && !this.state.memo) {
+			if (!keys.memo || (keys.memo.publicKey !== account.getIn(['options', 'memo_key']))) {
 				return this.setState({ error: 'Note permission required' });
 			}
 
 			this.setState(keys.memo ? { memo: keys.memo.privateKey } : {});
 		}
 
-		this.props.closeModal(MODAL_UNLOCK);
-		return this.props.openModal(MODAL_DETAILS);
+		return this.setState({ showUnlockModal: false, password: this.DEFAULT_STATE.password }, () => {
+			if (totalWeight < threshold) {
+				return this.setState({ showUnlockModal: true });
+			}
+
+			return this.props.openModal(MODAL_DETAILS);
+		});
+
 	}
 
 	send() {
@@ -121,13 +149,13 @@ class TransactionScenario extends React.Component {
 
 		this.props.sendTransaction({ active, owner, memo });
 		this.clear();
-
 		this.props.clearForm();
 	}
 
 	close() {
 		this.clear();
-		this.props.closeModal(MODAL_UNLOCK);
+		this.setState({ showUnlockModal: false, weight: null });
+
 		this.props.closeModal(MODAL_DETAILS);
 	}
 
@@ -136,7 +164,9 @@ class TransactionScenario extends React.Component {
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
-					show={this.props[MODAL_UNLOCK].get('show')}
+					weight={this.state.weight}
+					threshold={this.state.threshold}
+					show={this.state.showUnlockModal}
 					disabled={this.props[MODAL_UNLOCK].get('disabled')}
 					password={this.state.password}
 					error={this.state.error}

@@ -20,6 +20,7 @@ import {
 	validateNetworkAddress,
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+import { formatError } from '../helpers/FormatHelper';
 
 import {
 	initBalances,
@@ -61,7 +62,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 	} catch (err) {
-		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
 		setTimeout(() => {
 			dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
@@ -104,7 +105,7 @@ export const connection = () => async (dispatch) => {
 		}
 
 	} catch (err) {
-		dispatch(GlobalReducer.actions.set({ field: 'error', value: err }));
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
 		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}

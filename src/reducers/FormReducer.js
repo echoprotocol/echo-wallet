@@ -1,5 +1,5 @@
 import { createModule } from 'redux-modules';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import _ from 'lodash';
 
 import {
@@ -59,6 +59,12 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 			checked: false,
 		},
+		from: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
 		amount: {
 			value: '',
 			error: null,
@@ -70,6 +76,10 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		selectedSymbol: '',
+		isWalletAccount: true,
+		balance: {
+			assets: new List([]),
+		},
 		note: {
 			value: '',
 			error: null,

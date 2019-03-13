@@ -11,22 +11,21 @@ import { setValue } from '../../actions/FormActions';
 import { getFeeSync, getFee, fetchFee } from '../../actions/TransactionActions';
 import { setContractFees } from '../../actions/ContractActions';
 
-import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID, FORM_TRANSFER } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
 
 	constructor(props) {
 		super(props);
 
-		props.fetchFee().then((fee) => {
-			props.setValue('fee', fee);
-		});
-
 		this.state = {
 			isChanged: false,
 		};
 	}
 	componentDidMount() {
+		this.props.fetchFee().then((fee) => {
+			this.props.setValue('fee', fee);
+		});
 		this.props.setContractFees();
 	}
 
@@ -34,11 +33,18 @@ class FeeComponent extends React.Component {
 		if (_.isEqual(this.props, nextProps)) { return; }
 
 		const {
-			note, assets, selectedSymbol,
+			note,
+			assets,
+			selectedSymbol,
+			form,
+			assetsFromTransfer,
+			isWalletAccount,
 		} = this.props;
 
-		if (assets.length && !this.state.isChanged) {
-			assets.forEach((asset) => {
+		const targetAsset = isWalletAccount && form === FORM_TRANSFER ? assets : assetsFromTransfer;
+
+		if (targetAsset.length && !this.state.isChanged) {
+			targetAsset.forEach((asset) => {
 				if (asset.symbol === selectedSymbol) {
 					this.props.getFee(note.value).then((resultFee) => {
 						if (resultFee) {
@@ -58,7 +64,6 @@ class FeeComponent extends React.Component {
 			note, type,
 		} = this.props;
 
-
 		if (note.value !== nextProps.note.value || type !== nextProps.type) {
 			this.props.getFee((nextProps.type !== 'call_contract' || nextProps.type !== 'create_contract') && nextProps.note.value).then((value) => {
 				if (value) {
@@ -75,9 +80,17 @@ class FeeComponent extends React.Component {
 	}
 
 	getOptionsTransfer() {
-		const { assets, note } = this.props;
+		const {
+			assets,
+			note,
+			form,
+			assetsFromTransfer,
+			isWalletAccount,
+		} = this.props;
 
-		const options = assets.reduce((arr, asset) => {
+		const targetAsset = isWalletAccount && form === FORM_TRANSFER ? assets : assetsFromTransfer;
+
+		const options = targetAsset.reduce((arr, asset) => {
 			const fee = this.props.getFeeSync(asset.id, note.value);
 
 			if (fee) {
@@ -127,7 +140,6 @@ class FeeComponent extends React.Component {
 
 	getText(options) {
 		const { fee } = this.props;
-
 		if (fee && fee.value) {
 			return formatAmount(fee.value, fee.asset.precision, fee.asset.symbol);
 		}
@@ -156,7 +168,7 @@ class FeeComponent extends React.Component {
 					fluid
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
-					text={options.length ? text : '0 ECHO'}
+					text={text}
 					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
@@ -168,9 +180,11 @@ class FeeComponent extends React.Component {
 }
 
 FeeComponent.propTypes = {
+	isWalletAccount: PropTypes.bool.isRequired,
 	isSingle: PropTypes.bool,
 	fee: PropTypes.object,
 	assets: PropTypes.array,
+	assetsFromTransfer: PropTypes.array,
 	selectedSymbol: PropTypes.string,
 	form: PropTypes.string.isRequired,
 	note: PropTypes.any.isRequired,
@@ -189,6 +203,7 @@ FeeComponent.defaultProps = {
 	isSingle: false,
 	fee: {},
 	assets: [],
+	assetsFromTransfer: [],
 	selectedSymbol: '',
 	currency: {},
 	feeError: '',
@@ -198,13 +213,14 @@ export default connect(
 	(state, { form, isSingle }) => ({
 		isSingle,
 		assets: state.balance.get('assets').toArray(),
+		assetsFromTransfer: state.form.getIn([FORM_TRANSFER, 'balance']).assets.toArray(),
+		isWalletAccount: state.form.getIn([FORM_TRANSFER, 'isWalletAccount']),
 		fee: state.form.getIn([form, 'fee']),
 		note: state.form.getIn([form, 'note']) || {},
 		currency: state.form.getIn([form, 'currency']) || {},
 		selectedSymbol: state.form.getIn([form, 'selectedSymbol']),
 		feeError: state.form.getIn([form, 'feeError']),
 		fees: state.fee.toArray() || [],
-		form,
 	}),
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),

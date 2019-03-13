@@ -21,6 +21,7 @@ import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 import ContractFeeReducer from '../reducers/ContractFeeReducer';
 
+import { formatError } from '../helpers/FormatHelper';
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastInfo } from '../helpers/ToastHelper';
 
@@ -115,7 +116,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
-		dispatch(setValue(FORM_ADD_CONTRACT, 'error', err));
+		dispatch(setValue(FORM_ADD_CONTRACT, 'error', formatError(err)));
 	}
 };
 

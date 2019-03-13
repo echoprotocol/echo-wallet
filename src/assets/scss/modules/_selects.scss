@@ -32,7 +32,9 @@
               url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
             font-weight: normal;
             font-style: normal;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #fff;
             min-width: 22px;
             width: 22px;
@@ -73,7 +75,57 @@
     }
 }
 
+.sort-icon {
+    cursor: pointer;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0.4;
 
+    &.up {
+        opacity: 1;
+
+        &:after {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    &.down {
+        opacity: 1;
+
+        &:before {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    &:before {
+        content: '';
+        display: block;
+        width: 5px;
+        height: 4px;
+        background-image: url(../images/sort-icon.svg);
+        background-position: center center;
+        background-repeat: no-repeat;
+        margin-bottom: 1px;
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        width: 5px;
+        height: 4px;
+        background-image: url(../images/sort-icon.svg);
+        background-position: center center;
+        background-repeat: no-repeat;
+        transform: rotate(180deg);
+    }
+}
 
 .radio {
     &-list {

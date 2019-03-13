@@ -100,6 +100,7 @@
     }
 
 
+
     &.contract-type-dropdown {
         display: flex;
         align-items: center;
@@ -465,5 +466,16 @@
 		&.fee-default-dropdown {
 			border: 1px solid #ff4848; 
 		}
+	}
+}
+
+.fee-dropdown-wrap {
+	.fee-dropdown {
+		&.ui.dropdown.active {
+			box-shadow: none;
+			&:hover {
+				box-shadow: none;
+			}
+		} 
 	}
 }

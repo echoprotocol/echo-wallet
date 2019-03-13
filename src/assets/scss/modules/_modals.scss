@@ -42,6 +42,136 @@
         }
 
     }
+
+    &.choose-account {
+        width: 600px;
+
+        padding-top: 35px;
+        background-color: transparent;
+
+        .modal-content {
+            transform: translateY(-35px);
+            background: #FFFFFF;
+            padding: 33px 20px 45px 20px;
+
+            .form-info {
+                margin-bottom: 23px; 
+            }
+        }
+    }
+
+    .accounts-list {
+        width: 500px;
+        border: 1px solid #babccb;
+        border-radius: 4px;
+        margin-bottom: 5px;
+
+        &_header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            padding-left: 15px;
+            padding-right: 24px;
+            border-bottom: 1px solid  #f1f1f1;
+            height: 37px;
+
+            .check-container {
+                display: flex;
+                align-items: center;
+
+                .txt {
+                    font-weight: 600;
+                    color: rgba(92, 99, 125, 0.5);         
+                    font-size: 12px;           
+                }
+
+                .check {
+                    .label {
+
+                        &-text {
+                            font-weight: 600;
+                            color: rgba(92, 99, 125, 0.5);
+                            font-size: 12px;           
+                        }
+
+                        &:before {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+                }
+                .sort-icon {
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        &_list {
+            padding-left: 15px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-right: 30px;
+            max-height: 255px;
+            overflow: auto;
+            
+            &::-webkit-scrollbar {
+
+                width: 7px;
+                
+            }
+            
+            */* Track */*
+            
+            &::-webkit-scrollbar-track {
+            
+            background: transparent;
+            
+            }
+            
+            */* Handle */*
+            
+            &::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, .1);
+            
+            }
+            
+            */* Handle on hover */*
+            
+            &::-webkit-scrollbar-thumb:hover {
+            
+            background: #555;
+            
+            }
+
+            .line {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                
+                &:not(:last-child) {
+                    margin-bottom: 20px;
+                }
+
+                .label {
+                    &:before {
+                        margin-right: 11px;
+                    }
+
+                    &-text {
+                        font-size: 15px;
+                        // color: #3b3b3b;
+                    }
+                }
+
+                .value {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: #5c637d;
+                }
+            }
+        }
+    }
 }
 
 .modals {

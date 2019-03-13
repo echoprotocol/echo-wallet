@@ -5,13 +5,7 @@ import { Map } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	options: null,
 	operation: '',
-	keys: null,
 	showOptions: null,
-	note: {
-		value: '',
-		unlocked: false,
-		error: null,
-	},
 	details: null,
 });
 
@@ -45,19 +39,6 @@ export default createModule({
 				state = state.set('operation', payload.operation);
 				state = state.set('options', new Map(payload.options));
 				state = state.set('showOptions', new Map(payload.showOptions));
-
-				return state;
-			},
-		},
-		setNote: {
-			reducer: (state, { payload }) => {
-				const note = DEFAULT_FIELDS.get('note');
-
-				state = state.set('note', {
-					value: payload.note ? payload.note : note.value,
-					unlocked: payload.unlocked ? payload.unlocked : note.unlocked,
-					error: payload.error ? payload.error : note.error,
-				});
 
 				return state;
 			},

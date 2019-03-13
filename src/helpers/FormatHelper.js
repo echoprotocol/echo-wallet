@@ -130,3 +130,5 @@ export const parseBytecode = (bytecode) => {
 		args,
 	};
 };
+
+export const formatError = (error) => (error instanceof Error ? error.message : error);
