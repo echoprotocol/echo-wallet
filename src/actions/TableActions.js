@@ -8,8 +8,8 @@ import { getFeeSync, resetTransaction } from './TransactionActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
-import { isThreshold, isPublicKey } from '../helpers/ValidateHelper';
-import { setInFormError, setValue as setFormValue } from './FormActions';
+import { isThreshold, isPublicKey, isAccountId, isWeight } from '../helpers/ValidateHelper';
+import { setInFormError, setInFormValue, setValue as setFormValue } from './FormActions';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -158,6 +158,65 @@ export const isChanged = () => (dispatch, getState) => {
 	}));
 };
 
+export const validateKey = (role, tableKey, key, weight) => async (dispatch) => {
+	let error = false;
+
+	if (!key) {
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], ''));
+	}
+
+	let account = null;
+
+	if (!key) {
+		error = true;
+
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+	} else {
+		try {
+			account = (role !== 'memo') && await dispatch(EchoJSActions.fetch(key.value));
+
+			if (!account) {
+
+				if (!isPublicKey(key.value)) {
+					error = true;
+
+					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+				}
+
+			} else if (!isAccountId(account.get('id')) && role !== 'memo') {
+
+				error = true;
+
+				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
+			}
+		} catch (e) {
+			if (!isPublicKey(key.value)) {
+				error = true;
+
+				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+			}
+		}
+	}
+
+	if (role !== 'memo') {
+		if (!weight) {
+			dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], ''));
+		}
+
+		if (!weight || !isWeight(weight.value)) {
+			error = true;
+
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], 'Incorrect weight'));
+		}
+	}
+
+	if (!error && account) {
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], account.get('name')));
+	}
+
+	return error;
+};
+
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentOptions = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id'), 'options']);
@@ -166,6 +225,20 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
 	const roles = ['active', 'owner', 'memo'];
+
+	const validateFields = [];
+
+	roles.forEach((role) => {
+		permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
+			validateFields.push(dispatch(validateKey(role, keyTable, keyForm.get('key'), keyForm.get('weight'))));
+		});
+	});
+
+	const errors = await Promise.all(validateFields);
+
+	if (errors.includes(true)) {
+		return false;
+	}
 
 	const isError = ['active', 'owner'].some((role) => {
 		const threshold = permissionForm.getIn([role, 'threshold']).value;

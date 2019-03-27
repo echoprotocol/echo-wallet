@@ -7,10 +7,9 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { EchoJSActions } from 'echojs-redux';
 
-import { isChanged, unlockPrivateKey } from '../../actions/TableActions';
+import { isChanged, unlockPrivateKey, validateKey } from '../../actions/TableActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
-import { setInFormError, setInFormValue, setValue } from '../../actions/FormActions';
-import { isAccountId, isPublicKey, isWeight } from '../../helpers/ValidateHelper';
+import { setInFormError, setInFormValue, setValue, removeKey } from '../../actions/FormActions';
 
 class PermissionTableRow extends Component {
 
@@ -107,7 +106,7 @@ class PermissionTableRow extends Component {
 	}
 
 	async onSaveRow(e, k, key, weight) {
-		if (await this.validateData(k, key, weight)) {
+		if (await this.props.validateField(k.role, k.key, key, weight)) {
 			return;
 		}
 
@@ -132,65 +131,6 @@ class PermissionTableRow extends Component {
 		this.setState({ removedRows });
 	}
 
-	async validateData(k, key, weight) {
-		let error = false;
-
-		if (!key) {
-			this.props.setValue([k.role, 'keys', k.key, 'key'], '');
-		}
-
-		let account = null;
-
-		if (!key) {
-			error = true;
-
-			this.props.setError([k.role, 'keys', k.key, 'key'], 'Incorrect key');
-		} else {
-			try {
-				account = (k.role !== 'memo') && await this.props.getAccount(key.value);
-
-				if (!account) {
-
-					if (!isPublicKey(key.value)) {
-						error = true;
-
-						this.props.setError([k.role, 'keys', k.key, 'key'], 'Incorrect key');
-					}
-
-				} else if (!isAccountId(account.get('id')) && k.role !== 'memo') {
-
-					error = true;
-
-					this.props.setError([k.role, 'keys', k.key, 'key'], 'Incorrect account');
-				}
-			} catch (e) {
-				if (!isPublicKey(key.value)) {
-					error = true;
-
-					this.props.setError([k.role, 'keys', k.key, 'key'], 'Incorrect key');
-				}
-			}
-		}
-
-		if (k.role !== 'memo') {
-			if (!weight) {
-				this.props.setValue([k.role, 'keys', k.key, 'weight'], '');
-			}
-
-			if (!weight || !isWeight(weight.value)) {
-				error = true;
-
-				this.props.setError([k.role, 'keys', k.key, 'weight'], 'Incorrect weight');
-			}
-		}
-
-		if (!error && account) {
-			this.props.setValue([k.role, 'keys', k.key, 'key'], account.get('name'));
-		}
-
-		return error;
-	}
-
 	closeEdit(e, k) {
 		const { editRows } = this.state;
 		const { keyRole } = this.props;
@@ -208,7 +148,7 @@ class PermissionTableRow extends Component {
 	}
 
 	async saveAddKey(e, num, key, weight, keyRole) {
-		if (await this.validateData({ role: keyRole, key: num.toString() }, key, weight)) {
+		if (await this.props.validateField(keyRole, num.toString(), key, weight)) {
 			return;
 		}
 
@@ -222,8 +162,7 @@ class PermissionTableRow extends Component {
 	cancelAddKey(e, num) {
 		const { keyRole } = this.props;
 
-		this.props.setValue([keyRole, 'keys', num.toString(), 'key'], '');
-		this.props.setValue([keyRole, 'keys', num.toString(), 'weight'], '');
+		this.props.removeKey([keyRole, 'keys', num.toString()]);
 		this.props.cancelEdit(num);
 	}
 
@@ -470,10 +409,12 @@ PermissionTableRow.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	removeKey: PropTypes.func.isRequired,
 	submit: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
 	onAddKey: PropTypes.func.isRequired,
 	getAccount: PropTypes.func.isRequired,
+	validateField: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -486,7 +427,10 @@ export default connect(
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
+		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
 		isChanged: () => dispatch(isChanged()),
 		getAccount: (id) => dispatch(EchoJSActions.fetch(id)),
+		validateField: (role, keyTable, key, weight) =>
+			dispatch(validateKey(role, keyTable, key, weight)),
 	}),
 )(PermissionTableRow);

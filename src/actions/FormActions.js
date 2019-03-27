@@ -98,7 +98,7 @@ export const pushForm = (field, param, value) => (dispatch) => {
 /**
  * Set multiple params by field
  * @param {String} form
- * @param {String} fields
+ * @param {Array} fields
  * @param value
  * @returns {Function}
  */
@@ -126,4 +126,14 @@ export const setInFormError = (form, fields, value) => (dispatch) => {
  */
 export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
 	dispatch(FormReducer.actions.setInFormErrorConstant({ form, fields, value }));
+};
+
+/**
+ * Remove permission key
+ * @param {String} form
+ * @param {Array} fields
+ * @returns {Function}
+ */
+export const removeKey = (form, fields) => (dispatch) => {
+	dispatch(FormReducer.actions.removeKey({ form, fields }));
 };

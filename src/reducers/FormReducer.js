@@ -372,5 +372,15 @@ export default createModule({
 				return state;
 			},
 		},
+
+		removeKey: {
+			reducer: (state, { payload }) => {
+				const path = [payload.form].concat(payload.fields);
+
+				state = state.deleteIn(path);
+
+				return state;
+			},
+		},
 	},
 });
