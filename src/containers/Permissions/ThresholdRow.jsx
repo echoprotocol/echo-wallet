@@ -37,7 +37,7 @@ class ThresholdRow extends React.Component {
 				<Form.Field
 					className={classnames({ error: threshold.error })}
 				>
-					<p className="i-title">TRESHHOLD</p>
+					<p className="i-title">THRESHOLD</p>
 					<input
 						type="text"
 						placeholder="Enter threshold"
