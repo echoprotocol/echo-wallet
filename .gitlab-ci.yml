@@ -75,7 +75,7 @@ build.windows:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHO Wallet Setup 1.0.1.exe.blockmap
+     - build/binaries/ECHO Wallet Setup 1.0.1.exe
      expire_in: 1 week
 
 build.linux-debug:
@@ -103,5 +103,5 @@ build.windows-debug:
     - echo-linux
   artifacts:
      paths:
-     - build/binaries/ECHO Wallet Setup 1.0.1.exe.blockmap
+     - build/binaries/ECHO Wallet Setup 1.0.1.exe
      expire_in: 1 week
