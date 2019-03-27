@@ -169,8 +169,7 @@ class PermissionTableRow extends Component {
 	removeAddkey(e, num) {
 		const { keyRole } = this.props;
 
-		this.props.setValue([keyRole, 'keys', num.toString(), 'key'], '');
-		this.props.setValue([keyRole, 'keys', num.toString(), 'weight'], '');
+		this.props.removeKey([keyRole, 'keys', num.toString()]);
 		this.props.cancelEdit(num);
 
 		const { editedAddKeys } = this.state;
