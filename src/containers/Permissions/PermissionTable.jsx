@@ -76,7 +76,6 @@ class PermissionTable extends React.Component {
 							keyRole={keyRole}
 							privateKeys={keys}
 							submit={this.props.submit}
-							setChanged={this.props.setChanged}
 							resetAddKeys={this.props.resetAddKeys}
 							onAddKey={(num) => this.onAddKey(num)}
 						/>
@@ -110,7 +109,6 @@ PermissionTable.propTypes = {
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.array.isRequired,
 	submit: PropTypes.func.isRequired,
-	setChanged: PropTypes.func.isRequired,
 };
 
 PermissionTable.defaultProps = {

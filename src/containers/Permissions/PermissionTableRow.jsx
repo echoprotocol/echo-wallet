@@ -9,7 +9,7 @@ import { EchoJSActions } from 'echojs-redux';
 
 import { isChanged, unlockPrivateKey } from '../../actions/TableActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
-import { setInFormError, setInFormValue } from '../../actions/FormActions';
+import { setInFormError, setInFormValue, setValue } from '../../actions/FormActions';
 import { isAccountId, isPublicKey, isWeight } from '../../helpers/ValidateHelper';
 
 class PermissionTableRow extends Component {
@@ -60,15 +60,13 @@ class PermissionTableRow extends Component {
 		return null;
 	}
 
-	componentDidMount() {
-		this.props.setChanged(this.props.isChanged());
-	}
-
 	componentDidUpdate(prevProps) {
-		const { data, keyRole, keys } = this.props;
-		const { data: prevData, keys: prevKeys } = prevProps;
+		const {
+			keys, firstFetch, data, keyRole,
+		} = this.props;
+		const { keys: prevKeys, firstFetch: prevFetch } = prevProps;
 
-		if (!_.isEqual(data, prevData) && data.length) {
+		if (firstFetch !== prevFetch && firstFetch) {
 			data.forEach((k) => {
 				this.props.setValue([keyRole, 'keys', k.key, 'key'], k.key);
 				this.props.setValue([keyRole, 'keys', k.key, 'weight'], k.weight);
@@ -76,7 +74,7 @@ class PermissionTableRow extends Component {
 		}
 
 		if (!_.isEqual(keys, prevKeys)) {
-			this.props.setChanged(this.props.isChanged());
+			this.props.set('isChanged', this.props.isChanged());
 		}
 	}
 
@@ -466,13 +464,14 @@ PermissionTableRow.propTypes = {
 	keys: PropTypes.object.isRequired,
 	keyRole: PropTypes.string.isRequired,
 	resetAddKeys: PropTypes.bool.isRequired,
+	firstFetch: PropTypes.bool.isRequired,
 	unlockPrivateKey: PropTypes.func.isRequired,
 	cancelEdit: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	set: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
 	submit: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
-	setChanged: PropTypes.func.isRequired,
 	onAddKey: PropTypes.func.isRequired,
 	getAccount: PropTypes.func.isRequired,
 };
@@ -480,10 +479,12 @@ PermissionTableRow.propTypes = {
 export default connect(
 	(state) => ({
 		keys: state.form.get(FORM_PERMISSION_KEY),
+		firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 	}),
 	(dispatch) => ({
 		unlockPrivateKey: (value) => dispatch(unlockPrivateKey(value)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
+		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
 		isChanged: () => dispatch(isChanged()),
 		getAccount: (id) => dispatch(EchoJSActions.fetch(id)),

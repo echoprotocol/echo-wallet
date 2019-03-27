@@ -192,6 +192,8 @@ const DEFAULT_FORM_FIELDS = {
 		memo: new Map({
 			keys: Map({}),
 		}),
+		firstFetch: false,
+		isChanged: false,
 	}),
 };
 

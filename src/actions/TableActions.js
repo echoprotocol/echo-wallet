@@ -9,7 +9,7 @@ import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
 import { isThreshold, isPublicKey } from '../helpers/ValidateHelper';
-import { setInFormError } from './FormActions';
+import { setInFormError, setValue as setFormValue } from './FormActions';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -94,6 +94,8 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 		key: account.options.memo_key, role: 'memo', type: 'keys',
 	};
 	dispatch(setIn(PERMISSION_TABLE, ['memo', 'keys'], new List([target])));
+
+	dispatch(setFormValue(FORM_PERMISSION_KEY, 'firstFetch', true));
 };
 
 export const unlockPrivateKey = (k) => (dispatch) => {
@@ -118,6 +120,13 @@ export const isChanged = () => (dispatch, getState) => {
 	const roles = ['active', 'owner', 'memo'];
 
 	return roles.some((role) => permissionForm.getIn([role, 'keys']).some((keyForm) => {
+		let tableAccountsKeys = permissionTable.getIn([role, 'keys']);
+
+		if (role === 'memo' && keyForm.get('key') && keyForm.get('key').value && tableAccountsKeys.size) {
+			return !tableAccountsKeys
+				.some((keyTable) => keyTable.key === keyForm.get('key').value);
+		}
+
 		const threshold = permissionForm.getIn([role, 'threshold']);
 
 		if (!permissionTable.getIn([role, 'threshold']) || !threshold.value) {
@@ -139,8 +148,6 @@ export const isChanged = () => (dispatch, getState) => {
 		if (keyForm.get('remove')) {
 			return true;
 		}
-
-		let tableAccountsKeys = permissionTable.getIn([role, 'keys']);
 
 		if (role !== 'memo') {
 			tableAccountsKeys = tableAccountsKeys.concat(permissionTable.getIn([role, 'accounts']));

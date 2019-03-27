@@ -19,7 +19,6 @@ class Permissions extends React.Component {
 		super(props);
 
 		this.state = {
-			isChanged: false,
 			resetAddKeys: false,
 		};
 	}
@@ -107,7 +106,7 @@ class Permissions extends React.Component {
 				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{
 						(submitTr) => (
-							this.state.isChanged &&
+							this.props.isChanged &&
 								<div className="top-btn-container">
 									<Button
 										basic
@@ -136,7 +135,6 @@ class Permissions extends React.Component {
 									data={active}
 									keys={keys.active}
 									submit={submit}
-									setChanged={(isChanged) => this.setState({ isChanged })}
 									resetAddKeys={this.state.resetAddKeys}
 								/>
 								<PermissionTable
@@ -146,7 +144,6 @@ class Permissions extends React.Component {
 									keys={keys.owner}
 									submit={submit}
 									description="Owner key allows to overwrite all keys. Basicaly owner key allows you to control account."
-									setChanged={(isChanged) => this.setState({ isChanged })}
 									resetAddKeys={this.state.resetAddKeys}
 								/>
 								<PermissionTable
@@ -158,7 +155,6 @@ class Permissions extends React.Component {
 									keys={keys.note}
 									submit={submit}
 									description="Note key is used to read notes from transactions."
-									setChanged={(isChanged) => this.setState({ isChanged })}
 									resetAddKeys={this.state.resetAddKeys}
 								/>
 							</React.Fragment>
@@ -173,6 +169,7 @@ class Permissions extends React.Component {
 
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
+	isChanged: PropTypes.bool.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
 	formPermissionKeys: PropTypes.func.isRequired,
@@ -193,6 +190,7 @@ export default connect(
 			accountName: state.global.getIn(['activeUser', 'name']),
 			account: state.echojs.getIn(['data', 'accounts', accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
+			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 		};
 	},
 	(dispatch) => ({
