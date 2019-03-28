@@ -1,4 +1,4 @@
-import { ChainValidation } from 'echojs-lib';
+import { ChainValidation, PublicKey } from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import { ADDRESS_PREFIX, PUBLIC_KEY_LENGTH } from '../constants/GlobalConstants';
@@ -310,6 +310,12 @@ export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
 	if (typeof v !== 'string' || v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length)) return false;
 
 	const prefix = v.slice(0, addressPrefix.length);
+
+	try {
+		PublicKey.fromStringOrThrow(v);
+	} catch (e) {
+		return false;
+	}
 
 	return addressPrefix === prefix;
 };
