@@ -4,13 +4,14 @@ import { EchoJSActions } from 'echojs-redux';
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import TableReducer from '../reducers/TableReducer';
-import { getFeeSync, resetTransaction } from './TransactionActions';
+import { resetTransaction } from './TransactionActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
 import { isThreshold, isPublicKey, isAccountId, isWeight } from '../helpers/ValidateHelper';
 import { setInFormError, setInFormValue, setValue as setFormValue } from './FormActions';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
+import { getOperationFee } from '../api/TransactionApi';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -292,6 +293,12 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 				|| keyForm.get('remove')
 			) {
 				permissionForm.getIn([role, 'keys']).forEach((value) => {
+					if (role === 'memo') {
+						permissionData[role].keys.push([value.get('key').value]);
+
+						return;
+					}
+
 					const weightInt = parseInt(value.get('weight').value, 10);
 
 					if (value.get('remove') || !value.get('key').value || !weightInt) {
@@ -334,21 +341,14 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	}
 
 	await dispatch(EchoJSActions.fetch('2.0.0'));
-	await dispatch(EchoJSActions.fetch('1.3.0'));
-
-	const fee = dispatch(getFeeSync('account_update'));
+	const feeAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
 
 	const transaction = {
-		fee: {
-			amount: fee.value,
-			asset_id: fee.asset.id,
-		},
 		account: currentAccount.get('id'),
 	};
 
 	const showOptions = {
 		account: currentAccount.get('name'),
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 	};
 
 	if (
@@ -449,6 +449,12 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			extensions: [],
 		};
 	}
+	const feeValue = await getOperationFee('account_update', transaction);
+
+	transaction.fee.amount = feeValue;
+	transaction.fee.asset_id = '1.3.0';
+
+	showOptions.fee = `${feeValue / (10 ** feeAsset.get('precision'))} ${feeAsset.get('symbol')}`;
 
 	dispatch(resetTransaction());
 

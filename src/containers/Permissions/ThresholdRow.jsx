@@ -30,7 +30,7 @@ class ThresholdRow extends React.Component {
 
 	render() {
 
-		const { threshold } = this.props;
+		const { threshold, keyRole } = this.props;
 
 		return (
 			<Form className="treshhold-input">
@@ -45,7 +45,7 @@ class ThresholdRow extends React.Component {
 						className="ui input"
 						value={threshold.value || ''}
 						onChange={(e) => this.onInput(e)}
-						autoFocus
+						autoFocus={keyRole === 'active'}
 					/>
 					<span className="error-message">{threshold.error}</span>
 				</Form.Field>
