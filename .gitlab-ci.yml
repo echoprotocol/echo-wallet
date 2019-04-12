@@ -32,7 +32,7 @@ deploy:
     - pp-projects
 
 build.macos:
-  stage: deploy
+  stage: prepare
   script:
     - npm install
     - npm run package-mac
@@ -48,7 +48,7 @@ build.macos:
 
 
 build.linux:
-  stage: deploy
+  stage: prepare
   script:
     - rm  -rf node_modules/
     - npm install
@@ -64,7 +64,7 @@ build.linux:
      expire_in: 1 week
 
 build.windows:
-  stage: deploy
+  stage: prepare
   script:
     - npm install
     - npm run package-win
@@ -79,7 +79,7 @@ build.windows:
      expire_in: 1 week
 
 build.linux-debug:
-  stage: deploy
+  stage: prepare
   script:
     - npm install
     - npm run package-deb-debug
@@ -93,7 +93,7 @@ build.linux-debug:
      expire_in: 1 week
 
 build.windows-debug:
-  stage: deploy
+  stage: prepare
   script:
     - npm install
     - npm run package-win-debug
