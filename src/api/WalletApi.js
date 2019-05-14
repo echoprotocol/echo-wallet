@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import { PrivateKey, PrivateKeyECDSA } from 'echojs-lib';
 
 export const generateKeyFromPassword = (accountName, role, password) => {
 	const seed = `${accountName}${role}${password}`;
@@ -6,6 +6,13 @@ export const generateKeyFromPassword = (accountName, role, password) => {
 	const publicKey = privateKey.toPublicKey().toString();
 
 	return { privateKey, publicKey };
+};
+
+export const generateECDSAPublicKey = (accountName, role, password) => {
+	const seed = `${accountName}${role}${password}`;
+	const privateKey = PrivateKeyECDSA.fromSeed(seed);
+	const publicKey = privateKey.toPublicKey().toString('ECHO');
+	return { publicKey, privateKey };
 };
 
 export const getKeyFromWif = (wif) => {
@@ -64,15 +71,6 @@ export const unlockWallet = (account, password, roles = ['active', 'owner', 'mem
 
 				if (activeKey) {
 					keys.active = key;
-				}
-
-				break;
-			}
-			case 'owner': {
-				const ownerKey = account.owner.key_auths.find(([owner]) => owner === key.publicKey);
-
-				if (ownerKey) {
-					keys.owner = key;
 				}
 
 				break;

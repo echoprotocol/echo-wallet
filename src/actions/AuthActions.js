@@ -55,8 +55,8 @@ export const createAccount = ({
 
 	try {
 		const instance = getState().echojs.getIn(['system', 'instance']);
-		const network = getState().global.getIn(['network']).toJS();
 
+		const network = getState().global.getIn(['network']).toJS();
 		accountNameError = await validateAccountExist(instance, accountName, false);
 
 		if (isAddAccount && !accountNameError) {
@@ -77,6 +77,7 @@ export const createAccount = ({
 			accountName,
 			generatedPassword,
 		);
+
 
 		dispatch(setKey(owner, accountName, generatedPassword, 'owner'));
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
@@ -125,18 +126,13 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
-
 		const account = await dispatch(EchoJSActions.fetch(accountName));
 
-		const { owner, active, memo } = unlockWallet(account, password);
+		const { active, memo } = unlockWallet(account, password);
 
-		if (!owner && !active && !memo) {
+		if (!active && !memo) {
 			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
 			return false;
-		}
-
-		if (owner) {
-			dispatch(setKey(owner, accountName, password, 'owner'));
 		}
 
 		if (active) {
@@ -220,7 +216,6 @@ export const importAccount = ({ accountName, password }) =>
 
 			try {
 				let accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
-
 				if (!accountIDs.size) {
 					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
 					return;
