@@ -256,6 +256,10 @@ export const validateAmount = (value, { symbol, precision, balance }) => {
 		return 'Insufficient funds';
 	}
 
+	if (amount.isNegative()) {
+		return 'Amount should be positive number';
+	}
+
 	return null;
 };
 
