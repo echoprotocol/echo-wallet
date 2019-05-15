@@ -142,6 +142,9 @@
       "executableName": "ECHO Wallet",
       "desktop": "ECHO Wallet",
       "synopsis": "ECHO Wallet: Cryptocurrency wallet for ECHO platform"
+    },
+    "deb": {
+      "afterRemove": "resources/scripts/linux-package.after-remove.sh"
     }
   }
 }
