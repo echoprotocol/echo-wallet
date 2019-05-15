@@ -69,7 +69,7 @@ export default {
 			value: null,
 			asset: null,
 		},
-		permission: 'active',
+		permission: 'owner',
 	},
 	account_whitelist: {
 		value: 7,
@@ -201,28 +201,8 @@ export default {
 			asset: 'asset_id',
 		},
 	},
-	witness_create: {
-		value: 20,
-		name: 'Create witness',
-		options: {
-			from: 'witness_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	witness_update: {
-		value: 21,
-		name: 'Update witness',
-		options: {
-			from: 'witness_account',
-			subject: ['witness', 'name'],
-			value: null,
-			asset: null,
-		},
-	},
 	proposal_create: {
-		value: 22,
+		value: 20,
 		name: 'Create proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -232,7 +212,7 @@ export default {
 		},
 	},
 	proposal_update: {
-		value: 23,
+		value: 21,
 		name: 'Update proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -242,7 +222,7 @@ export default {
 		},
 	},
 	proposal_delete: {
-		value: 24,
+		value: 22,
 		name: 'Delete proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -252,7 +232,7 @@ export default {
 		},
 	},
 	withdraw_permission_create: {
-		value: 25,
+		value: 23,
 		name: 'Create withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -262,7 +242,7 @@ export default {
 		},
 	},
 	withdraw_permission_update: {
-		value: 26,
+		value: 24,
 		name: 'Update withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -272,7 +252,7 @@ export default {
 		},
 	},
 	withdraw_permission_claim: {
-		value: 27,
+		value: 25,
 		name: 'Claim withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -282,7 +262,7 @@ export default {
 		},
 	},
 	withdraw_permission_delete: {
-		value: 28,
+		value: 26,
 		name: 'Delete withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -292,7 +272,7 @@ export default {
 		},
 	},
 	committee_member_create: {
-		value: 29,
+		value: 27,
 		name: 'Create committee member',
 		options: {
 			from: 'committee_member_account',
@@ -302,7 +282,7 @@ export default {
 		},
 	},
 	committee_member_update: {
-		value: 30,
+		value: 28,
 		name: 'Update committee member',
 		options: {
 			from: 'committee_member_account',
@@ -312,7 +292,7 @@ export default {
 		},
 	},
 	committee_member_update_global_parameters: {
-		value: 31,
+		value: 29,
 		name: 'Global parameters update',
 		options: {
 			from: null,
@@ -322,7 +302,7 @@ export default {
 		},
 	},
 	vesting_balance_create: {
-		value: 32,
+		value: 30,
 		name: 'Create vesting balance',
 		options: {
 			from: 'creator',
@@ -332,7 +312,7 @@ export default {
 		},
 	},
 	vesting_balance_withdraw: {
-		value: 33,
+		value: 31,
 		name: 'Withdraw vesting balance',
 		options: {
 			from: 'owner',
@@ -341,18 +321,8 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
-	worker_create: {
-		value: 34,
-		name: 'Create worker',
-		options: {
-			from: 'owner',
-			subject: ['name', null],
-			value: null,
-			asset: null,
-		},
-	},
 	custom: {
-		value: 35,
+		value: 32,
 		name: 'Custom',
 		options: {
 			from: 'payer',
@@ -362,7 +332,7 @@ export default {
 		},
 	},
 	assert: {
-		value: 36,
+		value: 33,
 		name: 'Assert operation',
 		options: {
 			from: 'fee_paying_account',
@@ -372,7 +342,7 @@ export default {
 		},
 	},
 	balance_claim: {
-		value: 37,
+		value: 34,
 		name: 'Claim balance',
 		options: {
 			from: null,
@@ -382,7 +352,7 @@ export default {
 		},
 	},
 	override_transfer: {
-		value: 38,
+		value: 35,
 		name: 'Override transfer',
 		options: {
 			from: 'from',
@@ -391,38 +361,8 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
-	transfer_to_blind: {
-		value: 39,
-		name: 'Transfer to blinded account',
-		options: {
-			from: 'from',
-			subject: null,
-			value: 'amount.amount',
-			asset: 'amount.asset_id',
-		},
-	},
-	blind_transfer: {
-		value: 40,
-		name: 'Blinded transfer',
-		options: {
-			from: null,
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	transfer_from_blind: {
-		value: 41,
-		name: 'Transfer from blinded account',
-		options: {
-			from: null,
-			subject: ['to', 'name'],
-			value: 'amount.amount',
-			asset: 'amount.asset_id',
-		},
-	},
 	asset_settle_cancel: {
-		value: 42,
+		value: 36,
 		name: 'Cancel asset settlement',
 		options: {
 			from: 'account',
@@ -432,7 +372,7 @@ export default {
 		},
 	},
 	asset_claim_fees: {
-		value: 43,
+		value: 37,
 		name: 'Claim asset fees',
 		options: {
 			from: 'issuer',
@@ -441,8 +381,10 @@ export default {
 			asset: 'amount_to_claim.asset_id',
 		},
 	},
+	// BID_COLLATERAL = 38,
+	// EXECUTE_BID = 39,
 	create_contract: {
-		value: 47,
+		value: 40,
 		name: 'Create contract',
 		options: {
 			from: 'registrar',
@@ -454,7 +396,7 @@ export default {
 		permission: 'active',
 	},
 	call_contract: {
-		value: 48,
+		value: 41,
 		name: 'Call contract',
 		options: {
 			from: 'registrar',
@@ -466,7 +408,7 @@ export default {
 		permission: 'active',
 	},
 	contract_transfer: {
-		value: 49,
+		value: 42,
 		name: 'Contract transfer',
 		options: {
 			from: 'from',
