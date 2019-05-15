@@ -29,18 +29,17 @@ class AuthApi {
      *  @return {Object}
      */
 	static async registerAccount(instance, accountName, password) {
-		const owner = generateKeyFromPassword(accountName, 'owner', password);
 		const active = generateKeyFromPassword(accountName, 'active', password);
 		const memo = generateECDSAPublicKey(accountName, 'memo', password);
 		const echoRandKey = this.generateEchoRandKey();
 
-		const error = await instance.registrationApi().exec('register_account', [() => {}, accountName, owner.publicKey, active.publicKey, memo.publicKey, echoRandKey.publicKey]);
+		const error = await instance.registrationApi().exec('register_account', [() => {}, accountName, active.publicKey, active.publicKey, memo.publicKey, echoRandKey.publicKey]);
+
 		if (error) {
 			throw error;
 		}
 
 		return {
-			owner,
 			active,
 			memo,
 			echoRandKey,

@@ -198,7 +198,6 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 		if (opositeAccountError && opositeAccountError === ERROR_FORM_TRANSFER.ERROR_SEND_TO_YOURSELF) {
 			dispatch(setIn(FORM_TRANSFER, opositeSubject, { error: null }));
 		}
-
 		dispatch(setIn(FORM_TRANSFER, subject, {
 			checked: true,
 			error: null,
@@ -565,8 +564,7 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	const privateKeys = (keys.active.length ? keys.active : keys.owner)
-		.map(([privateKey]) => privateKey);
+	const privateKeys = keys.active.map(([privateKey]) => privateKey);
 
 	buildAndSendTransaction(operation, options, privateKeys)
 		.then((res) => {

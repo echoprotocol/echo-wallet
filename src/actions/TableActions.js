@@ -69,26 +69,8 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	}));
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
 
-	let threshold = account.active.weight_threshold;
+	const threshold = account.active.weight_threshold;
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'threshold'], threshold));
-
-	// save owner accounts
-	target = account.owner.account_auths.map(async (a) => {
-		const { name } = (await dispatch(EchoJSActions.fetch(a[0]))).toJS();
-		return {
-			key: name, weight: a[1], role: 'owner', type: 'accounts',
-		};
-	});
-	dispatch(setIn(PERMISSION_TABLE, ['owner', 'accounts'], new List(await Promise.all(target))));
-
-	// save owner keys
-	target = account.owner.key_auths.map((a) => ({
-		key: a[0], weight: a[1], role: 'owner', type: 'keys',
-	}));
-	dispatch(setIn(PERMISSION_TABLE, ['owner', 'keys'], new List(target)));
-
-	threshold = account.owner.weight_threshold;
-	dispatch(setIn(PERMISSION_TABLE, ['owner', 'threshold'], threshold));
 
 	// save note
 	target = {
@@ -118,7 +100,7 @@ export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active', 'owner', 'memo'];
+	const roles = ['active', 'memo'];
 
 	return roles.some((role) => permissionForm.getIn([role, 'keys']).some((keyForm) => {
 		let tableAccountsKeys = permissionTable.getIn([role, 'keys']);
@@ -170,28 +152,23 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 
 	if (!key) {
 		error = true;
-
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 	} else {
 		try {
 			account = (role !== 'memo') && await dispatch(EchoJSActions.fetch(key.value));
-
 			if (!account) {
-
-				if (!isPublicKey(key.value)) {
+				if (!isPublicKey(key.value, role === 'memo' ? 'ECHO' : 'DET')) {
 					error = true;
-
 					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 				}
 
 			} else if (!isAccountId(account.get('id')) && role !== 'memo') {
-
 				error = true;
 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
 			}
 		} catch (e) {
-			if (!isPublicKey(key.value)) {
+			if (!isPublicKey(key.value, role === 'memo' ? 'ECHO' : 'DET')) {
 				error = true;
 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
@@ -225,23 +202,21 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active', 'owner', 'memo'];
+	const roles = ['active', 'memo'];
 
 	const validateFields = [];
-
 	roles.forEach((role) => {
 		permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
 			validateFields.push(dispatch(validateKey(role, keyTable, keyForm.get('key'), keyForm.get('weight'))));
 		});
 	});
-
 	const errors = await Promise.all(validateFields);
 
 	if (errors.includes(true)) {
 		return false;
 	}
 
-	const isError = ['active', 'owner'].some((role) => {
+	const isError = ['active'].some((role) => {
 		const threshold = permissionForm.getIn([role, 'threshold']).value;
 
 		if (!isThreshold(threshold)) {
@@ -262,11 +237,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			accounts: [],
 			threshold: null,
 		},
-		owner: {
-			keys: [],
-			accounts: [],
-			threshold: null,
-		},
 		memo: {
 			keys: [],
 			accounts: [],
@@ -281,7 +251,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 		permissionForm.getIn([role, 'keys']).some((keyForm) => {
 			const threshold = permissionForm.getIn([role, 'threshold']);
-
 			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
 				permissionData[role].threshold = Number(threshold.value);
 			}
@@ -324,7 +293,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	const accountsResults = await Promise.all(rolesPromises);
 
-	['active', 'owner'].forEach((role, index) => {
+	['active'].forEach((role, index) => {
 		accountsResults[index].forEach((account, i) => {
 			permissionData[role].accounts[i][0] = account.get('id');
 		});
@@ -332,10 +301,8 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	if (
 		!permissionData.active.keys.length
-			&& !permissionData.owner.keys.length
 			&& !permissionData.memo.keys.length
-			&& permissionData.active.threshold !== null
-			&& permissionData.owner.threshold !== null
+			&& permissionData.active.threshold === null
 	) {
 		return false;
 	}
@@ -395,45 +362,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			transaction.active.account_auths = permissionData.active.accounts;
 		} else if (transaction.active.account_auths.length) {
 			showOptions.activeAccounts = transaction.active.account_auths;
-		}
-	}
-
-	if (permissionData.owner.keys.length || permissionData.owner.threshold) {
-		const keysMap = [];
-
-		permissionForm.getIn(['owner', 'keys']).forEach((value) => {
-			keysMap.push([value.get('key').value, parseInt(value.get('weight').value, 10)]);
-		});
-
-		transaction.owner = {
-			weight_threshold: currentFullAccount.getIn(['owner', 'weight_threshold']),
-			account_auths: currentFullAccount.getIn(['owner', 'account_auths']),
-			key_auths: keysMap,
-			address_auths: [],
-		};
-
-		if (permissionData.owner.threshold) {
-			showOptions.ownerThreshold = permissionData.owner.threshold;
-
-			transaction.owner.weight_threshold = permissionData.owner.threshold;
-		} else {
-			showOptions.ownerThreshold = transaction.owner.weight_threshold;
-		}
-
-		if (permissionData.owner.keys.length) {
-			showOptions.ownerKeys = permissionData.owner.keys;
-
-			transaction.owner.key_auths = permissionData.owner.keys;
-		} else if (transaction.owner.key_auths.length) {
-			showOptions.ownerKeys = transaction.owner.key_auths;
-		}
-
-		if (permissionData.owner.accounts.length) {
-			showOptions.ownerAccounts = permissionData.owner.accounts;
-
-			transaction.owner.account_auths = permissionData.owner.accounts;
-		} else if (transaction.owner.account_auths.length) {
-			showOptions.ownerAccounts = transaction.owner.account_auths;
 		}
 	}
 

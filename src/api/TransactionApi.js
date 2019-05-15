@@ -2,9 +2,10 @@ import { TransactionBuilder, TransactionHelper, Aes, PrivateKey, ops } from 'ech
 
 export const buildAndSendTransaction = async (operation, options, privateKeys) => {
 	const tr = new TransactionBuilder();
+
 	tr.add_type_operation(operation, options);
 
-	await tr.set_required_fees(options.asset_id);
+	await tr.set_required_fees(options.fee.asset_id);
 	privateKeys.map((privateKey) => tr.add_signer(privateKey));
 
 	return tr.broadcast();

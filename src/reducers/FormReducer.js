@@ -182,13 +182,6 @@ const DEFAULT_FORM_FIELDS = {
 				error: null,
 			},
 		}),
-		owner: new Map({
-			keys: Map({}),
-			threshold: {
-				value: null,
-				error: null,
-			},
-		}),
 		memo: new Map({
 			keys: Map({}),
 		}),

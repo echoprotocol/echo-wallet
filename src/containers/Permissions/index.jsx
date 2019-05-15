@@ -49,7 +49,6 @@ class Permissions extends React.Component {
 
 		if (
 			!_.isEqual(prevAccount.active, account.active) ||
-            !_.isEqual(prevAccount.owner, account.owner) ||
             prevAccount.options.memo_key !== account.options.memo_key
 		) {
 			this.props.formPermissionKeys();
@@ -65,7 +64,7 @@ class Permissions extends React.Component {
 
 		this.setState({ resetAddKeys: true }, () => { this.setState({ resetAddKeys: false }); });
 
-		const roles = ['active', 'owner', 'memo'];
+		const roles = ['active', 'memo'];
 
 		roles.forEach((role) => {
 			if (data[role].threshold) {
@@ -92,10 +91,7 @@ class Permissions extends React.Component {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
 		};
-		const owner = {
-			keys: permissionsKeys.owner.keys.concat(permissionsKeys.owner.accounts),
-			threshold: permissionsKeys.owner.threshold,
-		};
+
 		const note = {
 			keys: permissionsKeys.memo.keys,
 		};
@@ -112,7 +108,7 @@ class Permissions extends React.Component {
 										basic
 										className="txt-btn"
 										content="Cancel"
-										onClick={() => this.onCancel({ active, owner, memo: note })}
+										onClick={() => this.onCancel({ active, memo: note })}
 									/>
 									<Button
 										basic
@@ -135,15 +131,6 @@ class Permissions extends React.Component {
 									data={active}
 									keys={keys.active}
 									submit={submit}
-									resetAddKeys={this.state.resetAddKeys}
-								/>
-								<PermissionTable
-									keyRole="owner"
-									table="Owner"
-									data={owner}
-									keys={keys.owner}
-									submit={submit}
-									description="Owner key allows to overwrite all keys. Basicaly owner key allows you to control account."
 									resetAddKeys={this.state.resetAddKeys}
 								/>
 								<PermissionTable

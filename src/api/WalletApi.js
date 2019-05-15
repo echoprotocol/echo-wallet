@@ -39,7 +39,7 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const unlockWallet = (account, password, roles = ['active', 'owner', 'memo']) => {
+export const unlockWallet = (account, password, roles = ['active', 'memo']) => {
 
 	const privateKey = getKeyFromWif(password);
 	let key;

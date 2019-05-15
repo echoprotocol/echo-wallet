@@ -34,9 +34,9 @@ class PermissionTableRow extends Component {
 		const editedAddKeys = [];
 
 		if (!keysLength && !addKeys.length && keys.getIn([keyRole, 'keys']).size - data.length !== keysLength) {
-
 			keys.getIn([keyRole, 'keys']).mapEntries(([key, value]) => {
-				if (Number.isNaN(Number(key)) || !value.get('key').value || !value.get('weight').value) {
+
+				if (Number.isNaN(Number(key)) || value || !value.get('key').value || !value.get('weight').value) {
 					return;
 				}
 

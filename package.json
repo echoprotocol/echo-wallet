@@ -30,7 +30,7 @@
     "bn.js": "^4.11.8",
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
-    "echojs-lib": "0.1.13",
+    "echojs-lib": "0.1.16",
     "echojs-redux": "0.1.12",
     "echojs-ws": "0.1.16",
     "electron-context-menu": "^0.10.0",

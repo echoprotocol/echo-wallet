@@ -25,7 +25,6 @@ class TransactionScenario extends React.Component {
 			password: '',
 			error: null,
 			active: [],
-			owner: [],
 			memo: null,
 		};
 
@@ -50,7 +49,6 @@ class TransactionScenario extends React.Component {
 
 		const { account, operation, showOptions } = this.props;
 		const { permission } = operations[operation];
-
 		const permissionPrivateKeys = account.getIn([permission, 'key_auths'])
 			.reduce((arr, [publicKey, weight]) => {
 				const privateKey = this.props.getPrivateKey(publicKey);
@@ -61,10 +59,8 @@ class TransactionScenario extends React.Component {
 		if (!permissionPrivateKeys.length) {
 			return this.setState({ showUnlockModal: true });
 		}
-
 		const threshold = account.getIn([permission, 'weight_threshold']);
 		const totalWeight = permissionPrivateKeys.reduce((result, [, weight]) => result + weight, 0);
-
 		this.setState({ [permission]: permissionPrivateKeys, weight: totalWeight, threshold });
 
 		if (operations[operation].value === operations.transfer.value && showOptions.note) {
@@ -145,9 +141,9 @@ class TransactionScenario extends React.Component {
 	}
 
 	send() {
-		const { active, owner, memo } = this.state;
+		const { active, memo } = this.state;
 
-		this.props.sendTransaction({ active, owner, memo });
+		this.props.sendTransaction({ active, memo });
 		this.clear();
 		this.props.clearForm();
 	}

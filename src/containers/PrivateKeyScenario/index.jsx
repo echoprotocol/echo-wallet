@@ -18,7 +18,6 @@ class PrivateKeyScenario extends React.Component {
 		this.DEFAULT_STATE = {
 			password: '',
 			error: null,
-			owner: [],
 			active: [],
 			note: [],
 		};

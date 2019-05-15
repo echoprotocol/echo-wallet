@@ -21,11 +21,6 @@ const DEFAULT_TABLE_FIELDS = {
 			accounts: new List(),
 			keys: new List(),
 		}),
-		owner: new Map({
-			threshold: null,
-			accounts: new List(),
-			keys: new List(),
-		}),
 		memo: new Map({
 			keys: new List(),
 		}),
