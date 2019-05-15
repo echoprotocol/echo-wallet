@@ -20,10 +20,6 @@ export const validateAccountName = (accountName) => {
 		return ChainValidation.is_account_name_error(accountName);
 	}
 
-	if (!ChainValidation.is_cheap_name(accountName)) {
-		return 'Enter a name containing least one dash, a number or no vowels';
-	}
-
 	return null;
 };
 
