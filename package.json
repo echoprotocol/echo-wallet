@@ -30,9 +30,9 @@
     "bn.js": "^4.11.8",
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
-    "echojs-lib": "0.1.12",
-    "echojs-redux": "0.1.11",
-    "echojs-ws": "0.1.15",
+    "echojs-lib": "0.1.13",
+    "echojs-redux": "0.1.12",
+    "echojs-ws": "0.1.16",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
@@ -142,6 +142,9 @@
       "executableName": "ECHO Wallet",
       "desktop": "ECHO Wallet",
       "synopsis": "ECHO Wallet: Cryptocurrency wallet for ECHO platform"
+    },
+    "deb": {
+      "afterRemove": "resources/scripts/linux-package.after-remove.sh"
     }
   }
 }
