@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
+import BN from 'bignumber.js';
 
 import classnames from 'classnames';
 
@@ -125,7 +126,9 @@ class AmountField extends React.Component {
 			return currency.balance;
 		}
 
-		return currency.balance - fee.value;
+		const amount = new BN(currency.balance).minus(fee.value);
+
+		return amount.isNegative() ? 0 : amount;
 	}
 
 	clearSearchText() {
