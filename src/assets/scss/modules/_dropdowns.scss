@@ -150,7 +150,7 @@
             .dropdown.icon {
                 margin-top: -7px;
                 margin-right: -10px;
-            }  
+            }
         }
         .dropdown.icon {
             padding-left: 1em;
@@ -464,7 +464,7 @@
 .error {
 	.ui.dropdown {
 		&.fee-default-dropdown {
-			border: 1px solid #ff4848; 
+			border: 1px solid #ff4848;
 		}
 	}
 }
@@ -476,6 +476,14 @@
 			&:hover {
 				box-shadow: none;
 			}
-		} 
+		}
 	}
+}
+
+.visible.transition {
+  display: flex;
+  visibility: visible !important;
+  &.menu {
+      display: block;
+  }
 }

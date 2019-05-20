@@ -1,0 +1,37 @@
+.voting-wrap {
+    position: relative;
+    padding: 20px;
+    height: calc(100vh - 121px);
+    overflow: auto;
+}
+
+.proxy-wrap {
+    margin-bottom: 30px;
+
+    h3 {
+        color: rgba(92, 99, 125, 1);
+        font-size: 1.4em;
+        font-weight: normal;
+        line-height: 1;
+        letter-spacing: .01px;
+        margin-bottom: 8px;
+    }
+
+    .description {
+        font-size: 13px;
+        color: #3b3b3b;
+        margin-bottom: 18px;
+    }
+
+    .proxy-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.th-voting {
+    width: 60px;
+    display: block;
+    text-align: center;
+}

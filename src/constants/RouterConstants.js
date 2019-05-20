@@ -11,6 +11,7 @@ export const CALL_CONTRACT_PATH = '/call-contract';
 export const NETWORKS_PATH = '/networks';
 export const PERMISSIONS_PATH = '/permissions';
 export const INDEX_PATH = '/';
+export const COMMITTEE_VOTE_PATH = '/committee-vote';
 
 export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH];
 

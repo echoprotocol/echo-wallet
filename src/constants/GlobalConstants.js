@@ -9,6 +9,7 @@ import {
 	CALL_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	PERMISSIONS_PATH,
+	COMMITTEE_VOTE_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -52,6 +53,10 @@ export const HEADER_TITLE = [
 		path: PERMISSIONS_PATH,
 		title: 'Permissions',
 	},
+	{
+		path: COMMITTEE_VOTE_PATH,
+		title: 'Voting',
+	},
 ];
 
 export const SORT_CONTRACTS = 'contracts';
@@ -61,6 +66,7 @@ export const PUBLIC_KEY_LENGTH = 44;
 export const ECDSA_PUBLIC_KEY_LENGTH = 50;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
+export const CONTRACT_ID = '1.14';
 
 export const NETWORKS = [
 	{

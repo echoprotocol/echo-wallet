@@ -110,9 +110,11 @@ div,span {
 }
 .link {
     color: $main-сolor;
+    transition: color $speed;
+
     &:hover {
         color: $main-сolor;
-    } 
+    }
     &:focus {
         text-decoration: underline;
     }
@@ -124,7 +126,7 @@ div,span {
     }
 }
 
-// ANIMATIONS 
+// ANIMATIONS
 
 @-webkit-keyframes rotating /* Safari and Chrome */ {
     from {

@@ -418,3 +418,32 @@ input {
 		box-shadow: 0 0 0 4px #f1f1f1;
 	}
 }
+
+.horizontal-input {
+
+    .field {
+        display: inline-flex;
+        align-items: center;
+
+        input {
+            padding: 4px 10px;
+            font-size: 15px;
+            min-width: 320px;
+            max-width: 320px;
+
+            &::placeholder {
+                font-size: 15px;
+            }
+        }
+    }
+
+    .i-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #aeb4c0;
+        margin: 0;
+        flex-shrink: 0;
+        margin-right: 11px;
+        text-transform: uppercase;
+    }
+}

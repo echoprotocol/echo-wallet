@@ -24,6 +24,7 @@ import {
 	ADD_CONTRACT_PATH,
 	CREATE_CONTRACT_PATH,
 	CALL_CONTRACT_PATH,
+	COMMITTEE_VOTE_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -36,6 +37,7 @@ const primaryPaths = [
 	PERMISSIONS_PATH,
 	VIEW_CONTRACT_PATH,
 	TRANSFER_PATH,
+	COMMITTEE_VOTE_PATH,
 ];
 
 const secondaryContractPaths = [

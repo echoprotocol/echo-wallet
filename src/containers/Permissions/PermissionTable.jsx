@@ -53,13 +53,13 @@ class PermissionTable extends React.Component {
 
 		return (
 
-			<div className="permissions-table-wrap">
+			<div className="main-table-wrap">
 				<h3>{`${table}`}</h3>
 				<p className="description">{description}</p>
 				{
 					(!noInput) && <ThresholdRow keyRole={keyRole} defaultThreshold={data.threshold} />
 				}
-				<Table structured fixed className="permissions-table">
+				<Table structured fixed className="main-table">
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell>Account / Key</Table.HeaderCell>

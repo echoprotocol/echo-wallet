@@ -33,7 +33,7 @@ class ThresholdRow extends React.Component {
 		const { threshold, keyRole } = this.props;
 
 		return (
-			<Form className="treshhold-input">
+			<Form className="horizontal-input">
 				<Form.Field
 					className={classnames({ error: threshold.error })}
 				>
