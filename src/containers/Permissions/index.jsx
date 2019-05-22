@@ -133,17 +133,6 @@ class Permissions extends React.Component {
 									submit={submit}
 									resetAddKeys={this.state.resetAddKeys}
 								/>
-								<PermissionTable
-									noInput
-									noBtn
-									keyRole="memo"
-									table="Note"
-									data={note}
-									keys={keys.note}
-									submit={submit}
-									description="Note key is used to read notes from transactions."
-									resetAddKeys={this.state.resetAddKeys}
-								/>
 							</React.Fragment>
 						)
 					}

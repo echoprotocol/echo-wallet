@@ -81,10 +81,6 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
-		note: {
-			value: '',
-			error: null,
-		},
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
 		bytecode: {

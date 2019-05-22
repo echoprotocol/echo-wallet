@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
-import NoteScenario from '../NoteScenario';
-
 import operations from '../../constants/Operations';
 
 import { resetTransaction } from '../../actions/TransactionActions';
@@ -36,18 +34,7 @@ class ViewTransaction extends React.Component {
 			{
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<NoteScenario>
-							{
-								(note, unlock) => (
-									<TabOverview
-										data={data}
-										note={note}
-										bytecodeArgs={bytecodeArgs}
-										unlock={unlock}
-									/>
-								)
-							}
-						</NoteScenario>
+						<TabOverview data={data} bytecodeArgs={bytecodeArgs} />
 					</Tab.Pane>
 				),
 			},

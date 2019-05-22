@@ -11,7 +11,7 @@ import { formatAmount } from '../../helpers/FormatHelper';
 import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
-import { updateFee, fetchFee } from '../../actions/TransactionActions';
+import { fetchFee } from '../../actions/TransactionActions';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -38,7 +38,7 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
-		const { currency, note } = this.props;
+		const { currency } = this.props;
 		const value = e.target.value.trim();
 		const { name } = e.target;
 		if (this.state.timeout) {
@@ -50,13 +50,10 @@ class AmountField extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(() => {
-				if (value) {
-					this.props.updateFee('transfer', note.value);
-				} else {
-					this.props.fetchFee('transfer').then((fee) => {
-						this.props.setValue('fee', fee);
-					});
-				}
+				if (value) return;
+				this.props.fetchFee('transfer').then((fee) => {
+					this.props.setValue('fee', fee);
+				});
 			}, 300),
 		});
 
@@ -272,7 +269,6 @@ AmountField.propTypes = {
 	assets: PropTypes.array,
 	assetsFromTransfer: PropTypes.array,
 	tokens: PropTypes.any.isRequired,
-	note: PropTypes.any.isRequired,
 
 	amount: PropTypes.object.isRequired,
 
@@ -280,7 +276,6 @@ AmountField.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
-	updateFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
@@ -304,7 +299,6 @@ export default connect(
 			currency: state.form.getIn([form, 'currency']),
 			fee: state.form.getIn([form, 'fee']),
 			tokens: form === FORM_TRANSFER && isWalletAccount ? state.balance.get('tokens').toArray() : [],
-			note: state.form.getIn([form, 'note']) || {},
 		};
 	},
 	(dispatch, { form }) => ({
@@ -314,7 +308,6 @@ export default connect(
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 		setContractFees: () => dispatch(setContractFees(form)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(form)),
-		updateFee: (type, note) => dispatch(updateFee(type, note)),
 		fetchFee: (type) => dispatch(fetchFee(type)),
 	}),
 )(AmountField);

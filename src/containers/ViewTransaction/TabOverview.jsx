@@ -66,28 +66,6 @@ class TabOverview extends React.Component {
 		);
 	}
 
-
-	renderNote() {
-		const { note, data: { memo } } = this.props;
-		return note ?
-			(
-				<div className="note-wrap">
-					<div className="note">
-						{note}
-					</div>
-				</div>
-			) : (
-				<Button
-					basic
-					content="Show note"
-					icon="comment"
-					size="mini"
-					className="main-btn"
-					onClick={() => this.props.unlock(memo)}
-				/>
-			);
-	}
-
 	renderContractOptions() {
 		const { details, contract, bytecode } = this.props.data;
 
@@ -180,14 +158,6 @@ class TabOverview extends React.Component {
 					</li>
 
 					{
-						data.memo ?
-							<li>
-								<div className="col">Note:</div>
-								<div className="col"> {this.renderNote()} </div>
-							</li> : null
-					}
-
-					{
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 				</ul>
@@ -198,14 +168,9 @@ class TabOverview extends React.Component {
 }
 
 TabOverview.propTypes = {
-	note: PropTypes.string,
 	bytecodeArgs: PropTypes.object.isRequired,
 	data: PropTypes.object.isRequired,
-	unlock: PropTypes.func.isRequired,
 };
 
-TabOverview.defaultProps = {
-	note: null,
-};
 
 export default TabOverview;

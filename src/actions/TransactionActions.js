@@ -45,7 +45,6 @@ import {
 	buildAndSendTransaction,
 	estimateCallContractFee,
 	encodeMemo,
-	getMemoFee,
 	getOperationFee,
 } from '../api/TransactionApi';
 
@@ -118,17 +117,13 @@ export const getFee = (type, note = null) => async (dispatch, getState) => {
 	};
 };
 
-export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, getState) => {
+export const getFeeSync = (type, assetId = '1.3.0') => (dispatch, getState) => {
 
 	const globalObject = getState().echojs.getIn(['data', 'objects', '2.0.0']);
 	if (!globalObject) { return null; }
 
 	const code = operations[type].value;
 	let fee = globalObject.getIn(['parameters', 'current_fees', 'parameters', code, 1, 'fee']);
-
-	if (note) {
-		fee = new BN(fee).plus(getMemoFee(globalObject, note));
-	}
 
 	let feeAsset = getState().echojs.getIn(['data', 'assets', '1.3.0']);
 	if (!feeAsset) { return null; }
@@ -154,18 +149,6 @@ export const getFeeSync = (type, assetId = '1.3.0', note = null) => (dispatch, g
 	}
 
 	return { value: new BN(fee).integerValue(BN.ROUND_UP).toString(), asset: feeAsset };
-};
-
-export const updateFee = (type, note = null) => async (dispatch) => {
-	if (note) {
-		const fee = dispatch(getFee(type, note));
-		fee.then((value) => {
-			if (value) {
-				dispatch(setValue(FORM_TRANSFER, 'fee', value));
-			}
-		});
-	}
-
 };
 
 export const checkFeePool = (echo, asset, fee) => {
@@ -276,13 +259,12 @@ export const transfer = () => async (dispatch, getState) => {
 		from,
 		to,
 		currency,
-		note,
 	} = form;
 
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString();
 
-	if (to.error || from.error || form.amount.error || fee.error || note.error) {
+	if (to.error || from.error || form.amount.error || fee.error) {
 		return false;
 	}
 
@@ -304,7 +286,7 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	if (!fee.value || !fee.asset) {
-		fee = dispatch(currency.type === 'tokens' ? getFeeSync('transfer', '1.3.0', note.value) : getFeeSync('call_contract'));
+		fee = dispatch(currency.type === 'tokens' ? getFeeSync('transfer', '1.3.0') : getFeeSync('call_contract'));
 	}
 
 	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
@@ -378,11 +360,6 @@ export const transfer = () => async (dispatch, getState) => {
 		to: toAccount.name,
 		amount: `${amount} ${currency.symbol}`,
 	};
-
-	if (note.value && currency.type !== 'tokens') {
-		options.memo = note.value;
-		showOptions.note = note.value;
-	}
 
 	dispatch(resetTransaction());
 

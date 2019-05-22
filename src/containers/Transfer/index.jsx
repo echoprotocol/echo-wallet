@@ -11,7 +11,6 @@ import TransactionScenario from '../TransactionScenario';
 
 import AccountField from './AccountField';
 import AmountField from '../../components/AmountField';
-import NoteField from './NoteField';
 
 class Transfer extends React.Component {
 
@@ -44,7 +43,6 @@ class Transfer extends React.Component {
 								<AccountField subject="from" />
 								<AccountField subject="to" autoFocus />
 								<AmountField form={FORM_TRANSFER} />
-								<NoteField />
 								<div className="form-panel">
 									<Button
 										basic

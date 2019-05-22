@@ -25,7 +25,6 @@ class TransactionScenario extends React.Component {
 			password: '',
 			error: null,
 			active: [],
-			memo: null,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -47,7 +46,7 @@ class TransactionScenario extends React.Component {
 			return null;
 		}
 
-		const { account, operation, showOptions } = this.props;
+		const { account, operation } = this.props;
 		const { permission } = operations[operation];
 		const permissionPrivateKeys = account.getIn([permission, 'key_auths'])
 			.reduce((arr, [publicKey, weight]) => {
@@ -62,16 +61,6 @@ class TransactionScenario extends React.Component {
 		const threshold = account.getIn([permission, 'weight_threshold']);
 		const totalWeight = permissionPrivateKeys.reduce((result, [, weight]) => result + weight, 0);
 		this.setState({ [permission]: permissionPrivateKeys, weight: totalWeight, threshold });
-
-		if (operations[operation].value === operations.transfer.value && showOptions.note) {
-			const memoPrivateKey = this.props.getPrivateKey(account.getIn(['options', 'memo_key']));
-
-			if (!memoPrivateKey) {
-				return this.setState({ showUnlockModal: true });
-			}
-
-			this.setState({ memo: memoPrivateKey });
-		}
 
 		return this.setState({ showUnlockModal: false, password: this.DEFAULT_STATE.password }, () => {
 			if (totalWeight < threshold) {
@@ -88,7 +77,7 @@ class TransactionScenario extends React.Component {
 
 	unlock() {
 		const { password } = this.state;
-		const { account, operation, showOptions } = this.props;
+		const { account, operation } = this.props;
 
 		const { keys, error } = this.props.unlockAccount(account, password);
 		if (error) {
@@ -122,14 +111,6 @@ class TransactionScenario extends React.Component {
 
 		this.setState({ [permission]: stateKeys, weight: totalWeight, threshold });
 
-		if (operations[operation].value === operations.transfer.value && showOptions.get('note') && !this.state.memo) {
-			if (!keys.memo || (keys.memo.publicKey !== account.getIn(['options', 'memo_key']))) {
-				return this.setState({ error: 'Note permission required' });
-			}
-
-			this.setState(keys.memo ? { memo: keys.memo.privateKey } : {});
-		}
-
 		return this.setState({ showUnlockModal: false, password: this.DEFAULT_STATE.password }, () => {
 			if (totalWeight < threshold) {
 				return this.setState({ showUnlockModal: true });
@@ -141,9 +122,9 @@ class TransactionScenario extends React.Component {
 	}
 
 	send() {
-		const { active, memo } = this.state;
+		const { active } = this.state;
 
-		this.props.sendTransaction({ active, memo });
+		this.props.sendTransaction({ active });
 		this.clear();
 		this.props.clearForm();
 	}
