@@ -16,6 +16,7 @@ eslint:
      - triggers
      - develop
      - master
+     - merge_requests
   tags:
     - pp-projects
 
