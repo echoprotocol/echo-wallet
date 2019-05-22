@@ -18,7 +18,7 @@ eslint:
      - master
      - merge_requests
   tags:
-    - pp-projects
+    - docker
 
 deploy:
   stage: deploy
@@ -30,7 +30,7 @@ deploy:
   only:
     - master
   tags:
-    - docker
+    - pp-projects
 
 build.macos:
   stage: prepare
