@@ -30,7 +30,7 @@ deploy:
   only:
     - master
   tags:
-    - pp-projects
+    - docker
 
 build.macos:
   stage: prepare
