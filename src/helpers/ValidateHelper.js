@@ -13,6 +13,7 @@ const reg = /^[0-9a-fA-F]+$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
+const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
 
 export const validateAccountName = (accountName) => {
 	if (!accountName) { return 'Account name should not be empty'; }
@@ -341,3 +342,5 @@ export const isThreshold = (v) => {
 	const thresholdNumber = Number(v);
 	return !(v === '' || !Number.isInteger(thresholdNumber) || thresholdNumber <= 0);
 };
+
+export const isCommitteeMemberId = (v) => (typeof v === 'string') && committeeMemberIdRegex.test(v);

@@ -11,7 +11,7 @@ import {
 	AUTH_ROUTES,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { NETWORKS } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, NETWORKS } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY } from '../constants/FormConstants';
 
 
@@ -103,6 +103,8 @@ export const connection = () => async (dispatch) => {
 			const active = accounts.find((i) => i.active) || accounts[0];
 			await dispatch(initAccount(active.name, network.name));
 		}
+
+		await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));

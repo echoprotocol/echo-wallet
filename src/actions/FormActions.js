@@ -43,7 +43,7 @@ export const setFormError = (form, field, value) => (dispatch) => {
  * in button reducer.
  * @param {String} form
  * @param {String|Boolean} field
- * @param {Boolean} loading
+ * @param {Boolean} [loading]
  */
 export const toggleLoading = (form, field, loading) => (dispatch) => {
 	if (typeof loading === 'undefined') {
@@ -87,10 +87,18 @@ export const setIn = (form, field, params) => (dispatch) => {
 	dispatch(FormReducer.actions.setIn({ form, field, params }));
 };
 
-export const pushForm = (field, param, value) => (dispatch) => {
+export const pushForm = (form, field, value) => (dispatch) => {
 	dispatch(FormReducer.actions.push({
+		form,
 		field,
-		param,
+		value,
+	}));
+};
+
+export const deleteValue = (form, field, value) => (dispatch) => {
+	dispatch(FormReducer.actions.deleteValue({
+		form,
+		field,
 		value,
 	}));
 };

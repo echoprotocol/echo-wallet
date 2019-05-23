@@ -106,6 +106,8 @@ export const formatAmount = (amount, precision, symbol) => {
 	return symbol ? `${resultNumber} ${symbol}` : resultNumber;
 };
 
+export const formatTotalVotes = (value, precision) => formatAmount(value, precision).split('.')[0];
+
 export const formatCallContractField = (value) => String(value)
 	.replace(removeUnderscoreRegEx, ' ')
 	.split(removeCamelCaseRegEx)

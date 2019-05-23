@@ -12,7 +12,7 @@ import {
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
-	FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY,
+	FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_COMMITTEE,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -184,6 +184,10 @@ const DEFAULT_FORM_FIELDS = {
 		firstFetch: false,
 		isChanged: false,
 	}),
+	[FORM_COMMITTEE]: Map({
+		votes: List([]),
+		canceled: List([]),
+	}),
 };
 
 export default createModule({
@@ -206,6 +210,8 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_ADD_CUSTOM_NETWORK]),
 		[FORM_PERMISSION_KEY]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_PERMISSION_KEY]),
+		[FORM_COMMITTEE]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_COMMITTEE]),
 	}),
 	transformations: {
 		set: {
@@ -247,7 +253,19 @@ export default createModule({
 
 		push: {
 			reducer: (state, { payload }) => {
-				state = state.setIn([payload.field, payload.param], payload.value);
+				const list = state.getIn([payload.field, payload.param]).push(payload.value);
+
+				state = state.setIn([payload.field, payload.param], list);
+
+				return state;
+			},
+		},
+
+		deleteValue: {
+			reducer: (state, { payload }) => {
+				const index = state.getIn([payload.field, payload.param]).indexOf(payload.value);
+
+				state = state.deleteIn([payload.field, payload.param, index]);
 
 				return state;
 			},

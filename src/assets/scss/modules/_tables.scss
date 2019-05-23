@@ -1,37 +1,37 @@
 $thead-height: 46px;
 
 .sort {
-	display: flex;
-	flex-direction: column;
-	max-width: 10px;
-	margin: -2px 0 0 5px;
-	border: 0;
-	background: none;
+    display: flex;
+    flex-direction: column;
+    max-width: 10px;
+    margin: -2px 0 0 5px;
+    border: 0;
+    background: none;
 
-	i {
-		margin: 0;
-		width: 10px;
-		line-height: 8px;
-		font-size: 4px;
-		opacity: .4;
-		transition: opacity $speed;
-		&.active {
-			color: $link-gray;
-			opacity: 1;
-		}
-	}
-	&-wrap {
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-		&:hover {
-			.sort {
-				i {
-					opacity: 1;
-				}
-			}
-		}
-	}
+    i {
+        margin: 0;
+        width: 10px;
+        line-height: 8px;
+        font-size: 4px;
+        opacity: .4;
+        transition: opacity $speed;
+        &.active {
+            color: $link-gray;
+            opacity: 1;
+        }
+    }
+    &-wrap {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+            .sort {
+                i {
+                    opacity: 1;
+                }
+            }
+        }
+    }
 }
 
 .table {
@@ -323,43 +323,43 @@ $thead-height: 46px;
                 &:nth-child(2n-1) {
                     background-color: #f5f5f6;
                 }
-				.voted {
-					text-align: center;
-				    font-size: 16px;
-					position: relative;
-					&-wrap {
-						display: flex;
-						align-items: center;
-					}
-					&:before {
-						position: absolute;
-						right: 0;
-						left: 0;
-						top: 6px;
-						bottom: 0;
-						margin: auto;
-					}
+                .voted {
+                    text-align: center;
+                    font-size: 16px;
+                    position: relative;
+                    &-wrap {
+                        display: flex;
+                        align-items: center;
+                    }
+                    &:before {
+                        position: absolute;
+                        right: 0;
+                        left: 0;
+                        top: 6px;
+                        bottom: 0;
+                        margin: auto;
+                    }
 
 
-				}
-				.btn-lock {
-					min-width: 54px;
-					height: 28px;
-				}
+                }
+                .btn-lock {
+                    min-width: 54px;
+                    height: 28px;
+                }
 
-				.ui.basic {
-					height: 28px;
-				}
-				.ui.main-btn,
-				.voted {
-					height: 28px;
-					min-width: 60px;
+                .ui.basic {
+                    height: 28px;
+                }
+                .ui.main-btn,
+                .voted {
+                    height: 28px;
+                    min-width: 60px;
 
-					& + .button {
-						margin-left: 20px;
-						color: rgba(#5D637B, .7);
-					}
-				}
+                    & + .button {
+                        margin-left: 20px;
+                        color: rgba(#5D637B, .7);
+                    }
+                }
                 &:hover {
                     background-color: $main-сolor;
                     td {
@@ -370,7 +370,7 @@ $thead-height: 46px;
                             }
                         }
                     }
-					.btn-lock,
+                    .btn-lock,
                     .icon-e-show,
                     .icon-e-hide {
                         color: $yellow;
@@ -385,19 +385,19 @@ $thead-height: 46px;
                             color: $yellow;
                         }
                     }
-					.link {
-						color: $yellow;
-					}
-					.ui.main-btn,
-					.voted {
-						& + .button {
-							color: $yellow;
-						}
-					}
-					.ui.main-btn {
-						border: 1px solid #fff;
-						color: #fff;
-					}
+                    .link {
+                        color: $yellow;
+                    }
+                    .ui.main-btn,
+                    .voted {
+                        & + .button {
+                            color: $yellow;
+                        }
+                    }
+                    .ui.main-btn {
+                        border: 1px solid #fff;
+                        color: #fff;
+                    }
                 }
             }
         }

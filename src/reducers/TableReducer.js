@@ -2,7 +2,7 @@ import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 import _ from 'lodash';
 
-import { HISTORY_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
+import { COMMITTEE_TABLE, HISTORY_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 
 const DEFAULT_FIELDS = Map({
 	loading: false,
@@ -29,6 +29,11 @@ const DEFAULT_TABLE_FIELDS = {
 			type: '',
 			role: '',
 		},
+	}),
+	[COMMITTEE_TABLE]: Map({
+		active: List([]),
+		backup: List([]),
+		locked: false,
 	}),
 };
 

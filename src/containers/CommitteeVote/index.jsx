@@ -1,8 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Table, Form, Button } from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+
+import { fetchCommittee, formatCommitteeTable } from '../../actions/CommitteeActions';
+import { isCommitteeMemberId } from '../../helpers/ValidateHelper';
+import { COMMITTEE_TABLE } from '../../constants/TableConstants';
+import CommitteeTable from './CommitteeTable';
+import { FORM_COMMITTEE } from '../../constants/FormConstants';
+import { deleteValue, pushForm } from '../../actions/FormActions';
+import { ECHO_ASSET_ID } from '../../constants/GlobalConstants';
+import Loading from '../../components/Loader/LoadingData';
 
 
 class Voting extends React.Component {
@@ -14,17 +24,50 @@ class Voting extends React.Component {
 		};
 	}
 
-	render() {
+	async componentDidMount() {
+		await this.props.fetchCommittee();
+		this.props.formatCommittee();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (_.isEqual(this.props, prevProps)) {
+			return;
+		}
+
+		const { objects } = this.props;
+		const { objects: prevObjects } = prevProps;
+
+		const getCommittee = (objs) => objs.filter((obj) => isCommitteeMemberId(obj.get('id')));
+
+		if (!_.isEqual(getCommittee(objects), getCommittee(prevObjects))) {
+			this.props.formatCommittee();
+		}
+	}
+
+	isSaveable() {
+		const { votes, canceled } = this.props;
+
+		return !!votes.concat(canceled).size;
+	}
+
+	renderPage() {
+		const {
+			committeeTable, votes, canceled, coreAsset,
+		} = this.props;
+
 		return (
 			<div className="voting-wrap">
 				<div className="proxy-wrap">
 					<div className="proxy-head">
 						<h3>Proxy</h3>
-						<Button
-							basic
-							className="green"
-							content="Save"
-						/>
+						{
+							this.isSaveable() &&
+							<Button
+								basic
+								className="green"
+								content="Save"
+							/>
+						}
 					</div>
 					<div className="description">
                         You may delegate your votes to another account.
@@ -44,157 +87,81 @@ class Voting extends React.Component {
 						</Form.Field>
 					</Form>
 				</div>
-				<div className="main-table-wrap">
-					<h3>Committee Members</h3>
-					<Table structured fixed className="main-table">
-						<Table.Header>
-							<Table.Row>
-								<Table.HeaderCell>Name</Table.HeaderCell>
-								<Table.HeaderCell>Votes</Table.HeaderCell>
-								<Table.HeaderCell>info</Table.HeaderCell>
-								<Table.HeaderCell>
-									<span className="th-voting">Voting</span>
-								</Table.HeaderCell>
-							</Table.Row>
-						</Table.Header>
-						<Table.Body>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<div className="voted-wrap">
-										<i className="voted icon-voted" />
-										<Button
-											basic
-											className="capitalize"
-											content="cancel"
-										/>
-									</div>
-								</Table.Cell>
-							</Table.Row>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Button
-										basic
-										className="main-btn capitalize"
-										content="vote"
-									/>
-									<Button
-										basic
-										className="capitalize"
-										content="cancel"
-									/>
-								</Table.Cell>
-							</Table.Row>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Button
-										basic
-										className="main-btn capitalize"
-										content="vote"
-									/>
-									<Button
-										basic
-										className="capitalize"
-										content="cancel"
-									/>
-								</Table.Cell>
-							</Table.Row>
-						</Table.Body>
-					</Table>
-				</div>
-				<div className="main-table-wrap air">
-					<h3>Backup Committee Members</h3>
-					<Table structured fixed className="main-table">
-						<Table.Header>
-							<Table.Row>
-								<Table.HeaderCell>Name</Table.HeaderCell>
-								<Table.HeaderCell>Votes</Table.HeaderCell>
-								<Table.HeaderCell>info</Table.HeaderCell>
-								<Table.HeaderCell>
-									<span className="th-voting">Voting</span>
-								</Table.HeaderCell>
-							</Table.Row>
-						</Table.Header>
-						<Table.Body>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Button className="btn-lock icon-lock" />
-								</Table.Cell>
-							</Table.Row>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Button className="btn-lock icon-lock" />
-								</Table.Cell>
-							</Table.Row>
-							<Table.Row>
-								<Table.Cell >
-                                    valik21
-								</Table.Cell>
-								<Table.Cell>
-                                    456 323 000
-								</Table.Cell>
-								<Table.Cell>
-									<div className="link">http://info.com/125hlKXEemMDVG</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Button className="btn-lock icon-lock" />
-								</Table.Cell>
-							</Table.Row>
-						</Table.Body>
-					</Table>
-				</div>
+				{
+					committeeTable &&
+						(
+							<React.Fragment>
+								<CommitteeTable
+									committeeTable={committeeTable.get('active')}
+									title="Committee Members"
+									pushForm={this.props.pushForm}
+									deleteValue={this.props.deleteValue}
+									votes={votes}
+									canceled={canceled}
+									coreAsset={coreAsset}
+									isVoteLocked={committeeTable.get('locked')}
+								/>
+								<CommitteeTable
+									backup
+									committeeTable={committeeTable.get('backup')}
+									title="Backup Committee Members"
+									pushForm={this.props.pushForm}
+									deleteValue={this.props.deleteValue}
+									votes={votes}
+									canceled={canceled}
+									coreAsset={coreAsset}
+									isVoteLocked={committeeTable.get('locked')}
+								/>
+							</React.Fragment>
+						)
+				}
 			</div>
 		);
 	}
 
+	render() {
+		const { loading, isConnect } = this.props;
+
+		return loading && isConnect ? <Loading text="Committee is loading..." /> : this.renderPage();
+	}
+
 }
 
-Voting.propTypes = {};
+Voting.propTypes = {
+	loading: PropTypes.bool,
+	isConnect: PropTypes.bool,
+	objects: PropTypes.object.isRequired,
+	committeeTable: PropTypes.any,
+	votes: PropTypes.object.isRequired,
+	canceled: PropTypes.object.isRequired,
+	coreAsset: PropTypes.object,
+	formatCommittee: PropTypes.func.isRequired,
+	fetchCommittee: PropTypes.func.isRequired,
+	pushForm: PropTypes.func.isRequired,
+	deleteValue: PropTypes.func.isRequired,
+};
 
-Voting.defaultProps = {};
+Voting.defaultProps = {
+	loading: false,
+	isConnect: false,
+	committeeTable: null,
+	coreAsset: null,
+};
 
-export default connect()(Voting);
+export default connect(
+	(state) => ({
+		objects: state.echojs.getIn(['data', 'objects']),
+		coreAsset: state.echojs.getIn(['data', 'assets', ECHO_ASSET_ID]),
+		committeeTable: state.table.get(COMMITTEE_TABLE),
+		votes: state.form.getIn([FORM_COMMITTEE, 'votes']),
+		canceled: state.form.getIn([FORM_COMMITTEE, 'canceled']),
+		loading: state.form.getIn([FORM_COMMITTEE, 'loading']),
+		isConnect: state.echojs.getIn(['system', 'isConnected']),
+	}),
+	(dispatch) => ({
+		formatCommittee: () => dispatch(formatCommitteeTable()),
+		fetchCommittee: () => dispatch(fetchCommittee()),
+		pushForm: (field, value) => dispatch(pushForm(FORM_COMMITTEE, field, value)),
+		deleteValue: (field, value) => dispatch(deleteValue(FORM_COMMITTEE, field, value)),
+	}),
+)(Voting);
