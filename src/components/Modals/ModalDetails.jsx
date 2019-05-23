@@ -21,6 +21,10 @@ class ModalDetails extends React.Component {
 	}
 
 	getInput(key, data) {
+		if (Array.isArray(data) && !data.length) {
+			return null;
+		}
+
 		return (
 			<Form.Field key={key}>
 				<label htmlFor="amount">

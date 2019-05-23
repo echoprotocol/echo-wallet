@@ -69,7 +69,7 @@ export default {
 			value: null,
 			asset: null,
 		},
-		permission: 'owner',
+		permission: 'active',
 	},
 	account_whitelist: {
 		value: 7,

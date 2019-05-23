@@ -13,7 +13,6 @@ import { getPrivateKey } from '../../actions/KeyChainActions';
 import { unlockAccount } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
-import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 
 class TransactionScenario extends React.Component {
 
@@ -123,10 +122,14 @@ class TransactionScenario extends React.Component {
 
 	send() {
 		const { active } = this.state;
+		const { form } = this.props;
 
 		this.props.sendTransaction({ active });
 		this.clear();
-		this.props.clearForm();
+
+		if (form) {
+			this.props.clearForm();
+		}
 	}
 
 	close() {
@@ -171,6 +174,7 @@ TransactionScenario.propTypes = {
 	operation: PropTypes.string,
 	showOptions: PropTypes.object,
 	externalAccountId: PropTypes.string, // eslint-disable-line
+	form: PropTypes.string, // eslint-disable-line
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	getPrivateKey: PropTypes.func.isRequired,
@@ -186,6 +190,7 @@ TransactionScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
 	externalAccountId: '',
+	form: '',
 };
 
 export default connect(
@@ -196,13 +201,13 @@ export default connect(
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
 	}),
-	(dispatch) => ({
+	(dispatch, props) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		getPrivateKey: (publicKey) => dispatch(getPrivateKey(publicKey)),
 		unlockAccount: (account, password) => dispatch(unlockAccount(account, password)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		resetTransaction: () => dispatch(resetTransaction()),
-		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
+		clearForm: () => dispatch(clearForm(props.form)),
 	}),
 )(TransactionScenario);

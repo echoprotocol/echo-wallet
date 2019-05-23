@@ -253,9 +253,9 @@ export default createModule({
 
 		push: {
 			reducer: (state, { payload }) => {
-				const list = state.getIn([payload.field, payload.param]).push(payload.value);
+				const list = state.getIn([payload.form, payload.field]).push(payload.value);
 
-				state = state.setIn([payload.field, payload.param], list);
+				state = state.setIn([payload.form, payload.field], list);
 
 				return state;
 			},
@@ -263,9 +263,9 @@ export default createModule({
 
 		deleteValue: {
 			reducer: (state, { payload }) => {
-				const index = state.getIn([payload.field, payload.param]).indexOf(payload.value);
+				const index = state.getIn([payload.form, payload.field]).indexOf(payload.value);
 
-				state = state.deleteIn([payload.field, payload.param, index]);
+				state = state.deleteIn([payload.form, payload.field, index]);
 
 				return state;
 			},

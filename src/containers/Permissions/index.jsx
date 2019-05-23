@@ -99,7 +99,10 @@ class Permissions extends React.Component {
 		return (
 
 			<div className="permissions-wrap">
-				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
+				<TransactionScenario
+					handleTransaction={() => this.props.permissionTransaction()}
+					form={FORM_PERMISSION_KEY}
+				>
 					{
 						(submitTr) => (
 							this.props.isChanged &&
