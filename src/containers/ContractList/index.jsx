@@ -12,7 +12,7 @@ import {
 	VIEW_CONTRACT_PATH,
 	CALL_CONTRACT_PATH,
 } from '../../constants/RouterConstants';
-import { SORT_CONTRACTS } from '../../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, SORT_CONTRACTS } from '../../constants/GlobalConstants';
 
 import { toggleSort } from '../../actions/SortActions';
 
@@ -33,8 +33,8 @@ class ContractList extends React.Component {
 		return Object.entries(contracts)
 			.sort(([name1, { id: id1 }], [name2, { id: id2 }]) => {
 
-				const t1 = (sortType === 'id' ? id1.split('1.16.')[1] : name1) || '';
-				const t2 = (sortType === 'id' ? id2.split('1.16.')[1] : name2) || '';
+				const t1 = (sortType === 'id' ? id1.split(`${CONTRACT_ID_PREFIX}.`)[1] : name1) || '';
+				const t2 = (sortType === 'id' ? id2.split(`${CONTRACT_ID_PREFIX}.`)[1] : name2) || '';
 				return (t1.localeCompare(t2, [], { numeric: true })) * (sortInc ? 1 : -1);
 			});
 	}

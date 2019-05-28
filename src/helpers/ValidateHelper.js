@@ -3,6 +3,7 @@ import BN from 'bignumber.js';
 
 import {
 	ADDRESS_PREFIX,
+	CONTRACT_ID_PREFIX,
 	ECDSA_ADDRESS_PREFIX,
 	ECDSA_PUBLIC_KEY_LENGTH,
 	PUBLIC_KEY_LENGTH,
@@ -71,7 +72,7 @@ export const validateContractName = (name) => {
 
 export const validateContractId = (id) => {
 	id = id.split('.');
-	if (id.length !== 3 || id.splice(0, 2).join('.') !== '1.16' || Number.isInteger(id[2])) {
+	if (id.length !== 3 || id.splice(0, 2).join('.') !== CONTRACT_ID_PREFIX || Number.isInteger(id[2])) {
 		return 'Invalid contract ID';
 	}
 	return null;

@@ -13,6 +13,7 @@ import { setField } from './TransactionActions';
 import { getContractResult } from '../api/ContractApi';
 
 import history from '../history';
+import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 const fetch = (request) => async (dispatch) => {
 	const response = await dispatch(EchoJSActions.fetch(request));
@@ -106,7 +107,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		if (contractResultType === 0) {
 			const { exec_res: { new_address: hexAddress } } = contractResultData;
 
-			result.subject = `1.16.${parseInt(hexAddress.slice(2), 16)}`;
+			result.subject = `${CONTRACT_ID_PREFIX}.${parseInt(hexAddress.slice(2), 16)}`;
 		}
 	}
 
