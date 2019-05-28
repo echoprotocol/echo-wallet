@@ -5,9 +5,11 @@ import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
-
 import operations from '../../constants/Operations';
+import { COMMITTEE_TABLE } from '../../constants/TableConstants';
+import { FORM_COMMITTEE } from '../../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../../constants/ModalConstants';
+import { setValue as setTableValue } from '../../actions/TableActions';
 import { openModal, closeModal } from '../../actions/ModalActions';
 import { getPrivateKey } from '../../actions/KeyChainActions';
 import { unlockAccount } from '../../actions/AuthActions';
@@ -129,6 +131,9 @@ class TransactionScenario extends React.Component {
 
 		if (form) {
 			this.props.clearForm();
+			if (form === FORM_COMMITTEE) {
+				this.props.disabledInput();
+			}
 		}
 	}
 
@@ -183,6 +188,7 @@ TransactionScenario.propTypes = {
 	sendTransaction: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	disabledInput: PropTypes.func.isRequired,
 };
 
 TransactionScenario.defaultProps = {
@@ -209,5 +215,6 @@ export default connect(
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		resetTransaction: () => dispatch(resetTransaction()),
 		clearForm: () => dispatch(clearForm(props.form)),
+		disabledInput: () => dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', true)),
 	}),
 )(TransactionScenario);

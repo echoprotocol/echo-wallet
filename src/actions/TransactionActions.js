@@ -11,6 +11,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
+import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
@@ -26,6 +27,7 @@ import {
 } from './FormActions';
 import { addContractByName } from './ContractActions';
 import { getBalanceFromAssets } from './BalanceActions';
+import { setValue as setTableValue } from './TableActions';
 
 import { getMethod } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
@@ -553,13 +555,20 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 					abi,
 				));
 			}
+
+			if (res[0].trx.operations[0][0] === operations.account_update.value) {
+				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
+			}
+
 			toastSuccess(`${operations[operation].name} transaction was completed`);
+
 		})
 		.catch((error) => {
 			error = error.toString();
 			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
 			message = message.charAt(0).toUpperCase() + message.slice(1);
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 		})
 		.finally(() => dispatch(setDisable(MODAL_DETAILS, false)));
 	toastSuccess(`${operations[operation].name} transaction was sent`);

@@ -56,7 +56,9 @@ class AccountComponent extends React.Component {
 				<label htmlFor={`account${subject}`}>{subject}</label>
 				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus}>
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
-					{ field.checked && !field.error ? <span className="icon-checked_1 value-status" /> : null }
+					{ field.checked && !field.error &&
+						<span className={classnames('icon-checked value-status', { success: field.checked })} />
+					}
 					{ field.error ? <span className="icon-error-red value-status" /> : null }
 				</Input>
 				<span className="error-message">{field.error}</span>

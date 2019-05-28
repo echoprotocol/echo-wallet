@@ -169,10 +169,6 @@
                 margin: auto;
                 content: "";
                 position: absolute;
-                -webkit-animation: rotating 1s linear infinite;
-                -moz-animation: rotating 1s linear infinite;
-                -ms-animation: rotating 1s linear infinite;
-                -o-animation: rotating 1s linear infinite;
                 animation: rotating 1s linear infinite;
             }
         }
@@ -424,6 +420,38 @@ input {
     .field {
         display: inline-flex;
         align-items: center;
+        position: relative;
+        &.error {
+            .error-message {
+                top: 100%;
+            }
+        }
+        &.loading {
+            &:after {
+                width: 14px;
+                height: 14px;
+                border: 2px solid #7ad38d;
+                border-top: 2px solid transparent;
+                right: 11px;
+                top: 0;
+                bottom: 0;
+                border-radius: 50%;
+                margin: auto;
+                content: "";
+                position: absolute;
+                animation: rotating 1s linear infinite;
+            }
+        }
+        .value-status {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            width: 25px;
+        }
 
         input {
             padding: 4px 10px;

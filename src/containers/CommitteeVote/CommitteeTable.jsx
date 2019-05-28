@@ -59,6 +59,7 @@ export default class CommitteeTable extends React.Component {
 	}
 
 	getActiveMembers() {
+
 		const {
 			committeeTable, backup, coreAsset, isVoteLocked,
 		} = this.props;
@@ -86,9 +87,10 @@ export default class CommitteeTable extends React.Component {
 					</Table.Cell>
 					<Table.Cell>
 						{
+
 							isVoteLocked ?
 								(
-									<Button className="btn-lock icon-lock" />
+									<Button disabled className="btn-lock icon-lock" />
 								) :
 								(
 									this.getVoted(committee.name, committee.voted)

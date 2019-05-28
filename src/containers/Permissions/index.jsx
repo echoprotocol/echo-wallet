@@ -115,8 +115,8 @@ class Permissions extends React.Component {
 									/>
 									<Button
 										basic
-										className="main-btn green"
-										content="SAVE"
+										className="green"
+										content="Save"
 										onClick={submitTr}
 									/>
 								</div>

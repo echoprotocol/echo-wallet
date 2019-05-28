@@ -34,6 +34,7 @@ const DEFAULT_TABLE_FIELDS = {
 		active: List([]),
 		backup: List([]),
 		locked: false,
+		disabledInput: false,
 	}),
 };
 
@@ -42,6 +43,7 @@ export default createModule({
 	initialState: Map({
 		[HISTORY_TABLE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[HISTORY_TABLE]),
 		[PERMISSION_TABLE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[PERMISSION_TABLE]),
+		[COMMITTEE_TABLE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_TABLE_FIELDS[COMMITTEE_TABLE]),
 	}),
 	transformations: {
 		set: {

@@ -12,7 +12,9 @@ import {
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
-	FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_COMMITTEE,
+	FORM_ADD_CUSTOM_NETWORK,
+	FORM_PERMISSION_KEY,
+	FORM_COMMITTEE,
 } from '../constants/FormConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -184,9 +186,17 @@ const DEFAULT_FORM_FIELDS = {
 		firstFetch: false,
 		isChanged: false,
 	}),
-	[FORM_COMMITTEE]: Map({
+	[FORM_COMMITTEE]: new Map({
 		votes: List([]),
 		canceled: List([]),
+		votingAccountId: null,
+		proxyAccountId: null,
+		accountLoading: false,
+		disabled: false,
+		account: {
+			value: '',
+			error: null,
+		},
 	}),
 };
 
@@ -223,14 +233,13 @@ export default createModule({
 		},
 
 		setIn: {
+
 			reducer: (state, { payload }) => {
 				const field = state.getIn([payload.form, payload.field]);
-
 				state = state.setIn([payload.form, payload.field], {
 					...field,
 					...payload.params,
 				});
-
 				return state;
 			},
 		},
@@ -253,6 +262,7 @@ export default createModule({
 
 		push: {
 			reducer: (state, { payload }) => {
+
 				const list = state.getIn([payload.form, payload.field]).push(payload.value);
 
 				state = state.setIn([payload.form, payload.field], list);

@@ -110,18 +110,17 @@
     content: "\e901";
 }
 
-.icon-checked_1:before {
-    content: "\e902";
-    color: #7ad38d;
-}
+.icon-checked {
+    &:before {
+        content: "\e902";
+        color: #fff;
+    }
 
-.icon-checked:before {
-    content: "\e902";
-    color: #fff;
-}
-
-.icon-checked:before {
-    content: "\e903";
+    &.success {
+        &:before {
+            color: #7ad38d;
+        }
+    }
 }
 
 .icon-close:before {
@@ -152,21 +151,6 @@
     content: "\e928";
 }
 
-// .icon-menu_2:before {
-//     content: "\e90a";
-// }
-
-// .icon-menu_3:before {
-//     content: "\e90b";
-// }
-//
-// .icon-menu_4:before {
-//     content: "\e90c";
-// }
-//
-// .icon-menu_5:before {
-//     content: "\e90d";
-// }
 
 .icon-menu:before {
     content: "\e90e";
