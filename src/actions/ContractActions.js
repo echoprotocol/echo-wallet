@@ -35,6 +35,7 @@ import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../co
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 
 import history from '../history';
+import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
@@ -214,7 +215,7 @@ export const addContractByName = (
 
 	const address = (await getContractResult(instance, contractResultId))[1].exec_res.new_address;
 
-	const id = `1.16.${getContractId(address)}`;
+	const id = `${CONTRACT_ID_PREFIX}.${getContractId(address)}`;
 
 	let contracts = localStorage.getItem(`contracts_${networkName}`);
 

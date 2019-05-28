@@ -15,7 +15,7 @@ import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import { closeModal, setDisable } from './ModalActions';
 import {
@@ -380,7 +380,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	if (!activeUserId) return 0;
 
-	let contractId = '1.16.1';
+	let contractId = `${CONTRACT_ID_PREFIX}.1`;
 	let amountValue = 0;
 	let bytecode = '';
 
