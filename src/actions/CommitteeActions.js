@@ -37,10 +37,13 @@ export const formatProxy = () => async (dispatch, getState) => {
 	const proxyAccount = await dispatch(EchoJSActions.fetch(votingAccount));
 
 	if (votingAccount && votingAccount === ECHO_PROXY_TO_SELF_ACCOUNT) {
+		dispatch(setFormValue(FORM_COMMITTEE, 'account', ''));
 		dispatch(set(FORM_COMMITTEE, 'votingAccountId', votingAccount));
 		dispatch(set(FORM_COMMITTEE, 'proxyAccountId', proxyAccount.get('id')));
+		dispatch(setValue(COMMITTEE_TABLE, 'locked', false));
 		return;
 	}
+
 	dispatch(setFormValue(FORM_COMMITTEE, 'account', proxyAccount.get('name')));
 	dispatch(set(FORM_COMMITTEE, 'votingAccountId', votingAccount));
 	dispatch(set(FORM_COMMITTEE, 'proxyAccountId', proxyAccount.get('id')));
