@@ -60,7 +60,7 @@ export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
-export const fetchFee = (type) => async (dispatch) => {
+export const fetchFee = (form, type) => async (dispatch) => {
 	const globalObject = await dispatch(EchoJSActions.fetch('2.0.0'));
 	const asset = await dispatch(EchoJSActions.fetch('1.3.0'));
 
@@ -72,8 +72,9 @@ export const fetchFee = (type) => async (dispatch) => {
 		1,
 		'fee',
 	]);
-	return { value, asset: asset.toJS() };
 
+	dispatch(setValue(form, 'fee', { value, asset: asset.toJS() }));
+	return ({ value, asset: asset.toJS() });
 };
 
 export const getFee = (type, note = null) => async (dispatch, getState) => {
@@ -429,9 +430,11 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 		const { currency } = formValues;
 
-		if (!currency || !currency.precision) return 0;
+		if (!currency || !currency.precision || !formValues.amount.value) return 0;
 
-		const amount = Number(formValues.amount.value || 0).toString();
+		contractId = currency.id;
+
+		const amount = BN(formValues.amount.value).toString();
 
 		bytecode = getMethod(
 			{
@@ -502,7 +505,7 @@ export const createContract = () => async (dispatch, getState) => {
 		supported_asset_id: '1.3.0',
 	};
 
-	const fee = await dispatch(fetchFee('create_contract'));
+	const fee = await dispatch(FORM_CREATE_CONTRACT, fetchFee('create_contract'));
 	let feeValue = null;
 
 	try {

@@ -9,7 +9,6 @@ import { formatAmount } from '../../helpers/FormatHelper';
 
 import { setValue } from '../../actions/FormActions';
 import { getFeeSync, getFee, fetchFee } from '../../actions/TransactionActions';
-import { setContractFees } from '../../actions/ContractActions';
 
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID, FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -23,10 +22,7 @@ class FeeComponent extends React.Component {
 		};
 	}
 	componentDidMount() {
-		this.props.fetchFee().then((fee) => {
-			this.props.setValue('fee', fee);
-		});
-		this.props.setContractFees();
+		this.props.fetchFee();
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -191,7 +187,6 @@ FeeComponent.propTypes = {
 	fees: PropTypes.array.isRequired,
 	setValue: PropTypes.func.isRequired,
 	getFeeSync: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	getFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
@@ -225,8 +220,7 @@ export default connect(
 	(dispatch, { form, type }) => ({
 		setValue: (field, value) => dispatch(setValue(form, field, value)),
 		getFeeSync: (asset, note) => dispatch(getFeeSync(type, asset, note)),
-		setContractFees: () => dispatch(setContractFees(form)),
 		getFee: (note) => dispatch(getFee(type, note)),
-		fetchFee: () => dispatch(fetchFee(type)),
+		fetchFee: () => dispatch(fetchFee(form, type)),
 	}),
 )(FeeComponent);

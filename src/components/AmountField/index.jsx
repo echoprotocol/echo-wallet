@@ -16,6 +16,7 @@ import { fetchFee } from '../../actions/TransactionActions';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import FeeField from './FeeField';
+import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
 class AmountField extends React.Component {
 
@@ -51,9 +52,8 @@ class AmountField extends React.Component {
 		this.setState({
 			timeout: setTimeout(() => {
 				if (value) return;
-				this.props.fetchFee('transfer').then((fee) => {
-					this.props.setValue('fee', fee);
-				});
+				const typeOperation = currency.id.startsWith(PREFIX_ASSET) ? 'transfer' : 'call_contract';
+				this.props.fetchFee(typeOperation);
 			}, 300),
 		});
 
@@ -62,6 +62,7 @@ class AmountField extends React.Component {
 
 	onChangeCurrency(e, value) {
 		const {
+			amount,
 			tokens,
 			assets,
 			form,
@@ -75,17 +76,22 @@ class AmountField extends React.Component {
 
 		if (isWalletAccount && form === FORM_TRANSFER) {
 			target = tokens.find((el) => el.id === value);
+
 			if (target) {
 				this.setCurrency(target, 'tokens');
-				this.props.setContractFees();
+				if (amount.value) {
+					this.props.fetchFee('call_contract');
+					this.props.setContractFees();
+				}
 				return;
 			}
 		}
 
 		target = targetAsset.find((el) => el.id === value);
-		if (target) {
-			this.setCurrency(target, 'assets');
-		}
+		if (!target) return;
+		this.setCurrency(target, 'assets');
+		if (!amount.value) return;
+		this.props.fetchFee('transfer');
 	}
 
 	onDropdownChange(e, value) {
@@ -308,6 +314,6 @@ export default connect(
 		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
 		setContractFees: () => dispatch(setContractFees(form)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(form)),
-		fetchFee: (type) => dispatch(fetchFee(type)),
+		fetchFee: (type) => dispatch(fetchFee(form, type)),
 	}),
 )(AmountField);

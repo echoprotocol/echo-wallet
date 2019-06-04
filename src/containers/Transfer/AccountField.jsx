@@ -5,7 +5,7 @@ import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { setIn, setValue } from '../../actions/FormActions';
+import { setIn } from '../../actions/FormActions';
 import { checkAccount, fetchFee, updateFee } from '../../actions/TransactionActions';
 
 class AccountComponent extends React.Component {
@@ -39,9 +39,7 @@ class AccountComponent extends React.Component {
 				) {
 					this.props.updateFee('transfer', this.props.note.value);
 				} else {
-					this.props.fetchFee('transfer').then((fee) => {
-						this.props.setValue('fee', fee);
-					});
+					this.props.fetchFee('transfer');
 				}
 			}, 300),
 		});
@@ -77,7 +75,6 @@ AccountComponent.propTypes = {
 	setIn: PropTypes.func.isRequired,
 	updateFee: PropTypes.func.isRequired,
 	fetchFee: PropTypes.func.isRequired,
-	setValue: PropTypes.func.isRequired,
 	note: PropTypes.any.isRequired,
 };
 
@@ -92,9 +89,8 @@ export default connect(
 	}),
 	(dispatch, props) => ({
 		setIn: (param) => dispatch(setIn(FORM_TRANSFER, props.subject, param)),
-		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
 		checkAccount: (value) => dispatch(checkAccount(value, props.subject)),
-		fetchFee: (type) => dispatch(fetchFee(type)),
+		fetchFee: (type) => dispatch(fetchFee(FORM_TRANSFER, type)),
 		updateFee: (type, note) => dispatch(updateFee(type, note)),
 	}),
 )(AccountComponent);

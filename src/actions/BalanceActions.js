@@ -345,6 +345,7 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 			const balances = subscribeObject.value.get('balances').toJS();
 
 			const accountName = getState().global.getIn(['activeUser', 'name']);
+
 			const preview = getState().balance.get('preview');
 			const networkName = getState().global.getIn(['network', 'name']);
 
