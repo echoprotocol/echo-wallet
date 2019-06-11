@@ -1,7 +1,7 @@
 import { ED25519 } from 'echojs-lib';
 import bs58 from 'bs58';
 
-import { generateKeyFromPassword, generateECDSAPublicKey } from './WalletApi';
+import { generateKeyFromPassword } from './WalletApi';
 
 class AuthApi {
 
@@ -30,10 +30,9 @@ class AuthApi {
      */
 	static async registerAccount(instance, accountName, password) {
 		const active = generateKeyFromPassword(accountName, 'active', password);
-		const memo = generateECDSAPublicKey(accountName, 'memo', password);
 		const echoRandKey = this.generateEchoRandKey();
 
-		const error = await instance.registrationApi().exec('register_account', [() => {}, accountName, active.publicKey, active.publicKey, memo.publicKey, echoRandKey.publicKey]);
+		const error = await instance.registrationApi().exec('register_account', [() => {}, accountName, active.publicKey, echoRandKey.publicKey]);
 
 		if (error) {
 			throw error;
@@ -41,7 +40,6 @@ class AuthApi {
 
 		return {
 			active,
-			memo,
 			echoRandKey,
 		};
 	}

@@ -71,7 +71,7 @@ export const createAccount = ({
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
 		const {
-			active, memo, echoRandKey,
+			active, echoRandKey,
 		} = await AuthApi.registerAccount(
 			instance,
 			accountName,
@@ -79,7 +79,6 @@ export const createAccount = ({
 		);
 
 		dispatch(setKey(active, accountName, generatedPassword, 'active'));
-		dispatch(setKey(memo, accountName, generatedPassword, 'memo'));
 		dispatch(setKey(echoRandKey, accountName, generatedPassword, 'echoRand'));
 
 		dispatch(addAccount(accountName, network.name));
@@ -283,8 +282,7 @@ export const unlockAccount = (account, password) => (dispatch) => {
 
 		const keys = unlockWallet(account, password);
 
-
-		if (!keys.active && !keys.memo) {
+		if (!keys.active) {
 			return { error: 'Invalid password' };
 		}
 

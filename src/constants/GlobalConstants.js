@@ -60,7 +60,7 @@ export const HEADER_TITLE = [
 ];
 
 export const SORT_CONTRACTS = 'contracts';
-export const ADDRESS_PREFIX = 'DET';
+export const ADDRESS_PREFIX = 'ECHO';
 export const ECDSA_ADDRESS_PREFIX = 'ECHO';
 export const PUBLIC_KEY_LENGTH = 44;
 export const ECDSA_PUBLIC_KEY_LENGTH = 50;

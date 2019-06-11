@@ -46,7 +46,6 @@ import { validateAccountExist } from '../api/WalletApi';
 import {
 	buildAndSendTransaction,
 	estimateCallContractFee,
-	encodeMemo,
 	getOperationFee,
 } from '../api/TransactionApi';
 
@@ -530,13 +529,6 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 	dispatch(setDisable(MODAL_DETAILS, true));
 
 	const { operation, options } = getState().transaction.toJS();
-
-	if (options.memo) {
-		const fromAccount = (await dispatch(EchoJSActions.fetch(options.from))).toJS();
-		const toAccount = (await dispatch(EchoJSActions.fetch(options.to))).toJS();
-
-		options.memo = encodeMemo(fromAccount, toAccount, options.memo, keys.memo);
-	}
 
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);

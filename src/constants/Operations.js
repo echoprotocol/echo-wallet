@@ -417,4 +417,124 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
+	change_sidechain_config: {
+		value: 43,
+		name: 'Change sidechain config',
+		options: {
+			from: null,
+			subject: null,
+			value: null,
+			asset: null,
+		},
+	},
+	account_address_create: {
+		value: 44,
+		name: 'Account address create',
+		options: {
+			from: 'owner',
+			subject: null,
+			value: null,
+			asset: null,
+		},
+	},
+	transfer_to_address: {
+		value: 45,
+		name: 'Transfer to address',
+		options: {
+			from: 'from',
+			subject: ['to', 'name'],
+			value: 'amount',
+			asset: null,
+		},
+	},
+	generate_eth_address: {
+		value: 46,
+		name: 'Generate eth address',
+		options: {
+			from: 'account',
+			subject: null,
+			value: null,
+			asset: null,
+		},
+	},
+	create_eth_address: {
+		value: 47,
+		name: 'Create eth address',
+		options: {
+			from: 'account',
+			subject: ['committee_member_id'],
+			value: null,
+			asset: null,
+		},
+	},
+	deposit_eth: {
+		value: 48,
+		name: 'Deposit eth',
+		options: {
+			from: 'account',
+			subject: ['committee_member_id'],
+			value: 'value',
+			asset: null,
+		},
+	},
+	withdraw_eth: {
+		value: 49,
+		name: 'Withdraw eth',
+		options: {
+			from: 'account',
+			subject: null,
+			value: 'value',
+			asset: null,
+		},
+	},
+	approve_withdraw_eth: {
+		value: 50,
+		name: 'Approve withdraw eth',
+		options: {
+			from: null,
+			subject: ['committee_member_id'],
+			value: null,
+			asset: null,
+		},
+	},
+	contract_fund_pool: {
+		value: 51,
+		name: 'Contract fund pool',
+		options: {
+			from: 'registrar',
+			subject: 'contract_to_modify',
+			amount: null,
+			asset: 'fee',
+		},
+	},
+	contract_whitelist: {
+		value: 52,
+		name: 'Contract whitelist',
+		options: {
+			from: 'sender',
+			subject: 'callee',
+			amount: 'value',
+			asset: 'fee',
+		},
+	},
+	sidechain_issue: {
+		value: 53,
+		name: 'Sidechain issue',
+		options: {
+			from: 'account',
+			subject: 'deposit_id',
+			amount: 'value',
+			asset: 'fee',
+		},
+	},
+	sidechain_burn: {
+		value: 54,
+		name: 'Sidechain burn',
+		options: {
+			from: 'account',
+			subject: 'withdraw_id',
+			amount: 'value',
+			asset: 'fee',
+		},
+	},
 };

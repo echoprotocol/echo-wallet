@@ -157,7 +157,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		try {
 			account = (role !== 'memo') && await dispatch(EchoJSActions.fetch(key.value));
 			if (!account) {
-				if (!isPublicKey(key.value, role === 'memo' ? 'ECHO' : 'DET')) {
+				if (!isPublicKey(key.value, 'ECHO')) {
 					error = true;
 					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 				}
@@ -168,7 +168,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
 			}
 		} catch (e) {
-			if (!isPublicKey(key.value, role === 'memo' ? 'ECHO' : 'DET')) {
+			if (!isPublicKey(key.value, 'ECHO')) {
 				error = true;
 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
