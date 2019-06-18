@@ -496,7 +496,6 @@ export const createContract = () => async (dispatch, getState) => {
 	dispatch(resetTransaction());
 
 	const options = {
-		asset_id: '1.3.0',
 		registrar: activeUserId,
 		value: { amount: 0, asset_id: '1.3.0' },
 		code: bytecode.value,
@@ -504,25 +503,24 @@ export const createContract = () => async (dispatch, getState) => {
 		supported_asset_id: '1.3.0',
 	};
 
-	const fee = await dispatch(FORM_CREATE_CONTRACT, fetchFee('create_contract'));
-	let feeValue = null;
-
 	try {
+		const fee = await dispatch(fetchFee(FORM_CREATE_CONTRACT, 'create_contract'));
+		let feeValue = null;
+
 		feeValue = await estimateCallContractFee('create_contract', options);
+		const showOptions = {
+			from: activeUserName,
+			fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+			code: bytecode.value,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
+
+		return true;
 	} catch (err) {
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', 'Incorrect bytecode'));
 		return false;
 	}
-
-	const showOptions = {
-		from: activeUserName,
-		fee: `${feeValue / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
-		code: bytecode.value,
-	};
-
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
-
-	return true;
 };
 
 export const sendTransaction = (keys) => async (dispatch, getState) => {
@@ -748,7 +746,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	}
 
 	const options = {
-		asset_id: fee.asset.id,
+		fee: { asset_id: fee.asset.id, amount: 0 },
 		registrar: activeUserId,
 		value: { amount: amountValue, asset_id: '1.3.0' },
 		code: bytecode.value,
@@ -759,7 +757,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	try {
 		feeValue = await estimateCallContractFee('call_contract', options);
 	} catch (error) {
-		dispatch(setInFormError(FORM_CALL_CONTRACT_VIA_ID, ['fee', 'error'], 'Can\'t be calculated'));
+		dispatch(setInFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', 'Can\'t be calculated'));
 		return false;
 	}
 

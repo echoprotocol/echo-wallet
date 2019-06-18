@@ -33,10 +33,10 @@ const to64HexString = (v, type, mode = 256) => {
 		}
 		case 'address': {
 			const sourceAddress = v || '1.2.0';
-			if (!/^1\.(2|16)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
+			if (!/^1\.(2|14)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
 			const preRes = new BigNumber(sourceAddress.split('.')[2]).toString(16);
 			if (preRes.length > 38) throw new Error('invalid address id');
-			const isContract = sourceAddress.split('.')[1] === '16';
+			const isContract = sourceAddress.split('.')[1] === '14';
 			return [
 				new Array(25).fill(null).map(() => 0).join(''),
 				isContract ? '1' : '0',

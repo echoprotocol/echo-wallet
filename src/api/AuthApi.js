@@ -15,7 +15,7 @@ class AuthApi {
 		const echoRandPublicKey = EchoRandKeyBuffer.publicKey;
 		return {
 			privateKey: EchoRandKeyBuffer.privateKey,
-			publicKey: `DET${bs58.encode(echoRandPublicKey)}`,
+			publicKey: `ECHO${bs58.encode(echoRandPublicKey)}`,
 		};
 	}
 
