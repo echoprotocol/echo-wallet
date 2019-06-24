@@ -356,8 +356,9 @@ export const transfer = () => async (dispatch, getState) => {
 		};
 	}
 
+	const precision = new BN(10).pow(fee.asset.precision);
 	const showOptions = {
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
+		fee: `${new BN(fee.value).div(precision).toString(10)} ${fee.asset.symbol}`,
 		from: fromAccount.name,
 		to: toAccount.name,
 		amount: `${amount} ${currency.symbol}`,

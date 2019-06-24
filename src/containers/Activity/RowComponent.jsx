@@ -26,7 +26,8 @@ class RowComponent extends React.Component {
 			timestamp,
 		} = this.props.data;
 
-		const amount = value.amount ? formatAmount(value.amount, value.precision) : null;
+		const amount = value.amount && value.precision ?
+			formatAmount(value.amount, value.precision) : value.amount;
 		const symbol = value.amount ? value.symbol : null;
 
 		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision) : null;

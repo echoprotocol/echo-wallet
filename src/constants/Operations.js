@@ -461,8 +461,8 @@ export default {
 		value: 47,
 		name: 'Create eth address',
 		options: {
-			from: 'account',
-			subject: ['committee_member_id'],
+			from: 'committee_member_id',
+			subject: ['account', 'name'],
 			value: null,
 			asset: null,
 		},
@@ -471,8 +471,8 @@ export default {
 		value: 48,
 		name: 'Deposit eth',
 		options: {
-			from: 'account',
-			subject: ['committee_member_id'],
+			from: 'committee_member_id',
+			subject: ['account', 'name'],
 			value: 'value',
 			asset: null,
 		},
@@ -482,7 +482,7 @@ export default {
 		name: 'Withdraw eth',
 		options: {
 			from: 'account',
-			subject: null,
+			subject: ['eth_addr'],
 			value: 'value',
 			asset: null,
 		},
@@ -501,10 +501,10 @@ export default {
 		value: 51,
 		name: 'Contract fund pool',
 		options: {
-			from: 'registrar',
-			subject: 'contract_to_modify',
-			amount: null,
-			asset: 'fee',
+			from: 'sender',
+			subject: ['contract'],
+			amount: 'value.amount',
+			asset: 'value.asset_id',
 		},
 	},
 	contract_whitelist: {
@@ -512,9 +512,9 @@ export default {
 		name: 'Contract whitelist',
 		options: {
 			from: 'sender',
-			subject: 'callee',
-			amount: 'value',
-			asset: 'fee',
+			subject: ['contract'],
+			value: null,
+			asset: null,
 		},
 	},
 	sidechain_issue: {
@@ -522,9 +522,9 @@ export default {
 		name: 'Sidechain issue',
 		options: {
 			from: 'account',
-			subject: 'deposit_id',
-			amount: 'value',
-			asset: 'fee',
+			subject: ['deposit_id'],
+			amount: 'value.amount',
+			asset: 'value.asset_id',
 		},
 	},
 	sidechain_burn: {
@@ -532,9 +532,59 @@ export default {
 		name: 'Sidechain burn',
 		options: {
 			from: 'account',
-			subject: 'withdraw_id',
+			subject: ['withdraw_id'],
+			amount: 'value.amount',
+			asset: 'value.asset_id',
+		},
+	},
+	register_erc20_token: {
+		value: 55,
+		name: 'Register ERC20 token',
+		options: {
+			from: 'account',
+			subject: null,
+			amount: null,
+			asset: null,
+		},
+	},
+	deposit_erc20_token: {
+		value: 56,
+		name: 'Deposit ERC20 token',
+		options: {
+			from: 'account',
+			subject: ['erc20_token_addr'],
 			amount: 'value',
-			asset: 'fee',
+			asset: null,
+		},
+	},
+	withdraw_erc20_token: {
+		value: 57,
+		name: 'Withdraw ERC20 token',
+		options: {
+			from: 'committee_member_id',
+			subject: ['to'],
+			amount: 'value',
+			asset: null,
+		},
+	},
+	approve_erc20_token_withdraw: {
+		value: 58,
+		name: 'Approve ERC20 token withdraw',
+		options: {
+			from: 'account',
+			subject: ['to'],
+			amount: 'value',
+			asset: null,
+		},
+	},
+	contract_update: {
+		value: 59,
+		name: 'Contract update',
+		options: {
+			from: 'sender',
+			subject: ['contract'],
+			amount: null,
+			asset: null,
 		},
 	},
 };

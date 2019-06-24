@@ -30,7 +30,7 @@
     "bn.js": "^4.11.8",
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
-    "echojs-lib": "0.1.21",
+    "echojs-lib": "0.1.22",
     "echojs-redux": "0.1.14",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
@@ -61,7 +61,7 @@
     "utf8": "^3.0.0"
   },
   "peerDependencies": {
-    "echojs-ws": "0.1.16"
+    "echojs-ws": "0.1.22"
   },
   "devDependencies": {
     "babel-loader": "^7.1.3",
