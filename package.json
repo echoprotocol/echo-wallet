@@ -3,7 +3,7 @@
   "author": "PixelPlex <info@pixelplex.by>",
   "description": "PixelPlex React Redux app",
   "homepage": "https://pixelplex.by/",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "main": "build/electron/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=local webpack-dev-server --mode development --progress --colors --history-api-fallback --hot --inline",
