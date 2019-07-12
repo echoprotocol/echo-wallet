@@ -350,7 +350,7 @@ export const transfer = () => async (dispatch, getState) => {
 			from: fromAccount.id,
 			to: toAccount.id,
 			amount: {
-				amount: amount * (10 ** currency.precision),
+				amount: new BN(amount).times(10 ** currency.precision).toString(),
 				asset_id: currency.id,
 			},
 		};
