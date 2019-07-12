@@ -16,7 +16,7 @@ import {
 	closeModal,
 	setDisable,
 } from './ModalActions';
-import { setValue } from './FormActions';
+import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
@@ -355,6 +355,15 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 
 			if (preview.find((v) => v.name === name)) {
 				dispatch(getPreviewBalances(networkName));
+			}
+
+			if (history.location.pathname === TRANSFER_PATH) {
+				const form = getState().form.getIn([FORM_TRANSFER]);
+				if (form.get('from').value === name && balances[form.get('currency').id]) {
+					const stats = await dispatch(EchoJSActions.fetch(balances[form.get('currency').id]));
+					dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.get('balance') }));
+					dispatch(setFormError(FORM_TRANSFER, 'amount', null));
+				}
 			}
 
 			break;
