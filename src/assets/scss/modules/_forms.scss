@@ -1,10 +1,32 @@
 .field-wrap {
     width: 100%;
     .field {
+        position: relative;
+
         &:last-child {
             margin-bottom: 0;
         }
+
+        .image-input {
+            .avatar-image {
+                position: absolute;
+                top: 28px;
+                left: 15px;
+                z-index: 2;
+
+                svg {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            input {
+                text-indent: 30px;
+            }
+        }
     }
+
+
 }
 
 .form {
@@ -187,7 +209,6 @@
                 padding-right: 30px;
             }
         }
-
         .value-status {
             position: absolute;
             top: 0;

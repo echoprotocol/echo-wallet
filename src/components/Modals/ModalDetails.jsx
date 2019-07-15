@@ -1,8 +1,11 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
+
+import Avatar from '../Avatar';
 
 class ModalDetails extends React.Component {
 
@@ -25,12 +28,15 @@ class ModalDetails extends React.Component {
 			return null;
 		}
 
+		const isImageInput = ['from', 'to'].includes(key);
+
 		return (
-			<Form.Field key={key}>
+			<Form.Field key={key} >
 				<label htmlFor="amount">
 					{key.replace(/([A-Z])/g, ' $1')}
 				</label>
-				<div>
+				<div className={classnames({ 'image-input': isImageInput })}>
+					{isImageInput && <Avatar accountName={data} />}
 					<input type="text" name="Fee" disabled className="ui input" value={data} />
 				</div>
 			</Form.Field>

@@ -6,6 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
 
 import Dropdown from '../../components/Dropdown';
+import Avatar from '../../components/Avatar';
 
 class TabOverview extends React.Component {
 
@@ -131,7 +132,10 @@ class TabOverview extends React.Component {
 						data.from ?
 							<li>
 								<div className="col">From:</div>
-								<div className="col">{data.from}</div>
+								<div className="col avatar-block">
+									<Avatar accountName={data.from} />
+									<span>{data.from}</span>
+								</div>
 							</li> : null
 					}
 
@@ -139,7 +143,10 @@ class TabOverview extends React.Component {
 						data.subject ?
 							<li>
 								<div className="col">Subject:</div>
-								<div className="col">{data.subject}</div>
+								<div className="col avatar-block">
+									<Avatar accountName={data.subject} />
+									<span>{data.subject}</span>
+								</div>
 							</li> : null
 					}
 

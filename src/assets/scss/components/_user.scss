@@ -15,3 +15,27 @@
     }
 
 }
+
+.avatar-image {
+    img {
+        width: 20px;
+        height: 20px;
+        border-radius: 3px;
+    }
+
+    svg {
+        border-radius: 3px;
+    }
+}
+
+.avatar-block {
+    & > div {
+        display: inline-block;
+    }
+
+    & > span {
+        position: relative;
+        left: 10px;
+        top: -5px;
+    }
+}

@@ -31,6 +31,7 @@
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
     "echojs-lib": "0.1.22",
+    "echojs-ping": "^0.1.5",
     "echojs-redux": "0.1.15",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",

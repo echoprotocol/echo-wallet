@@ -7,6 +7,8 @@ import { Element } from 'react-scroll/modules/index';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
+import Avatar from '../../components/Avatar';
+
 class RowComponent extends React.Component {
 
 	onTransaction() {
@@ -51,12 +53,16 @@ class RowComponent extends React.Component {
 					<span className="ellips">#{block}</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">{from}</span>
+					<span className="ellips avatar-block">
+						<Avatar accountName={from} />
+						<span>{from}</span>
+					</span>
 				</Table.Cell>
 				<Table.Cell>
 					{/* TODO add to contract create operation className=create */}
-					<span className="ellips">
-						{subject}
+					<span className="ellips avatar-block">
+						<Avatar accountName={subject} />
+						<span>{subject}</span>
 					</span>
 				</Table.Cell>
 				<Table.Cell>

@@ -3,6 +3,7 @@ import { Table, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { formatTotalVotes } from '../../helpers/FormatHelper';
+import Avatar from '../../components/Avatar';
 
 export default class CommitteeTable extends React.Component {
 
@@ -74,7 +75,10 @@ export default class CommitteeTable extends React.Component {
 			return (
 				<Table.Row key={`${backup ? 'backup' : 'active'}${key}`}>
 					<Table.Cell >
-						{committee.name}
+						<div className="col avatar-block">
+							<Avatar accountName={committee.name} />
+							<span>{committee.name}</span>
+						</div>
 					</Table.Cell>
 					<Table.Cell>
 						{
