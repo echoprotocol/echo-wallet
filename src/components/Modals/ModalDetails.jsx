@@ -73,7 +73,7 @@ class ModalDetails extends React.Component {
 				return this.getArea(key, value.data);
 			}
 
-			if (['active', 'activeAccounts'].includes(key)) {
+			if (['active', 'activeAccounts', 'activeKeys'].includes(key)) {
 				return this.getPermissions(key, value.data);
 			}
 

@@ -4,8 +4,6 @@ import BN from 'bignumber.js';
 import {
 	ADDRESS_PREFIX,
 	CONTRACT_ID_PREFIX,
-	ECDSA_ADDRESS_PREFIX,
-	ECDSA_PUBLIC_KEY_LENGTH,
 	PUBLIC_KEY_LENGTH,
 } from '../constants/GlobalConstants';
 
@@ -314,10 +312,7 @@ export const validateNetworkAddress = (address) => {
 export const isAccountId = (v) => accountIdRegex.test(v);
 
 export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
-	const publicKeyLength = addressPrefix === ECDSA_ADDRESS_PREFIX ?
-		ECDSA_PUBLIC_KEY_LENGTH : PUBLIC_KEY_LENGTH;
-
-	if (typeof v !== 'string' || v.length !== (publicKeyLength + addressPrefix.length)) return false;
+	if (typeof v !== 'string' || v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length)) return false;
 
 	const prefix = v.slice(0, addressPrefix.length);
 
