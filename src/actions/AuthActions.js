@@ -198,14 +198,6 @@ const getAccountsList = (accounts) => async (dispatch) => {
  */
 export const importAccount = ({ accountName, password }) =>
 	async (dispatch, getState) => {
-
-		if (accountName) {
-			const added = await dispatch(authUser({ accountName, password }));
-			if (added) {
-				return;
-			}
-		}
-
 		if (getKeyFromWif(password)) {
 
 			const active = PrivateKey.fromWif(password).toPublicKey().toString();
