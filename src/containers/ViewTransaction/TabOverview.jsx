@@ -8,6 +8,8 @@ import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
 import Dropdown from '../../components/Dropdown';
 import Avatar from '../../components/Avatar';
 
+import externalLink from '../../assets/images/ic-external-link.svg';
+
 class TabOverview extends React.Component {
 
 	format(value) {
@@ -168,6 +170,10 @@ class TabOverview extends React.Component {
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 				</ul>
+				<a href="" target="_blank" className="external-link">
+					<img src={externalLink} alt="" />
+					<span>Go to explorer</span>
+				</a>
 			</div>
 		);
 	}

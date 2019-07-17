@@ -126,6 +126,21 @@ div,span {
     }
 }
 
+.external-link {
+    color: #5267C6;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    height: 14px;
+
+    img {
+        min-width: 14px;
+        width: 14px;
+        height: 14px;
+        margin-right: 5px;
+    }
+}
+
 // ANIMATIONS
 
 @-webkit-keyframes rotating /* Safari and Chrome */ {

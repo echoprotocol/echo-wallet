@@ -25,7 +25,7 @@
         }
     }
 }
-    
+
 .addition {
     display: none !important;
 }
@@ -163,7 +163,11 @@
 }
 
 
-
+.overview-list {
+    & + .external-link {
+        margin-top: 34px;
+    }
+}
 .overview-list,
 .logs-list {
     li {
@@ -224,7 +228,7 @@
                 &:hover {
                     color: $link-gray;
                 }
-            } 
+            }
         }
         &-method {
             margin-bottom: 10px;
