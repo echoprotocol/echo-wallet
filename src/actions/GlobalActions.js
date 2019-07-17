@@ -33,6 +33,9 @@ import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
 import { setFormError, clearForm } from './FormActions';
 
+import Services from '../services';
+import UserStorageService from '../services/UserStorageService';
+
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
@@ -298,4 +301,33 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 		field: 'networks',
 		value: new List(networks),
 	}));
+};
+
+export const initUserStorage = () => async (dispatch) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.init();
+	} catch (err) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
+	} finally {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+	}
+};
+
+export const createDB = (password) => async (dispatch) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.deleteDB(password);
+		await userStorage.createDB(password);
+
+		await userStorage.setScheme(UserStorageService.SCHEMES.AUTO, password);
+
+		await dispatch(connection());
+	} catch (err) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
+	} finally {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+	}
 };

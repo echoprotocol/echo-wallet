@@ -68,6 +68,21 @@ export const CONTRACT_ID_PREFIX = '1.14';
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
 
+export const SCRYPT_ALGORITHM_PARAMS = {
+	N: 2 ** 14,
+	r: 8,
+	p: 1,
+	l: 32,
+	SALT_BYTES_LENGTH: 256,
+};
+export const ENCRYPTED_DB_NAME = 'db';
+export const ALGORITHM_IV_BYTES_LENGTH = 16;
+export const DB_NAME = 'keyval-store';
+export const STORE = 'keyval';
+export const ACTIVE_KEY = 'active';
+export const ALGORITHM = 'aes-256-cbc';
+export const RANDOM_SIZE = 2048;
+
 export const NETWORKS = [
 	{
 		name: 'devnet',

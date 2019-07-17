@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { PrivateKey } from 'echojs-lib';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 
 import { MODAL_UNLOCK_PERMISSION } from '../../constants/ModalConstants';
 import { openModal, closeModal } from '../../actions/ModalActions';
-import { getPrivateKey } from '../../actions/KeyChainActions';
 import { unlockAccount } from '../../actions/AuthActions';
+
+import Services from '../../services';
 
 class PrivateKeyScenario extends React.Component {
 
@@ -29,7 +31,7 @@ class PrivateKeyScenario extends React.Component {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
-	submit(role, publicKey) {
+	async submit(role, publicKey) {
 		if (role === 'memo' && !this.state[role]) {
 			role = 'note';
 		}
@@ -40,7 +42,14 @@ class PrivateKeyScenario extends React.Component {
 			});
 		}
 
-		const privateKey = this.props.getPrivateKey(publicKey);
+		const userStorage = Services.getUserStorage();
+		const key = await userStorage.getWIFByPublicKey(publicKey, { password: '123123' });
+
+		if (!key) {
+			return null;
+		}
+
+		const privateKey = PrivateKey.fromWif(key.wif).toHex();
 
 		if (!privateKey) {
 			return this.props.openModal({ role, publicKey });
@@ -120,7 +129,6 @@ PrivateKeyScenario.propTypes = {
 	publicKey: PropTypes.string,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
-	getPrivateKey: PropTypes.func.isRequired,
 	unlockAccount: PropTypes.func.isRequired,
 };
 
@@ -143,7 +151,6 @@ export default connect(
 	(dispatch) => ({
 		openModal: (params) => dispatch(openModal(MODAL_UNLOCK_PERMISSION, params)),
 		closeModal: () => dispatch(closeModal(MODAL_UNLOCK_PERMISSION)),
-		getPrivateKey: (publicKey) => dispatch(getPrivateKey(publicKey)),
 		unlockAccount: (account, password) => dispatch(unlockAccount(account, password)),
 	}),
 )(PrivateKeyScenario);

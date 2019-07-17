@@ -3,7 +3,6 @@ import { EchoJSActions, ChainStore } from 'echojs-redux';
 import { List } from 'immutable';
 
 import { openModal, setDisable } from './ModalActions';
-import { set as setKey } from './KeyChainActions';
 import { addAccount, isAccountAdded } from './GlobalActions';
 
 import {
@@ -26,6 +25,9 @@ import {
 	getKeyFromWif,
 } from '../api/WalletApi';
 import AuthApi from '../api/AuthApi';
+
+import Services from '../services';
+import Key from '../logic-components/db/models/key';
 
 export const generatePassword = () => (dispatch) => {
 	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
@@ -78,8 +80,10 @@ export const createAccount = ({
 			generatedPassword,
 		);
 
-		dispatch(setKey(active, accountName, generatedPassword, 'active'));
-		dispatch(setKey(echoRandKey, accountName, generatedPassword, 'echoRand'));
+		const userStorage = Services.getUserStorage();
+		const account = await dispatch(EchoJSActions.fetch(accountName));
+		await userStorage.addKey(Key.create(active.publicKey, generatedPassword, account.get('id')), { password: '123123' });
+		await userStorage.addKey(Key.create(echoRandKey.publicKey, generatedPassword, account.get('id')), { password: '123123' });
 
 		dispatch(addAccount(accountName, network.name));
 
@@ -132,12 +136,9 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 			return false;
 		}
 
+		const userStorage = Services.getUserStorage();
 		if (active) {
-			dispatch(setKey(active, accountName, password, 'active'));
-		}
-
-		if (memo) {
-			dispatch(setKey(memo, accountName, password, 'memo'));
+			await userStorage.addKey(Key.create(active.publicKey, password, account.get('id')), { password: '123123' });
 		}
 
 		dispatch(addAccount(accountName, networkName));
@@ -278,8 +279,9 @@ export const unlockAccount = (account, password) => (dispatch) => {
 			return { error: 'Invalid password' };
 		}
 
-		Object.entries(keys).forEach(([role, value]) => {
-			dispatch(setKey(value, account.get('name'), password, role));
+		const userStorage = Services.getUserStorage();
+		Object.entries(keys).forEach(([, value]) => {
+			userStorage.addKey(Key.create(value.publicKey, password, account.get('id')), { password: '123123' });
 		});
 
 		return { keys };

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { PrivateKey } from 'echojs-lib';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
@@ -11,10 +12,11 @@ import { FORM_COMMITTEE } from '../../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_DETAILS } from '../../constants/ModalConstants';
 import { setValue as setTableValue } from '../../actions/TableActions';
 import { openModal, closeModal } from '../../actions/ModalActions';
-import { getPrivateKey } from '../../actions/KeyChainActions';
 import { unlockAccount } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 import { clearForm } from '../../actions/FormActions';
+
+import Services from '../../services';
 
 class TransactionScenario extends React.Component {
 
@@ -49,9 +51,17 @@ class TransactionScenario extends React.Component {
 
 		const { account, operation } = this.props;
 		const { permission } = operations[operation];
-		const permissionPrivateKeys = account.getIn([permission, 'key_auths'])
-			.reduce((arr, [publicKey, weight]) => {
-				const privateKey = this.props.getPrivateKey(publicKey);
+		const userStorage = Services.getUserStorage();
+		const permissionPrivateKeys = await account.getIn([permission, 'key_auths'])
+			.reduce(async (arr, [publicKey, weight]) => {
+				const key = await userStorage.getWIFByPublicKey(publicKey, { password: '123123' });
+
+				if (!key) {
+					return null;
+				}
+
+				const privateKey = PrivateKey.fromWif(key.wif).toHex();
+
 				if (privateKey) { arr.push([privateKey, weight]); }
 				return arr;
 			}, []);
@@ -182,7 +192,6 @@ TransactionScenario.propTypes = {
 	form: PropTypes.string, // eslint-disable-line
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
-	getPrivateKey: PropTypes.func.isRequired,
 	handleTransaction: PropTypes.func.isRequired,
 	unlockAccount: PropTypes.func.isRequired,
 	sendTransaction: PropTypes.func.isRequired,
@@ -210,7 +219,6 @@ export default connect(
 	(dispatch, props) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
-		getPrivateKey: (publicKey) => dispatch(getPrivateKey(publicKey)),
 		unlockAccount: (account, password) => dispatch(unlockAccount(account, password)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		resetTransaction: () => dispatch(resetTransaction()),

@@ -30,6 +30,7 @@
     "bn.js": "^4.11.8",
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
+    "crypto-random-string": "^3.0.1",
     "echojs-lib": "0.1.22",
     "echojs-ping": "^0.1.5",
     "echojs-redux": "0.1.15",
@@ -37,6 +38,7 @@
     "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
     "history": "^4.7.2",
+    "idb": "^4.0.4",
     "immutable": "^3.8.2",
     "js-sha3": "^0.7.0",
     "lodash": "^4.17.11",
@@ -58,6 +60,7 @@
     "redux-modules": "^1.1.1",
     "redux-thunk": "^2.3.0",
     "rlp": "^2.1.0",
+    "scrypt-js": "^2.0.4",
     "semantic-ui-react": "^0.78.3",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "utf8": "^3.0.0"
