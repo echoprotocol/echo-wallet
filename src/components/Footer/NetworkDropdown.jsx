@@ -54,7 +54,10 @@ class Network extends React.PureComponent {
 				content: (
 
 					<React.Fragment>
-						<span className="label-text">{i.name}</span>
+						<div className="label-text">
+							<span className="name">{i.name}</span>
+						</div>
+						<a href="" className="label-link">wss://devtnet.echo-dev.io/ws</a>
 						{ !NETWORKS.find((n) => n.name === i.name) ?
 							<Button
 								id="btn-dlt"
