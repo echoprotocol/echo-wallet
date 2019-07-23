@@ -42,10 +42,10 @@ class ModalUnlockWallet extends React.Component {
 							</div>
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="Password">Password</label>
+									<label htmlFor="Password">PIN</label>
 									<input
 										type="password"
-										placeholder="Password"
+										placeholder="PIN"
 										name="password"
 										className="ui input"
 										value={password}
@@ -55,14 +55,17 @@ class ModalUnlockWallet extends React.Component {
 									<span className="error-message">{error}</span>
 								</Form.Field>
 							</div>
-							<Button
-								basic
-								type="submit"
-								className="main-btn"
-								onClick={(e) => this.onSuccess(e)}
-								disabled={disabled}
-								content="Unlock Wallet"
-							/>
+							<div className="form-panel">
+								<a className="action-link">Forgot PIN?</a>
+								<Button
+									basic
+									type="submit"
+									className="main-btn"
+									onClick={(e) => this.onSuccess(e)}
+									disabled={disabled}
+									content="Unlock Wallet"
+								/>
+							</div>
 						</Form>
 					</div>
 				</div>
