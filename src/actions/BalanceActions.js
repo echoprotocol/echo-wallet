@@ -166,42 +166,38 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	 *  		precision,
      *  	},
      *  	name,
+	 *      accountId,
      *  }]
      */
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	const { symbol, precision } = (await dispatch(EchoJSActions.fetch('1.3.0'))).toJS();
+	const coreAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
 
 	const balances = accounts.map(async ({ name }) => {
-		const account = (await dispatch(EchoJSActions.fetch(name))).toJS();
+		const account = await dispatch(EchoJSActions.fetch(name));
 
 		const preview = {
 			balance: {
 				amount: 0,
-				symbol,
-				precision,
+				symbol: coreAsset.get('symbol'),
+				precision: coreAsset.get('precision'),
 			},
 			name,
+			accountId: account.get('id'),
 		};
 
-		if (account && account.balances && account.balances['1.3.0']) {
-			const stats = (await dispatch(EchoJSActions.fetch(account.balances['1.3.0']))).toJS();
-			preview.balance.amount = stats.balance || 0;
-			preview.balance.id = account.balances['1.3.0'];
+		if (account && account.get('balances') && account.getIn(['balances', '1.3.0'])) {
+			const stats = await dispatch(EchoJSActions.fetch(account.getIn(['balances', '1.3.0'])));
+			preview.balance.amount = stats.get('balance') || 0;
+			preview.balance.id = account.getIn(['balances', '1.3.0']);
 		}
 
 		return preview;
 	});
 
-	balances.reduce(
-		(resolved, balance) =>
-			resolved.then((array) => balance.then((result) => [...array, result]).catch(() => array)),
-		Promise.resolve([]),
-	).then((result) => {
-		dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(result) }));
-	});
+	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(await Promise.all(balances)) }));
 };
 
 export const initBalances = (accountId, networkName) => async (dispatch) => {

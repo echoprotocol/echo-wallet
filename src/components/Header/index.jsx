@@ -13,6 +13,9 @@ import { MODAL_LOGOUT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
+
+import Avatar from '../../components/Avatar';
+
 import {
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
@@ -135,6 +138,7 @@ class Header extends React.Component {
 		const { preview, accountName } = this.props;
 
 		return preview.map(({
+			accountId,
 			name, balance: { amount, precision, symbol },
 		}) => {
 			const content = (
@@ -143,20 +147,23 @@ class Header extends React.Component {
 						className="user-item"
 						onClick={(e) => this.onChangeAccount(e, name)}
 					>
-						<span>{name}</span>
+						<div className="avatar-wrap">
+							<Avatar accountName={name} />
+						</div>
+						<div className="user-base-info">
+							<div className="name">{name}</div>
+							<div className="id">{accountId}</div>
+						</div>
+
 						<div className="balance">
 							<span>{formatAmount(amount, precision) || '0'}</span>
 							<span>{symbol || 'ECHO'}</span>
 						</div>
 					</button>
-					{
-						preview.length < 2 ? null : (
-							<button
-								className="logout-user-btn"
-								onClick={(e) => this.onRemoveAccount(e, name)}
-							/>
-						)
-					}
+					<button
+						className="logout-user-btn"
+						onClick={(e) => this.onRemoveAccount(e, name)}
+					/>
 				</div>
 			);
 
@@ -186,17 +193,6 @@ class Header extends React.Component {
 				className: 'add-account',
 				content: 'Add account',
 				onClick: (e) => this.onAddAccount(e),
-			},
-			{
-				value: 'logout',
-				key: 'logout',
-				className: 'logout-wrap',
-				content: (
-					<a className="user-panel">
-						<span className="logout">Logout</span>
-					</a>
-				),
-				onClick: (e) => this.onOpenLogout(e),
 			},
 		];
 

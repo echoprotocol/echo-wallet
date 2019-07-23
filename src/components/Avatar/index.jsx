@@ -35,12 +35,15 @@ class Avatar extends React.Component {
 
 	render() {
 		const { avatarSize } = this.state;
-		const { accountName } = this.props;
+		const { accountName, defaultSize } = this.props;
 		return (
 			<div ref={this.imageRef} className="avatar-image">
 				{
 					!accountName ? <img src={avatar} alt="avatar" /> : (
-						<div dangerouslySetInnerHTML={{ __html: svgAvatar(accountName, avatarSize) }} />
+						<div dangerouslySetInnerHTML={
+							{ __html: svgAvatar(accountName, avatarSize || defaultSize) }
+						}
+						/>
 					)
 				}
 			</div>
@@ -51,10 +54,12 @@ class Avatar extends React.Component {
 
 Avatar.propTypes = {
 	accountName: PropTypes.string,
+	defaultSize: PropTypes.number,
 };
 
 Avatar.defaultProps = {
 	accountName: '',
+	defaultSize: 20,
 };
 
 export default Avatar;
