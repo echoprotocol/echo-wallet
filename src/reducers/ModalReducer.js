@@ -9,6 +9,7 @@ import {
 	MODAL_UNLOCK_PERMISSION,
 	MODAL_CHOOSE_ACCOUNT,
 	MODAL_LOGOUT,
+	MODAL_WIPE,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -38,6 +39,7 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_LOGOUT]: Map({
 		accountName: '',
 	}),
+	[MODAL_WIPE]: Map({}),
 };
 
 export default createModule({
@@ -49,6 +51,7 @@ export default createModule({
 		[MODAL_DETAILS]: _.cloneDeep(DEFAULT_FIELDS),
 		[MODAL_TOKENS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_TOKENS]),
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
+		[MODAL_WIPE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_WIPE]),
 	}),
 	transformations: {
 		open: {
