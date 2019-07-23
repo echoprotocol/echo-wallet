@@ -9,6 +9,7 @@
     padding: 2px;
     margin: 1px;
     justify-content: space-between;
+
     &-wrap {
         animation: fadeIn $speed;
         background-color:  #5e79e8;
@@ -53,4 +54,39 @@
             animation-delay: 600ms;
         }
     }
+
+    &.dots {
+        color: #5D637B;
+        margin-top: 12px;
+        &:after {
+            content: '.';
+            animation: dots 1.4s steps(3, end) infinite;
+        }
+    }
+
+    &-image {
+        width: 34px;
+        height: 34px;
+    }
 }
+
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);}
+  40% {
+    color: #5D637B;
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);}
+  60% {
+    text-shadow:
+      .25em 0 0 #5D637B,
+      .5em 0 0 rgba(0,0,0,0);}
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 #5D637B,
+      .5em 0 0 #5D637B;}}

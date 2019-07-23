@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
+import loader from '../../assets/images/loader.svg';
 
 class Loading extends React.PureComponent {
 
@@ -8,7 +9,8 @@ class Loading extends React.PureComponent {
 		const { text } = this.props;
 		return (
 			<Dimmer inverted active>
-				<Loader inverted content={text} />
+				<img className="loader-image" src={loader} alt="" />
+				<Loader inverted className="dots" content={text} />
 			</Dimmer>
 		);
 	}
