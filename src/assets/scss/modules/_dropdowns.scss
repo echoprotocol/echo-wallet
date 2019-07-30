@@ -414,6 +414,9 @@
                         align-items: flex-start;
                     }
                 }
+                &.item-divider + .item:not(.item-link){
+                    margin-top: 6px;
+                }
                 &:not(.item-link):not(.item-divider) {
                     &.active {
                         background-color: #f8f8f8;
@@ -438,10 +441,12 @@
 
                 }
                 .icon-remove {
-                    margin: 0 0 0 auto;
+                    margin: 0;
                     border-radius: 0;
                     padding: 0 16px;
-                    height: 36px;
+                    height: 40px;
+                    position: absolute;
+                    right: 0;
                     &:hover {
                         background-color: #4258b5;
                     }
@@ -473,6 +478,10 @@
                     padding: 0 0 0 33px;
                     color: #5267C6;
                     transition: color $speed;
+                    max-width: 225px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
                 .error-wrap {
                     margin: 0;

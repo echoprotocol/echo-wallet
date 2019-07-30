@@ -57,7 +57,7 @@ class Network extends React.PureComponent {
 						<div className="label-text">
 							<span className="name">{i.name}</span>
 						</div>
-						<a href="" className="label-link">wss://devtnet.echo-dev.io/ws</a>
+						<a href="" className="label-link">{i.url}</a>
 						{ !NETWORKS.find((n) => n.name === i.name) ?
 							<Button
 								id="btn-dlt"
