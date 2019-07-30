@@ -78,3 +78,8 @@ export const NETWORKS = [
 		url: 'wss://testnet.echo-dev.io/ws',
 	},
 ];
+
+export const EXPLORER_URL = {
+	devnet: 'https://656-echo-explorer.pixelplex-test.by',
+	testnet: 'https://explorer.echo.org',
+};

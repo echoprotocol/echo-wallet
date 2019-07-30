@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
+import URLHelper from '../../helpers/URLHelper';
 
 import Dropdown from '../../components/Dropdown';
 import Avatar from '../../components/Avatar';
@@ -115,7 +116,7 @@ class TabOverview extends React.Component {
 	}
 
 	render() {
-		const { data } = this.props;
+		const { data, network } = this.props;
 
 		return (
 			<div className="tab-content">
@@ -170,7 +171,7 @@ class TabOverview extends React.Component {
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 				</ul>
-				<a href="" target="_blank" className="external-link">
+				<a target="_blank" rel="noreferrer noopener" href={URLHelper.getLinkToExplorerBlock(network.name, data.block)} className="external-link">
 					<img src={externalLink} alt="" />
 					<span>Go to explorer</span>
 				</a>
@@ -183,6 +184,7 @@ class TabOverview extends React.Component {
 TabOverview.propTypes = {
 	bytecodeArgs: PropTypes.object.isRequired,
 	data: PropTypes.object.isRequired,
+	network: PropTypes.object.isRequired,
 };
 
 

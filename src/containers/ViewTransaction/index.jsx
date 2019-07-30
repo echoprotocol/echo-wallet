@@ -22,7 +22,7 @@ class ViewTransaction extends React.Component {
 
 	render() {
 		const {
-			data, bytecodeArgs, dataLog, topics,
+			data, bytecodeArgs, dataLog, topics, network,
 		} = this.props;
 
 		if (!data) {
@@ -34,7 +34,7 @@ class ViewTransaction extends React.Component {
 			{
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabOverview data={data} bytecodeArgs={bytecodeArgs} />
+						<TabOverview network={network} data={data} bytecodeArgs={bytecodeArgs} />
 					</Tab.Pane>
 				),
 			},
@@ -91,6 +91,7 @@ ViewTransaction.propTypes = {
 	history: PropTypes.object.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
+	network: PropTypes.object.isRequired,
 };
 
 ViewTransaction.defaultProps = {
@@ -103,6 +104,7 @@ export default withRouter(connect(
 		dataLog: state.converter.get('data'),
 		topics: state.converter.get('topics'),
 		bytecodeArgs: state.converter.get('bytecodeArgs'),
+		network: state.global.get('network').toJS(),
 	}),
 	(dispatch) => ({
 		resetTransaction: () => dispatch(resetTransaction()),
