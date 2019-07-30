@@ -8,7 +8,7 @@ import history from '../history';
 import {
 	SIGN_IN_PATH,
 	INDEX_PATH,
-	AUTH_ROUTES,
+	AUTH_ROUTES, CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { ECHO_ASSET_ID, NETWORKS } from '../constants/GlobalConstants';
@@ -54,7 +54,12 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		EchoJSActions.setSubscribe({ types: ['objects', 'block', 'accounts'], method: getObject });
 
-		if (AUTH_ROUTES.includes(history.location.pathname)) {
+		const userStorage = Services.getUserStorage();
+		const doesDBExist = await userStorage.doesDBExist();
+
+		if (!doesDBExist) {
+			history.push(CREATE_PASSWORD_PATH);
+		} else if (AUTH_ROUTES.includes(history.location.pathname)) {
 			history.push(INDEX_PATH);
 		}
 
@@ -93,13 +98,21 @@ export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
 
 	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.init();
+		await userStorage.setNetworkId(network.name);
+		const doesDBExist = await userStorage.doesDBExist();
+		if (!doesDBExist) {
+			history.push(CREATE_PASSWORD_PATH);
+		}
+
 		await dispatch(EchoJSActions.connect(network.url));
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
 		if (!accounts.length) {
-			if (!AUTH_ROUTES.includes(history.location.pathname)) {
+			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
 			}
 		} else {
@@ -204,6 +217,9 @@ export const saveNetwork = (network) => async (dispatch, getState) => {
 
 	localStorage.setItem('current_network', JSON.stringify(network));
 	dispatch(connection());
+
+	const userStorage = Services.getUserStorage();
+	await userStorage.setNetworkId(network.name);
 };
 
 export const addNetwork = () => (dispatch, getState) => {
@@ -303,18 +319,6 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	}));
 };
 
-export const initUserStorage = () => async (dispatch) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-	try {
-		const userStorage = Services.getUserStorage();
-		await userStorage.init();
-	} catch (err) {
-		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
-	} finally {
-		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
-	}
-};
-
 export const createDB = (password) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 	try {
@@ -322,12 +326,25 @@ export const createDB = (password) => async (dispatch) => {
 		await userStorage.deleteDB(password);
 		await userStorage.createDB(password);
 
-		await userStorage.setScheme(UserStorageService.SCHEMES.AUTO, password);
+		await userStorage.setScheme(UserStorageService.SCHEMES.MANUAL, password);
 
-		await dispatch(connection());
+		history.push(SIGN_IN_PATH);
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
 		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}
+};
+
+export const resetData = () => async (dispatch) => {
+	await dispatch(logout());
+
+	const userStorage = Services.getUserStorage();
+	const doesDBExist = await userStorage.doesDBExist();
+
+	if (doesDBExist) {
+		await userStorage.deleteDB();
+	}
+
+	history.push(CREATE_PASSWORD_PATH);
 };

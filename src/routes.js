@@ -16,6 +16,7 @@ import {
 	NETWORKS_PATH,
 	PERMISSIONS_PATH,
 	COMMITTEE_VOTE_PATH,
+	CREATE_PASSWORD_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -33,6 +34,7 @@ import CallContract from './containers/CallContract';
 import Networks from './containers/Networks';
 import Permissions from './containers/Permissions';
 import CommitteeVote from './containers/CommitteeVote';
+import Password from './containers/Password';
 
 export default class Routes extends React.Component {
 
@@ -54,6 +56,7 @@ export default class Routes extends React.Component {
 					<Route exact path={NETWORKS_PATH} component={Networks} />
 					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
 					<Route exact path={COMMITTEE_VOTE_PATH} component={CommitteeVote} />
+					<Route exact path={CREATE_PASSWORD_PATH} component={Password} />
 				</div>
 			</App>
 		);

@@ -4,6 +4,8 @@ import BN from 'bignumber.js';
 import {
 	ADDRESS_PREFIX,
 	CONTRACT_ID_PREFIX,
+	MAX_PASSWORD_LENGTH,
+	MIN_PASSWORD_LENGTH,
 	PUBLIC_KEY_LENGTH,
 } from '../constants/GlobalConstants';
 
@@ -18,16 +20,6 @@ export const validateAccountName = (accountName) => {
 
 	if (ChainValidation.is_account_name_error(accountName)) {
 		return ChainValidation.is_account_name_error(accountName);
-	}
-
-	return null;
-};
-
-export const validatePassword = (password) => {
-	if (!password) { return 'Password should not be empty'; }
-
-	if (password.length !== 0 && password.length < 8) {
-		return 'Password must be 8 characters or more';
 	}
 
 	return null;
@@ -339,3 +331,25 @@ export const isThreshold = (v) => {
 };
 
 export const isCommitteeMemberId = (v) => (typeof v === 'string') && committeeMemberIdRegex.test(v);
+
+export const validatePassword = (v) => {
+	const regPasswordLength = new RegExp(`^[\\w+]{${MIN_PASSWORD_LENGTH},${MAX_PASSWORD_LENGTH}}$`);
+
+	if (!v.match(regPasswordLength)) {
+		return `Password should have only latin letters from ${MIN_PASSWORD_LENGTH} to ${MAX_PASSWORD_LENGTH} characters`;
+	}
+
+	if (!/[A-Z]+/.test(v)) {
+		return 'Password should have one latin uppercase letter';
+	}
+
+	if (!/[a-z]+/.test(v)) {
+		return 'Password should have one latin lowercase letter';
+	}
+
+	if (!/^(?=.*[0-9])/.test(v)) {
+		return 'Password should have one number';
+	}
+
+	return null;
+};
