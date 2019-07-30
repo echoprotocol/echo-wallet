@@ -1,17 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
-	FORM_SIGN_UP,
-
 	FORM_SIGN_UP_CHECKBOX_1,
 	FORM_SIGN_UP_CHECKBOX_2,
 	FORM_SIGN_UP_CHECKBOX_3,
 } from '../../constants/FormConstants';
-
-import { setValue } from '../../actions/FormActions';
-
 
 class CheckComponent extends React.Component {
 
@@ -73,11 +67,4 @@ CheckComponent.propTypes = {
 	loading: PropTypes.bool.isRequired,
 };
 
-export default connect(
-	(state) => ({
-		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
-	}),
-	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_SIGN_UP, field, value)),
-	}),
-)(CheckComponent);
+export default CheckComponent;

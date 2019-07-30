@@ -25,6 +25,12 @@ export const validateAccountName = (accountName) => {
 	return null;
 };
 
+export const validateWIF = (wif) => {
+	if (!wif) { return 'WIF should not be empty'; }
+
+	return null;
+};
+
 export const validateCode = (code) => {
 	if (!code) {
 		return 'field should be not empty';

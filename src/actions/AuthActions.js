@@ -1,8 +1,9 @@
-import { key, PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 import { EchoJSActions, ChainStore } from 'echojs-redux';
 import { List } from 'immutable';
+import random from 'crypto-random-string';
 
-import { openModal, setDisable } from './ModalActions';
+import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
 import { addAccount, isAccountAdded } from './GlobalActions';
 
 import {
@@ -14,10 +15,10 @@ import {
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
-import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
-import { validateAccountName, validatePassword } from '../helpers/ValidateHelper';
+import { validateAccountName, validateWIF } from '../helpers/ValidateHelper';
 
 import {
 	validateAccountExist,
@@ -29,20 +30,20 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 
-export const generatePassword = () => (dispatch) => {
-	const generatedPassword = (`P${key.get_random_key().toWif()}`).substr(0, 45);
+export const generateWIF = () => (dispatch) => {
+	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
 
-	dispatch(setFormValue(FORM_SIGN_UP, 'generatedPassword', generatedPassword));
+	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
 };
 
 export const createAccount = ({
-	accountName, generatedPassword, confirmPassword,
+	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
-	let confirmPasswordError = validatePassword(confirmPassword);
+	let confirmWIFError = validateWIF(confirmWIF);
 
-	if (generatedPassword !== confirmPassword) {
-		confirmPasswordError = 'Passwords do not match';
+	if (generatedWIF !== confirmWIF) {
+		confirmWIFError = 'WIFs do not match';
 	}
 
 	if (accountNameError) {
@@ -50,8 +51,8 @@ export const createAccount = ({
 		return;
 	}
 
-	if (confirmPasswordError) {
-		dispatch(setFormError(FORM_SIGN_UP, 'confirmPassword', confirmPasswordError));
+	if (confirmWIFError) {
+		dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));
 		return;
 	}
 
@@ -72,18 +73,15 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const {
-			active, echoRandKey,
-		} = await AuthApi.registerAccount(
+		const { publicKey } = await AuthApi.registerAccount(
 			instance,
 			accountName,
-			generatedPassword,
+			generatedWIF,
 		);
 
 		const userStorage = Services.getUserStorage();
 		const account = await dispatch(EchoJSActions.fetch(accountName));
-		await userStorage.addKey(Key.create(active.publicKey, generatedPassword, account.get('id')), { password: '123123' });
-		await userStorage.addKey(Key.create(echoRandKey.publicKey, generatedPassword, account.get('id')), { password: '123123' });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.get('id')), { password });
 
 		dispatch(addAccount(accountName, network.name));
 
@@ -96,18 +94,17 @@ export const createAccount = ({
 };
 
 
-export const authUser = ({ accountName, password }) => async (dispatch, getState) => {
-
+export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
-	const passwordError = validatePassword(password);
+	const wifError = validateWIF(wif);
 
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_IN, 'accountName', accountNameError));
 		return false;
 	}
 
-	if (passwordError) {
-		dispatch(setFormError(FORM_SIGN_IN, 'password', passwordError));
+	if (wifError) {
+		dispatch(setFormError(FORM_SIGN_IN, 'wif', wifError));
 		return false;
 	}
 
@@ -129,21 +126,21 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
 		const account = await dispatch(EchoJSActions.fetch(accountName));
 
-		const { active, memo } = unlockWallet(account, password);
+		const key = unlockWallet(account, wif);
 
-		if (!active && !memo) {
-			dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
+		if (!key) {
+			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
 			return false;
 		}
 
 		const userStorage = Services.getUserStorage();
-		if (active) {
-			await userStorage.addKey(Key.create(active.publicKey, password, account.get('id')), { password: '123123' });
-		}
+		await userStorage.addKey(Key.create(key.publicKey, wif, account.get('id')), { password });
 
 		dispatch(addAccount(accountName, networkName));
+
 		return false;
 	} catch (err) {
+		console.log(err);
 		dispatch(setValue(FORM_SIGN_IN, 'error', formatError(err)));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
@@ -194,55 +191,63 @@ const getAccountsList = (accounts) => async (dispatch) => {
  *  Import account
  *
  * 	@param {String} accountName
- * @param {String} password
+ * @param {String} wif
  *
  */
-export const importAccount = ({ accountName, password }) =>
+export const importAccount = ({ accountName, wif, password }) =>
 	async (dispatch, getState) => {
-		if (getKeyFromWif(password)) {
+		const wifError = validateWIF(wif);
 
-			const active = PrivateKey.fromWif(password).toPublicKey().toString();
-			const networkName = getState().global.getIn(['network', 'name']);
+		if (wifError) {
+			dispatch(setFormError(FORM_SIGN_IN, 'wif', wifError));
+			return;
+		}
 
-			try {
-				let accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
-				if (!accountIDs.size) {
-					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
-					return;
-				}
-				accountIDs = new Set(accountIDs.toArray());
-				accountIDs = [...accountIDs];
+		const key = getKeyFromWif(wif);
 
-				const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
+		if (!key) {
+			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+			return;
+		}
 
-				accounts.forEach((n) => {
-					if (isAccountAdded(n.get('name'), networkName)) {
-						accountIDs = accountIDs.filter((item) => n.get('id') !== item);
-					}
-				});
+		const active = key.toPublicKey().toString();
+		const networkName = getState().global.getIn(['network', 'name']);
 
-				if (accountIDs.length > 1) {
-					dispatch(getAccountsList(accounts));
-					return;
-				}
-
-				const account = await ChainStore.FetchChain('getAccount', accountIDs[0]);
-
-				if (accountName && account.get('name') !== accountName) {
-					dispatch(setFormError(FORM_SIGN_IN, 'password', 'Invalid password'));
-					return;
-				}
-
-				dispatch(authUser({ accountName: account.get('name'), password }));
+		try {
+			let accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
+			if (!accountIDs.size) {
+				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
 				return;
-
-
-			} catch (error) {
-				dispatch(setValue(FORM_SIGN_IN, 'error', error));
 			}
 
+			accountIDs = accountIDs.toSet().toArray();
+
+			const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
+
+			accounts.forEach((n) => {
+				if (isAccountAdded(n.get('name'), networkName)) {
+					accountIDs = accountIDs.filter((item) => n.get('id') !== item);
+				}
+			});
+
+			if (accountIDs.length > 1) {
+				dispatch(getAccountsList(accounts));
+				return;
+			}
+
+			const account = await ChainStore.FetchChain('getAccount', accountIDs[0]);
+
+			if (accountName && account.get('name') !== accountName) {
+				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+				return;
+			}
+
+			dispatch(authUser({ accountName: account.get('name'), wif, password }));
+			return;
+
+		} catch (error) {
+			dispatch(setValue(FORM_SIGN_IN, 'error', error));
 		}
-		dispatch(authUser({ accountName, password }));
 	};
 
 /**
@@ -251,44 +256,44 @@ export const importAccount = ({ accountName, password }) =>
  *  Log in selected accounts
  *
  *  @param {Array} accounts
- *  @param {String} password
+ *  @param {String} wif
  *
  */
-export const importSelectedAccounts = (accounts, password) => async (dispatch) => {
+export const importSelectedAccounts = (accounts, wif) => async (dispatch) => {
 	accounts.forEach((account) => {
 		if (account.checked) {
-			dispatch(authUser({ accountName: account.name, password }));
+			dispatch(authUser({ accountName: account.name, wif }));
 		}
 	});
 };
 
-export const unlockAccount = (account, password) => (dispatch) => {
-
+export const unlock = (password, callback = () => {}) => async (dispatch) => {
 	try {
-		dispatch(setDisable(MODAL_UNLOCK, true));
-
-		const passwordError = validatePassword(password);
-
-		if (passwordError) {
-			return { error: passwordError };
-		}
-
-		const keys = unlockWallet(account, password);
-
-		if (!keys.active) {
-			return { error: 'Invalid password' };
-		}
+		dispatch(toggleModalLoading(MODAL_UNLOCK, true));
 
 		const userStorage = Services.getUserStorage();
-		Object.entries(keys).forEach(([, value]) => {
-			userStorage.addKey(Key.create(value.publicKey, password, account.get('id')), { password: '123123' });
-		});
+		const doesDBExist = await userStorage.doesDBExist();
 
-		return { keys };
+		if (!doesDBExist) {
+			dispatch(setError(MODAL_UNLOCK, 'DB doesn\'t exist'));
+			return;
+		}
+
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+		const correctPassword = await userStorage.isMasterPassword(password);
+
+		if (!correctPassword) {
+			dispatch(setError(MODAL_UNLOCK, 'Invalid password'));
+			return;
+		}
+
+		dispatch(closeModal(MODAL_UNLOCK));
+
+		callback(password);
 	} catch (err) {
-		return { error: formatError(err) };
+		dispatch(setError(MODAL_UNLOCK, err));
 	} finally {
-		dispatch(setDisable(MODAL_UNLOCK, false));
+		dispatch(toggleModalLoading(MODAL_UNLOCK, false));
 	}
 
 };

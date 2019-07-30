@@ -144,7 +144,7 @@ export default connect(
 	(state) => ({
 		account: state.echojs.getIn(['data', 'accounts', state.global.getIn(['activeUser', 'id'])]),
 		show: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'show']),
-		disabled: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'disabled']),
+		disabled: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'loading']),
 		role: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'role']),
 		publicKey: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'publicKey']),
 	}),

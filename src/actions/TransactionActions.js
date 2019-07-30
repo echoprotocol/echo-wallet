@@ -17,7 +17,7 @@ import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants'
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
-import { closeModal, setDisable } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -525,7 +525,7 @@ export const createContract = () => async (dispatch, getState) => {
 };
 
 export const sendTransaction = (keys) => async (dispatch, getState) => {
-	dispatch(setDisable(MODAL_DETAILS, true));
+	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 
 	const { operation, options } = getState().transaction.toJS();
 
@@ -564,7 +564,7 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 		})
-		.finally(() => dispatch(setDisable(MODAL_DETAILS, false)));
+		.finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
 	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));

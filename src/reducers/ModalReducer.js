@@ -14,7 +14,8 @@ import {
 
 const DEFAULT_FIELDS = Map({
 	show: false,
-	disabled: false,
+	loading: false,
+	error: null,
 });
 
 const DEFAULT_MODAL_FIELDS = {
@@ -23,12 +24,8 @@ const DEFAULT_MODAL_FIELDS = {
 			value: '',
 			error: null,
 		},
-		error: null,
 	}),
-	[MODAL_UNLOCK]: Map({
-		role: null,
-		publicKey: null,
-	}),
+	[MODAL_UNLOCK]: Map({}),
 	[MODAL_UNLOCK_PERMISSION]: Map({
 		role: null,
 		publicKey: null,
@@ -81,9 +78,9 @@ export default createModule({
 				return state;
 			},
 		},
-		setDisable: {
+		toggleLoading: {
 			reducer: (state, { payload }) => {
-				state = state.setIn([payload.type, 'disabled'], payload.value);
+				state = state.setIn([payload.type, 'loading'], payload.value);
 				return state;
 			},
 		},

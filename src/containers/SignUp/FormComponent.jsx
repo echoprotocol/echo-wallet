@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Form, Button } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
 
-import { FORM_SIGN_UP } from '../../constants/FormConstants';
-
-import { setFormValue, clearForm } from '../../actions/FormActions';
 
 class FormComponent extends React.Component {
 
@@ -30,7 +26,7 @@ class FormComponent extends React.Component {
 
 	render() {
 		const {
-			accountName, generatedPassword, confirmPassword, loading,
+			accountName, generatedWIF, confirmWIF, loading,
 		} = this.props;
 
 		return (
@@ -49,25 +45,25 @@ class FormComponent extends React.Component {
 					<span className="error-message">{accountName.error}</span>
 				</Form.Field>
 				<Form.Field>
-					<label htmlFor="generatedPassword">Generated password</label>
+					<label htmlFor="generatedWIF">Generated WIF</label>
 					<div className="ui action input">
-						<input name="generatedPassword" className="ui input" placeholder="Genereted password" value={generatedPassword.value} readOnly />
-						<CopyToClipboard text={generatedPassword.value}>
+						<input name="generatedWIF" className="ui input" placeholder="Genereted WIF" value={generatedWIF.value} readOnly />
+						<CopyToClipboard text={generatedWIF.value}>
 							<Button icon="copy" className="main-btn" />
 						</CopyToClipboard>
 					</div>
 				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: confirmPassword.error })}>
-					<label htmlFor="confirmPassword">Confirm password</label>
+				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>
+					<label htmlFor="confirmWIF">Confirm WIF</label>
 					<input
-						name="confirmPassword"
+						name="confirmWIF"
 						className="ui input"
-						placeholder="Confirm password"
-						value={confirmPassword.value}
+						placeholder="Confirm WIF"
+						value={confirmWIF.value}
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					<span className="error-message">{confirmPassword.error}</span>
+					<span className="error-message">{confirmWIF.error}</span>
 
 				</Form.Field>
 			</div>
@@ -78,22 +74,11 @@ class FormComponent extends React.Component {
 
 FormComponent.propTypes = {
 	accountName: PropTypes.object.isRequired,
-	generatedPassword: PropTypes.object.isRequired,
-	confirmPassword: PropTypes.object.isRequired,
+	generatedWIF: PropTypes.object.isRequired,
+	confirmWIF: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool.isRequired,
 };
 
-export default connect(
-	(state) => ({
-		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),
-		generatedPassword: state.form.getIn([FORM_SIGN_UP, 'generatedPassword']),
-		confirmPassword: state.form.getIn([FORM_SIGN_UP, 'confirmPassword']),
-		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
-	}),
-	(dispatch) => ({
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_UP, field, value)),
-		clearForm: () => dispatch(clearForm(FORM_SIGN_UP)),
-	}),
-)(FormComponent);
+export default FormComponent;

@@ -12,7 +12,7 @@ import {
 	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 import {
 	FORM_ADD_CUSTOM_NETWORK,
 	FORM_PERMISSION_KEY,
@@ -39,7 +39,6 @@ import { clearTable } from './TableActions';
 import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
 
 import Services from '../services';
-import UserStorageService from '../services/UserStorageService';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
@@ -339,7 +338,7 @@ export const createDB = (password) => async (dispatch) => {
 		await userStorage.deleteDB(password);
 		await userStorage.createDB(password);
 
-		await userStorage.setScheme(UserStorageService.SCHEMES.MANUAL, password);
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
 
 		history.push(SIGN_IN_PATH);
 	} catch (err) {

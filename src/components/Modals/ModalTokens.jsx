@@ -97,7 +97,7 @@ ModalTokens.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TOKENS, 'show']),
-		disabled: state.modal.getIn([MODAL_TOKENS, 'disabled']),
+		disabled: state.modal.getIn([MODAL_TOKENS, 'loading']),
 		contractId: state.modal.getIn([MODAL_TOKENS, 'contractId']),
 		error: state.modal.getIn([MODAL_TOKENS, 'error']),
 	}),

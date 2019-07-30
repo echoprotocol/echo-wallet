@@ -162,7 +162,7 @@ class TransactionScenario extends React.Component {
 					weight={this.state.weight}
 					threshold={this.state.threshold}
 					show={this.state.showUnlockModal}
-					disabled={this.props[MODAL_UNLOCK].get('disabled')}
+					disabled={this.props[MODAL_UNLOCK].get('loading')}
 					password={this.state.password}
 					error={this.state.error}
 					change={(value) => this.change(value)}
@@ -171,7 +171,7 @@ class TransactionScenario extends React.Component {
 				/>
 				<ModalApprove
 					show={this.props[MODAL_DETAILS].get('show')}
-					disabled={this.props[MODAL_DETAILS].get('disabled')}
+					disabled={this.props[MODAL_DETAILS].get('loading')}
 					operation={this.props.operation}
 					showOptions={this.props.showOptions}
 					send={(value) => this.send(value)}

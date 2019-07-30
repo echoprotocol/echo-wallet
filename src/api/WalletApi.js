@@ -1,13 +1,5 @@
 import { PrivateKey } from 'echojs-lib';
 
-export const generateKeyFromPassword = (accountName, role, password) => {
-	const seed = `${accountName}${role}${password}`;
-	const privateKey = PrivateKey.fromSeed(seed);
-	const publicKey = privateKey.toPublicKey().toString();
-
-	return { privateKey, publicKey };
-};
-
 export const getKeyFromWif = (wif) => {
 	try {
 		const privateKey = PrivateKey.fromWif(wif);
@@ -32,40 +24,17 @@ export const validateAccountExist = (instance, accountName, shouldExist, limit =
 		})
 );
 
-export const unlockWallet = (account, password, roles = ['active']) => {
-
-	const privateKey = getKeyFromWif(password);
-	let key;
-
-	if (privateKey) {
-		key = {
-			privateKey,
-			publicKey: privateKey.toPublicKey().toString(),
-		};
+export const unlockWallet = (account, wif) => {
+	if (!account) {
+		return null;
 	}
 
+	const privateKey = PrivateKey.fromWif(wif);
+	const publicKey = privateKey.toPublicKey().toString();
 
-	if (!account) { return {}; }
+	if (account.getIn(['active', 'key_auths']).find(([key]) => key === publicKey)) {
+		return { privateKey, publicKey };
+	}
 
-	account = account.toJS();
-	return roles.reduce((keys, role) => {
-		if (!privateKey) {
-			key = generateKeyFromPassword(account.name, role, password);
-		}
-
-		switch (role) {
-			case 'active': {
-				const activeKey = account.active.key_auths.find(([active]) => active === key.publicKey);
-
-				if (activeKey) {
-					keys.active = key;
-				}
-
-				break;
-			}
-			default: break;
-		}
-
-		return keys;
-	}, {});
+	return null;
 };

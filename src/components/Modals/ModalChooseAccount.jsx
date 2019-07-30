@@ -30,8 +30,8 @@ class ModalChooseAccount extends React.Component {
 	}
 
 
-	onConfirm(accounts, password) {
-		this.props.importAccounts(accounts, password);
+	onConfirm(accounts, wif) {
+		this.props.importAccounts(accounts, wif);
 		this.onClose();
 	}
 
@@ -127,7 +127,7 @@ class ModalChooseAccount extends React.Component {
 
 	render() {
 
-		const { show, accounts, password } = this.props;
+		const { show, accounts, wif } = this.props;
 		const { checkedAll } = this.state;
 		const { sortType, sortInc } = this.props.sort.toJS();
 
@@ -204,7 +204,7 @@ class ModalChooseAccount extends React.Component {
 									basic
 									type="button"
 									className="main-btn"
-									onClick={() => this.onConfirm(accounts, password)}
+									onClick={() => this.onConfirm(accounts, wif)}
 									content="Continue"
 								/>
 							</div>
@@ -224,27 +224,27 @@ ModalChooseAccount.propTypes = {
 	importAccounts: PropTypes.func.isRequired,
 	toggleSort: PropTypes.func.isRequired,
 	accounts: PropTypes.any,
-	password: PropTypes.string,
+	wif: PropTypes.string,
 	sort: PropTypes.object.isRequired,
 };
 
 ModalChooseAccount.defaultProps = {
 	show: false,
 	accounts: [],
-	password: '',
+	wif: '',
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'show']),
 		accounts: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'accounts']),
-		password: state.form.getIn([FORM_SIGN_IN, 'password']).value,
+		wif: state.form.getIn([FORM_SIGN_IN, 'wif']).value,
 		sort: state.sort.get(SORT_ACCOUNTS),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_CHOOSE_ACCOUNT)),
 		toggleChecked: (param, value) => dispatch(update(MODAL_CHOOSE_ACCOUNT, param, value)),
-		importAccounts: (accounts, password) => dispatch(importSelectedAccounts(accounts, password)),
+		importAccounts: (accounts, wif) => dispatch(importSelectedAccounts(accounts, wif)),
 		toggleSort: (type) => dispatch(toggleSort(SORT_ACCOUNTS, type)),
 	}),
 )(ModalChooseAccount);

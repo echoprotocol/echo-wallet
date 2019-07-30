@@ -20,6 +20,6 @@ export const setParamError = (type, param, error) => (dispatch) => {
 export const setError = (type, error) => (dispatch) => {
 	dispatch(ModalReducer.actions.setError({ type, error }));
 };
-export const setDisable = (type, value) => (dispatch) => {
-	dispatch(ModalReducer.actions.setDisable({ type, value }));
+export const toggleLoading = (type, value) => (dispatch) => {
+	dispatch(ModalReducer.actions.toggleLoading({ type, value }));
 };

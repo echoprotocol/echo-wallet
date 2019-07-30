@@ -6,6 +6,8 @@ import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 
+import AuthorizationScenario from '../AuthorizationScenario';
+
 import { SIGN_UP_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
@@ -18,11 +20,12 @@ class SignIn extends React.Component {
 		this.props.clearForm();
 	}
 
-	onClick() {
-		const { accountName, password } = this.props;
+	onClick(password) {
+		const { accountName, wif } = this.props;
 		this.props.importAccount({
 			accountName: accountName.value.trim(),
-			password: password.value.trim(),
+			wif: wif.value.trim(),
+			password,
 		});
 	}
 
@@ -45,19 +48,19 @@ class SignIn extends React.Component {
 
 	isDisabledSubmit() {
 		const {
-			password,
+			wif,
 		} = this.props;
 
-		if (!password.value || password.error) {
+		if (!wif.value || wif.error) {
 			return true;
 		}
 
 		return false;
 	}
 
-	renderSignIn() {
+	renderSignIn(submit) {
 		const {
-			accountName, password, loading, location,
+			accountName, wif, loading, location,
 		} = this.props;
 
 		const { isAddAccount } = qs.parse(location.search);
@@ -95,10 +98,10 @@ class SignIn extends React.Component {
 						<span className="error-message">{accountName.error}</span>
 
 					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: password.error })}>
-						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
-						<input type="password" placeholder="Password or WIF-key" name="password" className="ui input" value={password.value} onChange={(e) => this.onChange(e)} />
-						<span className="error-message">{password.error}</span>
+					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
+						<label htmlFor="PasOrWifiKey">WIF-key</label>
+						<input type="password" placeholder="WIF-key" name="wif" className="ui input" value={wif.value} onChange={(e) => this.onChange(e)} />
+						<span className="error-message">{wif.error}</span>
 					</Form.Field>
 				</div>
 				<div className="form-panel">
@@ -122,7 +125,7 @@ class SignIn extends React.Component {
 								basic
 								type="submit"
 								disabled={this.isDisabledSubmit()}
-								onClick={() => this.onClick()}
+								onClick={submit}
 								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 								content={isAddAccount ? 'Add Account' : 'Login'}
 							/>
@@ -136,9 +139,15 @@ class SignIn extends React.Component {
 	render() {
 
 		return (
-			<div className="sign-scroll-fix">
-				{ this.renderSignIn() }
-			</div>
+			<AuthorizationScenario authorize={(password) => this.onClick(password)}>
+				{
+					(submit) => (
+						<div className="sign-scroll-fix">
+							{ this.renderSignIn(submit) }
+						</div>
+					)
+				}
+			</AuthorizationScenario>
 		);
 	}
 
@@ -147,7 +156,7 @@ class SignIn extends React.Component {
 SignIn.propTypes = {
 	loading: PropTypes.bool,
 	accountName: PropTypes.object.isRequired,
-	password: PropTypes.object.isRequired,
+	wif: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	importAccount: PropTypes.func.isRequired,
@@ -162,7 +171,7 @@ SignIn.defaultProps = {
 export default connect(
 	(state) => ({
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
-		password: state.form.getIn([FORM_SIGN_IN, 'password']),
+		wif: state.form.getIn([FORM_SIGN_IN, 'wif']),
 		loading: state.form.getIn([FORM_SIGN_IN, 'loading']),
 	}),
 	(dispatch) => ({

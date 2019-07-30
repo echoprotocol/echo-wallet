@@ -14,7 +14,7 @@ import {
 	setError,
 	setParamError,
 	closeModal,
-	setDisable,
+	toggleLoading,
 } from './ModalActions';
 import { setValue, setFormError } from './FormActions';
 
@@ -216,7 +216,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	dispatch(setDisable(MODAL_TOKENS, true));
+	dispatch(toggleLoading(MODAL_TOKENS, true));
 
 	try {
 		if (!contractId) {
@@ -273,7 +273,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', formatError(err)));
 	} finally {
-		dispatch(setDisable(MODAL_TOKENS, false));
+		dispatch(toggleLoading(MODAL_TOKENS, false));
 	}
 
 };

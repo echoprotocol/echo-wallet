@@ -64,7 +64,7 @@ class Password extends React.Component {
 	}
 
 	render() {
-		const { repeatError } = this.state;
+		const { repeatError, password, repeatPassword } = this.state;
 		const { loading, error } = this.props;
 
 		return (
@@ -107,6 +107,7 @@ class Password extends React.Component {
 				</div>
 				<div className="form-panel">
 					<Button
+						disabled={loading || error || repeatError || !password || !repeatPassword}
 						basic={!loading}
 						content={loading ? 'Creating...' : 'Create password'}
 						className={classnames('main-btn', { load: loading })}

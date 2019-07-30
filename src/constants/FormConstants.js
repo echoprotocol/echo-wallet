@@ -12,6 +12,6 @@ export const FORM_PERMISSION_KEY = 'permission_key';
 export const FORM_PASSWORD_CREATE = 'password_create';
 export const FORM_COMMITTEE = 'committee_key';
 
-export const FORM_SIGN_UP_CHECKBOX_1 = 'I understand that I will lose access to my funds if I loose my password';
-export const FORM_SIGN_UP_CHECKBOX_2 = 'I understand no one can recover my password if I lose or forget it';
-export const FORM_SIGN_UP_CHECKBOX_3 = 'I have written down or otherwise stored my password';
+export const FORM_SIGN_UP_CHECKBOX_1 = 'I understand that I will lose access to my funds if I loose my WIF';
+export const FORM_SIGN_UP_CHECKBOX_2 = 'I understand no one can recover my WIF if I lose or forget it';
+export const FORM_SIGN_UP_CHECKBOX_3 = 'I have written down or otherwise stored my WIF';

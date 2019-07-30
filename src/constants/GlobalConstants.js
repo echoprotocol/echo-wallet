@@ -86,6 +86,11 @@ export const RANDOM_SIZE = 2048;
 export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_PASSWORD_LENGTH = 32;
 
+export const USER_STORAGE_SCHEMES = {
+	AUTO: 'AUTO',
+	MANUAL: 'MANUAL',
+};
+
 export const KEY_CODE_ENTER = 13;
 
 export const NETWORKS = [

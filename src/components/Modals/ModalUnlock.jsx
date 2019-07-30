@@ -20,7 +20,7 @@ class ModalUnlockWallet extends React.Component {
 
 	render() {
 		const {
-			show, password, error, disabled, weight, threshold,
+			show, password, error, disabled,
 		} = this.props;
 
 		return (
@@ -38,14 +38,14 @@ class ModalUnlockWallet extends React.Component {
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="form-info">
-								<h3>{`Unlock Wallet ${(weight !== null) ? `(Threshold ${weight}/${threshold})` : ''}`}</h3>
+								<h3>Unlock Wallet</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="Password">PIN</label>
+									<label htmlFor="Password">Password</label>
 									<input
 										type="password"
-										placeholder="PIN"
+										placeholder="Password"
 										name="password"
 										className="ui input"
 										value={password}
@@ -56,7 +56,7 @@ class ModalUnlockWallet extends React.Component {
 								</Form.Field>
 							</div>
 							<div className="form-panel">
-								<a className="action-link">Forgot PIN?</a>
+								<a className="action-link">Forgot password?</a>
 								<Button
 									basic
 									type="submit"
@@ -83,8 +83,6 @@ ModalUnlockWallet.propTypes = {
 	change: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
-	weight: PropTypes.number,
-	threshold: PropTypes.number,
 };
 
 ModalUnlockWallet.defaultProps = {
@@ -92,8 +90,6 @@ ModalUnlockWallet.defaultProps = {
 	disabled: false,
 	password: '',
 	error: null,
-	weight: null,
-	threshold: null,
 };
 
 export default ModalUnlockWallet;

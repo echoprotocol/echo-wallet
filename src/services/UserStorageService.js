@@ -1,6 +1,6 @@
 import StorageService from './StorageService';
 import Storage from '../logic-components/db/Storage';
-import { DB_NAME, STORE } from '../constants/GlobalConstants';
+import { DB_NAME, STORE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 import ManualSchemeService from './schemes/ManualSchemeService';
 import AutoSchemeService from './schemes/AutoSchemeService';
 import Network from '../logic-components/db/models/network';
@@ -66,7 +66,7 @@ class UserStorageService {
 
 	/**
 	 *
-	 * @param {UserStorageService.SCHEMES.AUTO|UserStorageService.SCHEMES.MANUAL} scheme AUTO|MANUAL
+	 * @param {USER_STORAGE_SCHEMES.AUTO|USER_STORAGE_SCHEMES.MANUAL} scheme AUTO|MANUAL
 	 * @param {String?} password
 	 * @return {Promise.<void>}
 	 */
@@ -76,13 +76,13 @@ class UserStorageService {
 		await autoSchemeService.resetPrivateStorage();
 
 		switch (scheme) {
-			case UserStorageService.SCHEMES.AUTO:
+			case USER_STORAGE_SCHEMES.AUTO:
 				if (!password) {
 					throw new Error('Password is required.');
 				}
 				await autoSchemeService.setEncryptionHash(password);
 				break;
-			case UserStorageService.SCHEMES.MANUAL:
+			case USER_STORAGE_SCHEMES.MANUAL:
 				break;
 			default:
 				throw new Error('Unknown scheme');
@@ -92,9 +92,9 @@ class UserStorageService {
 
 	getCurrentScheme() {
 		switch (this.scheme) {
-			case UserStorageService.SCHEMES.AUTO:
+			case USER_STORAGE_SCHEMES.AUTO:
 				return autoSchemeService;
-			case UserStorageService.SCHEMES.MANUAL:
+			case USER_STORAGE_SCHEMES.MANUAL:
 				return manualSchemeService;
 			default:
 				throw new Error('Unknown scheme');
@@ -107,10 +107,10 @@ class UserStorageService {
 	 */
 	async resetCurrentScheme() {
 		switch (this.scheme) {
-			case UserStorageService.SCHEMES.AUTO:
+			case USER_STORAGE_SCHEMES.AUTO:
 				await this.getCurrentScheme().resetPrivateStorage();
 				break;
-			case UserStorageService.SCHEMES.MANUAL:
+			case USER_STORAGE_SCHEMES.MANUAL:
 				break;
 			default:
 				break;
@@ -301,10 +301,5 @@ class UserStorageService {
 	}
 
 }
-
-UserStorageService.SCHEMES = {
-	AUTO: 'AUTO',
-	MANUAL: 'MANUAL',
-};
 
 export default UserStorageService;

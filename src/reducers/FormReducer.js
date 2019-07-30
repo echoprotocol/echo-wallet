@@ -29,11 +29,11 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
-		generatedPassword: {
+		generatedWIF: {
 			value: '',
 			error: null,
 		},
-		confirmPassword: {
+		confirmWIF: {
 			value: '',
 			error: null,
 		},
@@ -44,14 +44,13 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
-		password: {
+		wif: {
 			value: '',
 			error: null,
 		},
 	}),
 	[FORM_UNLOCK_MODAL]: Map({
 		password: {
-			value: '',
 			error: null,
 		},
 	}),
