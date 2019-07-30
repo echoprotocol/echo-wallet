@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input, Button } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 import { createDB } from '../../actions/GlobalActions';
+import { setValue } from '../../actions/FormActions';
 
 import { KEY_CODE_ENTER } from '../../constants/GlobalConstants';
-
-import { validatePassword } from '../../helpers/ValidateHelper';
+import { FORM_PASSWORD_CREATE } from '../../constants/FormConstants';
 
 class Password extends React.Component {
 
@@ -16,7 +17,6 @@ class Password extends React.Component {
 
 		this.state = {
 			password: '',
-			passwordError: '',
 			repeatPassword: '',
 			repeatError: false,
 		};
@@ -25,8 +25,8 @@ class Password extends React.Component {
 	onChange(e) {
 		const { value, name } = e.target;
 
-		if (name === 'password') {
-			this.setState({ passwordError: '' });
+		if (name === 'password' && this.props.error) {
+			this.props.clear();
 		}
 
 		this.setState({
@@ -37,18 +37,7 @@ class Password extends React.Component {
 	}
 
 	onSubmit() {
-		const { password, repeatPassword, repeatError } = this.state;
-
-		const passwordError = validatePassword(password);
-
-		if (passwordError) {
-			this.setState({ passwordError });
-			return;
-		}
-
-		if (repeatError) {
-			return;
-		}
+		const { password, repeatPassword } = this.state;
 
 		if (password !== repeatPassword) {
 			this.setState({ repeatError: true });
@@ -60,10 +49,10 @@ class Password extends React.Component {
 	}
 
 	onKeyDown(e) {
-		const { passwordError, repeatError } = this.state;
-		const { globalLoading } = this.props;
+		const { repeatError } = this.state;
+		const { loading, error } = this.props;
 
-		if (globalLoading || passwordError || repeatError) { return; }
+		if (loading || error || repeatError) { return; }
 
 		const key = e.keyCode || e.which;
 
@@ -75,34 +64,79 @@ class Password extends React.Component {
 	}
 
 	render() {
-		const { repeatError, passwordError } = this.state;
+		const { repeatError } = this.state;
+		const { loading, error } = this.props;
+
 		return (
-			<div>
-				<div>ECHO Password</div>
-				<Input name="password" onChange={(e) => this.onChange(e)} onKeyDown={(e) => this.onKeyDown(e)} />
-				<div>{passwordError}</div>
-				<p />
-				<Input name="repeatPassword" onChange={(e) => this.onChange(e)} onKeyDown={(e) => this.onKeyDown(e)} />
-				<p />
-				<div>{repeatError && 'Password does not match'}</div>
-				<p />
-				<Button content="Click me!" onClick={() => this.onSubmit()} />
-			</div>
+			<Form className="main-form pin-form">
+				<div className="form-info">
+					<h3>Welcome to Echo</h3>
+				</div>
+				<div className="form-info-description">Please, create password that will be used to unlock the app from this device. Echo Desktop Wallet does not store backups of the account password, so in case of losing your password you will need to reset it.</div>
+				<div className="field-wrap">
+					<Form.Field className={classnames('error-wrap', { error })}>
+						<label htmlFor="password">Password</label>
+
+						<input
+							type="password"
+							placeholder="Create password"
+							name="password"
+							className="ui input"
+							autoFocus
+							onChange={(e) => this.onChange(e)}
+							onKeyDown={(e) => this.onKeyDown(e)}
+						/>
+						<span className="error-message">{error}</span>
+
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
+						<label htmlFor="repeatPassword">Confirm password</label>
+
+						<input
+							type="password"
+							placeholder="Confirm password"
+							name="repeatPassword"
+							className="ui input"
+							autoFocus
+							onChange={(e) => this.onChange(e)}
+							onKeyDown={(e) => this.onKeyDown(e)}
+						/>
+						<span className="error-message">Passwords do not match</span>
+
+					</Form.Field>
+				</div>
+				<div className="form-panel">
+					<Button
+						basic={!loading}
+						content={loading ? 'Creating...' : 'Create password'}
+						className={classnames('main-btn', { load: loading })}
+						onClick={() => this.onSubmit()}
+					/>
+				</div>
+			</Form>
 		);
 	}
 
 }
 
 Password.propTypes = {
-	globalLoading: PropTypes.bool.isRequired,
+	error: PropTypes.string,
+	loading: PropTypes.bool.isRequired,
 	createDB: PropTypes.func.isRequired,
+	clear: PropTypes.func.isRequired,
+};
+
+Password.defaultProps = {
+	error: null,
 };
 
 export default connect(
 	(state) => ({
-		globalLoading: state.global.get('globalLoading'),
+		loading: state.form.getIn([FORM_PASSWORD_CREATE, 'loading']),
+		error: state.form.getIn([FORM_PASSWORD_CREATE, 'error']),
 	}),
 	(dispatch) => ({
 		createDB: (password) => dispatch(createDB(password)),
+		clear: () => dispatch(setValue(FORM_PASSWORD_CREATE, 'error', null)),
 	}),
 )(Password);

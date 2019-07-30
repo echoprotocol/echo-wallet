@@ -34,7 +34,7 @@
         display: flex;
         align-items: center;
         width: 100%;
-        margin-bottom: 28px;
+
         .back-link {
             background-color: transparent;
             border: 0;
@@ -72,7 +72,19 @@
             margin: 0 auto;
             text-align: center;
         }
+
+
     }
+    .form-info-description {
+        font-size: 14px;
+        font-family: proxima;
+        font-weight: 400;
+        color: rgba(59, 59, 59, 0.8);
+        line-height: 1.429;
+        text-align: center;
+        max-width: 432px;
+    }
+
     &.main-form {
         display: flex;
         flex-direction: column;
@@ -168,7 +180,16 @@
             }
         }
     }
-
+    &.pin-form {
+        .form-panel {
+            justify-content: flex-end;
+            .main-btn {
+                margin: 0;
+                min-width: 160px;
+                min-height: 37px;
+            }
+        }
+    }
     &.ui.form {
         textarea {
             resize: none;
@@ -338,7 +359,14 @@
         margin-top: 2px;
     }
 }
-
+.form-info  {
+    & + .field-wrap {
+        margin-top: 28px;
+    }
+    & + .form-info-description {
+        margin:  18px auto 28px;
+    }
+}
 
 .ui.input.label-in-left {
     display: flex;

@@ -333,6 +333,10 @@ export const isThreshold = (v) => {
 export const isCommitteeMemberId = (v) => (typeof v === 'string') && committeeMemberIdRegex.test(v);
 
 export const validatePassword = (v) => {
+	if (!v) {
+		return 'Password should not be empty';
+	}
+
 	const regPasswordLength = new RegExp(`^[\\w+]{${MIN_PASSWORD_LENGTH},${MAX_PASSWORD_LENGTH}}$`);
 
 	if (!v.match(regPasswordLength)) {

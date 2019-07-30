@@ -8,16 +8,21 @@ import history from '../history';
 import {
 	SIGN_IN_PATH,
 	INDEX_PATH,
-	AUTH_ROUTES, CREATE_PASSWORD_PATH,
+	AUTH_ROUTES,
+	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { ECHO_ASSET_ID, NETWORKS } from '../constants/GlobalConstants';
-import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY } from '../constants/FormConstants';
-
+import {
+	FORM_ADD_CUSTOM_NETWORK,
+	FORM_PERMISSION_KEY,
+	FORM_PASSWORD_CREATE,
+} from '../constants/FormConstants';
 
 import {
 	validateNetworkName,
 	validateNetworkAddress,
+	validatePassword,
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { formatError } from '../helpers/FormatHelper';
@@ -31,7 +36,7 @@ import {
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
-import { setFormError, clearForm } from './FormActions';
+import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
 
 import Services from '../services';
 import UserStorageService from '../services/UserStorageService';
@@ -320,7 +325,15 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 };
 
 export const createDB = (password) => async (dispatch) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+	const error = validatePassword(password);
+
+	if (error) {
+		dispatch(setValue(FORM_PASSWORD_CREATE, 'error', error));
+		return;
+	}
+
+	dispatch(toggleLoading(FORM_PASSWORD_CREATE, true));
+
 	try {
 		const userStorage = Services.getUserStorage();
 		await userStorage.deleteDB(password);
@@ -330,9 +343,9 @@ export const createDB = (password) => async (dispatch) => {
 
 		history.push(SIGN_IN_PATH);
 	} catch (err) {
-		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
+		dispatch(setValue(FORM_PASSWORD_CREATE, 'error', formatError(err)));
 	} finally {
-		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+		dispatch(toggleLoading(FORM_PASSWORD_CREATE, false));
 	}
 };
 
