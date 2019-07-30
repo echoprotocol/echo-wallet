@@ -142,8 +142,9 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const removeAccount = (accountName, networkName) => async (dispatch, getState) => {
+export const removeAccount = (accountName) => async (dispatch, getState) => {
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -151,30 +152,20 @@ export const removeAccount = (accountName, networkName) => async (dispatch, getS
 	accounts = accounts.filter(({ name }) => name !== accountName);
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-	if (activeAccountName === accountName && accounts[0]) {
-		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+	if (!accounts.length) {
+		dispatch(clearTable(HISTORY_TABLE));
+		dispatch(resetBalance());
+		history.push(SIGN_IN_PATH);
+		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
+		EchoJSActions.resetSubscribe();
+		dispatch(EchoJSActions.clearStore());
+	}
 
+	if (activeAccountName === accountName && accounts[0]) {
 		dispatch(initAccount(accounts[0].name, networkName));
 	} else {
 		dispatch(getPreviewBalances(networkName));
 	}
-};
-
-export const logout = () => async (dispatch, getState) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-
-	const networkName = getState().global.getIn(['network', 'name']);
-
-	localStorage.setItem(`accounts_${networkName}`, JSON.stringify([]));
-
-	dispatch(clearTable(HISTORY_TABLE));
-	dispatch(resetBalance());
-	history.push(SIGN_IN_PATH);
-	process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
-	EchoJSActions.resetSubscribe();
-	dispatch(EchoJSActions.clearStore());
-
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 };
 
 export const isAccountAdded = (accountName, networkName) => {

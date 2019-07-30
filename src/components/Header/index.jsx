@@ -7,7 +7,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
 
-import { initAccount, removeAccount } from '../../actions/GlobalActions';
+import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
 import { MODAL_LOGOUT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
@@ -52,10 +52,6 @@ const secondaryContractPaths = [
 
 class Header extends React.Component {
 
-	onOpenLogout() {
-		this.props.openModal();
-	}
-
 	onAddAccount(e) {
 		e.preventDefault();
 
@@ -73,10 +69,8 @@ class Header extends React.Component {
 		this.props.initAccount(name, networkName);
 	}
 
-	onRemoveAccount(e, name) {
-		const { networkName } = this.props;
-
-		this.props.removeAccount(name, networkName);
+	onRemoveAccount(name) {
+		this.props.openModal({ accountName: name });
 	}
 
 	onDropdownChange(e, value) {
@@ -162,7 +156,7 @@ class Header extends React.Component {
 					</button>
 					<button
 						className="logout-user-btn"
-						onClick={(e) => this.onRemoveAccount(e, name)}
+						onClick={() => this.onRemoveAccount(name)}
 					/>
 				</div>
 			);
@@ -260,7 +254,6 @@ Header.propTypes = {
 	transactionData: PropTypes.object,
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
-	removeAccount: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
@@ -277,9 +270,8 @@ export default withRouter(connect(
 		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
-		openModal: () => dispatch(openModal(MODAL_LOGOUT)),
+		openModal: (accountName) => dispatch(openModal(MODAL_LOGOUT, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
-		removeAccount: (name, network) => dispatch(removeAccount(name, network)),
 	}),
 )(Header));

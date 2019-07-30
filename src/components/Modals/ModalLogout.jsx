@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../actions/ModalActions';
 
 import { MODAL_LOGOUT } from '../../constants/ModalConstants';
-import { logout } from '../../actions/GlobalActions';
+import { removeAccount } from '../../actions/GlobalActions';
 
 
 class ModalLogout extends React.Component {
@@ -16,12 +16,13 @@ class ModalLogout extends React.Component {
 	}
 
 	onConfirm() {
-		this.props.logout();
+		const { accountName } = this.props;
+		this.props.logout(accountName);
 		this.props.closeModal();
 	}
 
 	render() {
-		const { show, accounts } = this.props;
+		const { show } = this.props;
 
 		return (
 			<Modal className="small" open={show} dimmer="inverted">
@@ -39,9 +40,7 @@ class ModalLogout extends React.Component {
 							<div className="form-info">
 								<h3>Confirm logout</h3>
 							</div>
-							{ accounts.length < 2 ? 'You will be signed out of your account.' : 'You will be signed out of all your accounts.' }
-
-
+							You will be signed out of your account.
 							<div className="form-panel">
 								<Button
 									basic
@@ -69,8 +68,8 @@ class ModalLogout extends React.Component {
 
 ModalLogout.propTypes = {
 	show: PropTypes.bool,
+	accountName: PropTypes.string.isRequired,
 	logout: PropTypes.func.isRequired,
-	accounts: PropTypes.array.isRequired,
 	closeModal: PropTypes.func.isRequired,
 };
 
@@ -81,10 +80,10 @@ ModalLogout.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_LOGOUT, 'show']),
-		accounts: state.balance.get('preview').toJS(),
+		accountName: state.modal.getIn([MODAL_LOGOUT, 'accountName']),
 	}),
 	(dispatch) => ({
-		logout: () => dispatch(logout()),
+		logout: (accountName) => dispatch(removeAccount(accountName)),
 		closeModal: () => dispatch(closeModal(MODAL_LOGOUT)),
 	}),
 )(ModalLogout);
