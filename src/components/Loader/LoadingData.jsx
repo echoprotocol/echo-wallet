@@ -1,16 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dimmer, Loader } from 'semantic-ui-react';
-import loader from '../../assets/images/loader.svg';
+import Lottie from 'react-lottie';
+import echoLoading from '../../assets/animations/echo-loading.json';
 
 class Loading extends React.PureComponent {
 
 	render() {
+
+		const loaderOptions = {
+			loop: true,
+			autoplay: true,
+			animationData: echoLoading,
+			isStopped: false,
+			isPaused: false,
+
+		};
+
 		const { text } = this.props;
+
 		return (
 			<Dimmer inverted active>
-				<img className="loader-image" src={loader} alt="" />
-				<Loader inverted className="dots" content={text} />
+				<Lottie
+					height={35}
+					width={35}
+					options={loaderOptions}
+					isClickToPauseDisabled
+				/>
+				<Loader inverted content={text} />
 			</Dimmer>
 		);
 	}

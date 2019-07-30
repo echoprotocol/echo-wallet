@@ -109,7 +109,7 @@ class Activity extends React.Component {
 	render() {
 		const { loading, isConnect } = this.props;
 
-		return loading && isConnect ? <Loading text="History is loading" /> : this.renderTable(isConnect);
+		return loading && isConnect ? <Loading text="History is loading..." /> : this.renderTable(isConnect);
 	}
 
 }
