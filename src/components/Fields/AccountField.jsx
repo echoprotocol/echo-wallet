@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
-import { setIn } from '../../actions/FormActions';
-import { checkAccount, fetchFee, updateFee } from '../../actions/TransactionActions';
-
-class AccountComponent extends React.Component {
+class AccountField extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -24,7 +19,8 @@ class AccountComponent extends React.Component {
 		}
 
 		const value = e.target.value.toLowerCase().trim();
-		this.props.setIn({
+
+		this.props.setIn(this.props.subject, {
 			loading: true,
 			error: null,
 			checked: false,
@@ -33,14 +29,12 @@ class AccountComponent extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(async () => {
-				if (
-					(await this.props.checkAccount(this.props.field.value, this.props.subject)) &&
-					this.props.note.value
-				) {
-					this.props.updateFee('transfer', this.props.note.value);
-				} else {
-					this.props.fetchFee('transfer');
-				}
+				const isValidAccount =
+					await this.props.checkAccount(this.props.field.value, this.props.subject);
+				if (!isValidAccount) return;
+				this.props.setContractFees();
+				this.props.getTransferFee()
+					.then((fee) => fee && this.props.setFormValue('fee', fee));
 			}, 300),
 		});
 	}
@@ -67,30 +61,19 @@ class AccountComponent extends React.Component {
 
 }
 
-AccountComponent.propTypes = {
+AccountField.propTypes = {
 	subject: PropTypes.any.isRequired,
 	autoFocus: PropTypes.bool,
 	field: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
-	updateFee: PropTypes.func.isRequired,
-	fetchFee: PropTypes.func.isRequired,
-	note: PropTypes.any.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
+	getTransferFee: PropTypes.func.isRequired,
 };
 
-AccountComponent.defaultProps = {
+AccountField.defaultProps = {
 	autoFocus: false,
 };
 
-export default connect(
-	(state, props) => ({
-		field: state.form.getIn([FORM_TRANSFER, props.subject]),
-		note: state.form.getIn(['transfer', 'note']) || {},
-	}),
-	(dispatch, props) => ({
-		setIn: (param) => dispatch(setIn(FORM_TRANSFER, props.subject, param)),
-		checkAccount: (value) => dispatch(checkAccount(value, props.subject)),
-		fetchFee: (type) => dispatch(fetchFee(FORM_TRANSFER, type)),
-		updateFee: (type, note) => dispatch(updateFee(type, note)),
-	}),
-)(AccountComponent);
+export default AccountField;

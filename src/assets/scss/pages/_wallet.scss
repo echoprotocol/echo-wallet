@@ -13,4 +13,18 @@
             }
         }
     }
+
+   & > div {
+    &:nth-child(1) {
+      width: 100%;
+      max-width: 450px;
+
+      & > div:nth-child(1) {
+        height: 40vh;
+      }
+    }
+
+    &:nth-child(2) {}
+   }
+
 }

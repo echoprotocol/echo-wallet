@@ -1,15 +1,17 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { Table } from 'semantic-ui-react';
 
 import { formatAmount } from '../../helpers/FormatHelper';
-import { redirectToTransfer } from '../../actions/BalanceActions';
 
 class Assets extends React.Component {
 
-	toTransfer(symbol) {
-		this.props.redirectToTransfer(symbol);
+	componentDidMount() {
+		this.props.setAssetActiveAccount();
+	}
+
+	setAsset(symbol) {
+		this.props.setAsset(symbol);
 	}
 
 	renderEmpty() {
@@ -48,14 +50,13 @@ class Assets extends React.Component {
 				<Table className="tbody" unstackable>
 					<Table.Body>
 						{
-
 							this.props.assets.map((asset, i) => {
 								const id = i;
 								return (
 									<Table.Row
 										key={id}
 										className="pointer"
-										onClick={() => this.toTransfer(asset)}
+										onClick={() => this.setAsset(asset)}
 									>
 										<Table.Cell>{asset.symbol}</Table.Cell>
 										<Table.Cell>
@@ -87,19 +88,9 @@ class Assets extends React.Component {
 }
 
 Assets.propTypes = {
-	assets: PropTypes.any,
-	redirectToTransfer: PropTypes.func.isRequired,
+	assets: PropTypes.object.isRequired,
+	setAsset: PropTypes.func.isRequired,
+	setAssetActiveAccount: PropTypes.func.isRequired,
 };
 
-Assets.defaultProps = {
-	assets: null,
-};
-
-export default connect(
-	(state) => ({
-		assets: state.balance.get('assets'),
-	}),
-	(dispatch) => ({
-		redirectToTransfer: (asset) => dispatch(redirectToTransfer(asset, 'assets')),
-	}),
-)(Assets);
+export default Assets;

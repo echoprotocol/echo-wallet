@@ -1,6 +1,10 @@
+import { ChainTypes } from 'echojs-lib';
+
+const OPERATIONS_IDS = ChainTypes.operations;
+
 export default {
 	transfer: {
-		value: 0,
+		value: OPERATIONS_IDS.transfer,
 		name: 'Transfer',
 		options: {
 			from: 'from',
@@ -11,7 +15,7 @@ export default {
 		signer: 'from',
 	},
 	limit_order_create: {
-		value: 1,
+		value: OPERATIONS_IDS.limit_order_create,
 		name: 'Place order',
 		options: {
 			from: 'seller',
@@ -21,7 +25,7 @@ export default {
 		},
 	},
 	limit_order_cancel: {
-		value: 2,
+		value: OPERATIONS_IDS.limit_order_cancel,
 		name: 'Cancel order',
 		options: {
 			from: 'fee_paying_account',
@@ -31,7 +35,7 @@ export default {
 		},
 	},
 	call_order_update: {
-		value: 3,
+		value: OPERATIONS_IDS.call_order_update,
 		name: 'Update margin',
 		options: {
 			from: 'funding_account',
@@ -41,7 +45,7 @@ export default {
 		},
 	},
 	fill_order: {
-		value: 4,
+		value: OPERATIONS_IDS.fill_order,
 		name: 'Fill order',
 		options: {
 			from: 'account_id',
@@ -51,7 +55,7 @@ export default {
 		},
 	},
 	account_create: {
-		value: 5,
+		value: OPERATIONS_IDS.account_create,
 		name: 'Create account',
 		options: {
 			from: 'registrar',
@@ -62,7 +66,7 @@ export default {
 		signer: 'registrar',
 	},
 	account_update: {
-		value: 6,
+		value: OPERATIONS_IDS.account_update,
 		name: 'Update account',
 		options: {
 			from: 'account',
@@ -73,7 +77,7 @@ export default {
 		signer: 'account',
 	},
 	account_whitelist: {
-		value: 7,
+		value: OPERATIONS_IDS.account_whitelist,
 		name: 'Account whitelist',
 		options: {
 			from: 'authorizing_account',
@@ -83,7 +87,7 @@ export default {
 		},
 	},
 	account_upgrade: {
-		value: 8,
+		value: OPERATIONS_IDS.account_upgrade,
 		name: 'Upgrade Account',
 		options: {
 			from: 'account_to_upgrade',
@@ -93,7 +97,7 @@ export default {
 		},
 	},
 	account_transfer: {
-		value: 9,
+		value: OPERATIONS_IDS.account_transfer,
 		name: 'Transfer Account',
 		options: {
 			from: 'account_id',
@@ -103,7 +107,7 @@ export default {
 		},
 	},
 	asset_create: {
-		value: 10,
+		value: OPERATIONS_IDS.asset_create,
 		name: 'Create asset',
 		options: {
 			from: 'issuer',
@@ -113,7 +117,7 @@ export default {
 		},
 	},
 	asset_update: {
-		value: 11,
+		value: OPERATIONS_IDS.asset_update,
 		name: 'Update asset',
 		options: {
 			from: 'issuer',
@@ -123,7 +127,7 @@ export default {
 		},
 	},
 	asset_update_bitasset: {
-		value: 12,
+		value: OPERATIONS_IDS.asset_update_bitasset,
 		name: 'Update SmartCoin',
 		options: {
 			from: 'issuer',
@@ -133,7 +137,7 @@ export default {
 		},
 	},
 	asset_update_feed_producers: {
-		value: 13,
+		value: OPERATIONS_IDS.asset_update_feed_producers,
 		name: 'Update asset feed producers',
 		options: {
 			from: 'issuer',
@@ -143,7 +147,7 @@ export default {
 		},
 	},
 	asset_issue: {
-		value: 14,
+		value: OPERATIONS_IDS.asset_issue,
 		name: 'Issue asset',
 		options: {
 			from: 'issuer',
@@ -153,7 +157,7 @@ export default {
 		},
 	},
 	asset_reserve: {
-		value: 15,
+		value: OPERATIONS_IDS.asset_reserve,
 		name: 'Burn asset',
 		options: {
 			from: 'payer',
@@ -163,7 +167,7 @@ export default {
 		},
 	},
 	asset_fund_fee_pool: {
-		value: 16,
+		value: OPERATIONS_IDS.asset_fund_fee_pool,
 		name: 'Fund asset fee pool',
 		options: {
 			from: 'from_account',
@@ -173,7 +177,7 @@ export default {
 		},
 	},
 	asset_settle: {
-		value: 17,
+		value: OPERATIONS_IDS.asset_settle,
 		name: 'Asset settlement',
 		options: {
 			from: 'account',
@@ -183,7 +187,7 @@ export default {
 		},
 	},
 	asset_global_settle: {
-		value: 18,
+		value: OPERATIONS_IDS.asset_global_settle,
 		name: 'Global asset settlement',
 		options: {
 			from: 'issuer',
@@ -193,7 +197,7 @@ export default {
 		},
 	},
 	asset_publish_feed: {
-		value: 19,
+		value: OPERATIONS_IDS.asset_publish_feed,
 		name: 'Publish feed',
 		options: {
 			from: 'publisher',
@@ -203,7 +207,7 @@ export default {
 		},
 	},
 	proposal_create: {
-		value: 20,
+		value: OPERATIONS_IDS.proposal_create,
 		name: 'Create proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -213,7 +217,7 @@ export default {
 		},
 	},
 	proposal_update: {
-		value: 21,
+		value: OPERATIONS_IDS.proposal_update,
 		name: 'Update proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -223,7 +227,7 @@ export default {
 		},
 	},
 	proposal_delete: {
-		value: 22,
+		value: OPERATIONS_IDS.proposal_delete,
 		name: 'Delete proposal',
 		options: {
 			from: 'fee_paying_account',
@@ -233,7 +237,7 @@ export default {
 		},
 	},
 	withdraw_permission_create: {
-		value: 23,
+		value: OPERATIONS_IDS.withdraw_permission_create,
 		name: 'Create withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -243,7 +247,7 @@ export default {
 		},
 	},
 	withdraw_permission_update: {
-		value: 24,
+		value: OPERATIONS_IDS.withdraw_permission_update,
 		name: 'Update withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -253,7 +257,7 @@ export default {
 		},
 	},
 	withdraw_permission_claim: {
-		value: 25,
+		value: OPERATIONS_IDS.withdraw_permission_claim,
 		name: 'Claim withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -263,7 +267,7 @@ export default {
 		},
 	},
 	withdraw_permission_delete: {
-		value: 26,
+		value: OPERATIONS_IDS.withdraw_permission_delete,
 		name: 'Delete withdrawal permission',
 		options: {
 			from: 'withdraw_from_account',
@@ -273,7 +277,7 @@ export default {
 		},
 	},
 	committee_member_create: {
-		value: 27,
+		value: OPERATIONS_IDS.committee_member_create,
 		name: 'Create committee member',
 		options: {
 			from: 'committee_member_account',
@@ -283,7 +287,7 @@ export default {
 		},
 	},
 	committee_member_update: {
-		value: 28,
+		value: OPERATIONS_IDS.committee_member_update,
 		name: 'Update committee member',
 		options: {
 			from: 'committee_member_account',
@@ -293,7 +297,7 @@ export default {
 		},
 	},
 	committee_member_update_global_parameters: {
-		value: 29,
+		value: OPERATIONS_IDS.committee_member_update,
 		name: 'Global parameters update',
 		options: {
 			from: null,
@@ -303,7 +307,7 @@ export default {
 		},
 	},
 	vesting_balance_create: {
-		value: 30,
+		value: OPERATIONS_IDS.vesting_balance_create,
 		name: 'Create vesting balance',
 		options: {
 			from: 'creator',
@@ -313,7 +317,7 @@ export default {
 		},
 	},
 	vesting_balance_withdraw: {
-		value: 31,
+		value: OPERATIONS_IDS.vesting_balance_withdraw,
 		name: 'Withdraw vesting balance',
 		options: {
 			from: 'owner',
@@ -323,7 +327,7 @@ export default {
 		},
 	},
 	custom: {
-		value: 32,
+		value: OPERATIONS_IDS.custom,
 		name: 'Custom',
 		options: {
 			from: 'payer',
@@ -333,7 +337,7 @@ export default {
 		},
 	},
 	assert: {
-		value: 33,
+		value: OPERATIONS_IDS.assert,
 		name: 'Assert operation',
 		options: {
 			from: 'fee_paying_account',
@@ -343,7 +347,7 @@ export default {
 		},
 	},
 	balance_claim: {
-		value: 34,
+		value: OPERATIONS_IDS.balance_claim,
 		name: 'Claim balance',
 		options: {
 			from: null,
@@ -353,7 +357,7 @@ export default {
 		},
 	},
 	override_transfer: {
-		value: 35,
+		value: OPERATIONS_IDS.override_transfer,
 		name: 'Override transfer',
 		options: {
 			from: 'from',
@@ -363,7 +367,7 @@ export default {
 		},
 	},
 	asset_settle_cancel: {
-		value: 36,
+		value: OPERATIONS_IDS.asset_settle_cancel,
 		name: 'Cancel asset settlement',
 		options: {
 			from: 'account',
@@ -373,7 +377,7 @@ export default {
 		},
 	},
 	asset_claim_fees: {
-		value: 37,
+		value: OPERATIONS_IDS.asset_claim_fees,
 		name: 'Claim asset fees',
 		options: {
 			from: 'issuer',
@@ -385,7 +389,7 @@ export default {
 	// BID_COLLATERAL = 38,
 	// EXECUTE_BID = 39,
 	create_contract: {
-		value: 40,
+		value: OPERATIONS_IDS.create_contract,
 		name: 'Create contract',
 		options: {
 			from: 'registrar',
@@ -397,7 +401,7 @@ export default {
 		signer: 'registrar',
 	},
 	call_contract: {
-		value: 41,
+		value: OPERATIONS_IDS.call_contract,
 		name: 'Call contract',
 		options: {
 			from: 'registrar',
@@ -409,7 +413,7 @@ export default {
 		signer: 'registrar',
 	},
 	contract_transfer: {
-		value: 42,
+		value: OPERATIONS_IDS.contract_transfer,
 		name: 'Contract transfer',
 		options: {
 			from: 'from',
@@ -419,7 +423,7 @@ export default {
 		},
 	},
 	change_sidechain_config: {
-		value: 43,
+		value: OPERATIONS_IDS.change_sidechain_config,
 		name: 'Change sidechain config',
 		options: {
 			from: null,
@@ -429,7 +433,7 @@ export default {
 		},
 	},
 	account_address_create: {
-		value: 44,
+		value: OPERATIONS_IDS.account_address_create,
 		name: 'Account address create',
 		options: {
 			from: 'owner',
@@ -439,7 +443,7 @@ export default {
 		},
 	},
 	transfer_to_address: {
-		value: 45,
+		value: OPERATIONS_IDS.transfer_to_address,
 		name: 'Transfer to address',
 		options: {
 			from: 'from',
@@ -449,7 +453,7 @@ export default {
 		},
 	},
 	generate_eth_address: {
-		value: 46,
+		value: OPERATIONS_IDS.generate_eth_address,
 		name: 'Generate eth address',
 		options: {
 			from: 'account',
@@ -459,7 +463,7 @@ export default {
 		},
 	},
 	create_eth_address: {
-		value: 47,
+		value: OPERATIONS_IDS.create_eth_address,
 		name: 'Create eth address',
 		options: {
 			from: 'committee_member_id',
@@ -469,7 +473,7 @@ export default {
 		},
 	},
 	deposit_eth: {
-		value: 48,
+		value: OPERATIONS_IDS.deposit_eth,
 		name: 'Deposit eth',
 		options: {
 			from: 'committee_member_id',
@@ -479,7 +483,7 @@ export default {
 		},
 	},
 	withdraw_eth: {
-		value: 49,
+		value: OPERATIONS_IDS.withdraw_eth,
 		name: 'Withdraw eth',
 		options: {
 			from: 'account',
@@ -489,7 +493,7 @@ export default {
 		},
 	},
 	approve_withdraw_eth: {
-		value: 50,
+		value: OPERATIONS_IDS.approve_withdraw_eth,
 		name: 'Approve withdraw eth',
 		options: {
 			from: null,
@@ -499,7 +503,7 @@ export default {
 		},
 	},
 	contract_fund_pool: {
-		value: 51,
+		value: OPERATIONS_IDS.contract_fund_pool,
 		name: 'Contract fund pool',
 		options: {
 			from: 'sender',
@@ -509,7 +513,7 @@ export default {
 		},
 	},
 	contract_whitelist: {
-		value: 52,
+		value: OPERATIONS_IDS.contract_whitelist,
 		name: 'Contract whitelist',
 		options: {
 			from: 'sender',
@@ -519,7 +523,7 @@ export default {
 		},
 	},
 	sidechain_issue: {
-		value: 53,
+		value: OPERATIONS_IDS.sidechain_issue,
 		name: 'Sidechain issue',
 		options: {
 			from: 'account',
@@ -529,7 +533,7 @@ export default {
 		},
 	},
 	sidechain_burn: {
-		value: 54,
+		value: OPERATIONS_IDS.sidechain_burn,
 		name: 'Sidechain burn',
 		options: {
 			from: 'account',
@@ -539,7 +543,7 @@ export default {
 		},
 	},
 	register_erc20_token: {
-		value: 55,
+		value: OPERATIONS_IDS.register_erc20_token,
 		name: 'Register ERC20 token',
 		options: {
 			from: 'account',
@@ -549,7 +553,7 @@ export default {
 		},
 	},
 	deposit_erc20_token: {
-		value: 56,
+		value: OPERATIONS_IDS.deposit_erc20_token,
 		name: 'Deposit ERC20 token',
 		options: {
 			from: 'account',
@@ -559,7 +563,7 @@ export default {
 		},
 	},
 	withdraw_erc20_token: {
-		value: 57,
+		value: OPERATIONS_IDS.withdraw_erc20_token,
 		name: 'Withdraw ERC20 token',
 		options: {
 			from: 'committee_member_id',
@@ -569,7 +573,7 @@ export default {
 		},
 	},
 	approve_erc20_token_withdraw: {
-		value: 58,
+		value: OPERATIONS_IDS.approve_erc20_token_withdraw,
 		name: 'Approve ERC20 token withdraw',
 		options: {
 			from: 'account',
@@ -579,7 +583,7 @@ export default {
 		},
 	},
 	contract_update: {
-		value: 59,
+		value: OPERATIONS_IDS.contract_update,
 		name: 'Contract update',
 		options: {
 			from: 'sender',

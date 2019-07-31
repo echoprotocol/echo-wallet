@@ -8,7 +8,6 @@ import {
 	setInFormErrorConstant,
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
-import { estimateFormFee } from './TransactionActions';
 import { convert } from './ConverterActions';
 
 import {
@@ -33,9 +32,11 @@ import {
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
+import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 import history from '../history';
-import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
+
+import { estimateFormFee } from './TransactionActions';
 
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
@@ -371,7 +372,9 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
+
 export const setContractFees = (form) => async (dispatch, getState) => {
+
 	const assets = getState().balance.get('assets').toArray();
 
 	let fees = assets.reduce((arr, asset) => {
@@ -403,5 +406,9 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 		return arr;
 	}, []);
 
+	const currency = getState().form.getIn([form, 'currency']);
+	const fee = fees.find((el) => el.asset.id === currency.id) || (fees.length && fees[0]);
+	dispatch(setValue(form, 'fee', { error: null, ...fee }));
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
 };
+

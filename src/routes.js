@@ -6,7 +6,6 @@ import {
 	SIGN_UP_PATH,
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
-	TRANSFER_PATH,
 	ADD_CONTRACT_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
@@ -25,8 +24,7 @@ import SignIn from './containers/SignIn';
 import ContractList from './containers/ContractList';
 import ViewContract from './containers/ViewContract';
 import AddContract from './containers/AddContract';
-import Balances from './containers/Balances';
-import Transfer from './containers/Transfer';
+import Wallet from './containers/Wallet';
 import CreateContract from './containers/CreateContract';
 import ViewTransaction from './containers/ViewTransaction';
 import CallContract from './containers/CallContract';
@@ -40,11 +38,10 @@ export default class Routes extends React.Component {
 		return (
 			<App>
 				<div>
-					<Route exact path={INDEX_PATH} component={Balances} />
+					<Route exact path={INDEX_PATH} component={Wallet} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
 					<Route exact path={ACTIVITY_PATH} component={Activity} />
-					<Route exact path={TRANSFER_PATH} component={Transfer} />
 					<Route exact path={ADD_CONTRACT_PATH} component={AddContract} />
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
 					<Route exact path={CONTRACT_LIST_PATH} component={ContractList} />

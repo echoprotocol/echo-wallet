@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
-import { setInFormValue } from '../../../actions/FormActions';
-import { setContractFees } from '../../../actions/ContractActions';
+import { setInFormValue, setValue } from '../../../actions/FormActions';
 import { formatCallContractField } from '../../../helpers/FormatHelper';
+import { setContractFees } from '../../../actions/ContractActions';
 
 class TabCallContracts extends React.Component {
 
@@ -17,6 +17,14 @@ class TabCallContracts extends React.Component {
 		if (field) {
 			this.props.setFormValue(field, value);
 			this.props.setContractFees();
+		}
+	}
+
+	onFee(fee) {
+		if (!fee) {
+			this.props.setFormValue('fee', fee);
+		} else {
+			this.props.setValue('fee', fee);
 		}
 	}
 
@@ -44,11 +52,12 @@ class TabCallContracts extends React.Component {
 }
 
 TabCallContracts.propTypes = {
-	setFormValue: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	field: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
 	data: PropTypes.object.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -59,6 +68,7 @@ export default connect(
 	},
 	(dispatch) => ({
 		setFormValue: (field, value) => dispatch(setInFormValue(FORM_CALL_CONTRACT, ['inputs', field], value)),
+		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
 )(TabCallContracts);

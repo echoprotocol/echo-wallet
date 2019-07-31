@@ -1,13 +1,10 @@
 import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
-import { openModal } from '../../actions/ModalActions';
 import { formatAmount } from '../../helpers/FormatHelper';
-import { disableToken, redirectToTransfer } from '../../actions/BalanceActions';
 
 class Tokens extends React.Component {
 
@@ -15,8 +12,8 @@ class Tokens extends React.Component {
 		this.props.removeToken(name, id);
 	}
 
-	toTransfer(symbol) {
-		this.props.redirectToTransfer(symbol);
+	setAsset(symbol) {
+		this.props.setAsset(symbol);
 	}
 
 	showTokensModal() {
@@ -50,14 +47,14 @@ class Tokens extends React.Component {
 				className="pointer"
 			>
 				<Table.Cell
-					onClick={() => this.toTransfer({
+					onClick={() => this.setAsset({
 						id, symbol, precision, balance,
 					})}
 				>
 					{symbol}
 				</Table.Cell>
 				<Table.Cell
-					onClick={() => this.toTransfer({
+					onClick={() => this.setAsset({
 						id, symbol, precision, balance,
 					})}
 				>
@@ -128,24 +125,10 @@ class Tokens extends React.Component {
 }
 
 Tokens.propTypes = {
-	tokens: PropTypes.object,
+	tokens: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
-	redirectToTransfer: PropTypes.func.isRequired,
+	setAsset: PropTypes.func.isRequired,
 };
 
-Tokens.defaultProps = {
-	tokens: null,
-};
-
-
-export default connect(
-	(state) => ({
-		tokens: state.balance.get('tokens'),
-	}),
-	(dispatch) => ({
-		openModal: (value) => dispatch(openModal(value)),
-		removeToken: (name, id) => dispatch(disableToken(name, id)),
-		redirectToTransfer: (token) => dispatch(redirectToTransfer(token, 'tokens')),
-	}),
-)(Tokens);
+export default Tokens;

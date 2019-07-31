@@ -17,6 +17,11 @@
                     margin-left: 4px;
                     color: $main-сolor;
                     cursor: pointer;
+
+                    &.disabled {
+                        color: $gray;
+                    }
+
                     &:focus {
                         text-decoration: underline;
                     }

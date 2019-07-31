@@ -78,11 +78,11 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		selectedSymbol: '',
-		isWalletAccount: true,
-		externalAccountId: '',
+		accountFromId: '',
 		balance: {
 			assets: new List([]),
 		},
+		isAvailableBalance: false,
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
 		bytecode: {
@@ -115,6 +115,7 @@ const DEFAULT_FORM_FIELDS = {
 		functionName: '',
 		payable: false,
 		feeError: null,
+		isAvailableBalance: false,
 	}),
 	[FORM_ADD_CONTRACT]: Map({
 		name: {
@@ -158,6 +159,7 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
+		isAvailableBalance: false,
 	}),
 	[FORM_ADD_CUSTOM_NETWORK]: Map({
 		address: {

@@ -1,7 +1,6 @@
 import {
 	INDEX_PATH,
 	ACTIVITY_PATH,
-	TRANSFER_PATH,
 	CREATE_CONTRACT_PATH,
 	CONTRACT_LIST_PATH,
 	VIEW_CONTRACT_PATH,
@@ -19,10 +18,6 @@ export const HEADER_TITLE = [
 	{
 		path: ACTIVITY_PATH,
 		title: 'Recent Activity',
-	},
-	{
-		path: TRANSFER_PATH,
-		title: 'Create Payment',
 	},
 	{
 		path: CREATE_CONTRACT_PATH,

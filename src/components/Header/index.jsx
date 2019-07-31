@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Dropdown, Button } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
 
@@ -19,7 +19,6 @@ import Avatar from '../../components/Avatar';
 import {
 	SIGN_IN_PATH,
 	ACTIVITY_PATH,
-	TRANSFER_PATH,
 	INDEX_PATH,
 	CONTRACT_LIST_PATH,
 	PERMISSIONS_PATH,
@@ -39,7 +38,6 @@ const primaryPaths = [
 	ACTIVITY_PATH,
 	PERMISSIONS_PATH,
 	VIEW_CONTRACT_PATH,
-	TRANSFER_PATH,
 	COMMITTEE_VOTE_PATH,
 ];
 
@@ -200,19 +198,6 @@ class Header extends React.Component {
 
 				<div className="page-title">{this.getTitle()}</div>
 				<div className="panel-right">
-
-					<NavLink
-						exact
-						className="nav-link"
-						replace={TRANSFER_PATH === parsedLocation}
-						to={TRANSFER_PATH}
-					>
-						<Button
-							icon="send"
-							className="send"
-							content="Send"
-						/>
-					</NavLink>
 					<div className="user-section">
 						<NavLink
 							exact

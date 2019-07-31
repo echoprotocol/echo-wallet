@@ -1,22 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Form, Input, Dropdown } from 'semantic-ui-react';
 import BN from 'bignumber.js';
-
 import classnames from 'classnames';
+
+import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
-import { setValue, setFormValue, setFormError } from '../../actions/FormActions';
-import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
-import { setContractFees } from '../../actions/ContractActions';
-import { fetchFee } from '../../actions/TransactionActions';
-
-import { FORM_TRANSFER } from '../../constants/FormConstants';
-
 import FeeField from './FeeField';
-import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
 class AmountField extends React.Component {
 
@@ -34,64 +27,62 @@ class AmountField extends React.Component {
 		this.props.setDefaultAsset();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (!prevProps.currency && prevProps.currency !== this.props.currency) {
+			this.props.setDefaultAsset();
+		}
+	}
+
 	onSearch(e) {
 		this.setState({ searchText: e.target.value });
 	}
 
 	onChangeAmount(e) {
-		const { currency } = this.props;
+		const { currency, form } = this.props;
 		const value = e.target.value.trim();
+
 		const { name } = e.target;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
 		this.props.amountInput(value, currency, name);
-		if (currency && currency.type === 'tokens') this.props.setContractFees();
 
+		if ((currency && currency.type === 'tokens') || form !== FORM_TRANSFER) this.props.setContractFees();
 
 		this.setState({
 			timeout: setTimeout(() => {
-				if (value) return;
-				const typeOperation = currency.id.startsWith(PREFIX_ASSET) ? 'transfer' : 'call_contract';
-				this.props.fetchFee(typeOperation);
+				if (form === FORM_TRANSFER && currency.id.startsWith(PREFIX_ASSET)) {
+					this.props.getTransferFee()
+						.then((fee) => this.onFee(fee));
+				}
 			}, 300),
 		});
-
-
 	}
 
 	onChangeCurrency(e, value) {
 		const {
-			amount,
-			tokens,
-			assets,
-			form,
-			assetsFromTransfer,
-			isWalletAccount,
+			amount, tokens, assets, form,
 		} = this.props;
-
-		const targetAsset = !isWalletAccount && form === FORM_TRANSFER ? assetsFromTransfer : assets;
 
 		let target = null;
 
-		if (isWalletAccount && form === FORM_TRANSFER) {
+		if (form === FORM_TRANSFER) {
 			target = tokens.find((el) => el.id === value);
 
 			if (target) {
 				this.setCurrency(target, 'tokens');
-				if (amount.value) {
-					this.props.fetchFee('call_contract');
-					this.props.setContractFees();
-				}
+				if (!amount.value) return;
+				this.props.setContractFees();
 				return;
 			}
 		}
 
-		target = targetAsset.find((el) => el.id === value);
+		target = assets.find((el) => el.id === value);
 		if (!target) return;
 		this.setCurrency(target, 'assets');
 		if (!amount.value) return;
-		this.props.fetchFee('transfer');
+		this.props.getTransferFee()
+			.then((fee) => this.onFee(fee));
 	}
 
 	onDropdownChange(e, value) {
@@ -103,8 +94,21 @@ class AmountField extends React.Component {
 		}
 	}
 
+	onFee(fee) {
+		if (!fee) {
+			this.props.setFormValue('fee', fee);
+		} else {
+			this.props.setValue('fee', fee);
+		}
+	}
+
 	setAvailableAmount(currency) {
-		this.props.setFormValue('amount', this.getAvailableAmount(currency) / (10 ** currency.precision));
+		const { isAvailableBalance, fee } = this.props;
+		if (!isAvailableBalance || !fee.value) return;
+
+		const value = this.getAvailableAmount(currency) / (10 ** currency.precision);
+		this.props.setFormValue('amount', value);
+		this.onChangeAmount({ target: { value: value.toString() } });
 	}
 
 	setCurrency(currency, type) {
@@ -129,7 +133,7 @@ class AmountField extends React.Component {
 			return currency.balance;
 		}
 
-		const amount = new BN(currency.balance).minus(fee.value);
+		const amount = new BN(currency.balance).minus(fee.value || 0);
 
 		return amount.isNegative() ? 0 : amount;
 	}
@@ -152,16 +156,13 @@ class AmountField extends React.Component {
 
 	renderList(type) {
 		const { searchText } = this.state;
-		const { form, isWalletAccount } = this.props;
-
-		const target = type === 'assets' && !isWalletAccount && form === FORM_TRANSFER ? 'assetsFromTransfer' : type;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
 		const list = (
 			searchText !== ''
 			|| search
-			|| !this.props[target].length
-			|| this.props[target].filter((i) => i.disabled).length === this.props[type].length
+			|| !this.props[type].length
+			|| this.props[type].filter((i) => i.disabled).length === this.props[type].length
 		) ? [] : [
 				{
 					key: `${type}_header`,
@@ -171,7 +172,7 @@ class AmountField extends React.Component {
 					disabled: true,
 				},
 			];
-		return this.props[target].reduce((arr, a, i) => {
+		return this.props[type].reduce((arr, a, i) => {
 			if ((!search || a.symbol.toLowerCase().match(search)) && !a.disabled) {
 				const id = i;
 				arr.push({
@@ -185,21 +186,13 @@ class AmountField extends React.Component {
 	}
 
 	render() {
-
 		const {
-			assets,
-			amount,
-			form,
-			fee,
-			assetsFromTransfer,
-			isWalletAccount,
+			assets, amount, form, fee, selectedSymbol, isAvailableBalance, fees,
 		} = this.props;
 
-		const targetAsset = !isWalletAccount && form === FORM_TRANSFER ? assetsFromTransfer : assets;
-
 		const { searchText } = this.state;
-		const currency = this.props.currency || targetAsset[0];
-		const type = form === FORM_TRANSFER && currency && currency.type === 'tokens' ? 'call_contract' : 'transfer';
+		const currency = this.props.currency || assets[0];
+		const type = form === FORM_TRANSFER && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'call_contract' : 'transfer';
 
 		return (
 			<Form.Field>
@@ -208,11 +201,24 @@ class AmountField extends React.Component {
 					<ul className="list-amount">
 						<li>
 							Fee:
-							<FeeField form={form} type={type} />
+							<FeeField
+								currency={currency}
+								forn={form}
+								fees={fees}
+								form={form}
+								type={type}
+								fee={fee}
+								assets={assets.toJS()}
+								selectedSymbol={selectedSymbol}
+								setValue={this.props.setValue}
+								setFormValue={this.props.setFormValue}
+								getTransferFee={this.props.getTransferFee}
+							/>
 						</li>
 						<li>
 							Available Balance:
 							<span
+								className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 								role="button"
 								onClick={(e) => this.setAvailableAmount(currency, e)}
 								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
@@ -254,7 +260,7 @@ class AmountField extends React.Component {
 						onBlur={() => this.clearSearchText()}
 						options={this.renderList('assets').concat(this.renderList('tokens'))}
 						noResultsMessage="No results are found"
-						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + targetAsset.length) <= 1 })}
+						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + assets.length) <= 1 })}
 						onClose={() => this.clearSearchText()}
 					/>
 
@@ -267,53 +273,31 @@ class AmountField extends React.Component {
 }
 
 AmountField.propTypes = {
+	fees: PropTypes.array.isRequired,
 	form: PropTypes.string.isRequired,
-	isWalletAccount: PropTypes.bool.isRequired,
-
-	currency: PropTypes.object,
+	selectedSymbol: PropTypes.string,
 	fee: PropTypes.object,
-	assets: PropTypes.array,
-	assetsFromTransfer: PropTypes.array,
-	tokens: PropTypes.any.isRequired,
-
+	assets: PropTypes.object,
+	tokens: PropTypes.object.isRequired,
 	amount: PropTypes.object.isRequired,
-
-	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
+	currency: PropTypes.object,
+	isAvailableBalance: PropTypes.bool.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
-	fetchFee: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	getTransferFee: PropTypes.func.isRequired,
 };
+
 
 AmountField.defaultProps = {
 	currency: null,
-	fee: null,
-	assets: [],
-	assetsFromTransfer: [],
+	fee: {},
+	assets: null,
+	selectedSymbol: '',
 };
 
-export default connect(
-	(state, { form }) => {
-		const isWalletAccount = state.form.getIn([FORM_TRANSFER, 'isWalletAccount']);
-		return {
-			assetsFromTransfer: state.form.getIn([FORM_TRANSFER, 'balance']).assets.toArray(),
-			isWalletAccount,
-			assets: state.balance.get('assets').toArray(),
-			amount: state.form.getIn([form, 'amount']),
-			currency: state.form.getIn([form, 'currency']),
-			fee: state.form.getIn([form, 'fee']),
-			tokens: form === FORM_TRANSFER && isWalletAccount ? state.balance.get('tokens').toArray() : [],
-		};
-	},
-	(dispatch, { form }) => ({
-		setValue: (field, value) => dispatch(setValue(form, field, value)),
-		setFormValue: (field, value) => dispatch(setFormValue(form, field, value)),
-		amountInput: (value, currency, name) => dispatch(amountInput(form, value, currency, name)),
-		setFormError: (field, error) => dispatch(setFormError(form, field, error)),
-		setContractFees: () => dispatch(setContractFees(form)),
-		setDefaultAsset: () => dispatch(setDefaultAsset(form)),
-		fetchFee: (type) => dispatch(fetchFee(form, type)),
-	}),
-)(AmountField);
+export default AmountField;
+

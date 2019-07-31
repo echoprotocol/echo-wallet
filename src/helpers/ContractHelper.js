@@ -202,4 +202,14 @@ export const checkTransactionResult = (accountId, result) => {
 	});
 };
 
+export const getTransferCode = (id, text) => {
+	const method = keccak256('transfer(address,uint256)').substr(0, 8);
+
+	const idArg = Number(id.split('.')[2]).toString(16).padStart(64, '0');
+
+	const amountArg = text.toString(16).padStart(64, '0');
+
+	return method + idArg + amountArg;
+};
+
 export const getContractId = (address) => parseInt(address.substr(-32), 16);
