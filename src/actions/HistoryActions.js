@@ -58,16 +58,17 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.from) {
 		const request = _.get(operation, options.from);
 		const response = (await dispatch(fetch(request))).toJS();
-		result.from = response.name;
+		result.from = { value: response.name, id: response.id };
 	}
 
 	if (options.subject) {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
 			const response = (await dispatch(fetch(request))).toJS();
-			result.subject = response[options.subject[1]];
+			result.subject = { value: response[options.subject[1]], id: request };
 		} else {
-			result.subject = operation[options.subject[0]];
+			const id = options.subject[0] === 'name' ? '1.2.0' : '1.16.0';
+			result.subject = { value: operation[options.subject[0]], id };
 		}
 	}
 

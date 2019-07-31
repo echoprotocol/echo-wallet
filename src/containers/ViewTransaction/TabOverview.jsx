@@ -2,6 +2,9 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import classnames from 'classnames';
+
+import { ACCOUNT_ID_PREFIX } from '../../constants/GlobalConstants';
 
 import { formatAmount, parseBytecode } from '../../helpers/FormatHelper';
 import URLHelper from '../../helpers/URLHelper';
@@ -118,6 +121,10 @@ class TabOverview extends React.Component {
 	render() {
 		const { data, network } = this.props;
 
+		const isFromAccount = data.from && data.from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+		const isSubjectAccount = data.subject &&
+			data.subject.id && data.subject.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+
 		return (
 			<div className="tab-content">
 				<ul className="overview-list">
@@ -136,8 +143,8 @@ class TabOverview extends React.Component {
 							<li>
 								<div className="col">From:</div>
 								<div className="col avatar-block">
-									<Avatar accountName={data.from} />
-									<span>{data.from}</span>
+									{isFromAccount && <Avatar accountName={data.subject.value} />}
+									<span>{data.from.value}</span>
 								</div>
 							</li> : null
 					}
@@ -146,9 +153,9 @@ class TabOverview extends React.Component {
 						data.subject ?
 							<li>
 								<div className="col">Subject:</div>
-								<div className="col avatar-block">
-									<Avatar accountName={data.subject} />
-									<span>{data.subject}</span>
+								<div className={classnames('col', { 'avatar-block': isSubjectAccount })}>
+									{isSubjectAccount && <Avatar accountName={data.subject.value} />}
+									<span>{data.subject.value}</span>
 								</div>
 							</li> : null
 					}
