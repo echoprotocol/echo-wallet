@@ -12,6 +12,7 @@ import {
 	setFormError,
 	deleteValue,
 	pushForm,
+	clearForm,
 } from '../../actions/FormActions';
 import {
 	formatCommitteeTable,
@@ -21,6 +22,7 @@ import {
 	fetchCommittee,
 	checkAccount,
 } from '../../actions/CommitteeActions';
+import { setValue as setTableValue } from '../../actions/TableActions';
 
 import { COMMITTEE_TABLE } from '../../constants/TableConstants';
 
@@ -66,6 +68,11 @@ class Voting extends React.Component {
 		if (!_.isEqual(accounts, prevAccounts)) {
 			await this.props.formatCommittee();
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm();
+		this.props.disabledInput();
 	}
 
 	async onChange(e) {
@@ -136,10 +143,7 @@ class Voting extends React.Component {
 
 		return (
 			<div className="voting-wrap">
-				<TransactionScenario
-					handleTransaction={() => this.props.updateAccount()}
-					form={FORM_COMMITTEE}
-				>
+				<TransactionScenario handleTransaction={() => this.props.updateAccount()}>
 					{
 						(submit) => (
 							<React.Fragment>
@@ -256,6 +260,8 @@ Voting.propTypes = {
 	setFormError: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	activeAccount: PropTypes.string,
+	clearForm: PropTypes.func.isRequired,
+	disabledInput: PropTypes.func.isRequired,
 };
 
 
@@ -297,5 +303,7 @@ export default connect(
 		onChangeProxy: (value) => dispatch(onChangeProxy(value)),
 		pushForm: (field, value) => dispatch(pushForm(FORM_COMMITTEE, field, value)),
 		deleteValue: (field, value) => dispatch(deleteValue(FORM_COMMITTEE, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_COMMITTEE)),
+		disabledInput: () => dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', true)),
 	}),
 )(Voting);

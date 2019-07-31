@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { PrivateKey } from 'echojs-lib';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 
-import { MODAL_UNLOCK_PERMISSION } from '../../constants/ModalConstants';
-import { openModal, closeModal } from '../../actions/ModalActions';
-import { unlockAccount } from '../../actions/AuthActions';
+import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE } from '../../constants/ModalConstants';
+import { toastError } from '../../helpers/ToastHelper';
+import { openModal, closeModal, setError } from '../../actions/ModalActions';
+import { unlock } from '../../actions/AuthActions';
 
 import Services from '../../services';
 
@@ -19,100 +19,93 @@ class PrivateKeyScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			password: '',
-			error: null,
-			active: [],
-			note: [],
+			publicKey: '',
+			keys: [],
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
+	}
+
+	async setWIFKey() {
+		const { password, publicKey } = this.state;
+
+		const userStorage = Services.getUserStorage();
+		const key = await userStorage.getWIFByPublicKey(publicKey, { password });
+
+		if (!key) {
+			toastError('Private key was not imported in Echo Desktop Wallet');
+			return;
+		}
+
+		this.setState((prevState) => ({
+			...prevState,
+			password: '',
+			publicKey: '',
+			keys: [...prevState.keys, { publicKey, wif: key.wif }],
+		}));
 	}
 
 	clear() {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
-	async submit(role, publicKey) {
-		if (role === 'memo' && !this.state[role]) {
-			role = 'note';
+	submit(role, publicKey) {
+		const unlocked = this.state.keys.find((k) => k.publicKey === publicKey);
+
+		if (unlocked) {
+			this.setState((prevState) => ({
+				...prevState,
+				keys: prevState.keys.filter((k) => k.publicKey !== publicKey),
+			}));
+			return;
 		}
 
-		if (this.state[role].find((k) => k.publicKey === publicKey)) {
-			return this.setState({
-				[role]: this.state[role].filter(((k) => k.publicKey !== publicKey)),
-			});
-		}
-
-		const userStorage = Services.getUserStorage();
-		const key = await userStorage.getWIFByPublicKey(publicKey, { password: '123123' });
-
-		if (!key) {
-			return null;
-		}
-
-		const privateKey = PrivateKey.fromWif(key.wif).toHex();
-
-		if (!privateKey) {
-			return this.props.openModal({ role, publicKey });
-		}
-
-		return this.setState({
-			[role]: [...this.state[role], { publicKey, privateKey }],
-		});
+		this.setState({ password: '', publicKey });
+		this.props.openModal(MODAL_UNLOCK_PERMISSION);
 	}
 
-	change(value) {
-		this.setState({ password: value, error: null });
+	change(password) {
+		this.setState({ password });
+
+		if (this.props[MODAL_UNLOCK_PERMISSION].get('error')) {
+			this.props.clear(MODAL_UNLOCK_PERMISSION);
+		}
 	}
 
 	unlock() {
 		const { password } = this.state;
-		const { account, role, publicKey } = this.props;
 
-		const { keys, error } = this.props.unlockAccount(account, password);
-		if (error) {
-			return this.setState({ error });
-		}
-
-		const key = role !== 'note' ? keys[role] : keys.memo;
-		if (key.publicKey !== publicKey) {
-			return this.setState({ error: 'Invalid password' });
-		}
-
-		this.setState({
-			[role]: [
-				...this.state[role],
-				{ publicKey, privateKey: key.privateKey.toWif() },
-			],
-			password: '',
-		});
-
-		return this.props.closeModal();
+		this.props.unlock(password, this.setWIFKey.bind(this));
 	}
 
-	close() {
-		const { role, publicKey } = this.props;
+	close(modal) {
+		this.setState({ password: '', publicKey: '' });
+		this.props.closeModal(modal);
+	}
 
-		this.setState({
-			[role]: this.state[role].filter(((k) => k.publicKey !== publicKey)),
-			password: '',
-			error: null,
-		});
-
-		this.props.closeModal();
+	forgot() {
+		this.setState({ password: '' });
+		this.props.closeModal(MODAL_UNLOCK_PERMISSION);
+		this.props.openModal(MODAL_WIPE);
 	}
 
 	render() {
+		const {
+			[MODAL_UNLOCK_PERMISSION]: modalUnlock,
+		} = this.props;
+
 		return (
 			<React.Fragment>
-				{this.props.children(this.state, this.submit.bind(this))}
+				{this.props.children(this.state.keys, this.submit.bind(this))}
 				<ModalUnlock
-					show={this.props.show}
-					disabled={this.props.disabled}
+					show={modalUnlock.get('show')}
+					disabled={modalUnlock.get('loading')}
+					error={modalUnlock.get('error')}
 					password={this.state.password}
-					error={this.state.error}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlock()}
-					close={() => this.close()}
+					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
+					forgot={() => this.forgot()}
 				/>
 			</React.Fragment>
 		);
@@ -122,35 +115,23 @@ class PrivateKeyScenario extends React.Component {
 
 PrivateKeyScenario.propTypes = {
 	children: PropTypes.func.isRequired,
-	account: PropTypes.object,
-	show: PropTypes.bool,
-	disabled: PropTypes.bool,
-	role: PropTypes.string,
-	publicKey: PropTypes.string,
+
+	[MODAL_UNLOCK_PERMISSION]: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
-	unlockAccount: PropTypes.func.isRequired,
+	clear: PropTypes.func.isRequired,
+	unlock: PropTypes.func.isRequired,
 };
 
-PrivateKeyScenario.defaultProps = {
-	account: {},
-	show: false,
-	disabled: false,
-	role: null,
-	publicKey: null,
-};
 
 export default connect(
 	(state) => ({
-		account: state.echojs.getIn(['data', 'accounts', state.global.getIn(['activeUser', 'id'])]),
-		show: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'show']),
-		disabled: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'loading']),
-		role: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'role']),
-		publicKey: state.modal.getIn([MODAL_UNLOCK_PERMISSION, 'publicKey']),
+		[MODAL_UNLOCK_PERMISSION]: state.modal.get(MODAL_UNLOCK_PERMISSION),
 	}),
 	(dispatch) => ({
-		openModal: (params) => dispatch(openModal(MODAL_UNLOCK_PERMISSION, params)),
-		closeModal: () => dispatch(closeModal(MODAL_UNLOCK_PERMISSION)),
-		unlockAccount: (account, password) => dispatch(unlockAccount(account, password)),
+		openModal: (modal, params) => dispatch(openModal(modal, params)),
+		closeModal: (modal) => dispatch(closeModal(modal)),
+		clear: (modal) => dispatch(setError(modal, null)),
+		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
 	}),
 )(PrivateKeyScenario);

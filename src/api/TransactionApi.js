@@ -1,16 +1,5 @@
 import { TransactionBuilder, TransactionHelper, Aes, PrivateKey } from 'echojs-lib';
 
-export const buildAndSendTransaction = async (operation, options, privateKeys) => {
-	const tr = new TransactionBuilder();
-
-	tr.add_type_operation(operation, options);
-
-	await tr.set_required_fees(options.fee.asset_id);
-	privateKeys.map((privateKey) => tr.add_signer(privateKey));
-
-	return tr.broadcast();
-};
-
 export const estimateCallContractFee = async (operation, options) => {
 	const tr = new TransactionBuilder();
 

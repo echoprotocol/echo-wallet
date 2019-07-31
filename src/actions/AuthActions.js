@@ -4,7 +4,7 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, setGlobalError } from './GlobalActions';
+import { addAccount, isAccountAdded, initAccount, setGlobalError } from './GlobalActions';
 
 import {
 	setFormValue,
@@ -108,13 +108,16 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 	}
 
 	const networkName = getState().global.getIn(['network', 'name']);
+	const userStorage = Services.getUserStorage();
 
 	try {
 		const instance = getState().echojs.getIn(['system', 'instance']);
 		accountNameError = await validateAccountExist(instance, accountName, true);
 
 		if (!accountNameError) {
-			accountNameError = isAccountAdded(accountName, networkName);
+			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+			const key = await userStorage.getWIFByPublicKey(publicKey, { password });
+			accountNameError = !!key && isAccountAdded(accountName, networkName);
 		}
 
 		if (accountNameError) {
@@ -132,10 +135,13 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			return false;
 		}
 
-		const userStorage = Services.getUserStorage();
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.get('id')), { password });
 
-		dispatch(addAccount(accountName, networkName));
+		if (!isAccountAdded(accountName, networkName)) {
+			dispatch(addAccount(accountName, networkName));
+		} else {
+			dispatch(initAccount(accountName, networkName));
+		}
 
 		return false;
 	} catch (err) {
@@ -221,12 +227,15 @@ export const importAccount = ({ accountName, wif, password }) =>
 			accountIDs = accountIDs.toSet().toArray();
 
 			const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
+			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
 
-			accounts.forEach((n) => {
-				if (isAccountAdded(n.get('name'), networkName)) {
+			await Promise.all(accounts.map(async (n) => {
+
+				if (!!storageKey && isAccountAdded(n.get('name'), networkName)) {
 					accountIDs = accountIDs.filter((item) => n.get('id') !== item);
 				}
-			});
+			}));
 
 			if (accountIDs.length > 1) {
 				dispatch(getAccountsList(accounts));
@@ -253,27 +262,31 @@ export const importAccount = ({ accountName, wif, password }) =>
  *
  *  Log in selected accounts
  *
+ *  @param {String} password
  *  @param {Array} accounts
- *  @param {String} wif
  *
  */
-export const importSelectedAccounts = (accounts, wif) => async (dispatch) => {
+export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
+	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
+
 	accounts.forEach((account) => {
 		if (account.checked) {
-			dispatch(authUser({ accountName: account.name, wif }));
+			dispatch(authUser({ accountName: account.name, wif, password }));
 		}
 	});
+
+	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
 
-export const unlock = (password, callback = () => {}) => async (dispatch) => {
+export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
 	try {
-		dispatch(toggleModalLoading(MODAL_UNLOCK, true));
+		dispatch(toggleModalLoading(modal, true));
 
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
 
 		if (!doesDBExist) {
-			dispatch(setError(MODAL_UNLOCK, 'DB doesn\'t exist'));
+			dispatch(setError(modal, 'DB doesn\'t exist'));
 			return;
 		}
 
@@ -281,17 +294,17 @@ export const unlock = (password, callback = () => {}) => async (dispatch) => {
 		const correctPassword = await userStorage.isMasterPassword(password);
 
 		if (!correctPassword) {
-			dispatch(setError(MODAL_UNLOCK, 'Invalid password'));
+			dispatch(setError(modal, 'Invalid password'));
 			return;
 		}
 
-		dispatch(closeModal(MODAL_UNLOCK));
+		dispatch(closeModal(modal));
 
 		callback(password);
 	} catch (err) {
-		dispatch(setError(MODAL_UNLOCK, err));
+		dispatch(setError(modal, err));
 	} finally {
-		dispatch(toggleModalLoading(MODAL_UNLOCK, false));
+		dispatch(toggleModalLoading(modal, false));
 	}
 
 };

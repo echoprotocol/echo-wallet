@@ -1,16 +1,7 @@
 import React from 'react';
 import { Modal, Form, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
-
-import { importSelectedAccounts } from '../../actions/AuthActions';
-import { closeModal, update } from '../../actions/ModalActions';
-import { toggleSort } from '../../actions/SortActions';
-
-import { FORM_SIGN_IN } from '../../constants/FormConstants';
-import { MODAL_CHOOSE_ACCOUNT } from '../../constants/ModalConstants';
-import { SORT_ACCOUNTS } from '../../constants/GlobalConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -30,8 +21,8 @@ class ModalChooseAccount extends React.Component {
 	}
 
 
-	onConfirm(accounts, wif) {
-		this.props.importAccounts(accounts, wif);
+	onConfirm(accounts) {
+		this.props.importAccounts(accounts);
 		this.onClose();
 	}
 
@@ -127,7 +118,7 @@ class ModalChooseAccount extends React.Component {
 
 	render() {
 
-		const { show, accounts, wif } = this.props;
+		const { show, accounts } = this.props;
 		const { checkedAll } = this.state;
 		const { sortType, sortInc } = this.props.sort.toJS();
 
@@ -204,7 +195,7 @@ class ModalChooseAccount extends React.Component {
 									basic
 									type="button"
 									className="main-btn"
-									onClick={() => this.onConfirm(accounts, wif)}
+									onClick={() => this.onConfirm(accounts)}
 									content="Continue"
 								/>
 							</div>
@@ -219,32 +210,17 @@ class ModalChooseAccount extends React.Component {
 
 ModalChooseAccount.propTypes = {
 	show: PropTypes.bool,
+	accounts: PropTypes.any,
+	sort: PropTypes.object.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	toggleChecked: PropTypes.func.isRequired,
 	importAccounts: PropTypes.func.isRequired,
 	toggleSort: PropTypes.func.isRequired,
-	accounts: PropTypes.any,
-	wif: PropTypes.string,
-	sort: PropTypes.object.isRequired,
 };
 
 ModalChooseAccount.defaultProps = {
 	show: false,
 	accounts: [],
-	wif: '',
 };
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'show']),
-		accounts: state.modal.getIn([MODAL_CHOOSE_ACCOUNT, 'accounts']),
-		wif: state.form.getIn([FORM_SIGN_IN, 'wif']).value,
-		sort: state.sort.get(SORT_ACCOUNTS),
-	}),
-	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_CHOOSE_ACCOUNT)),
-		toggleChecked: (param, value) => dispatch(update(MODAL_CHOOSE_ACCOUNT, param, value)),
-		importAccounts: (accounts, wif) => dispatch(importSelectedAccounts(accounts, wif)),
-		toggleSort: (type) => dispatch(toggleSort(SORT_ACCOUNTS, type)),
-	}),
-)(ModalChooseAccount);
+export default ModalChooseAccount;

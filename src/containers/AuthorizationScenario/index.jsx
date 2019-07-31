@@ -4,10 +4,13 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
+import ModalChooseAccount from '../../components/Modals/ModalChooseAccount';
 
-import { MODAL_UNLOCK } from '../../constants/ModalConstants';
-import { openModal, closeModal, setError } from '../../actions/ModalActions';
-import { unlock } from '../../actions/AuthActions';
+import { MODAL_UNLOCK, MODAL_WIPE, MODAL_CHOOSE_ACCOUNT } from '../../constants/ModalConstants';
+import { SORT_ACCOUNTS } from '../../constants/GlobalConstants';
+import { openModal, closeModal, setError, update } from '../../actions/ModalActions';
+import { unlock, importSelectedAccounts } from '../../actions/AuthActions';
+import { toggleSort } from '../../actions/SortActions';
 
 class AuthorizationScenario extends React.Component {
 
@@ -27,18 +30,17 @@ class AuthorizationScenario extends React.Component {
 
 	clear() {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
-		this.props.closeModal();
 	}
 
 	submit() {
-		this.props.openModal();
+		this.props.openModal(MODAL_UNLOCK);
 	}
 
 	change(value) {
 		this.setState({ password: value });
 
-		if (this.props.error) {
-			this.props.clear();
+		if (this.props[MODAL_UNLOCK].get('error')) {
+			this.props.clear(MODAL_UNLOCK);
 		}
 	}
 
@@ -48,25 +50,52 @@ class AuthorizationScenario extends React.Component {
 		this.props.unlock(password, this.props.authorize);
 	}
 
-	close() {
+	close(modal) {
 		this.clear();
+		this.props.closeModal(modal);
+	}
+
+	forgot() {
+		this.clear();
+		this.props.closeModal(MODAL_UNLOCK);
+		this.props.openModal(MODAL_WIPE);
+	}
+
+	choose(accounts) {
+		const { password } = this.state;
+
+		this.props.importAccounts(password, accounts);
 	}
 
 	render() {
 		const { password } = this.state;
-		const { show, loading, error } = this.props;
+		const {
+			[MODAL_UNLOCK]: modalUnlock,
+			[MODAL_CHOOSE_ACCOUNT]: modalChooseAccount,
+			sort,
+		} = this.props;
 
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
-					show={show}
-					disabled={loading}
+					show={modalUnlock.get('show')}
+					disabled={modalUnlock.get('loading')}
 					password={password}
-					error={error}
+					error={modalUnlock.get('error')}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlock()}
-					close={() => this.close()}
+					forgot={() => this.forgot()}
+					close={() => this.close(MODAL_UNLOCK)}
+				/>
+				<ModalChooseAccount
+					show={modalChooseAccount.get('show')}
+					accounts={modalChooseAccount.get('accounts')}
+					sort={sort}
+					closeModal={() => this.close(MODAL_CHOOSE_ACCOUNT)}
+					importAccounts={(accounts) => this.choose(accounts)}
+					toggleChecked={(param, value) => this.props.toggleChecked(param, value)}
+					toggleSort={(type) => this.props.toggleSort(type)}
 				/>
 			</React.Fragment>
 		);
@@ -76,32 +105,34 @@ class AuthorizationScenario extends React.Component {
 
 AuthorizationScenario.propTypes = {
 	children: PropTypes.func.isRequired,
-	show: PropTypes.bool,
-	loading: PropTypes.bool,
-	error: PropTypes.string,
 	authorize: PropTypes.func.isRequired,
+
+	[MODAL_UNLOCK]: PropTypes.object.isRequired,
+	[MODAL_CHOOSE_ACCOUNT]: PropTypes.object.isRequired,
+	sort: PropTypes.object.isRequired,
 	unlock: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	clear: PropTypes.func.isRequired,
+	toggleChecked: PropTypes.func.isRequired,
+	importAccounts: PropTypes.func.isRequired,
+	toggleSort: PropTypes.func.isRequired,
 };
 
-AuthorizationScenario.defaultProps = {
-	show: false,
-	loading: false,
-	error: null,
-};
 
 export default connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_UNLOCK, 'show']),
-		loading: state.modal.getIn([MODAL_UNLOCK, 'loading']),
-		error: state.modal.getIn([MODAL_UNLOCK, 'error']),
+		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
+		[MODAL_CHOOSE_ACCOUNT]: state.modal.get(MODAL_CHOOSE_ACCOUNT),
+		sort: state.sort.get(SORT_ACCOUNTS),
 	}),
 	(dispatch) => ({
-		openModal: () => dispatch(openModal(MODAL_UNLOCK)),
-		closeModal: () => dispatch(closeModal(MODAL_UNLOCK)),
+		openModal: (modal) => dispatch(openModal(modal)),
+		closeModal: (modal) => dispatch(closeModal(modal)),
 		unlock: (value, callback) => dispatch(unlock(value, callback)),
-		clear: () => dispatch(setError(MODAL_UNLOCK, null)),
+		clear: (modal) => dispatch(setError(modal, null)),
+		toggleChecked: (param, value) => dispatch(update(MODAL_CHOOSE_ACCOUNT, param, value)),
+		importAccounts: (password, accounts) => dispatch(importSelectedAccounts(password, accounts)),
+		toggleSort: (type) => dispatch(toggleSort(SORT_ACCOUNTS, type)),
 	}),
 )(AuthorizationScenario);

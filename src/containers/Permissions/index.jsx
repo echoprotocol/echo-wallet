@@ -57,6 +57,7 @@ class Permissions extends React.Component {
 
 	componentWillUnmount() {
 		this.props.clear();
+		this.props.clearForm();
 	}
 
 	onCancel(data) {
@@ -99,10 +100,7 @@ class Permissions extends React.Component {
 		return (
 
 			<div className="permissions-wrap">
-				<TransactionScenario
-					handleTransaction={() => this.props.permissionTransaction()}
-					form={FORM_PERMISSION_KEY}
-				>
+				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{
 						(submitTr) => (
 							this.props.isChanged &&
@@ -132,7 +130,7 @@ class Permissions extends React.Component {
 									table="Active"
 									description="Active key allows you to sign transactions Use this key to log in into wallets."
 									data={active}
-									keys={keys.active}
+									keys={keys}
 									submit={submit}
 									resetAddKeys={this.state.resetAddKeys}
 								/>

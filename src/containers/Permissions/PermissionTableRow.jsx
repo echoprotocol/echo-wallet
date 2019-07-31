@@ -203,7 +203,7 @@ class PermissionTableRow extends Component {
 						/>
 						{
 							key ?
-								<span className="key">{key.privateKey}</span> :
+								<span className="key">{key.wif}</span> :
 								<input
 									tabIndex="-1"
 									type="password"

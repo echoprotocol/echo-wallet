@@ -1,6 +1,7 @@
 import BN from 'bignumber.js';
-import { EchoJSActions } from 'echojs-redux';
 import { List } from 'immutable';
+import { TransactionBuilder } from 'echojs-lib';
+import { EchoJSActions } from 'echojs-redux';
 
 import history from '../history';
 
@@ -28,6 +29,7 @@ import {
 import { addContractByName } from './ContractActions';
 import { getBalanceFromAssets } from './BalanceActions';
 import { setValue as setTableValue } from './TableActions';
+import { signTransaction } from './SignActions';
 
 import { getMethod } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
@@ -44,7 +46,6 @@ import { formatError } from '../helpers/FormatHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import {
-	buildAndSendTransaction,
 	estimateCallContractFee,
 	getOperationFee,
 } from '../api/TransactionApi';
@@ -524,7 +525,7 @@ export const createContract = () => async (dispatch, getState) => {
 	}
 };
 
-export const sendTransaction = (keys) => async (dispatch, getState) => {
+export const sendTransaction = (password) => async (dispatch, getState) => {
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 
 	const { operation, options } = getState().transaction.toJS();
@@ -537,34 +538,39 @@ export const sendTransaction = (keys) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	const privateKeys = keys.active.map(([privateKey]) => privateKey);
+	const tr = new TransactionBuilder();
 
-	buildAndSendTransaction(operation, options, privateKeys)
-		.then((res) => {
-			if (addToWatchList) {
-				dispatch(addContractByName(
-					res[0].trx.operation_results[0][1],
-					accountId,
-					name,
-					abi,
-				));
-			}
+	tr.add_type_operation(operation, options);
 
-			if (res[0].trx.operations[0][0] === operations.account_update.value) {
-				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-			}
+	await tr.set_required_fees(options.fee.asset_id);
 
-			toastSuccess(`${operations[operation].name} transaction was completed`);
+	const signer = options[operations[operation].signer];
+	await dispatch(signTransaction(signer, tr, password));
 
-		})
-		.catch((error) => {
-			error = error.toString();
-			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
-			message = message.charAt(0).toUpperCase() + message.slice(1);
-			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+	tr.broadcast().then((res) => {
+		if (addToWatchList) {
+			dispatch(addContractByName(
+				res[0].trx.operation_results[0][1],
+				accountId,
+				name,
+				abi,
+			));
+		}
+
+		if (res[0].trx.operations[0][0] === operations.account_update.value) {
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		})
-		.finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+		}
+
+		toastSuccess(`${operations[operation].name} transaction was completed`);
+
+	}).catch((error) => {
+		error = error.toString();
+		let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
+		message = message.charAt(0).toUpperCase() + message.slice(1);
+		toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
+	}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+
 	toastSuccess(`${operations[operation].name} transaction was sent`);
 
 	dispatch(closeModal(MODAL_DETAILS));

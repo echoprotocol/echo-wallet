@@ -8,7 +8,7 @@ export default {
 			value: 'amount.amount',
 			asset: 'amount.asset_id',
 		},
-		permission: 'active',
+		signer: 'from',
 	},
 	limit_order_create: {
 		value: 1,
@@ -59,6 +59,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		signer: 'registrar',
 	},
 	account_update: {
 		value: 6,
@@ -69,7 +70,7 @@ export default {
 			value: null,
 			asset: null,
 		},
-		permission: 'active',
+		signer: 'account',
 	},
 	account_whitelist: {
 		value: 7,
@@ -393,7 +394,7 @@ export default {
 			asset: 'value.asset_id',
 			code: 'code',
 		},
-		permission: 'active',
+		signer: 'registrar',
 	},
 	call_contract: {
 		value: 41,
@@ -405,7 +406,7 @@ export default {
 			asset: 'value.asset_id',
 			code: 'code',
 		},
-		permission: 'active',
+		signer: 'registrar',
 	},
 	contract_transfer: {
 		value: 42,

@@ -107,7 +107,7 @@ class Password extends React.Component {
 				</div>
 				<div className="form-panel">
 					<Button
-						disabled={loading || error || repeatError || !password || !repeatPassword}
+						disabled={loading || !!error || !!repeatError || !password || !repeatPassword}
 						basic={!loading}
 						content={loading ? 'Creating...' : 'Create password'}
 						className={classnames('main-btn', { load: loading })}

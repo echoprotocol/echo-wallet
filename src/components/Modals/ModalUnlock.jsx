@@ -5,6 +5,12 @@ import classnames from 'classnames';
 
 class ModalUnlockWallet extends React.Component {
 
+	onForgot(e) {
+		e.preventDefault();
+
+		this.props.forgot();
+	}
+
 	onSuccess() {
 		this.props.unlock();
 	}
@@ -20,7 +26,7 @@ class ModalUnlockWallet extends React.Component {
 
 	render() {
 		const {
-			show, password, error, disabled,
+			show, error, disabled,
 		} = this.props;
 
 		return (
@@ -48,7 +54,6 @@ class ModalUnlockWallet extends React.Component {
 										placeholder="Password"
 										name="password"
 										className="ui input"
-										value={password}
 										onChange={(e) => this.onChange(e)}
 										autoFocus
 									/>
@@ -56,7 +61,15 @@ class ModalUnlockWallet extends React.Component {
 								</Form.Field>
 							</div>
 							<div className="form-panel">
-								<a className="action-link">Forgot password?</a>
+								<a
+									className="action-link"
+									role="button"
+									onClick={(e) => this.onForgot(e)}
+									onKeyPress={(e) => this.onForgot(e)}
+									tabIndex="0"
+								>
+									Forgot password?
+								</a>
 								<Button
 									basic
 									type="submit"
@@ -78,17 +91,16 @@ class ModalUnlockWallet extends React.Component {
 ModalUnlockWallet.propTypes = {
 	show: PropTypes.bool,
 	disabled: PropTypes.bool,
-	password: PropTypes.string,
 	error: PropTypes.string,
 	change: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
+	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
 };
 
 ModalUnlockWallet.defaultProps = {
 	show: false,
 	disabled: false,
-	password: '',
 	error: null,
 };
 

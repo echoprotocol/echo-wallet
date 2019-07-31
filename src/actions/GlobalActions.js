@@ -11,6 +11,7 @@ import {
 	AUTH_ROUTES,
 	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
+import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
@@ -34,6 +35,7 @@ import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable } from './TableActions';
 import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
+import { closeModal, setError } from './ModalActions';
 
 import Services from '../services';
 
@@ -170,7 +172,20 @@ export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
 };
 
-export const removeAccount = (accountName) => async (dispatch, getState) => {
+export const removeAccount = (accountName, password) => async (dispatch, getState) => {
+	const userStorage = Services.getUserStorage();
+	await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+	const correctPassword = await userStorage.isMasterPassword(password);
+
+	if (!correctPassword) {
+		dispatch(setError(MODAL_LOGOUT, 'Invalid password'));
+		return;
+	}
+
+	const account = await dispatch(EchoJSActions.fetch(accountName));
+
+	await userStorage.removeKeys(account.getIn(['active', 'key_auths']).map(([k]) => k), { password });
+
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
@@ -179,6 +194,8 @@ export const removeAccount = (accountName) => async (dispatch, getState) => {
 
 	accounts = accounts.filter(({ name }) => name !== accountName);
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+
+	dispatch(closeModal(MODAL_LOGOUT));
 
 	if (!accounts.length) {
 		dispatch(clearTable(HISTORY_TABLE));
@@ -357,14 +374,32 @@ export const createDB = (password) => async (dispatch) => {
 };
 
 export const resetData = () => async (dispatch) => {
-	// await dispatch(logout());
+	dispatch(closeModal(MODAL_WIPE));
 
-	const userStorage = Services.getUserStorage();
-	const doesDBExist = await userStorage.doesDBExist();
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
-	if (doesDBExist) {
-		await userStorage.deleteDB();
+	try {
+		EchoJSActions.resetSubscribe();
+		dispatch(EchoJSActions.clearStore());
+
+		dispatch(clearTable(HISTORY_TABLE));
+		dispatch(resetBalance());
+		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
+
+		const userStorage = Services.getUserStorage();
+		const doesDBExist = await userStorage.doesDBExist();
+
+		if (doesDBExist) {
+			await userStorage.deleteDB();
+		}
+
+		localStorage.clear();
+
+		history.push(CREATE_PASSWORD_PATH);
+
+	} catch (e) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(e) }));
+	} finally {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}
-
-	history.push(CREATE_PASSWORD_PATH);
 };
