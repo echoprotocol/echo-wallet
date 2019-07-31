@@ -20,6 +20,7 @@ let mainWindow;
 function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
+		show: false,
 		width: 1000,
 		height: 650,
 		minWidth: 1000,
@@ -129,6 +130,12 @@ ipcMain.on('max-app', () => {
 ipcMain.on('min-app', () => {
 	mainWindow.minimize();
 });
+
+
+ipcMain.on('showWindow', () => {
+	mainWindow.show();
+});
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

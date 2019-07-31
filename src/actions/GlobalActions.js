@@ -73,6 +73,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
+	if (ELECTRON && window.ipcRenderer) {
+		window.ipcRenderer.send('showWindow');
+	}
+
 	let network = localStorage.getItem('current_network');
 
 	if (!network) {

@@ -1,9 +1,11 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 	template: `${__dirname}/src/assets/index.html`,
@@ -11,10 +13,11 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 	inject: 'body',
 });
 
-const extractSass = new ExtractTextPlugin({
+const miniExtractSass = new MiniCssExtractPlugin({
 	filename: '[name].[hash].css',
 	disable: process.env.NODE_ENV === 'local',
 });
+
 const { version } = require('./package.json');
 
 module.exports = {
@@ -48,15 +51,24 @@ module.exports = {
 			},
 			{
 				test: /\.scss$/,
-				use: extractSass.extract({
-					use: [{
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+					},
+					{
 						loader: 'css-loader',
-					}, {
+						options: {
+							sourceMap: false,
+							importLoaders: 1,
+						},
+					},
+					{
 						loader: 'sass-loader',
-					}],
-					// use style-loader in development
-					fallback: 'style-loader',
-				}),
+						options: {
+							sourceMap: false,
+						},
+					},
+				],
 			},
 			{
 				test: /\.(png|woff|woff2|eot|ttf|otf|svg)$/,
@@ -65,6 +77,21 @@ module.exports = {
 		],
 	},
 	optimization: {
+		minimizer: [
+			new TerserPlugin({
+				parallel: true,
+				sourceMap: true,
+				cache: true,
+			}),
+			new OptimizeCSSAssetsPlugin({
+				cssProcessorOptions: {
+					map: {
+						inline: false,
+						annotation: true,
+					},
+				},
+			}),
+		],
 		splitChunks: {
 			cacheGroups: {
 				default: false,
@@ -83,10 +110,11 @@ module.exports = {
 		],
 		extensions: ['.js', '.jsx', '.json'],
 	},
+
 	plugins: [
 		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
-		extractSass,
+		miniExtractSass,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
 		new webpack.DefinePlugin({ ELECTRON: !!process.env.ELECTRON }),
 	],
