@@ -8,6 +8,7 @@ import { Element } from 'react-scroll/modules/index';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import Avatar from '../../components/Avatar';
+import { ACCOUNT_ID_PREFIX } from '../../constants/GlobalConstants';
 
 class RowComponent extends React.Component {
 
@@ -35,6 +36,9 @@ class RowComponent extends React.Component {
 		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision) : null;
 		const feeSymbol = fee.amount ? fee.symbol : null;
 
+		const isFromAccount = from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+		const isSubjectAccount = subject.id && subject.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+
 		return (
 			<Table.Row
 				className="pointer"
@@ -53,16 +57,16 @@ class RowComponent extends React.Component {
 					<span className="ellips">#{block}</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips avatar-block">
-						<Avatar accountName={from} />
-						<span>{from}</span>
+					<span className={classnames('ellips', { 'avatar-block': isFromAccount })}>
+						{isFromAccount && <Avatar accountName={from.value} />}
+						<span>{from.value}</span>
 					</span>
 				</Table.Cell>
 				<Table.Cell>
 					{/* TODO add to contract create operation className=create */}
-					<span className="ellips avatar-block">
-						<Avatar accountName={subject} />
-						<span>{subject}</span>
+					<span className={classnames('ellips', { 'avatar-block': isSubjectAccount })}>
+						{isSubjectAccount && <Avatar accountName={subject.value} />}
+						<span>{subject.value}</span>
 					</span>
 				</Table.Cell>
 				<Table.Cell>

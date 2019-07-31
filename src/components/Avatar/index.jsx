@@ -13,17 +13,10 @@ class Avatar extends React.Component {
 			avatarSize: null,
 		};
 		this.imageRef = React.createRef();
-		this.listener = this.updateAvatarSize.bind(this);
 	}
 
 	componentDidMount() {
 		this.updateAvatarSize();
-		window.addEventListener('resize', this.listener);
-		window.addEventListener('load', this.listener);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.listener);
 	}
 
 	updateAvatarSize() {
