@@ -62,6 +62,7 @@ export const ECHO_ASSET_ID = '1.3.0';
 export const CONTRACT_ID_PREFIX = '1.14';
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
+export const GLOBAL_ERROR_TIMEOUT = 10 * 1000;
 
 export const NETWORKS = [
 	{

@@ -4,13 +4,12 @@ import { List } from 'immutable';
 
 import { openModal, setDisable } from './ModalActions';
 import { set as setKey } from './KeyChainActions';
-import { addAccount, isAccountAdded } from './GlobalActions';
+import { addAccount, isAccountAdded, setGlobalError } from './GlobalActions';
 
 import {
 	setFormValue,
 	setFormError,
 	toggleLoading,
-	setValue,
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
@@ -84,7 +83,7 @@ export const createAccount = ({
 		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
-		dispatch(setValue(FORM_SIGN_UP, 'error', formatError(err)));
+		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -143,7 +142,7 @@ export const authUser = ({ accountName, password }) => async (dispatch, getState
 		dispatch(addAccount(accountName, networkName));
 		return false;
 	} catch (err) {
-		dispatch(setValue(FORM_SIGN_IN, 'error', formatError(err)));
+		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
@@ -237,7 +236,7 @@ export const importAccount = ({ accountName, password }) =>
 
 
 			} catch (error) {
-				dispatch(setValue(FORM_SIGN_IN, 'error', error));
+				dispatch(setGlobalError(formatError(error) || 'Account importing error. Please, try again later'));
 			}
 
 		}

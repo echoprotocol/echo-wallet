@@ -11,7 +11,7 @@ import {
 	AUTH_ROUTES,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, NETWORKS, GLOBAL_ERROR_TIMEOUT } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY } from '../constants/FormConstants';
 
 
@@ -125,6 +125,13 @@ export const disconnection = (address) => async (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.disconnect());
 };
 
+export const setGlobalError = (err) => (dispatch) => {
+	dispatch(GlobalReducer.actions.set({ field: 'globalError', value: err }));
+
+	setTimeout(() => {
+		dispatch(GlobalReducer.actions.set({ field: 'globalError', value: null }));
+	}, GLOBAL_ERROR_TIMEOUT);
+};
 
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
