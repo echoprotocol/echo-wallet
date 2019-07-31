@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 const DEFAULT_FIELDS = Map({
 	globalLoading: false,
+	globalError: null,
 	error: null,
 	activeUser: new Map({
 		id: '',

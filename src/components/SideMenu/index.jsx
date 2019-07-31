@@ -16,7 +16,6 @@ import {
 	PERMISSIONS_PATH,
 	INDEX_PATH,
 	VIEW_TRANSACTION_PATH,
-	COMMITTEE_VOTE_PATH,
 } from '../../constants/RouterConstants';
 
 class SidebarMenu extends React.Component {
@@ -90,18 +89,6 @@ class SidebarMenu extends React.Component {
 								>
 									<span className="icon icon-contractSearch" />
 									<span className="sidebar-nav-text">Smart Contracts</span>
-								</NavLink>
-							</li>
-							<li>
-								<NavLink
-									exact
-									className="sidebar-nav-link"
-									onClick={() => this.props.hideBar()}
-									replace={COMMITTEE_VOTE_PATH === parsedLocation}
-									to={COMMITTEE_VOTE_PATH}
-								>
-									<span className="icon icon-menu-voting" />
-									<span className="sidebar-nav-text">Voting</span>
 								</NavLink>
 							</li>
 							<li>

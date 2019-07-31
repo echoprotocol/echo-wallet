@@ -12,12 +12,9 @@ import {
 	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
-import {
-	FORM_ADD_CUSTOM_NETWORK,
-	FORM_PERMISSION_KEY,
-	FORM_PASSWORD_CREATE,
-} from '../constants/FormConstants';
+import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT } from '../constants/GlobalConstants';
+import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
+
 
 import {
 	validateNetworkName,
@@ -85,6 +82,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
+	if (ELECTRON && window.ipcRenderer) {
+		window.ipcRenderer.send('showWindow');
+	}
+
 	let network = localStorage.getItem('current_network');
 
 	if (!network) {
@@ -145,6 +146,13 @@ export const disconnection = (address) => async (dispatch, getState) => {
 	dispatch(GlobalReducer.actions.disconnect());
 };
 
+export const setGlobalError = (err) => (dispatch) => {
+	dispatch(GlobalReducer.actions.set({ field: 'globalError', value: err }));
+
+	setTimeout(() => {
+		dispatch(GlobalReducer.actions.set({ field: 'globalError', value: null }));
+	}, GLOBAL_ERROR_TIMEOUT);
+};
 
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
@@ -349,7 +357,7 @@ export const createDB = (password) => async (dispatch) => {
 };
 
 export const resetData = () => async (dispatch) => {
-	await dispatch(logout());
+	// await dispatch(logout());
 
 	const userStorage = Services.getUserStorage();
 	const doesDBExist = await userStorage.doesDBExist();

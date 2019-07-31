@@ -9,7 +9,6 @@ import {
 	CALL_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	PERMISSIONS_PATH,
-	COMMITTEE_VOTE_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -53,10 +52,6 @@ export const HEADER_TITLE = [
 		path: PERMISSIONS_PATH,
 		title: 'Permissions',
 	},
-	{
-		path: COMMITTEE_VOTE_PATH,
-		title: 'Voting',
-	},
 ];
 
 export const SORT_CONTRACTS = 'contracts';
@@ -67,6 +62,7 @@ export const ECHO_ASSET_ID = '1.3.0';
 export const CONTRACT_ID_PREFIX = '1.14';
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
+export const GLOBAL_ERROR_TIMEOUT = 10 * 1000;
 
 export const SCRYPT_ALGORITHM_PARAMS = {
 	N: 2 ** 14,

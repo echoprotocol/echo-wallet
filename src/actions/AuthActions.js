@@ -4,13 +4,12 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded } from './GlobalActions';
+import { addAccount, isAccountAdded, setGlobalError } from './GlobalActions';
 
 import {
 	setFormValue,
 	setFormError,
 	toggleLoading,
-	setValue,
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
@@ -86,7 +85,7 @@ export const createAccount = ({
 		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
-		dispatch(setValue(FORM_SIGN_UP, 'error', formatError(err)));
+		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -140,8 +139,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 
 		return false;
 	} catch (err) {
-		console.log(err);
-		dispatch(setValue(FORM_SIGN_IN, 'error', formatError(err)));
+		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
@@ -246,7 +244,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 			return;
 
 		} catch (error) {
-			dispatch(setValue(FORM_SIGN_IN, 'error', error));
+			dispatch(setGlobalError(formatError(error) || 'Account importing error. Please, try again later'));
 		}
 	};
 

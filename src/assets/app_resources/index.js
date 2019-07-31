@@ -19,6 +19,7 @@ let mainWindow;
 function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
+		show: false,
 		width: 1000,
 		height: 700,
 		minWidth: 1000,
@@ -28,6 +29,7 @@ function createWindow() {
 			preload: `${__dirname}/preload.js`,
 		},
 		frame: false,
+		backgroundColor: '#5e79e8',
 	});
 
 	// and load the index.html of the app.
@@ -98,5 +100,9 @@ ipcMain.on('min-app', () => {
 	mainWindow.minimize();
 });
 
+
+ipcMain.on('showWindow', () => {
+	mainWindow.show();
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

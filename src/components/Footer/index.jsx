@@ -17,7 +17,7 @@ class Footer extends React.PureComponent {
 
 	render() {
 		const {
-			isConnect, latency, lastBlock,
+			isConnect, latency, lastBlock, error,
 		} = this.props;
 
 		const connected = (
@@ -44,7 +44,21 @@ class Footer extends React.PureComponent {
 				</ul>
 			</div>
 		);
-		return isConnect && !latency.error ? connected : disconnected;
+
+		const errored = (
+			<div className="footer disconnected">
+				<ul>
+					<li>{error}</li>
+					<li />
+				</ul>
+			</div>
+		);
+
+		if (isConnect && !latency.error) {
+			return error ? errored : connected;
+		}
+
+		return disconnected;
 	}
 
 }
@@ -53,12 +67,14 @@ Footer.propTypes = {
 	lastBlock: PropTypes.any,
 	isConnect: PropTypes.any,
 	latency: PropTypes.any,
+	error: PropTypes.string,
 	connection: PropTypes.func.isRequired,
 };
 
 Footer.defaultProps = {
 	lastBlock: '',
 	isConnect: false,
+	error: null,
 	latency: {
 		value: 0,
 		error: null,
@@ -71,6 +87,7 @@ export default connect(
 		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
 		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		error: state.global.get('globalError'),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),
