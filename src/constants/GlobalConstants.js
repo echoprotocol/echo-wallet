@@ -9,7 +9,6 @@ import {
 	CALL_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	PERMISSIONS_PATH,
-	COMMITTEE_VOTE_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -52,10 +51,6 @@ export const HEADER_TITLE = [
 	{
 		path: PERMISSIONS_PATH,
 		title: 'Permissions',
-	},
-	{
-		path: COMMITTEE_VOTE_PATH,
-		title: 'Voting',
 	},
 ];
 

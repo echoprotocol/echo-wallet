@@ -15,7 +15,6 @@ import {
 	CALL_CONTRACT_PATH,
 	NETWORKS_PATH,
 	PERMISSIONS_PATH,
-	COMMITTEE_VOTE_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -32,7 +31,6 @@ import ViewTransaction from './containers/ViewTransaction';
 import CallContract from './containers/CallContract';
 import Networks from './containers/Networks';
 import Permissions from './containers/Permissions';
-import CommitteeVote from './containers/CommitteeVote';
 
 export default class Routes extends React.Component {
 
@@ -53,7 +51,6 @@ export default class Routes extends React.Component {
 					<Route exact path={CALL_CONTRACT_PATH} component={CallContract} />
 					<Route exact path={NETWORKS_PATH} component={Networks} />
 					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
-					<Route exact path={COMMITTEE_VOTE_PATH} component={CommitteeVote} />
 				</div>
 			</App>
 		);
