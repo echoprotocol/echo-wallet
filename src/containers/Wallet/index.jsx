@@ -28,8 +28,6 @@ export default connect(
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
 		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
-		selectedSymbol: state.form.getIn([FORM_TRANSFER, 'selectedSymbol']),
-		accountFromId: state.form.getIn([FORM_TRANSFER, 'accountFromId']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
 	}),

@@ -22,18 +22,20 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			accountFromId, from, to, currency,
-			fee, assets, tokens, amount, selectedSymbol, isAvailableBalance, fees,
+			from, to, currency,
+			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
-				accountFromId={accountFromId}
 			>
 				{
 					(submit) => (
 						<Form className="main-form">
+							<div className="form-info">
+								<h3>Create Payment</h3>
+							</div>
 							<div className="field-wrap">
 								<AccountField
 									subject="from"
@@ -43,6 +45,7 @@ class Transfer extends React.Component {
 									setFormValue={this.props.setFormValue}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
+									setValue={this.props.setValue}
 								/>
 								<AccountField
 									subject="to"
@@ -53,6 +56,7 @@ class Transfer extends React.Component {
 									setFormValue={this.props.setFormValue}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
+									setValue={this.props.setValue}
 								/>
 								<AmountField
 									fees={fees}
@@ -62,7 +66,6 @@ class Transfer extends React.Component {
 									tokens={tokens}
 									amount={amount}
 									currency={currency}
-									selectedSymbol={selectedSymbol}
 									isAvailableBalance={isAvailableBalance}
 									amountInput={this.props.amountInput}
 									setFormError={this.props.setFormError}
@@ -96,7 +99,6 @@ Transfer.propTypes = {
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
-	accountFromId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
@@ -107,7 +109,6 @@ Transfer.propTypes = {
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
-	selectedSymbol: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,

@@ -48,6 +48,8 @@
             font-family: proximanovaSemibold;
             font-size: .9em;
             cursor: pointer;
+            padding: 0;
+
             &:focus {
                 &:not(:active) {
                     .icon-back {

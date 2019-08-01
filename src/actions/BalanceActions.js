@@ -25,7 +25,7 @@ import { validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
-import { TRANSFER_PATH } from '../constants/RouterConstants';
+import { INDEX_PATH } from '../constants/RouterConstants';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
@@ -94,6 +94,7 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 		field: 'assets',
 		value: new List(balances),
 	}));
+	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
 export const getTokenBalances = (accountId, networkName) => async (dispatch, getState) => {
@@ -353,7 +354,7 @@ export const getObject = (subscribeObject) => async (dispatch, getState) => {
 				dispatch(getPreviewBalances(networkName));
 			}
 
-			if (history.location.pathname === TRANSFER_PATH) {
+			if (history.location.pathname === INDEX_PATH) {
 				const form = getState().form.getIn([FORM_TRANSFER]);
 				if (form.get('from').value === name && balances[form.get('currency').id]) {
 					const stats = await dispatch(EchoJSActions.fetch(balances[form.get('currency').id]));
@@ -406,7 +407,6 @@ export const disableToken = (name, contractId) => (dispatch) => {
 export const setAsset = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
-	dispatch(setValue(FORM_TRANSFER, 'selectedSymbol', asset.symbol));
 };
 
 export const resetBalance = () => (dispatch) => {

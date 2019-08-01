@@ -65,10 +65,15 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
 			const response = (await dispatch(fetch(request))).toJS();
-			result.subject = { value: response[options.subject[1]], id: request };
+			result.subject = {
+				value: response[options.subject[1]],
+				id: response.id,
+			};
 		} else {
-			const id = options.subject[0] === 'name' ? '1.2.0' : '1.16.0';
-			result.subject = { value: operation[options.subject[0]], id };
+			result.subject = {
+				value: operation[options.subject[0]],
+				id: options.subject[0] === 'name' ? '1.2.0' : null,
+			};
 		}
 	}
 
@@ -93,7 +98,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		const [, resultId] = data.result;
 
-		result.subject = resultId;
+		result.subject = { value: resultId };
 
 		const instance = getState().echojs.getIn(['system', 'instance']);
 
@@ -108,7 +113,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		if (contractResultType === 0) {
 			const { exec_res: { new_address: hexAddress } } = contractResultData;
 
-			result.subject = `${CONTRACT_ID_PREFIX}.${parseInt(hexAddress.slice(2), 16)}`;
+			const id = `${CONTRACT_ID_PREFIX}.${parseInt(hexAddress.slice(2), 16)}`;
+			result.subject = {
+				value: id,
+				id,
+			};
 		}
 	}
 

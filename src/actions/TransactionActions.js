@@ -80,8 +80,9 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 			value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
 			asset: feeAsset.toJS(),
 		};
+		// eslint-disable-next-line no-empty
 	} catch (err) {
-		console.log('error', err);
+
 	}
 
 	return null;
@@ -90,7 +91,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
-	if (!formOptions.get('amount').value || !formOptions.get('to').value) {
+	if (!formOptions.get('to').value) {
 		dispatch(setValue(form, 'isAvailableBalance', false));
 		return null;
 	}
@@ -100,7 +101,7 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 
 	const options = {
 		amount: {
-			amount: formOptions.get('amount').value,
+			amount: formOptions.get('amount').value || 0,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
@@ -181,14 +182,12 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			balances = getState().balance.get('assets').toArray();
 			([defaultAsset] = balances);
 			dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
-			dispatch(setValue(FORM_TRANSFER, 'accountFromId', ''));
 		} else {
 			const account = await dispatch(EchoJSActions.fetch(accountName));
 			const assets = account.get('balances').toJS();
 			balances = await dispatch(getBalanceFromAssets(assets));
 			([defaultAsset] = balances);
 			dispatch(setIn(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
-			dispatch(setValue(FORM_TRANSFER, 'accountFromId', account.get('id')));
 		}
 
 		if (!defaultAsset) {
@@ -592,8 +591,13 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	const { amount, currency } = form;
 
 	// if method payable check amount and currency
-	if (!amount || !currency || !fee || !fee.value) {
+
+	if (!currency || !fee || !fee.value) {
 		return false;
+	}
+
+	if (!amount) {
+		amount.value = 0;
 	}
 
 	const assets = getState().balance.get('assets').toArray();

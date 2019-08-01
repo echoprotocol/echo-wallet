@@ -77,8 +77,6 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
-		selectedSymbol: '',
-		accountFromId: '',
 		balance: {
 			assets: new List([]),
 		},

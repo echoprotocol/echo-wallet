@@ -34,7 +34,7 @@ class AccountField extends React.Component {
 				if (!isValidAccount) return;
 				this.props.setContractFees();
 				this.props.getTransferFee()
-					.then((fee) => fee && this.props.setFormValue('fee', fee));
+					.then((fee) => fee && this.props.setValue('fee', fee));
 			}, 300),
 		});
 	}
@@ -67,7 +67,7 @@ AccountField.propTypes = {
 	field: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 };

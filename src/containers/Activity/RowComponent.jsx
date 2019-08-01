@@ -37,7 +37,7 @@ class RowComponent extends React.Component {
 		const feeSymbol = fee.amount ? fee.symbol : null;
 
 		const isFromAccount = from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
-		const isSubjectAccount = subject.id && subject.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+		const isSubjectAccount = subject && subject.id && subject.id.startsWith(ACCOUNT_ID_PREFIX);
 
 		return (
 			<Table.Row
@@ -64,10 +64,14 @@ class RowComponent extends React.Component {
 				</Table.Cell>
 				<Table.Cell>
 					{/* TODO add to contract create operation className=create */}
-					<span className={classnames('ellips', { 'avatar-block': isSubjectAccount })}>
-						{isSubjectAccount && <Avatar accountName={subject.value} />}
-						<span>{subject.value}</span>
-					</span>
+					{
+						subject ? (
+							<span className={classnames('ellips', { 'avatar-block': isSubjectAccount })}>
+								{isSubjectAccount && <Avatar accountName={subject.value} />}
+								<span>{subject.value}</span>
+							</span>
+						) : null
+					}
 				</Table.Cell>
 				<Table.Cell>
 					<span className="ellips">

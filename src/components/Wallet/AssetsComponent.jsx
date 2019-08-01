@@ -1,13 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
-
+import classnames from 'classnames';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 class Assets extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			focusedId: null,
+		};
+	}
+
 	componentDidMount() {
 		this.props.setAssetActiveAccount();
+	}
+	onFocus(id) {
+		this.setState({ focusedId: id });
+	}
+
+	onBlur() {
+		this.setState({ focusedId: null });
 	}
 
 	setAsset(symbol) {
@@ -16,72 +29,53 @@ class Assets extends React.Component {
 
 	renderEmpty() {
 		return (
-			<div className="msg-empty">
-				<h3>You have no assets</h3>
-			</div>
+			<li>
+				<button>
+					<span className="currency-symbol">ECHO</span>
+					<span className="currency-amount">0</span>
+				</button>
+			</li>
 		);
 	}
 
 	renderList() {
 
 		return (
-			<React.Fragment>
-				<div className="thead-wrap">
+			this.props.assets.map((asset, i) => {
+				const id = i;
+				return (
+					<li
+						key={id}
+						className={classnames({ focused: id === this.state.focusedId })}
+					>
+						<button
+							onFocus={() => this.onFocus(id)}
+							onBlur={() => this.onBlur()}
+							onClick={() => this.setAsset(asset)}
+						>
+							<span className="currency-symbol">{asset.symbol}</span>
+							<span className="currency-amount">
+								{formatAmount(asset.balance, asset.precision, '')}
+							</span>
+						</button>
+					</li>
+				);
 
-					<div className="thead-info">
-						<div className="table-title">Assets</div>
-					</div>
-
-					<Table className="thead" unstackable>
-						<Table.Body>
-							<Table.Row>
-								<Table.Cell>
-                                    Assets
-									{/* <div className="col-title">Assets</div> */}
-								</Table.Cell>
-								<Table.Cell>
-                                    Total amount
-									{/* <div className="col-title">Total amount</div> */}
-								</Table.Cell>
-							</Table.Row>
-						</Table.Body>
-					</Table>
-				</div>
-				<Table className="tbody" unstackable>
-					<Table.Body>
-						{
-							this.props.assets.map((asset, i) => {
-								const id = i;
-								return (
-									<Table.Row
-										key={id}
-										className="pointer"
-										onClick={() => this.setAsset(asset)}
-									>
-										<Table.Cell>{asset.symbol}</Table.Cell>
-										<Table.Cell>
-											{formatAmount(asset.balance, asset.precision, '')}
-										</Table.Cell>
-									</Table.Row>
-								);
-
-							})
-						}
-					</Table.Body>
-				</Table>
-			</React.Fragment>
+			})
 		);
 	}
 
 	render() {
 		return (
-			<div className="table-assets">
-
-				{
-					!this.props.assets || !this.props.assets.size ?
-						this.renderEmpty() : this.renderList()
-				}
-			</div>
+			<React.Fragment>
+				<div className="currency-title">Assets</div>
+				<ul className="currency-list">
+					{
+						!this.props.assets || !this.props.assets.size ?
+							this.renderEmpty() : this.renderList()
+					}
+				</ul>
+			</React.Fragment>
 		);
 	}
 

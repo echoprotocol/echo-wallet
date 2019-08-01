@@ -407,7 +407,8 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	}, []);
 
 	const currency = getState().form.getIn([form, 'currency']);
-	const fee = fees.find((el) => el.asset.id === currency.id) || (fees.length && fees[0]);
+	const fee = fees
+		.find((el) => el.asset.id === currency && currency.id) || (fees.length && fees[0]);
 	dispatch(setValue(form, 'fee', { error: null, ...fee }));
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
 };

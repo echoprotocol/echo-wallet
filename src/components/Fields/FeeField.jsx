@@ -23,24 +23,24 @@ class FeeComponent extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (_.isEqual(this.props, nextProps)) { return; }
-
-		const { assets, selectedSymbol } = this.props;
 		this.setOptions();
-		if (!(assets.length)) return;
-		const targetAsset = assets.find((asset) => asset.symbol === selectedSymbol);
-		if (!targetAsset) return;
-		this.getTransferFee();
 	}
 
 	onFee(fee) {
+		const { options } = this.state;
+		const { assets = [] } = this.props;
+
 		if (!fee) {
 			this.props.setFormValue('fee', fee);
 		} else {
-			if (typeof fee === 'string') {
-				this.props.setFormValue('fee', fee);
+			if (typeof fee === 'object') {
+				this.props.setValue('fee', fee);
 				return;
 			}
-			this.props.setValue('fee', fee);
+			const symbol = options.find((opt) => opt.value === fee.toString());
+			const asset = assets.find((opt) => opt.symbol === symbol.key);
+			this.props.setValue('fee', { value: fee, asset });
+
 		}
 	}
 
@@ -58,13 +58,11 @@ class FeeComponent extends React.Component {
 		const feePromises = assets.map((asset) => this.props.getTransferFee(asset.id));
 		const fees = await Promise.all(feePromises);
 
-		const options = fees.filter((fee) => fee).map((fee, index) => ({
+		return fees.filter((fee) => fee).map((fee, index) => ({
 			key: assets[index].symbol,
-			value: JSON.stringify(fee.value),
+			value: fee.value.toString(),
 			text: formatAmount(fee.value, assets[index].precision, assets[index].symbol),
 		}));
-
-		return options;
 	}
 
 	async getOptionsCallContract() {
@@ -76,7 +74,6 @@ class FeeComponent extends React.Component {
 				value: JSON.stringify(fee),
 				text: formatAmount(fee.value, fee.asset.precision, fee.asset.symbol),
 			});
-
 
 			return arr;
 		}, []);
@@ -150,7 +147,6 @@ FeeComponent.propTypes = {
 	fee: PropTypes.object,
 	isSingle: PropTypes.bool,
 	assets: PropTypes.array.isRequired,
-	selectedSymbol: PropTypes.string,
 	type: PropTypes.string.isRequired,
 	feeError: PropTypes.string,
 	setValue: PropTypes.func.isRequired,
@@ -163,7 +159,6 @@ FeeComponent.defaultProps = {
 	feeError: null,
 	fee: {},
 	currency: {},
-	selectedSymbol: '',
 };
 
 

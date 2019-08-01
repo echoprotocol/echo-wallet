@@ -4,22 +4,27 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
+import ContractReducer from '../../reducers/ContractReducer';
+
 import { formatAbi } from '../../actions/ContractActions';
 import { clearForm } from '../../actions/FormActions';
+import { resetConverter } from '../../actions/ConverterActions';
+import { setDefaultAsset } from '../../actions/AmountActions';
 
-import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT } from '../../constants/FormConstants';
+import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 
-import ContractReducer from '../../reducers/ContractReducer';
-import { resetConverter } from '../../actions/ConverterActions';
-
 class ViewContract extends React.Component {
 
 	componentWillMount() {
 		this.props.formatAbi(this.props.match.params.name);
+	}
+
+	componentDidMount() {
+		this.props.setDefaultAsset();
 	}
 
 	componentWillUnmount() {
@@ -64,6 +69,7 @@ ViewContract.propTypes = {
 	formatAbi: PropTypes.func.isRequired,
 	clearContract: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -73,5 +79,6 @@ export default withRouter(connect(
 		formatAbi: (value) => dispatch(formatAbi(value)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
 		resetConverter: () => dispatch(resetConverter()),
+		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CALL_CONTRACT_VIA_ID)),
 	}),
 )(ViewContract));

@@ -614,48 +614,6 @@ $thead-height: 46px;
         }
     }
 }
-.table-assets {
-    margin-right: 10px;
-}
-
-.table-tokens {
-    margin-left: 10px;
-    .tbody {
-        tr {
-            &:hover {
-                td {
-                    &:nth-child(2) {
-                        padding-right: 10px;
-                    }
-                    &:last-child {
-                        display: flex;
-                        max-width: 34px;
-                        justify-content: center;
-                        align-items: center;
-                        animation: fadeIn .4s;
-                        padding-right: 20px;
-                    }
-                }
-            }
-            td {
-                &:nth-child(2) {
-                    justify-content: flex-end;
-                    white-space: nowrap;
-                    padding-right: 20px;
-                    color: $text-dark;
-                    font-family: proximanovaSemibold;
-                    font-size: .95em;
-                    line-height: 30px;
-                    transition: color $speed;
-                }
-                &:last-child {
-                    display: none;
-                }
-            }
-        }
-    }
-
-}
 
 
 .msg-empty {

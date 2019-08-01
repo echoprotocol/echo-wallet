@@ -1,30 +1,128 @@
 .wallet-wrap {
-    max-width: 1240px;
-    margin: 10px auto 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
-    .table-title {
-        & + .main-btn {
-            &.ui.button {
-                margin: 0;
-                padding: 6px 10px 4px;
-                font-size: .82rem;
-            }
+}
+
+.send-wrap {
+    width: 100%;
+    max-height: calc(100vh - 120px);
+    overflow: overlay;
+    background-color: #FCFCFC;
+    @include max-vw(1000) {
+        padding: 0 20px;
+    }
+    .ui.button.main-btn.basic {
+        background-color: #fff;
+    }
+    .form-info {
+        margin-bottom: 20px;
+
+        h3 {
+            color: #5D637B;
+            margin: 0;
+            font-size: 20px;
         }
     }
 
-   & > div {
-    &:nth-child(1) {
-      width: 100%;
-      max-width: 450px;
+}
 
-      & > div:nth-child(1) {
-        height: 40vh;
-      }
+.balance-wrap {
+    max-width: 357px;
+    width: 100%;
+}
+.balance-scroll {
+    position: relative;
+    height: calc(100vh - 185px);
+    overflow: overlay;
+    padding: 0 17px;
+    margin-top: 22px;
+}
+.balance-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding: 0 17px;
+
+    .balance-title {
+        font-size: 20px;
+        color: rgb(92, 99, 125);
+        line-height: 1.32;
     }
+}
 
-    &:nth-child(2) {}
-   }
+.currency-title {
+    color: $gray;
+    font-family: proximanovaSemibold;
+    margin-bottom: 6px;
+}
+.currency-list {
 
+    & + .currency-title {
+        margin-top: 35px;
+    }
+    li {
+        background-color: #F5F5F6;
+        cursor: pointer;
+        height: 50px;
+        display: flex;
+        overflow: hidden;
+        transition: background-color .2s;
+        border-radius: 6px;
+
+        &:not(:last-child) {
+            margin-bottom: 6px;
+        }
+        &.focused,
+        &:hover {
+            background-color: #5267C6;
+            button:nth-child(2) {
+                width: 44px;
+            }
+            .currency-symbol {
+                color: $yellow;
+            }
+            .currency-amount {
+                color: #fff;
+            }
+        }
+        .currency-symbol {
+            color: $main-сolor;
+            transition: color .2s;
+        }
+        .currency-amount {
+            color: $text-dark;
+            transition: color .2s;
+        }
+        button {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
+        }
+        button:first-child {
+            width: 100%;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: proximanovaSemibold;
+        }
+        button:nth-child(2) {
+            width: 0px;
+            padding: 0;
+            border: 0;
+            transition: width .2s, color .2s;
+            overflow: hidden;
+            font-size: 14px;
+            color: #fff;
+            font-size: 11px;
+            &:focus {
+                color: $yellow;
+            }
+            &:hover {
+                color: $yellow;
+            }
+        }
+
+    }
 }

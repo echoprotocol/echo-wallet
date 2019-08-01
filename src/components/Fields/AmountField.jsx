@@ -53,16 +53,14 @@ class AmountField extends React.Component {
 			timeout: setTimeout(() => {
 				if (form === FORM_TRANSFER && currency.id.startsWith(PREFIX_ASSET)) {
 					this.props.getTransferFee()
-						.then((fee) => this.onFee(fee));
+						.then((fee) => fee && this.onFee(fee));
 				}
 			}, 300),
 		});
 	}
 
 	onChangeCurrency(e, value) {
-		const {
-			amount, tokens, assets, form,
-		} = this.props;
+		const { tokens, assets, form } = this.props;
 
 		let target = null;
 
@@ -71,7 +69,6 @@ class AmountField extends React.Component {
 
 			if (target) {
 				this.setCurrency(target, 'tokens');
-				if (!amount.value) return;
 				this.props.setContractFees();
 				return;
 			}
@@ -80,9 +77,8 @@ class AmountField extends React.Component {
 		target = assets.find((el) => el.id === value);
 		if (!target) return;
 		this.setCurrency(target, 'assets');
-		if (!amount.value) return;
 		this.props.getTransferFee()
-			.then((fee) => this.onFee(fee));
+			.then((fee) => fee && this.onFee(fee));
 	}
 
 	onDropdownChange(e, value) {
@@ -105,10 +101,9 @@ class AmountField extends React.Component {
 	setAvailableAmount(currency) {
 		const { isAvailableBalance, fee } = this.props;
 		if (!isAvailableBalance || !fee.value) return;
-
 		const value = this.getAvailableAmount(currency) / (10 ** currency.precision);
 		this.props.setFormValue('amount', value);
-		this.onChangeAmount({ target: { value: value.toString() } });
+		this.onChangeAmount({ target: { value: value.toString() }, name: 'amount' });
 	}
 
 	setCurrency(currency, type) {
@@ -187,7 +182,7 @@ class AmountField extends React.Component {
 
 	render() {
 		const {
-			assets, amount, form, fee, selectedSymbol, isAvailableBalance, fees,
+			assets, amount, form, fee, isAvailableBalance, fees,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -200,7 +195,7 @@ class AmountField extends React.Component {
 					Amount
 					<ul className="list-amount">
 						<li>
-							Fee:
+							{fee && fee.value && 'Fee:'}
 							<FeeField
 								currency={currency}
 								forn={form}
@@ -209,7 +204,6 @@ class AmountField extends React.Component {
 								type={type}
 								fee={fee}
 								assets={assets.toJS()}
-								selectedSymbol={selectedSymbol}
 								setValue={this.props.setValue}
 								setFormValue={this.props.setFormValue}
 								getTransferFee={this.props.getTransferFee}
@@ -275,7 +269,6 @@ class AmountField extends React.Component {
 AmountField.propTypes = {
 	fees: PropTypes.array.isRequired,
 	form: PropTypes.string.isRequired,
-	selectedSymbol: PropTypes.string,
 	fee: PropTypes.object,
 	assets: PropTypes.object,
 	tokens: PropTypes.object.isRequired,
@@ -296,7 +289,6 @@ AmountField.defaultProps = {
 	currency: null,
 	fee: {},
 	assets: null,
-	selectedSymbol: '',
 };
 
 export default AmountField;
