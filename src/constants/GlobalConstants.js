@@ -92,12 +92,12 @@ export const KEY_CODE_ENTER = 13;
 
 export const NETWORKS = [
 	{
-		name: 'devnet',
-		url: 'wss://devnet.echo-dev.io/ws',
-	},
-	{
 		name: 'testnet',
 		url: 'wss://testnet.echo-dev.io/ws',
+	},
+	{
+		name: 'devnet',
+		url: 'wss://devnet.echo-dev.io/ws',
 	},
 ];
 

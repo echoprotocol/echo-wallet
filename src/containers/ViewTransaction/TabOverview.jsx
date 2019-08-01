@@ -20,7 +20,6 @@ class TabOverview extends React.Component {
 		return formatAmount(value.amount, value.precision, value.symbol);
 	}
 
-
 	copyBytecode() {
 		const { bytecode } = this.props.data;
 		return (
@@ -33,6 +32,13 @@ class TabOverview extends React.Component {
 				/>
 			</CopyToClipboard>
 		);
+	}
+
+	goToTransaction(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
 	}
 
 	renderBytecode() {
@@ -124,6 +130,7 @@ class TabOverview extends React.Component {
 		const isFromAccount = data.from && data.from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
 		const isSubjectAccount = data.subject &&
 			data.subject.id && data.subject.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+		const linkToTransaction = URLHelper.getLinkToExplorerBlock(network.name, data.block);
 
 		return (
 			<div className="tab-content">
@@ -178,7 +185,7 @@ class TabOverview extends React.Component {
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 				</ul>
-				<a target="_blank" rel="noreferrer noopener" href={URLHelper.getLinkToExplorerBlock(network.name, data.block)} className="external-link">
+				<a target="_blank" rel="noreferrer noopener" href={linkToTransaction} onClick={(e) => this.goToTransaction(e, linkToTransaction)} className="external-link">
 					<img src={externalLink} alt="" />
 					<span>Go to explorer</span>
 				</a>
