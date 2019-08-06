@@ -1,0 +1,34 @@
+language: node_js
+node_js:
+  - "10"
+
+stages:
+  - lint
+  - test
+  - build
+
+jobs:
+  include:
+
+    - stage: lint
+      name: "Lint"
+      if: type = push
+      script:
+        - npm run lint
+
+#    - stage: test
+#      name: "Tests"
+#      if: branch IN (develop, master) AND type = pull_request
+#      script: npm run test
+#
+#    - stage: build
+#      name: "Build Artifacts"
+#      if: (branch = master OR tag IS present) AND type = push
+#      addons:
+#        artifacts:
+#          working_dir: build/zip/
+#          paths:
+#            - echo_bridge.zip
+#      script:
+#        - npm run build-ext
+#        - "echo \"Download URL: https://${ARTIFACTS_BUCKET}.s3.amazonaws.com/echoprotocol/bridge-extension/${TRAVIS_BUILD_NUMBER}/${TRAVIS_JOB_NUMBER}/echo_bridge.zip\""
