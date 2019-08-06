@@ -16,6 +16,7 @@ jobs:
       script:
         - npm run lint
 
+
 #    - stage: test
 #      name: "Tests"
 #      if: branch IN (develop, master) AND type = pull_request
