@@ -1,108 +1,131 @@
-cache:
-  paths:
-  - node_modules/
-
 stages:
-  - lint
-  - prepare
+  - build
   - deploy
 
-eslint:
-  stage: lint
+
+build:
+  stage: build
+  variables:
+    NODE_APP_INSTANCE: $CI_COMMIT_REF_NAME
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - npm install
-    - npm run lint
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
-     - triggers
-     - develop
-     - master
-     - merge_requests
+    - master
+    - develop
+    - EDW-497
   tags:
-    - docker
+    - echo-linux
+
 
 deploy:
   stage: deploy
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  variables:
+    CI_FULL_REGISTRY: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    PORT: 26450
   script:
-    - cd /home/devuser/DevProjects/645.echo_web/desktop
-    - git pull origin master
-    - npm install
-    - npm run build-dev
+    - docker-compose -p $CI_COMMIT_REF_NAME up -d
   only:
+    - develop
     - master
-  tags:
-    - pp-projects
-
-build.macos:
-  stage: prepare
-  script:
-    - npm install
-    - npm run package-mac
-  only:
-    - web
-    - tags
-  tags:
-    - echo-mac
-  artifacts:
-     paths:
-     - build/binaries/Echo Wallet-1.3.0.dmg
-     expire_in: 1 week
-
-
-build.linux:
-  stage: prepare
-  script:
-    - rm  -rf node_modules/
-    - npm install
-    - npm run package-deb
-  only:
-    - web
-    - tags
+    - EDW-497
   tags:
     - echo-linux
-  artifacts:
-     paths:
-     - build/binaries/echo-wallet_1.3.0_amd64.deb
-     expire_in: 1 week
 
-build.windows:
-  stage: prepare
-  script:
-    - npm install
-    - npm run package-win
-  only:
-    - web
-    - tags
-  tags:
-    - echo-linux
-  artifacts:
-     paths:
-     - build/binaries/Echo Wallet Setup 1.3.0.exe
-     expire_in: 1 week
 
-build.linux-debug:
-  stage: prepare
-  script:
-    - npm install
-    - npm run package-deb-debug
-  only:
-    - web
-  tags:
-    - echo-linux
-  artifacts:
-     paths:
-     - build/binaries/echo-wallet_1.3.0_amd64.deb
-     expire_in: 1 week
+#build.master:
+#  stage: build
+#  before_script:
+#    - CI_FULL_REGISTRY=bridge-server:master
+#  variables:
+#    CI_FULL_REGISTRY: ""
+#    PORT: 26490
+#  script:
+#    - docker build --cache-from $CI_FULL_REGISTRY -t $CI_FULL_REGISTRY .
+#    - docker-compose -p bridge-master up -d
+#  only:
+#    - master
+#  tags:
+#    - bridge-dev
+#  environment:
+#    name: stage
 
-build.windows-debug:
-  stage: prepare
-  script:
-    - npm install
-    - npm run package-win-debug
-  only:
-    - web
-  tags:
-    - echo-linux
-  artifacts:
-     paths:
-     - build/binaries/Echo Wallet Setup 1.3.0.exe
-     expire_in: 1 week
+
+#build.macos:
+#  stage: prepare
+#  script:
+#    - npm install
+#    - npm run package-mac
+#  only:
+#    - web
+#    - tags
+#  tags:
+#    - echo-mac
+#  artifacts:
+#     paths:
+#     - build/binaries/Echo Wallet-1.3.0.dmg
+#     expire_in: 1 week
+#
+#build.linux:
+#  stage: prepare
+#  script:
+#    - rm  -rf node_modules/
+#    - npm install
+#    - npm run package-deb
+#  only:
+#    - web
+#    - tags
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - build/binaries/echo-wallet_1.3.0_amd64.deb
+#     expire_in: 1 week
+#
+#build.windows:
+#  stage: prepare
+#  script:
+#    - npm install
+#    - npm run package-win
+#  only:
+#    - web
+#    - tags
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - build/binaries/Echo Wallet Setup 1.3.0.exe
+#     expire_in: 1 week
+#
+#build.linux-debug:
+#  stage: prepare
+#  script:
+#    - npm install
+#    - npm run package-deb-debug
+#  only:
+#    - web
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - build/binaries/echo-wallet_1.3.0_amd64.deb
+#     expire_in: 1 week
+#
+#build.windows-debug:
+#  stage: prepare
+#  script:
+#    - npm install
+#    - npm run package-win-debug
+#  only:
+#    - web
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - build/binaries/Echo Wallet Setup 1.3.0.exe
+#     expire_in: 1 week
