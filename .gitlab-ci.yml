@@ -13,10 +13,10 @@ test:
     - npm install
     - npm run lint
     - npm run test
-  only:
-    - develop
-    - master
-    - merge_requests
+#  only:
+#    - develop
+#    - master
+#    - merge_requests
   tags:
     - docker
 
@@ -34,7 +34,6 @@ build:
   only:
     - master
     - develop
-    - EDW-497
   tags:
     - echo-linux
 
@@ -51,7 +50,6 @@ deploy:
   only:
     - develop
     - master
-    - EDW-497
   tags:
     - echo-linux
 
