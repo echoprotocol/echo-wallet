@@ -9,11 +9,11 @@ stages:
 jobs:
   include:
 
-#    - stage: test
-#      name: "Lint"
-#      if: type = push
-#      script:
-#        - npm run lint
+    - stage: test
+      name: "Lint"
+      if: type = push
+      script:
+        - npm run lint
 
     - stage: build
       name: "Gitlab Mirror Trigger"
@@ -22,15 +22,12 @@ jobs:
         - sudo apt-get install -y curl
       script:
         - "curl --request POST --header \"PRIVATE-TOKEN: ${GITLAB_TOKEN}\" https://gitlab.com/api/v4/projects/13691195/mirror/pull"
+
     - stage: build
       name: "Build Linux App"
-#      if: type = push
       if: tag IS present
-#     if: branch IN (develop, master) AND type = pull_request
       script:
         - npm run package-deb
-        - ls -la build/
-        - ls -la build/binaries/
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
@@ -39,15 +36,32 @@ jobs:
         skip_cleanup: true
         on:
           tags: true
-#
-#    - stage: build
-#      name: "Build Artifacts"
-#      if: (branch = master OR tag IS present) AND type = push
-#      addons:
-#        artifacts:
-#          working_dir: build/zip/
-#          paths:
-#            - echo_bridge.zip
-#      script:
-#        - npm run build-ext
-#        - "echo \"Download URL: https://${ARTIFACTS_BUCKET}.s3.amazonaws.com/echoprotocol/bridge-extension/${TRAVIS_BUILD_NUMBER}/${TRAVIS_JOB_NUMBER}/echo_bridge.zip\""
+
+    - stage: build
+      name: "Build Win App"
+      if: tag IS present
+      script:
+        - npm run package-win
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        file_glob: true
+        file: build/binaries/Echo*
+        skip_cleanup: true
+        on:
+          tags: true
+
+    - stage: build
+      os: osx
+      name: "Build macOS App"
+      if: tag IS present
+      script:
+        - npm run package-mac
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        file_glob: true
+        file: build/binaries/Echo*
+        skip_cleanup: true
+        on:
+          tags: true
