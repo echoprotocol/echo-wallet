@@ -9,11 +9,11 @@ stages:
 jobs:
   include:
 
-    - stage: test
-      name: "Lint"
-      if: type = push
-      script:
-        - npm run lint
+#    - stage: test
+#      name: "Lint"
+#      if: type = push
+#      script:
+#        - npm run lint
 
     - stage: build
       name: "Gitlab Mirror Trigger"
