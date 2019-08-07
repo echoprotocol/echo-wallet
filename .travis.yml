@@ -27,7 +27,7 @@ jobs:
 #    - stage: test
 #      name: "Tests"
 #      if: branch IN (develop, master) AND type = pull_request
-#      script: npm run test
+      script: 'echo "test"'
 #
 #    - stage: build
 #      name: "Build Artifacts"
