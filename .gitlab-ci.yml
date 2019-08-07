@@ -21,7 +21,6 @@ test:
     - docker
 
 
-
 build:
   stage: build
   variables:
