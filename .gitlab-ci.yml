@@ -38,23 +38,6 @@ deploy:
     - echo-linux
 
 
-#build.master:
-#  stage: build
-#  before_script:
-#    - CI_FULL_REGISTRY=bridge-server:master
-#  variables:
-#    CI_FULL_REGISTRY: ""
-#    PORT: 26490
-#  script:
-#    - docker build --cache-from $CI_FULL_REGISTRY -t $CI_FULL_REGISTRY .
-#    - docker-compose -p bridge-master up -d
-#  only:
-#    - master
-#  tags:
-#    - bridge-dev
-#  environment:
-#    name: stage
-
 
 #build.macos:
 #  stage: prepare
