@@ -54,21 +54,21 @@ deploy:
 #     - build/binaries/Echo Wallet-1.3.0.dmg
 #     expire_in: 1 week
 
-build.linux:
-  stage: prepare
-  script:
-    - rm  -rf node_modules/
-    - npm install
-    - npm run package-deb
-  only:
-    - web
-    - tags
-  tags:
-    - echo-linux
-  artifacts:
-     paths:
-     - build/binaries/echo-wallet_1.3.0_amd64.deb
-     expire_in: 1 week
+#build.linux:
+#  stage: prepare
+#  script:
+#    - rm  -rf node_modules/
+#    - npm install
+#    - npm run package-deb
+#  only:
+#    - web
+#    - tags
+#  tags:
+#    - echo-linux
+#  artifacts:
+#     paths:
+#     - build/binaries/echo-wallet_1.3.0_amd64.deb
+#     expire_in: 1 week
 
 #build.windows:
 #  stage: prepare
