@@ -5,7 +5,7 @@ stages:
 
 
 test:
-  image: node:10.16.1
+  image: node:10.16.1-alpine
   stage: test
   before_script:
     - apk add --update-cache git python make g++ gcc libpng-dev automake libtool
