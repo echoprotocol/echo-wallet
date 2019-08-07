@@ -16,6 +16,7 @@ build:
   only:
     - master
     - develop
+    - EDW-497
   tags:
     - echo-linux
 
@@ -32,6 +33,7 @@ deploy:
   only:
     - develop
     - master
+    - EDW-497
   tags:
     - echo-linux
 
