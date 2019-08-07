@@ -1,6 +1,24 @@
 stages:
+  - test
   - build
   - deploy
+
+
+test:
+  image: node:10.16.1
+  stage: test
+  before_script:
+    - apk add --update-cache git python make g++ gcc libpng-dev automake libtool
+  script:
+    - npm install
+    - npm run lint
+    - npm run test
+  only:
+    - develop
+    - master
+    - merge_requests
+  tags:
+    - docker
 
 
 build:
