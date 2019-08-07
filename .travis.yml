@@ -17,7 +17,7 @@ jobs:
 
     - stage: build
       name: "Gitlab Mirror Trigger"
-      if: type = push
+#       if: type = push
       before_script:
         - sudo apt-get install -y curl
       script:
