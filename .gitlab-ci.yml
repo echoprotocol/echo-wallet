@@ -8,7 +8,6 @@ build:
   variables:
     NODE_APP_INSTANCE: $CI_COMMIT_REF_NAME
   before_script:
-    - export CI_COMMIT_REF_NAME=master
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
@@ -17,7 +16,6 @@ build:
   only:
     - master
     - develop
-    - EDW-497
   tags:
     - echo-linux
 
@@ -26,7 +24,6 @@ deploy:
   stage: deploy
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - export CI_COMMIT_REF_NAME=master
     - if [ "$CI_COMMIT_REF_NAME" != "master" ]; then export PORT=36450; fi
   variables:
     CI_FULL_REGISTRY: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
@@ -36,6 +33,5 @@ deploy:
   only:
     - develop
     - master
-    - EDW-497
   tags:
     - echo-linux
