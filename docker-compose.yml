@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+
+  echo-wallet:
+    image: $CI_FULL_REGISTRY
+    ports:
+      - 127.0.0.1:${PORT}:80
+    restart: always
