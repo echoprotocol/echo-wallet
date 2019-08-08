@@ -12,12 +12,12 @@ export const toastSuccess = (text) => {
 	});
 };
 
-export const toastInfo = (text, onUndo, onClose) => {
+export const toastInfo = (text, onUndo, onOpen) => {
 	toast.info(ToastInfo(text, onUndo), {
 		autoClose: 5000,
 		position: 'bottom-right',
 		pauseOnHover: true,
-		onClose,
+		onOpen,
 	});
 };
 

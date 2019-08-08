@@ -37,6 +37,7 @@ import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
+import BalanceReducer from "../reducers/BalanceReducer";
 
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
@@ -144,7 +145,9 @@ export const removeContract = (name) => (dispatch, getState) => {
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 };
 
-export const enableContract = (name) => (dispatch) => {
+export const enableContract = (name) => (dispatch, getState) => {
+	const intervalId = getState().contract.get('intervalId');
+	clearTimeout(intervalId);
 	dispatch(update('contracts', name, { disabled: false }));
 };
 
@@ -156,7 +159,13 @@ export const disableContract = (name) => (dispatch) => {
 	toastInfo(
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableContract(name)),
-		() => setTimeout(() => dispatch(removeContract(name)), 1000),
+		() => {
+			const intervalId = setTimeout(() => dispatch(removeContract(name)), 1000 + 5000);
+			dispatch(ContractReducer.actions.set({
+				field: 'intervalId',
+				value: intervalId,
+			}));
+		},
 	);
 };
 
