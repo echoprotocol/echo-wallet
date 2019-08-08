@@ -4,6 +4,7 @@ services:
 
   echo-wallet:
     image: $CI_FULL_REGISTRY
+    container_name: "echo-wallet"
     ports:
       - 127.0.0.1:${PORT}:80
     restart: always
