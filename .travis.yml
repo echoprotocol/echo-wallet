@@ -40,8 +40,11 @@ jobs:
     - stage: build
       name: "Build Win App"
       if: tag IS present
+      install:
+        ./scripts/install-wine.sh
       script:
         - npm run package-win
+        - ls -la build/binaries
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
@@ -61,7 +64,7 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         file_glob: true
-        file: build/binaries/Echo*
+        file: build/binaries/Echo*.dmg
         skip_cleanup: true
         on:
           tags: true
