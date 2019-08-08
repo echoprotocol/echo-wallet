@@ -16,14 +16,6 @@ jobs:
         - npm run lint
 
     - stage: build
-      name: "Gitlab Mirror Trigger"
-      if: type = push
-      before_script:
-        - sudo apt-get install -y curl
-      script:
-        - "curl --request POST --header \"PRIVATE-TOKEN: ${GITLAB_TOKEN}\" https://gitlab.com/api/v4/projects/13691195/mirror/pull"
-
-    - stage: build
       name: "Build Linux App"
       if: tag IS present
       script:
@@ -40,16 +32,14 @@ jobs:
     - stage: build
       name: "Build Win App"
       if: tag IS present
-      install:
-        ./scripts/install-wine.sh
       script:
-        - npm run package-win
+        - docker run --rm --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_') -v ${PWD}:/project -v ~/.cache/electron:/root/.cache/electron -v ~/.cache/electron-builder:/root/.cache/electron-builder electronuserland/builder:wine /bin/bash -c "npm install && npm run package-win"
         - ls -la build/binaries
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         file_glob: true
-        file: build/binaries/Echo*
+        file: build/binaries/Echo*.exe
         skip_cleanup: true
         on:
           tags: true
