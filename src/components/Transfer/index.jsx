@@ -38,6 +38,7 @@ class Transfer extends React.Component {
 							</div>
 							<div className="field-wrap">
 								<AccountField
+									currency={currency}
 									subject="from"
 									field={from}
 									checkAccount={this.props.checkAccount}
@@ -48,6 +49,7 @@ class Transfer extends React.Component {
 									setValue={this.props.setValue}
 								/>
 								<AccountField
+									currency={currency}
 									subject="to"
 									field={to}
 									autoFocus

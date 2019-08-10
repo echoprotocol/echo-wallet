@@ -82,7 +82,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-
+		console.log('err', err);
 	}
 
 	return null;
@@ -101,7 +101,7 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 
 	const options = {
 		amount: {
-			amount: formOptions.get('amount').value || 0,
+			amount: formOptions.get('amount').value ? Math.floor(formOptions.get('amount').value) : 0,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
@@ -699,12 +699,17 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		const formValues = getState().form.get(FORM_TRANSFER).toJS();
 
 		const { currency } = formValues;
+		let { amount } = formValues;
 
-		if (!currency || !currency.precision || !formValues.amount.value) return 0;
+		if (!currency || !currency.precision) return 0;
 
 		contractId = currency.id;
 
-		const amount = BN(formValues.amount.value).toString();
+		if (!formValues.amount.value) {
+			amount.value = 0;
+		}
+
+		amount = BN(amount.value).toString();
 
 		bytecode = getMethod(
 			{

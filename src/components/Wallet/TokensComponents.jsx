@@ -33,6 +33,8 @@ class Tokens extends React.Component {
 		id, symbol, precision, balance, disabled,
 	}) {
 		if (disabled) return null;
+		if (!precision) return null;
+
 		return (
 			<li
 				className={classnames({ focused: id === this.state.focusedId })}
