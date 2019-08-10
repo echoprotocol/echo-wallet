@@ -20,6 +20,7 @@
         }
     }
     &.disconnected {
+        flex-shrink: 0;
         background-color: rgb(246, 92, 92);
         ul {
             li {

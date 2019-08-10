@@ -129,6 +129,8 @@ export const connection = () => async (dispatch) => {
 
 		await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
 
+		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
+
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
