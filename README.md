@@ -75,15 +75,7 @@ npm run build
 
 It correctly bundles Echo Desktop Wallet in production mode and optimizes the build for the best performance
 
-## Building the Electron-based desktop apps for Linux, MacOS, Windows
-
-The desktop version of Echo Wallet currently uses Electron. If you want builds the apps for Linux, MacOS, Windows to the `build/binaries` folder run this command:
-
-```bash
-npm run package
-```
-
-## Building the Electron-based desktop app for Linux
+## Building the Electron-based desktop app for Linux on Linux
 
 If you want builds the app for Linux to the `build/binaries` folder run this command:
 
@@ -91,7 +83,8 @@ If you want builds the app for Linux to the `build/binaries` folder run this com
 npm run package-deb
 ```
 
-## Building the Electron-based desktop app for Windows
+
+## Building the Electron-based desktop app for Windows on Windows
 
 If you want builds the app for Windows to the `build/binaries` folder run this command:
 
@@ -99,13 +92,64 @@ If you want builds the app for Windows to the `build/binaries` folder run this c
 npm run package-win
 ```
 
-## Building the Electron-based desktop app for MacOS
+## Building the Electron-based desktop app for MacOS on MacOS
 
 If you want builds the app for MacOS to the `build/binaries` folder run this command:
 
 ```bash
 npm run package-mac
 ```
+
+## Building the Electron-based desktop app for Windows on Linux
+
+If you want builds the app for Windows on Linux to the `build/binaries` you need to install [Wine](https://wiki.winehq.org/Download#binary) (2.0+ is required)
+
+After install the [Wine](https://wiki.winehq.org/Download#binary) run this command:
+
+```bash
+npm run package-win
+```
+
+
+## Building the Electron App using [Docker](https://www.docker.com/) for Windows on any platform.
+
+You can use Docker to avoid installing system dependencies. Docker (`electronuserland/builder:wine` with installed [Wine](https://wiki.winehq.org/Download#binary) is recommended to avoid installing system dependencies. To build app for Windows on any platform run docker container:
+
+```bash
+docker run --rm -ti \
+ -v ${PWD}:/project \
+ electronuserland/builder:wine
+```
+
+Type in
+
+```bash
+npm run package-win
+```
+
+You will find your `.exe` build file in `build/binaries` directory.
+
+## Building the Electron App using [Docker](https://www.docker.com/) for Linux on any platform.
+
+Docker (`electronuserland/builder:10`, `10` is major NodeJS version) is recommended to avoid installing system dependencies.
+
+```bash
+docker run --rm -ti \
+ -v ${PWD}:/project \
+ electronuserland/builder:10
+```
+
+Type in
+
+```bash
+npm run package-deb
+```
+
+You will find your `.deb` build file in `build/binaries` directory.
+
+## Building the Electron-based desktop app for MacOS on another platform
+
+You will need a mac machine to make a `.dmg` build.
 
 ## Lint
 
