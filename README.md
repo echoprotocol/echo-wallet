@@ -113,7 +113,7 @@ npm run package-win
 
 ## Building the Electron App using [Docker](https://www.docker.com/) for Windows on any platform.
 
-You can use Docker to avoid installing system dependencies. Docker (`electronuserland/builder:wine` with installed [Wine](https://wiki.winehq.org/Download#binary) is recommended to avoid installing system dependencies. To build app for Windows on any platform run docker container:
+You can use Docker to avoid installing system dependencies. Docker (`electronuserland/builder:wine` with installed [Wine](https://wiki.winehq.org/Download#binary)) is recommended to avoid installing system dependencies. To build app for Windows on any platform run docker container:
 
 ```bash
 docker run --rm -ti \
@@ -131,7 +131,7 @@ You will find your `.exe` build file in `build/binaries` directory.
 
 ## Building the Electron App using [Docker](https://www.docker.com/) for Linux on any platform.
 
-Docker (`electronuserland/builder:10`, `10` is major NodeJS version) is recommended to avoid installing system dependencies.
+Docker (`electronuserland/builder:10`. `10` is major NodeJS version) is recommended to avoid installing system dependencies.
 
 ```bash
 docker run --rm -ti \
