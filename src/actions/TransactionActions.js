@@ -425,36 +425,40 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 	await tr.set_required_fees(options.fee.asset_id);
 
-	const signer = options[operations[operation].signer];
-	const transaction = await dispatch(signTransaction(signer, tr, password));
-	if (transaction) {
-		tr.broadcast().then((res) => {
-			if (addToWatchList) {
-				dispatch(addContractByName(
-					res[0].trx.operation_results[0][1],
-					accountId,
-					name,
-					abi,
-				));
-			}
+	try {
+		const signer = options[operations[operation].signer];
+		await dispatch(signTransaction(signer, tr, password));
+		const res = await tr.broadcast();
+		if (addToWatchList) {
+			dispatch(addContractByName(
+				res[0].trx.operation_results[0][1],
+				accountId,
+				name,
+				abi,
+			));
+		}
 
-			if (res[0].trx.operations[0][0] === operations.account_update.value) {
-				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-			}
-
-			toastSuccess(`${operations[operation].name} transaction was completed`);
-
-		}).catch((error) => {
-			error = error.toString();
-			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
-			message = message.charAt(0).toUpperCase() + message.slice(1);
-			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+		if (res[0].trx.operations[0][0] === operations.account_update.value) {
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+		}
 
-		toastSuccess(`${operations[operation].name} transaction was sent`);
-		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+		toastSuccess(`${operations[operation].name} transaction was completed`);
+	} catch (error) {
+		const errorObj = error.toString();
+		let message = errorObj.substring(errorObj.indexOf(':') + 2, errorObj.indexOf('\n'));
+		message = (message.charAt(0).toUpperCase() + message.slice(1)) || error.message;
+		if (message === 'Error: ') {
+			message += error.message;
+		}
+
+		toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
+	} finally {
+		dispatch(toggleModalLoading(MODAL_DETAILS, false));
 	}
+
+	toastSuccess(`${operations[operation].name} transaction was sent`);
+	history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 
 	dispatch(closeModal(MODAL_DETAILS));
 	dispatch(resetTransaction());
