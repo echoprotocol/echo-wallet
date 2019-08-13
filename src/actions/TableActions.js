@@ -72,12 +72,6 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	const threshold = account.active.weight_threshold;
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'threshold'], threshold));
 
-	// save note
-	target = {
-		key: account.options.memo_key, role: 'memo', type: 'keys',
-	};
-	dispatch(setIn(PERMISSION_TABLE, ['memo', 'keys'], new List([target])));
-
 	dispatch(setFormValue(FORM_PERMISSION_KEY, 'firstFetch', true));
 };
 
@@ -100,15 +94,10 @@ export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active', 'memo'];
+	const roles = ['active'];
 
 	return roles.some((role) => permissionForm.getIn([role, 'keys']).some((keyForm) => {
 		let tableAccountsKeys = permissionTable.getIn([role, 'keys']);
-
-		if (role === 'memo' && keyForm.get('key') && keyForm.get('key').value && tableAccountsKeys.size) {
-			return !tableAccountsKeys
-				.some((keyTable) => keyTable.key === keyForm.get('key').value);
-		}
 
 		const threshold = permissionForm.getIn([role, 'threshold']);
 
@@ -132,9 +121,7 @@ export const isChanged = () => (dispatch, getState) => {
 			return true;
 		}
 
-		if (role !== 'memo') {
-			tableAccountsKeys = tableAccountsKeys.concat(permissionTable.getIn([role, 'accounts']));
-		}
+		tableAccountsKeys = tableAccountsKeys.concat(permissionTable.getIn([role, 'accounts']));
 
 		return !tableAccountsKeys
 			.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight.toString() === keyForm.get('weight').value.toString());
@@ -155,14 +142,14 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 	} else {
 		try {
-			account = (role !== 'memo') && await dispatch(EchoJSActions.fetch(key.value));
+			account = await dispatch(EchoJSActions.fetch(key.value));
 			if (!account) {
 				if (!isPublicKey(key.value, 'ECHO')) {
 					error = true;
 					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 				}
 
-			} else if (!isAccountId(account.get('id')) && role !== 'memo') {
+			} else if (!isAccountId(account.get('id'))) {
 				error = true;
 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
@@ -176,16 +163,14 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		}
 	}
 
-	if (role !== 'memo') {
-		if (!weight) {
-			dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], ''));
-		}
+	if (!weight) {
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], ''));
+	}
 
-		if (!weight || !isWeight(weight.value)) {
-			error = true;
+	if (!weight || !isWeight(weight.value)) {
+		error = true;
 
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], 'Incorrect weight'));
-		}
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], 'Incorrect weight'));
 	}
 
 	if (!error && account) {
@@ -197,12 +182,11 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
-	const currentOptions = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id'), 'options']);
 	const currentFullAccount = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id')]);
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active', 'memo'];
+	const roles = ['active'];
 
 	const validateFields = [];
 	roles.forEach((role) => {
@@ -237,11 +221,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			accounts: [],
 			threshold: null,
 		},
-		memo: {
-			keys: [],
-			accounts: [],
-			threshold: null,
-		},
 	};
 
 	const rolesPromises = [];
@@ -262,12 +241,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 				|| keyForm.get('remove')
 			) {
 				permissionForm.getIn([role, 'keys']).forEach((value) => {
-					if (role === 'memo') {
-						permissionData[role].keys.push([value.get('key').value]);
-
-						return;
-					}
-
 					const weightInt = parseInt(value.get('weight').value, 10);
 
 					if (value.get('remove') || !value.get('key').value || !weightInt) {
@@ -301,7 +274,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	if (
 		!permissionData.active.keys.length
-			&& !permissionData.memo.keys.length
 			&& permissionData.active.threshold === null
 	) {
 		return false;
@@ -365,18 +337,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		}
 	}
 
-	if (permissionData.memo.keys.length) {
-		[[showOptions.memoKey]] = permissionData.memo.keys;
-		transaction.new_options = {
-			memo_key: permissionData.memo.keys[0][0],
-			voting_account: currentOptions.get('voting_account'),
-			delegating_account: currentOptions.get('delegating_account'),
-			num_committee: currentOptions.get('num_committee'),
-			num_witness: currentOptions.get('num_witness'),
-			votes: [],
-			extensions: [],
-		};
-	}
 	const feeValue = await getOperationFee('account_update', transaction);
 
 	transaction.fee.amount = feeValue;
