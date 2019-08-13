@@ -1,29 +1,31 @@
 import { toast } from 'react-toastify';
 
+import { TIME_TOAST_ANIMATION } from '../constants/GlobalConstants';
+
 import ToastInfo from '../components/Toast/ToastInfo';
 import ToastSuccess from '../components/Toast/ToastSuccess';
 
 
 export const toastSuccess = (text) => {
 	toast.success(ToastSuccess(text), {
-		autoClose: 5000,
+		autoClose: TIME_TOAST_ANIMATION,
 		position: 'bottom-right',
 		pauseOnHover: true,
 	});
 };
 
-export const toastInfo = (text, onUndo, onClose) => {
+export const toastInfo = (text, onUndo, onOpen) => {
 	toast.info(ToastInfo(text, onUndo), {
-		autoClose: 5000,
+		autoClose: TIME_TOAST_ANIMATION,
 		position: 'bottom-right',
 		pauseOnHover: true,
-		onClose,
+		onOpen,
 	});
 };
 
 export const toastError = (text) => {
 	toast.error(text, {
-		autoClose: 5000,
+		autoClose: TIME_TOAST_ANIMATION,
 		position: 'bottom-right',
 		pauseOnHover: true,
 	});
