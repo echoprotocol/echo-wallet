@@ -30,6 +30,7 @@ const getSigners = (account, keys, viewed = []) => async (dispatch) => {
 	}
 
 	viewed.push(account.get('id'));
+
 	weight = await account.getIn(['active', 'account_auths']).reduce(async (wght, [id, w]) => {
 		if (viewed.includes(id)) {
 			return wght;

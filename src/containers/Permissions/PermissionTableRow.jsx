@@ -65,7 +65,7 @@ class PermissionTableRow extends Component {
 		} = this.props;
 		const { keys: prevKeys, firstFetch: prevFetch } = prevProps;
 
-		if (firstFetch !== prevFetch && firstFetch) {
+		if ((firstFetch !== prevFetch && firstFetch) || (data.length !== prevProps.data.length)) {
 			data.forEach((k) => {
 				this.props.setValue([keyRole, 'keys', k.key, 'key'], k.key);
 				this.props.setValue([keyRole, 'keys', k.key, 'weight'], k.weight);
