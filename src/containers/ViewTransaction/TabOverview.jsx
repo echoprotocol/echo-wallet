@@ -150,7 +150,7 @@ class TabOverview extends React.Component {
 							<li>
 								<div className="col">From:</div>
 								<div className="col avatar-block">
-									{isFromAccount && <Avatar accountName={data.subject.value} />}
+									{isFromAccount && <Avatar accountName={data.from.value} />}
 									<span>{data.from.value}</span>
 								</div>
 							</li> : null

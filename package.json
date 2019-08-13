@@ -146,6 +146,7 @@
       ]
     },
     "nsis": {
+      "deleteAppDataOnUninstall": true,
       "oneClick": false,
       "perMachine": false,
       "allowElevation": true,
