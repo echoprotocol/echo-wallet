@@ -100,3 +100,8 @@ export const EXPLORER_URL = {
 	devnet: 'https://656-echo-explorer.pixelplex-test.by',
 	testnet: 'https://explorer.echo.org',
 };
+
+
+export const TIME_TOAST_ANIMATION = 5000;
+export const DELAY_REMOVE_CONTRACT = 1000;
+export const TIME_REMOVE_CONTRACT = TIME_TOAST_ANIMATION + DELAY_REMOVE_CONTRACT;

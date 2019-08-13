@@ -32,7 +32,7 @@ import {
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
 
 import history from '../history';
 
@@ -144,7 +144,9 @@ export const removeContract = (name) => (dispatch, getState) => {
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 };
 
-export const enableContract = (name) => (dispatch) => {
+export const enableContract = (name) => (dispatch, getState) => {
+	const intervalId = getState().contract.get('intervalId');
+	clearTimeout(intervalId);
 	dispatch(update('contracts', name, { disabled: false }));
 };
 
@@ -156,7 +158,13 @@ export const disableContract = (name) => (dispatch) => {
 	toastInfo(
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableContract(name)),
-		() => setTimeout(() => dispatch(removeContract(name)), 1000),
+		() => {
+			const intervalId = setTimeout(() => dispatch(removeContract(name)), TIME_REMOVE_CONTRACT);
+			dispatch(ContractReducer.actions.set({
+				field: 'intervalId',
+				value: intervalId,
+			}));
+		},
 	);
 };
 
