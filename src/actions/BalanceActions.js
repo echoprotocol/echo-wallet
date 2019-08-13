@@ -26,7 +26,7 @@ import { validateContractId } from '../helpers/ValidateHelper';
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
-import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -405,7 +405,7 @@ export const disableToken = (name, contractId) => (dispatch) => {
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableToken(contractId)),
 		() => {
-			const intervalId = setTimeout(() => dispatch(removeToken(contractId)), 1000 + 5000);
+			const intervalId = setTimeout(() => dispatch(removeToken(contractId)), TIME_REMOVE_CONTRACT);
 			dispatch(BalanceReducer.actions.set({
 				field: 'intervalId',
 				value: intervalId,
