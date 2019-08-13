@@ -82,7 +82,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-		console.log('err', err);
+		console.warn('err', err);
 	}
 
 	return null;
@@ -99,9 +99,11 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const toAccountId = (await dispatch(EchoJSActions.fetch(formOptions.get('to').value))).get('id');
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
+	const amount = formOptions.get('amount').value || 0;
+
 	const options = {
 		amount: {
-			amount: formOptions.get('amount').value ? Math.floor(formOptions.get('amount').value) : 0,
+			amount: BN(amount).integerValue(BN.ROUND_HALF_UP).toString(),
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
@@ -111,6 +113,8 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 			asset_id: asset || formOptions.get('currency').id,
 		},
 	};
+
+	console.log('options', options);
 
 	dispatch(setValue(form, 'isAvailableBalance', true));
 	return dispatch(getTransactionFee(form, 'transfer', options));
