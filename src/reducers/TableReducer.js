@@ -21,9 +21,6 @@ const DEFAULT_TABLE_FIELDS = {
 			accounts: new List(),
 			keys: new List(),
 		}),
-		memo: new Map({
-			keys: new List(),
-		}),
 		permissionKey: {
 			key: '',
 			type: '',

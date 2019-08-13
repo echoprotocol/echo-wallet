@@ -47,10 +47,7 @@ class Permissions extends React.Component {
 			return;
 		}
 
-		if (
-			!_.isEqual(prevAccount.active, account.active) ||
-            prevAccount.options.memo_key !== account.options.memo_key
-		) {
+		if (!_.isEqual(prevAccount.active, account.active)) {
 			this.props.formPermissionKeys();
 		}
 	}
@@ -65,7 +62,7 @@ class Permissions extends React.Component {
 
 		this.setState({ resetAddKeys: true }, () => { this.setState({ resetAddKeys: false }); });
 
-		const roles = ['active', 'memo'];
+		const roles = ['active'];
 
 		roles.forEach((role) => {
 			if (data[role].threshold) {
@@ -93,10 +90,6 @@ class Permissions extends React.Component {
 			threshold: permissionsKeys.active.threshold,
 		};
 
-		const note = {
-			keys: permissionsKeys.memo.keys,
-		};
-
 		return (
 
 			<div className="permissions-wrap">
@@ -109,7 +102,7 @@ class Permissions extends React.Component {
 										basic
 										className="txt-btn"
 										content="Cancel"
-										onClick={() => this.onCancel({ active, memo: note })}
+										onClick={() => this.onCancel({ active })}
 									/>
 									<Button
 										basic
