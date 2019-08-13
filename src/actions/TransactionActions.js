@@ -114,8 +114,6 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		},
 	};
 
-	console.log('options', options);
-
 	dispatch(setValue(form, 'isAvailableBalance', true));
 	return dispatch(getTransactionFee(form, 'transfer', options));
 };
