@@ -32,7 +32,8 @@ class Tokens extends React.Component {
 	renderRow({
 		id, symbol, precision, balance, disabled,
 	}) {
-		if (disabled) return null;
+		if (disabled || !precision) return null;
+
 		return (
 			<li
 				className={classnames({ focused: id === this.state.focusedId })}
