@@ -37,7 +37,6 @@ import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
-import BalanceReducer from "../reducers/BalanceReducer";
 
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
