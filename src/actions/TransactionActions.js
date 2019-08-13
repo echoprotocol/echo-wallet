@@ -82,7 +82,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-		console.warn('err', err);
+
 	}
 
 	return null;
@@ -99,11 +99,9 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const toAccountId = (await dispatch(EchoJSActions.fetch(formOptions.get('to').value))).get('id');
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
-	const amount = formOptions.get('amount').value || 0;
-
 	const options = {
 		amount: {
-			amount: BN(amount).integerValue(BN.ROUND_HALF_UP).toString(),
+			amount: formOptions.get('amount').value || 0,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
@@ -430,35 +428,31 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 	try {
 		const signer = options[operations[operation].signer];
 		await dispatch(signTransaction(signer, tr, password));
-		const res = await tr.broadcast();
-		if (addToWatchList) {
-			dispatch(addContractByName(
-				res[0].trx.operation_results[0][1],
-				accountId,
-				name,
-				abi,
-			));
-		}
+		tr.broadcast().then((res) => {
+			if (addToWatchList) {
+				dispatch(addContractByName(
+					res[0].trx.operation_results[0][1],
+					accountId,
+					name,
+					abi,
+				));
+			}
+			if (res[0].trx.operations[0][0] === operations.account_update.value) {
+				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
+			}
 
-		if (res[0].trx.operations[0][0] === operations.account_update.value) {
+			toastSuccess(`${operations[operation].name} transaction was completed`);
+		}).catch((error) => {
+			error = error.toString();
+			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
+			message = (message.charAt(0).toUpperCase() + message.slice(1));
+			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		}
-
-		toastSuccess(`${operations[operation].name} transaction was completed`);
+		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
 	} catch (error) {
-		const errorObj = error.toString();
-		let message = errorObj.substring(errorObj.indexOf(':') + 2, errorObj.indexOf('\n'));
-		message = (message.charAt(0).toUpperCase() + message.slice(1)) || error.message;
-		if (message === 'Error: ') {
-			message += error.message;
-		}
-
-		toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-	} finally {
-		dispatch(toggleModalLoading(MODAL_DETAILS, false));
 	}
-
 	toastSuccess(`${operations[operation].name} transaction was sent`);
 	history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 
@@ -704,17 +698,12 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		const formValues = getState().form.get(FORM_TRANSFER).toJS();
 
 		const { currency } = formValues;
-		let { amount } = formValues;
 
-		if (!currency || !currency.precision) return 0;
+		if (!currency || !currency.precision || !formValues.amount.value) return 0;
 
 		contractId = currency.id;
 
-		if (!formValues.amount.value) {
-			amount.value = 0;
-		}
-
-		amount = BN(amount.value).toString();
+		const amount = BN(formValues.amount.value).toString();
 
 		bytecode = getMethod(
 			{
