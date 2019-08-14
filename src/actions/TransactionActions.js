@@ -407,9 +407,16 @@ export const createContract = () => async (dispatch, getState) => {
 };
 
 export const sendTransaction = (password) => async (dispatch, getState) => {
-	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-
+	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
 	const { operation, options } = getState().transaction.toJS();
+
+	if (!isConnected) {
+		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
+		dispatch(closeModal(MODAL_DETAILS));
+		return;
+	}
+
+	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
