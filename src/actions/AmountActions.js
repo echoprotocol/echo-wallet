@@ -34,6 +34,12 @@ export const setDefaultAsset = (form) => async (dispatch, getState) => {
 		return;
 	}
 
+	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
+
+	if (!isConnected) {
+		return;
+	}
+
 	let defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
 	const assets = getState().balance.get('assets');
 	const asset = assets.find((value) => value.id === ECHO_ASSET_ID);
