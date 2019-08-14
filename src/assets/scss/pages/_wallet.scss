@@ -1,6 +1,9 @@
 .wallet-wrap {
     display: flex;
     justify-content: space-between;
+    .form.main-form {
+        padding: 74px 0 30px;
+    }
 }
 
 .send-wrap {
@@ -15,12 +18,14 @@
         background-color: #fff;
     }
     .form-info {
-        margin-bottom: 20px;
-
         h3 {
             color: #5D637B;
             margin: 0;
             font-size: 20px;
+        }
+        & + .field-wrap {
+            margin-top: 16px;
+            margin-left: 5px;
         }
     }
 
@@ -34,15 +39,15 @@
     position: relative;
     height: calc(100vh - 185px);
     overflow: overlay;
-    padding: 0 17px;
-    margin-top: 22px;
+    padding: 0 18px 0 19px;
+    margin-top: 17px;
 }
 .balance-title-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 16px;
-    padding: 0 17px;
+    padding: 0 19px 0 18px;
 
     .balance-title {
         font-size: 20px;
@@ -54,7 +59,7 @@
 .currency-title {
     color: $gray;
     font-family: proximanovaSemibold;
-    margin-bottom: 6px;
+    line-height: 20px;
 }
 .currency-list {
 
@@ -89,10 +94,13 @@
         .currency-symbol {
             color: $main-сolor;
             transition: color .2s;
+            font-size: 18px;
         }
         .currency-amount {
             color: $text-dark;
             transition: color .2s;
+            font-size: 18px;
+            margin-right: 10px;
         }
         button {
             border: 0;
