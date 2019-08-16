@@ -239,7 +239,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 		const symbol = await getTokenSymbol(instance, accountId, contractId);
 		const precision = await getTokenPrecision(instance, accountId, contractId);
-
+		console.log(symbol, precision)
 		if (!symbol || !Number.isInteger(precision)) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
 			return;
