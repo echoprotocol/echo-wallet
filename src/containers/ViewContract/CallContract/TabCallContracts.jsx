@@ -71,7 +71,7 @@ class TabCallContracts extends React.Component {
 					form={FORM_CALL_CONTRACT}
 					isSingle
 					feeLabel="contract"
-					type="call_contract"
+					type="contract_call"
 					fee={fee}
 					fees={fees}
 					setValue={this.props.setValue}

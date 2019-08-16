@@ -14,46 +14,6 @@ export default {
 		},
 		signer: 'from',
 	},
-	limit_order_create: {
-		value: OPERATIONS_IDS.limit_order_create,
-		name: 'Place order',
-		options: {
-			from: 'seller',
-			subject: null,
-			value: 'amount_to_sell.amount',
-			asset: 'amount_to_sell.asset_id',
-		},
-	},
-	limit_order_cancel: {
-		value: OPERATIONS_IDS.limit_order_cancel,
-		name: 'Cancel order',
-		options: {
-			from: 'fee_paying_account',
-			subject: ['order', 'name'],
-			value: null,
-			asset: null,
-		},
-	},
-	call_order_update: {
-		value: OPERATIONS_IDS.call_order_update,
-		name: 'Update margin',
-		options: {
-			from: 'funding_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	fill_order: {
-		value: OPERATIONS_IDS.fill_order,
-		name: 'Fill order',
-		options: {
-			from: 'account_id',
-			subject: ['order_id', null],
-			value: 'pays.amount',
-			asset: 'pays.asset_id',
-		},
-	},
 	account_create: {
 		value: OPERATIONS_IDS.account_create,
 		name: 'Create account',
@@ -82,16 +42,6 @@ export default {
 		options: {
 			from: 'authorizing_account',
 			subject: ['account_to_list', 'name'],
-			value: null,
-			asset: null,
-		},
-	},
-	account_upgrade: {
-		value: OPERATIONS_IDS.account_upgrade,
-		name: 'Upgrade Account',
-		options: {
-			from: 'account_to_upgrade',
-			subject: null,
 			value: null,
 			asset: null,
 		},
@@ -176,26 +126,6 @@ export default {
 			asset: 'asset_id',
 		},
 	},
-	asset_settle: {
-		value: OPERATIONS_IDS.asset_settle,
-		name: 'Asset settlement',
-		options: {
-			from: 'account',
-			subject: null,
-			value: 'amount.amount',
-			asset: 'amount.asset_id',
-		},
-	},
-	asset_global_settle: {
-		value: OPERATIONS_IDS.asset_global_settle,
-		name: 'Global asset settlement',
-		options: {
-			from: 'issuer',
-			subject: null,
-			value: 'settle_price',
-			asset: 'asset_to_settle',
-		},
-	},
 	asset_publish_feed: {
 		value: OPERATIONS_IDS.asset_publish_feed,
 		name: 'Publish feed',
@@ -231,46 +161,6 @@ export default {
 		name: 'Delete proposal',
 		options: {
 			from: 'fee_paying_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	withdraw_permission_create: {
-		value: OPERATIONS_IDS.withdraw_permission_create,
-		name: 'Create withdrawal permission',
-		options: {
-			from: 'withdraw_from_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	withdraw_permission_update: {
-		value: OPERATIONS_IDS.withdraw_permission_update,
-		name: 'Update withdrawal permission',
-		options: {
-			from: 'withdraw_from_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	withdraw_permission_claim: {
-		value: OPERATIONS_IDS.withdraw_permission_claim,
-		name: 'Claim withdrawal permission',
-		options: {
-			from: 'withdraw_from_account',
-			subject: ['withdraw_to_account', 'name'],
-			value: 'amount_to_withdraw.amount',
-			asset: 'amount_to_withdraw.asset_id',
-		},
-	},
-	withdraw_permission_delete: {
-		value: OPERATIONS_IDS.withdraw_permission_delete,
-		name: 'Delete withdrawal permission',
-		options: {
-			from: 'withdraw_from_account',
 			subject: null,
 			value: null,
 			asset: null,
@@ -326,26 +216,6 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
-	custom: {
-		value: OPERATIONS_IDS.custom,
-		name: 'Custom',
-		options: {
-			from: 'payer',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
-	assert: {
-		value: OPERATIONS_IDS.assert,
-		name: 'Assert operation',
-		options: {
-			from: 'fee_paying_account',
-			subject: null,
-			value: null,
-			asset: null,
-		},
-	},
 	balance_claim: {
 		value: OPERATIONS_IDS.balance_claim,
 		name: 'Claim balance',
@@ -366,16 +236,6 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
-	asset_settle_cancel: {
-		value: OPERATIONS_IDS.asset_settle_cancel,
-		name: 'Cancel asset settlement',
-		options: {
-			from: 'account',
-			subject: null,
-			value: 'amount.amount',
-			asset: 'amount.asset_id',
-		},
-	},
 	asset_claim_fees: {
 		value: OPERATIONS_IDS.asset_claim_fees,
 		name: 'Claim asset fees',
@@ -386,11 +246,9 @@ export default {
 			asset: 'amount_to_claim.asset_id',
 		},
 	},
-	// BID_COLLATERAL = 38,
-	// EXECUTE_BID = 39,
-	create_contract: {
-		value: OPERATIONS_IDS.create_contract,
-		name: 'Create contract',
+	contract_create: {
+		value: OPERATIONS_IDS.contract_create,
+		name: 'Contract create',
 		options: {
 			from: 'registrar',
 			subject: null,
@@ -400,9 +258,9 @@ export default {
 		},
 		signer: 'registrar',
 	},
-	call_contract: {
-		value: OPERATIONS_IDS.call_contract,
-		name: 'Call contract',
+	contract_call: {
+		value: OPERATIONS_IDS.contract_call,
+		name: 'Contract call',
 		options: {
 			from: 'registrar',
 			subject: ['callee', null],
@@ -422,9 +280,9 @@ export default {
 			asset: 'amount.asset_id',
 		},
 	},
-	change_sidechain_config: {
-		value: OPERATIONS_IDS.change_sidechain_config,
-		name: 'Change sidechain config',
+	sidechain_change_config: {
+		value: OPERATIONS_IDS.sidechain_change_config,
+		name: 'Sidechain change config',
 		options: {
 			from: null,
 			subject: null,
@@ -452,9 +310,9 @@ export default {
 			asset: null,
 		},
 	},
-	generate_eth_address: {
-		value: OPERATIONS_IDS.generate_eth_address,
-		name: 'Generate eth address',
+	sidechain_eth_create_address: {
+		value: OPERATIONS_IDS.sidechain_eth_create_address,
+		name: 'Sidechain eth create address',
 		options: {
 			from: 'account',
 			subject: null,
@@ -462,9 +320,9 @@ export default {
 			asset: null,
 		},
 	},
-	create_eth_address: {
-		value: OPERATIONS_IDS.create_eth_address,
-		name: 'Create eth address',
+	sidechain_eth_approve_address: {
+		value: OPERATIONS_IDS.sidechain_eth_approve_address,
+		name: 'Sidechain eth approve address',
 		options: {
 			from: 'committee_member_id',
 			subject: ['account', 'name'],
@@ -472,9 +330,9 @@ export default {
 			asset: null,
 		},
 	},
-	deposit_eth: {
-		value: OPERATIONS_IDS.deposit_eth,
-		name: 'Deposit eth',
+	sidechain_eth_deposit: {
+		value: OPERATIONS_IDS.sidechain_eth_deposit,
+		name: 'Sidechain deposit eth',
 		options: {
 			from: 'committee_member_id',
 			subject: ['account', 'name'],
@@ -482,9 +340,9 @@ export default {
 			asset: null,
 		},
 	},
-	withdraw_eth: {
-		value: OPERATIONS_IDS.withdraw_eth,
-		name: 'Withdraw eth',
+	sidechain_eth_withdraw: {
+		value: OPERATIONS_IDS.sidechain_eth_withdraw,
+		name: 'Sidechain withdraw eth',
 		options: {
 			from: 'account',
 			subject: ['eth_addr'],
@@ -492,9 +350,9 @@ export default {
 			asset: null,
 		},
 	},
-	approve_withdraw_eth: {
-		value: OPERATIONS_IDS.approve_withdraw_eth,
-		name: 'Approve withdraw eth',
+	sidechain_eth_approve_withdraw: {
+		value: OPERATIONS_IDS.sidechain_eth_approve_withdraw,
+		name: 'Sidechain eth approve withdraw',
 		options: {
 			from: null,
 			subject: ['committee_member_id'],
@@ -522,9 +380,9 @@ export default {
 			asset: null,
 		},
 	},
-	sidechain_issue: {
-		value: OPERATIONS_IDS.sidechain_issue,
-		name: 'Sidechain issue',
+	sidechain_eth_issue: {
+		value: OPERATIONS_IDS.sidechain_eth_issue,
+		name: 'Sidechain eth issue',
 		options: {
 			from: 'account',
 			subject: ['deposit_id'],
@@ -532,9 +390,9 @@ export default {
 			asset: 'value.asset_id',
 		},
 	},
-	sidechain_burn: {
-		value: OPERATIONS_IDS.sidechain_burn,
-		name: 'Sidechain burn',
+	sidechain_eth_burn: {
+		value: OPERATIONS_IDS.sidechain_eth_burn,
+		name: 'Sidechain eth burn',
 		options: {
 			from: 'account',
 			subject: ['withdraw_id'],
@@ -542,8 +400,8 @@ export default {
 			asset: 'value.asset_id',
 		},
 	},
-	register_erc20_token: {
-		value: OPERATIONS_IDS.register_erc20_token,
+	sidechain_erc20_register_token: {
+		value: OPERATIONS_IDS.sidechain_erc20_register_token,
 		name: 'Register ERC20 token',
 		options: {
 			from: 'account',
@@ -552,8 +410,8 @@ export default {
 			asset: null,
 		},
 	},
-	deposit_erc20_token: {
-		value: OPERATIONS_IDS.deposit_erc20_token,
+	sidechain_erc20_deposit_token: {
+		value: OPERATIONS_IDS.sidechain_erc20_deposit_token,
 		name: 'Deposit ERC20 token',
 		options: {
 			from: 'account',
@@ -562,8 +420,8 @@ export default {
 			asset: null,
 		},
 	},
-	withdraw_erc20_token: {
-		value: OPERATIONS_IDS.withdraw_erc20_token,
+	sidechain_erc20_withdraw_token: {
+		value: OPERATIONS_IDS.sidechain_erc20_withdraw_token,
 		name: 'Withdraw ERC20 token',
 		options: {
 			from: 'committee_member_id',
@@ -572,8 +430,8 @@ export default {
 			asset: null,
 		},
 	},
-	approve_erc20_token_withdraw: {
-		value: OPERATIONS_IDS.approve_erc20_token_withdraw,
+	sidechain_erc20_approve_token_withdraw: {
+		value: OPERATIONS_IDS.sidechain_erc20_approve_token_withdraw,
 		name: 'Approve ERC20 token withdraw',
 		options: {
 			from: 'account',
