@@ -211,6 +211,11 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getPreviewBalances(networkName));
 };
 
+/**
+ *
+ * @param contractId
+ * @returns {Function}
+ */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
