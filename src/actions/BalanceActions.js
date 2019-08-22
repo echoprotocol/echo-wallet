@@ -213,7 +213,7 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 
 /**
  *
- * @param contractId
+ * @param {String} contractId
  * @returns {Function}
  */
 export const addToken = (contractId) => async (dispatch, getState) => {
