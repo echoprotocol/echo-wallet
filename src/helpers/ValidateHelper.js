@@ -3,7 +3,7 @@ import BN from 'bignumber.js';
 
 import {
 	ADDRESS_PREFIX,
-	CONTRACT_ID_PREFIX,
+	CONTRACT_ID_PREFIX, ERC20_HASHES,
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
 	PUBLIC_KEY_LENGTH,
@@ -362,4 +362,18 @@ export const validatePassword = (v) => {
 	}
 
 	return null;
+};
+
+/**
+ *
+ * @param {String} scriptHex
+ * @returns {boolean}
+ */
+export const checkErc20Contract = (scriptHex) => {
+	if (scriptHex) {
+		const hashes = Object.values(ERC20_HASHES);
+		return hashes.every((hash) => scriptHex.includes(hash.toString()));
+	}
+
+	return false;
 };
