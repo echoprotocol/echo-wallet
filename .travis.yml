@@ -19,6 +19,8 @@ jobs:
       name: "Build Linux App"
       if: tag IS present
       script:
+        - rm -rf node_modules
+        - npm i
         - npm run package-deb
       deploy:
         provider: releases
@@ -50,6 +52,8 @@ jobs:
       name: "Build macOS App"
       if: tag IS present
       script:
+        - rm -rf node_modules
+        - npm i
         - npm run package-mac
       deploy:
         provider: releases
