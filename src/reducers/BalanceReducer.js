@@ -5,6 +5,7 @@ const DEFAULT_FIELDS = Map({
 	tokens: new List([]),
 	assets: new List([]),
 	preview: new List([]),
+	intervalId: null,
 });
 
 export default createModule({

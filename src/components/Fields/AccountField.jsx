@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
+import { PREFIX_ASSET } from '../../constants/GlobalConstants';
+
 class AccountField extends React.Component {
 
 	constructor(props) {
@@ -32,9 +34,13 @@ class AccountField extends React.Component {
 				const isValidAccount =
 					await this.props.checkAccount(this.props.field.value, this.props.subject);
 				if (!isValidAccount) return;
-				this.props.setContractFees();
-				this.props.getTransferFee()
-					.then((fee) => fee && this.props.setValue('fee', fee));
+				const { currency } = this.props;
+				if (currency && currency.id.startsWith(PREFIX_ASSET)) {
+					this.props.getTransferFee()
+						.then((fee) => fee && this.props.setValue('fee', fee));
+				} else {
+					this.props.setContractFees();
+				}
 			}, 300),
 		});
 	}
@@ -62,8 +68,9 @@ class AccountField extends React.Component {
 }
 
 AccountField.propTypes = {
-	subject: PropTypes.any.isRequired,
 	autoFocus: PropTypes.bool,
+	currency: PropTypes.object,
+	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
@@ -74,6 +81,7 @@ AccountField.propTypes = {
 
 AccountField.defaultProps = {
 	autoFocus: false,
+	currency: null,
 };
 
 export default AccountField;

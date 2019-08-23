@@ -33,10 +33,10 @@ const to64HexString = (v, type, mode = 256) => {
 		}
 		case 'address': {
 			const sourceAddress = v || '1.2.0';
-			if (!/^1\.(2|14)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
+			if (!/^1\.(2|9)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
 			const preRes = new BigNumber(sourceAddress.split('.')[2]).toString(16);
 			if (preRes.length > 38) throw new Error('invalid address id');
-			const isContract = sourceAddress.split('.')[1] === '14';
+			const isContract = sourceAddress.split('.')[1] === '9';
 			return [
 				new Array(25).fill(null).map(() => 0).join(''),
 				isContract ? '1' : '0',
@@ -177,7 +177,7 @@ export const getMethod = (method, args) => {
 
 export const checkBlockTransaction = (accountId, op, tokens) => {
 	const operation = op[0];
-	if (operation !== operations.call_contract.value) return false;
+	if (operation !== operations.contract_call.value) return false;
 
 	const contractId = op[1].receiver;
 	if (!contractId) return false;

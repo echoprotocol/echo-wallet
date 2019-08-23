@@ -41,8 +41,8 @@ class ViewTransaction extends React.Component {
 		];
 
 		const isLogData = [
-			operations.create_contract.name,
-			operations.call_contract.name,
+			operations.contract_create.name,
+			operations.contract_call.name,
 		].includes(data.name) && data.details.tr_receipt.log.length;
 
 		if (isLogData) {

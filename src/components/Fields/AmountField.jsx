@@ -187,7 +187,7 @@ class AmountField extends React.Component {
 
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const type = form === FORM_TRANSFER && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'call_contract' : 'transfer';
+		const type = form === FORM_TRANSFER && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>
@@ -292,4 +292,3 @@ AmountField.defaultProps = {
 };
 
 export default AmountField;
-

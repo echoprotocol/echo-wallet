@@ -1,11 +1,14 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
-export default class Loading extends React.PureComponent {
+class Loading extends React.PureComponent {
 
 	render() {
+		const { disconnected } = this.props;
+
 		return (
-			<div className="loader-wrap">
+			<div className={classnames('loader-wrap', { disconnected })}>
 				<h3 className="loader-header">Please wait</h3>
 				<p className="loader-description">We’re loading all data...</p>
 				<div className="loader">
@@ -19,3 +22,13 @@ export default class Loading extends React.PureComponent {
 	}
 
 }
+
+Loading.propTypes = {
+	disconnected: PropTypes.bool,
+};
+
+Loading.defaultProps = {
+	disconnected: false,
+};
+
+export default Loading;

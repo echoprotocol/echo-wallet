@@ -13,7 +13,13 @@
     margin-top: 12px;
     user-select: none;
 
+    &-container {
+        display: flex;
+        flex-direction: column;
+    }
+
     &-wrap {
+        flex: 1 0 auto;
         animation: fadeIn $speed;
         background-color:  #5e79e8;
         position: fixed;
@@ -27,6 +33,11 @@
         justify-content: center;
         flex-direction: column;
         color: #fff;
+
+        &.disconnected {
+            position: relative;
+            height: calc(100vh - 70px);
+        }
     }
     &-header {
         font-weight: 700;

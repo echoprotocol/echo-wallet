@@ -89,6 +89,17 @@ class App extends React.Component {
 		);
 	}
 
+	renderLoading() {
+		const { disconnected, inited } = this.props;
+
+		return (
+			<div className="loader-container">
+				<Loading disconnected={inited && disconnected} />
+				{ inited && disconnected ? <Footer /> : null }
+			</div>
+		);
+	}
+
 	render() {
 		const { globalLoading } = this.props;
 
@@ -99,7 +110,7 @@ class App extends React.Component {
 
 				<div className="global-wrapper">
 					<Segment>
-						{globalLoading ? <Loading /> : this.renderSidebar()}
+						{globalLoading ? this.renderLoading() : this.renderSidebar()}
 					</Segment>
 
 					<Modals />
@@ -113,6 +124,8 @@ class App extends React.Component {
 }
 
 App.propTypes = {
+	disconnected: PropTypes.bool,
+	inited: PropTypes.bool,
 	location: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	globalLoading: PropTypes.bool.isRequired,
@@ -124,12 +137,19 @@ App.propTypes = {
 	hideBar: PropTypes.func.isRequired,
 };
 
+App.defaultProps = {
+	disconnected: true,
+	inited: false,
+};
+
 export default withRouter(connect(
 	(state) => ({
 		globalLoading: state.global.get('globalLoading'),
+		inited: state.global.get('inited'),
 		visibleBar: state.global.get('visibleBar'),
 		accountId: state.global.getIn(['activeUser', 'id']),
 		networkName: state.global.getIn(['network', 'name']),
+		disconnected: !state.echojs.getIn(['system', 'isConnected']),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),

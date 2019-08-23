@@ -334,7 +334,7 @@ export const transfer = () => async (dispatch, getState) => {
 	dispatch(resetTransaction());
 
 	dispatch(TransactionReducer.actions.setOperation({
-		operation: currency.type === 'tokens' ? 'call_contract' : 'transfer',
+		operation: currency.type === 'tokens' ? 'contract_call' : 'transfer',
 		options,
 		showOptions,
 	}));
@@ -385,7 +385,7 @@ export const createContract = () => async (dispatch, getState) => {
 	};
 
 	try {
-		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'create_contract', options));
+		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
 
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
@@ -397,7 +397,7 @@ export const createContract = () => async (dispatch, getState) => {
 			code: bytecode.value,
 		};
 
-		dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
+		dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_create', options, showOptions }));
 
 		return true;
 	} catch (err) {
@@ -407,9 +407,16 @@ export const createContract = () => async (dispatch, getState) => {
 };
 
 export const sendTransaction = (password) => async (dispatch, getState) => {
-	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-
+	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
 	const { operation, options } = getState().transaction.toJS();
+
+	if (!isConnected) {
+		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
+		dispatch(closeModal(MODAL_DETAILS));
+		return;
+	}
+
+	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -425,39 +432,38 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 	await tr.set_required_fees(options.fee.asset_id);
 
-	const signer = options[operations[operation].signer];
-	await dispatch(signTransaction(signer, tr, password));
+	try {
+		const signer = options[operations[operation].signer];
+		await dispatch(signTransaction(signer, tr, password));
+		tr.broadcast().then((res) => {
+			if (addToWatchList) {
+				dispatch(addContractByName(
+					res[0].trx.operation_results[0][1],
+					accountId,
+					name,
+					abi,
+				));
+			}
+			if (res[0].trx.operations[0][0] === operations.account_update.value) {
+				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
+			}
 
-	tr.broadcast().then((res) => {
-		if (addToWatchList) {
-			dispatch(addContractByName(
-				res[0].trx.operation_results[0][1],
-				accountId,
-				name,
-				abi,
-			));
-		}
-
-		if (res[0].trx.operations[0][0] === operations.account_update.value) {
+			toastSuccess(`${operations[operation].name} transaction was completed`);
+		}).catch((error) => {
+			error = error.toString();
+			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
+			message = (message.charAt(0).toUpperCase() + message.slice(1));
+			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		}
-
-		toastSuccess(`${operations[operation].name} transaction was completed`);
-
-	}).catch((error) => {
-		error = error.toString();
-		let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
-		message = message.charAt(0).toUpperCase() + message.slice(1);
-		toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+	} catch (error) {
+		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-	}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
-
+	}
 	toastSuccess(`${operations[operation].name} transaction was sent`);
-
-	dispatch(closeModal(MODAL_DETAILS));
-
 	history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 
+	dispatch(closeModal(MODAL_DETAILS));
 	dispatch(resetTransaction());
 };
 
@@ -532,7 +538,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	let feeValue;
 	try {
-		feeValue = await dispatch(getTransactionFee(FORM_CALL_CONTRACT, 'call_contract', options));
+		feeValue = await dispatch(getTransactionFee(FORM_CALL_CONTRACT, 'contract_call', options));
 	} catch (error) {
 		dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
 		return false;
@@ -548,7 +554,7 @@ export const callContract = () => async (dispatch, getState) => {
 		showOptions.value = `${amount.value} ${currency.symbol}`;
 	}
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 
@@ -635,7 +641,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	showOptions.value = `${amount.value} ${currency.symbol}`;
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
 
 	return true;
 };
@@ -725,7 +731,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	let feeValue = null;
 	try {
-		feeValue = await dispatch(getTransactionFee(form, 'call_contract', options));
+		feeValue = await dispatch(getTransactionFee(form, 'contract_call', options));
 	} catch (error) {
 		return null;
 	}

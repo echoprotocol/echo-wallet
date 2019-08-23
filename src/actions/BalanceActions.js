@@ -21,12 +21,12 @@ import { setValue, setFormError } from './FormActions';
 import { formatError } from '../helpers/FormatHelper';
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
-import { validateContractId } from '../helpers/ValidateHelper';
+import { checkErc20Contract, validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
-import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -211,6 +211,11 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getPreviewBalances(networkName));
 };
 
+/**
+ *
+ * @param {String} contractId
+ * @returns {Function}
+ */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
@@ -234,6 +239,15 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 		if (!contract) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			return;
+		}
+
+		const [, { code }] = contract;
+
+		const isErc20Token = checkErc20Contract(code);
+
+		if (!isErc20Token) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
 			return;
 		}
 
@@ -390,9 +404,13 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };
 
-export const enableToken = (contractId) => (dispatch) => {
+export const enableToken = (contractId) => (dispatch, getState) => {
+	const intervalId = getState().balance.get('intervalId');
+	clearTimeout(intervalId);
+	dispatch(BalanceReducer.actions.set({ field: 'intervalId', value: null }));
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
 };
+
 
 export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
@@ -400,7 +418,13 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	toastInfo(
 		`You have removed ${name} from watch list`,
 		() => dispatch(enableToken(contractId)),
-		() => setTimeout(() => dispatch(removeToken(contractId)), 1000),
+		() => {
+			const intervalId = setTimeout(() => dispatch(removeToken(contractId)), TIME_REMOVE_CONTRACT);
+			dispatch(BalanceReducer.actions.set({
+				field: 'intervalId',
+				value: intervalId,
+			}));
+		},
 	);
 };
 
