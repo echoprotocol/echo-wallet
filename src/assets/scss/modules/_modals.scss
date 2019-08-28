@@ -8,6 +8,7 @@
         width: 100%;
         padding: 50px 20px;
         position: relative;
+
         .icon-close {
             width: 35px;
             height: 35px;
@@ -20,6 +21,7 @@
             cursor: pointer;
             color: #c4c5ca;
             transition: color .3s;
+
             &:hover {
                 color: #6d7178;
             }
@@ -28,6 +30,7 @@
 
     .form.main-form {
         padding: 0;
+
         .button[type=submit],
         .button[type=button] {
             margin: 30px 0 0;
@@ -86,6 +89,7 @@
             text-align: center;
             margin: 0 auto 42px;
         }
+
         .check-list {
             margin: auto;
         }
@@ -112,7 +116,7 @@
             justify-content: space-between;
             padding-left: 15px;
             padding-right: 24px;
-            border-bottom: 1px solid  #f1f1f1;
+            border-bottom: 1px solid #f1f1f1;
             height: 37px;
 
             .check-container {
@@ -140,6 +144,7 @@
                         }
                     }
                 }
+
                 .sort-icon {
                     margin-left: 4px;
                 }
@@ -160,26 +165,29 @@
 
             }
 
-            */* Track */*
+            *
 
-            &::-webkit-scrollbar-track {
+            /* Track */
+            * &::-webkit-scrollbar-track {
 
-            background: transparent;
-
-            }
-
-            */* Handle */*
-
-            &::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 0, 0, .1);
+                background: transparent;
 
             }
 
-            */* Handle on hover */*
+            *
 
-            &::-webkit-scrollbar-thumb:hover {
+            /* Handle */
+            * &::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, .1);
 
-            background: #555;
+            }
+
+            *
+
+            /* Handle on hover */
+            * &::-webkit-scrollbar-thumb:hover {
+
+                background: #555;
 
             }
 
@@ -215,7 +223,7 @@
 
 .modals {
     &.ui.dimmer {
-        background-color: rgba(#cacccf,.9);
+        background-color: rgba(#cacccf, .9);
     }
 }
 
