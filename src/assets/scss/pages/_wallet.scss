@@ -1,6 +1,7 @@
 .wallet-wrap {
     display: flex;
     justify-content: space-between;
+
     .form.main-form {
         padding: 74px 0 30px;
     }
@@ -11,19 +12,23 @@
     max-height: calc(100vh - 120px);
     overflow: overlay;
     background-color: #FCFCFC;
+
     @include max-vw(1000) {
         padding: 0 20px;
     }
+
     .ui.button.main-btn.basic {
         background-color: #fff;
     }
+
     .form-info {
         h3 {
             color: #5D637B;
             margin: 0;
             font-size: 20px;
         }
-        & + .field-wrap {
+
+        &+.field-wrap {
             margin-top: 16px;
             margin-left: 5px;
         }
@@ -35,6 +40,7 @@
     max-width: 357px;
     width: 100%;
 }
+
 .balance-scroll {
     position: relative;
     height: calc(100vh - 185px);
@@ -42,6 +48,7 @@
     padding: 0 18px 0 19px;
     margin-top: 17px;
 }
+
 .balance-title-row {
     display: flex;
     align-items: center;
@@ -61,11 +68,13 @@
     font-family: proximanovaSemibold;
     line-height: 20px;
 }
+
 .currency-list {
 
-    & + .currency-title {
+    &+.currency-title {
         margin-top: 35px;
     }
+
     li {
         background-color: #F5F5F6;
         cursor: pointer;
@@ -78,35 +87,43 @@
         &:not(:last-child) {
             margin-bottom: 6px;
         }
+
         &.focused,
         &:hover {
             background-color: #5267C6;
+
             button:nth-child(2) {
                 width: 44px;
             }
+
             .currency-symbol {
                 color: $yellow;
             }
+
             .currency-amount {
                 color: #fff;
             }
         }
+
         .currency-symbol {
             color: $main-сolor;
             transition: color .2s;
             font-size: 18px;
         }
+
         .currency-amount {
             color: $text-dark;
             transition: color .2s;
             font-size: 18px;
             margin-right: 10px;
         }
+
         button {
             border: 0;
             background-color: transparent;
             cursor: pointer;
         }
+
         button:first-child {
             width: 100%;
             padding: 0 12px;
@@ -115,6 +132,7 @@
             justify-content: space-between;
             font-family: proximanovaSemibold;
         }
+
         button:nth-child(2) {
             width: 0px;
             padding: 0;
@@ -124,9 +142,11 @@
             font-size: 14px;
             color: #fff;
             font-size: 11px;
+
             &:focus {
                 color: $yellow;
             }
+
             &:hover {
                 color: $yellow;
             }

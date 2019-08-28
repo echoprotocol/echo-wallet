@@ -118,7 +118,7 @@ class SignIn extends React.Component {
 							<Button
 								type="submit"
 								color="orange"
-								className="load main-btn"
+								className="load main-btn fix-width"
 								content="Loading..."
 							/> :
 							<Button
