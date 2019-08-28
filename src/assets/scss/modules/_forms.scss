@@ -1,5 +1,6 @@
 .field-wrap {
     width: 100%;
+
     .field {
         position: relative;
 
@@ -40,7 +41,7 @@
             border: 0;
             margin-right: -45px;
             transform: translate(0);
-            color:rgb(156, 160, 176);
+            color: rgb(156, 160, 176);
             display: flex;
             align-items: center;
             line-height: 1;
@@ -57,11 +58,13 @@
                     }
                 }
             }
+
             &:hover {
                 .icon-back {
                     color: $main-сolor;
                 }
             }
+
             .icon-back {
                 transition: color $speed;
                 margin: -2px 5px 0 -5px;
@@ -69,6 +72,7 @@
                 border-radius: $angulars;
             }
         }
+
         h3 {
             font-size: 1.5em;
             margin: 0 auto;
@@ -77,6 +81,7 @@
 
 
     }
+
     .form-info-description {
         font-size: 14px;
         font-family: proxima;
@@ -99,6 +104,7 @@
         @media only screen and (max-height: 800px) {
             padding: 30px 0;
         }
+
         @media only screen and (min-height: 800px) {
             padding: 100px 0 30px;
         }
@@ -113,13 +119,16 @@
                 max-width: 150px;
                 min-width: 150px;
             }
+
             &.icon {
                 color: $bd-gray;
             }
         }
+
         .visible.transition {
             display: block !important;
         }
+
         .button[type=submit],
         .button[type=button] {
             margin: 30px 0 0 auto;
@@ -129,19 +138,33 @@
             justify-content: center;
             line-height: normal;
             text-transform: uppercase;
-            letter-spacing:.2px;
+            letter-spacing: .2px;
         }
 
         .form-panel {
             width: 100%;
+
             .button[type=submit],
             .button[type=button] {
                 white-space: nowrap;
                 margin: 0 0 0 auto;
+
                 &:not(:last-child) {
                     margin-right: 20px;
                 }
             }
+
+            .button[type=button] {
+                padding-left: 4.29em;
+                padding-right: 4.29em;
+            }
+
+            .button[type=button]:first-child {
+                padding-left: 4.62em;
+                padding-right: 4.62em;
+                color: red;
+            }
+
             .sign-nav {
                 margin: 0 auto 0 0;
             }
@@ -156,24 +179,29 @@
             &-wrap {
                 position: relative;
                 margin-top: 25px;
+
                 .check {
                     max-width: 300px;
                 }
+
                 .shrink {
                     display: none;
                 }
+
                 .ui.button {
                     right: 0;
                     top: -6px;
                     position: absolute;
                     margin: 0;
                 }
+
                 &.active {
                     .shrink {
                         display: block;
                         margin: 20px 0;
                         animation: fadeIn .5s;
                     }
+
                     .ui.button {
                         position: relative;
                         margin: 25px 0 0 auto;
@@ -182,9 +210,11 @@
             }
         }
     }
+
     &.pin-form {
         .form-panel {
             justify-content: flex-end;
+
             .main-btn {
                 margin: 0;
                 min-width: 160px;
@@ -192,15 +222,17 @@
             }
         }
     }
+
     &.ui.form {
         textarea {
             resize: none;
-		}
+        }
     }
 
     .action-wrap {
         position: relative;
         transition: margin .3s;
+
         &.loading {
             &:after {
                 width: 14px;
@@ -217,21 +249,24 @@
                 animation: rotating 1s linear infinite;
             }
         }
+
         &.ui.input,
-        &.textarea-wrap
-        {
+        &.textarea-wrap {
             &.error {
                 textarea {
                     border-color: $err-red;
                 }
+
                 .error-message {
                     top: 99%;
                 }
             }
+
             input {
                 padding-right: 30px;
             }
         }
+
         .value-status {
             position: absolute;
             top: 0;
@@ -243,6 +278,7 @@
             width: 25px;
         }
     }
+
     &-panel {
         display: flex;
         align-items: center;
@@ -263,6 +299,7 @@
                     .assets-tokens-dropdown {
                         border-color: $inut-hover;
                         position: relative;
+
                         &:before {
                             top: -5px;
                             bottom: -5px;
@@ -279,7 +316,9 @@
                         }
                     }
                 }
+
                 &.error {
+
                     .assets-tokens-dropdown,
                     .amount {
                         border-color: $err-red;
@@ -296,11 +335,13 @@
                         width: 100%;
                         position: relative;
                         display: flex;
+
                         &:hover {
-                            & + .assets-tokens-dropdown {
+                            &+.assets-tokens-dropdown {
                                 border-color: $inut-hover;
                             }
                         }
+
                         &:after {
                             width: 1px;
                             background: #fff;
@@ -311,6 +352,7 @@
                             top: 1.2px;
                             z-index: 2;
                         }
+
                         &:before {
                             width: 1px;
                             background: #fff;
@@ -343,12 +385,15 @@
         color: $white;
         z-index: 5;
     }
+
     &.error,
     .error {
         position: relative;
+
         .error-message {
             display: flex;
         }
+
         .input {
             &:focus {
                 border: 1px solid $err-red;
@@ -356,17 +401,20 @@
         }
     }
 }
+
 .textarea-wrap {
     .error-message {
         margin-top: 2px;
     }
 }
-.form-info  {
-    & + .field-wrap {
+
+.form-info {
+    &+.field-wrap {
         margin-top: 28px;
     }
-    & + .form-info-description {
-        margin:  18px auto 28px;
+
+    &+.form-info-description {
+        margin: 18px auto 28px;
     }
 }
 
@@ -376,12 +424,14 @@
     max-width: 350px;
 
     width: 100%;
+
     input {
         min-width: 360px;
         padding-right: 55px;
         height: 34px;
         padding: 0 1em;
     }
+
     .label {
         color: $bd-gray;
         font-size: 1em;
@@ -393,6 +443,7 @@
         display: table;
         line-height: 38px;
     }
+
     .edit-option {
         top: 7.5px;
         height: 20px;
@@ -407,13 +458,16 @@
         color: #d6d9df;
         transition: color .3s;
         cursor: pointer;
+
         &:hover,
         &:focus {
             color: #aeb4c0;
         }
+
         &.icon-edit-checked {
             right: 20px;
         }
+
         &.icon-edit-close {
             right: 0;
         }
@@ -425,18 +479,21 @@
     &-wrap {
         position: relative;
         margin-bottom: 25px;
+
         &.error {
             .error-message {
                 display: block;
             }
 
-            input, textarea {
+            input,
+            textarea {
                 border-color: $err-red !important;
             }
 
 
         }
     }
+
     &-message {
         display: none;
         position: absolute;
@@ -461,9 +518,9 @@ input {
 
 
 .amount-wrap {
-	input:focus {
-		box-shadow: 0 0 0 4px #f1f1f1;
-	}
+    input:focus {
+        box-shadow: 0 0 0 4px #f1f1f1;
+    }
 }
 
 .horizontal-input {
@@ -472,11 +529,13 @@ input {
         display: inline-flex;
         align-items: center;
         position: relative;
+
         &.error {
             .error-message {
                 top: 100%;
             }
         }
+
         &.loading {
             &:after {
                 width: 14px;
@@ -493,6 +552,7 @@ input {
                 animation: rotating 1s linear infinite;
             }
         }
+
         .value-status {
             position: absolute;
             top: 0;
