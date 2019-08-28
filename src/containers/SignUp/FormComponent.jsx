@@ -36,7 +36,7 @@ class FormComponent extends React.Component {
 					<input
 						name="accountName"
 						className="ui input"
-						placeholder="Account name"
+						placeholder="Account Name"
 						value={accountName.value}
 						onChange={(e) => this.onChange(e, true)}
 						disabled={loading}

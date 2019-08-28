@@ -162,7 +162,6 @@
             .button[type=button]:first-child {
                 padding-left: 4.62em;
                 padding-right: 4.62em;
-                color: red;
             }
 
             .sign-nav {
@@ -410,7 +409,7 @@
 
 .form-info {
     &+.field-wrap {
-        margin-top: 28px;
+        margin-top: 18px;
     }
 
     &+.form-info-description {
