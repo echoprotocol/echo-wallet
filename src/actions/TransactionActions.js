@@ -334,7 +334,7 @@ export const transfer = () => async (dispatch, getState) => {
 	dispatch(resetTransaction());
 
 	dispatch(TransactionReducer.actions.setOperation({
-		operation: currency.type === 'tokens' ? 'call_contract' : 'transfer',
+		operation: currency.type === 'tokens' ? 'contract_call' : 'transfer',
 		options,
 		showOptions,
 	}));
@@ -385,7 +385,7 @@ export const createContract = () => async (dispatch, getState) => {
 	};
 
 	try {
-		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'create_contract', options));
+		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
 
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
@@ -397,7 +397,7 @@ export const createContract = () => async (dispatch, getState) => {
 			code: bytecode.value,
 		};
 
-		dispatch(TransactionReducer.actions.setOperation({ operation: 'create_contract', options, showOptions }));
+		dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_create', options, showOptions }));
 
 		return true;
 	} catch (err) {
@@ -538,7 +538,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 	let feeValue;
 	try {
-		feeValue = await dispatch(getTransactionFee(FORM_CALL_CONTRACT, 'call_contract', options));
+		feeValue = await dispatch(getTransactionFee(FORM_CALL_CONTRACT, 'contract_call', options));
 	} catch (error) {
 		dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
 		return false;
@@ -554,7 +554,7 @@ export const callContract = () => async (dispatch, getState) => {
 		showOptions.value = `${amount.value} ${currency.symbol}`;
 	}
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
 
 	dispatch(setValue(FORM_CALL_CONTRACT, 'loading', false));
 
@@ -641,7 +641,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	showOptions.value = `${amount.value} ${currency.symbol}`;
 
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'call_contract', options, showOptions }));
+	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
 
 	return true;
 };
@@ -731,7 +731,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	let feeValue = null;
 	try {
-		feeValue = await dispatch(getTransactionFee(form, 'call_contract', options));
+		feeValue = await dispatch(getTransactionFee(form, 'contract_call', options));
 	} catch (error) {
 		return null;
 	}

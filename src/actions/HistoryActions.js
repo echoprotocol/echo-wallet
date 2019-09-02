@@ -21,7 +21,7 @@ const fetch = (request) => async (dispatch) => {
 };
 
 export const viewTransaction = (transaction) => async (dispatch, getState) => {
-	if ([operations.create_contract.name, operations.call_contract.name].includes(transaction.name)) {
+	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
 		const instance = getState().echojs.getIn(['system', 'instance']);
 
 		if (!instance) return;
@@ -94,7 +94,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		};
 	}
 
-	if (type === operations.create_contract.value) {
+	if (type === operations.contract_create.value) {
 
 		const [, resultId] = data.result;
 
@@ -121,7 +121,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		}
 	}
 
-	if ([operations.create_contract.value, operations.call_contract.value].includes(type)) {
+	if ([operations.contract_create.value, operations.contract_call.value].includes(type)) {
 		[, result.result] = data.result;
 	}
 

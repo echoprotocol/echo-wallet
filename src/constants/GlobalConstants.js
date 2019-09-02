@@ -54,7 +54,7 @@ export const ADDRESS_PREFIX = 'ECHO';
 export const PUBLIC_KEY_LENGTH = 44;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
-export const CONTRACT_ID_PREFIX = '1.14';
+export const CONTRACT_ID_PREFIX = '1.9';
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
 export const ACCOUNT_ID_PREFIX = '1.2.';
@@ -105,3 +105,13 @@ export const EXPLORER_URL = {
 export const TIME_TOAST_ANIMATION = 5000;
 export const DELAY_REMOVE_CONTRACT = 1000;
 export const TIME_REMOVE_CONTRACT = TIME_TOAST_ANIMATION + DELAY_REMOVE_CONTRACT;
+
+export const ERC20_HASHES = {
+	'totalSupply()': '18160ddd',
+	'balanceOf(address)': '70a08231',
+	'allowance(address,address)': 'dd62ed3e',
+	'transfer(address,uint256)': 'a9059cbb',
+	'approve(address,uint256)': '095ea7b3',
+	'transferFrom(address,address,uint256)': '23b872dd',
+	'Transfer(address,address,uint256)': 'ddf252ad',
+};

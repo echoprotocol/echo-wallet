@@ -21,7 +21,7 @@ import { setValue, setFormError } from './FormActions';
 import { formatError } from '../helpers/FormatHelper';
 import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
-import { validateContractId } from '../helpers/ValidateHelper';
+import { checkErc20Contract, validateContractId } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
@@ -211,6 +211,11 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getPreviewBalances(networkName));
 };
 
+/**
+ *
+ * @param {String} contractId
+ * @returns {Function}
+ */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
 	const instance = getState().echojs.getIn(['system', 'instance']);
@@ -234,6 +239,15 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 		if (!contract) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			return;
+		}
+
+		const [, { code }] = contract;
+
+		const isErc20Token = checkErc20Contract(code);
+
+		if (!isErc20Token) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
 			return;
 		}
 
