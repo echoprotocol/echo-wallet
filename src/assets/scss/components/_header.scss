@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     height: 50px;
-    padding: 0 20px;
+    padding: 0 24px 0 17px;
     background-color: rgb(247, 247, 247);
     border-bottom: 1px solid rgb(247, 247, 247);
 
@@ -57,6 +57,7 @@
         color: $text-dark;
         font-size: 20px;
         font-family: proximanovaSemibold;
+        line-height: 26.4px;
     }
 
     .show-sidebar-btn {
@@ -85,6 +86,7 @@
 
 
 .user-section {
+    margin-top: 3px;
     margin-left: 20px;
     display: flex;
     flex-direction: column;

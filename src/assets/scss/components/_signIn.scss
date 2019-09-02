@@ -23,7 +23,7 @@
             }
 
             @media only screen and (min-height: 900px) {
-                margin-top: 15vh;
+                margin-top: calc(14.8vh - 1px);
                 padding: 0px;
 
             }

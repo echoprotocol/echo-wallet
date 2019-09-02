@@ -39,17 +39,18 @@
         .back-link {
             background-color: transparent;
             border: 0;
-            margin-right: -45px;
+            margin-right: -48px;
             transform: translate(0);
             color: rgb(156, 160, 176);
             display: flex;
             align-items: center;
-            line-height: 1;
+            line-height: 25px;
             text-transform: uppercase;
             font-family: proximanovaSemibold;
-            font-size: .9em;
             cursor: pointer;
             padding: 0;
+            font-size: 12px;
+            font-weight: 400;
 
             &:focus {
                 &:not(:active) {
@@ -77,6 +78,8 @@
             font-size: 1.428571429em;
             margin: 0 auto;
             text-align: center;
+            margin-top: -4px;
+            padding: 0 0 1px 1px;
         }
 
 
@@ -106,7 +109,7 @@
         }
 
         @media only screen and (min-height: 800px) {
-            padding: 100px 0 30px;
+            padding: 112px 0 30px;
         }
 
 
@@ -133,7 +136,7 @@
         .button[type=button] {
             margin: 30px 0 0 auto;
             min-width: 120px;
-            min-height: 37px;
+            min-height: 38px;
             display: flex;
             justify-content: center;
             line-height: normal;
@@ -160,6 +163,7 @@
 
             .sign-nav {
                 margin: 0 auto 0 0;
+                padding-top: 2px;
             }
         }
 
@@ -403,11 +407,11 @@
 
 .form-info {
     &+.field-wrap {
-        margin-top: 18px;
+        margin-top: 15px;
     }
 
     &+.form-info-description {
-        margin: 18px auto 28px;
+        margin: 11px auto 26px;
     }
 }
 

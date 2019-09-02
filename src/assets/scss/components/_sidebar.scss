@@ -25,15 +25,23 @@
         height: 20px;
         text-align: center;
         line-height: 20px;
-        font-size: 20px;
+        font-size: 18px;
         &.icon-menu-wallet {
-            font-size: 17px;
+            height: 24px;
+        }
+        &.icon-recent-activity {
+            height: 22px;
+            padding: 0 1px;
+        }
+        &.icon-contractSearch {
+            font-size: 19px;
+            padding: 1px 2px;
         }
         &-menu {
             position: absolute;
             transition: opacity .5s, color .3s;
             opacity: 1;
-            width: 60px;
+            width: 56px;
             height: 50px;
             display: flex;
             align-items: center;
@@ -47,7 +55,7 @@
         }
     }
     &-header {
-        padding: 0 20px;
+        padding: 0 18px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -63,6 +71,7 @@
         .icon-menu {
             animation: fadeIn 1.3s;
             color: $text-dark;
+    font-size: 12px;
         }
 
         .icon-close {
@@ -97,7 +106,7 @@
             .sidebar-nav-link {
                 display: flex;
                 min-height: 45px;
-                padding: 8px 17px;
+                padding: 8px 15px;
                 color: $text-dark;
                 align-items: center;
                 justify-content: flex-start;
@@ -117,7 +126,7 @@
             }
         }
         &-text {
-            margin-left: 12px;
+            margin-left: 9px;
             opacity: 0;
             transition: opacity .3s;       
         }
@@ -145,15 +154,21 @@
             display: none;
         }
         &-close {
-            width: 60px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
             display: flex;
-            margin-right: -20px;
+            margin-right:2px;
+            margin-top: 18px;
             align-items: center;
             justify-content: center;
-            &:hover,
+            font-size: 12px;
+            &:hover {
+                color: #5c637d;
+            }
             &:focus  {
-                background-color: rgba(#c5c9d2,.2);
+                border-radius: 4px;
+                border: 2px solid rgba(186, 188, 203, 0.4);
+                color: rgba(186, 188, 203, 0.4);
             }
         }
     }
@@ -164,6 +179,10 @@
             opacity: 1;
             transition: opacity .3s;
             transition-delay: .2s;
+            color: #5c637d;
+            font-family: proxima;
+            font-size: 16px;
+            font-weight: 400;
         }
     }
 }
