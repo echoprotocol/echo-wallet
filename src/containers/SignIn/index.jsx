@@ -88,7 +88,7 @@ class SignIn extends React.Component {
 						<label htmlFor="AccountName">Account name</label>
 
 						<input
-							placeholder="Account name"
+							placeholder="Account Name"
 							name="accountName"
 							className="ui input"
 							value={accountName.value}
@@ -99,8 +99,8 @@ class SignIn extends React.Component {
 
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
-						<label htmlFor="PasOrWifiKey">WIF-key</label>
-						<input type="password" placeholder="WIF-key" name="wif" className="ui input" value={wif.value} onChange={(e) => this.onChange(e)} />
+						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
+						<input type="password" placeholder="Password or WIF-key" name="wif" className="ui input" value={wif.value} onChange={(e) => this.onChange(e)} />
 						<span className="error-message">{wif.error}</span>
 					</Form.Field>
 				</div>
@@ -118,7 +118,7 @@ class SignIn extends React.Component {
 							<Button
 								type="submit"
 								color="orange"
-								className="load main-btn"
+								className="load main-btn fix-width"
 								content="Loading..."
 							/> :
 							<Button
@@ -126,7 +126,7 @@ class SignIn extends React.Component {
 								type="submit"
 								disabled={this.isDisabledSubmit()}
 								onClick={submit}
-								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
+								className={classnames('main-btn fix-width', { disabled: this.isDisabledSubmit() })}
 								content={isAddAccount ? 'Add Account' : 'Login'}
 							/>
 					}

@@ -47,29 +47,31 @@ $thead-height: 46px;
         @media (min-width: 840px){
             overflow-y: overlay;
             overflow-x: hidden;
-            margin: 46px 0 0 0;
-            height: calc(100vh - 166px);
         }
         border: 0;
         border-radius: 0;
         thead {
             width: 100%;
             background-color: #fff;
-
+            
+            line-height: 8px;
             @media (min-width: 840px) {
                 overflow-y: overlay;
                 position: fixed;
                 overflow-x: hidden;
-                margin-top: -44px;
 
             }
             @media (min-width: 1200px){
-                margin-top: -46px;
             }
             th {
                 background:0;
                 color: $gray;
                 padding: 0.92857143em 5px;
+                opacity: 0.5;
+                color: #5c637d;
+                font-family: proximanovaSemibold;
+                font-size: 12px;
+                font-weight: 400;
                 @media (min-width: 840px) and (max-width: 1200px)  {
                     &:last-child {
                         position: relative;
@@ -101,7 +103,7 @@ $thead-height: 46px;
             }
             &:first-child {
                 min-width: calc(21vw - 30px);
-                padding-left:  20px;
+                padding-left:  18px;
                 @media (max-width: 1200px) {
                     min-width: calc(23vw - 30px);
                 }
@@ -165,8 +167,11 @@ $thead-height: 46px;
         tbody {
             overflow-x: hidden;
             overflow-y: overlay;
+            margin-top: 31px;
             tr {
                 transition: background-color .3s;
+                height: 52px; 
+                line-height: 1;
                 &:nth-child(2n) {
                     background-color: #fafafa;
                     &:hover {
@@ -219,6 +224,7 @@ $thead-height: 46px;
                         color: $gray;
                         span {
                             display: block;
+                            line-height: 15px;
                         }
                     }
                 }
@@ -231,7 +237,7 @@ $thead-height: 46px;
         display: flex;
         flex-direction: column;
         margin: 0;
-        height: calc(100vh - 176px);
+        height: calc(100vh - 190px);
         overflow-x: hidden;
         border: 0;
         border-radius: 0;
@@ -276,7 +282,7 @@ $thead-height: 46px;
         tbody {
             tr {
                 transition: background-color .3s;
-
+                max-height: 52px;
                 &:nth-child(2n) {
                     &:hover {
                         background-color: $main-сolor;
@@ -501,7 +507,7 @@ $thead-height: 46px;
                 td {
                     width: 50%;
                     &:first-child {
-                        padding-left: 20px;
+                        padding-left: 18px;
                     }
                     &:last-child {
                         padding-right: 20px;

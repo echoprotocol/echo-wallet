@@ -52,7 +52,7 @@ class AccountField extends React.Component {
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
 				<label htmlFor={`account${subject}`}>{subject}</label>
-				<Input type="text" placeholder="Account name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus}>
+				<Input type="text" placeholder="Account Name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus}>
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
 					{ field.checked && !field.error &&
 						<span className={classnames('icon-checked value-status', { success: field.checked })} />
