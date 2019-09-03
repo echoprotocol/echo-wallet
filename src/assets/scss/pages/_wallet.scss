@@ -8,6 +8,10 @@
         // padding-left: 100px;
     }
 
+    .ui.form .field:nth-child(2){
+        margin-bottom: 18px;
+    }
+
     @media only screen and (max-width: 1150px) {
         .send-wrap {
             padding: 0 92px;
@@ -53,6 +57,8 @@
     }
 
 }
+
+
 
 .balance-wrap {
     max-width: 357px;
