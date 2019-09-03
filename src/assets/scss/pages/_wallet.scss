@@ -4,12 +4,13 @@
 
     .form.main-form {
         padding: 70px 0 30px;
+
         .field-wrap {
             min-width: 100%;
         }
     }
 
-    .ui.form .field:nth-child(2){
+    .ui.form .field:nth-child(2) {
         margin-bottom: 18px;
     }
 
@@ -18,7 +19,11 @@
         .send-wrap {
             padding: 0 20px;
         }
-    }    
+
+        .list-amount li:last-child {
+            display: none;
+        }
+    }
 }
 
 .send-wrap {
