@@ -29,7 +29,7 @@ class SidebarMenu extends React.Component {
 			<div>
 				<Sidebar as={Menu} animation="overlay" vertical visible={this.props.visibleBar}>
 					<div className="sidebar-header">
-						<div className="sidebar-logo"></div>
+						<div className="sidebar-logo" />
 						<div className="sidebar-close">
 							<span
 								className="icon-close"
