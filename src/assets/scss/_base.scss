@@ -29,6 +29,7 @@ div,span {
     right: 0px;
     top: 0;
     display: flex;
+    justify-content: flex-end;
     background-color: $main-сolor;
     width: 150px;
     button {
@@ -57,6 +58,8 @@ div,span {
             }
         }
         &.global-max {
+            font-size: 10px;
+            width: 40px;
             &:before {
                 content: '\e926';
             }

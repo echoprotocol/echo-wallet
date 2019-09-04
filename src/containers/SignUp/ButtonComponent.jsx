@@ -9,7 +9,7 @@ class ButtonComponent extends React.Component {
 		return (
 			<Button
 				type="submit"
-				className="main-btn load"
+				className="main-btn load fix-width"
 				content="Creating..."
 			/>
 		);
@@ -24,7 +24,7 @@ class ButtonComponent extends React.Component {
 					basic
 					type="submit"
 					disabled={disabled}
-					className={classnames('main-btn', { disabled })}
+					className={classnames('main-btn fix-width', { disabled })}
 					onClick={submit}
 					content={isAddAccount ? 'Add Account' : 'Create Account'}
 				/>

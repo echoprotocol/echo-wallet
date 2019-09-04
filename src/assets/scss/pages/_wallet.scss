@@ -1,6 +1,29 @@
 .wallet-wrap {
     display: flex;
     justify-content: space-between;
+
+    .form.main-form {
+        padding: 70px 0 30px;
+
+        .field-wrap {
+            min-width: 100%;
+        }
+    }
+
+    .ui.form .field:nth-child(2) {
+        margin-bottom: 18px;
+    }
+
+
+    @media only screen and (max-width: 1150px) {
+        .send-wrap {
+            padding: 0 20px;
+        }
+
+        .list-amount li:last-child {
+            display: none;
+        }
+    }
 }
 
 .send-wrap {
@@ -8,41 +31,54 @@
     max-height: calc(100vh - 120px);
     overflow: overlay;
     background-color: #FCFCFC;
+
     @include max-vw(1000) {
         padding: 0 20px;
     }
+
     .ui.button.main-btn.basic {
         background-color: #fff;
     }
-    .form-info {
-        margin-bottom: 20px;
 
+    .form-info {
         h3 {
-            color: #5D637B;
+            color: #5c637d;
             margin: 0;
+            font-family: proximanovaSemibold;
             font-size: 20px;
+            font-weight: 400;
+            line-height: 26.4px;
+        }
+
+        &+.field-wrap {
+            margin-top: 15px;
+            margin-left: 2px;
         }
     }
 
 }
 
+
+
 .balance-wrap {
     max-width: 357px;
     width: 100%;
 }
+
 .balance-scroll {
     position: relative;
     height: calc(100vh - 185px);
     overflow: overlay;
-    padding: 0 17px;
-    margin-top: 22px;
+    padding: 0 20px 0 17px;
+    margin-top: 17px;
 }
+
 .balance-title-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 16px;
-    padding: 0 17px;
+    margin-top: 13px;
+    padding: 0 20px 0 17px;
 
     .balance-title {
         font-size: 20px;
@@ -54,13 +90,15 @@
 .currency-title {
     color: $gray;
     font-family: proximanovaSemibold;
-    margin-bottom: 6px;
+    line-height: 20px;
 }
+
 .currency-list {
 
-    & + .currency-title {
+    &+.currency-title {
         margin-top: 35px;
     }
+
     li {
         background-color: #F5F5F6;
         cursor: pointer;
@@ -73,32 +111,43 @@
         &:not(:last-child) {
             margin-bottom: 6px;
         }
+
         &.focused,
         &:hover {
             background-color: #5267C6;
+
             button:nth-child(2) {
                 width: 44px;
             }
+
             .currency-symbol {
                 color: $yellow;
             }
+
             .currency-amount {
                 color: #fff;
             }
         }
+
         .currency-symbol {
             color: $main-сolor;
             transition: color .2s;
+            font-size: 18px;
         }
+
         .currency-amount {
             color: $text-dark;
             transition: color .2s;
+            font-size: 18px;
+            margin-right: 8px;
         }
+
         button {
             border: 0;
             background-color: transparent;
             cursor: pointer;
         }
+
         button:first-child {
             width: 100%;
             padding: 0 12px;
@@ -107,6 +156,7 @@
             justify-content: space-between;
             font-family: proximanovaSemibold;
         }
+
         button:nth-child(2) {
             width: 0px;
             padding: 0;
@@ -116,9 +166,11 @@
             font-size: 14px;
             color: #fff;
             font-size: 11px;
+
             &:focus {
                 color: $yellow;
             }
+
             &:hover {
                 color: $yellow;
             }
