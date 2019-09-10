@@ -233,7 +233,7 @@ class AmountField extends React.Component {
 					<div className="amount-wrap action-wrap">
 						<input
 							className="amount"
-							placeholder="Amount"
+							placeholder="0.00"
 							value={amount.value}
 							name="amount"
 							onChange={(e) => this.onChangeAmount(e)}

@@ -4,6 +4,7 @@
 
     .form.main-form {
         padding: 70px 0 30px;
+        max-width: 400px;
 
         .field-wrap {
             min-width: 100%;
@@ -14,16 +15,26 @@
         margin-bottom: 18px;
     }
 
-
     @media only screen and (max-width: 1150px) {
         .send-wrap {
-            padding: 0 20px;
+            padding: 0 90px;
         }
 
         .list-amount li:last-child {
             display: none;
         }
     }
+
+    @media only screen and (max-width: 1000px) {
+        .send-wrap {
+            padding: 0 20px;
+        }
+
+        .form.main-form {
+            min-width: 175px;
+        }
+    }
+
 }
 
 .send-wrap {

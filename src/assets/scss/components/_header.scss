@@ -159,14 +159,19 @@
                     max-width: 180px;
                     color: #3B3B3B;
                     transition: color $speed;
-                    line-height: 13px;
-
+                    line-height: 16px;
+                    font-family: proximaNovaSemibold;
+                    font-size: 13px;
+                    font-weight: 400;
                 }
 
                 .id {
                     color: rgba(#3B3B3B, .6);
                     transition: color $speed;
                     line-height: 13px;
+                    font-family: proximaNovaSemibold;
+                    font-size: 13px;
+                    font-weight: 400;
                 }
 
                 &:hover {
@@ -189,6 +194,8 @@
 
                         .balance {
                             color: #fff;
+                            font-family: proximaNovaSemibold;
+
                         }
 
                     }
