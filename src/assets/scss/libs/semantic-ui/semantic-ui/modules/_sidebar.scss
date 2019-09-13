@@ -133,7 +133,7 @@ body.pushable {
   transition: transform 500ms ease;
   transition: transform 500ms ease, -webkit-transform 500ms ease;
   z-index: 2;
-  max-width: calc(100vw - 60px);
+  max-width: calc(100vw - 56px);
   max-height: calc(100vh - 30px);
   margin-left: auto;
 }
@@ -347,7 +347,7 @@ body.pushable > .pusher {
 //   -webkit-transform: translate3d(-100%, 0%, 0);
 //           transform: translate3d(-100%, 0%, 0);
     transition: width .1s;
-    width: 60px;
+    width: 56px;
 }
 .ui.right.overlay.sidebar {
   -webkit-transform: translate3d(100%, 0%, 0);

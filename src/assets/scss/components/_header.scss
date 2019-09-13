@@ -2,9 +2,10 @@
     display: flex;
     align-items: center;
     height: 50px;
-    padding: 0 20px;
+    padding: 0 24px 0 17px;
     background-color: rgb(247, 247, 247);
     border-bottom: 1px solid rgb(247, 247, 247);
+
     &-global {
         -webkit-app-region: drag;
         display: flex;
@@ -21,52 +22,63 @@
         top: 0;
 
     }
+
     .icon-back {
         line-height: 15px;
         padding: 5px;
-        color: rgba(#c4c5ca,1);
+        color: rgba(#c4c5ca, 1);
         margin: 0 10px 0 0;
         transition: color .3s;
         display: block;
         background-color: transparent;
         border: 0;
         cursor: pointer;
+
         &:focus {
             border-radius: 0.28571429rem;
             @extend %onFocus;
         }
+
         &:focus,
         &:hover {
-            color: rgba(#6d7178,1);
+            color: rgba(#6d7178, 1);
         }
+
         &:active {
             box-shadow: none;
         }
-        &.sub + .page-title {
+
+        &.sub+.page-title {
             font-size: 16px;
         }
     }
+
     .page-title {
         color: $text-dark;
         font-size: 20px;
         font-family: proximanovaSemibold;
+        line-height: 26.4px;
     }
+
     .show-sidebar-btn {
         color: $text-dark;
         cursor: pointer;
         transition: color .3s;
         display: block;
         margin-right: 20px;
+
         .icon-menu {
             line-height: 19px;
         }
     }
+
     .panel-right {
         margin-left: auto;
         padding-left: 50px;
         display: flex;
         align-items: center;
     }
+
     .ui.dropdown {
         line-height: normal;
     }
@@ -74,7 +86,8 @@
 
 
 .user-section {
-    margin-left: 20px;
+    margin-top: 3px;
+    margin-left: 19px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -85,29 +98,34 @@
                 line-height: 11px;
             }
         }
+
         .menu {
             right: -12px;
             margin-top: 2px;
             left: auto;
-            min-width: 340px;
+            min-width: 344px;
             border-radius: 0;
             overflow: hidden;
+
             .balance {
                 margin-left: 10px;
             }
 
-            & > .item {
+            &>.item {
                 padding: 0;
                 color: #6d7178;
                 font-size: 13px;
 
                 &:not(.add-account) {
                     transition: background-color $speed;
+
                     &:hover {
                         background-color: $main-сolor;
+
                         .name {
                             color: #fff;
                         }
+
                         .balance {
                             color: #fff;
                         }
@@ -115,10 +133,11 @@
                         .logout-user-btn {
                             color: transparent;
                             width: auto;
-                            padding: 0 1.14285714rem 0 0;
+                            padding: 0 20px 0 0;
                         }
                     }
                 }
+
                 .avatar-wrap {
                     border: 1px solid transparent;
                     border-radius: 4px;
@@ -129,7 +148,9 @@
                 .user-base-info {
                     margin: 0 auto 0 9px;
                     text-align: left;
+                    font-family: $font-family;
                 }
+
                 .name {
                     color: $main-сolor;
                     overflow: hidden;
@@ -138,38 +159,52 @@
                     max-width: 180px;
                     color: #3B3B3B;
                     transition: color $speed;
-                    line-height: 13px;
-
+                    line-height: 16px;
+                    font-family: proximaNovaSemibold;
+                    font-size: 13px;
+                    font-weight: 400;
                 }
+
                 .id {
-                    color: rgba(#3B3B3B,.6);
+                    color: rgba(#3B3B3B, .6);
                     transition: color $speed;
                     line-height: 13px;
-
+                    font-family: proximaNovaSemibold;
+                    font-size: 13px;
+                    font-weight: 400;
                 }
+
                 &:hover {
                     .id {
-                        color: rgba(#fff,.6);
+                        color: rgba(#fff, .6);
                     }
+
                     .avatar-wrap {
                         border: 1px solid rgba(#fff, .1);
                     }
                 }
+
                 &.selected {
                     background-color: transparent;
+
                     &:hover {
                         .name {
                             color: #fff;
                         }
+
                         .balance {
                             color: #fff;
+                            font-family: proximaNovaSemibold;
+
                         }
 
                     }
                 }
+
                 &.active {
                     background-color: #f8f8f8;
                 }
+
                 &.add-account {
                     text-transform: uppercase;
                     display: flex;
@@ -182,11 +217,14 @@
                     font-size: .9rem;
                     color: rgb(211, 212, 214);
                     transition: color $speed;
+
                     &.selected {
                         color: $inut-hover;
                         background-color: transparent;
+
                         .text {
                             position: relative;
+
                             &:before {
                                 @extend %onTextFocus;
                                 position: absolute;
@@ -200,12 +238,15 @@
                             }
                         }
                     }
+
                     &:hover {
                         color: $inut-hover;
                     }
+
                     &:focus {
                         color: $inut-hover;
                     }
+
                     &:before {
                         font-family: 'icomoon';
                         speak: none;
@@ -222,12 +263,14 @@
                         margin-right: 7px;
                     }
                 }
+
                 .user-item,
                 .user-panel {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                 }
+
                 .user-item {
                     background-color: transparent;
                     width: 100%;
@@ -235,7 +278,8 @@
                     cursor: pointer;
                     color: $black;
                     transition: background-color $speed, color $speed;
-                    padding: 7px 9px 7px 16px;
+                    padding: 7px 18px 7px 16px;
+
                     &-wrap {
                         display: flex;
                     }
@@ -261,17 +305,21 @@
                     transition:
                         width $speed,
                         padding $speed;
+
                     &:before {
                         content: "\e923";
+                        font-size: 18px;
                         color: #fff;
                         transition: color $speed;
                     }
+
                     &:hover {
                         &:before {
                             color: $yellow;
                         }
                     }
                 }
+
                 .user-panel {
                     padding: 0;
 
@@ -282,12 +330,14 @@
         .dropdown.icon {
             color: $link-gray;
         }
-        & > .text {
+
+        &>.text {
             color: $main-сolor;
             font-family: proximanovaSemibold;
         }
 
     }
+
     .balance {
         transition: color $speed;
         color: #5D637B;

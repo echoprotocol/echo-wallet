@@ -15,15 +15,18 @@ $thead-height: 46px;
         font-size: 4px;
         opacity: .4;
         transition: opacity $speed;
+
         &.active {
             color: $link-gray;
             opacity: 1;
         }
     }
+
     &-wrap {
         display: flex;
         align-items: center;
         cursor: pointer;
+
         &:hover {
             .sort {
                 i {
@@ -44,35 +47,44 @@ $thead-height: 46px;
         height: calc(100vh - 120px);
         overflow-y: overlay;
         overflow-x: hidden;
-        @media (min-width: 840px){
+
+        @media (min-width: 840px) {
             overflow-y: overlay;
             overflow-x: hidden;
-            margin: 46px 0 0 0;
-            height: calc(100vh - 166px);
         }
+
         border: 0;
         border-radius: 0;
+
         thead {
             width: 100%;
             background-color: #fff;
+
+            line-height: 8px;
 
             @media (min-width: 840px) {
                 overflow-y: overlay;
                 position: fixed;
                 overflow-x: hidden;
-                margin-top: -44px;
 
             }
-            @media (min-width: 1200px){
-                margin-top: -46px;
-            }
+
+            @media (min-width: 1200px) {}
+
             th {
-                background:0;
+                background: 0;
                 color: $gray;
                 padding: 0.92857143em 5px;
-                @media (min-width: 840px) and (max-width: 1200px)  {
+                opacity: 0.5;
+                color: #5c637d;
+                font-family: proximanovaSemibold;
+                font-size: 12px;
+                font-weight: 400;
+
+                @media (min-width: 840px) and (max-width: 1200px) {
                     &:last-child {
                         position: relative;
+
                         &:after {
                             width: 100px;
                             height: 1px;
@@ -90,18 +102,23 @@ $thead-height: 46px;
 
         // WIDTH OF CELLS
 
-        th, td {
+        th,
+        td {
             min-width: 11vw;
             padding: 0.82857143em 5px;
+
             @media (max-width: 980px) {
                 font-size: .9em;
             }
+
             @media (max-width: 1200px) {
                 font-size: .95em;
             }
+
             &:first-child {
                 min-width: calc(21vw - 30px);
-                padding-left:  20px;
+                padding-left: 18px;
+
                 @media (max-width: 1200px) {
                     min-width: calc(23vw - 30px);
                 }
@@ -119,9 +136,12 @@ $thead-height: 46px;
                 .ellips {
                     max-width: 12vw;
                 }
+
                 min-width: 13vw;
+
                 @media (max-width: 1200px) {
                     min-width: 11vw;
+
                     .ellips {
                         max-width: 10vw;
                     }
@@ -131,13 +151,16 @@ $thead-height: 46px;
 
             &:nth-child(5) {
                 min-width: calc(18vw - 30px);
+
                 .ellips {
                     max-width: 14vw;
                 }
-                @media (max-width: 1200px){
+
+                @media (max-width: 1200px) {
                     min-width: calc(18vw - 15px);
                     max-width: calc(18vw - 15px);
                     text-align: right;
+
                     .ellips {
                         margin-left: auto;
                         max-width: 13vw;
@@ -147,15 +170,18 @@ $thead-height: 46px;
 
             &:nth-child(6) {
                 max-width: 11vw;
-                @media (max-width: 1200px){
+
+                @media (max-width: 1200px) {
                     text-align: right;
                     max-width: 13vw;
                     min-width: 13vw;
                 }
             }
+
             &:last-child {
                 text-align: right;
-                padding-right:  20px;
+                padding-right: 20px;
+
                 @media (max-width: 1200px) {
                     letter-spacing: -.2px;
                 }
@@ -165,31 +191,43 @@ $thead-height: 46px;
         tbody {
             overflow-x: hidden;
             overflow-y: overlay;
+            margin-top: 31px;
+
             tr {
                 transition: background-color .3s;
+                height: 52px;
+                line-height: 1;
+
                 &:nth-child(2n) {
                     background-color: #fafafa;
+
                     &:hover {
                         background-color: $main-сolor;
                     }
                 }
+
                 &:hover {
                     background-color: $main-сolor;
+
                     .label-operation {
                         border-right: 1px solid #fff;
                         border-top: 1px solid #fff;
                         border-bottom: 1px solid #fff;
                     }
+
                     td {
+
                         &:nth-child(2),
                         &:nth-child(3),
                         &:nth-child(4) {
-                            color:$yellow;
+                            color: $yellow;
                         }
+
                         &:nth-child(5),
                         &:nth-child(6) {
                             color: #fff;
                         }
+
                         &:last-child,
                         .success,
                         .fall {
@@ -198,6 +236,7 @@ $thead-height: 46px;
 
                     }
                 }
+
                 td {
                     border-top: 0;
                     transition: color .3s;
@@ -206,19 +245,24 @@ $thead-height: 46px;
                     .fall {
                         transition: color .3s;
                     }
+
                     &:nth-child(2),
                     &:nth-child(3),
                     &:nth-child(4) {
                         color: $main-сolor;
                     }
+
                     &:nth-child(5),
                     &:nth-child(6) {
                         color: $gray-dark;
                     }
+
                     &:last-child {
                         color: $gray;
+
                         span {
                             display: block;
+                            line-height: 15px;
                         }
                     }
                 }
@@ -231,27 +275,29 @@ $thead-height: 46px;
         display: flex;
         flex-direction: column;
         margin: 0;
-        height: calc(100vh - 176px);
+        height: calc(100vh - 190px);
         overflow-x: hidden;
         border: 0;
         border-radius: 0;
 
         @media (min-width: 1060px) {
             margin: 46px 0 0 0;
-            height: calc(100vh - 222px);
+            height: calc(100vh - 236px);
         }
 
         thead {
             width: 100%;
             background-color: #fff;
-            @media (min-width: 1060px){
+
+            @media (min-width: 1060px) {
                 position: fixed;
                 overflow-x: hidden;
                 margin-top: -($thead-height);
 
             }
+
             th {
-                background:0;
+                background: 0;
                 color: $gray;
                 padding: 0.92857143em 5px;
             }
@@ -259,15 +305,17 @@ $thead-height: 46px;
 
         // WIDTH OF CELLS
         tr {
-            th, td {
+
+            th,
+            td {
                 &:first-child {
                     min-width: 25vw;
-                    padding-left:  20px;
+                    padding-left: 20px;
                 }
 
                 &:last-child {
                     min-width: calc(75vw - 1px);
-                    padding-right:  20px;
+                    padding-right: 20px;
                 }
             }
         }
@@ -276,23 +324,28 @@ $thead-height: 46px;
         tbody {
             tr {
                 transition: background-color .3s;
+                max-height: 52px;
 
                 &:nth-child(2n) {
                     &:hover {
                         background-color: $main-сolor;
                     }
                 }
+
                 &:hover {
                     background-color: $main-сolor;
+
                     td {
                         color: #fff;
                     }
                 }
+
                 td {
                     border-top: 0;
                     transition: color .3s;
                     padding: 0.82857143em 5px;
                     color: $black;
+
                     &:last-child {
                         span {
                             display: block;
@@ -308,8 +361,6 @@ $thead-height: 46px;
         thead {
             th {
                 padding: 0 18px;
-
-
                 height: 30px;
                 font-family: proximanovaSemibold;
                 color: rgba(173, 177, 190, 1);
@@ -317,20 +368,25 @@ $thead-height: 46px;
 
             }
         }
+
         tbody {
             tr {
                 transition: background-color $speed;
+
                 &:nth-child(2n-1) {
                     background-color: #f5f5f6;
                 }
+
                 .voted {
                     text-align: center;
                     font-size: 16px;
                     position: relative;
+
                     &-wrap {
                         display: flex;
                         align-items: center;
                     }
+
                     &:before {
                         position: absolute;
                         right: 0;
@@ -342,6 +398,7 @@ $thead-height: 46px;
 
 
                 }
+
                 .btn-lock {
                     min-width: 54px;
                     height: 26px;
@@ -350,26 +407,31 @@ $thead-height: 46px;
                 .ui.basic {
                     height: 28px;
                 }
+
                 .ui.main-btn,
                 .voted {
                     height: 28px;
                     min-width: 60px;
 
-                    & + .button {
+                    &+.button {
                         margin-left: 20px;
                         color: rgba(#5D637B, .7);
                     }
                 }
+
                 &:hover {
                     background-color: $main-сolor;
+
                     td {
                         color: rgba(#fff, 1);
+
                         &:last-child {
-                            &:not(:first-child ) {
+                            &:not(:first-child) {
                                 color: $yellow;
                             }
                         }
                     }
+
                     .btn-lock,
                     .icon-e-show,
                     .icon-e-hide {
@@ -385,15 +447,18 @@ $thead-height: 46px;
                             color: $yellow;
                         }
                     }
+
                     .link {
                         color: $yellow;
                     }
+
                     .ui.main-btn,
                     .voted {
-                        & + .button {
+                        &+.button {
                             color: $yellow;
                         }
                     }
+
                     .ui.main-btn {
                         border: 1px solid #fff;
                         color: #fff;
@@ -410,21 +475,24 @@ $thead-height: 46px;
             color: rgba(92, 99, 125, 1);
             transition: color $speed;
 
-            @media (max-width: 1200px){
+            @media (max-width: 1200px) {
                 font-size: .9em;
 
             }
-            @media (max-width: 980px){
+
+            @media (max-width: 980px) {
                 letter-spacing: -.1px;
                 padding-right: 9px;
                 padding-left: 9px;
             }
+
             &:last-child {
-                &:not(:first-child ) {
+                &:not(:first-child) {
                     transition: color $speed;
                     color: $main-сolor;
                 }
             }
+
             .cell-wrap {
                 display: flex;
                 align-items: center;
@@ -435,6 +503,7 @@ $thead-height: 46px;
                 border: 0;
                 cursor: pointer;
             }
+
             .key-input {
                 background-color: transparent;
                 border: 0;
@@ -443,12 +512,14 @@ $thead-height: 46px;
                 transition: color $speed;
                 font-size: .85em;
                 letter-spacing: -.2px;
+
                 &:focus {
                     background-color: transparent;
                     box-shadow: none;
 
                 }
             }
+
             .icon-e-show,
             .icon-e-hide {
                 color: rgba(173, 177, 190, 1);
@@ -467,9 +538,11 @@ $thead-height: 46px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
     .text-bold {
         font-family: proximanovaSemibold;
-        & + span {
+
+        &+span {
             margin-left: 4px;
         }
     }
@@ -484,9 +557,11 @@ $thead-height: 46px;
 
         width: 100%;
         max-width: 600px;
+
         td {
             padding: 5px 0.78571429em;
         }
+
         .thead,
         .tbody {
             display: flex;
@@ -496,13 +571,17 @@ $thead-height: 46px;
             border-radius: 0;
             max-width: 1000px;
             margin: auto;
+
             tr {
                 display: flex;
+
                 td {
                     width: 50%;
+
                     &:first-child {
-                        padding-left: 20px;
+                        padding-left: 18px;
                     }
+
                     &:last-child {
                         padding-right: 20px;
                     }
@@ -513,17 +592,20 @@ $thead-height: 46px;
 
         .thead {
             border: 1px solid $bd-gray;
+
             &-info {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 height: 25px;
                 margin: 10px 0;
+
                 .table-title {
                     font-size: 1.2em;
                     color: $black;
                 }
             }
+
             &-wrap {
                 position: relative;
                 max-width: 1000px;
@@ -538,12 +620,14 @@ $thead-height: 46px;
                 font-size: .9em;
                 font-family: proximanovaSemibold;
                 margin-top: auto;
+
                 &:last-child {
                     align-items: flex-end;
 
                 }
             }
         }
+
         .tbody {
             height: calc(100vh - 230px);
             border-left: 1px solid $bd-gray;
@@ -557,11 +641,14 @@ $thead-height: 46px;
                 width: 0;
                 margin: 0;
             }
+
             tr {
                 transition: background-color .3s;
+
                 &:nth-child(2n-1) {
                     background-color: #f5f5f6;
                 }
+
                 td {
                     border: 0;
                     display: flex;
@@ -569,11 +656,13 @@ $thead-height: 46px;
                     padding: 0 0.78571429em;
                     min-height: 30px;
                     align-items: center;
+
                     &:first-child {
                         color: $main-сolor;
                         line-height: 30px;
                         font-family: proximanovaSemibold;
                     }
+
                     &:last-child {
                         justify-content: flex-end;
                         color: $text-dark;
@@ -581,6 +670,7 @@ $thead-height: 46px;
                         font-size: .95em;
                     }
                 }
+
                 &.msg-empty {
                     background-color: transparent;
 
@@ -593,19 +683,23 @@ $thead-height: 46px;
                 }
             }
 
-            tr,tr:nth-child(2n-1) {
+            tr,
+            tr:nth-child(2n-1) {
                 &:not(.msg-empty):hover {
                     background-color: $main-сolor;
+
                     .icon-close {
                         display: inline-block;
                         opacity: 1;
                         width: auto;
 
                     }
+
                     td {
                         &:nth-child(1) {
-                            color:$yellow;
+                            color: $yellow;
                         }
+
                         color: #fff;
                     }
                 }
@@ -622,6 +716,7 @@ $thead-height: 46px;
     justify-content: center;
     flex-direction: column;
     padding: 15vh 20px;
+
     h3 {
         color: #9d9d9d;
         font-weight: normal;

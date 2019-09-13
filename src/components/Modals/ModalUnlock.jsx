@@ -30,7 +30,7 @@ class ModalUnlockWallet extends React.Component {
 		} = this.props;
 
 		return (
-			<Modal className="small" open={show} dimmer="inverted">
+			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
 
 					<span
