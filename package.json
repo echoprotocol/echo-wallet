@@ -1,6 +1,10 @@
 {
   "name": "echo-wallet",
-  "author": "PixelPlex <info@pixelplex.by>",
+  "author": {
+    "name": "PixelPlex, Inc.",
+    "email": "info@pixelplex.io",
+    "url": "https://pixelplex.io"
+  },
   "description": "Echo Wallet: Cryptocurrency wallet for Echo platform",
   "homepage": "https://github.com/echoprotocol/echo-wallet",
   "version": "1.3.3",
