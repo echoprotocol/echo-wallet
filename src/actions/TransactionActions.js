@@ -717,7 +717,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			['1.2.1', amount * (10 ** currency.precision)],
+			['1.2.1', new BN(amount).times(10 ** currency.precision).toString()],
 		);
 	}
 
