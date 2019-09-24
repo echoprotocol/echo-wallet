@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { EchoJSActions } from 'echojs-redux';
+import echo from 'echojs-lib';
 
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
@@ -12,6 +12,7 @@ import { isThreshold, isPublicKey, isAccountId, isWeight } from '../helpers/Vali
 import { setInFormError, setInFormValue, setValue as setFormValue } from './FormActions';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 import { getOperationFee } from '../api/TransactionApi';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -55,7 +56,8 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
-		const { name } = (await dispatch(EchoJSActions.fetch(a[0]))).toJS();
+
+		const { name } = await echo.api.getObject(a[0]);
 		return {
 			key: name, weight: a[1], role: 'active', type: 'accounts',
 		};
@@ -142,14 +144,14 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 	} else {
 		try {
-			account = await dispatch(EchoJSActions.fetch(key.value));
+			account = await echo.api.getObject(key.value);
 			if (!account) {
 				if (!isPublicKey(key.value, 'ECHO')) {
 					error = true;
 					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 				}
 
-			} else if (!isAccountId(account.get('id'))) {
+			} else if (!isAccountId(account.id)) {
 				error = true;
 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
@@ -174,7 +176,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 	}
 
 	if (!error && account) {
-		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], account.get('name')));
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], account.name));
 	}
 
 	return error;
@@ -250,7 +252,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 					if (isPublicKey(value.get('key').value)) {
 						permissionData[role].keys.push([value.get('key').value, weightInt]);
 					} else {
-						accountsPromises.push(dispatch(EchoJSActions.fetch(value.get('key').value)));
+						accountsPromises.push(echo.api.getObject(value.get('key').value));
 						permissionData[role].accounts.push([value.get('key').value, weightInt]);
 					}
 				});
@@ -268,7 +270,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	['active'].forEach((role, index) => {
 		accountsResults[index].forEach((account, i) => {
-			permissionData[role].accounts[i][0] = account.get('id');
+			permissionData[role].accounts[i][0] = account.id;
 		});
 	});
 
@@ -279,8 +281,8 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	await dispatch(EchoJSActions.fetch('2.0.0'));
-	const feeAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
+	await echo.api.getGlobalProperties(true);
+	const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 	const transaction = {
 		account: currentAccount.get('id'),
@@ -342,7 +344,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	transaction.fee.amount = feeValue;
 	transaction.fee.asset_id = '1.3.0';
 
-	showOptions.fee = `${feeValue / (10 ** feeAsset.get('precision'))} ${feeAsset.get('symbol')}`;
+	showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
 
 	dispatch(resetTransaction());
 

@@ -1,4 +1,4 @@
-import { EchoJSActions } from 'echojs-redux';
+import echo from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
@@ -15,8 +15,8 @@ import { getContractResult } from '../api/ContractApi';
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
-const fetch = (request) => async (dispatch) => {
-	const response = await dispatch(EchoJSActions.fetch(request));
+const fetch = (request) => async () => {
+	const response = await echo.api.getObject(request);
 	return response;
 };
 
@@ -38,8 +38,8 @@ export const viewTransaction = (transaction) => async (dispatch, getState) => {
 const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
-	const block = await dispatch(EchoJSActions.fetch(data.block_num));
-	const feeAsset = (await dispatch(EchoJSActions.fetch(operation.fee.asset_id))).toJS();
+	const block = await echo.api.getBlock(data.block_num);
+	const feeAsset = await echo.api.getObject(operation.fee.asset_id);
 
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
 

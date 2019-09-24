@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { EchoJSActions } from 'echojs-redux';
+import echo from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import {
@@ -54,20 +54,21 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
-export const getBalanceFromAssets = (assets) => async (dispatch) => {
+export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
-		const defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+		const defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
 		balances.push({
 			balance: 0,
-			id: defaultAsset.get('id'),
-			symbol: defaultAsset.get('symbol'),
-			precision: defaultAsset.get('precision'),
+			id: defaultAsset.id,
+			symbol: defaultAsset.symbol,
+			precision: defaultAsset.precision,
 		});
 	} else {
 		balances = Object.entries(assets).map(async (asset) => {
-			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
-			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
+
+			const stats = await echo.api.getObject(asset[1]);
+			asset = await echo.api.getObject(asset[0]);
 			return { balance: stats.balance, ...asset };
 		});
 
@@ -174,25 +175,30 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	const coreAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
+
+	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 	const balances = accounts.map(async ({ name }) => {
-		const account = await dispatch(EchoJSActions.fetch(name));
+
+		const account = await echo.api.getAccountByName(name);
 
 		const preview = {
 			balance: {
 				amount: 0,
-				symbol: coreAsset.get('symbol'),
-				precision: coreAsset.get('precision'),
+				symbol: coreAsset.symbol,
+				precision: coreAsset.precision,
 			},
 			name,
-			accountId: account.get('id'),
+			accountId: account.id,
 		};
 
-		if (account && account.get('balances') && account.getIn(['balances', '1.3.0'])) {
-			const stats = await dispatch(EchoJSActions.fetch(account.getIn(['balances', '1.3.0'])));
-			preview.balance.amount = stats.get('balance') || 0;
-			preview.balance.id = account.getIn(['balances', '1.3.0']);
+		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
+
+
+			// TODO: check result
+			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
+			preview.balance.amount = stats.balance || 0;
+			preview.balance.id = account.balances[ECHO_ASSET_ID];
 		}
 
 		return preview;
@@ -204,7 +210,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getTokenBalances(accountId, networkName));
 
-	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
+	const account = await echo.api.getObject(accountId);
 
 	await dispatch(getAssetsBalances(account.balances));
 
@@ -371,7 +377,8 @@ export const getObject = (subscribeObject = {}) => async (dispatch, getState) =>
 			if (history.location.pathname === INDEX_PATH) {
 				const form = getState().form.getIn([FORM_TRANSFER]);
 				if (form.get('from').value === name && balances[form.get('currency').id]) {
-					const stats = await dispatch(EchoJSActions.fetch(balances[form.get('currency').id]));
+
+					const stats = await echo.api.getObject(balances[form.get('currency').id]);
 					dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.get('balance') }));
 					dispatch(setFormError(FORM_TRANSFER, 'amount', null));
 				}
