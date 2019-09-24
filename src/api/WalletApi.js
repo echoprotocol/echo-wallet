@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import echo, { PrivateKey } from 'echojs-lib';
 
 export const getKeyFromWif = (wif) => {
 	try {
