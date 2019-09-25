@@ -1,11 +1,12 @@
-import { TransactionBuilder } from 'echojs-lib';
+import echo from 'echojs-lib';
 
 export const getOperationFee = async (type, options) => {
-	const tr = new TransactionBuilder();
+	const tr = echo.createTransaction();
 
-	tr.add_type_operation(type, options);
+	tr.addOperation(type, options);
 
-	await tr.set_required_fees(options.asset_id);
+	await tr.setRequiredFees(options.asset_id);
 
+	// TODO: check result
 	return tr.operations[0][1].fee.amount; // eslint-disable-line no-underscore-dangle
 };

@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import echo, { PrivateKey } from 'echojs-lib';
 
 export const getKeyFromWif = (wif) => {
 	try {
@@ -9,8 +9,8 @@ export const getKeyFromWif = (wif) => {
 	}
 };
 
-export const validateAccountExist = (instance, accountName, shouldExist, limit = 50) => (
-	instance.dbApi().exec('lookup_accounts', [accountName, limit])
+export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
+	echo.api.lookupAccounts(accountName, limit)
 		.then((result) => {
 			if (!result.find((i) => i[0] === accountName) && shouldExist) {
 				return 'Account not found';
