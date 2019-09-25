@@ -284,7 +284,7 @@ export default connect(
 		proxyAccountId: state.form.getIn([FORM_COMMITTEE, 'proxyAccountId']),
 		loading: state.form.getIn([FORM_COMMITTEE, 'loading']),
 		accountLoading: state.form.getIn([FORM_COMMITTEE, 'accountLoading']),
-		accounts: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS]),
+		accounts: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]),
 		coreAsset: state.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]),
 		committeeTable: state.table.get(COMMITTEE_TABLE),
 		votes: state.form.getIn([FORM_COMMITTEE, 'votes']),
