@@ -55,10 +55,8 @@ export const createAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['system', 'instance']);
-
 		const network = getState().global.getIn(['network']).toJS();
-		accountNameError = await validateAccountExist(instance, accountName, false);
+		accountNameError = await validateAccountExist(accountName, false);
 
 		if (isAddAccount && !accountNameError) {
 			accountNameError = isAccountAdded(accountName, network.name);
@@ -71,11 +69,7 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const { publicKey } = await AuthApi.registerAccount(
-			instance,
-			accountName,
-			generatedWIF,
-		);
+		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
 		const userStorage = Services.getUserStorage();
 		const account = await echo.api.getAccountByName(accountName);
@@ -110,8 +104,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 	const userStorage = Services.getUserStorage();
 
 	try {
-		const instance = getState().echojs.getIn(['system', 'instance']);
-		accountNameError = await validateAccountExist(instance, accountName, true);
+		accountNameError = await validateAccountExist(accountName, true);
 
 		if (!accountNameError) {
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();

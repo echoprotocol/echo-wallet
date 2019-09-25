@@ -111,9 +111,8 @@ const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 };
 
 
-export const checkAccount = (account) => async (dispatch, getState) => {
-	const instance = getState().echojs.getIn(['system', 'instance']);
-	const accountNameError = await validateAccountExist(instance, account, false);
+export const checkAccount = (account) => async () => {
+	const accountNameError = await validateAccountExist(account, false);
 	return accountNameError;
 };
 

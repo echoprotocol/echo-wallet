@@ -139,8 +139,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			error: opositeAccountError,
 		} = getState().form.getIn([FORM_TRANSFER, opositeSubject]);
 
-		const instance = getState().echojs.getIn(['system', 'instance']);
-		const accountNameError = await validateAccountExist(instance, accountName, true);
+		const accountNameError = await validateAccountExist(accountName, true);
 
 		if (opositeAccountError && opositeAccountError === ERROR_FORM_TRANSFER.ERROR_SEND_TO_YOURSELF) {
 			dispatch(setIn(FORM_TRANSFER, opositeSubject, { error: null }));

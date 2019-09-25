@@ -10,24 +10,17 @@ import { formatError } from '../helpers/FormatHelper';
 import { setValue, toggleLoading, setError } from './TableActions';
 import { setField } from './TransactionActions';
 
-import { getContractResult } from '../api/ContractApi';
-
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
-const fetch = (request) => async () => {
-	const response = await echo.api.getObject(request);
-	return response;
-};
-
-export const viewTransaction = (transaction) => async (dispatch, getState) => {
+export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
-		const instance = getState().echojs.getIn(['system', 'instance']);
 
-		if (!instance) return;
+		if (!echo.isConnected) return;
 
-		[, transaction.details] = await getContractResult(instance, transaction.result);
-		transaction.contract = (await dispatch(fetch(transaction.result))).toJS().contracts_id;
+		[, transaction.details] = await echo.api.getContractResult(transaction.result);
+		// TODO: check result
+		transaction.contract = (await echo.api.getObject(transaction.result)).contracts_id;
 	}
 
 	dispatch(setField('details', transaction));
@@ -57,14 +50,16 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	};
 	if (options.from) {
 		const request = _.get(operation, options.from);
-		const response = (await dispatch(fetch(request))).toJS();
+		// TODO: check result
+		const response = await echo.api.getObject(request);
 		result.from = { value: response.name, id: response.id };
 	}
 
 	if (options.subject) {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
-			const response = (await dispatch(fetch(request))).toJS();
+			// TODO: check result
+			const response = await echo.api.getObject(request);
 			result.subject = {
 				value: response[options.subject[1]],
 				id: response.id,
@@ -86,7 +81,8 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.asset) {
 		const request = _.get(operation, options.asset);
-		const response = (await dispatch(fetch(request))).toJS();
+		// TODO: check result
+		const response = await echo.api.getObject(request);
 		result.value = {
 			...result.value,
 			precision: response.precision,
@@ -100,13 +96,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		result.subject = { value: resultId };
 
-		const instance = getState().echojs.getIn(['system', 'instance']);
-
-		if (!instance) {
+		if (!echo.isConnected) {
 			return result;
 		}
 
-		const contractResult = await getContractResult(instance, resultId);
+		const contractResult = await echo.api.getContractResult(resultId);
 
 		const [contractResultType, contractResultData] = contractResult;
 

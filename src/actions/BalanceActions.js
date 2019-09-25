@@ -3,10 +3,8 @@ import echo from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import {
-	getContractResult,
 	getTokenPrecision,
 	getTokenBalance,
-	getContract,
 	getTokenSymbol,
 } from '../api/ContractApi';
 
@@ -108,9 +106,8 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 	 *  	}
 	 *  }
      */
-	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!instance) return;
+	if (!echo.isConnected) return;
 
 	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
@@ -118,9 +115,9 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 	let balances = [];
 	if (tokens && tokens[accountId]) {
 		balances = tokens[accountId].map(async (contractId) => {
-			const balance = await getTokenBalance(instance, accountId, contractId);
-			const precision = await getTokenPrecision(instance, accountId, contractId);
-			const symbol = await getTokenSymbol(instance, accountId, contractId);
+			const balance = await getTokenBalance(accountId, contractId);
+			const precision = await getTokenPrecision(accountId, contractId);
+			const symbol = await getTokenSymbol(accountId, contractId);
 			return {
 				symbol, precision, balance, id: contractId,
 			};
@@ -139,11 +136,10 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	const tokens = getState().balance.get('tokens');
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!tokens.size || !accountId || !instance) return;
+	if (!tokens.size || !accountId || !echo.isConnected) return;
 	let balances = tokens.map(async (value) => {
-		const balance = await getTokenBalance(instance, accountId, value.id);
+		const balance = await getTokenBalance(accountId, value.id);
 		return { ...value, balance };
 	});
 
@@ -224,7 +220,6 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
  */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
@@ -241,7 +236,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		const contract = await getContract(instance, contractId);
+		const contract = await echo.api.getContract(contractId);
 
 		if (!contract) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
@@ -257,8 +252,8 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		const symbol = await getTokenSymbol(instance, accountId, contractId);
-		const precision = await getTokenPrecision(instance, accountId, contractId);
+		const symbol = await getTokenSymbol(accountId, contractId);
+		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
@@ -280,7 +275,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		tokens[accountId].push(contractId);
 		localStorage.setItem(`tokens_${networkName}`, JSON.stringify(tokens));
 
-		const balance = await getTokenBalance(instance, accountId, contractId);
+		const balance = await getTokenBalance(accountId, contractId);
 
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',
@@ -299,19 +294,18 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 };
 
-const checkTransactionLogs = async (r, instance, accountId) => {
+const checkTransactionLogs = async (r, accountId) => {
 	if (typeof r[1] === 'object' || !r[1].startsWith('1.17')) return false;
 
-	const result = await getContractResult(instance, r[1]);
+	const result = await echo.api.getContractResult(r[1]);
 
 	return checkTransactionResult(accountId, result);
 };
 
 export const getObject = (subscribeObject = {}) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!accountId || !instance) return;
+	if (!accountId || !echo.isConnected) return;
 	switch (subscribeObject.type) {
 		case 'block': {
 			const tokens = getState().balance.get('tokens');
@@ -329,7 +323,8 @@ export const getObject = (subscribeObject = {}) => async (dispatch, getState) =>
 			const isNeedUpdate = transactions.some((tr) =>
 				tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens)) ||
 				tr.operation_results.some(async (r) => {
-					const result = await checkTransactionLogs(r, instance, accountId);
+					// TODO: rewrite method
+					const result = await checkTransactionLogs(r, accountId);
 					return result;
 				}));
 			if (isNeedUpdate) await dispatch(updateTokenBalances());

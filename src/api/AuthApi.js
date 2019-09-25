@@ -1,4 +1,4 @@
-import { PrivateKey, ED25519 } from 'echojs-lib';
+import echo, { PrivateKey, ED25519 } from 'echojs-lib';
 import bs58 from 'bs58';
 
 
@@ -21,17 +21,16 @@ class AuthApi {
 	/**
      *  @method registerAccount
      *
-     *  @param  {Object} instance
      * 	@param  {String} accountName
      * 	@param  {String} wif
      *
      *  @return {Object}
      */
-	static async registerAccount(instance, accountName, wif) {
+	static async registerAccount(accountName, wif) {
 		const privateKey = PrivateKey.fromWif(wif);
 		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 
-		const error = await instance.registrationApi().exec('register_account', [() => {}, accountName, publicKey, publicKey]);
+		const error = await echo.api.registerAccount(accountName, publicKey, publicKey)
 
 		if (error) {
 			throw error;

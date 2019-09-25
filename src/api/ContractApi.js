@@ -1,70 +1,44 @@
 import BN from 'bignumber.js';
+import echo from 'echojs-lib';
 
-import {
-	getMethodId,
-	getMethod,
-} from '../helpers/ContractHelper';
+import { getMethod } from '../helpers/ContractHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
+import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
-//	TODO methods should be in echojs-lib!!!
-//	please, don't export them and use only as private methods at contract api
-const getContractProp = (instance, contract, account, code) => instance.dbApi().exec(
-	'call_contract_no_changing_state',
-	[contract, account, '1.3.0', code],
-);
 
-export const getResult = (instance, resultId) => instance.dbApi().exec(
-	'get_contract_result',
-	[resultId],
-);
-
-const getContractInfo = (instance, contract) => instance.dbApi().exec('get_contract', [contract]);
-//	end
-
-export const getContractResult = (instance, resultId) => getResult(instance, resultId);
-
-export const getTokenBalance = async (instance, accountId, contractId) => {
+export const getTokenBalance = async (accountId, contractId) => {
 	const method = { name: 'balanceOf', inputs: [{ type: 'address' }] };
 	const args = [accountId];
-	const result = await getContractProp(
-		instance,
+	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
+		ECHO_ASSET_ID,
 		getMethod(method, args),
 	);
 
 	return new BN(result, 16).toString(10);
 };
 
-export const getTokenSymbol = async (instance, accountId, contractId) => {
+export const getTokenSymbol = async (accountId, contractId) => {
 	const method = { name: 'symbol', inputs: [] };
-	const result = await getContractProp(
-		instance,
+	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		getMethodId(method),
+		ECHO_ASSET_ID,
+		getMethod(method),
 	);
 
 	return toUtf8(result.substr(-64));
 };
 
-export const getTokenPrecision = async (instance, accountId, contractId) => {
+export const getTokenPrecision = async (accountId, contractId) => {
 	const method = { name: 'decimals', inputs: [] };
-	const result = await getContractProp(
-		instance,
+	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		getMethodId(method),
+		ECHO_ASSET_ID,
+		getMethod(method),
 	);
 
 	return toInt(result);
 };
-
-export const getContractConstant = (instance, contractId, accountId, method) => getContractProp(
-	instance,
-	contractId,
-	accountId,
-	method,
-);
-
-export const getContract = (instance, contractId) => getContractInfo(instance, contractId);
