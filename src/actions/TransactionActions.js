@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import { TransactionBuilder } from 'echojs-lib';
+import { TransactionBuilder, CACHE_MAPS } from 'echojs-lib';
 import { EchoJSActions } from 'echojs-redux';
 
 import history from '../history';
@@ -62,7 +62,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	try {
 		const { fee } = options;
 
-		const core = getState().echojs.getIn(['data', 'assets', ECHO_ASSET_ID]).toJS();
+		const core = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
 		const feeAsset = await dispatch(EchoJSActions.fetch(fee.asset_id));
 
 		let amount = await getOperationFee(type, options);
@@ -258,8 +258,8 @@ export const transfer = () => async (dispatch, getState) => {
 		fee = await dispatch(getTransferFee(FORM_TRANSFER));
 	}
 
-	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
-	const feeAsset = getState().echojs.getIn(['data', 'assets', fee.asset.id]).toJS();
+	const echo = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id]).toJS();
 
 	if (!checkFeePool(echo, feeAsset, fee.value)) {
 		dispatch(setFormError(

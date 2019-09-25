@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Form, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { FORM_COMMITTEE } from '../../constants/FormConstants';
 import {
@@ -283,8 +284,8 @@ export default connect(
 		proxyAccountId: state.form.getIn([FORM_COMMITTEE, 'proxyAccountId']),
 		loading: state.form.getIn([FORM_COMMITTEE, 'loading']),
 		accountLoading: state.form.getIn([FORM_COMMITTEE, 'accountLoading']),
-		accounts: state.echojs.getIn(['data', 'accounts']),
-		coreAsset: state.echojs.getIn(['data', 'assets', ECHO_ASSET_ID]),
+		accounts: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS]),
+		coreAsset: state.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]),
 		committeeTable: state.table.get(COMMITTEE_TABLE),
 		votes: state.form.getIn([FORM_COMMITTEE, 'votes']),
 		canceled: state.form.getIn([FORM_COMMITTEE, 'canceled']),

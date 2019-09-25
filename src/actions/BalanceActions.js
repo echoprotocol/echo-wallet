@@ -1,6 +1,7 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 import BN from 'bignumber.js';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import {
 	getContractResult,
@@ -331,7 +332,7 @@ export const getObject = (subscribeObject = {}) => async (dispatch, getState) =>
 		}
 		case 'objects': {
 			const objectId = subscribeObject.value.get('id');
-			const balances = getState().echojs.getIn(['data', 'accounts', accountId, 'balances']);
+			const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']);
 			const assets = getState().balance.get('assets');
 
 			if (

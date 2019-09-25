@@ -1,5 +1,6 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
@@ -51,7 +52,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	if (!accountId) return;
 
-	const account = getState().echojs.getIn(['data', 'accounts', accountId]).toJS();
+	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]).toJS();
 
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
@@ -182,7 +183,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
-	const currentFullAccount = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id')]);
+	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 

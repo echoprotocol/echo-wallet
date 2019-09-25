@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { ChainStore, EchoJSActions } from 'echojs-redux';
 import { List } from 'immutable';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { isCommitteeMemberId } from '../helpers/ValidateHelper';
 import { COMMITTEE_TABLE } from '../constants/TableConstants';
@@ -32,7 +33,7 @@ export const fetchCommittee = () => async (dispatch) => {
 };
 
 export const formatProxy = () => async (dispatch, getState) => {
-	const account = getState().echojs.getIn(['data', 'accounts', getState().global.getIn(['activeUser', 'id'])]);
+	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
 	const proxyAccount = await dispatch(EchoJSActions.fetch(votingAccount));
 
@@ -56,10 +57,10 @@ export const formatProxy = () => async (dispatch, getState) => {
 };
 
 export const formatCommitteeTable = () => async (dispatch, getState) => {
-	const account = getState().echojs.getIn(['data', 'accounts', getState().global.getIn(['activeUser', 'id'])]);
+	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const accountVotes = account ? account.getIn(['options', 'votes']) : [];
 
-	const stateObjects = getState().echojs.getIn(['data', 'objects']);
+	const stateObjects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 	const committeeStateObjects = stateObjects.filter((obj) => isCommitteeMemberId(obj.get('id')));
 
 	const activeCommitteeMembers = (await dispatch(EchoJSActions.fetch('2.0.0'))).get('active_committee_members');
@@ -98,8 +99,8 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 };
 
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
-	const accounts = getState().echojs.getIn(['data', 'accounts']);
-	const objects = getState().echojs.getIn(['data', 'objects']);
+	const accounts = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS]);
+	const objects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 
 	return accountNames.map((name) => {
 		const id = accounts.find((account) => account.get('name') === name).get('id');
@@ -138,9 +139,9 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 export const updateAccount = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
-	const currentFullAccount = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id')]);
+	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 	const accountOptions = currentFullAccount.get('options');
-	const feeAsset = getState().echojs.getIn(['data', 'assets', ECHO_ASSET_ID]);
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]);
 
 	const votes = getState().form.getIn([FORM_COMMITTEE, 'votes']);
 	const canceled = getState().form.getIn([FORM_COMMITTEE, 'canceled']);

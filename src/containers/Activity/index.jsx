@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { scroller } from 'react-scroll';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import Loading from '../../components/Loader/LoadingData';
 
@@ -132,7 +133,7 @@ Activity.defaultProps = {
 export default connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
-		const account = state.echojs.getIn(['data', 'accounts', accountId]);
+		const account = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]);
 		const history = state.table.getIn([HISTORY_TABLE, 'data']);
 		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
 		const activeTransaction = state.table.getIn([HISTORY_TABLE, 'activeTransaction']);
