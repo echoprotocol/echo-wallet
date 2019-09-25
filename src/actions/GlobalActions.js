@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo from 'echojs-lib';
+import echo, { constants } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -114,7 +114,8 @@ export const connection = () => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
-		await echo.connect(network.url);
+		await echo.connect(network.url, { apis: constants.WS_CONSTANTS.CHAIN_APIS });
+		await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];

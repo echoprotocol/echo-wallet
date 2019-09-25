@@ -30,10 +30,10 @@ class AuthApi {
 		const privateKey = PrivateKey.fromWif(wif);
 		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 
-		const error = await echo.api.registerAccount(accountName, publicKey, publicKey)
-
-		if (error) {
-			throw error;
+		try {
+			await echo.api.registerAccount(accountName, publicKey, publicKey);
+		} catch (error) {
+			throw new Error(error.message);
 		}
 
 		return { privateKey, publicKey };

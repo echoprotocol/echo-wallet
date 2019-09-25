@@ -40,9 +40,9 @@ export const setDefaultAsset = (form) => async (dispatch, getState) => {
 
 	defaultAsset = {
 		balance: asset ? asset.balance : 0,
-		id: defaultAsset.get('id'),
-		symbol: defaultAsset.get('symbol'),
-		precision: defaultAsset.get('precision'),
+		id: defaultAsset.id,
+		symbol: defaultAsset.symbol,
+		precision: defaultAsset.precision,
 	};
 
 	dispatch(setValue(form, 'currency', defaultAsset));
