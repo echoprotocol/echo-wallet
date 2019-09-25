@@ -85,7 +85,7 @@ export default connect(
 	(state) => ({
 		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn([CACHE_MAPS.DYNAMIC_GLOBAL_PROPERTIES, 'head_block_number']),
-		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		isConnect: state.global.get('isConnected'),
 		error: state.global.get('globalError'),
 	}),
 	(dispatch) => ({

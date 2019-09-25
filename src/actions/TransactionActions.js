@@ -1,8 +1,9 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import { TransactionBuilder, CACHE_MAPS } from 'echojs-lib';
+import echo, { TransactionBuilder, CACHE_MAPS } from 'echojs-lib';
 import { EchoJSActions } from 'echojs-redux';
+
 
 import history from '../history';
 
@@ -407,10 +408,9 @@ export const createContract = () => async (dispatch, getState) => {
 };
 
 export const sendTransaction = (password) => async (dispatch, getState) => {
-	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
 	const { operation, options } = getState().transaction.toJS();
 
-	if (!isConnected) {
+	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
 		return;

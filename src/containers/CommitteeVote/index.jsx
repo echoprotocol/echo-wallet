@@ -289,7 +289,7 @@ export default connect(
 		committeeTable: state.table.get(COMMITTEE_TABLE),
 		votes: state.form.getIn([FORM_COMMITTEE, 'votes']),
 		canceled: state.form.getIn([FORM_COMMITTEE, 'canceled']),
-		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		isConnect: state.global.get('isConnected'),
 		activeAccount: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({

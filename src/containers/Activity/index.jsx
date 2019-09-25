@@ -137,7 +137,7 @@ export default connect(
 		const history = state.table.getIn([HISTORY_TABLE, 'data']);
 		const loading = state.table.getIn([HISTORY_TABLE, 'loading']);
 		const activeTransaction = state.table.getIn([HISTORY_TABLE, 'activeTransaction']);
-		const isConnect = state.echojs.getIn(['system', 'isConnected']);
+		const isConnect = state.global.get('isConnected');
 		return {
 			account, history, loading, activeTransaction, isConnect,
 		};
