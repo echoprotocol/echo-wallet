@@ -52,7 +52,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	if (!accountId) return;
 
-	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]).toJS();
+	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
 
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {

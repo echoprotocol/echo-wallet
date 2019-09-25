@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import echo, { TransactionBuilder, CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 
 import history from '../history';

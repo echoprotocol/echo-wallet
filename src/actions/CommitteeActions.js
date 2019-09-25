@@ -102,7 +102,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 };
 
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
-	const accounts = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS]);
+	const accounts = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]);
 	const objects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 
 	return accountNames.map((name) => {
