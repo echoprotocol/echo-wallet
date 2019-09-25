@@ -31,6 +31,7 @@ import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstant
 import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
+import echo from 'echojs-lib';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -299,6 +300,26 @@ const checkTransactionLogs = async (r, instance, accountId) => {
 	const result = await getContractResult(instance, r[1]);
 
 	return checkTransactionResult(accountId, result);
+};
+
+export const handleGetBlock = () => async (dispatch, getState) => {
+	const tokens = getState().balance.get('tokens');
+
+	const { head_block_number: blockHead } = await echo.api.getDynamicGlobalProperties();
+	const block = await echo.api.getBlock(blockHead);
+
+	const { transactions } = block;
+
+	if (!transactions || !transactions.length) return;
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+
+	const isNeedUpdate = transactions.some((tr) =>
+		tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens)) ||
+		tr.operation_results.some(async (r) => {
+			const result = await checkTransactionLogs(r, accountId);
+			return result;
+		}));
+	if (isNeedUpdate) await dispatch(updateTokenBalances());
 };
 
 export const getObject = (subscribeObject = {}) => async (dispatch, getState) => {
