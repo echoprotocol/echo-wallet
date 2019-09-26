@@ -1,7 +1,6 @@
 import { List } from 'immutable';
-import echo from 'echojs-lib';
 import BN from 'bignumber.js';
-import { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import {
 	getTokenPrecision,
