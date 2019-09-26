@@ -303,14 +303,18 @@ const checkTransactionLogs = async (r, instance, accountId) => {
 };
 
 export const handleGetBlock = () => async (dispatch, getState) => {
+	console.log('got new block...');
 	const tokens = getState().balance.get('tokens');
 
 	const { head_block_number: blockHead } = await echo.api.getDynamicGlobalProperties();
+	console.log('blockHead: ', blockHead);
 	const block = await echo.api.getBlock(blockHead);
 
 	const { transactions } = block;
 
+	console.log('transactions: ', transactions);
 	if (!transactions || !transactions.length) return;
+
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	const isNeedUpdate = transactions.some((tr) =>
