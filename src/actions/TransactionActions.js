@@ -182,7 +182,8 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			([defaultAsset] = balances);
 			dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 		} else {
-			const account = await echo.api.getAccountByName(accountName);
+			const { id } = echo.api.getAccountByName(accountName);
+			const [account] = await echo.api.getFullAccounts([id]);
 			const assets = account.balances;
 			balances = await dispatch(getBalanceFromAssets(assets));
 			([defaultAsset] = balances);

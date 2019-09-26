@@ -134,7 +134,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }
-	console.log(activity);
 
 	try {
 		let rows = activity.map((h) => dispatch(formatOperation(h)));

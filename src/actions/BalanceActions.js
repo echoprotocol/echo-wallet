@@ -171,12 +171,16 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-
 	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
-	const balances = accounts.map(async ({ name }) => {
+	const accountPromises = accounts.map(async ({ name }) => echo.api.getAccountByName(name));
+	const fetchedAccounts = await Promise.all(accountPromises);
 
-		const account = await echo.api.getAccountByName(name);
+	const accountIds = fetchedAccounts.map(({ id }) => id);
+
+	const fullAccounts = await echo.api.getFullAccounts(accountIds);
+
+	const balances = fullAccounts.map(async (account) => {
 
 		const preview = {
 			balance: {
@@ -184,7 +188,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 				symbol: coreAsset.symbol,
 				precision: coreAsset.precision,
 			},
-			name,
+			name: account.name,
 			accountId: account.id,
 		};
 
@@ -206,7 +210,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getTokenBalances(accountId, networkName));
 
-	const account = await echo.api.getObject(accountId);
+	const [account] = await echo.api.getFullAccounts([accountId]);
 
 	await dispatch(getAssetsBalances(account.balances));
 

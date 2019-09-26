@@ -221,7 +221,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 			}
 
 			// TODO: check result
-			const accounts = await echo.api.getObjects(accountIDs);
+			const accounts = await echo.api.getFullAccounts(accountIDs);
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
 
