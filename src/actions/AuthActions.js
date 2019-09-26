@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import echo, { PrivateKey } from 'echojs-lib';
 import { EchoJSActions, ChainStore } from 'echojs-redux';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
@@ -226,7 +226,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 
 			accountIDs = accountIDs.toSet().toArray();
 
-			const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
+			const accounts = await echo.api.getFullAccounts(accountIDs);
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
 

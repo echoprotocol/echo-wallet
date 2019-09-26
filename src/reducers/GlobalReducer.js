@@ -3,7 +3,7 @@ import { Map, List } from 'immutable';
 import _ from 'lodash';
 
 const DEFAULT_FIELDS = Map({
-	globalLoading: false,
+	globalLoading: true,
 	globalError: null,
 	error: null,
 	activeUser: new Map({

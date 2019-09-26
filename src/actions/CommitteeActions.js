@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { ChainStore, EchoJSActions } from 'echojs-redux';
 import { List } from 'immutable';
-import { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import { isCommitteeMemberId } from '../helpers/ValidateHelper';
 import { COMMITTEE_TABLE } from '../constants/TableConstants';

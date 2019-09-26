@@ -54,6 +54,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 		const { id, name } = await echo.api.getAccountByName(accountName);
+		await echo.api.getFullAccounts([accountName], false, true);
 		echo.subscriber.setGlobalSubscribe(getObject);
 
 		const userStorage = Services.getUserStorage();

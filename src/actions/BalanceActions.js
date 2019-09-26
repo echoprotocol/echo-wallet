@@ -1,7 +1,7 @@
 import { List } from 'immutable';
 import { EchoJSActions } from 'echojs-redux';
 import BN from 'bignumber.js';
-import { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import {
 	getContractResult,
@@ -175,25 +175,34 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	const coreAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
+	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
-	const balances = accounts.map(async ({ name }) => {
-		const account = await dispatch(EchoJSActions.fetch(name));
+	const accountPromises = accounts.map(async ({ name }) => echo.api.getAccountByName(name));
+	const fetchedAccounts = await Promise.all(accountPromises);
+
+	const accountIds = fetchedAccounts.map(({ id }) => id);
+
+	const fullAccounts = await echo.api.getFullAccounts(accountIds);
+
+	const balances = fullAccounts.map(async (account) => {
 
 		const preview = {
 			balance: {
 				amount: 0,
-				symbol: coreAsset.get('symbol'),
-				precision: coreAsset.get('precision'),
+				symbol: coreAsset.symbol,
+				precision: coreAsset.precision,
 			},
-			name,
-			accountId: account.get('id'),
+			name: account.name,
+			accountId: account.id,
 		};
 
-		if (account && account.get('balances') && account.getIn(['balances', '1.3.0'])) {
-			const stats = await dispatch(EchoJSActions.fetch(account.getIn(['balances', '1.3.0'])));
-			preview.balance.amount = stats.get('balance') || 0;
-			preview.balance.id = account.getIn(['balances', '1.3.0']);
+		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
+
+
+			// TODO: check result
+			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
+			preview.balance.amount = stats.balance || 0;
+			preview.balance.id = account.balances[ECHO_ASSET_ID];
 		}
 
 		return preview;
