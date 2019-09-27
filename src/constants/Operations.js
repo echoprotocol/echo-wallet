@@ -1,6 +1,4 @@
-import { ChainTypes } from 'echojs-lib';
-
-const OPERATIONS_IDS = ChainTypes.operations;
+import { OPERATIONS_IDS } from 'echojs-lib';
 
 export default {
 	transfer: {

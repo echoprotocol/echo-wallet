@@ -1,5 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
-import { EchoJSActions } from 'echojs-redux';
+import echo, { PrivateKey } from 'echojs-lib';
 
 import Services from '../services';
 
@@ -12,11 +11,11 @@ import Services from '../services';
  *
  * @returns {Promise}
  */
-const getSigners = (account, keys, viewed = []) => async (dispatch) => {
+const getSigners = async (account, keys, viewed = []) => {
 	let weight = 0;
 	let signers = [];
 
-	account.getIn(['active', 'key_auths']).forEach(([k, w]) => {
+	account.active.key_auths.forEach(([k, w]) => {
 		const key = keys
 			.find(({ accountId, publicKey }) => (publicKey === k && accountId === account.get('id')));
 		if (key && weight < account.getIn(['active', 'weight_threshold'])) {
@@ -29,16 +28,17 @@ const getSigners = (account, keys, viewed = []) => async (dispatch) => {
 		return signers;
 	}
 
-	viewed.push(account.get('id'));
+	viewed.push(account.id);
 
-	weight = await account.getIn(['active', 'account_auths']).reduce(async (wght, [id, w]) => {
+	weight = await account.active.account_auths.reduce(async (wght, [id, w]) => {
 		if (viewed.includes(id)) {
 			return wght;
 		}
 
 		try {
-			const signer = await dispatch(EchoJSActions.fetch(id));
-			const accountSigners = await dispatch(getSigners(signer, keys, viewed));
+
+			const signer = await echo.api.getObject(id);
+			const accountSigners = await getSigners(signer, keys, viewed);
 			signers = signers.concat(accountSigners);
 			return wght + w;
 		} catch (e) {
@@ -47,7 +47,7 @@ const getSigners = (account, keys, viewed = []) => async (dispatch) => {
 		}
 	}, weight);
 
-	if (weight < account.getIn(['active', 'weight_threshold'])) {
+	if (weight < account.active.weight_threshold) {
 		throw new Error('Threshold is greater than the sum of keys weight available in Echo Desktop');
 	}
 
@@ -60,13 +60,15 @@ const getSigners = (account, keys, viewed = []) => async (dispatch) => {
  * @param tr
  * @returns {Promise}
  */
-export const signTransaction = (account, tr, password) => async (dispatch) => {
-	const signer = await dispatch(EchoJSActions.fetch(account));
-	const { pubkeys: publicKeys } = await tr.get_potential_signatures();
+export const signTransaction = async (account, tr, password) => {
+	// TODO: check result
+	const signer = await echo.api.getObject(account.id);
+	const { publicKeys } = await tr.getPotentialSignatures();
 
 	const keys = await Promise
 		.all(publicKeys.map((k) => Services.getUserStorage().getWIFByPublicKey(k, { password })));
 
-	const signers = await dispatch(getSigners(signer, keys.filter((k) => k)));
-	signers.map((s) => tr.add_signer(s));
+	const signers = await getSigners(signer, keys.filter((k) => k));
+	// TODO: check result
+	signers.map((s) => tr.addSigner(s));
 };
