@@ -230,6 +230,11 @@ export const importAccount = ({ accountName, wif, password }) =>
 				}
 			}));
 
+			if (accountIDs.length === 0) {
+				dispatch(setGlobalError('Account already exists'));
+				return;
+			}
+
 			if (accountIDs.length > 1) {
 				dispatch(getAccountsList(accounts));
 				return;
