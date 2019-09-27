@@ -54,9 +54,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 		const { id, name } = await echo.api.getAccountByName(accountName);
-
-		// TODO: check result
-		// echo.subscriber.setGlobalSubscribe(getObject);
+		echo.subscriber.setGlobalSubscribe(getObject);
 
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();

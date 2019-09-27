@@ -96,7 +96,7 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
-export const getTokenBalances = (accountId, networkName) => async (dispatch, getState) => {
+export const getTokenBalances = (accountId, networkName) => async (dispatch) => {
 
 	/**
      *  Tokens structure
