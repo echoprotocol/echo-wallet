@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import echo from 'echojs-lib';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
@@ -52,7 +52,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	if (!accountId) return;
 
-	const account = getState().echojs.getIn(['data', 'accounts', accountId]).toJS();
+	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
 
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
@@ -144,6 +144,8 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 	} else {
 		try {
+
+			// TODO: check result
 			account = await echo.api.getObject(key.value);
 			if (!account) {
 				if (!isPublicKey(key.value, 'ECHO')) {
@@ -184,7 +186,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
-	const currentFullAccount = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id')]);
+	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
@@ -252,6 +254,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 					if (isPublicKey(value.get('key').value)) {
 						permissionData[role].keys.push([value.get('key').value, weightInt]);
 					} else {
+						// TODO: check result
 						accountsPromises.push(echo.api.getObject(value.get('key').value));
 						permissionData[role].accounts.push([value.get('key').value, weightInt]);
 					}

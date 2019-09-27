@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-import echo from 'echojs-lib';
 import { List } from 'immutable';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import { isCommitteeMemberId } from '../helpers/ValidateHelper';
 import { COMMITTEE_TABLE } from '../constants/TableConstants';
@@ -34,8 +34,9 @@ export const fetchCommittee = () => async (dispatch) => {
 };
 
 export const formatProxy = () => async (dispatch, getState) => {
-	const account = getState().echojs.getIn(['data', 'accounts', getState().global.getIn(['activeUser', 'id'])]);
+	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
+	// TODO: check result
 	const proxyAccount = await echo.api.getObject(votingAccount);
 
 	if (votingAccount && votingAccount === ECHO_PROXY_TO_SELF_ACCOUNT) {
@@ -58,10 +59,10 @@ export const formatProxy = () => async (dispatch, getState) => {
 };
 
 export const formatCommitteeTable = () => async (dispatch, getState) => {
-	const account = getState().echojs.getIn(['data', 'accounts', getState().global.getIn(['activeUser', 'id'])]);
+	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const accountVotes = account ? account.getIn(['options', 'votes']) : [];
 
-	const stateObjects = getState().echojs.getIn(['data', 'objects']);
+	const stateObjects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 	const committeeStateObjects = stateObjects.filter((obj) => isCommitteeMemberId(obj.get('id')));
 
 	const activeCommitteeMembers = (await echo.api.getGlobalProperties()).active_committee_members;
@@ -71,6 +72,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 			return null;
 		}
 
+		// TODO: check result
 		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
@@ -87,6 +89,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 		.filter((id) => !activeCommitteeMembers.includes(id));
 	const backupCommittees = backupIds.map(async (idCommittee) => {
 
+		// TODO: check result
 		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
@@ -101,8 +104,8 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 };
 
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
-	const accounts = getState().echojs.getIn(['data', 'accounts']);
-	const objects = getState().echojs.getIn(['data', 'objects']);
+	const accounts = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]);
+	const objects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 
 	return accountNames.map((name) => {
 		const id = accounts.find((account) => account.get('name') === name).get('id');
@@ -128,6 +131,8 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 	dispatch(setValue(COMMITTEE_TABLE, 'locked', true));
 
 	if (accountExist) {
+
+		// TODO: check result
 		const votingAccountId = (await echo.api.getObject(account)).id;
 		if (getState().global.getIn(['activeUser', 'id']) === votingAccountId) {
 			dispatch(setValue(COMMITTEE_TABLE, 'locked', false));
@@ -140,9 +145,9 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 export const updateAccount = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
-	const currentFullAccount = getState().echojs.getIn(['data', 'accounts', currentAccount.get('id')]);
+	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 	const accountOptions = currentFullAccount.get('options');
-	const feeAsset = getState().echojs.getIn(['data', 'assets', ECHO_ASSET_ID]);
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]);
 
 	const votes = getState().form.getIn([FORM_COMMITTEE, 'votes']);
 	const canceled = getState().form.getIn([FORM_COMMITTEE, 'canceled']);
