@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import BN from 'bignumber.js';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators } from 'echojs-lib';
 
 import {
 	getTokenPrecision,
@@ -17,7 +17,6 @@ import {
 import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
-import { checkBlockTransaction, checkTransactionResult } from '../helpers/ContractHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { checkErc20Contract, validateContractId } from '../helpers/ValidateHelper';
 
@@ -298,94 +297,84 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 };
 
-const checkTransactionLogs = async (r, accountId) => {
-	if (typeof r[1] === 'object' || !r[1].startsWith('1.17')) return false;
+const getAccountFromTransferFrom = (balances) => async (dispatch, getState) => {
+	const isIndexPath = history.location.pathname === INDEX_PATH;
 
-	const result = await echo.api.getContractResult(r[1]);
+	if (!isIndexPath) {
+		return undefined;
+	}
 
-	return checkTransactionResult(accountId, result);
+	const form = getState().form.getIn([FORM_TRANSFER]);
+	const formName = form.get('from').value;
+	const account = await echo.api.getAccountByName(formName);
+	const isFormBalance = balances[form.get('currency').id];
+
+	if (!account || !isFormBalance) {
+		return undefined;
+	}
+
+	return account;
 };
 
-export const getObject = (subscribeObject = {}) => async (dispatch, getState) => {
+export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
 	if (!accountId || !echo.isConnected) return;
-	switch (subscribeObject.type) {
-		case 'block': {
-			const tokens = getState().balance.get('tokens');
 
-			const { value } = subscribeObject;
+	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
+	const tokens = getState().balance.get('tokens').toJS();
 
-			if (!value || typeof value !== 'object' || !tokens.size) {
-				return;
-			}
+	let isBalanceUpdated = balances.length !== getState().balance.get('assets').size;
+	let isTokenUpdated = false;
+	let isCurrentTransferBalanceUpdated = false;
 
-			const { transactions } = value;
+	const accountFromTransfer = await dispatch(getAccountFromTransferFrom(balances));
 
-			if (!transactions || !transactions.length) return;
+	for (let i = 0; i < subscribeObjects.length; i += 1) {
+		const object = subscribeObjects[i];
 
-			const isNeedUpdate = transactions.some((tr) =>
-				tr.operations.some((op) => checkBlockTransaction(accountId, op, tokens)) ||
-				tr.operation_results.some(async (r) => {
-					// TODO: rewrite method
-					const result = await checkTransactionLogs(r, accountId);
-					return result;
-				}));
-			if (isNeedUpdate) await dispatch(updateTokenBalances());
+		if (!isBalanceUpdated && validators.isAccountBalanceId(object.id)) {
+			isBalanceUpdated = Object.values(balances).some((b) => b === object.id);
+		}
+
+		if (!isTokenUpdated && object.contract) {
+			isTokenUpdated = Object.values(tokens).some((t) => t.id === object.contract);
+		}
+
+		if (
+			!isCurrentTransferBalanceUpdated &&
+			validators.isAccountBalanceId(object.id) &&
+			!!object.owner &&
+			!!accountFromTransfer
+		) {
+			isCurrentTransferBalanceUpdated = Object.values(balances)
+				.some((b) => b === object.id && accountFromTransfer.id === object.owner);
+		}
+
+		if (
+			isTokenUpdated &&
+			isBalanceUpdated &&
+			(!accountFromTransfer || isCurrentTransferBalanceUpdated)
+		) {
 			break;
 		}
-		case 'objects': {
-			const objectId = subscribeObject.value.get('id');
-			const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']);
-			const assets = getState().balance.get('assets');
+	}
 
-			if (
-				balances && (
-					Object.values(balances.toJS()).includes(objectId) || balances.size !== assets.size
-				)
-			) {
-				await dispatch(getAssetsBalances(balances.toJS(), true));
-			}
+	if (isTokenUpdated) {
+		await dispatch(updateTokenBalances());
+	}
 
-			const preview = getState().balance.get('preview').toJS();
-			const networkName = getState().global.getIn(['network', 'name']);
+	if (balances && isBalanceUpdated) {
+		await dispatch(getAssetsBalances(balances, true));
+		const networkName = getState().global.getIn(['network', 'name']);
+		await dispatch(getPreviewBalances(networkName));
+	}
 
-			if (preview.find((i) => i.balance.id === objectId)) {
-				await dispatch(getPreviewBalances(networkName));
-			}
-
-			break;
-		}
-		case 'accounts': {
-			const name = subscribeObject.value.get('name');
-			const balances = subscribeObject.value.get('balances').toJS();
-
-			const accountName = getState().global.getIn(['activeUser', 'name']);
-
-			const preview = getState().balance.get('preview');
-			const networkName = getState().global.getIn(['network', 'name']);
-
-			if (accountName === name) {
-				dispatch(getAssetsBalances(balances, true));
-			}
-
-			if (preview.find((v) => v.name === name)) {
-				dispatch(getPreviewBalances(networkName));
-			}
-
-			if (history.location.pathname === INDEX_PATH) {
-				const form = getState().form.getIn([FORM_TRANSFER]);
-				if (form.get('from').value === name && balances[form.get('currency').id]) {
-
-					const stats = await echo.api.getObject(balances[form.get('currency').id]);
-					dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.get('balance') }));
-					dispatch(setFormError(FORM_TRANSFER, 'amount', null));
-				}
-			}
-
-			break;
-		}
-		default:
+	if (isCurrentTransferBalanceUpdated) {
+		const form = getState().form.getIn([FORM_TRANSFER]);
+		const stats = await echo.api.getObject(balances[form.get('currency').id]);
+		dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.balance }));
+		dispatch(setFormError(FORM_TRANSFER, 'amount', null));
 	}
 };
 

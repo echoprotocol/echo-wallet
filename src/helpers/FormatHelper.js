@@ -2,7 +2,6 @@ import utf8 from 'utf8';
 import BN from 'bignumber.js';
 
 import operations from '../constants/Operations';
-import { events } from '../constants/LogEventConstants';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 const AREA_FIELDS = ['code', 'note'];
@@ -27,21 +26,6 @@ export const getTransactionDetails = (operationType, showOptions) => {
 	});
 
 	return result;
-};
-
-export const logParser = (log) => {
-	if (!log || !log.length) return [];
-	return log.map((l) => {
-		const contractId = parseInt(l.address.slice(2), 16);
-		const event = events[l.log[0]] || l.log[0];
-		const params = l.log.slice(1);
-		return { contractId, event, params };
-	});
-};
-
-export const getLog = (result) => {
-	const trReceipt = result.tr_receipt;
-	return trReceipt ? trReceipt.log : null;
 };
 
 export const toUtf8 = (hex) => {
