@@ -67,11 +67,11 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		}
 
 		await dispatch(initBalances(id, networkName));
+		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
 
-		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
@@ -192,9 +192,9 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		return;
 	}
 
-	const account = await echo.getAccountByName(accountName);
+	const account = await echo.api.getAccountByName(accountName);
 
-	await userStorage.removeKeys(account.getIn(['active', 'key_auths']).map(([k]) => k), { password });
+	await userStorage.removeKeys(account.active.key_auths.map(([k]) => k), { password });
 
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
 	const networkName = getState().global.getIn(['network', 'name']);

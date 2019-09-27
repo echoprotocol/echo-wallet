@@ -81,6 +81,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
+		console.error(err);
 		return null;
 	}
 };
