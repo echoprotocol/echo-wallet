@@ -27,7 +27,6 @@ import { formatError } from '../helpers/FormatHelper';
 
 import {
 	initBalances,
-	getObject,
 	resetBalance,
 	getPreviewBalances,
 } from './BalanceActions';
@@ -54,7 +53,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 		const { id, name } = await echo.api.getAccountByName(accountName);
-		echo.subscriber.setGlobalSubscribe(getObject);
+		await echo.api.getFullAccounts([accountName], false, true);
+
+		// TODO: check result
+		// echo.subscriber.setGlobalSubscribe(getObject);
 
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
@@ -78,6 +80,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 			dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 		}, 1000);
 	}
+};
+
+export const setIsConnectedStatus = (isConnect) => (dispatch) => {
+	dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: isConnect }));
 };
 
 export const connection = () => async (dispatch) => {
@@ -112,6 +118,9 @@ export const connection = () => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
+		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
+		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
+
 		await echo.connect(network.url, { apis: constants.WS_CONSTANTS.CHAIN_APIS });
 		await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
@@ -130,6 +139,7 @@ export const connection = () => async (dispatch) => {
 		await echo.api.getObject(ECHO_ASSET_ID);
 		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
 
+
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
@@ -143,6 +153,7 @@ export const disconnection = () => async (dispatch) => {
 		await echo.disconnect();
 	}
 
+	echo.subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());

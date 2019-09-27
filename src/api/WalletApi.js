@@ -32,7 +32,7 @@ export const unlockWallet = (account, wif) => {
 	const privateKey = PrivateKey.fromWif(wif);
 	const publicKey = privateKey.toPublicKey().toString();
 
-	if (account.getIn(['active', 'key_auths']).find(([key]) => key === publicKey)) {
+	if (account.active.key_auths.find(([key]) => key === publicKey)) {
 		return { privateKey, publicKey };
 	}
 

@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Button, Table } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
-import echo from 'echojs-lib';
 
 import { isChanged, unlockPrivateKey, validateKey } from '../../actions/TableActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
@@ -412,7 +411,6 @@ PermissionTableRow.propTypes = {
 	submit: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
 	onAddKey: PropTypes.func.isRequired,
-	getAccount: PropTypes.func.isRequired,
 	validateField: PropTypes.func.isRequired,
 };
 
@@ -428,7 +426,6 @@ export default connect(
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
 		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
 		isChanged: () => dispatch(isChanged()),
-		getAccount: (id) => echo.api.getObject(id),
 		validateField: (role, keyTable, key, weight) =>
 			dispatch(validateKey(role, keyTable, key, weight)),
 	}),
