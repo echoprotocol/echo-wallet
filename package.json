@@ -38,6 +38,7 @@
     "crypto-random-string": "^3.0.1",
     "echojs-lib": "^1.6.3",
     "echojs-ping": "^0.1.5",
+    "echojs-redux": "^0.1.16",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
