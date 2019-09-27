@@ -1,11 +1,19 @@
-import { TransactionBuilder } from 'echojs-lib';
+import echo from 'echojs-lib';
+import operations from '../constants/Operations';
 
 export const getOperationFee = async (type, options) => {
-	const tr = new TransactionBuilder();
+	const { value: operationId } = operations[type];
+	const [result] = await echo.api.getRequiredFees([[operationId, options]], options.asset_id);
 
-	tr.add_type_operation(type, options);
-
-	await tr.set_required_fees(options.asset_id);
-
-	return tr.operations[0][1].fee.amount; // eslint-disable-line no-underscore-dangle
+	switch (operationId) {
+		case operations.transfer.value: return result.amount;
+		case operations.contract_call.value: return result.fee.amount;
+		default: {
+			if (result.amount === null || result.amount === undefined) {
+				/* eslint-disable no-console */
+				console.debug('override fee access field from "getRequiredFees"', type, JSON.stringify(result, null, 2));
+			}
+			return result.amount;
+		}
+	}
 };
