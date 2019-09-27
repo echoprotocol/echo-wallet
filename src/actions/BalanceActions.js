@@ -328,13 +328,13 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
-	const accountFromTransfer = getAccountFromTransferFrom(balances);
+	const accountFromTransfer = await dispatch(getAccountFromTransferFrom(balances));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
 
-		if (!isBalanceUpdated && validators.isBalanceId(object.id)) {
-			isBalanceUpdated = Object.values(balances).some((b) => b.id === object.id);
+		if (!isBalanceUpdated && validators.isAccountBalanceId(object.id)) {
+			isBalanceUpdated = Object.values(balances).some((b) => b === object.id);
 		}
 
 		if (!isTokenUpdated && object.contract) {
@@ -343,12 +343,12 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 		if (
 			!isCurrentTransferBalanceUpdated &&
-			validators.isBalanceId(object.id) &&
-			object.owner &&
-			accountFromTransfer
+			validators.isAccountBalanceId(object.id) &&
+			!!object.owner &&
+			!!accountFromTransfer
 		) {
 			isCurrentTransferBalanceUpdated = Object.values(balances)
-				.some((b) => b.id === object.id && accountFromTransfer.id === object.owner);
+				.some((b) => b === object.id && accountFromTransfer.id === object.owner);
 		}
 
 		if (
