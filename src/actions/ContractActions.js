@@ -27,7 +27,7 @@ import {
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import history from '../history';
 
@@ -276,6 +276,7 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	const queryResult = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
+		ECHO_ASSET_ID,
 		getMethod(method, args),
 	);
 
@@ -322,7 +323,8 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
-		const constantValue = await echo.api.callContractNoChangingState(contractId, accountId, method);
+
+		const constantValue = await echo.api.callContractNoChangingState(contractId, accountId, ECHO_ASSET_ID, method);
 		constant.constantValue = constantValue.substr(-64);
 		constant.showQueryResult = false;
 		return constant;

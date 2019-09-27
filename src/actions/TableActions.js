@@ -344,8 +344,10 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	const feeValue = await getOperationFee('account_update', transaction);
 
-	transaction.fee.amount = feeValue;
-	transaction.fee.asset_id = '1.3.0';
+	transaction.fee = {
+		amount: feeValue,
+		asset_id: ECHO_ASSET_ID,
+	};
 
 	showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
 

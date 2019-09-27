@@ -81,10 +81,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-
+		return null;
 	}
-
-	return null;
 };
 
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
@@ -388,7 +386,7 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
 		}
-		options.fee.amount = Number.parseInt(fee.value, 10);
+		options.fee.amount = fee.value;
 		const showOptions = {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
@@ -528,7 +526,7 @@ export const callContract = () => async (dispatch, getState) => {
 	const options = {
 		registrar: activeUserId,
 		value: { amount: amountValue, asset_id: '1.3.0' },
-		fee: { amount: 0, asset_id: '1.3.0' },
+		fee: { asset_id: '1.3.0' },
 		code: bytecode,
 		callee: contractId,
 	};
@@ -541,6 +539,7 @@ export const callContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
+	options.fee.amount = feeValue.value;
 	const showOptions = {
 		from: activeUserName,
 		fee: `${feeValue.value / (10 ** feeValue.asset.precision)} ${feeValue.asset.symbol}`,
@@ -732,6 +731,8 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	} catch (error) {
 		return null;
 	}
+
+	options.fee.amount = feeValue.value;
 
 	return feeValue ? feeValue.value : null;
 };
