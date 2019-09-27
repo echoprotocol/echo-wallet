@@ -324,7 +324,12 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
 
-		const constantValue = await echo.api.callContractNoChangingState(contractId, accountId, ECHO_ASSET_ID, method);
+		const constantValue = await echo.api.callContractNoChangingState(
+			contractId,
+			accountId,
+			ECHO_ASSET_ID,
+			method,
+		);
 		constant.constantValue = constantValue.substr(-64);
 		constant.showQueryResult = false;
 		return constant;
