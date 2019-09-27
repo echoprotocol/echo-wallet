@@ -301,7 +301,7 @@ const checkTransactionLogs = async (r, instance, accountId) => {
 	return checkTransactionResult(accountId, result);
 };
 
-export const getObject = (subscribeObject) => async (dispatch, getState) => {
+export const getObject = (subscribeObject = {}) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const instance = getState().echojs.getIn(['system', 'instance']);
 

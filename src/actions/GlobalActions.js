@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import { EchoJSActions } from 'echojs-redux';
+import echo from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -53,9 +53,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-		const { id, name } = (await dispatch(EchoJSActions.fetch(accountName))).toJS();
-
-		EchoJSActions.setSubscribe({ types: ['objects', 'block', 'accounts'], method: getObject });
+		const { id, name } = await echo.api.getAccountByName(accountName);
+		echo.subscriber.setGlobalSubscribe(getObject);
 
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
@@ -113,7 +112,7 @@ export const connection = () => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
-		await dispatch(EchoJSActions.connect(network.url));
+		await echo.connect(network.url);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
@@ -127,8 +126,7 @@ export const connection = () => async (dispatch) => {
 			await dispatch(initAccount(active.name, network.name));
 		}
 
-		await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
-
+		await echo.api.getObject(ECHO_ASSET_ID);
 		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
 
 	} catch (err) {
@@ -138,11 +136,10 @@ export const connection = () => async (dispatch) => {
 	}
 };
 
-export const disconnection = (address) => async (dispatch, getState) => {
-	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
+export const disconnection = () => async (dispatch) => {
 
-	if (isConnected) {
-		await dispatch(EchoJSActions.disconnect(address));
+	if (echo.isConnected) {
+		await echo.disconnect();
 	}
 
 	dispatch(clearTable(HISTORY_TABLE));
@@ -184,7 +181,7 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		return;
 	}
 
-	const account = await dispatch(EchoJSActions.fetch(accountName));
+	const account = await echo.getAccountByName(accountName);
 
 	await userStorage.removeKeys(account.getIn(['active', 'key_auths']).map(([k]) => k), { password });
 
@@ -204,8 +201,9 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		dispatch(resetBalance());
 		history.push(SIGN_IN_PATH);
 		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
-		EchoJSActions.resetSubscribe();
-		dispatch(EchoJSActions.clearStore());
+
+		echo.subscriber.reset();
+		echo.cache.reset();
 	}
 
 	if (activeAccountName === accountName && accounts[0]) {
@@ -239,12 +237,10 @@ export const addAccount = (accountName, networkName) => (dispatch) => {
 	dispatch(initAccount(accountName, networkName));
 };
 
-export const saveNetwork = (network) => async (dispatch, getState) => {
+export const saveNetwork = (network) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
-	const oldNetwork = getState().global.get('network').toJS();
-
-	await dispatch(disconnection(oldNetwork.url));
+	await dispatch(disconnection());
 
 	localStorage.setItem('current_network', JSON.stringify(network));
 	dispatch(connection());
@@ -381,8 +377,8 @@ export const resetData = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		EchoJSActions.resetSubscribe();
-		dispatch(EchoJSActions.clearStore());
+		echo.subscriber.reset();
+		echo.cache.reset();
 
 		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());
