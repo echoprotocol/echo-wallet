@@ -153,20 +153,6 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 };
 
 export const getPreviewBalances = (networkName) => async (dispatch) => {
-	/**
-     *  Preview structure
-     *  preview: [{
-     *  	balance: {
-	 *  		id,
-	 *  		amount,
-	 *  	 	symbol,
-	 *  		precision,
-     *  	},
-     *  	name,
-	 *      accountId,
-     *  }]
-     */
-
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
@@ -324,7 +310,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
 
-	let isBalanceUpdated = balances.length !== getState().balance.get('assets').size;
+	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
