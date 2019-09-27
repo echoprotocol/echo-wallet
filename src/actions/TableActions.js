@@ -144,6 +144,8 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 	} else {
 		try {
+
+			// TODO: check result
 			account = await echo.api.getObject(key.value);
 			if (!account) {
 				if (!isPublicKey(key.value, 'ECHO')) {
@@ -252,6 +254,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 					if (isPublicKey(value.get('key').value)) {
 						permissionData[role].keys.push([value.get('key').value, weightInt]);
 					} else {
+						// TODO: check result
 						accountsPromises.push(echo.api.getObject(value.get('key').value));
 						permissionData[role].accounts.push([value.get('key').value, weightInt]);
 					}

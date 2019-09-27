@@ -36,6 +36,7 @@ export const fetchCommittee = () => async (dispatch) => {
 export const formatProxy = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
+	// TODO: check result
 	const proxyAccount = await echo.api.getObject(votingAccount);
 
 	if (votingAccount && votingAccount === ECHO_PROXY_TO_SELF_ACCOUNT) {
@@ -71,6 +72,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 			return null;
 		}
 
+		// TODO: check result
 		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
@@ -87,6 +89,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 		.filter((id) => !activeCommitteeMembers.includes(id));
 	const backupCommittees = backupIds.map(async (idCommittee) => {
 
+		// TODO: check result
 		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
@@ -128,6 +131,8 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 	dispatch(setValue(COMMITTEE_TABLE, 'locked', true));
 
 	if (accountExist) {
+
+		// TODO: check result
 		const votingAccountId = (await echo.api.getObject(account)).id;
 		if (getState().global.getIn(['activeUser', 'id']) === votingAccountId) {
 			dispatch(setValue(COMMITTEE_TABLE, 'locked', false));

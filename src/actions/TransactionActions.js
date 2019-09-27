@@ -96,7 +96,7 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		return null;
 	}
 
-	const toAccountId = (await echo.api.getObject(formOptions.get('to').value)).id;
+	const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
 	const options = {
@@ -107,7 +107,6 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		from: fromAccountId,
 		to: toAccountId,
 		fee: {
-			amount: 0,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 	};
@@ -287,8 +286,8 @@ export const transfer = () => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 
-	const fromAccount = echo.api.getObject(from.value);
-	const toAccount = echo.api.getObject(to.value);
+	const fromAccount = await echo.api.getAccountByName(from.value);
+	const toAccount = await echo.api.getAccountByName(to.value);
 
 	let options = {};
 
@@ -302,7 +301,7 @@ export const transfer = () => async (dispatch, getState) => {
 		);
 
 		options = {
-			fee: { asset_id: '1.3.0', amount: 0 },
+			fee: { asset_id: '1.3.0', amount: fee.value },
 			registrar: fromAccount.id,
 			value: { amount: 0, asset_id: '1.3.0' },
 			code,
@@ -390,7 +389,7 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
 		}
-
+		options.fee.amount = Number.parseInt(fee.value, 10);
 		const showOptions = {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
@@ -408,6 +407,7 @@ export const createContract = () => async (dispatch, getState) => {
 
 export const sendTransaction = (password) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
+	const { value: operationId } = operations[operation];
 
 	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
@@ -427,11 +427,13 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 	const tr = echo.createTransaction();
 
-	tr.addOperation(operation, options);
+	tr.addOperation(operationId, options);
 
 	try {
 		const signer = options[operations[operation].signer];
+
 		await signTransaction(signer, tr, password);
+
 		tr.broadcast().then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
@@ -450,6 +452,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			error = error.toString();
 			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
 			message = (message.charAt(0).toUpperCase() + message.slice(1));
+
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));

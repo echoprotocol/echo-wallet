@@ -119,6 +119,10 @@ export const connection = () => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
+
+		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
+		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
+
 		await echo.connect(network.url, { apis: constants.WS_CONSTANTS.CHAIN_APIS });
 		await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
@@ -137,8 +141,6 @@ export const connection = () => async (dispatch) => {
 		await echo.api.getObject(ECHO_ASSET_ID);
 		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
 
-		echo.subscriber.setStatusSubscribe('connect', dispatch(setIsConnectedStatus(true)));
-		echo.subscriber.setStatusSubscribe('disconnect', dispatch(setIsConnectedStatus(false)));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));

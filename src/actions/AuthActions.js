@@ -213,15 +213,14 @@ export const importAccount = ({ accountName, wif, password }) =>
 
 		try {
 
-			// TODO: check result
-			let accountIDs = await echo.api.getKeyReferences([active]);
+			let [accountIDs] = await echo.api.getKeyReferences([active]);
 			if (!accountIDs.length) {
 				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
 				return;
 			}
 
-			// TODO: check result
 			const accounts = await echo.api.getFullAccounts(accountIDs);
+
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
 

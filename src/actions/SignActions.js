@@ -17,14 +17,14 @@ const getSigners = async (account, keys, viewed = []) => {
 
 	account.active.key_auths.forEach(([k, w]) => {
 		const key = keys
-			.find(({ accountId, publicKey }) => (publicKey === k && accountId === account.get('id')));
-		if (key && weight < account.getIn(['active', 'weight_threshold'])) {
+			.find(({ accountId, publicKey }) => (publicKey === k && accountId === account.id));
+		if (key && weight < account.active.weight_threshold) {
 			weight += w;
 			signers.push(PrivateKey.fromWif(key.wif));
 		}
 	});
 
-	if (weight >= account.getIn(['active', 'weight_threshold'])) {
+	if (weight >= account.active.weight_threshold) {
 		return signers;
 	}
 
@@ -60,15 +60,22 @@ const getSigners = async (account, keys, viewed = []) => {
  * @param tr
  * @returns {Promise}
  */
-export const signTransaction = async (account, tr, password) => {
-	// TODO: check result
-	const signer = await echo.api.getObject(account.id);
-	const { publicKeys } = await tr.getPotentialSignatures();
+export const signTransaction = async (accountId, tr, password) => {
+	const signer = await echo.api.getObject(accountId);
+
+	const transaction = {
+		ref_block_num: 0,
+		ref_block_prefix: 0,
+		expiration: 0,
+		operations: tr.operations,
+		extensions: [],
+	};
+
+	const publicKeys = await echo.api.getPotentialSignatures(transaction);
 
 	const keys = await Promise
 		.all(publicKeys.map((k) => Services.getUserStorage().getWIFByPublicKey(k, { password })));
 
 	const signers = await getSigners(signer, keys.filter((k) => k));
-	// TODO: check result
 	signers.map((s) => tr.addSigner(s));
 };

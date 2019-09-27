@@ -11,10 +11,6 @@ import {
 import { push, remove, update } from './GlobalActions';
 import { convert } from './ConverterActions';
 
-import {
-	getContractConstant,
-} from '../api/ContractApi';
-
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
 import ContractFeeReducer from '../reducers/ContractFeeReducer';
