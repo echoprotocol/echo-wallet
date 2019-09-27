@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo from 'echojs-lib';
+import echo, { constants } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -28,7 +28,6 @@ import { formatError } from '../helpers/FormatHelper';
 import {
 	initBalances,
 	handleSubscriber,
-	handleGetBlock,
 	resetBalance,
 	getPreviewBalances,
 } from './BalanceActions';
@@ -82,6 +81,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 	}
 };
 
+export const setIsConnectedStatus = (isConnect) => (dispatch) => {
+	dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: isConnect }));
+};
+
 export const connection = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
@@ -114,7 +117,11 @@ export const connection = () => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
-		await echo.connect(network.url);
+		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
+		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
+
+		await echo.connect(network.url, { apis: constants.WS_CONSTANTS.CHAIN_APIS });
+		await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
@@ -131,6 +138,7 @@ export const connection = () => async (dispatch) => {
 		await echo.api.getObject(ECHO_ASSET_ID);
 		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
 
+
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
@@ -144,6 +152,7 @@ export const disconnection = () => async (dispatch) => {
 		await echo.disconnect();
 	}
 
+	echo.subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());

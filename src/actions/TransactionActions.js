@@ -1,8 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import { TransactionBuilder } from 'echojs-lib';
-import { EchoJSActions } from 'echojs-redux';
+import echo, { CACHE_MAPS } from 'echojs-lib';
 
 import history from '../history';
 
@@ -62,23 +61,23 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	try {
 		const { fee } = options;
 
-		const core = getState().echojs.getIn(['data', 'assets', ECHO_ASSET_ID]).toJS();
-		const feeAsset = await dispatch(EchoJSActions.fetch(fee.asset_id));
+		const core = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
+		const feeAsset = await echo.api.getObject(fee.asset_id);
 
 		let amount = await getOperationFee(type, options);
 
-		if (feeAsset.get('id') !== ECHO_ASSET_ID) {
-			const price = new BN(feeAsset.getIn(['options', 'core_exchange_rate', 'quote', 'amount']))
-				.div(feeAsset.getIn(['options', 'core_exchange_rate', 'quote', 'amount']))
-				.times(10 ** (core.precision - feeAsset.get('precision')));
+		if (feeAsset.id !== ECHO_ASSET_ID) {
+			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
+				.div(feeAsset.options.core_exchange_rate.quote.amount)
+				.times(10 ** (core.precision - feeAsset.precision));
 
 			amount = new BN(amount).div(10 ** core.precision);
-			amount = price.times(amount).times(10 ** feeAsset.get('precision'));
+			amount = price.times(amount).times(10 ** feeAsset.precision);
 		}
 
 		return {
 			value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
-			asset: feeAsset.toJS(),
+			asset: feeAsset,
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
@@ -96,7 +95,7 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		return null;
 	}
 
-	const toAccountId = (await dispatch(EchoJSActions.fetch(formOptions.get('to').value))).get('id');
+	const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
 	const options = {
@@ -107,7 +106,6 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		from: fromAccountId,
 		to: toAccountId,
 		fee: {
-			amount: 0,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 	};
@@ -116,13 +114,13 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	return dispatch(getTransactionFee(form, 'transfer', options));
 };
 
-export const checkFeePool = (echo, asset, fee) => {
-	if (echo.id === asset.id) { return true; }
+export const checkFeePool = (echoAsset, asset, fee) => {
+	if (echoAsset.id === asset.id) { return true; }
 
-	let feePool = new BN(asset.dynamic.fee_pool).div(10 ** echo.precision);
+	let feePool = new BN(asset.dynamic.fee_pool).div(10 ** echoAsset.precision);
 
 	const { quote, base } = asset.options.core_exchange_rate;
-	const precision = echo.precision - asset.precision;
+	const precision = echoAsset.precision - asset.precision;
 	const price = new BN(quote.amount).div(base.amount).times(10 ** precision);
 	feePool = price.times(feePool).times(10 ** asset.precision);
 
@@ -140,8 +138,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			error: opositeAccountError,
 		} = getState().form.getIn([FORM_TRANSFER, opositeSubject]);
 
-		const instance = getState().echojs.getIn(['system', 'instance']);
-		const accountNameError = await validateAccountExist(instance, accountName, true);
+		const accountNameError = await validateAccountExist(accountName, true);
 
 		if (opositeAccountError && opositeAccountError === ERROR_FORM_TRANSFER.ERROR_SEND_TO_YOURSELF) {
 			dispatch(setIn(FORM_TRANSFER, opositeSubject, { error: null }));
@@ -183,21 +180,22 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			([defaultAsset] = balances);
 			dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 		} else {
-			const account = await dispatch(EchoJSActions.fetch(accountName));
-			const assets = account.get('balances').toJS();
+			const { id } = echo.api.getAccountByName(accountName);
+			const [account] = await echo.api.getFullAccounts([id]);
+			const assets = account.balances;
 			balances = await dispatch(getBalanceFromAssets(assets));
 			([defaultAsset] = balances);
 			dispatch(setIn(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 		}
 
 		if (!defaultAsset) {
-			defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+			defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 			defaultAsset = {
 				balance: 0,
-				id: defaultAsset.get('id'),
-				symbol: defaultAsset.get('symbol'),
-				precision: defaultAsset.get('precision'),
+				id: defaultAsset.id,
+				symbol: defaultAsset.symbol,
+				precision: defaultAsset.precision,
 			};
 		}
 
@@ -258,10 +256,10 @@ export const transfer = () => async (dispatch, getState) => {
 		fee = await dispatch(getTransferFee(FORM_TRANSFER));
 	}
 
-	const echo = getState().echojs.getIn(['data', 'assets', '1.3.0']).toJS();
-	const feeAsset = getState().echojs.getIn(['data', 'assets', fee.asset.id]).toJS();
+	const echoAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id]).toJS();
 
-	if (!checkFeePool(echo, feeAsset, fee.value)) {
+	if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
 		dispatch(setFormError(
 			FORM_TRANSFER,
 			'fee',
@@ -287,8 +285,8 @@ export const transfer = () => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 
-	const fromAccount = (await dispatch(EchoJSActions.fetch(from.value))).toJS();
-	const toAccount = (await dispatch(EchoJSActions.fetch(to.value))).toJS();
+	const fromAccount = await echo.api.getAccountByName(from.value);
+	const toAccount = await echo.api.getAccountByName(to.value);
 
 	let options = {};
 
@@ -302,7 +300,7 @@ export const transfer = () => async (dispatch, getState) => {
 		);
 
 		options = {
-			fee: { asset_id: '1.3.0', amount: 0 },
+			fee: { asset_id: '1.3.0', amount: fee.value },
 			registrar: fromAccount.id,
 			value: { amount: 0, asset_id: '1.3.0' },
 			code,
@@ -390,7 +388,7 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
 		}
-
+		options.fee.amount = Number.parseInt(fee.value, 10);
 		const showOptions = {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
@@ -407,10 +405,10 @@ export const createContract = () => async (dispatch, getState) => {
 };
 
 export const sendTransaction = (password) => async (dispatch, getState) => {
-	const isConnected = getState().echojs.getIn(['system', 'isConnected']);
 	const { operation, options } = getState().transaction.toJS();
+	const { value: operationId } = operations[operation];
 
-	if (!isConnected) {
+	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
 		return;
@@ -426,15 +424,13 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	const tr = new TransactionBuilder();
-
-	tr.add_type_operation(operation, options);
-
-	await tr.set_required_fees(options.fee.asset_id);
+	const tr = echo.createTransaction();
+	tr.addOperation(operationId, options);
 
 	try {
 		const signer = options[operations[operation].signer];
-		await dispatch(signTransaction(signer, tr, password));
+		await signTransaction(signer, tr, password);
+
 		tr.broadcast().then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
@@ -453,6 +449,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			error = error.toString();
 			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
 			message = (message.charAt(0).toUpperCase() + message.slice(1));
+
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));

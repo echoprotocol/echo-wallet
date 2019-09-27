@@ -1,11 +1,10 @@
 import { List } from 'immutable';
-import { EchoJSActions } from 'echojs-redux';
 import BN from 'bignumber.js';
+import echo, { CACHE_MAPS, validators } from 'echojs-lib';
 
 import {
 	getTokenPrecision,
 	getTokenBalance,
-	getContract,
 	getTokenSymbol,
 } from '../api/ContractApi';
 
@@ -29,7 +28,6 @@ import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstant
 import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
-import echo, { CACHE_MAPS, validators } from 'echojs-lib';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -53,20 +51,21 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
-export const getBalanceFromAssets = (assets) => async (dispatch) => {
+export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
-		const defaultAsset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+		const defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
 		balances.push({
 			balance: 0,
-			id: defaultAsset.get('id'),
-			symbol: defaultAsset.get('symbol'),
-			precision: defaultAsset.get('precision'),
+			id: defaultAsset.id,
+			symbol: defaultAsset.symbol,
+			precision: defaultAsset.precision,
 		});
 	} else {
 		balances = Object.entries(assets).map(async (asset) => {
-			const stats = (await dispatch(EchoJSActions.fetch(asset[1]))).toJS();
-			asset = (await dispatch(EchoJSActions.fetch(asset[0]))).toJS();
+
+			const stats = await echo.api.getObject(asset[1]);
+			asset = await echo.api.getObject(asset[0]);
 			return { balance: stats.balance, ...asset };
 		});
 
@@ -96,7 +95,7 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
-export const getTokenBalances = (accountId, networkName) => async (dispatch, getState) => {
+export const getTokenBalances = (accountId, networkName) => async (dispatch) => {
 
 	/**
      *  Tokens structure
@@ -106,9 +105,8 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 	 *  	}
 	 *  }
      */
-	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!instance) return;
+	if (!echo.isConnected) return;
 
 	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
@@ -116,9 +114,9 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch, get
 	let balances = [];
 	if (tokens && tokens[accountId]) {
 		balances = tokens[accountId].map(async (contractId) => {
-			const balance = await getTokenBalance(instance, accountId, contractId);
-			const precision = await getTokenPrecision(instance, accountId, contractId);
-			const symbol = await getTokenSymbol(instance, accountId, contractId);
+			const balance = await getTokenBalance(accountId, contractId);
+			const precision = await getTokenPrecision(accountId, contractId);
+			const symbol = await getTokenSymbol(accountId, contractId);
 			return {
 				symbol, precision, balance, id: contractId,
 			};
@@ -137,11 +135,10 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	const tokens = getState().balance.get('tokens');
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const instance = getState().echojs.getIn(['system', 'instance']);
 
-	if (!tokens.size || !accountId || !instance) return;
+	if (!tokens.size || !accountId || !echo.isConnected) return;
 	let balances = tokens.map(async (value) => {
-		const balance = await getTokenBalance(instance, accountId, value.id);
+		const balance = await getTokenBalance(accountId, value.id);
 		return { ...value, balance };
 	});
 
@@ -173,25 +170,34 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	const coreAsset = await dispatch(EchoJSActions.fetch('1.3.0'));
+	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
-	const balances = accounts.map(async ({ name }) => {
-		const account = await dispatch(EchoJSActions.fetch(name));
+	const accountPromises = accounts.map(async ({ name }) => echo.api.getAccountByName(name));
+	const fetchedAccounts = await Promise.all(accountPromises);
+
+	const accountIds = fetchedAccounts.map(({ id }) => id);
+
+	const fullAccounts = await echo.api.getFullAccounts(accountIds);
+
+	const balances = fullAccounts.map(async (account) => {
 
 		const preview = {
 			balance: {
 				amount: 0,
-				symbol: coreAsset.get('symbol'),
-				precision: coreAsset.get('precision'),
+				symbol: coreAsset.symbol,
+				precision: coreAsset.precision,
 			},
-			name,
-			accountId: account.get('id'),
+			name: account.name,
+			accountId: account.id,
 		};
 
-		if (account && account.get('balances') && account.getIn(['balances', '1.3.0'])) {
-			const stats = await dispatch(EchoJSActions.fetch(account.getIn(['balances', '1.3.0'])));
-			preview.balance.amount = stats.get('balance') || 0;
-			preview.balance.id = account.getIn(['balances', '1.3.0']);
+		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
+
+
+			// TODO: check result
+			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
+			preview.balance.amount = stats.balance || 0;
+			preview.balance.id = account.balances[ECHO_ASSET_ID];
 		}
 
 		return preview;
@@ -203,7 +209,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getTokenBalances(accountId, networkName));
 
-	const account = (await dispatch(EchoJSActions.fetch(accountId))).toJS();
+	const [account] = await echo.api.getFullAccounts([accountId]);
 
 	await dispatch(getAssetsBalances(account.balances));
 
@@ -217,7 +223,6 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
  */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
@@ -234,7 +239,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		const contract = await getContract(instance, contractId);
+		const contract = await echo.api.getContract(contractId);
 
 		if (!contract) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
@@ -250,8 +255,8 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		const symbol = await getTokenSymbol(instance, accountId, contractId);
-		const precision = await getTokenPrecision(instance, accountId, contractId);
+		const symbol = await getTokenSymbol(accountId, contractId);
+		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
@@ -273,7 +278,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		tokens[accountId].push(contractId);
 		localStorage.setItem(`tokens_${networkName}`, JSON.stringify(tokens));
 
-		const balance = await getTokenBalance(instance, accountId, contractId);
+		const balance = await getTokenBalance(accountId, contractId);
 
 		dispatch(BalanceReducer.actions.push({
 			field: 'tokens',

@@ -2,11 +2,10 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import NetworkDropdown from './NetworkDropdown';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { version } from '../../../package.json';
-
-
+import NetworkDropdown from './NetworkDropdown';
 import { connection } from '../../actions/GlobalActions';
 
 class Footer extends React.PureComponent {
@@ -85,8 +84,8 @@ Footer.defaultProps = {
 export default connect(
 	(state) => ({
 		latency: state.echojs.getIn(['meta', 'latency']),
-		lastBlock: state.echojs.getIn(['meta', 'lastBlockNumber']),
-		isConnect: state.echojs.getIn(['system', 'isConnected']),
+		lastBlock: state.echojs.getIn([CACHE_MAPS.DYNAMIC_GLOBAL_PROPERTIES, 'head_block_number']),
+		isConnect: state.global.get('isConnected'),
 		error: state.global.get('globalError'),
 	}),
 	(dispatch) => ({
