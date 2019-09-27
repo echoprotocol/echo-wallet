@@ -27,6 +27,7 @@ import { formatError } from '../helpers/FormatHelper';
 
 import {
 	initBalances,
+	handleSubscriber,
 	resetBalance,
 	getPreviewBalances,
 } from './BalanceActions';
@@ -52,11 +53,9 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
+		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
 		const { id, name } = await echo.api.getAccountByName(accountName);
-		await echo.api.getFullAccounts([accountName], false, true);
-
-		// TODO: check result
-		// echo.subscriber.setGlobalSubscribe(getObject);
+		await echo.api.getFullAccounts([id]);
 
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
@@ -339,7 +338,7 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	toastInfo(
 		`You have removed ${network.name} from networks list`,
 		() => dispatch(enableNetwork(network)),
-		() => {},
+		() => { },
 	);
 
 	const currentNetwork = getState().global.get('network').toJS();
