@@ -3,7 +3,6 @@ import { List } from 'immutable';
 
 import echo, { CACHE_MAPS } from 'echojs-lib';
 
-
 import history from '../history';
 
 import operations from '../constants/Operations';
@@ -426,12 +425,10 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
 	const tr = echo.createTransaction();
-
 	tr.addOperation(operationId, options);
 
 	try {
 		const signer = options[operations[operation].signer];
-
 		await signTransaction(signer, tr, password);
 
 		tr.broadcast().then((res) => {

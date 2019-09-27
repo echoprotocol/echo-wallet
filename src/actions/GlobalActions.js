@@ -27,7 +27,6 @@ import { formatError } from '../helpers/FormatHelper';
 
 import {
 	initBalances,
-	getObject,
 	resetBalance,
 	getPreviewBalances,
 } from './BalanceActions';
@@ -118,7 +117,6 @@ export const connection = () => async (dispatch) => {
 		if (!doesDBExist) {
 			history.push(CREATE_PASSWORD_PATH);
 		}
-
 
 		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
 		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
