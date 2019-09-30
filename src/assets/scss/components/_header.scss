@@ -106,6 +106,12 @@
                     animation: inner-tooltip .2s ease forwards;
                 }
             }
+
+            &:focus {
+                box-shadow: 2px 0 0 0 rgba(186, 188, 203, 0.4), -2px 0 0 0 rgba(186, 188, 203, 0.4);
+                border-right: 1px solid transparent;
+                border-left: 1px solid transparent;
+            }
         }
 
         .inner-info {
