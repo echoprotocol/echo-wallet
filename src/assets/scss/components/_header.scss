@@ -164,6 +164,8 @@
             text-align: left;
             opacity: 0;
             cursor: default;
+            user-select: none;
+            pointer-events: none;
         }
     }
 
