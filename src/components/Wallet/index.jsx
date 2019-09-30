@@ -17,7 +17,7 @@ class Wallet extends React.Component {
 		} = this.props;
 
 		return (
-			<div className="wallet-wrap">
+			<div className="page-wrap">
 				<div className="balance-wrap">
 					<div className="balance-title-row">
 						<div className="balance-title">Balances</div>
