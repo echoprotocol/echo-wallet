@@ -145,7 +145,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 	} else {
 		try {
 
-			// TODO: check result
+
 			account = await echo.api.getObject(key.value);
 			if (!account) {
 				if (!isPublicKey(key.value, 'ECHO')) {
@@ -159,6 +159,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
 			}
 		} catch (e) {
+
 			if (!isPublicKey(key.value, 'ECHO')) {
 				error = true;
 
