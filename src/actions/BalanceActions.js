@@ -179,8 +179,6 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
 
-
-			// TODO: check result
 			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
 			preview.balance.amount = stats.balance || 0;
 			preview.balance.id = account.balances[ECHO_ASSET_ID];
