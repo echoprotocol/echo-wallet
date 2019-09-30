@@ -169,12 +169,11 @@ class Header extends React.Component {
 	}
 
 	renderLinkToFrozenFunds() {
+		// TODO: show link, if page equal wallet only
 		return (
 			<div className="frozenfunds panel-right">
 				<NavLink
 					exact
-					// onClick={(e) => e.target.blur()}
-					// replace={INDEX_PATH === parsedLocation}
 					to="/frozen-funds"
 				>
 					<div className="inner-info">
