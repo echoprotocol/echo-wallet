@@ -15,7 +15,6 @@ import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
-
 		if (!echo.isConnected) return;
 
 		[, transaction.details] = await echo.api.getContractResult(transaction.result);
