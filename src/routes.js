@@ -15,6 +15,7 @@ import {
 	NETWORKS_PATH,
 	PERMISSIONS_PATH,
 	CREATE_PASSWORD_PATH,
+	FROZEN_FUNDS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -31,6 +32,7 @@ import CallContract from './containers/CallContract';
 import Networks from './containers/Networks';
 import Permissions from './containers/Permissions';
 import Password from './containers/Password';
+import FrozenFunds from './containers/FrozenFunds';
 
 export default class Routes extends React.Component {
 
@@ -51,6 +53,7 @@ export default class Routes extends React.Component {
 					<Route exact path={NETWORKS_PATH} component={Networks} />
 					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
 					<Route exact path={CREATE_PASSWORD_PATH} component={Password} />
+					<Route exact path={FROZEN_FUNDS_PATH} component={FrozenFunds} />
 				</div>
 			</App>
 		);
