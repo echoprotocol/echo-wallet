@@ -8,12 +8,13 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		return;
 	}
 
-	if (value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
+	if (+value !== 0 && value.replace(',', '.') !== '' && !Math.floor(value.replace(',', '.') * (10 ** currency.precision))) {
 		dispatch(setFormError(
 			form,
 			'amount',
 			`Amount should be more than 0 (${currency.symbol} precision is ${currency.precision} symbols)`,
 		));
+		return;
 	}
 
 	if (/\.|,/.test(value)) {
