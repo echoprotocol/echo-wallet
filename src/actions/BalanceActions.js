@@ -199,7 +199,8 @@ export const initBalances = (accountId, networkName) => async (dispatch, getStat
 	}));
 	const coreAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
 
-	const totalValueBN = frozenFunds.reduce((acc, { balance }) => acc.plus(balance.amount), new BN(0));
+	const totalValueBN = frozenFunds
+		.reduce((acc, { balance }) => acc.plus(balance.amount), new BN(0));
 	const totalFrozenFunds = totalValueBN.div(10 ** coreAsset.precision).toString();
 
 	dispatch(BalanceReducer.actions.set({
