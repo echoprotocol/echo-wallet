@@ -1,4 +1,5 @@
 import { Map, List } from 'immutable';
+import echo from 'echojs-lib';
 
 import {
 	setFormError,
@@ -9,12 +10,6 @@ import {
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 import { convert } from './ConverterActions';
-
-import {
-	getContract,
-	getContractConstant,
-	getContractResult,
-} from '../api/ContractApi';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 import ContractReducer from '../reducers/ContractReducer';
@@ -32,7 +27,7 @@ import {
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import history from '../history';
 
@@ -81,12 +76,11 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		return;
 	}
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	try {
-		const contract = await getContract(instance, id);
+		const contract = await echo.api.getContract(id);
 
 		if (!contract) {
 			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
@@ -219,10 +213,9 @@ export const addContractByName = (
 	name,
 	abi,
 ) => async (dispatch, getState) => {
-	const instance = getState().echojs.getIn(['system', 'instance']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	const address = (await getContractResult(instance, contractResultId))[1].exec_res.new_address;
+	const address = (await echo.api.getContractResult(contractResultId))[1].exec_res.new_address;
 
 	const id = `${CONTRACT_ID_PREFIX}.${getContractId(address)}`;
 
@@ -278,14 +271,12 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 		return;
 	}
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
-
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const queryResult = await getContractConstant(
-		instance,
+	const queryResult = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
+		ECHO_ASSET_ID,
 		getMethod(method, args),
 	);
 
@@ -311,7 +302,6 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 export const formatAbi = (contractName) => async (dispatch, getState) => {
 
-	const instance = getState().echojs.getIn(['system', 'instance']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
@@ -333,8 +323,13 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
-		const constantValue =
-				await getContractConstant(instance, contractId, accountId, method);
+
+		const constantValue = await echo.api.callContractNoChangingState(
+			contractId,
+			accountId,
+			ECHO_ASSET_ID,
+			method,
+		);
 		constant.constantValue = constantValue.substr(-64);
 		constant.showQueryResult = false;
 		return constant;

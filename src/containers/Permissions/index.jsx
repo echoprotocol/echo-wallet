@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PermissionTable from './PermissionTable';
@@ -158,7 +159,7 @@ export default connect(
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		return {
 			accountName: state.global.getIn(['activeUser', 'name']),
-			account: state.echojs.getIn(['data', 'accounts', accountId]),
+			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 		};

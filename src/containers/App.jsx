@@ -149,7 +149,7 @@ export default withRouter(connect(
 		visibleBar: state.global.get('visibleBar'),
 		accountId: state.global.getIn(['activeUser', 'id']),
 		networkName: state.global.getIn(['network', 'name']),
-		disconnected: !state.echojs.getIn(['system', 'isConnected']),
+		disconnected: !state.global.get('isConnected'),
 	}),
 	(dispatch) => ({
 		connection: () => dispatch(connection()),

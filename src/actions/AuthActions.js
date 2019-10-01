@@ -1,5 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
-import { EchoJSActions, ChainStore } from 'echojs-redux';
+import echo, { PrivateKey } from 'echojs-lib';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
 
@@ -56,10 +55,8 @@ export const createAccount = ({
 	}
 
 	try {
-		const instance = getState().echojs.getIn(['system', 'instance']);
-
 		const network = getState().global.getIn(['network']).toJS();
-		accountNameError = await validateAccountExist(instance, accountName, false);
+		accountNameError = await validateAccountExist(accountName, false);
 
 		if (isAddAccount && !accountNameError) {
 			accountNameError = isAccountAdded(accountName, network.name);
@@ -72,15 +69,11 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		const { publicKey } = await AuthApi.registerAccount(
-			instance,
-			accountName,
-			generatedWIF,
-		);
+		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
 		const userStorage = Services.getUserStorage();
-		const account = await dispatch(EchoJSActions.fetch(accountName));
-		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.get('id')), { password });
+		const account = await echo.api.getAccountByName(accountName);
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
 
 		dispatch(addAccount(accountName, network.name));
 
@@ -111,8 +104,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 	const userStorage = Services.getUserStorage();
 
 	try {
-		const instance = getState().echojs.getIn(['system', 'instance']);
-		accountNameError = await validateAccountExist(instance, accountName, true);
+		accountNameError = await validateAccountExist(accountName, true);
 
 		if (!accountNameError) {
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
@@ -126,7 +118,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
-		const account = await dispatch(EchoJSActions.fetch(accountName));
+		const account = await echo.api.getAccountByName(accountName);
 
 		const key = unlockWallet(account, wif);
 
@@ -135,7 +127,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			return false;
 		}
 
-		await userStorage.addKey(Key.create(key.publicKey, wif, account.get('id')), { password });
+		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
 
 		if (!isAccountAdded(accountName, networkName)) {
 			dispatch(addAccount(accountName, networkName));
@@ -163,21 +155,22 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
-	const asset = await dispatch(EchoJSActions.fetch(ECHO_ASSET_ID));
+	const asset = await echo.api.getObject(ECHO_ASSET_ID);
+
 	accounts = accounts.map(async (acc) => {
 		const account = {
-			name: acc.get('name'),
-			id: acc.get('id'),
+			name: acc.name,
+			id: acc.id,
 			checked: false,
 			balances: {
-				symbol: asset.get('symbol'),
-				precision: asset.get('precision'),
+				symbol: asset.symbol,
+				precision: asset.precision,
 			},
 		};
 
-		if (acc.has('balances') && acc.hasIn(['balances', ECHO_ASSET_ID])) {
-			const stats = await dispatch(EchoJSActions.fetch(acc.getIn(['balances', ECHO_ASSET_ID])));
-			account.balances.balance = stats.get('balance');
+		if (acc.balances && acc.balances[ECHO_ASSET_ID]) {
+			const stats = await echo.api.getObject(acc.balances[ECHO_ASSET_ID]);
+			account.balances.balance = stats.balance;
 		} else {
 			account.balances.balance = 0;
 		}
@@ -218,38 +211,43 @@ export const importAccount = ({ accountName, wif, password }) =>
 		const networkName = getState().global.getIn(['network', 'name']);
 
 		try {
-			let accountIDs = await ChainStore.FetchChain('getAccountRefsOfKey', active);
-			if (!accountIDs.size) {
+
+			let [accountIDs] = await echo.api.getKeyReferences([active]);
+			if (!accountIDs.length) {
 				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
 				return;
 			}
 
-			accountIDs = accountIDs.toSet().toArray();
+			const accounts = await echo.api.getFullAccounts(accountIDs);
 
-			const accounts = await ChainStore.FetchChain('getAccount', accountIDs);
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
 
 			await Promise.all(accounts.map(async (n) => {
 
-				if (!!storageKey && isAccountAdded(n.get('name'), networkName)) {
-					accountIDs = accountIDs.filter((item) => n.get('id') !== item);
+				if (!!storageKey && isAccountAdded(n.name, networkName)) {
+					accountIDs = accountIDs.filter((item) => n.id !== item);
 				}
 			}));
+
+			if (accountIDs.length === 0) {
+				dispatch(setGlobalError('Account already exists'));
+				return;
+			}
 
 			if (accountIDs.length > 1) {
 				dispatch(getAccountsList(accounts));
 				return;
 			}
 
-			const account = await ChainStore.FetchChain('getAccount', accountIDs[0]);
+			const account = await echo.api.getObject(accountIDs[0]);
 
-			if (accountName && account.get('name') !== accountName) {
+			if (accountName && account.name !== accountName) {
 				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
 				return;
 			}
 
-			dispatch(authUser({ accountName: account.get('name'), wif, password }));
+			dispatch(authUser({ accountName: account.name, wif, password }));
 			return;
 
 		} catch (error) {

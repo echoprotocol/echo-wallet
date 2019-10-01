@@ -1,4 +1,4 @@
-import { ChainValidation, PublicKey } from 'echojs-lib';
+import { validators, PublicKey } from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import {
@@ -15,11 +15,48 @@ export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
 
+const isAccountNameError = (value, allowShort) => {
+	if (allowShort == null) {
+		allowShort = false;
+	}
+	let suffix = 'Account name should';
+	if (!value) {
+		return `${suffix} not be empty.`;
+	}
+
+	if (value.length > 63) {
+		return `${suffix} be shorter then 63 symbols.`;
+	}
+
+	if (/\./.test(value)) {
+		suffix = 'Each account segment should';
+	}
+
+	const ref = value.split('.');
+
+	for (let i = 0; i < ref.length; i += 1) {
+		const label = ref[i];
+		if (!/^[~a-z]/.test(label)) {
+			return `${suffix} start with a latin letter.`;
+		}
+		if (!/^[~a-z0-9-]*$/.test(label)) {
+			return `${suffix} have only latin letters, digits, or dashes.`;
+		}
+		if (/--/.test(label)) {
+			return `${suffix} have only one dash in a row.`;
+		}
+		if (!/[a-z0-9]$/.test(label)) {
+			return `${suffix} end with a latin letter or digit.`;
+		}
+	}
+	return null;
+};
+
 export const validateAccountName = (accountName) => {
 	if (!accountName) { return 'Account name should not be empty'; }
 
-	if (ChainValidation.is_account_name_error(accountName)) {
-		return ChainValidation.is_account_name_error(accountName);
+	if (isAccountNameError(accountName)) {
+		return isAccountNameError(accountName);
 	}
 
 	return null;
@@ -166,7 +203,7 @@ const validateInt = (value, isUint, size = 256) => {
 };
 
 const validateString = (value) => (typeof value === 'string' ? null : 'value should be a string');
-const validateAddress = (value) => (ChainValidation.is_object_id(value) ? null : 'value should be in object id format');
+const validateAddress = (value) => (validators.isObjectId(value) ? null : 'value should be in object id format');
 const validateBool = (value) => (typeof value === 'boolean' ? null : 'value should be a boolean');
 const validateArray = (value) => (Array.isArray(value) ? null : 'value should be an array');
 const validateBytes = (value) => ((typeof value === 'string' && reg.test(value)) ? null : 'value should be a hex string');
