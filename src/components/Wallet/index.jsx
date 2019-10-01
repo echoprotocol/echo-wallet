@@ -7,7 +7,6 @@ import Tokens from './TokensComponents';
 import Transfer from '../Transfer';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
-
 class Wallet extends React.Component {
 
 	render() {
@@ -33,12 +32,20 @@ class Wallet extends React.Component {
 					<div className="balance-scroll">
 						<Assets
 							assets={assets}
-							setAsset={(symbol) => this.props.setAsset(symbol, 'assets')}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
 						/>
 						<Tokens
 							tokens={tokens}
-							setAsset={(symbol) => this.props.setAsset(symbol, 'tokens')}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'tokens');
+								this.props.setContractFees();
+							}}
 							removeToken={this.props.removeToken}
 							openModal={this.props.openModal}
 						/>

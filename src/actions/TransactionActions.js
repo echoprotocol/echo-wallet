@@ -79,8 +79,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 			value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
 			asset: feeAsset,
 		};
-		// eslint-disable-next-line no-empty
 	} catch (err) {
+		console.debug(err);
 		return null;
 	}
 };
