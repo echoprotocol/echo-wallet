@@ -81,7 +81,6 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-		console.error(err);
 		return null;
 	}
 };
@@ -444,6 +443,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			}
 
 			toastSuccess(`${operations[operation].name} transaction was completed`);
+			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		}).catch((error) => {
 			error = error.toString();
 			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
@@ -451,7 +451,8 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+			dispatch(toggleModalLoading(MODAL_DETAILS, false));
+		});
 	} catch (error) {
 		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
@@ -732,8 +733,6 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	} catch (error) {
 		return null;
 	}
-
-	options.fee.amount = feeValue.value;
 
 	return feeValue ? feeValue.value : null;
 };
