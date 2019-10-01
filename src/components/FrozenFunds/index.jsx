@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Assets from './AssetsComponent';
 import Transfer from './Transfer';
@@ -6,13 +7,15 @@ import Transfer from './Transfer';
 class FrozenFunds extends React.Component {
 
 	render() {
+		const { frozenFunds, totalFrozenFunds, coreAsset } = this.props;
+
 		return (
 			<div>
 				<div className="sub-header">
 					<span className="icon-frozen-funds" />
 					<span>Total Frozen Amount:</span>
 					<div className="balance">
-						<span>35</span>
+						<span>{totalFrozenFunds}</span>
 						<span>ECHO</span>
 					</div>
 				</div>
@@ -25,7 +28,10 @@ class FrozenFunds extends React.Component {
 							distributing the reward.
 						</div>
 						<div className="balance-scroll">
-							<Assets />
+							<Assets
+								frozenFunds={frozenFunds}
+								coreAsset={coreAsset}
+							/>
 						</div>
 					</div>
 					<div className="send-wrap">
@@ -39,12 +45,13 @@ class FrozenFunds extends React.Component {
 }
 
 FrozenFunds.propTypes = {
-	// assets: PropTypes.object,
-	// transfer: PropTypes.func,
+	frozenFunds: PropTypes.array.isRequired,
+	totalFrozenFunds: PropTypes.string,
+	coreAsset: PropTypes.object.isRequired,
 };
 
 FrozenFunds.defaultProps = {
-	assets: null,
+	totalFrozenFunds: '0',
 };
 
 export default FrozenFunds;

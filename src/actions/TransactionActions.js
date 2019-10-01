@@ -80,7 +80,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 			asset: feeAsset,
 		};
 	} catch (err) {
-		console.debug(err);
+		console.debug('getTransactionFee -> ', err);
 		return null;
 	}
 };

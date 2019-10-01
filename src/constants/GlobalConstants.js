@@ -121,3 +121,27 @@ export const ERC20_HASHES = {
 	'transferFrom(address,address,uint256)': '23b872dd',
 	'Transfer(address,address,uint256)': 'ddf252ad',
 };
+
+export const FREEZE_BALANCE_PARAMS = [
+	{
+		duration: 90,
+		durationMonth: 3,
+		multiplier: 13000,
+		durationText: '3 month',
+		coefficientText: '1.3',
+	},
+	{
+		duration: 180,
+		durationMonth: 6,
+		multiplier: 14000,
+		durationText: '6 month',
+		coefficientText: '1.4',
+	},
+	{
+		duration: 360,
+		durationMonth: 18,
+		multiplier: 15000,
+		durationText: '12 month',
+		coefficientText: '1.5',
+	},
+];
