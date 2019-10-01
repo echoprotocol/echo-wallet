@@ -153,20 +153,6 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 };
 
 export const getPreviewBalances = (networkName) => async (dispatch) => {
-	/**
-     *  Preview structure
-     *  preview: [{
-     *  	balance: {
-	 *  		id,
-	 *  		amount,
-	 *  	 	symbol,
-	 *  		precision,
-     *  	},
-     *  	name,
-	 *      accountId,
-     *  }]
-     */
-
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
@@ -193,8 +179,6 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
 
-
-			// TODO: check result
 			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
 			preview.balance.amount = stats.balance || 0;
 			preview.balance.id = account.balances[ECHO_ASSET_ID];
@@ -297,7 +281,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 };
 
-const getAccountFromTransferFrom = (balances) => async (dispatch, getState) => {
+const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	const isIndexPath = history.location.pathname === INDEX_PATH;
 
 	if (!isIndexPath) {
@@ -307,13 +291,24 @@ const getAccountFromTransferFrom = (balances) => async (dispatch, getState) => {
 	const form = getState().form.getIn([FORM_TRANSFER]);
 	const formName = form.get('from').value;
 	const account = await echo.api.getAccountByName(formName);
-	const isFormBalance = balances[form.get('currency').id];
 
-	if (!account || !isFormBalance) {
+	if (!account) {
 		return undefined;
 	}
 
-	return account;
+	const [fullAccount] = await echo.api.getFullAccounts([account.id]);
+
+	if (!fullAccount) {
+		return undefined;
+	}
+
+	const isFormBalance = fullAccount.balances[form.get('currency').id];
+
+	if (!isFormBalance) {
+		return undefined;
+	}
+
+	return fullAccount;
 };
 
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
@@ -324,11 +319,11 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
 
-	let isBalanceUpdated = balances.length !== getState().balance.get('assets').size;
+	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
-	const accountFromTransfer = await dispatch(getAccountFromTransferFrom(balances));
+	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
@@ -347,7 +342,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 			!!object.owner &&
 			!!accountFromTransfer
 		) {
-			isCurrentTransferBalanceUpdated = Object.values(balances)
+			isCurrentTransferBalanceUpdated = Object.values(accountFromTransfer.balances)
 				.some((b) => b === object.id && accountFromTransfer.id === object.owner);
 		}
 
@@ -372,7 +367,8 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 	if (isCurrentTransferBalanceUpdated) {
 		const form = getState().form.getIn([FORM_TRANSFER]);
-		const stats = await echo.api.getObject(balances[form.get('currency').id]);
+		const stats = await echo.api.getObject(accountFromTransfer.balances[form.get('currency').id]);
+		await dispatch(getAssetsBalances(accountFromTransfer.balances));
 		dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.balance }));
 		dispatch(setFormError(FORM_TRANSFER, 'amount', null));
 	}

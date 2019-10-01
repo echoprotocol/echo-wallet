@@ -159,19 +159,18 @@ const getAccountsList = (accounts) => async (dispatch) => {
 
 	accounts = accounts.map(async (acc) => {
 		const account = {
-			name: acc.get('name'),
-			id: acc.get('id'),
+			name: acc.name,
+			id: acc.id,
 			checked: false,
 			balances: {
-				symbol: asset.get('symbol'),
-				precision: asset.get('precision'),
+				symbol: asset.symbol,
+				precision: asset.precision,
 			},
 		};
 
-		if (acc.has('balances') && acc.hasIn(['balances', ECHO_ASSET_ID])) {
-			// TODO: check result
-			const stats = await echo.api.getObject(acc.getIn(['balances', ECHO_ASSET_ID]));
-			account.balances.balance = stats.get('balance');
+		if (acc.balances && acc.balances[ECHO_ASSET_ID]) {
+			const stats = await echo.api.getObject(acc.balances[ECHO_ASSET_ID]);
+			account.balances.balance = stats.balance;
 		} else {
 			account.balances.balance = 0;
 		}
@@ -230,6 +229,11 @@ export const importAccount = ({ accountName, wif, password }) =>
 					accountIDs = accountIDs.filter((item) => n.id !== item);
 				}
 			}));
+
+			if (accountIDs.length === 0) {
+				dispatch(setGlobalError('Account already exists'));
+				return;
+			}
 
 			if (accountIDs.length > 1) {
 				dispatch(getAccountsList(accounts));
