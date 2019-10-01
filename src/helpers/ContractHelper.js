@@ -103,7 +103,7 @@ export const getMethod = (method, args) => {
 		if (type.search('uint') !== -1) {
 			const input = new BigNumber(arg);
 			if (input.isNegative()) throw new Error('input is negative');
-			if (!input.isInteger()) throw new Error('input is not integer');
+			if (!input.isInteger()) throw new Error('input is less than min value');
 			if (input.gte(new BigNumber(2).pow(256))) throw new Error('is greater than max value');
 			const preRes = input.toString(16);
 			const comprehension = (count, map) => new Array(count).fill(null)

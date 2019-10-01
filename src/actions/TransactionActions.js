@@ -734,7 +734,5 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		return null;
 	}
 
-	options.fee.amount = feeValue.value;
-
 	return feeValue ? feeValue.value : null;
 };
