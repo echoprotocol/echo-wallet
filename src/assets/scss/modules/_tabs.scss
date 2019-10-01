@@ -3,35 +3,42 @@
         max-height: calc(100vh - 206px);
         overflow: overlay;
     }
+
     &.hide-menu {
         .scroll-fix {
             max-height: calc(100vh - 166px);
         }
-        & > .menu {
+
+        &>.menu {
             display: none;
         }
     }
- 
+
     .control {
         &-wrap {
             background-color: rgb(247, 247, 247);
             width: 100%;
             border-top: 1px solid $bd-gray;
         }
+
         &-panel {
             max-width: 900px;
             margin: auto;
+
             @media (max-width: 1200px) {
                 margin: 0;
                 max-width: 100%;
             }
+
             display: flex;
             align-items: center;
             padding: 10px 20px;
             height: 45px;
+
             .error-wrap {
                 margin-bottom: 0;
             }
+
             li {
                 .transparent {
                     i {
@@ -41,31 +48,38 @@
                         }
                     }
                 }
-                &:not(:last-child){
+
+                &:not(:last-child) {
                     margin-right: 40px;
                 }
+
                 &.id {
                     display: flex;
                     align-items: center;
                 }
+
                 &.name {
                     display: flex;
                     align-items: center;
                     margin: -1px auto 0 0;
                 }
             }
+
             .label {
                 color: $gray;
                 margin-right: 8px;
             }
+
             .value {
                 &.ui.button {
                     text-transform: none;
+
                     &:hover {
                         i {
                             color: rgb(137, 140, 145);
                         }
                     }
+
                     i {
                         margin: -5px 0 0 5px !important;
                         color: rgb(178, 180, 183);
@@ -75,6 +89,7 @@
                         transition: color $speed;
                     }
                 }
+
                 background-color: transparent;
                 color: $link-gray;
                 padding: 3px 5px;
@@ -83,6 +98,7 @@
                 height: 26px;
                 align-items: center;
                 flex-direction: row-reverse;
+
                 &:focus {
                     @extend %onFocus;
                 }
@@ -104,10 +120,12 @@
         margin: auto;
         border-bottom: 2px solid rgb(247, 247, 247);
         position: relative;
+
         @media (max-width: 1200px) {
             margin: 0;
             max-width: 100%;
         }
+
         &:after {
             content: "";
             height: 2px;
@@ -117,6 +135,7 @@
             bottom: -2px;
             visibility: visible;
         }
+
         &:before {
             content: "";
             height: 2px;
@@ -126,6 +145,7 @@
             bottom: -2px;
             right: 100%;
         }
+
         .item,
         .tab-btn {
             border: 0;
@@ -137,17 +157,20 @@
             border-bottom: 2px solid rgb(247, 247, 247);
             border-radius: 0;
             margin: 0 0 -2px 0;
-            transition: border $speed ease, color  $speed ease;
+            transition: border $speed ease, color $speed ease;
             padding: 0;
             z-index: 2;
             background-color: transparent;
+
             &:not(:last-child) {
                 margin-right: 35px;
             }
+
             &:hover {
                 color: $gray;
                 border-bottom: 2px solid rgb(211, 214, 220);
             }
+
             &.active {
                 color: $main-сolor;
                 line-height: 0px;
@@ -156,10 +179,13 @@
                 border-bottom: 2px solid;
             }
         }
+
         .tab-btn {
             position: relative;
+
             &:focus {
                 box-shadow: none;
+
                 &:before {
                     content: '';
                     position: absolute;
@@ -171,6 +197,7 @@
                     @extend %onTextFocus;
                 }
             }
+
             &:active {
                 &:before {
                     box-shadow: none;
@@ -180,16 +207,19 @@
         }
 
     }
+
     .ui.tab {
         background-color: #fff;
         border: 0;
     }
+
     .tab-content {
         max-width: 860px;
         margin: auto;
-        padding: 30px 45px 20px; 
+        padding: 20px 45px 60px;
         // overflow: initial;
         overflow: -webkit-paged-x;
+
         @media (max-width: 1200px) {
             margin: 0;
             max-width: 100%;
@@ -201,6 +231,7 @@
     .form.main-form {
         padding: 0;
     }
+
     .watchlist {
         margin: 0
     }

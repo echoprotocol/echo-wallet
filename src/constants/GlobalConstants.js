@@ -8,6 +8,7 @@ import {
 	CALL_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 	PERMISSIONS_PATH,
+	FROZEN_FUNDS_PATH,
 } from './RouterConstants';
 
 export const HEADER_TITLE = [
@@ -46,6 +47,11 @@ export const HEADER_TITLE = [
 	{
 		path: PERMISSIONS_PATH,
 		title: 'Permissions',
+	},
+
+	{
+		path: FROZEN_FUNDS_PATH,
+		title: 'Frozen Funds',
 	},
 ];
 

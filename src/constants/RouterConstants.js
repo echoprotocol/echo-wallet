@@ -12,6 +12,7 @@ export const PERMISSIONS_PATH = '/permissions';
 export const INDEX_PATH = '/';
 export const COMMITTEE_VOTE_PATH = '/committee-vote';
 export const CREATE_PASSWORD_PATH = '/password-create';
+export const FROZEN_FUNDS_PATH = '/frozen-funds';
 
 export const AUTH_ROUTES = [SIGN_UP_PATH, SIGN_IN_PATH];
 
