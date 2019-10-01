@@ -168,6 +168,32 @@ class Header extends React.Component {
 		});
 	}
 
+	renderLinkToFrozenFunds() {
+		// TODO: show link, if page equal wallet only
+		return (
+			<div className="frozenfunds panel-right">
+				<NavLink
+					exact
+					to="/frozen-funds"
+				>
+					<div className="inner-info">
+						<div className="balance">
+							<span>35</span>
+							<span>ECHO</span>
+						</div>
+						<span>Frozen funds</span>
+					</div>
+					<span className="icon-frozen-funds" />
+				</NavLink>
+				<div className="inner-tooltip">
+					<p>
+						Frozen funds allow you to get bigger reward for blocks creation.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		const {
 			location, accountName, assets,
@@ -197,6 +223,9 @@ class Header extends React.Component {
 				}
 
 				<div className="page-title">{this.getTitle()}</div>
+				{
+					this.renderLinkToFrozenFunds()
+				}
 				<div className="panel-right">
 					<div className="user-section">
 						<NavLink
