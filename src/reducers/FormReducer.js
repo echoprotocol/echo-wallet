@@ -19,6 +19,8 @@ import {
 	FORM_FREEZE,
 } from '../constants/FormConstants';
 
+import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+
 const DEFAULT_FIELDS = Map({
 	error: null,
 	loading: false,
@@ -214,7 +216,7 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
-		duration: null,
+		duration: FREEZE_BALANCE_PARAMS[0].duration,
 		isAvailableBalance: false,
 	}),
 };

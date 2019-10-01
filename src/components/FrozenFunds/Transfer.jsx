@@ -4,27 +4,30 @@ import PropTypes from 'prop-types';
 import { Dropdown, Button, Form } from 'semantic-ui-react';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
+import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 
 import TransactionScenario from '../../containers/TransactionScenario';
 import AmountField from '../Fields/AmountField';
 
-const dateOptions = [
-	{
-		key: '3_month',
-		text: '3 month',
-		value: 90,
-	},
-	{
-		key: '6_month',
-		text: '6 month',
-		value: 180,
-	},
-	{
-		key: '12_month',
-		text: '12 month',
-		value: 360,
-	},
-];
+const dateOptions = FREEZE_BALANCE_PARAMS
+	.map(({ duration, durationText }) => ({ value: duration, text: durationText }));
+// const dateOptions = [
+// 	{
+// 		key: '3_month',
+// 		text: '3 month',
+// 		value: 90,
+// 	},
+// 	{
+// 		key: '6_month',
+// 		text: '6 month',
+// 		value: 180,
+// 	},
+// 	{
+// 		key: '12_month',
+// 		text: '12 month',
+// 		value: 360,
+// 	},
+// ];
 
 class Transfer extends React.Component {
 
@@ -34,7 +37,6 @@ class Transfer extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		console.log(value);
 		this.props.setValue('duration', value);
 	}
 
@@ -44,9 +46,15 @@ class Transfer extends React.Component {
 			fee, assets, tokens, amount, isAvailableBalance, fees, duration,
 		} = this.props;
 
+		let coefficient = '0.0';
+		if (duration) {
+			({ coefficientText: coefficient } = FREEZE_BALANCE_PARAMS
+				.find((b) => b.duration === duration));
+		}
+
 		return (
 			<TransactionScenario
-				handleTransaction={() => this.props.transfer()}
+				handleTransaction={() => this.props.freezeBalance()}
 			>
 				{
 					(submit) => (
@@ -70,7 +78,7 @@ class Transfer extends React.Component {
 									setValue={this.props.setValue}
 									setDefaultAsset={this.props.setDefaultAsset}
 									getTransferFee={this.props.getTransactionFee}
-									setContractFees={this.props.setContractFees}
+									setContractFees={() => {}}
 									assetDropdown={false}
 									labelText="Amount, ECHO"
 								/>
@@ -78,19 +86,16 @@ class Transfer extends React.Component {
 									<label htmlFor="period">Period</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										text={duration}
+										text={String(duration)}
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
-										// value={duration}
-									// onClose={(e) => this.onCloseDropdown(e)}
 									/>
 								</Form.Field>
 								<div className="form-panel">
 									<div className="coefficient-value">
 										<span>Coefficient:</span>
-										<span>0.05</span>
-
+										<span>{coefficient}</span>
 										<div className="inner-tooltip-wrap">
 											<span className="inner-tooltip-trigger icon-info" />
 											<div className="inner-tooltip">This is the value that will be used to re-calculate a new sum after unfreezing.</div>
@@ -120,7 +125,7 @@ Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
 	duration: PropTypes.number.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	transfer: PropTypes.func.isRequired,
+	freezeBalance: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
@@ -134,7 +139,6 @@ Transfer.propTypes = {
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 };
 
 Transfer.defaultProps = {

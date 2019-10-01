@@ -11,11 +11,10 @@ import {
 	getFreezeBalanceFee,
 	resetTransaction,
 	setAssetActiveAccount,
-	transfer,
+	freezeBalance,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
-import { setContractFees } from '../../actions/ContractActions';
 
 export default connect(
 	(state) => ({
@@ -34,7 +33,7 @@ export default connect(
 		removeToken: (name, id) => dispatch(disableToken(name, id)),
 		setAsset: (asset, type) => dispatch(setAsset(asset, type)),
 		clearForm: () => dispatch(clearForm(FORM_FREEZE)),
-		transfer: () => dispatch(transfer()),
+		freezeBalance: () => dispatch(freezeBalance()),
 		resetTransaction: () => dispatch(resetTransaction()),
 		setIn: (field, param) => dispatch(setIn(FORM_FREEZE, field, param)),
 		setValue: (field, value) => dispatch(setValue(FORM_FREEZE, field, value)),
@@ -43,7 +42,6 @@ export default connect(
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_FREEZE)),
 		setAssetActiveAccount: () => dispatch(setAssetActiveAccount()),
 		getTransactionFee: (asset) => dispatch(getFreezeBalanceFee(FORM_FREEZE, asset)),
-		setContractFees: () => dispatch(setContractFees(FORM_FREEZE)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_FREEZE, value, currency, name)),
 	}),

@@ -4,7 +4,7 @@ import { Form, Input, Dropdown } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -38,9 +38,12 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
+	
 		const { currency, form } = this.props;
 		const value = e.target.value.trim();
-
+		console.log('onChangeAmount');
+		console.log([FORM_FREEZE, FORM_TRANSFER].includes(form));
+		console.log(currency.id.startsWith(PREFIX_ASSET));
 		const { name } = e.target;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -51,7 +54,7 @@ class AmountField extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(() => {
-				if (form === FORM_TRANSFER && currency.id.startsWith(PREFIX_ASSET)) {
+				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency.id.startsWith(PREFIX_ASSET)) {
 					this.props.getTransferFee()
 						.then((fee) => fee && this.onFee(fee));
 				}
@@ -187,7 +190,8 @@ class AmountField extends React.Component {
 
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const type = form === FORM_TRANSFER && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+		const type = [FORM_TRANSFER, FORM_FREEZE]
+			.includes(form) && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>

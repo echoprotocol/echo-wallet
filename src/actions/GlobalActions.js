@@ -55,8 +55,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
 		const { id, name } = await echo.api.getAccountByName(accountName);
-		await echo.api.getFullAccounts([id]);
 
+		await echo.api.getFullAccounts([id]);
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
 
@@ -65,7 +65,6 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		} else if (AUTH_ROUTES.includes(history.location.pathname)) {
 			history.push(INDEX_PATH);
 		}
-
 		await dispatch(initBalances(id, networkName));
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 		dispatch(initSorts(networkName));

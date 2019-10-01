@@ -45,7 +45,7 @@ class FrozenFunds extends React.Component {
 							currency={currency}
 							duration={duration}
 							isAvailableBalance={isAvailableBalance}
-							transfer={this.props.transfer}
+							freezeBalance={this.props.freezeBalance}
 							resetTransaction={this.props.resetTransaction}
 							clearForm={this.props.clearForm}
 							amountInput={this.props.amountInput}
@@ -54,7 +54,6 @@ class FrozenFunds extends React.Component {
 							setValue={this.props.setValue}
 							setFormValue={this.props.setFormValue}
 							getTransactionFee={this.props.getTransactionFee}
-							setContractFees={this.props.setContractFees}
 						/>
 					</div>
 				</div>
@@ -67,7 +66,7 @@ class FrozenFunds extends React.Component {
 FrozenFunds.propTypes = {
 	fees: PropTypes.array.isRequired,
 	clearForm: PropTypes.func.isRequired,
-	transfer: PropTypes.func.isRequired,
+	freezeBalance: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	currency: PropTypes.object,
 	duration: PropTypes.number,
@@ -82,7 +81,6 @@ FrozenFunds.propTypes = {
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 };
 
 FrozenFunds.defaultProps = {

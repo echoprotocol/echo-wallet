@@ -17,7 +17,7 @@ import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -87,10 +87,9 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 };
 
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
-
 	const formOptions = getState().form.get(form);
 
-	if (!formOptions.get('duration')) {
+	if (!formOptions.get('amount').value) {
 		dispatch(setValue(form, 'isAvailableBalance', false));
 		return null;
 	}
@@ -108,7 +107,10 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 			asset_id: asset || formOptions.get('currency').id,
 		},
 	};
+	console.log(options)
 
+
+	dispatch(setValue(form, 'isAvailableBalance', true));
 	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
 };
 
@@ -365,6 +367,97 @@ export const transfer = () => async (dispatch, getState) => {
 	return true;
 };
 
+export const freezeBalance = () => async (dispatch, getState) => {
+
+	const form = getState().form.get(FORM_FREEZE).toJS();
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	const {
+		currency,
+		duration,
+	} = form;
+
+	const durationObject = FREEZE_BALANCE_PARAMS.find((d) => d.duration === duration);
+
+	let { fee } = form;
+	const amount = new BN(form.amount.value).toString();
+
+	if (form.amount.error || fee.error || !activeUserId || !durationObject) {
+		return false;
+	}
+
+	const amountError = validateAmount(amount, currency);
+
+	if (amountError) {
+		dispatch(setFormError(FORM_FREEZE, 'amount', amountError));
+		return false;
+	}
+
+	if (!fee.value || !fee.asset) {
+		fee = await dispatch(getTransferFee(FORM_FREEZE));
+	}
+
+	const echoAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0']).toJS();
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id]).toJS();
+
+	if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_FREEZE,
+			'fee',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return false;
+	}
+
+	if (currency.id === fee.asset.id) {
+		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
+
+		if (total.gt(currency.balance)) {
+			dispatch(setFormError(FORM_FREEZE, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	} else {
+		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
+		if (new BN(fee.value).gt(asset.balance)) {
+			dispatch(setFormError(FORM_FREEZE, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	}
+
+	dispatch(toggleLoading(FORM_FREEZE, true));
+
+	const options = {
+		fee: {
+			amount: fee.value,
+			asset_id: fee.asset.id,
+		},
+		account: activeUserId,
+		duration,
+		amount: {
+			amount: new BN(amount).times(10 ** currency.precision).toString(),
+			asset_id: currency.id,
+		},
+	};
+
+	const precision = new BN(10).pow(fee.asset.precision);
+	const showOptions = {
+		amount: `${amount} ${currency.symbol}`,
+		account: getState().global.getIn(['activeUser', 'name']),
+		duration: durationObject.durationText,
+		fee: `${new BN(fee.value).div(precision).toString(10)} ${fee.asset.symbol}`,
+	};
+
+	dispatch(resetTransaction());
+
+	dispatch(TransactionReducer.actions.setOperation({
+		operation: 'balance_freeze',
+		options,
+		showOptions,
+	}));
+
+	return true;
+};
+
 export const createContract = () => async (dispatch, getState) => {
 	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
@@ -440,7 +533,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 	}
 
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-
+	console.log('123123')
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
@@ -455,7 +548,6 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 	try {
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
-
 		tr.broadcast().then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(

@@ -195,7 +195,7 @@ export default {
 		},
 	},
 	balance_freeze: {
-		value: OPERATIONS_IDS.VESTING_BALANCE_CREATE,
+		value: OPERATIONS_IDS.BALANCE_FREEZE,
 		name: 'Balance freeze',
 		options: {
 			from: 'account',
@@ -203,6 +203,7 @@ export default {
 			value: 'amount.amount',
 			asset: 'amount.asset_id',
 		},
+		signer: 'account',
 	},
 	vesting_balance_create: {
 		value: OPERATIONS_IDS.VESTING_BALANCE_CREATE,
