@@ -15,11 +15,9 @@ import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
-
 		if (!echo.isConnected) return;
 
 		[, transaction.details] = await echo.api.getContractResult(transaction.result);
-		// TODO: check result
 		transaction.contract = (await echo.api.getObject(transaction.result)).contracts_id;
 	}
 
@@ -50,7 +48,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	};
 	if (options.from) {
 		const request = _.get(operation, options.from);
-		// TODO: check result
 		const response = await echo.api.getObject(request);
 		result.from = { value: response.name, id: response.id };
 	}
@@ -58,7 +55,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.subject) {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
-			// TODO: check result
 			const response = await echo.api.getObject(request);
 			result.subject = {
 				value: response[options.subject[1]],
@@ -81,7 +77,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.asset) {
 		const request = _.get(operation, options.asset);
-		// TODO: check result
 		const response = await echo.api.getObject(request);
 		result.value = {
 			...result.value,

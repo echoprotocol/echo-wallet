@@ -81,10 +81,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		};
 		// eslint-disable-next-line no-empty
 	} catch (err) {
-
+		return null;
 	}
-
-	return null;
 };
 
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
@@ -180,7 +178,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			([defaultAsset] = balances);
 			dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 		} else {
-			const { id } = echo.api.getAccountByName(accountName);
+			const { id } = await echo.api.getAccountByName(accountName);
 			const [account] = await echo.api.getFullAccounts([id]);
 			const assets = account.balances;
 			balances = await dispatch(getBalanceFromAssets(assets));
@@ -388,7 +386,7 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
 		}
-		options.fee.amount = Number.parseInt(fee.value, 10);
+		options.fee.amount = fee.value;
 		const showOptions = {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
@@ -445,6 +443,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			}
 
 			toastSuccess(`${operations[operation].name} transaction was completed`);
+			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		}).catch((error) => {
 			error = error.toString();
 			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
@@ -452,7 +451,8 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
-		}).finally(() => dispatch(toggleModalLoading(MODAL_DETAILS, false)));
+			dispatch(toggleModalLoading(MODAL_DETAILS, false));
+		});
 	} catch (error) {
 		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
@@ -528,7 +528,7 @@ export const callContract = () => async (dispatch, getState) => {
 	const options = {
 		registrar: activeUserId,
 		value: { amount: amountValue, asset_id: '1.3.0' },
-		fee: { amount: 0, asset_id: '1.3.0' },
+		fee: { asset_id: '1.3.0' },
 		code: bytecode,
 		callee: contractId,
 	};
@@ -541,6 +541,7 @@ export const callContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
+	options.fee.amount = feeValue.value;
 	const showOptions = {
 		from: activeUserName,
 		fee: `${feeValue.value / (10 ** feeValue.asset.precision)} ${feeValue.asset.symbol}`,

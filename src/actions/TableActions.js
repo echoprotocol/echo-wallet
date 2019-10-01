@@ -145,26 +145,24 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 	} else {
 		try {
 
-			// TODO: check result
-			account = await echo.api.getObject(key.value);
-			if (!account) {
-				if (!isPublicKey(key.value, 'ECHO')) {
-					error = true;
-					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+			if (!isPublicKey(key.value, 'ECHO')) {
+				if (isAccountId(key.value)) {
+					account = await echo.api.getObject(key.value);
+				} else {
+					account = await echo.api.getAccountByName(key.value);
 				}
 
-			} else if (!isAccountId(account.id)) {
-				error = true;
-
-				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
+				if (!account) {
+					error = true;
+					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
+				}
 			}
+
 		} catch (e) {
-			if (!isPublicKey(key.value, 'ECHO')) {
-				error = true;
-
-				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
-			}
+			error = true;
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
 		}
+
 	}
 
 	if (!weight) {
@@ -255,7 +253,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 						permissionData[role].keys.push([value.get('key').value, weightInt]);
 					} else {
 						// TODO: check result
-						accountsPromises.push(echo.api.getObject(value.get('key').value));
+						accountsPromises.push(echo.api.getAccountByName(value.get('key').value));
 						permissionData[role].accounts.push([value.get('key').value, weightInt]);
 					}
 				});
@@ -279,7 +277,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	if (
 		!permissionData.active.keys.length
-			&& permissionData.active.threshold === null
+		&& permissionData.active.threshold === null
 	) {
 		return false;
 	}
@@ -344,8 +342,10 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	const feeValue = await getOperationFee('account_update', transaction);
 
-	transaction.fee.amount = feeValue;
-	transaction.fee.asset_id = '1.3.0';
+	transaction.fee = {
+		amount: feeValue,
+		asset_id: ECHO_ASSET_ID,
+	};
 
 	showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
 

@@ -16,11 +16,13 @@ const getSigners = async (account, keys, viewed = []) => {
 	let signers = [];
 
 	account.active.key_auths.forEach(([k, w]) => {
-		const key = keys
-			.find(({ accountId, publicKey }) => (publicKey === k && accountId === account.id));
-		if (key && weight < account.active.weight_threshold) {
+		const keyIndex = keys
+			.findIndex(({ publicKey }) => (publicKey === k));
+
+		if (keyIndex !== -1 && weight < account.active.weight_threshold) {
 			weight += w;
-			signers.push(PrivateKey.fromWif(key.wif));
+			signers.push(PrivateKey.fromWif(keys[keyIndex].wif));
+			keys.splice(1, keyIndex);
 		}
 	});
 
@@ -30,22 +32,23 @@ const getSigners = async (account, keys, viewed = []) => {
 
 	viewed.push(account.id);
 
-	weight = await account.active.account_auths.reduce(async (wght, [id, w]) => {
-		if (viewed.includes(id)) {
-			return wght;
+	for (let i = 0; i < account.active.account_auths.length; i += 1) {
+		const [id, w] = account.active.account_auths[i];
+
+		if (!viewed.includes(id)) {
+			try {
+				/* eslint-disable no-await-in-loop */
+				const [signer] = await echo.api.getFullAccounts([id]);
+				const accountSigners = await getSigners(signer, keys, viewed);
+				signers = signers.concat(accountSigners);
+				weight += w;
+			} catch (e) {
+				//
+			}
 		}
 
-		try {
 
-			const signer = await echo.api.getObject(id);
-			const accountSigners = await getSigners(signer, keys, viewed);
-			signers = signers.concat(accountSigners);
-			return wght + w;
-		} catch (e) {
-			//
-			return wght;
-		}
-	}, weight);
+	}
 
 	if (weight < account.active.weight_threshold) {
 		throw new Error('Threshold is greater than the sum of keys weight available in Echo Desktop');
