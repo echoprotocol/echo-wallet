@@ -230,7 +230,11 @@ class Header extends React.Component {
 
 				<div className="page-title">{this.getTitle()}</div>
 				{
-					this.renderLinkToFrozenFunds()
+					this.props.location.pathname === INDEX_PATH ?
+						this.renderLinkToFrozenFunds()
+						:
+						null
+
 
 				}
 				<div className="panel-right">
