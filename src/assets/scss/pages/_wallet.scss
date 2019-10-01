@@ -1,4 +1,4 @@
-.wallet-wrap {
+.page-wrap {
     display: flex;
     justify-content: space-between;
 
@@ -101,7 +101,9 @@
 .currency-title {
     color: $gray;
     font-family: proximanovaSemibold;
-    line-height: 20px;
+    line-height: 18px;
+    padding-bottom: 2px;
+    font-size: 15px;
 }
 
 .currency-list {
