@@ -194,6 +194,16 @@ export default {
 			asset: null,
 		},
 	},
+	balance_freeze: {
+		value: OPERATIONS_IDS.VESTING_BALANCE_CREATE,
+		name: 'Balance freeze',
+		options: {
+			from: 'account',
+			subject: null,
+			value: 'amount.amount',
+			asset: 'amount.asset_id',
+		},
+	},
 	vesting_balance_create: {
 		value: OPERATIONS_IDS.VESTING_BALANCE_CREATE,
 		name: 'Create vesting balance',

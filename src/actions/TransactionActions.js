@@ -11,6 +11,7 @@ import {
 	FORM_TRANSFER,
 	FORM_CALL_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
+	FORM_FREEZE,
 } from '../constants/FormConstants';
 import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
@@ -83,6 +84,32 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	} catch (err) {
 		return null;
 	}
+};
+
+export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
+
+	const formOptions = getState().form.get(form);
+
+	if (!formOptions.get('duration')) {
+		dispatch(setValue(form, 'isAvailableBalance', false));
+		return null;
+	}
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	const options = {
+		account: activeUserId,
+		duration: formOptions.get('duration') || 90,
+		amount: {
+			amount: formOptions.get('amount').value || 0,
+			asset_id: asset || formOptions.get('currency').id,
+		},
+		fee: {
+			asset_id: asset || formOptions.get('currency').id,
+		},
+	};
+
+	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
 };
 
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
