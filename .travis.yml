@@ -21,6 +21,10 @@ jobs:
       script:
         - rm -rf node_modules
         - npm i
+        - cd node_modules/echojs-lib
+        - npm i
+        - npm build
+        - cd ../../
         - npm run package-deb
       deploy:
         provider: releases
