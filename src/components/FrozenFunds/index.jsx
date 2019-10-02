@@ -1,11 +1,19 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Assets from './AssetsComponent';
 import Transfer from './Transfer';
+import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 
 class FrozenFunds extends React.Component {
 
 	render() {
+		const {
+			assets, tokens, amount, currency,
+			fee, isAvailableBalance, fees, duration, activeUserId,
+		} = this.props;
+
 		return (
 			<div>
 				<div className="sub-header">
@@ -29,7 +37,27 @@ class FrozenFunds extends React.Component {
 						</div>
 					</div>
 					<div className="send-wrap">
-						<Transfer />
+						<Transfer
+							fees={fees}
+							tokens={tokens}
+							assets={assets}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							duration={duration}
+							activeUserId={activeUserId}
+							isAvailableBalance={isAvailableBalance}
+							freezeBalance={this.props.freezeBalance}
+							resetTransaction={this.props.resetTransaction}
+							clearForm={this.props.clearForm}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							setFormValue={this.props.setFormValue}
+							getTransactionFee={this.props.getTransactionFee}
+							setAssets={this.props.setAssets}
+						/>
 					</div>
 				</div>
 			</div>
@@ -39,12 +67,30 @@ class FrozenFunds extends React.Component {
 }
 
 FrozenFunds.propTypes = {
-	// assets: PropTypes.object,
-	// transfer: PropTypes.func,
+	fees: PropTypes.array.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	freezeBalance: PropTypes.func.isRequired,
+	resetTransaction: PropTypes.func.isRequired,
+	currency: PropTypes.object,
+	duration: PropTypes.number,
+	activeUserId: PropTypes.string.isRequired,
+	assets: PropTypes.object.isRequired,
+	tokens: PropTypes.any.isRequired,
+	amount: PropTypes.object.isRequired,
+	fee: PropTypes.object.isRequired,
+	isAvailableBalance: PropTypes.bool.isRequired,
+	setValue: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	amountInput: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
+	getTransactionFee: PropTypes.func.isRequired,
+	setAssets: PropTypes.func.isRequired,
 };
 
 FrozenFunds.defaultProps = {
-	assets: null,
+	currency: null,
+	duration: FREEZE_BALANCE_PARAMS[0].duration,
 };
 
 export default FrozenFunds;

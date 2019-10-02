@@ -158,7 +158,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
-	const accountPromises = accounts.map(async ({ name }) => echo.api.getAccountByName(name));
+	const accountPromises = accounts.map(({ name }) => echo.api.getAccountByName(name));
 	const fetchedAccounts = await Promise.all(accountPromises);
 
 	const accountIds = fetchedAccounts.map(({ id }) => id);
