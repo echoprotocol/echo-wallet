@@ -187,7 +187,7 @@ class TabOverview extends React.Component {
 				</ul>
 				<a target="_blank" rel="noreferrer noopener" href={linkToTransaction} onClick={(e) => this.goToTransaction(e, linkToTransaction)} className="external-link">
 					<img src={externalLink} alt="" />
-					<span>Go to explorer</span>
+					<span>Open in explorer</span>
 				</a>
 			</div>
 		);
