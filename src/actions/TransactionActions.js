@@ -58,6 +58,13 @@ export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
+/**
+ *
+ * @param {String} form
+ * @param {String} type
+ * @param {Object} options
+ * @returns {Object|null}
+ */
 const getTransactionFee = (form, type, options) => async (dispatch, getState) => {
 	try {
 		const { fee } = options;
@@ -85,7 +92,12 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		return null;
 	}
 };
-
+/**
+ *
+ * @param {String} form
+ * @param {String} asset
+ * @returns {Object|null}
+ */
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
@@ -122,6 +134,12 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
 };
 
+/**
+ *
+ * @param {String} form
+ * @param {String} asset
+ * @returns {Object|null}
+ */
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
@@ -162,6 +180,10 @@ export const checkFeePool = (echoAsset, asset, fee) => {
 	return feePool.gt(fee);
 };
 
+/**
+ *
+ * @param {String} from
+ */
 export const setAssetsToForm = (from) => async (dispatch, getState) => {
 
 	if (!getState().global.getIn(['activeUser', 'id'])) {
@@ -172,6 +194,12 @@ export const setAssetsToForm = (from) => async (dispatch, getState) => {
 	dispatch(setValue(from, 'balance', { assets: new List(balances) }));
 };
 
+/**
+ *
+ * @param {String} accountName
+ * @param {String} subject
+ * @returns {Boolean}
+ */
 export const checkAccount = (accountName, subject) => async (dispatch, getState) => {
 	try {
 		if (!accountName) return false;
@@ -385,6 +413,9 @@ export const transfer = () => async (dispatch, getState) => {
 	return true;
 };
 
+/**
+ * @returns {Boolean}
+ */
 export const freezeBalance = () => async (dispatch, getState) => {
 
 	const form = getState().form.get(FORM_FREEZE).toJS();
