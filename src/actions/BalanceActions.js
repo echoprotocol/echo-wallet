@@ -190,7 +190,10 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(await Promise.all(balances)) }));
 };
 
-
+/**
+ *
+ * @param {String} accountId
+ */
 export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	const frozenFunds = await echo.api.getFrozenBalances(accountId);
 
@@ -210,6 +213,11 @@ export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	}));
 };
 
+/**
+ *
+ * @param {String} accountId
+ * @param {String} networkName
+ */
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 
 	await dispatch(getTokenBalances(accountId, networkName));
