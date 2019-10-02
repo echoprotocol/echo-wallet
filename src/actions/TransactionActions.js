@@ -96,9 +96,20 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
+
+	let amountValue = 0;
+	const amount = formOptions.get('amount').value;
+	if (amount) {
+		const currency = formOptions.get('currency');
+		const amountError = validateAmount(amount, currency);
+		if (!amountError) {
+			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+		}
+	}
+
 	const options = {
 		amount: {
-			amount: formOptions.get('amount').value || 0,
+			amount: amountValue,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
