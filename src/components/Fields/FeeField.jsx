@@ -60,7 +60,7 @@ class FeeComponent extends React.Component {
 
 		return fees.filter((fee) => fee).map((fee, index) => ({
 			key: assets[index].symbol,
-			value: fee.value.toString(),
+			value: JSON.stringify(fee),
 			text: formatAmount(fee.value, assets[index].precision, assets[index].symbol),
 		}));
 	}

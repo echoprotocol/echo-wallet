@@ -16,7 +16,10 @@ import {
 	FORM_PERMISSION_KEY,
 	FORM_COMMITTEE,
 	FORM_PASSWORD_CREATE,
+	FORM_FREEZE,
 } from '../constants/FormConstants';
+
+import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
 const DEFAULT_FIELDS = Map({
 	error: null,
@@ -199,6 +202,23 @@ const DEFAULT_FORM_FIELDS = {
 		},
 	}),
 	[FORM_PASSWORD_CREATE]: Map({}),
+	[FORM_FREEZE]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+		balance: {
+			assets: new List([]),
+		},
+		duration: FREEZE_BALANCE_PARAMS[0].duration,
+		isAvailableBalance: false,
+	}),
 };
 
 export default createModule({
@@ -225,6 +245,7 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_COMMITTEE]),
 		[FORM_PASSWORD_CREATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_PASSWORD_CREATE]),
+		[FORM_FREEZE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_FREEZE]),
 	}),
 	transformations: {
 		set: {
