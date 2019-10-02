@@ -47,7 +47,7 @@ export const toUtf8 = (hex) => {
 };
 
 export const toInt = (hex) => parseInt(hex, 16);
-export const toIntBN = (hex) => new BN(hex, 16).toString();
+export const toIntBN = (hex) => new BN(hex, 16).toString(10);
 export const toID = (hex) => {
 	const isContract = !!toInt(hex.slice(0, 26), 16);
 	return `1.${isContract ? 16 : 2}.${new BN(hex.substr(26), 16)}`;
