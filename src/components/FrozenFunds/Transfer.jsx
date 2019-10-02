@@ -95,8 +95,6 @@ class Transfer extends React.Component {
 											<div className="inner-tooltip">This is the value that will be used to re-calculate a new sum after unfreezing.</div>
 										</div>
 									</div>
-								</div>
-								<div className="form-panel">
 									<Button
 										basic
 										type="submit"
