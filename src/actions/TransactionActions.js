@@ -80,8 +80,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 			value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
 			asset: feeAsset,
 		};
-		// eslint-disable-next-line no-empty
 	} catch (err) {
+		console.debug(err);
 		return null;
 	}
 };
@@ -841,7 +841,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			['1.2.1', amount * (10 ** currency.precision)],
+			['1.2.1', new BN(amount).times(10 ** currency.precision).toString()],
 		);
 	}
 
