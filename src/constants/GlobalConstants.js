@@ -125,19 +125,22 @@ export const ERC20_HASHES = {
 export const FREEZE_BALANCE_PARAMS = [
 	{
 		duration: 90,
-		coefficient: 13000,
+		durationMonth: 3,
+		multiplier: 13000,
 		durationText: '3 month',
 		coefficientText: '1.3',
 	},
 	{
 		duration: 180,
-		coefficient: 14000,
+		durationMonth: 6,
+		multiplier: 14000,
 		durationText: '6 month',
 		coefficientText: '1.4',
 	},
 	{
 		duration: 360,
-		coefficient: 15000,
+		durationMonth: 18,
+		multiplier: 15000,
 		durationText: '12 month',
 		coefficientText: '1.5',
 	},

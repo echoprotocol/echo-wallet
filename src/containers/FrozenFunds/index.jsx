@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
+import { CACHE_MAPS } from 'echojs-lib';
 import { List } from 'immutable';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
 import FrozenFunds from '../../components/FrozenFunds';
+import { ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 
 import { disableToken, setAsset } from '../../actions/BalanceActions';
 import { openModal } from '../../actions/ModalActions';
@@ -16,7 +18,6 @@ import {
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
-
 export default connect(
 	(state) => ({
 		fees: state.fee.toArray() || [],
@@ -29,6 +30,9 @@ export default connect(
 		duration: state.form.getIn([FORM_FREEZE, 'duration']),
 		isAvailableBalance: state.form.getIn([FORM_FREEZE, 'isAvailableBalance']),
 		activeUserId: state.global.getIn(['activeUser', 'id']),
+		frozenFunds: state.balance.get('frozenFunds').toJS(),
+		totalFrozenFunds: state.balance.get('totalFrozenFunds'),
+		coreAsset: state.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS(),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

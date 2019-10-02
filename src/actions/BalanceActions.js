@@ -190,7 +190,36 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(await Promise.all(balances)) }));
 };
 
+/**
+ *
+ * @param {String} accountId
+ */
+export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
+	const frozenFunds = await echo.api.getFrozenBalances(accountId);
+
+	dispatch(BalanceReducer.actions.set({
+		field: 'frozenFunds',
+		value: new List(frozenFunds),
+	}));
+	const coreAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
+
+	const totalValueBN = frozenFunds
+		.reduce((acc, { balance }) => acc.plus(balance.amount), new BN(0));
+	const totalFrozenFunds = totalValueBN.div(10 ** coreAsset.precision).toString();
+
+	dispatch(BalanceReducer.actions.set({
+		field: 'totalFrozenFunds',
+		value: totalFrozenFunds,
+	}));
+};
+
+/**
+ *
+ * @param {String} accountId
+ * @param {String} networkName
+ */
 export const initBalances = (accountId, networkName) => async (dispatch) => {
+
 	await dispatch(getTokenBalances(accountId, networkName));
 
 	const [account] = await echo.api.getFullAccounts([accountId]);
@@ -198,6 +227,8 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 	await dispatch(getAssetsBalances(account.balances));
 
 	await dispatch(getPreviewBalances(networkName));
+
+	await dispatch(getFrozenBalances(account.id));
 };
 
 /**
@@ -363,6 +394,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		await dispatch(getAssetsBalances(balances, true));
 		const networkName = getState().global.getIn(['network', 'name']);
 		await dispatch(getPreviewBalances(networkName));
+		await dispatch(getFrozenBalances(accountId));
 	}
 
 	if (isCurrentTransferBalanceUpdated) {

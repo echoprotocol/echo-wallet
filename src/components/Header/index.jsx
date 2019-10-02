@@ -6,7 +6,6 @@ import { Dropdown } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
 
-
 import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
 import { MODAL_LOGOUT } from '../../constants/ModalConstants';
@@ -27,6 +26,7 @@ import {
 	CREATE_CONTRACT_PATH,
 	CALL_CONTRACT_PATH,
 	COMMITTEE_VOTE_PATH,
+	FROZEN_FUNDS_PATH,
 } from '../../constants/RouterConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -46,6 +46,7 @@ const secondaryContractPaths = [
 	CREATE_CONTRACT_PATH,
 	CALL_CONTRACT_PATH,
 	VIEW_CONTRACT_PATH.replace('/:name', ''),
+	FROZEN_FUNDS_PATH,
 ];
 
 class Header extends React.Component {
@@ -111,7 +112,11 @@ class Header extends React.Component {
 		let to = ACTIVITY_PATH;
 		let value = null;
 
-		if (secondaryContractPaths.includes(`/${location.pathname.split('/')[1]}`)) {
+		const path = `/${location.pathname.split('/')[1]}`;
+
+		if (path === FROZEN_FUNDS_PATH) {
+			to = INDEX_PATH;
+		} else if (secondaryContractPaths.includes(path)) {
 			to = CONTRACT_LIST_PATH;
 		} else {
 			value = transactionData ? transactionData.id : null;
@@ -169,7 +174,8 @@ class Header extends React.Component {
 	}
 
 	renderLinkToFrozenFunds() {
-		// TODO: show link, if page equal wallet only
+		const { totalFrozenFunds } = this.props;
+
 		return (
 			<div className="frozenfunds panel-right">
 				<NavLink
@@ -178,7 +184,7 @@ class Header extends React.Component {
 				>
 					<div className="inner-info">
 						<div className="balance">
-							<span>35</span>
+							<span>{totalFrozenFunds}</span>
 							<span>ECHO</span>
 						</div>
 						<span>Frozen funds</span>
@@ -224,7 +230,12 @@ class Header extends React.Component {
 
 				<div className="page-title">{this.getTitle()}</div>
 				{
-					this.renderLinkToFrozenFunds()
+					this.props.location.pathname === INDEX_PATH ?
+						this.renderLinkToFrozenFunds()
+						:
+						null
+
+
 				}
 				<div className="panel-right">
 					<div className="user-section">
@@ -262,6 +273,7 @@ Header.propTypes = {
 	networkName: PropTypes.string.isRequired,
 	preview: PropTypes.array.isRequired,
 	assets: PropTypes.array.isRequired,
+	totalFrozenFunds: PropTypes.string.isRequired,
 	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
@@ -280,6 +292,7 @@ export default withRouter(connect(
 		networkName: state.global.getIn(['network', 'name']),
 		assets: state.balance.get('assets').toJS(),
 		preview: state.balance.get('preview').toJS(),
+		totalFrozenFunds: state.balance.get('totalFrozenFunds'),
 		showBackButton: state.global.get('showBackButton'),
 		transactionData: state.transaction.get('details'),
 	}),

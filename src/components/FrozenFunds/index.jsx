@@ -1,5 +1,4 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 
 import Assets from './AssetsComponent';
@@ -10,6 +9,7 @@ class FrozenFunds extends React.Component {
 
 	render() {
 		const {
+			frozenFunds, totalFrozenFunds, coreAsset,
 			assets, tokens, amount, currency,
 			fee, isAvailableBalance, fees, duration, activeUserId,
 		} = this.props;
@@ -20,7 +20,7 @@ class FrozenFunds extends React.Component {
 					<span className="icon-frozen-funds" />
 					<span>Total Frozen Amount:</span>
 					<div className="balance">
-						<span>35</span>
+						<span>{totalFrozenFunds}</span>
 						<span>ECHO</span>
 					</div>
 				</div>
@@ -33,7 +33,10 @@ class FrozenFunds extends React.Component {
 							distributing the reward.
 						</div>
 						<div className="balance-scroll">
-							<Assets />
+							<Assets
+								frozenFunds={frozenFunds}
+								coreAsset={coreAsset}
+							/>
 						</div>
 					</div>
 					<div className="send-wrap">
@@ -67,6 +70,9 @@ class FrozenFunds extends React.Component {
 }
 
 FrozenFunds.propTypes = {
+	frozenFunds: PropTypes.array.isRequired,
+	totalFrozenFunds: PropTypes.string,
+	coreAsset: PropTypes.object.isRequired,
 	fees: PropTypes.array.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	freezeBalance: PropTypes.func.isRequired,
@@ -91,6 +97,7 @@ FrozenFunds.propTypes = {
 FrozenFunds.defaultProps = {
 	currency: null,
 	duration: FREEZE_BALANCE_PARAMS[0].duration,
+	totalFrozenFunds: '0',
 };
 
 export default FrozenFunds;

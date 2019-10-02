@@ -5,6 +5,8 @@ const DEFAULT_FIELDS = Map({
 	tokens: new List([]),
 	assets: new List([]),
 	preview: new List([]),
+	frozenFunds: new List([]),
+	totalFrozenFunds: '0',
 	intervalId: null,
 });
 

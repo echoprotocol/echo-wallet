@@ -125,6 +125,7 @@ export const connection = () => async (dispatch) => {
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
+		await echo.api.getObject(ECHO_ASSET_ID);
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
@@ -134,7 +135,6 @@ export const connection = () => async (dispatch) => {
 			await dispatch(initAccount(active.name, network.name));
 		}
 
-		await echo.api.getObject(ECHO_ASSET_ID);
 		dispatch(GlobalReducer.actions.set({ field: 'inited', value: true }));
 
 
