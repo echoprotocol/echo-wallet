@@ -1,4 +1,5 @@
 import echo from 'echojs-lib';
+import BN from 'bignumber.js';
 import { setFormValue, setFormError, setValue } from './FormActions';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
@@ -21,7 +22,7 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		const [intPath, doublePath] = value.split(/\.|,/);
 		value = `${intPath ? Number(intPath) : ''}.${doublePath || ''}`;
 	} else {
-		value = value ? Number(value).toString() : value;
+		value = value ? new BN(value).toString(10) : value;
 	}
 
 	dispatch(setFormError(form, 'fee', null));
