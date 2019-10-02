@@ -360,6 +360,19 @@
                             bottom: 1px;
                             z-index: 2;
                         }
+
+                        &.without-dropdown {
+
+                            &:after,
+                            &:before {
+                                content: none;
+                            }
+
+                            .amount {
+                                border-top-right-radius: 0.28571429rem;
+                                border-bottom-right-radius: 0.28571429rem;
+                            }
+                        }
                     }
 
                 }

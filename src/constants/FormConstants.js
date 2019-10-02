@@ -11,6 +11,7 @@ export const FORM_ADD_CUSTOM_NETWORK = 'add_custom_network';
 export const FORM_PERMISSION_KEY = 'permission_key';
 export const FORM_PASSWORD_CREATE = 'password_create';
 export const FORM_COMMITTEE = 'committee_key';
+export const FORM_FREEZE = 'freeze_amount';
 
 export const FORM_SIGN_UP_CHECKBOX_1 = 'I understand that I will lose access to my funds if I loose my WIF';
 export const FORM_SIGN_UP_CHECKBOX_2 = 'I understand no one can recover my WIF if I lose or forget it';
