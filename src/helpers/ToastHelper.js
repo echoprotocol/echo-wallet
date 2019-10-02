@@ -24,7 +24,6 @@ export const toastInfo = (text, onUndo, onOpen) => {
 };
 
 export const toastError = (text) => {
-	console.debug(text);
 	toast.error(text, {
 		autoClose: TIME_TOAST_ANIMATION,
 		position: 'bottom-right',
