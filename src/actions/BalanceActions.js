@@ -190,7 +190,8 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	dispatch(BalanceReducer.actions.set({ field: 'preview', value: new List(await Promise.all(balances)) }));
 };
 
-export const initBalances = (accountId, networkName) => async (dispatch, getState) => {
+
+export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	const frozenFunds = await echo.api.getFrozenBalances(accountId);
 
 	dispatch(BalanceReducer.actions.set({
@@ -207,6 +208,9 @@ export const initBalances = (accountId, networkName) => async (dispatch, getStat
 		field: 'totalFrozenFunds',
 		value: totalFrozenFunds,
 	}));
+};
+
+export const initBalances = (accountId, networkName) => async (dispatch) => {
 
 	await dispatch(getTokenBalances(accountId, networkName));
 
@@ -215,6 +219,8 @@ export const initBalances = (accountId, networkName) => async (dispatch, getStat
 	await dispatch(getAssetsBalances(account.balances));
 
 	await dispatch(getPreviewBalances(networkName));
+
+	await dispatch(getFrozenBalances(account.id));
 };
 
 /**
@@ -380,6 +386,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		await dispatch(getAssetsBalances(balances, true));
 		const networkName = getState().global.getIn(['network', 'name']);
 		await dispatch(getPreviewBalances(networkName));
+		await dispatch(getFrozenBalances(accountId));
 	}
 
 	if (isCurrentTransferBalanceUpdated) {

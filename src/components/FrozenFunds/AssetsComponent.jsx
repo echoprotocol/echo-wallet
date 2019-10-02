@@ -24,25 +24,25 @@ class Assets extends React.Component {
 			const {
 				balance: { amount }, unfreeze_time: unfreezeTime, multiplier, id,
 			} = item;
-			const freezParam = FREEZE_BALANCE_PARAMS.find((param) => param.multiplier === multiplier);
+			const freezeParam = FREEZE_BALANCE_PARAMS.find((param) => param.multiplier === multiplier);
 
 			const momentDate = moment(unfreezeTime).format('MMMM, DD');
-			const echobalance = new BN(amount).div(10 ** coreAsset.precision).toString();
+			const echoBalance = new BN(amount).div(10 ** coreAsset.precision).toString();
 
 			return (
 				<li key={id}>
 					<button>
 						<div className="frozen-value">
-							<span>{echobalance}</span>
+							<span>{echoBalance}</span>
 							<span>ECHO</span>
 						</div>
 						<div className="frozen-term">
-							<span>{freezParam.durationMonth}</span>
+							<span>{freezeParam.durationMonth}</span>
 							<span>Months</span>
 						</div>
 						<div className="frozen-coefficient">
 							<span>Coefficient: </span>
-							<span>{freezParam.coefficientText}</span>
+							<span>{freezeParam.coefficientText}</span>
 							<div className="inner-tooltip-wrap">
 								<span className="inner-tooltip-trigger icon-info" />
 								<div className="inner-tooltip">This is the value that will be used to re-calculate a new sum after unfreezing.</div>
