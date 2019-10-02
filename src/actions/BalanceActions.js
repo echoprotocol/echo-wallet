@@ -40,14 +40,14 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 		diff = diff.dividedBy(new BN(10).pow(nb.precision));
 
 		if (!oldBalance) {
-			return toastSuccess(`You receive ${diff.toString()} ${type} of ${nb.symbol}`);
+			return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
 		}
 
 		if (diff.lte(0)) {
 			return null;
 		}
 
-		return toastSuccess(`You receive ${diff.toString()} ${type} of ${nb.symbol}`);
+		return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
 	});
 };
 

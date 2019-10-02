@@ -84,7 +84,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		}
 
 		return {
-			value: new BN(amount).integerValue(BN.ROUND_UP).toString(),
+			value: new BN(amount).integerValue(BN.ROUND_UP).toString(10),
 			asset: feeAsset,
 		};
 	} catch (err) {
@@ -151,9 +151,20 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
 	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 
+
+	let amountValue = 0;
+	const amount = formOptions.get('amount').value;
+	if (amount) {
+		const currency = formOptions.get('currency');
+		const amountError = validateAmount(amount, currency);
+		if (!amountError) {
+			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+		}
+	}
+
 	const options = {
 		amount: {
-			amount: formOptions.get('amount').value || 0,
+			amount: amountValue,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		from: fromAccountId,
@@ -302,7 +313,7 @@ export const transfer = () => async (dispatch, getState) => {
 	} = form;
 
 	let { fee } = form;
-	const amount = new BN(form.amount.value).toString();
+	const amount = new BN(form.amount.value).toString(10);
 
 	if (to.error || from.error || form.amount.error || fee.error) {
 		return false;
@@ -369,7 +380,7 @@ export const transfer = () => async (dispatch, getState) => {
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			[toAccount.id, new BN(amount).times(10 ** currency.precision).toString()],
+			[toAccount.id, new BN(amount).times(10 ** currency.precision).toString(10)],
 		);
 
 		options = {
@@ -388,7 +399,7 @@ export const transfer = () => async (dispatch, getState) => {
 			from: fromAccount.id,
 			to: toAccount.id,
 			amount: {
-				amount: new BN(amount).times(10 ** currency.precision).toString(),
+				amount: new BN(amount).times(10 ** currency.precision).toString(10),
 				asset_id: currency.id,
 			},
 		};
@@ -841,7 +852,15 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 			return value;
 		});
 
-		bytecode = getMethod(targetFunction, args);
+		try {
+			bytecode = getMethod(targetFunction, args);
+		} catch (_) {
+			dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
+		}
+
+		if (!bytecode) {
+			return null;
+		}
 
 		const { amount, currency } = functionForm;
 		let { payable } = functionForm;
@@ -876,14 +895,14 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 		contractId = currency.id;
 
-		const amount = BN(formValues.amount.value).toString();
+		const amount = BN(formValues.amount.value).toString(10);
 
 		bytecode = getMethod(
 			{
 				name: 'transfer',
 				inputs: [{ type: 'address' }, { type: 'uint256' }],
 			},
-			['1.2.1', new BN(amount).times(10 ** currency.precision).toString()],
+			['1.2.1', new BN(amount).times(10 ** currency.precision).toString(10)],
 		);
 	}
 
