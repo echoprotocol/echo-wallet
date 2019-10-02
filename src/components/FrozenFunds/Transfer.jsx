@@ -11,29 +11,23 @@ import AmountField from '../Fields/AmountField';
 
 const dateOptions = FREEZE_BALANCE_PARAMS
 	.map(({ duration, durationText }) => ({ value: duration, text: durationText }));
-// const dateOptions = [
-// 	{
-// 		key: '3_month',
-// 		text: '3 month',
-// 		value: 90,
-// 	},
-// 	{
-// 		key: '6_month',
-// 		text: '6 month',
-// 		value: 180,
-// 	},
-// 	{
-// 		key: '12_month',
-// 		text: '12 month',
-// 		value: 360,
-// 	},
-// ];
 
 class Transfer extends React.Component {
+
+	componentDidMount() {
+		this.props.setAssets();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.activeUserId !== this.props.activeUserId) {
+			this.props.setAssets();
+		}
+	}
 
 	componentWillUnmount() {
 		this.props.clearForm();
 		this.props.resetTransaction();
+		this.props.setAssets();
 	}
 
 	onDropdownChange(e, value) {
@@ -78,7 +72,7 @@ class Transfer extends React.Component {
 									setValue={this.props.setValue}
 									setDefaultAsset={this.props.setDefaultAsset}
 									getTransferFee={this.props.getTransactionFee}
-									setContractFees={() => {}}
+									setContractFees={() => { }}
 									assetDropdown={false}
 									labelText="Amount, ECHO"
 								/>
@@ -124,6 +118,7 @@ class Transfer extends React.Component {
 Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
 	duration: PropTypes.number.isRequired,
+	activeUserId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	freezeBalance: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
@@ -139,6 +134,7 @@ Transfer.propTypes = {
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
+	setAssets: PropTypes.func.isRequired,
 };
 
 Transfer.defaultProps = {

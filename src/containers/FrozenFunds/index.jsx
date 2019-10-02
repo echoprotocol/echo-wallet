@@ -12,6 +12,7 @@ import {
 	resetTransaction,
 	setAssetActiveAccount,
 	freezeBalance,
+	setAssetsToForm,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
@@ -27,6 +28,7 @@ export default connect(
 		feeError: state.form.getIn([FORM_FREEZE, 'feeError']),
 		duration: state.form.getIn([FORM_FREEZE, 'duration']),
 		isAvailableBalance: state.form.getIn([FORM_FREEZE, 'isAvailableBalance']),
+		activeUserId: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -42,8 +44,8 @@ export default connect(
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_FREEZE)),
 		setAssetActiveAccount: () => dispatch(setAssetActiveAccount()),
 		getTransactionFee: (asset) => dispatch(getFreezeBalanceFee(FORM_FREEZE, asset)),
+		setAssets: () => dispatch(setAssetsToForm(FORM_FREEZE)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_FREEZE, value, currency, name)),
 	}),
 )(FrozenFunds);
-

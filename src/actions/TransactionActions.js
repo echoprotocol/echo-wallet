@@ -107,8 +107,6 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 			asset_id: asset || formOptions.get('currency').id,
 		},
 	};
-	console.log(options)
-
 
 	dispatch(setValue(form, 'isAvailableBalance', true));
 	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
@@ -152,6 +150,16 @@ export const checkFeePool = (echoAsset, asset, fee) => {
 	feePool = price.times(feePool).times(10 ** asset.precision);
 
 	return feePool.gt(fee);
+};
+
+export const setAssetsToForm = (from) => async (dispatch, getState) => {
+
+	if (!getState().global.getIn(['activeUser', 'id'])) {
+		return;
+	}
+
+	const balances = getState().balance.get('assets').toArray() || [];
+	dispatch(setValue(from, 'balance', { assets: new List(balances) }));
 };
 
 export const checkAccount = (accountName, subject) => async (dispatch, getState) => {
@@ -533,7 +541,6 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 	}
 
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-	console.log('123123')
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;

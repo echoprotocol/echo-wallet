@@ -38,12 +38,8 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
-	
 		const { currency, form } = this.props;
 		const value = e.target.value.trim();
-		console.log('onChangeAmount');
-		console.log([FORM_FREEZE, FORM_TRANSFER].includes(form));
-		console.log(currency.id.startsWith(PREFIX_ASSET));
 		const { name } = e.target;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -235,7 +231,7 @@ class AmountField extends React.Component {
 				>
 					<div className="amount-wrap action-wrap">
 						<input
-							className="amount ui input input-value"
+							className="amount"
 							placeholder="0.00"
 							value={amount.value}
 							name="amount"
