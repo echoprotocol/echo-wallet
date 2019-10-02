@@ -229,7 +229,7 @@ class AmountField extends React.Component {
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
-					<div className="amount-wrap action-wrap">
+					<div className={classnames('amount-wrap', 'action-wrap', { 'without-dropdown': !assetDropdown })} >
 						<input
 							className="amount"
 							placeholder="0.00"

@@ -183,7 +183,7 @@
         .field {
 
             .input-value::placeholder,
-            .dropdown>.text {
+            .dropdown:not(.fee-dropdown) .text {
                 opacity: 0.5;
                 color: #3b3b3b;
                 font-size: 15px;
