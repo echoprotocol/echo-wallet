@@ -684,7 +684,15 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 			return value;
 		});
 
-		bytecode = getMethod(targetFunction, args);
+		try {
+			bytecode = getMethod(targetFunction, args);
+		} catch (_) {
+			dispatch(setFormError(FORM_CALL_CONTRACT, 'fee', 'Can\'t be calculated'));
+		}
+
+		if (!bytecode) {
+			return null;
+		}
 
 		const { amount, currency } = functionForm;
 		let { payable } = functionForm;
