@@ -4,7 +4,7 @@ import { Form, Input, Dropdown } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -40,7 +40,6 @@ class AmountField extends React.Component {
 	onChangeAmount(e) {
 		const { currency, form } = this.props;
 		const value = e.target.value.trim();
-
 		const { name } = e.target;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -51,7 +50,7 @@ class AmountField extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(() => {
-				if (form === FORM_TRANSFER && currency.id.startsWith(PREFIX_ASSET)) {
+				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency.id.startsWith(PREFIX_ASSET)) {
 					this.props.getTransferFee()
 						.then((fee) => fee && this.onFee(fee));
 				}
@@ -182,23 +181,23 @@ class AmountField extends React.Component {
 
 	render() {
 		const {
-			assets, amount, form, fee, isAvailableBalance, fees,
+			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText,
 		} = this.props;
 
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
-		const type = form === FORM_TRANSFER && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+		const type = [FORM_TRANSFER, FORM_FREEZE]
+			.includes(form) && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
-					Amount
+					{labelText}
 					<ul className="list-amount">
 						<li>
 							{fee && fee.value && 'Fee:'}
 							<FeeField
 								currency={currency}
-								forn={form}
 								fees={fees}
 								form={form}
 								type={type}
@@ -230,7 +229,7 @@ class AmountField extends React.Component {
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
-					<div className="amount-wrap action-wrap">
+					<div className={classnames('amount-wrap', 'action-wrap', { 'without-dropdown': !assetDropdown })} >
 						<input
 							className="amount"
 							placeholder="0.00"
@@ -243,20 +242,23 @@ class AmountField extends React.Component {
 						{amount.error || fee.error ? <span className="icon-error-red value-status" /> : null}
 					</div>
 					{amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null}
-					<Dropdown
-						search
-						onChange={(e, { value }) => this.onDropdownChange(e, value)}
-						searchQuery={searchText}
-						closeOnChange
-						onSearchChange={(e) => this.onSearch(e)}
-						text={currency ? currency.symbol : ''}
-						selection
-						onBlur={() => this.clearSearchText()}
-						options={this.renderList('assets').concat(this.renderList('tokens'))}
-						noResultsMessage="No results are found"
-						className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + assets.length) <= 1 })}
-						onClose={() => this.clearSearchText()}
-					/>
+					{
+						assetDropdown && <Dropdown
+							search
+							onChange={(e, { value }) => this.onDropdownChange(e, value)}
+							searchQuery={searchText}
+							closeOnChange
+							onSearchChange={(e) => this.onSearch(e)}
+							text={currency ? currency.symbol : ''}
+							selection
+							onBlur={() => this.clearSearchText()}
+							options={this.renderList('assets').concat(this.renderList('tokens'))}
+							noResultsMessage="No results are found"
+							className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + assets.length) <= 1 })}
+							onClose={() => this.clearSearchText()}
+						/>
+					}
+
 
 				</Input>
 
@@ -282,6 +284,8 @@ AmountField.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	assetDropdown: PropTypes.bool,
+	labelText: PropTypes.string,
 };
 
 
@@ -289,6 +293,8 @@ AmountField.defaultProps = {
 	currency: null,
 	fee: {},
 	assets: null,
+	assetDropdown: true,
+	labelText: 'Amount',
 };
 
 export default AmountField;

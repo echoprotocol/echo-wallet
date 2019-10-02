@@ -194,6 +194,17 @@ export default {
 			asset: null,
 		},
 	},
+	balance_freeze: {
+		value: OPERATIONS_IDS.BALANCE_FREEZE,
+		name: 'Balance freeze',
+		options: {
+			from: 'account',
+			subject: null,
+			value: 'amount.amount',
+			asset: 'amount.asset_id',
+		},
+		signer: 'account',
+	},
 	vesting_balance_create: {
 		value: OPERATIONS_IDS.VESTING_BALANCE_CREATE,
 		name: 'Create vesting balance',
@@ -222,16 +233,6 @@ export default {
 			subject: ['deposit_to_account', 'name'],
 			value: null,
 			asset: null,
-		},
-	},
-	balance_freeze: {
-		value: OPERATIONS_IDS.BALANCE_FREEZE,
-		name: 'Balance freeze',
-		options: {
-			from: 'account',
-			subject: null,
-			value: 'amount.amount',
-			asset: 'amount.asset_id',
 		},
 	},
 	override_transfer: {
