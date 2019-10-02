@@ -89,18 +89,28 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
-	if (!formOptions.get('amount').value) {
+	const amount = formOptions.get('amount').value;
+	if (!amount) {
 		dispatch(setValue(form, 'isAvailableBalance', false));
 		return null;
+	}
+
+	let amountValue = 0;
+	if (amount) {
+		const currency = formOptions.get('currency');
+		const amountError = validateAmount(amount, currency);
+		if (!amountError) {
+			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+		}
 	}
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 	const options = {
 		account: activeUserId,
-		duration: formOptions.get('duration') || 90,
+		duration: formOptions.get('duration') || FREEZE_BALANCE_PARAMS[0].duration,
 		amount: {
-			amount: formOptions.get('amount').value || 0,
+			amount: amountValue,
 			asset_id: asset || formOptions.get('currency').id,
 		},
 		fee: {
