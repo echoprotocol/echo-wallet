@@ -13,7 +13,9 @@ const dateOptions = FREEZE_BALANCE_PARAMS
 	.map(({ duration, durationText }) => ({ value: duration, text: durationText }));
 
 class Transfer extends React.Component {
-
+	state = {
+		durationMonth: ''
+	}
 	componentDidMount() {
 		this.props.setAssets();
 	}
@@ -32,6 +34,10 @@ class Transfer extends React.Component {
 
 	onDropdownChange(e, value) {
 		this.props.setValue('duration', value);
+		this.setState({duration: value})
+		dateOptions.forEach((currentValue, i)=> {
+			if(currentValue.value === value) this.setState({durationMonth: currentValue.text})
+		})
 	}
 
 	render() {
@@ -80,7 +86,8 @@ class Transfer extends React.Component {
 									<label htmlFor="period">Period</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										text={String(duration)}
+										placeholder='Choose period'
+										text={String(this.state.durationMonth)}
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
