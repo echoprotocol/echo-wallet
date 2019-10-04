@@ -33,6 +33,7 @@ class AccountField extends React.Component {
 			timeout: setTimeout(async () => {
 				const isValidAccount =
 					await this.props.checkAccount(this.props.field.value, this.props.subject);
+				if(this.props.isCorrect) this.props.isCorrect(isValidAccount);
 				if (!isValidAccount) return;
 				const { currency } = this.props;
 				if (currency && currency.id.startsWith(PREFIX_ASSET)) {

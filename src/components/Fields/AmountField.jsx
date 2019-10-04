@@ -238,6 +238,7 @@ class AmountField extends React.Component {
 							onChange={(e) => this.onChangeAmount(e)}
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							disabled={this.props.isActive !== undefined ? !this.props.isActive : false}
 						/>
 						{amount.error || fee.error ? <span className="icon-error-red value-status" /> : null}
 					</div>
