@@ -208,10 +208,15 @@
         &>input.search {
             padding-right: 28px;
             transition: color .3s;
+            cursor: pointer;
         }
 
         &>.text {
             cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: calc(100% - 8px);
         }
 
         .menu {
@@ -224,9 +229,17 @@
             border-top-right-radius: 0;
             border-top: 1px solid $bd-gray;
 
-            &>.item:nth-child(1) {
-                &.header {
-                    margin: 0;
+            &>.item {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 0;
+                max-width: 138px;
+
+                &:nth-child(1) {
+                    &.header {
+                        margin: 0;
+                    }
                 }
             }
 
