@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Dropdown, Button, Form } from 'semantic-ui-react';
+import { Dropdown, Button, Form, Popup } from 'semantic-ui-react';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
 import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
@@ -90,10 +90,12 @@ class Transfer extends React.Component {
 									<div className="coefficient-value">
 										<span>Coefficient:</span>
 										<span>{coefficient}</span>
-										<div className="inner-tooltip-wrap">
-											<span className="inner-tooltip-trigger icon-info" />
-											<div className="inner-tooltip">This is the value that will be used to re-calculate a new sum after unfreezing.</div>
-										</div>
+										<Popup
+											trigger={<span className="inner-tooltip-trigger icon-info" />}
+											content="This is the value that will be used to re-calculate a new sum after unfreezing."
+											className="inner-tooltip"
+											inverted
+										/>
 									</div>
 									<Button
 										basic

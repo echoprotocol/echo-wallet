@@ -120,10 +120,7 @@
         overflow: hidden;
         transition: background-color .2s;
         border-radius: 6px;
-
-        &:not(:last-child) {
-            margin-bottom: 6px;
-        }
+        margin-bottom: 6px;
 
         &.focused,
         &:hover {
