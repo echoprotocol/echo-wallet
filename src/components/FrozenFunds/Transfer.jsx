@@ -31,9 +31,8 @@ class Transfer extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		let currentDuration = dateOptions.find((d) => { return d.value === value; });
-		this.props.setValue('duration', Object.assign({}, currentDuration, {isSelected: true}));
-		
+		const currentDuration = dateOptions.find((d) => d.value === value);
+		this.props.setValue('duration', Object.assign({}, currentDuration, { isSelected: true }));
 	}
 
 	render() {
@@ -44,7 +43,7 @@ class Transfer extends React.Component {
 		let coefficient = '0.0';
 		if (duration) {
 			({ coefficientText: coefficient } = FREEZE_BALANCE_PARAMS
-				.find((b) => { return b.duration === duration.value }));
+				.find((b) => b.duration === duration.value));
 		}
 		return (
 			<TransactionScenario
@@ -80,7 +79,7 @@ class Transfer extends React.Component {
 									<label htmlFor="period">Period</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										placeholder='Choose period'
+										placeholder="Choose period"
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
@@ -101,7 +100,7 @@ class Transfer extends React.Component {
 										className="main-btn"
 										content="Freeze"
 										onClick={submit}
-										disabled = {!duration.isSelected}
+										disabled={!duration.isSelected}
 									/>
 								</div>
 							</div>
