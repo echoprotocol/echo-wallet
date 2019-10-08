@@ -46,7 +46,9 @@ class AccountField extends React.Component {
 	}
 
 	render() {
-		const { field, autoFocus, subject,	disabled } = this.props;
+		const {
+			field, autoFocus, subject,	disabled,
+		} = this.props;
 
 		return (
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
@@ -83,7 +85,6 @@ AccountField.propTypes = {
 AccountField.defaultProps = {
 	autoFocus: false,
 	currency: null,
-	disabled: false,
 };
 
 export default AccountField;

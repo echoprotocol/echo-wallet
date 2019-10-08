@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Form, Popup } from 'semantic-ui-react';
@@ -131,14 +132,14 @@ class FeeComponent extends React.Component {
 					fluid
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
-					text={ ADDRESS_PREFIX === fee.asset.symbol ? text + ' ' + fee.asset.symbol : text }
-					icon={ ADDRESS_PREFIX === fee.asset.symbol ? ''
-					: <Popup
-						trigger={<span className="inner-tooltip-trigger icon-coin" />}
-						content={fee.asset.symbol}
-						className="asset-tooltip"
-						inverted
-					/>}
+					text={ADDRESS_PREFIX === fee.asset.symbol ? `${text}\u00a0${fee.asset.symbol}` : text}
+					icon={ADDRESS_PREFIX === fee.asset.symbol ? ''
+						: <Popup
+							trigger={<span className="inner-tooltip-trigger icon-coin" />}
+							content={fee.asset.symbol}
+							className="asset-tooltip"
+							inverted
+						/>}
 					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
