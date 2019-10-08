@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Assets from './AssetsComponent';
 import Transfer from './Transfer';
-import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 
 class FrozenFunds extends React.Component {
 
