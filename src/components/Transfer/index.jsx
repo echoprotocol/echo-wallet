@@ -9,10 +9,6 @@ import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 
 class Transfer extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {isAccountActive:false}
-	}
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
@@ -21,10 +17,6 @@ class Transfer extends React.Component {
 	componentWillUnmount() {
 		this.props.clearForm();
 		this.props.resetTransaction();
-	}
-	isCorrect = (isAccountCorrect) => {
-		this.setState({isAccountActive: isAccountCorrect})
-		return isAccountCorrect;
 	}
 	render() {
 		const {
@@ -52,7 +44,6 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
-									isCorrect={this.isCorrect}
 								/>
 								<AccountField
 									currency={currency}
@@ -65,7 +56,6 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
-									isCorrect={this.isCorrect}
 								/>
 								<AmountField
 									fees={fees}
@@ -83,7 +73,6 @@ class Transfer extends React.Component {
 									setDefaultAsset={this.props.setDefaultAsset}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
-									isActive={this.state.isAccountActive}
 								/>
 								<div className="form-panel">
 									<Button
