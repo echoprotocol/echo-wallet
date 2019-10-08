@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators } from 'echojs-lib';
 
 import history from '../history';
 
@@ -40,7 +40,6 @@ import {
 	validateContractName,
 	validateByType,
 	validateAmount,
-	validateContractId,
 	validateFee,
 } from '../helpers/ValidateHelper';
 import { formatError } from '../helpers/FormatHelper';
@@ -762,10 +761,10 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const contractIdError = validateContractId(id.value);
+	const isValidContractId = validators.isContractId(id.value);
 
-	if (contractIdError) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', contractIdError));
+	if (!isValidContractId) {
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', 'Invalid contract ID'));
 		return false;
 	}
 
