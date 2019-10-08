@@ -9,6 +9,7 @@ import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 
 class Transfer extends React.Component {
+
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
