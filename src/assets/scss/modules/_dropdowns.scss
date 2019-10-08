@@ -41,7 +41,7 @@
         text-align: right;
         min-width: auto;
         min-height: auto;
-
+        background: transparent;
 
         &.no-choice {
             cursor: auto;
@@ -600,6 +600,8 @@
 }
 
 .fee-dropdown-wrap {
+    z-index: 10;
+
     .fee-dropdown {
         &.ui.dropdown.active {
             box-shadow: none;

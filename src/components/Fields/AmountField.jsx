@@ -194,8 +194,9 @@ class AmountField extends React.Component {
 				<label htmlFor="amount">
 					{labelText}
 					<ul className="list-amount">
+					{fee && fee.value &&
 						<li>
-							{fee && fee.value && 'Fee:'}
+							Fee:
 							<FeeField
 								currency={currency}
 								fees={fees}
@@ -208,6 +209,7 @@ class AmountField extends React.Component {
 								getTransferFee={this.props.getTransferFee}
 							/>
 						</li>
+					}
 						<li>
 							Available Balance:
 							<span

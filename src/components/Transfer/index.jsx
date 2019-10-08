@@ -47,6 +47,7 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
+									disabled={true}
 								/>
 								<AccountField
 									currency={currency}

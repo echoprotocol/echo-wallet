@@ -21,10 +21,6 @@
         }
     }
 
-    .list-amount li:first-child {
-        display: none;
-    }
-
     @media only screen and (max-width: 1000px) {
         .send-wrap {
             padding: 0 20px;
