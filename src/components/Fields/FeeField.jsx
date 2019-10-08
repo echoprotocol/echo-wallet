@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Form } from 'semantic-ui-react';
+import { Dropdown, Form, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
+import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
@@ -101,7 +102,7 @@ class FeeComponent extends React.Component {
 	getText(options) {
 		const { fee } = this.props;
 		if (fee && fee.value && fee.asset) {
-			return formatAmount(fee.value, fee.asset.precision, fee.asset.symbol);
+			return formatAmount(fee.value, fee.asset.precision);
 		}
 
 		return options[0] ? options[0].text : '';
@@ -110,6 +111,7 @@ class FeeComponent extends React.Component {
 
 	render() {
 		const { options } = this.state;
+		const { fee } = this.props;
 		const text = this.getText(options);
 
 		return (
@@ -129,7 +131,14 @@ class FeeComponent extends React.Component {
 					fluid
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
-					text={text}
+					text={ ADDRESS_PREFIX === fee.asset.symbol ? text + ' ' + fee.asset.symbol : text }
+					icon={ ADDRESS_PREFIX === fee.asset.symbol ? ''
+					: <Popup
+						trigger={<span className="inner-tooltip-trigger icon-coin" />}
+						content={fee.asset.symbol}
+						className="asset-tooltip"
+						inverted
+					/>}
 					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>

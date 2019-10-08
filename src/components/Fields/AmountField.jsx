@@ -1,11 +1,12 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Dropdown } from 'semantic-ui-react';
+import { Form, Input, Dropdown, Popup } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
-import { PREFIX_ASSET } from '../../constants/GlobalConstants';
+import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -132,6 +133,25 @@ class AmountField extends React.Component {
 		return amount.isNegative() ? 0 : amount;
 	}
 
+	getAvailableBalance(currency) {
+		if (currency) {
+			return (
+				currency.symbol === ADDRESS_PREFIX ?
+					formatAmount(currency.balance, currency.precision, currency.symbol) :
+					<React.Fragment>
+						{formatAmount(currency.balance, currency.precision)}
+						<Popup
+							trigger={<span className="inner-tooltip-trigger icon-coin" />}
+							content={currency.symbol}
+							className="asset-tooltip"
+							inverted
+						/>
+					</React.Fragment>
+			);
+		}
+		return '0 ECHO';
+	}
+
 	clearSearchText() {
 		this.setState({ searchText: '' });
 	}
@@ -194,24 +214,24 @@ class AmountField extends React.Component {
 				<label htmlFor="amount">
 					{labelText}
 					<ul className="list-amount">
-					{fee && fee.value &&
+						{fee && fee.value &&
+							<li>
+								Fee:
+								<FeeField
+									currency={currency}
+									fees={fees}
+									form={form}
+									type={type}
+									fee={fee}
+									assets={assets.toJS()}
+									setValue={this.props.setValue}
+									setFormValue={this.props.setFormValue}
+									getTransferFee={this.props.getTransferFee}
+								/>
+							</li>
+						}
 						<li>
-							Fee:
-							<FeeField
-								currency={currency}
-								fees={fees}
-								form={form}
-								type={type}
-								fee={fee}
-								assets={assets.toJS()}
-								setValue={this.props.setValue}
-								setFormValue={this.props.setFormValue}
-								getTransferFee={this.props.getTransferFee}
-							/>
-						</li>
-					}
-						<li>
-							Available Balance:
+							Available:
 							<span
 								className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 								role="button"
@@ -219,7 +239,9 @@ class AmountField extends React.Component {
 								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
 								tabIndex="0"
 							>
-								{currency ? formatAmount(currency.balance, currency.precision, currency.symbol) : '0 ECHO'}
+								{
+									this.getAvailableBalance(currency)
+								}
 							</span>
 						</li>
 					</ul>
