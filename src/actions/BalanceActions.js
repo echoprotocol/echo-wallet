@@ -321,8 +321,10 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 
 	const form = getState().form.getIn([FORM_TRANSFER]);
 	const formName = form.get('from').value;
+	if (!formName) {
+		return undefined;
+	}
 	const account = await echo.api.getAccountByName(formName);
-
 	if (!account) {
 		return undefined;
 	}

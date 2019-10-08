@@ -367,7 +367,6 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
-
 	const fromAccount = await echo.api.getAccountByName(from.value);
 	const toAccount = await echo.api.getAccountByName(to.value);
 
