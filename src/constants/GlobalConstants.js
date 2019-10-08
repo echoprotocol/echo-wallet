@@ -139,7 +139,7 @@ export const FREEZE_BALANCE_PARAMS = [
 	},
 	{
 		duration: 360,
-		durationMonth: 18,
+		durationMonth: 12,
 		multiplier: 15000,
 		durationText: '12 month',
 		coefficientText: '1.5',
