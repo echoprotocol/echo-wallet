@@ -119,7 +119,7 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 
 	const options = {
 		account: activeUserId,
-		duration: formOptions.get('duration') || FREEZE_BALANCE_PARAMS[0].duration,
+		duration: formOptions.get('duration').value || FREEZE_BALANCE_PARAMS[0].duration,
 		amount: {
 			amount: amountValue,
 			asset_id: asset || formOptions.get('currency').id,
@@ -436,7 +436,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 		duration,
 	} = form;
 
-	const durationObject = FREEZE_BALANCE_PARAMS.find((d) => d.duration === duration);
+	const durationObject = FREEZE_BALANCE_PARAMS.find((d) => d.duration === duration.value);
 
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString();
@@ -491,7 +491,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 			asset_id: fee.asset.id,
 		},
 		account: activeUserId,
-		duration,
+		duration: duration.value,
 		amount: {
 			amount: new BN(amount).times(10 ** currency.precision).toString(),
 			asset_id: currency.id,

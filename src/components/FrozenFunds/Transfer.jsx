@@ -31,7 +31,8 @@ class Transfer extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		this.props.setValue('duration', value);
+		const currentDuration = dateOptions.find((d) => d.value === value);
+		this.props.setValue('duration', Object.assign({}, currentDuration, { isSelected: true }));
 	}
 
 	render() {
@@ -39,13 +40,11 @@ class Transfer extends React.Component {
 			currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees, duration,
 		} = this.props;
-
 		let coefficient = '0.0';
 		if (duration) {
 			({ coefficientText: coefficient } = FREEZE_BALANCE_PARAMS
-				.find((b) => b.duration === duration));
+				.find((b) => b.duration === duration.value));
 		}
-
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.freezeBalance()}
@@ -80,7 +79,7 @@ class Transfer extends React.Component {
 									<label htmlFor="period">Period</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										text={String(duration)}
+										placeholder="Choose period"
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
@@ -101,6 +100,7 @@ class Transfer extends React.Component {
 										className="main-btn"
 										content="Freeze"
 										onClick={submit}
+										disabled={!duration.isSelected}
 									/>
 								</div>
 							</div>
@@ -115,7 +115,7 @@ class Transfer extends React.Component {
 
 Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
-	duration: PropTypes.number.isRequired,
+	duration: PropTypes.object.isRequired,
 	activeUserId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	freezeBalance: PropTypes.func.isRequired,

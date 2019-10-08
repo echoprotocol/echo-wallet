@@ -216,7 +216,11 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
-		duration: FREEZE_BALANCE_PARAMS[0].duration,
+		duration: {
+			value: FREEZE_BALANCE_PARAMS[0].duration,
+			text: FREEZE_BALANCE_PARAMS[0].durationText,
+			isSelected: false,
+		},
 		isAvailableBalance: false,
 	}),
 };
