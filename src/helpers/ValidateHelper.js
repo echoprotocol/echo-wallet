@@ -3,7 +3,7 @@ import BN from 'bignumber.js';
 
 import {
 	ADDRESS_PREFIX,
-	CONTRACT_ID_PREFIX, ERC20_HASHES,
+	ERC20_HASHES,
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
 	PUBLIC_KEY_LENGTH,
@@ -101,14 +101,6 @@ export const validateContractName = (name) => {
 		return 'Invalid symbols';
 	}
 
-	return null;
-};
-
-export const validateContractId = (id) => {
-	id = id.split('.');
-	if (id.length !== 3 || id.splice(0, 2).join('.') !== CONTRACT_ID_PREFIX || Number.isInteger(id[2])) {
-		return 'Invalid contract ID';
-	}
 	return null;
 };
 
