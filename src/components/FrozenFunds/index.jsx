@@ -78,7 +78,7 @@ FrozenFunds.propTypes = {
 	freezeBalance: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	currency: PropTypes.object,
-	duration: PropTypes.object,
+	duration: PropTypes.object.isRequired,
 	activeUserId: PropTypes.string.isRequired,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
@@ -96,7 +96,6 @@ FrozenFunds.propTypes = {
 
 FrozenFunds.defaultProps = {
 	currency: null,
-	duration: FREEZE_BALANCE_PARAMS[0].duration,
 	totalFrozenFunds: '0',
 };
 

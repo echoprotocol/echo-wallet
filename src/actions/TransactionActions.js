@@ -492,7 +492,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 			asset_id: fee.asset.id,
 		},
 		account: activeUserId,
-		duration,
+		duration: duration.value,
 		amount: {
 			amount: new BN(amount).times(10 ** currency.precision).toString(),
 			asset_id: currency.id,
