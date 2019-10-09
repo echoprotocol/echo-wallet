@@ -1,6 +1,7 @@
 .ui.dropdown {
     &.active {
 
+        i.icon,
         .dropdown.icon,
         .icon-dropdown_arrow {
             transform: rotate(180deg);
@@ -41,7 +42,7 @@
         text-align: right;
         min-width: auto;
         min-height: auto;
-
+        background: transparent;
 
         &.no-choice {
             cursor: auto;
@@ -66,7 +67,6 @@
         }
 
         &>.text {
-            margin-right: 5px;
             color: $main-сolor;
         }
 
@@ -604,6 +604,8 @@
 }
 
 .fee-dropdown-wrap {
+    z-index: 10;
+
     .fee-dropdown {
         &.ui.dropdown.active {
             box-shadow: none;
@@ -611,6 +613,25 @@
             &:hover {
                 box-shadow: none;
             }
+        }
+    }
+
+    i.icon {
+
+        margin: 0 -4px 0 0;
+        line-height: 10px;
+
+        &:before {
+            font-family: icomoon;
+            speak: none;
+            font-style: normal;
+            font-weight: 400;
+            text-transform: none;
+            -webkit-font-smoothing: antialiased;
+            content: '\e907';
+            font-size: 4px;
+            vertical-align: middle;
+            color: #b2b4b7;
         }
     }
 }
