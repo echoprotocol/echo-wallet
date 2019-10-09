@@ -264,10 +264,8 @@
                 }
 
                 .name {
+                    @include cut-text;
                     color: $main-сolor;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
                     max-width: 180px;
                     color: #3B3B3B;
                     transition: color $speed;

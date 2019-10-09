@@ -212,10 +212,8 @@
         }
 
         &>.text {
+            @include cut-text;
             cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             max-width: calc(100% - 8px);
         }
 
@@ -230,9 +228,7 @@
             border-top: 1px solid $bd-gray;
 
             &>.item {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                @include cut-text;
                 padding-right: 0;
                 max-width: 138px;
 
@@ -371,11 +367,9 @@
 
         .status {
             .ellipsis {
+                @include cut-text;
                 max-width: 85px;
-                white-space: nowrap;
-                text-overflow: ellipsis;
                 display: block;
-                overflow: hidden;
             }
 
         }
@@ -550,21 +544,18 @@
                     }
 
                     .name {
+                        @include cut-text;
                         padding: 0 0 0 7px;
                         max-width: 200px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
                     }
                 }
 
                 .label-link {
+                    @include cut-text;
                     padding: 0 0 0 33px;
                     color: #5267C6;
                     transition: color $speed;
                     max-width: 225px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
                 }
 
                 .error-wrap {

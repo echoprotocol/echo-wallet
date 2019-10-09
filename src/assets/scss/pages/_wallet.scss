@@ -161,10 +161,8 @@
 
         .currency-symbol,
         .currency-amount {
+            @include cut-text;
             margin-right: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         button {
