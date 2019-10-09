@@ -46,15 +46,17 @@ class AccountField extends React.Component {
 	}
 
 	render() {
-		const { field, autoFocus, subject } = this.props;
+		const {
+			field, autoFocus, subject,	disabled,
+		} = this.props;
 
 		return (
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
 				<label htmlFor={`account${subject}`}>{subject}</label>
-				<Input type="text" placeholder="Account Name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus}>
+				<Input type="text" placeholder="Account Name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus} disabled={disabled}>
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
-					{ field.checked && !field.error &&
+					{ field.checked && !field.error && !disabled &&
 						<span className={classnames('icon-checked value-status', { success: field.checked })} />
 					}
 					{ field.error ? <span className="icon-error-red value-status" /> : null }
@@ -77,11 +79,13 @@ AccountField.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	disabled: PropTypes.bool,
 };
 
 AccountField.defaultProps = {
 	autoFocus: false,
 	currency: null,
+	disabled: false,
 };
 
 export default AccountField;

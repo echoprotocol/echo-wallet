@@ -74,7 +74,7 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransactionFee}
 									setContractFees={() => { }}
 									assetDropdown={false}
-									labelText="Amount, ECHO"
+									labelText="Amount"
 								/>
 								<Form.Field>
 									<label htmlFor="period">Period</label>

@@ -1,6 +1,7 @@
 .ui.dropdown {
     &.active {
 
+        i.icon,
         .dropdown.icon,
         .icon-dropdown_arrow {
             transform: rotate(180deg);
@@ -41,7 +42,7 @@
         text-align: right;
         min-width: auto;
         min-height: auto;
-
+        background: transparent;
 
         &.no-choice {
             cursor: auto;
@@ -66,7 +67,6 @@
         }
 
         &>.text {
-            margin-right: 5px;
             color: $main-сolor;
         }
 
@@ -208,10 +208,13 @@
         &>input.search {
             padding-right: 28px;
             transition: color .3s;
+            cursor: pointer;
         }
 
         &>.text {
+            @include cut-text;
             cursor: pointer;
+            max-width: calc(100% - 8px);
         }
 
         .menu {
@@ -224,9 +227,15 @@
             border-top-right-radius: 0;
             border-top: 1px solid $bd-gray;
 
-            &>.item:nth-child(1) {
-                &.header {
-                    margin: 0;
+            &>.item {
+                @include cut-text;
+                padding-right: 0;
+                max-width: 138px;
+
+                &:nth-child(1) {
+                    &.header {
+                        margin: 0;
+                    }
                 }
             }
 
@@ -358,11 +367,9 @@
 
         .status {
             .ellipsis {
+                @include cut-text;
                 max-width: 85px;
-                white-space: nowrap;
-                text-overflow: ellipsis;
                 display: block;
-                overflow: hidden;
             }
 
         }
@@ -537,21 +544,18 @@
                     }
 
                     .name {
+                        @include cut-text;
                         padding: 0 0 0 7px;
                         max-width: 200px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
                     }
                 }
 
                 .label-link {
+                    @include cut-text;
                     padding: 0 0 0 33px;
                     color: #5267C6;
                     transition: color $speed;
                     max-width: 225px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
                 }
 
                 .error-wrap {
@@ -600,6 +604,8 @@
 }
 
 .fee-dropdown-wrap {
+    z-index: 10;
+
     .fee-dropdown {
         &.ui.dropdown.active {
             box-shadow: none;
@@ -607,6 +613,25 @@
             &:hover {
                 box-shadow: none;
             }
+        }
+    }
+
+    i.icon {
+
+        margin: 0 -4px 0 0;
+        line-height: 10px;
+
+        &:before {
+            font-family: icomoon;
+            speak: none;
+            font-style: normal;
+            font-weight: 400;
+            text-transform: none;
+            -webkit-font-smoothing: antialiased;
+            content: '\e907';
+            font-size: 4px;
+            vertical-align: middle;
+            color: #b2b4b7;
         }
     }
 }
