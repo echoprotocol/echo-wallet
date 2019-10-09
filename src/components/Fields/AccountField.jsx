@@ -79,12 +79,13 @@ AccountField.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
-	disabled: PropTypes.bool.isRequired,
+	disabled: PropTypes.bool,
 };
 
 AccountField.defaultProps = {
 	autoFocus: false,
 	currency: null,
+	disabled: false,
 };
 
 export default AccountField;
