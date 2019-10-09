@@ -78,7 +78,7 @@
         Disabled
 ---------------------*/
 
-.ui.disabled.input,
+.ui.disabled.input:not(.action-wrap),
 .ui.input:not(.disabled) input[disabled] {
   opacity: 0.45;
 }
