@@ -216,7 +216,7 @@ class AmountField extends React.Component {
 					<ul className="list-amount">
 						{fee && fee.value &&
 							<li>
-								Fee:
+								{fee && fee.value && 'Fee:'}
 								<FeeField
 									currency={currency}
 									fees={fees}

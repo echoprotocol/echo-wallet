@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators } from 'echojs-lib';
 
 import history from '../history';
 
@@ -40,7 +40,6 @@ import {
 	validateContractName,
 	validateByType,
 	validateAmount,
-	validateContractId,
 	validateFee,
 } from '../helpers/ValidateHelper';
 import { formatError } from '../helpers/FormatHelper';
@@ -120,7 +119,7 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 
 	const options = {
 		account: activeUserId,
-		duration: formOptions.get('duration') || FREEZE_BALANCE_PARAMS[0].duration,
+		duration: formOptions.get('duration').value || FREEZE_BALANCE_PARAMS[0].duration,
 		amount: {
 			amount: amountValue,
 			asset_id: asset || formOptions.get('currency').id,
@@ -147,35 +146,35 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		dispatch(setValue(form, 'isAvailableBalance', false));
 		return null;
 	}
-
-	const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
-	const fromAccountId = getState().global.getIn(['activeUser', 'id']);
-
-
-	let amountValue = 0;
-	const amount = formOptions.get('amount').value;
-	if (amount) {
-		const currency = formOptions.get('currency');
-		const amountError = validateAmount(amount, currency);
-		if (!amountError) {
-			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+	try {
+		const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
+		const fromAccountId = getState().global.getIn(['activeUser', 'id']);
+		let amountValue = 0;
+		const amount = formOptions.get('amount').value;
+		if (amount) {
+			const currency = formOptions.get('currency');
+			const amountError = validateAmount(amount, currency);
+			if (!amountError) {
+				amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+			}
 		}
+		const options = {
+			amount: {
+				amount: amountValue,
+				asset_id: asset || formOptions.get('currency').id,
+			},
+			from: fromAccountId,
+			to: toAccountId,
+			fee: {
+				asset_id: asset || formOptions.get('currency').id,
+			},
+		};
+		dispatch(setValue(form, 'isAvailableBalance', true));
+		return dispatch(getTransactionFee(form, 'transfer', options));
+	} catch (err) {
+		return null;
 	}
 
-	const options = {
-		amount: {
-			amount: amountValue,
-			asset_id: asset || formOptions.get('currency').id,
-		},
-		from: fromAccountId,
-		to: toAccountId,
-		fee: {
-			asset_id: asset || formOptions.get('currency').id,
-		},
-	};
-
-	dispatch(setValue(form, 'isAvailableBalance', true));
-	return dispatch(getTransactionFee(form, 'transfer', options));
 };
 
 export const checkFeePool = (echoAsset, asset, fee) => {
@@ -368,7 +367,6 @@ export const transfer = () => async (dispatch, getState) => {
 	}
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
-
 	const fromAccount = await echo.api.getAccountByName(from.value);
 	const toAccount = await echo.api.getAccountByName(to.value);
 
@@ -437,7 +435,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 		duration,
 	} = form;
 
-	const durationObject = FREEZE_BALANCE_PARAMS.find((d) => d.duration === duration);
+	const durationObject = FREEZE_BALANCE_PARAMS.find((d) => d.duration === duration.value);
 
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString();
@@ -492,7 +490,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 			asset_id: fee.asset.id,
 		},
 		account: activeUserId,
-		duration,
+		duration: duration.value,
 		amount: {
 			amount: new BN(amount).times(10 ** currency.precision).toString(),
 			asset_id: currency.id,
@@ -762,10 +760,10 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const contractIdError = validateContractId(id.value);
+	const isValidContractId = validators.isContractId(id.value);
 
-	if (contractIdError) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', contractIdError));
+	if (!isValidContractId) {
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', 'Invalid contract ID'));
 		return false;
 	}
 

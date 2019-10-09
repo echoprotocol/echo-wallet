@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo from 'echojs-lib';
+import echo, { validators } from 'echojs-lib';
 
 import {
 	setFormError,
@@ -22,7 +22,7 @@ import { toastInfo } from '../helpers/ToastHelper';
 import {
 	validateAbi,
 	validateContractName,
-	validateContractId, validateByType,
+	validateByType,
 } from '../helpers/ValidateHelper';
 
 import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
@@ -58,7 +58,7 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const nameError = validateContractName(name);
-	const idError = validateContractId(id);
+	const idError = validators.isContractId(id);
 	const abiError = validateAbi(abi);
 
 	if (nameError) {

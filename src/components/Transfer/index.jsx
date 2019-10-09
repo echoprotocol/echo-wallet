@@ -19,13 +19,11 @@ class Transfer extends React.Component {
 		this.props.clearForm();
 		this.props.resetTransaction();
 	}
-
 	render() {
 		const {
 			from, to, currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
@@ -47,7 +45,6 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
-									disabled
 								/>
 								<AccountField
 									currency={currency}

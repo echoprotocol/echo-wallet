@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Assets from './AssetsComponent';
 import Transfer from './Transfer';
-import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 
 class FrozenFunds extends React.Component {
 
@@ -78,7 +77,7 @@ FrozenFunds.propTypes = {
 	freezeBalance: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	currency: PropTypes.object,
-	duration: PropTypes.number,
+	duration: PropTypes.object.isRequired,
 	activeUserId: PropTypes.string.isRequired,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
@@ -96,7 +95,6 @@ FrozenFunds.propTypes = {
 
 FrozenFunds.defaultProps = {
 	currency: null,
-	duration: FREEZE_BALANCE_PARAMS[0].duration,
 	totalFrozenFunds: '0',
 };
 
