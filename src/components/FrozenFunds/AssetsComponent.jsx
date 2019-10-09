@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BN from 'bignumber.js';
 import moment from 'moment';
+import { Popup } from 'semantic-ui-react';
 
 import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 
@@ -43,10 +44,12 @@ class Assets extends React.Component {
 						<div className="frozen-coefficient">
 							<span>Coefficient: </span>
 							<span>{freezeParam.coefficientText}</span>
-							<div className="inner-tooltip-wrap">
-								<span className="inner-tooltip-trigger icon-info" />
-								<div className="inner-tooltip">This is the value that will be used to re-calculate a new sum after unfreezing.</div>
-							</div>
+							<Popup
+								trigger={<span className="inner-tooltip-trigger icon-info" />}
+								content="This is the value that will be used to re-calculate a new sum after unfreezing."
+								className="inner-tooltip"
+								inverted
+							/>
 						</div>
 						<div className="frozen-interval">
 							<span>Frozen until</span>

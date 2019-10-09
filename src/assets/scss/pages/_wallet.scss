@@ -74,7 +74,7 @@
 
 .balance-scroll {
     position: relative;
-    height: calc(100vh - 185px);
+    height: calc(100vh - 176px);
     overflow: overlay;
     padding: 0 20px 0 17px;
     margin-top: 17px;
@@ -118,10 +118,7 @@
         overflow: hidden;
         transition: background-color .2s;
         border-radius: 6px;
-
-        &:not(:last-child) {
-            margin-bottom: 6px;
-        }
+        margin-bottom: 6px;
 
         &.focused,
         &:hover {
