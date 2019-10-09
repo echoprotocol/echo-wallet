@@ -113,6 +113,8 @@
         cursor: pointer;
         height: 50px;
         display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
         overflow: hidden;
         transition: background-color .2s;
         border-radius: 6px;
@@ -142,12 +144,20 @@
             color: $main-сolor;
             transition: color .2s;
             font-size: 18px;
+            text-align: left;
         }
 
         .currency-amount {
             color: $text-dark;
             transition: color .2s;
             font-size: 18px;
+            text-align: right;
+            min-width: 35%;
+        }
+
+        .currency-symbol,
+        .currency-amount {
+            @include cut-text;
             margin-right: 8px;
         }
 
