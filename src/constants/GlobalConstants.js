@@ -1,3 +1,5 @@
+import { constants } from 'echojs-lib';
+
 import {
 	INDEX_PATH,
 	ACTIVITY_PATH,
@@ -60,7 +62,7 @@ export const ADDRESS_PREFIX = 'ECHO';
 export const PUBLIC_KEY_LENGTH = 44;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
-export const CONTRACT_ID_PREFIX = '1.9';
+export const CONTRACT_ID_PREFIX = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT}`;
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
 export const ACCOUNT_ID_PREFIX = '1.2.';
@@ -127,21 +129,21 @@ export const FREEZE_BALANCE_PARAMS = [
 		duration: 90,
 		durationMonth: 3,
 		multiplier: 13000,
-		durationText: '3 month',
+		durationText: '3 months',
 		coefficientText: '1.3',
 	},
 	{
 		duration: 180,
 		durationMonth: 6,
 		multiplier: 14000,
-		durationText: '6 month',
+		durationText: '6 months',
 		coefficientText: '1.4',
 	},
 	{
 		duration: 360,
-		durationMonth: 18,
+		durationMonth: 12,
 		multiplier: 15000,
-		durationText: '12 month',
+		durationText: '12 months',
 		coefficientText: '1.5',
 	},
 ];

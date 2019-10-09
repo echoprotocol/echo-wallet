@@ -18,7 +18,7 @@ import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
-import { checkErc20Contract, validateContractId } from '../helpers/ValidateHelper';
+import { checkErc20Contract } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
@@ -249,7 +249,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 			return;
 		}
 
-		if (validateContractId(contractId)) {
+		if (!validators.isContractId(contractId)) {
 			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
 			return;
 		}
@@ -321,8 +321,10 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 
 	const form = getState().form.getIn([FORM_TRANSFER]);
 	const formName = form.get('from').value;
+	if (!formName) {
+		return undefined;
+	}
 	const account = await echo.api.getAccountByName(formName);
-
 	if (!account) {
 		return undefined;
 	}
