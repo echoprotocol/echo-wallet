@@ -190,7 +190,9 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		dispatch(setError(MODAL_LOGOUT, 'Invalid password'));
 		return;
 	}
+
 	const account = await echo.api.getAccountByName(accountName);
+
 	await userStorage.removeKeys(account.active.key_auths.map(([k]) => k), { password });
 
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);

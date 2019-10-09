@@ -19,10 +19,6 @@
         .send-wrap {
             padding: 0 90px;
         }
-
-        .list-amount li:last-child {
-            display: none;
-        }
     }
 
     @media only screen and (max-width: 1000px) {
@@ -78,7 +74,7 @@
 
 .balance-scroll {
     position: relative;
-    height: calc(100vh - 185px);
+    height: calc(100vh - 176px);
     overflow: overlay;
     padding: 0 20px 0 17px;
     margin-top: 17px;
@@ -117,13 +113,12 @@
         cursor: pointer;
         height: 50px;
         display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
         overflow: hidden;
         transition: background-color .2s;
         border-radius: 6px;
-
-        &:not(:last-child) {
-            margin-bottom: 6px;
-        }
+        margin-bottom: 6px;
 
         &.focused,
         &:hover {
@@ -146,12 +141,20 @@
             color: $main-сolor;
             transition: color .2s;
             font-size: 18px;
+            text-align: left;
         }
 
         .currency-amount {
             color: $text-dark;
             transition: color .2s;
             font-size: 18px;
+            text-align: right;
+            min-width: 35%;
+        }
+
+        .currency-symbol,
+        .currency-amount {
+            @include cut-text;
             margin-right: 8px;
         }
 

@@ -534,10 +534,8 @@ $thead-height: 46px;
 }
 
 .ellips {
+    @include cut-text;
     display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 
     .text-bold {
         font-family: proximanovaSemibold;
