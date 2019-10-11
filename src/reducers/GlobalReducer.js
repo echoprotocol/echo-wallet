@@ -85,8 +85,12 @@ export default createModule({
 			reducer: (state) => {
 				const network = state.get('network');
 				const networks = state.get('networks');
+				const isConnected = state.get('isConnected');
+				const globalLoading = state.get('globalLoading');
 
-				return _.cloneDeep(DEFAULT_FIELDS).merge({ network, networks });
+				return _.cloneDeep(DEFAULT_FIELDS).merge({
+					network, networks, isConnected, globalLoading,
+				});
 			},
 		},
 
