@@ -58,7 +58,7 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const nameError = validateContractName(name);
-	const idError = validators.isContractId(id);
+	const idError = !validators.isContractId(id);
 	const abiError = validateAbi(abi);
 
 	if (nameError) {
