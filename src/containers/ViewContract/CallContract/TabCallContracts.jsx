@@ -151,7 +151,7 @@ export default connect(
 		setFormError: (field, error) => dispatch(setFormError(FORM_CALL_CONTRACT, field, error)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CALL_CONTRACT)),
 		getTransferFee: (asset) => dispatch(getTransferFee(FORM_TRANSFER, asset)),
-		setContractFees: () => dispatch(setContractFees(FORM_TRANSFER)),
+		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_CALL_CONTRACT, value, currency, name)),
 	}),
