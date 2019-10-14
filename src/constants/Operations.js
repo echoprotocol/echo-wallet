@@ -470,4 +470,14 @@ export default {
 			asset: null,
 		},
 	},
+	block_reward: {
+		value: OPERATIONS_IDS.BLOCK_REWARD,
+		name: 'Block reward',
+		options: {
+			from: null,
+			subject: null,
+			value: null,
+			asset: null,
+		},
+	},
 };
