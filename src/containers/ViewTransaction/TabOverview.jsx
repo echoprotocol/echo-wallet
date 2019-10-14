@@ -170,14 +170,14 @@ class TabOverview extends React.Component {
 					<li>
 						<div className="col">Amount:</div>
 						<div className="col">
-							{ data.value.amount ? this.format(data.value) : '0 ECHO' }
+							{data.value.amount ? this.format(data.value) : '0 ECHO'}
 						</div>
 					</li>
 
 					<li>
 						<div className="col">Fee:</div>
 						<div className="col">
-							{ data.fee.amount ? this.format(data.fee) : '0 ECHO' }
+							{data.fee.amount ? this.format(data.fee) : '0 ECHO'}
 						</div>
 					</li>
 
@@ -185,10 +185,14 @@ class TabOverview extends React.Component {
 						data.name === 'Contract' ? this.renderContractOptions() : null
 					}
 				</ul>
-				<a target="_blank" rel="noreferrer noopener" href={linkToTransaction} onClick={(e) => this.goToTransaction(e, linkToTransaction)} className="external-link">
-					<img src={externalLink} alt="" />
-					<span>Open in explorer</span>
-				</a>
+				{
+					linkToTransaction &&
+					<a target="_blank" rel="noreferrer noopener" href={linkToTransaction} onClick={(e) => this.goToTransaction(e, linkToTransaction)} className="external-link">
+						<img src={externalLink} alt="" />
+						<span>Open in explorer</span>
+					</a>
+				}
+
 			</div>
 		);
 	}

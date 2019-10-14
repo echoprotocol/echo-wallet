@@ -414,5 +414,6 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 		.find((el) => el.asset.id === currency && currency.id) || (fees.length && fees[0]);
 	dispatch(setValue(form, 'fee', { error: null, ...fee }));
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
+	return fee;
 };
 
