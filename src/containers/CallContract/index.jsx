@@ -149,6 +149,6 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_CALL_CONTRACT_VIA_ID, value, currency, name)),
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
-		getTransferFee: () => dispatch(getTransferFee(FORM_TRANSFER)),
+		getTransferFee: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 	}),
 )(AddContractComponent);

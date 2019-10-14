@@ -19,7 +19,7 @@ import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants'
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
-import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading, setError } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -739,7 +739,6 @@ export const callContract = () => async (dispatch, getState) => {
 export const callContractViaId = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-
 	if (!activeUserId || !activeUserName) {
 		return false;
 	}
@@ -774,6 +773,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	// if method payable check amount and currency
 
 	if (!currency || !fee || !fee.value) {
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', 'Fee can\'t be calculated'));
 		return false;
 	}
 
@@ -785,7 +785,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 	const feeError = validateFee(amount, currency, fee, assets);
 	if (feeError) {
-		dispatch(setValue(FORM_CALL_CONTRACT, 'amount', feeError));
+		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', feeError));
 		return false;
 	}
 
@@ -794,7 +794,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	if (amount.value) {
 		const amountError = validateAmount(amount.value, currency);
 		if (amountError) {
-			dispatch(setValue(FORM_CALL_CONTRACT, 'amount', amountError));
+			dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', amountError));
 			return false;
 		}
 		amountValue = amount.value * (10 ** currency.precision);
