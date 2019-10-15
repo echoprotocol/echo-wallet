@@ -475,7 +475,7 @@ export default {
 		name: 'Block reward',
 		options: {
 			from: null,
-			subject: null,
+			subject: ['reciever', 'name'],
 			value: null,
 			asset: null,
 		},
