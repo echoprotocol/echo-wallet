@@ -7,10 +7,10 @@ import classnames from 'classnames';
 import TransactionScenario from '../TransactionScenario';
 import AmountField from '../../components/Fields/AmountField';
 
-import { FORM_CALL_CONTRACT_VIA_ID, FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm, setFormError, setValue } from '../../actions/FormActions';
-import { callContractViaId, getTransferFee } from '../../actions/TransactionActions';
+import { callContractViaId } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
 

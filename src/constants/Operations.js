@@ -235,6 +235,17 @@ export default {
 			asset: null,
 		},
 	},
+	balance_unfreeze: {
+		value: OPERATIONS_IDS.BALANCE_FREEZE,
+		name: 'Balance unfreeze',
+		options: {
+			from: 'account',
+			subject: null,
+			value: 'amount.amount',
+			asset: 'amount.asset_id',
+		},
+		signer: 'account',
+	},
 	override_transfer: {
 		value: OPERATIONS_IDS.OVERRIDE_TRANSFER,
 		name: 'Override transfer',
@@ -456,6 +467,16 @@ export default {
 			from: 'sender',
 			subject: ['contract'],
 			amount: null,
+			asset: null,
+		},
+	},
+	block_reward: {
+		value: OPERATIONS_IDS.BLOCK_REWARD,
+		name: 'Block reward',
+		options: {
+			from: null,
+			subject: null,
+			value: null,
 			asset: null,
 		},
 	},
