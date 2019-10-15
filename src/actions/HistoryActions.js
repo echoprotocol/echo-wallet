@@ -1,4 +1,4 @@
-import echo from 'echojs-lib';
+import echo, { constants, validators } from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
@@ -31,7 +31,10 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	const [type, operation] = data.op;
 	const block = await echo.api.getBlock(data.block_num);
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
-
+	if (type === 52) {
+		console.log(type);
+		console.log(operation);
+	}
 	const result = {
 		id: data.id,
 		timestamp: block.timestamp,
@@ -71,10 +74,20 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	if (options.value) {
-		result.value = {
-			...result.value,
-			amount: _.get(operation, options.value),
-		};
+		if (validators.isUInt64(operation.amount)) {
+			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
+			result.value = {
+				precision: coreAsset.precision,
+				asset_id: coreAsset.id,
+				symbol: coreAsset.symbol,
+				amount: _.get(operation, options.value),
+			};
+		} else {
+			result.value = {
+				...result.value,
+				amount: _.get(operation, options.value),
+			};
+		}
 	}
 
 	if (options.asset) {

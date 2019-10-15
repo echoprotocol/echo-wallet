@@ -476,7 +476,7 @@ export default {
 		options: {
 			from: null,
 			subject: ['reciever', 'name'],
-			value: null,
+			value: 'amount',
 			asset: null,
 		},
 	},
