@@ -19,7 +19,7 @@ import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants'
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
-import { closeModal, toggleLoading as toggleModalLoading, setError } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,

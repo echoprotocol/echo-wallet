@@ -11,7 +11,7 @@ import { setValue, toggleLoading, setError } from './TableActions';
 import { setField } from './TransactionActions';
 
 import history from '../history';
-import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {

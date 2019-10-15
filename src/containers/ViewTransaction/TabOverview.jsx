@@ -128,9 +128,6 @@ class TabOverview extends React.Component {
 		const { data, network } = this.props;
 
 		const isFromAccount = data.from && data.from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
-		console.log(data.block)
-		console.log(data.from)
-		console.log(isFromAccount)
 		const isSubjectAccount = data.subject &&
 			data.subject.id && data.subject.id.toString().startsWith(ACCOUNT_ID_PREFIX);
 		const linkToTransaction = URLHelper.getLinkToExplorerBlock(network.name, data.block);
