@@ -167,19 +167,25 @@ class TabOverview extends React.Component {
 							</li> : null
 					}
 
-					<li>
-						<div className="col">Amount:</div>
-						<div className="col">
-							{data.value.amount ? this.format(data.value) : '0 ECHO'}
-						</div>
-					</li>
+					{
+						data.value ?
+							<li>
+								<div className="col">Amount:</div>
+								<div className="col">
+									{data.value.amount ? this.format(data.value) : '0 ECHO'}
+								</div>
+							</li> : null
+					}
 
-					<li>
-						<div className="col">Fee:</div>
-						<div className="col">
-							{data.fee.amount ? this.format(data.fee) : '0 ECHO'}
-						</div>
-					</li>
+					{
+						data.fee ?
+							<li>
+								<div className="col">Fee:</div>
+								<div className="col">
+									{data.fee.amount ? this.format(data.fee) : '0 ECHO'}
+								</div>
+							</li> : null
+					}
 
 					{
 						data.name === 'Contract' ? this.renderContractOptions() : null

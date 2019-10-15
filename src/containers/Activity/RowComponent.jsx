@@ -29,14 +29,7 @@ class RowComponent extends React.Component {
 			timestamp,
 		} = this.props.data;
 
-		const amount = value.amount && value.precision ?
-			formatAmount(value.amount, value.precision) : value.amount;
-		const symbol = value.amount ? value.symbol : null;
-
-		const feeAmount = fee.amount ? formatAmount(fee.amount, fee.precision) : null;
-		const feeSymbol = fee.amount ? fee.symbol : null;
-
-		const isFromAccount = from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
+		const isFromAccount = from && from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
 		const isSubjectAccount = subject && subject.id && subject.id.startsWith(ACCOUNT_ID_PREFIX);
 
 		return (
@@ -57,10 +50,14 @@ class RowComponent extends React.Component {
 					<span className="ellips">#{block}</span>
 				</Table.Cell>
 				<Table.Cell>
-					<span className={classnames('ellips', { 'avatar-block': isFromAccount })}>
-						{isFromAccount && <Avatar accountName={from.value} />}
-						<span>{from.value}</span>
-					</span>
+					{
+						from ? (
+							<span className={classnames('ellips', { 'avatar-block': isFromAccount })}>
+								{isFromAccount && <Avatar accountName={from.value} />}
+								<span>{from.value}</span>
+							</span>
+						) : null
+					}
 				</Table.Cell>
 				<Table.Cell>
 					{/* TODO add to contract create operation className=create */}
@@ -74,16 +71,27 @@ class RowComponent extends React.Component {
 					}
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						<span className="text-bold">{amount}</span>
-						<span>{symbol}</span>
-					</span>
+					{
+						value ? (
+							<span className="ellips">
+								<span className="text-bold">
+									{value.amount && value.precision ?
+										formatAmount(value.amount, value.precision) : value.amount}
+								</span>
+								<span>{value.amount && value.symbol}</span>
+							</span>
+						) : null
+					}
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						<span className="text-bold">{feeAmount}</span>
-						<span>{feeSymbol}</span>
-					</span>
+					{
+						fee ? (
+							<span className="ellips">
+								<span className="text-bold">{fee.amount && formatAmount(fee.amount, fee.precision)}</span>
+								<span>{fee.amount && fee.symbol}</span>
+							</span>
+						) : null
+					}
 				</Table.Cell>
 				<Table.Cell>
 					<span className="date">{moment.utc(timestamp).local().format('MMM D, YYYY')}</span>

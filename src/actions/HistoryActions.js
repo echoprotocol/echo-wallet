@@ -1,4 +1,4 @@
-import echo from 'echojs-lib';
+import echo, { constants, validators } from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
@@ -30,22 +30,24 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
 	const block = await echo.api.getBlock(data.block_num);
-	const feeAsset = await echo.api.getObject(operation.fee.asset_id);
-
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
 
 	const result = {
 		id: data.id,
 		timestamp: block.timestamp,
 		block: data.block_num,
-		fee: {
-			amount: operation.fee.amount,
-			precision: feeAsset.precision,
-			symbol: feeAsset.symbol,
-		},
 		name,
 		value: {},
 	};
+
+	if (options.fee) {
+		const feeAsset = await echo.api.getObject(operation.fee.asset_id);
+		result.fee = {
+			amount: operation.fee.amount,
+			precision: feeAsset.precision,
+			symbol: feeAsset.symbol,
+		};
+	}
 	if (options.from) {
 		const request = _.get(operation, options.from);
 		const response = await echo.api.getObject(request);
@@ -69,10 +71,20 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	if (options.value) {
-		result.value = {
-			...result.value,
-			amount: _.get(operation, options.value),
-		};
+		if (validators.isUInt64(operation.amount)) {
+			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
+			result.value = {
+				precision: coreAsset.precision,
+				asset_id: coreAsset.id,
+				symbol: coreAsset.symbol,
+				amount: _.get(operation, options.value),
+			};
+		} else {
+			result.value = {
+				...result.value,
+				amount: _.get(operation, options.value),
+			};
+		}
 	}
 
 	if (options.asset) {
