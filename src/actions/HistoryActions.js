@@ -31,10 +31,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	const [type, operation] = data.op;
 	const block = await echo.api.getBlock(data.block_num);
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
-	if (type === 52) {
-		console.log(type);
-		console.log(operation);
-	}
+
 	const result = {
 		id: data.id,
 		timestamp: block.timestamp,
