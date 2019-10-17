@@ -8,7 +8,7 @@ import { version } from '../../../package.json';
 import NetworkDropdown from './NetworkDropdown';
 import { connection } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
-import { MODAL_INFO } from '../../constants/ModalConstants.js';
+import { MODAL_INFO } from '../../constants/ModalConstants';
 
 class Footer extends React.PureComponent {
 
