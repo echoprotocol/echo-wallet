@@ -635,7 +635,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
 	toastSuccess(`${operations[operation].name} transaction was sent`);
-	history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+	if (bytecode) history.push(CONTRACT_LIST_PATH);
 
 	dispatch(closeModal(MODAL_DETAILS));
 	dispatch(resetTransaction());
