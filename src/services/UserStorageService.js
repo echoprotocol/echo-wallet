@@ -13,7 +13,7 @@ const autoSchemeService = new AutoSchemeService(storageService);
 class UserStorageService {
 
 	/**
-	 *
+	 * @method init
 	 * @return {Promise.<void>}
 	 */
 	async init() {
@@ -24,7 +24,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method createDB
 	 * @param {String} password
 	 * @return {Promise.<void>}
 	 */
@@ -33,7 +33,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method doesDBExist
 	 * @return {Promise.<boolean>}
 	 */
 	async doesDBExist() {
@@ -42,7 +42,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method setNetworkId
 	 * @param {String} networkId
 	 * @return {Promise.<void>}
 	 */
@@ -51,13 +51,17 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method getNetworkId
 	 * @return {String}
 	 */
 	getNetworkId() {
 		return this.networkId;
 	}
 
+	/**
+	 * @method checkNetwork
+	 * @returns {undefined}
+	 */
 	checkNetwork() {
 		if (!this.getNetworkId()) {
 			throw new Error('Network ID is required');
@@ -65,7 +69,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method setScheme
 	 * @param {USER_STORAGE_SCHEMES.AUTO|USER_STORAGE_SCHEMES.MANUAL} scheme AUTO|MANUAL
 	 * @param {String?} password
 	 * @return {Promise.<void>}
@@ -90,6 +94,10 @@ class UserStorageService {
 
 	}
 
+	/**
+	 * @method getCurrentScheme
+	 * @returns {Object}
+	 */
 	getCurrentScheme() {
 		switch (this.scheme) {
 			case USER_STORAGE_SCHEMES.AUTO:
@@ -102,7 +110,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method resetCurrentScheme
 	 * @return {Promise.<void>}
 	 */
 	async resetCurrentScheme() {
@@ -120,7 +128,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method isMasterPassword
 	 * @param {String} password
 	 * @return {Promise.<boolean>}
 	 */
@@ -137,9 +145,9 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method addKey
 	 * @param {Key} key
-	 * @param params
+	 * @param {Array} params
 	 * @return {Promise.<void>}
 	 */
 	async addKey(key, params) {
@@ -162,7 +170,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method removeKeys
 	 * @param keys
 	 * @param params
 	 * @return {Promise.<void>}
@@ -184,7 +192,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method getAllPublicKeys
 	 * @param {Object} params
 	 * @return {Promise.<Array.String>}
 	 */
@@ -200,7 +208,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method getAllWIFKeysForAccount
 	 * @param {String} accountId
 	 * @param {Object?} params
 	 * @return {Promise.<Key>}
@@ -217,7 +225,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method getWIFByPublicKey
 	 * @param {String} publicKey
 	 * @param {Object?} params
 	 * @return {Promise.<Key>}
@@ -233,7 +241,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method isWIFAdded
 	 * @param {String} wif
 	 * @param {String} accountId
 	 * @param {Object?} params
@@ -250,7 +258,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method updateDB
 	 * @param decryptedData
 	 * @param params
 	 * @return {Promise.<void>}
@@ -264,7 +272,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method deleteDB
 	 * @return {Promise.<void>}
 	 */
 	async deleteDB() {
@@ -274,7 +282,7 @@ class UserStorageService {
 	}
 
 	/**
-	 *
+	 * @method getNetworkFromDecryptedData
 	 * @param {String} networkId
 	 * @param {String} decryptedData
 	 * @return {Promise.<Network>}

@@ -3,8 +3,9 @@ import ModalReducer from '../reducers/ModalReducer';
 /**
  * @method openModal
  *
- * @param {*} type
- * @param {*} params
+ * @param {String} type
+ * @param {Array} params
+ * @returns {undefined}
  */
 export const openModal = (type, params) => (dispatch) => {
 	dispatch(ModalReducer.actions.open({ type, params }));
@@ -13,7 +14,8 @@ export const openModal = (type, params) => (dispatch) => {
 /**
  * @method closeModal
  *
- * @param {*} type
+ * @param {String} type
+ * @returns {undefined}
  */
 export const closeModal = (type) => (dispatch) => {
 	dispatch(ModalReducer.actions.close({ type }));
@@ -21,9 +23,10 @@ export const closeModal = (type) => (dispatch) => {
 /**
  * @method update
  *
- * @param {*} type
- * @param {*} param
- * @param {*} value
+ * @param {String} type
+ * @param {String} param
+ * @param {any} value
+ * @returns {undefined}
  */
 export const update = (type, param, value) => (dispatch) => {
 	dispatch(ModalReducer.actions.update({ type, param, value }));
@@ -31,9 +34,10 @@ export const update = (type, param, value) => (dispatch) => {
 /**
  * @method setParamValue
  *
- * @param {*} type
- * @param {*} param
- * @param {*} value
+ * @param {String} type
+ * @param {String} param
+ * @param {any} value
+ * @returns {undefined}
  */
 export const setParamValue = (type, param, value) => (dispatch) => {
 	dispatch(ModalReducer.actions.setParamValue({ type, param, value }));
@@ -42,9 +46,10 @@ export const setParamValue = (type, param, value) => (dispatch) => {
 /**
  * @method setParamError
  *
- * @param {*} type
- * @param {*} param
- * @param {*} error
+ * @param {String} type
+ * @param {String} param
+ * @param {String} error
+ * @returns {undefined}
  */
 export const setParamError = (type, param, error) => (dispatch) => {
 	dispatch(ModalReducer.actions.setParamError({ type, param, error }));
@@ -52,8 +57,9 @@ export const setParamError = (type, param, error) => (dispatch) => {
 /**
  * @method setError
  *
- * @param {*} type
- * @param {*} error
+ * @param {String} type
+ * @param {String} error
+ * @returns {undefined}
  */
 export const setError = (type, error) => (dispatch) => {
 	dispatch(ModalReducer.actions.setError({ type, error }));
@@ -61,8 +67,9 @@ export const setError = (type, error) => (dispatch) => {
 /**
  * @method toggleLoading
  *
- * @param {*} type
- * @param {*} value
+ * @param {String} type
+ * @param {any} value
+ * @returns {undefined}
  */
 export const toggleLoading = (type, value) => (dispatch) => {
 	dispatch(ModalReducer.actions.toggleLoading({ type, value }));

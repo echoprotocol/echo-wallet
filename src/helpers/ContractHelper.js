@@ -6,12 +6,24 @@ const zero64String = '0000000000000000000000000000000000000000000000000000000000
 
 export const getHash = (str) => keccak256(str);
 
+/**
+ * @method getMethodId
+ * @param {Object} method
+ * @returns {String}
+ */
 export const getMethodId = (method) => {
 	const inputs = method.inputs.map((input) => input.type).join(',');
 
 	return getHash(`${method.name}(${inputs})`).substr(0, 8);
 };
 
+/**
+ * @method to64HexString
+ * @param {String} v
+ * @param {String} type
+ * @param {Number} mode
+ * @returns {String}
+ */
 const to64HexString = (v, type, mode = 256) => {
 
 	switch (type) {
@@ -46,6 +58,15 @@ const to64HexString = (v, type, mode = 256) => {
 	}
 };
 
+/**
+ * @method encode
+ *
+ * @param {String} value
+ * @param {String} type
+ * @param {Boolean} isArray
+ * @param {Number} modeNumber
+ * @returns {String}
+ */
 const encode = (value, type, isArray, modeNumber) => {
 	let arg = '';
 	if (isArray) {
@@ -78,6 +99,13 @@ const encode = (value, type, isArray, modeNumber) => {
 
 };
 
+/**
+ * @method getMethod
+ *
+ * @param {Object} method
+ * @param {Array} args
+ * @returns {String}
+ */
 export const getMethod = (method, args) => {
 
 	const code = getMethodId(method);
@@ -172,7 +200,12 @@ export const getMethod = (method, args) => {
 	return code.concat(argsString, hexStrings);
 };
 
-
+/**
+ * @method getTransferCode
+ * @param {String} id
+ * @param {String} text
+ * @returns {String}
+ */
 export const getTransferCode = (id, text) => {
 	const method = keccak256('transfer(address,uint256)').substr(0, 8);
 
@@ -182,5 +215,9 @@ export const getTransferCode = (id, text) => {
 
 	return method + idArg + amountArg;
 };
-
+/**
+ * @method getContractId
+ * @param {String} address
+ * @returns {Number}
+ */
 export const getContractId = (address) => parseInt(address.substr(-32), 16);

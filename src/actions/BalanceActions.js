@@ -34,8 +34,9 @@ BN.config({ EXPONENTIAL_AT: 1e+9 });
 /**
  * @method diffBalanceChecker
  *
- * @param {*} type
- * @param {*} balances
+ * @param {String} type
+ * @param {Array} balances
+ * @returns {Object}
  */
 const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
@@ -60,7 +61,8 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 /**
  * @method getBalanceFromAssets
  *
- * @param {*} assets
+ * @param {Array} assets
+ * @returns {Object}
  */
 export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
@@ -89,8 +91,9 @@ export const getBalanceFromAssets = (assets) => async () => {
 /**
  * @method getAssetsBalances
  *
- * @param {*} assets
- * @param {*} update
+ * @param {Array} assets
+ * @param {Boolean} update
+ * @returns {undefined}
  */
 export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
 
@@ -115,8 +118,9 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 /**
  * @method getTokenBalances
  *
- * @param {*} accountId
- * @param {*} networkName
+ * @param {String} accountId
+ * @param {String} networkName
+ * @returns {Object}
  */
 export const getTokenBalances = (accountId, networkName) => async (dispatch) => {
 
@@ -156,6 +160,7 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch) => 
 
 /**
  * @method updateTokenBalances
+ * @returns {undefined}
  */
 export const updateTokenBalances = () => async (dispatch, getState) => {
 
@@ -181,7 +186,8 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 /**
  * @method getPreviewBalances
  *
- * @param {*} networkName
+ * @param {String} networkName
+ * @returns {Object}
  */
 export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
@@ -225,6 +231,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
  * @method getFrozenBalances
  *
  * @param {String} accountId
+ * @returns {undefined}
  */
 export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	const frozenFunds = await echo.api.getFrozenBalances(accountId);
@@ -250,6 +257,7 @@ export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
  *
  * @param {String} accountId
  * @param {String} networkName
+ * @returns {undefined}
  */
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 
@@ -348,6 +356,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 /**
  * @method getAccountFromTransferFrom
+ * @returns {(Array | undefined)}
  */
 const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	const isIndexPath = history.location.pathname === INDEX_PATH;
@@ -384,7 +393,8 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 /**
  * @method handleSubscriber
  *
- * @param {*} subscribeObjects
+ * @param {Array} subscribeObjects
+ * @returns {undefined}
  */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -453,7 +463,8 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 /**
  * @method removeToken
  *
- * @param {*} contractId
+ * @param {String} contractId
+ * @returns {undefined}
  */
 export const removeToken = (contractId) => (dispatch, getState) => {
 	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
@@ -479,7 +490,8 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 /**
  * @method enableToken
  *
- * @param {*} contractId
+ * @param {String} contractId
+ * @returns {undefined}
  */
 export const enableToken = (contractId) => (dispatch, getState) => {
 	const intervalId = getState().balance.get('intervalId');
@@ -488,7 +500,13 @@ export const enableToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
 };
 
-
+/**
+ * @method disableToken
+ *
+ * @param {String} name
+ * @param {String} contractId
+ * @returns {undefined}
+ */
 export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
@@ -508,8 +526,9 @@ export const disableToken = (name, contractId) => (dispatch) => {
 /**
  * @method setAsset
  *
- * @param {*} asset
- * @param {*} type
+ * @param {Array} asset
+ * @param {Array} type
+ * @returns {undefined}
  */
 export const setAsset = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
@@ -518,6 +537,7 @@ export const setAsset = (asset, type) => (dispatch, getState) => {
 
 /**
  * @method resetBalance
+ * @returns {undefined}
  */
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());

@@ -19,6 +19,7 @@ import { formatError } from '../helpers/FormatHelper';
 
 /**
  * @method fetchCommittee
+ * @returns {undefined}
  */
 export const fetchCommittee = () => async (dispatch) => {
 	try {
@@ -38,6 +39,7 @@ export const fetchCommittee = () => async (dispatch) => {
 
 /**
  * @method formatProxy
+ * @returns {undefined}
  */
 export const formatProxy = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
@@ -65,6 +67,7 @@ export const formatProxy = () => async (dispatch, getState) => {
 
 /**
  * @method formatCommitteeTable
+ * @returns {(Object | null)}
  */
 export const formatCommitteeTable = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
@@ -112,7 +115,8 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 /**
  * @method getVoteIdsByAccountNames
  *
- * @param {*} accountNames
+ * @param {Array} accountNames
+ * @returns {String}
  */
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 	const accounts = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]);
@@ -127,7 +131,8 @@ const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 /**
  * @method checkAccount
  *
- * @param {*} account
+ * @param {String} account
+ * @returns {(null | String)}
  */
 export const checkAccount = (account) => async () => {
 	const accountNameError = await validateAccountExist(account, false);
@@ -137,7 +142,8 @@ export const checkAccount = (account) => async () => {
 /**
  * @method onChangeProxy
  *
- * @param {*} account
+ * @param {String} account
+ * @returns {undefined}
  */
 export const onChangeProxy = (account) => async (dispatch, getState) => {
 
@@ -164,6 +170,7 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 /**
  * @method updateAccount
+ * @returns {Boolean}
  */
 export const updateAccount = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');

@@ -42,8 +42,9 @@ import Services from '../services';
 /**
  * @method initAccount
  *
- * @param {*} accountName
- * @param {*} networkName
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {undefined}
  */
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
@@ -89,7 +90,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 /**
  * @method setIsConnectedStatus
  *
- * @param {*} isConnect
+ * @param {Boolean} isConnect
+ * @returns {undefined}
  */
 export const setIsConnectedStatus = (isConnect) => (dispatch) => {
 	dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: isConnect }));
@@ -158,6 +160,7 @@ export const connection = () => async (dispatch) => {
 
 /**
  * @method disconnect
+ * @returns {undefined}
  */
 export const disconnection = () => async (dispatch) => {
 
@@ -174,7 +177,8 @@ export const disconnection = () => async (dispatch) => {
 /**
  * @method setGlobalError
  *
- * @param {*} err
+ * @param {String} err
+ * @returns {undefined}
  */
 export const setGlobalError = (err) => (dispatch) => {
 	dispatch(GlobalReducer.actions.set({ field: 'globalError', value: err }));
@@ -187,7 +191,8 @@ export const setGlobalError = (err) => (dispatch) => {
 /**
  * @method toggleBar
  *
- * @param {*} value
+ * @param {String} value
+ * @returns {undefined}
  */
 export const toggleBar = (value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.toggleBar({ value }));
@@ -196,9 +201,10 @@ export const toggleBar = (value) => (dispatch) => {
 /**
  * @method push
  *
- * @param {*} field
- * @param {*} param
- * @param {*} value
+ * @param {String} field
+ * @param {String} param
+ * @param {String} value
+ * @returns {undefined}
  */
 export const push = (field, param, value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.push({ field, param, value }));
@@ -207,9 +213,10 @@ export const push = (field, param, value) => (dispatch) => {
 /**
  * @method update
  *
- * @param {*} field
- * @param {*} param
- * @param {*} value
+ * @param {String} field
+ * @param {String} param
+ * @param {String} value
+ * @returns {undefined}
  */
 export const update = (field, param, value) => (dispatch) => {
 	dispatch(GlobalReducer.actions.update({ field, param, value }));
@@ -218,8 +225,9 @@ export const update = (field, param, value) => (dispatch) => {
 /**
  * @method remove
  *
- * @param {*} field
- * @param {*} param
+ * @param {String} field
+ * @param {String} param
+ * @returns {undefined}
  */
 export const remove = (field, param) => (dispatch) => {
 	dispatch(GlobalReducer.actions.remove({ field, param }));
@@ -228,8 +236,9 @@ export const remove = (field, param) => (dispatch) => {
 /**
  * @method removeAccount
  *
- * @param {*} accountName
- * @param {*} password
+ * @param {String} accountName
+ * @param {String} password
+ * @returns {undefined}
  */
 export const removeAccount = (accountName, password) => async (dispatch, getState) => {
 	const userStorage = Services.getUserStorage();
@@ -276,8 +285,9 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 /**
  * @method isAccountAdded
  *
- * @param {*} accountName
- * @param {*} networkName
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {(String | null)}
  */
 export const isAccountAdded = (accountName, networkName) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
@@ -293,8 +303,9 @@ export const isAccountAdded = (accountName, networkName) => {
 /**
  * @method addAccount
  *
- * @param {*} accountName
- * @param {*} networkName
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {undefined}
  */
 export const addAccount = (accountName, networkName) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
@@ -312,7 +323,8 @@ export const addAccount = (accountName, networkName) => (dispatch) => {
 /**
  * @method saveNetwork
  *
- * @param {*} network
+ * @param {Object} network
+ * @returns {undefined}
  */
 export const saveNetwork = (network) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
@@ -328,6 +340,7 @@ export const saveNetwork = (network) => async (dispatch) => {
 
 /**
  * @method addNetwork
+ * @returns {undefined}
  */
 export const addNetwork = () => (dispatch, getState) => {
 	const networks = getState().global.get('networks').toJS();
@@ -383,7 +396,8 @@ export const addNetwork = () => (dispatch, getState) => {
 /**
  * @method enableNetwork
  *
- * @param {*} network
+ * @param {Object} network
+ * @returns {undefined}
  */
 export const enableNetwork = (network) => (dispatch, getState) => {
 	let customNetworks = localStorage.getItem('custom_networks');
@@ -405,7 +419,8 @@ export const enableNetwork = (network) => (dispatch, getState) => {
 /**
  * @method deleteNetwork
  *
- * @param {*} network
+ * @param {Object} network
+ * @returns {undefined}
  */
 export const deleteNetwork = (network) => (dispatch, getState) => {
 	let customNetworks = localStorage.getItem('custom_networks');
@@ -439,7 +454,8 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 /**
  * @method createDB
  *
- * @param {*} password
+ * @param {String} password
+ * @returns {undefined}
  */
 export const createDB = (password) => async (dispatch) => {
 	const error = validatePassword(password);
@@ -468,6 +484,7 @@ export const createDB = (password) => async (dispatch) => {
 
 /**
  * @method resetData
+ * @returns {undefined}
  */
 export const resetData = () => async (dispatch) => {
 	dispatch(closeModal(MODAL_WIPE));

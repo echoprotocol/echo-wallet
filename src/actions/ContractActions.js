@@ -36,8 +36,8 @@ import { estimateFormFee } from './TransactionActions';
 /**
  * @method set
  *
- * @param {*} field
- * @param {*} value
+ * @param {String} field
+ * @param {(String | Number)} value
  */
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
@@ -46,8 +46,9 @@ export const set = (field, value) => (dispatch) => {
 /**
  * @method loadContracts
  *
- * @param {*} accountId
- * @param {*} networkName
+ * @param {String} accountId
+ * @param {String} networkName
+ * @returns {undefined}
  */
 export const loadContracts = (accountId, networkName) => (dispatch) => {
 	let contracts = localStorage.getItem(`contracts_${networkName}`);
@@ -71,9 +72,10 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 /**
  * @method addContract
  *
- * @param {*} name
- * @param {*} id
- * @param {*} abi
+ * @param {String} name
+ * @param {String} id
+ * @param {String} abi
+ * @returns {undefined}
  */
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const nameError = validateContractName(name);
@@ -138,7 +140,8 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 /**
  * @method removeContract
  *
- * @param {*} name
+ * @param {String} name
+ * @returns {undefined}
  */
 export const removeContract = (name) => (dispatch, getState) => {
 	if (!getState().global.getIn(['contracts', name]).disabled) {
@@ -165,7 +168,8 @@ export const removeContract = (name) => (dispatch, getState) => {
 /**
  * @method enableContract
  *
- * @param {*} name
+ * @param {String} name
+ * @returns {undefined}
  */
 export const enableContract = (name) => (dispatch, getState) => {
 	const intervalId = getState().contract.get('intervalId');
@@ -176,7 +180,8 @@ export const enableContract = (name) => (dispatch, getState) => {
 /**
  * @method disableContract
  *
- * @param {*} name
+ * @param {String} name
+ * @returns {undefined}
  */
 export const disableContract = (name) => (dispatch) => {
 	dispatch(update('contracts', name, { disabled: true }));
@@ -199,8 +204,9 @@ export const disableContract = (name) => (dispatch) => {
 /**
  * @method updateContractName
  *
- * @param {*} oldName
- * @param {*} newName
+ * @param {String} oldName
+ * @param {String} newName
+ * @returns {undefined}
  */
 export const updateContractName = (oldName, newName) => (dispatch, getState) => {
 	const nameError = validateContractName(newName);
@@ -250,10 +256,11 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 /**
  * @method addContractByName
  *
- * @param {*} contractResultId
- * @param {*} accountId
- * @param {*} name
- * @param {*} abi
+ * @param {String} contractResultId
+ * @param {String} accountId
+ * @param {String} name
+ * @param {String} abi
+ * @returns {undefined}
  */
 export const addContractByName = (
 	contractResultId,
@@ -298,9 +305,10 @@ export const addContractByName = (
 /**
  * @method contractQuery
  *
- * @param {*} method
- * @param {*} args
- * @param {*} contractId
+ * @param {Object} method
+ * @param {Array} args
+ * @param {String} contractId
+ * @returns {(Object | undefined)}
  */
 export const contractQuery = (method, args, contractId) => async (dispatch, getState) => {
 	let isErrorExist = false;
@@ -357,7 +365,8 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 /**
  * @method formatAbi
  *
- * @param {*} contractName
+ * @param {String} contractName
+ * @returns {Object}
  */
 export const formatAbi = (contractName) => async (dispatch, getState) => {
 
@@ -418,7 +427,8 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 /**
  * @method setFunction
  *
- * @param {*} functionName
+ * @param {String} functionName
+ * @returns {undefined}
  */
 export const setFunction = (functionName) => (dispatch, getState) => {
 	const functions = getState().contract.get('functions') || [];
@@ -442,7 +452,8 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 /**
  * @method setContractFees
  *
- * @param {*} form
+ * @param {String} form
+ * @returns {Object}
  */
 export const setContractFees = (form) => async (dispatch, getState) => {
 

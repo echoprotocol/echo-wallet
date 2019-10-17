@@ -6,9 +6,9 @@ import Services from '../services';
  * @method getSigners
  * Get transaction signers
  *
- * @param account
- * @param keys
- * @param viewed
+ * @param {Object} account
+ * @param {Array} keys
+ * @param {Array} viewed
  *
  * @returns {Promise}
  */
@@ -61,8 +61,8 @@ const getSigners = async (account, keys, viewed = []) => {
 /**
  * @method signTransaction
  * Sign transaction
- * @param signer
- * @param tr
+ * @param {String} signer
+ * @param {Object} tr
  * @returns {Promise}
  */
 export const signTransaction = async (accountId, tr, password) => {

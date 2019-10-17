@@ -28,7 +28,9 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 
-/*
+/**
+ * @method generateWIF
+ * @returns {undefined}
  */
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
@@ -38,8 +40,9 @@ export const generateWIF = () => (dispatch) => {
 
 /**
  * @method createAccount
- * @param {*} param0
- * @param {*} isAddAccount
+ * @param {Object} param0
+ * @param {Boolean} isAddAccount
+ * @returns {undefined}
  */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
@@ -95,7 +98,8 @@ export const createAccount = ({
 /**
  * @method authUser
  *
- * @param {*} param0
+ * @param {Object} param0
+ * @returns {Boolean}
  */
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
@@ -162,7 +166,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
  * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
- *
+ * 	@returns {Object}
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
@@ -199,8 +203,8 @@ const getAccountsList = (accounts) => async (dispatch) => {
  *  Import account
  *
  * 	@param {String} accountName
- * @param {String} wif
- *
+ *  @param {String} wif
+ *	@returns {undefined}
  */
 export const importAccount = ({ accountName, wif, password }) =>
 	async (dispatch, getState) => {
@@ -273,7 +277,7 @@ export const importAccount = ({ accountName, wif, password }) =>
  *
  *  @param {String} password
  *  @param {Array} accounts
- *
+ *  @returns {undefined}
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
@@ -289,9 +293,10 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 
 /**
  * @method unlock
- * @param {*} password
- * @param {*} callback
- * @param {*} modal
+ * @param {String} password
+ * @param {Function} callback
+ * @param {String} modal
+ * @returns {undefined}
  */
 export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
 	try {

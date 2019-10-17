@@ -16,7 +16,8 @@ import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 /**
  * @method viewTransaction
  *
- * @param {*} transaction
+ * @param {Object} transaction
+ * @returns {undefined}
  */
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
@@ -34,7 +35,8 @@ export const viewTransaction = (transaction) => async (dispatch) => {
 /**
  * @method formatOperation
  *
- * @param {*} data
+ * @param {Object} data
+ * @returns {Object}
  */
 const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
@@ -152,7 +154,8 @@ const formatOperation = (data) => async (dispatch, getState) => {
 /**
  * @method formatHistory
  *
- * @param {*} activity
+ * @param {Array} activity
+ * @returns {undefined}
  */
 export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }

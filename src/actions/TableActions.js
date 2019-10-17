@@ -19,9 +19,10 @@ const zeroPrivateKey = '00000000000000000000000000000000000000000000000000000000
 /**
  * @method setValue
  *
- * @param {*} table
- * @param {*} field
- * @param {*} value
+ * @param {String} table
+ * @param {String} field
+ * @param {String} value
+ * @returns {undefined}
  */
 export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
@@ -30,7 +31,8 @@ export const setValue = (table, field, value) => (dispatch) => {
 /**
  * @method clearTable
  *
- * @param {*} table
+ * @param {String} table
+ * @returns {undefined}
  */
 export const clearTable = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
@@ -39,8 +41,9 @@ export const clearTable = (table) => (dispatch) => {
 /**
  * @method toggleLoading
  *
- * @param {*} table
- * @param {*} value
+ * @param {String} table
+ * @param {String} value
+ * @returns {undefined}
  */
 export const toggleLoading = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'loading', value }));
@@ -49,8 +52,9 @@ export const toggleLoading = (table, value) => (dispatch) => {
 /**
  * @method setError
  *
- * @param {*} table
- * @param {*} value
+ * @param {String} table
+ * @param {String} value
+ * @returns {undefined}
  */
 export const setError = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'error', value }));
@@ -59,9 +63,10 @@ export const setError = (table, value) => (dispatch) => {
 /**
  * @method setIn
  *
- * @param {*} table
- * @param {*} fields
- * @param {*} value
+ * @param {String} table
+ * @param {String} fields
+ * @param {String} value
+ * @returns {undefined}
  */
 export const setIn = (table, fields, value) => (dispatch) => {
 	dispatch(TableReducer.actions.setIn({ table, fields, value }));
@@ -70,10 +75,11 @@ export const setIn = (table, fields, value) => (dispatch) => {
 /**
  * @method update
  *
- * @param {*} table
- * @param {*} fields
- * @param {*} param
- * @param {*} value
+ * @param {String} table
+ * @param {String} fields
+ * @param {String} param
+ * @param {String} value
+ * @returns {undefined}
  */
 export const update = (table, fields, param, value) => (dispatch) => {
 	dispatch(TableReducer.actions.update({
@@ -84,7 +90,8 @@ export const update = (table, fields, param, value) => (dispatch) => {
 /**
  * @method clear
  *
- * @param {*} table
+ * @param {String} table
+ * @returns {undefined}
  */
 export const clear = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
@@ -92,6 +99,7 @@ export const clear = (table) => (dispatch) => {
 
 /**
  * @method formPermissionKeys
+ * @returns {undefined}
  */
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -126,7 +134,8 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 /**
  * @method unlockPrivateKey
  *
- * @param {*} k
+ * @param {String} k
+ * @returns {undefined}
  */
 export const unlockPrivateKey = (k) => (dispatch) => {
 	const {
@@ -145,6 +154,7 @@ export const unlockPrivateKey = (k) => (dispatch) => {
 
 /**
  * @method isChanged
+ * @returns {Boolean}
  */
 export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
@@ -187,10 +197,11 @@ export const isChanged = () => (dispatch, getState) => {
 /**
  * @method validateKey
  *
- * @param {*} role
- * @param {*} tableKey
- * @param {*} key
- * @param {*} weight
+ * @param {String} role
+ * @param {String} tableKey
+ * @param {Object} key
+ * @param {Object} weight
+ * @returns {Boolean}
  */
 export const validateKey = (role, tableKey, key, weight) => async (dispatch) => {
 	let error = false;
@@ -246,6 +257,7 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 
 /**
  * @method permissionTransaction
+ * @returns {Boolean}
  */
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
