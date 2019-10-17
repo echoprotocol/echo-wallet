@@ -58,7 +58,7 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const nameError = validateContractName(name);
-	const idError = validators.isContractId(id);
+	const idError = !validators.isContractId(id);
 	const abiError = validateAbi(abi);
 
 	if (nameError) {
@@ -414,5 +414,6 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 		.find((el) => el.asset.id === currency && currency.id) || (fees.length && fees[0]);
 	dispatch(setValue(form, 'fee', { error: null, ...fee }));
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
+	return fee;
 };
 
