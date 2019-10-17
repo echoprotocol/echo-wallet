@@ -444,6 +444,8 @@
         &>.text {
             color: $main-сolor;
             font-family: proximanovaSemibold;
+            max-width: 296px;
+            @include cut-text;
         }
 
     }
