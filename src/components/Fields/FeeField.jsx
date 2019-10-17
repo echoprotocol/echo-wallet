@@ -115,6 +115,9 @@ class FeeComponent extends React.Component {
 		const { fee } = this.props;
 		const text = this.getText(options);
 
+		const isFeeExist = !!(fee && fee.asset && fee.asset.symbol);
+		const isFeeAssetEqualsAddressPrefix = isFeeExist && (ADDRESS_PREFIX === fee.asset.symbol);
+
 		return (
 			<Form.Field className={classnames({
 				'fee-dropdown-wrap': !this.props.isSingle,
@@ -132,8 +135,8 @@ class FeeComponent extends React.Component {
 					fluid
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={options}
-					text={ADDRESS_PREFIX === fee.asset.symbol ? `${text}\u00a0${fee.asset.symbol}` : text}
-					icon={ADDRESS_PREFIX === fee.asset.symbol ? ''
+					text={isFeeAssetEqualsAddressPrefix ? `${text}\u00a0${fee.asset.symbol}` : text}
+					icon={isFeeAssetEqualsAddressPrefix || !isFeeExist ? ''
 						: <Popup
 							trigger={<span className="inner-tooltip-trigger icon-coin" />}
 							content={fee.asset.symbol}
