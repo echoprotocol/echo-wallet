@@ -3,6 +3,14 @@ import BN from 'bignumber.js';
 import { setFormValue, setFormError, setValue } from './FormActions';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
+/**
+ * @method amountInput
+ *
+ * @param {*} form
+ * @param {*} value
+ * @param {*} currency
+ * @param {*} name
+ *  */
 export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
 		dispatch(setFormError(form, 'amount', 'Amount must contain only digits and dot'));
@@ -29,6 +37,11 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 	dispatch(setFormValue(form, name, value));
 };
 
+/**
+ * @method setDefaultAsset
+ *
+ * @param {*} form
+ */
 export const setDefaultAsset = (form) => async (dispatch, getState) => {
 	const currency = getState().form.getIn([form, 'currency']);
 

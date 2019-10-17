@@ -3,6 +3,7 @@ import echo, { PrivateKey } from 'echojs-lib';
 import Services from '../services';
 
 /**
+ * @method getSigners
  * Get transaction signers
  *
  * @param account
@@ -58,6 +59,7 @@ const getSigners = async (account, keys, viewed = []) => {
 };
 
 /**
+ * @method signTransaction
  * Sign transaction
  * @param signer
  * @param tr

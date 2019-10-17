@@ -1,6 +1,7 @@
 import FormReducer from '../reducers/FormReducer';
 
 /**
+ * @method setValue
  * Set value by field
  * @param form
  * @param field
@@ -12,6 +13,7 @@ export const setValue = (form, field, value) => (dispatch) => {
 };
 
 /**
+ * @method setFormValue
  * Set value by field for object {value, error}
  * @param form
  * @param field
@@ -23,6 +25,7 @@ export const setFormValue = (form, field, value) => (dispatch) => {
 };
 
 /**
+ * @method setFormError
  * Set error by field form
  * @param form
  * @param field
@@ -34,6 +37,7 @@ export const setFormError = (form, field, value) => (dispatch) => {
 };
 
 /**
+ * @method toggleLoading
  * Toggle loading
  * This function used for form and button loading.
  * You can call this with 2 params(without loading for button loading)
@@ -58,6 +62,7 @@ export const toggleLoading = (form, field, loading) => (dispatch) => {
 };
 
 /**
+ * @method clearForm
  * Clear form
  * @param {String} form
  * @returns {Function}
@@ -67,6 +72,7 @@ export const clearForm = (form) => (dispatch) => {
 };
 
 /**
+ * @method clearByField
  * Clear by field
  * @param {String} form
  * @param {String} field
@@ -77,6 +83,7 @@ export const clearByField = (form, field) => (dispatch) => {
 };
 
 /**
+ * @method setIn
  * Set multiple params by field
  * @param {String} form
  * @param {String} field
@@ -87,6 +94,13 @@ export const setIn = (form, field, params) => (dispatch) => {
 	dispatch(FormReducer.actions.setIn({ form, field, params }));
 };
 
+/**
+ * @method pushForm
+ *
+ * @param {*} form
+ * @param {*} field
+ * @param {*} value
+ */
 export const pushForm = (form, field, value) => (dispatch) => {
 
 	dispatch(FormReducer.actions.push({
@@ -96,6 +110,13 @@ export const pushForm = (form, field, value) => (dispatch) => {
 	}));
 };
 
+/**
+ * @method deleteValue
+ *
+ * @param {*} form
+ * @param {*} field
+ * @param {*} value
+ */
 export const deleteValue = (form, field, value) => (dispatch) => {
 	dispatch(FormReducer.actions.deleteValue({
 		form,
@@ -105,6 +126,7 @@ export const deleteValue = (form, field, value) => (dispatch) => {
 };
 
 /**
+ * @method setInFormValue
  * Set multiple params by field
  * @param {String} form
  * @param {Array} fields
@@ -116,6 +138,7 @@ export const setInFormValue = (form, fields, value) => (dispatch) => {
 };
 
 /**
+ * @method setInFormError
  * Set multiple params by field
  * @param {String} form
  * @param {Array} fields
@@ -127,6 +150,7 @@ export const setInFormError = (form, fields, value) => (dispatch) => {
 };
 
 /**
+ * @method setInFormErrorConstant
  * Set multiple params by field for constant
  * @param {String} form
  * @param {Array} fields
@@ -138,6 +162,7 @@ export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
 };
 
 /**
+ * @method removeKey
  * Remove permission key
  * @param {String} form
  * @param {Array} fields

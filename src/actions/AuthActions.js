@@ -28,12 +28,19 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 
+/*
+ */
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
 
 	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
 };
 
+/**
+ * @method createAccount
+ * @param {*} param0
+ * @param {*} isAddAccount
+ */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount) => async (dispatch, getState) => {
@@ -85,7 +92,11 @@ export const createAccount = ({
 
 };
 
-
+/**
+ * @method authUser
+ *
+ * @param {*} param0
+ */
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	const wifError = validateWIF(wif);
@@ -276,6 +287,12 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
 
+/**
+ * @method unlock
+ * @param {*} password
+ * @param {*} callback
+ * @param {*} modal
+ */
 export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
 	try {
 		dispatch(toggleModalLoading(modal, true));

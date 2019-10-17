@@ -33,10 +33,22 @@ import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
 
+/**
+ * @method set
+ *
+ * @param {*} field
+ * @param {*} value
+ */
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
 };
 
+/**
+ * @method loadContracts
+ *
+ * @param {*} accountId
+ * @param {*} networkName
+ */
 export const loadContracts = (accountId, networkName) => (dispatch) => {
 	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
@@ -56,6 +68,13 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 	}));
 };
 
+/**
+ * @method addContract
+ *
+ * @param {*} name
+ * @param {*} id
+ * @param {*} abi
+ */
 export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const nameError = validateContractName(name);
 	const idError = !validators.isContractId(id);
@@ -116,6 +135,11 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	}
 };
 
+/**
+ * @method removeContract
+ *
+ * @param {*} name
+ */
 export const removeContract = (name) => (dispatch, getState) => {
 	if (!getState().global.getIn(['contracts', name]).disabled) {
 		return;
@@ -138,12 +162,22 @@ export const removeContract = (name) => (dispatch, getState) => {
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 };
 
+/**
+ * @method enableContract
+ *
+ * @param {*} name
+ */
 export const enableContract = (name) => (dispatch, getState) => {
 	const intervalId = getState().contract.get('intervalId');
 	clearTimeout(intervalId);
 	dispatch(update('contracts', name, { disabled: false }));
 };
 
+/**
+ * @method disableContract
+ *
+ * @param {*} name
+ */
 export const disableContract = (name) => (dispatch) => {
 	dispatch(update('contracts', name, { disabled: true }));
 
@@ -162,6 +196,12 @@ export const disableContract = (name) => (dispatch) => {
 	);
 };
 
+/**
+ * @method updateContractName
+ *
+ * @param {*} oldName
+ * @param {*} newName
+ */
 export const updateContractName = (oldName, newName) => (dispatch, getState) => {
 	const nameError = validateContractName(newName);
 
@@ -207,6 +247,14 @@ export const updateContractName = (oldName, newName) => (dispatch, getState) => 
 	history.replace(VIEW_CONTRACT_PATH.replace(/:name/, newName));
 };
 
+/**
+ * @method addContractByName
+ *
+ * @param {*} contractResultId
+ * @param {*} accountId
+ * @param {*} name
+ * @param {*} abi
+ */
 export const addContractByName = (
 	contractResultId,
 	accountId,
@@ -247,7 +295,13 @@ export const addContractByName = (
  * args: ARRAY,
  * contractId,
  */
-
+/**
+ * @method contractQuery
+ *
+ * @param {*} method
+ * @param {*} args
+ * @param {*} contractId
+ */
 export const contractQuery = (method, args, contractId) => async (dispatch, getState) => {
 	let isErrorExist = false;
 
@@ -300,6 +354,11 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	dispatch(ContractReducer.actions.set({ field: 'constants', value: new List(newConstants) }));
 };
 
+/**
+ * @method formatAbi
+ *
+ * @param {*} contractName
+ */
 export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -356,6 +415,11 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method setFunction
+ *
+ * @param {*} functionName
+ */
 export const setFunction = (functionName) => (dispatch, getState) => {
 	const functions = getState().contract.get('functions') || [];
 
@@ -375,7 +439,11 @@ export const setFunction = (functionName) => (dispatch, getState) => {
 	dispatch(setValue(FORM_CALL_CONTRACT, 'payable', true));
 };
 
-
+/**
+ * @method setContractFees
+ *
+ * @param {*} form
+ */
 export const setContractFees = (form) => async (dispatch, getState) => {
 
 	const assets = getState().balance.get('assets').toArray();

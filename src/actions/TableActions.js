@@ -16,37 +16,83 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
+/**
+ * @method setValue
+ *
+ * @param {*} table
+ * @param {*} field
+ * @param {*} value
+ */
 export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
 };
 
+/**
+ * @method clearTable
+ *
+ * @param {*} table
+ */
 export const clearTable = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
 };
 
+/**
+ * @method toggleLoading
+ *
+ * @param {*} table
+ * @param {*} value
+ */
 export const toggleLoading = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'loading', value }));
 };
 
+/**
+ * @method setError
+ *
+ * @param {*} table
+ * @param {*} value
+ */
 export const setError = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'error', value }));
 };
 
+/**
+ * @method setIn
+ *
+ * @param {*} table
+ * @param {*} fields
+ * @param {*} value
+ */
 export const setIn = (table, fields, value) => (dispatch) => {
 	dispatch(TableReducer.actions.setIn({ table, fields, value }));
 };
 
+/**
+ * @method update
+ *
+ * @param {*} table
+ * @param {*} fields
+ * @param {*} param
+ * @param {*} value
+ */
 export const update = (table, fields, param, value) => (dispatch) => {
 	dispatch(TableReducer.actions.update({
 		table, fields, param, value,
 	}));
 };
 
+/**
+ * @method clear
+ *
+ * @param {*} table
+ */
 export const clear = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
 };
 
-
+/**
+ * @method formPermissionKeys
+ */
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
@@ -77,6 +123,11 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	dispatch(setFormValue(FORM_PERMISSION_KEY, 'firstFetch', true));
 };
 
+/**
+ * @method unlockPrivateKey
+ *
+ * @param {*} k
+ */
 export const unlockPrivateKey = (k) => (dispatch) => {
 	const {
 		key, unlocked, role, type,
@@ -92,6 +143,9 @@ export const unlockPrivateKey = (k) => (dispatch) => {
 	dispatch(openModal(MODAL_UNLOCK));
 };
 
+/**
+ * @method isChanged
+ */
 export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
@@ -130,6 +184,14 @@ export const isChanged = () => (dispatch, getState) => {
 	}));
 };
 
+/**
+ * @method validateKey
+ *
+ * @param {*} role
+ * @param {*} tableKey
+ * @param {*} key
+ * @param {*} weight
+ */
 export const validateKey = (role, tableKey, key, weight) => async (dispatch) => {
 	let error = false;
 
@@ -182,6 +244,9 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 	return error;
 };
 
+/**
+ * @method permissionTransaction
+ */
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);

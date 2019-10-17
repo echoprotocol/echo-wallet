@@ -17,6 +17,9 @@ import { FORM_COMMITTEE } from '../constants/FormConstants';
 
 import { formatError } from '../helpers/FormatHelper';
 
+/**
+ * @method fetchCommittee
+ */
 export const fetchCommittee = () => async (dispatch) => {
 	try {
 		dispatch(toggleLoading(FORM_COMMITTEE, true));
@@ -33,6 +36,9 @@ export const fetchCommittee = () => async (dispatch) => {
 	}
 };
 
+/**
+ * @method formatProxy
+ */
 export const formatProxy = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
@@ -57,6 +63,9 @@ export const formatProxy = () => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method formatCommitteeTable
+ */
 export const formatCommitteeTable = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const accountVotes = account ? account.getIn(['options', 'votes']) : [];
@@ -100,6 +109,11 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 	dispatch(setValue(COMMITTEE_TABLE, 'backup', new List(await Promise.all(backupCommittees))));
 };
 
+/**
+ * @method getVoteIdsByAccountNames
+ *
+ * @param {*} accountNames
+ */
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 	const accounts = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]);
 	const objects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
@@ -110,12 +124,21 @@ const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 	});
 };
 
-
+/**
+ * @method checkAccount
+ *
+ * @param {*} account
+ */
 export const checkAccount = (account) => async () => {
 	const accountNameError = await validateAccountExist(account, false);
 	return accountNameError;
 };
 
+/**
+ * @method onChangeProxy
+ *
+ * @param {*} account
+ */
 export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 	if (!account) {
@@ -139,6 +162,9 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 	dispatch(set(FORM_COMMITTEE, 'votingAccountId', null));
 };
 
+/**
+ * @method updateAccount
+ */
 export const updateAccount = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
