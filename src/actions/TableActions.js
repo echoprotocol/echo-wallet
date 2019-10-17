@@ -21,7 +21,7 @@ const zeroPrivateKey = '00000000000000000000000000000000000000000000000000000000
  *
  * @param {String} table
  * @param {String} field
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const setValue = (table, field, value) => (dispatch) => {
@@ -42,7 +42,7 @@ export const clearTable = (table) => (dispatch) => {
  * @method toggleLoading
  *
  * @param {String} table
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const toggleLoading = (table, value) => (dispatch) => {
@@ -53,7 +53,7 @@ export const toggleLoading = (table, value) => (dispatch) => {
  * @method setError
  *
  * @param {String} table
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const setError = (table, value) => (dispatch) => {
@@ -65,7 +65,7 @@ export const setError = (table, value) => (dispatch) => {
  *
  * @param {String} table
  * @param {String} fields
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const setIn = (table, fields, value) => (dispatch) => {
@@ -78,7 +78,7 @@ export const setIn = (table, fields, value) => (dispatch) => {
  * @param {String} table
  * @param {String} fields
  * @param {String} param
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const update = (table, fields, param, value) => (dispatch) => {

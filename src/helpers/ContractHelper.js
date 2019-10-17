@@ -61,7 +61,7 @@ const to64HexString = (v, type, mode = 256) => {
 /**
  * @method encode
  *
- * @param {String} value
+ * @param {any} value
  * @param {String} type
  * @param {Boolean} isArray
  * @param {Number} modeNumber

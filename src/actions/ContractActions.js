@@ -37,7 +37,7 @@ import { estimateFormFee } from './TransactionActions';
  * @method set
  *
  * @param {String} field
- * @param {(String | Number)} value
+ * @param {any} value
  */
 export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));

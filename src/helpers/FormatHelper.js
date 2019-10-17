@@ -136,7 +136,7 @@ export const formatAmount = (amount, precision, symbol) => {
 
 /**
  * @method formatTotalVotes
- * @param {(String | Number)} value
+ * @param {any} value
  * @param {Number} precision
  * @returns {String}
  */
@@ -144,7 +144,7 @@ export const formatTotalVotes = (value, precision) => formatAmount(value, precis
 
 /**
  * @method formatCallContractField
- * @param {Number} value
+ * @param {any} value
  * @returns {String}
  */
 export const formatCallContractField = (value) => String(value)

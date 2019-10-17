@@ -240,7 +240,7 @@ const validateInt = (value, isUint, size = 256) => {
 const validateString = (value) => (typeof value === 'string' ? null : 'value should be a string');
 /**
  * @method validateAddress
- * @param {String} value
+ * @param {any} value
  * @returns {(String | null)}
  */
 const validateAddress = (value) => (validators.isObjectId(value) ? null : 'value should be in object id format');
@@ -328,7 +328,7 @@ export const validateByType = (value, type) => {
 
 /**
  * @method validateAmount
- * @param {(String | Number)} value
+ * @param {any} value
  * @param {Object} param1
  * @returns {(null | String)}
  */

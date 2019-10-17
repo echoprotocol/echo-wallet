@@ -191,7 +191,7 @@ export const setGlobalError = (err) => (dispatch) => {
 /**
  * @method toggleBar
  *
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const toggleBar = (value) => (dispatch) => {
@@ -203,7 +203,7 @@ export const toggleBar = (value) => (dispatch) => {
  *
  * @param {String} field
  * @param {String} param
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const push = (field, param, value) => (dispatch) => {
@@ -215,7 +215,7 @@ export const push = (field, param, value) => (dispatch) => {
  *
  * @param {String} field
  * @param {String} param
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const update = (field, param, value) => (dispatch) => {

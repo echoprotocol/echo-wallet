@@ -3,9 +3,9 @@ import FormReducer from '../reducers/FormReducer';
 /**
  * @method setValue
  * Set value by field
- * @param form
- * @param field
- * @param value
+ * @param {String} form
+ * @param {String} field
+ * @param {any} value
  * @returns {Function}
  */
 export const setValue = (form, field, value) => (dispatch) => {
@@ -15,9 +15,9 @@ export const setValue = (form, field, value) => (dispatch) => {
 /**
  * @method setFormValue
  * Set value by field for object {value, error}
- * @param form
- * @param field
- * @param value
+ * @param {String} form
+ * @param {String} field
+ * @param {any} value
  * @returns {Function}
  */
 export const setFormValue = (form, field, value) => (dispatch) => {
@@ -29,7 +29,7 @@ export const setFormValue = (form, field, value) => (dispatch) => {
  * Set error by field form
  * @param {String} form
  * @param {String} field
- * @param {String} value
+ * @param {any} value
  * @returns {Function}
  */
 export const setFormError = (form, field, value) => (dispatch) => {
@@ -100,7 +100,7 @@ export const setIn = (form, field, params) => (dispatch) => {
  *
  * @param {String} form
  * @param {String} field
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const pushForm = (form, field, value) => (dispatch) => {
@@ -117,7 +117,7 @@ export const pushForm = (form, field, value) => (dispatch) => {
  *
  * @param {String} form
  * @param {String} field
- * @param {String} value
+ * @param {any} value
  * @returns {undefined}
  */
 export const deleteValue = (form, field, value) => (dispatch) => {
@@ -133,7 +133,7 @@ export const deleteValue = (form, field, value) => (dispatch) => {
  * Set multiple params by field
  * @param {String} form
  * @param {Array} fields
- * @param {String} value
+ * @param {any} value
  * @returns {Function}
  */
 export const setInFormValue = (form, fields, value) => (dispatch) => {
@@ -145,7 +145,7 @@ export const setInFormValue = (form, fields, value) => (dispatch) => {
  * Set multiple params by field
  * @param {String} form
  * @param {Array} fields
- * @param {String} value
+ * @param {any} value
  * @returns {Function}
  */
 export const setInFormError = (form, fields, value) => (dispatch) => {
@@ -157,7 +157,7 @@ export const setInFormError = (form, fields, value) => (dispatch) => {
  * Set multiple params by field for constant
  * @param {String} form
  * @param {Array} fields
- * @param {String} value
+ * @param {any} value
  * @returns {Function}
  */
 export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
