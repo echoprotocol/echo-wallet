@@ -102,7 +102,7 @@ class Transfer extends React.Component {
 										className="main-btn"
 										content="Freeze"
 										onClick={submit}
-										disabled={!(duration.isSelected)}
+										disabled={!duration.isSelected}
 									/>
 								</div>
 							</div>
