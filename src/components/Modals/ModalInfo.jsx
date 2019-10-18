@@ -3,7 +3,7 @@ import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import classnames from 'classnames';
-
+import { version } from '../../../package.json';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
 
@@ -31,7 +31,7 @@ class ModalInfoWallet extends React.Component {
 					<div className="modal-body">
 						<div className="info-row">
 							<div className="info-title">Version:</div>
-							<div className="info-value">1.4.4 <a href="#" target="_blank"> <span className="icon-commit" />k8b3c4e</a></div>
+							<div className="info-value">{version} <a href="#" target="_blank"> <span className="icon-commit" />k8b3c4e</a></div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Website:</div>
@@ -39,7 +39,7 @@ class ModalInfoWallet extends React.Component {
 						</div>
 						<div className="info-row">
 							<div className="info-title">Privacy:</div>
-							<div className="info-value">&#169; 2019 PixelPlex. All Rights Reserved</div>
+							<div className="info-value">&#169; {(new Date()).getFullYear()} PixelPlex. All Rights Reserved</div>
 						</div>
 					</div>
 				</div>
@@ -62,6 +62,7 @@ ModalInfoWallet.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_INFO, 'show']),
+		version,
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_INFO)),

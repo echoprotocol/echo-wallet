@@ -8,7 +8,7 @@ import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
-
+import { version } from '../../../package.json';
 import { contractIdRegex } from '../../helpers/ValidateHelper';
 
 
@@ -115,6 +115,7 @@ export default connect(
 		name: state.form.getIn([FORM_ADD_CONTRACT, 'name']),
 		id: state.form.getIn([FORM_ADD_CONTRACT, 'id']),
 		abi: state.form.getIn([FORM_ADD_CONTRACT, 'abi']),
+		version,
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_ADD_CONTRACT)),
