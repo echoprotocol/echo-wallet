@@ -444,12 +444,17 @@ export const freezeBalance = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const amountError = validateAmount(amount, currency);
+	if ((new BN(amount)).eq(0)) {
+		dispatch(setFormError(FORM_FREEZE, 'amount', 'Amount shouldn\'t be 0 value'));
+		return false;
+	}
 
+	const amountError = validateAmount(amount, currency);
 	if (amountError) {
 		dispatch(setFormError(FORM_FREEZE, 'amount', amountError));
 		return false;
 	}
+
 
 	if (!fee.value || !fee.asset) {
 		fee = await dispatch(getTransferFee(FORM_FREEZE));
