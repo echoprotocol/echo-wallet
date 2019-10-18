@@ -52,7 +52,9 @@ class LineComponent extends React.Component {
 							<Form.Field key={id} className={classnames({ error: errorValue, 'error-wrap': true })}>
 								{ id !== 0 && <span className="comma item">,</span> }
 								<InputComponent field={{ id, name: constant.name }} inputData={input} />
-								<span className="error-message">{errorValue}</span>
+								<div className="error-message error-animation">
+									<span>{errorValue}</span>
+								</div>
 							</Form.Field>
 						);
 					})

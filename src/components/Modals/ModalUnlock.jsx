@@ -57,7 +57,9 @@ class ModalUnlockWallet extends React.Component {
 										onChange={(e) => this.onChange(e)}
 										autoFocus
 									/>
-									<span className="error-message">{error}</span>
+									<div className="error-message error-animation">
+										<span>{error}</span>
+									</div>
 								</Form.Field>
 							</div>
 							<div className="form-panel">

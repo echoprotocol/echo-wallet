@@ -95,13 +95,16 @@ class SignIn extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 							autoFocus
 						/>
-						<span className="error-message">{accountName.error}</span>
-
+						<div className="error-message error-animation">
+							<span>{accountName.error}</span>
+						</div>
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
 						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
 						<input type="password" placeholder="Password or WIF-key" name="wif" className="ui input" value={wif.value} onChange={(e) => this.onChange(e)} />
-						<span className="error-message">{wif.error}</span>
+						<div className="error-message error-animation">
+							<span>{wif.error}</span>
+						</div>
 					</Form.Field>
 				</div>
 				<div className="form-panel">

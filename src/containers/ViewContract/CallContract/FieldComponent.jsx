@@ -44,7 +44,9 @@ class TabCallContracts extends React.Component {
 					value={data.value}
 					onChange={(e) => this.onChange(e)}
 				/>
-				<span className="error-message">{data.error}</span>
+				<div className="error-message error-animation">
+					<span>{data.error}</span>
+				</div>
 			</Form.Field>
 		);
 	}

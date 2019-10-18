@@ -56,7 +56,9 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						<span className="error-message">{name.error}</span>
+						<div className="error-message error-animation">
+							<span>{name.error}</span>
+						</div>
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
@@ -68,7 +70,9 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<span className="error-message">{id.error}</span>
+						<div className="error-message error-animation">
+							<span>{id.error}</span>
+						</div>
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">ABI</label>
@@ -80,7 +84,9 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<span className="error-message">{abi.error}</span>
+						<div className="error-message error-animation">
+							<span>{abi.error}</span>
+						</div>
 					</Form.Field>
 					<div className="form-panel">
 						<Button

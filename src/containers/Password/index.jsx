@@ -86,7 +86,9 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">{error}</span>
+						<div className="error-message error-animation">
+							<span>{error}</span>
+						</div>
 
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
@@ -101,7 +103,9 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">Passwords do not match</span>
+						<div className="error-message error-animation">
+						<span>Passwords do not match</span>
+						</div>
 
 					</Form.Field>
 				</div>

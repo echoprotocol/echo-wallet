@@ -1,28 +1,35 @@
 * {
     &:focus {
-       outline:none;
+        outline: none;
     }
 }
 
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-body,ul,li {
-    margin:0;
-    padding:0;
-}
-a {
-    text-decoration:none;
-}
+body,
+ul,
 li {
-    list-style-type:none;
+    margin: 0;
+    padding: 0;
 }
-div,span {
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
+div,
+span {
     &:focus {
         outline: none;
     }
 }
+
 .app-nav {
     position: absolute;
     z-index: 9999999;
@@ -32,16 +39,17 @@ div,span {
     justify-content: flex-end;
     background-color: $main-сolor;
     width: 150px;
+
     button {
         background-color: transparent;
         border: 0;
         color: #fff;
         font-family: 'icomoon';
-        src:  url('../fonts/iconmoon/icomoon.eot?h46e29');
-        src:  url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
-          url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
-          url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
-          url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+        src: url('../fonts/iconmoon/icomoon.eot?h46e29');
+        src: url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+            url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+            url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+            url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
         font-weight: normal;
         font-style: normal;
         font-size: .85em;
@@ -52,18 +60,22 @@ div,span {
         &:hover {
             background-color: #4258b5;
         }
+
         &.global-min {
             &:before {
                 content: '\e913';
             }
         }
+
         &.global-max {
             font-size: 10px;
             width: 40px;
+
             &:before {
                 content: '\e926';
             }
         }
+
         &.global-close {
             &:before {
                 content: '\e911';
@@ -71,46 +83,57 @@ div,span {
         }
     }
 }
-.mobile body{
-	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+.mobile body {
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-.tablet body{
-	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+.tablet body {
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
 .ios input,
-.ios textarea{
-	-webkit-appearance: none;
-	border-radius: 0;
+.ios textarea {
+    -webkit-appearance: none;
+    border-radius: 0;
 }
+
 .hidden {
     display: none;
 }
+
 .pointer {
     cursor: pointer;
 }
+
 .global-wrapper {
     padding-top: 30px;
 }
+
 .wrapper {
-	display: flex;
-	min-height: calc(100vh - 30px);
-	flex-direction: column;
+    display: flex;
+    min-height: calc(100vh - 30px);
+    flex-direction: column;
 }
+
 .content {
-	flex: 1;
-	&.center-mode {
-		display: flex;
+    flex: 1;
+
+    &.center-mode {
+        display: flex;
         justify-content: center;
         max-height: calc(100vh - 120px);
         overflow: auto;
         overflow-y: overlay;
-		div {
-			width: 100%;
-		}
-	}
+
+        div {
+            width: 100%;
+        }
+    }
 }
+
 .link {
     color: $main-сolor;
     transition: color $speed;
@@ -118,14 +141,17 @@ div,span {
     &:hover {
         color: $main-сolor;
     }
+
     &:focus {
         text-decoration: underline;
     }
+
     &.main-link {
         color: $main-сolor;
     }
+
     &.disabled {
-      pointer-events: none;
+        pointer-events: none;
     }
 }
 
@@ -150,18 +176,23 @@ div,span {
 
 // ANIMATIONS
 
-@-webkit-keyframes rotating /* Safari and Chrome */ {
+@-webkit-keyframes rotating
+
+/* Safari and Chrome */
+    {
     from {
-      -webkit-transform: rotate(0deg);
-      -o-transform: rotate(0deg);
-      transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
     }
+
     to {
-      -webkit-transform: rotate(360deg);
-      -o-transform: rotate(360deg);
-      transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
+
 @keyframes rotating {
     from {
         -ms-transform: rotate(0deg);
@@ -170,6 +201,7 @@ div,span {
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     to {
         -ms-transform: rotate(360deg);
         -moz-transform: rotate(360deg);

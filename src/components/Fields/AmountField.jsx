@@ -265,7 +265,9 @@ class AmountField extends React.Component {
 						/>
 						{amount.error || fee.error ? <span className="icon-error-red value-status" /> : null}
 					</div>
-					{amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null}
+					<div className="error-message error-animation">
+						<span>{amount.error || fee.error}</span>
+					</div> 
 					{
 						assetDropdown && <Dropdown
 							search

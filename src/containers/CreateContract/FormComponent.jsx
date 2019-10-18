@@ -49,7 +49,9 @@ class FormComponent extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					<span className="error-message">{name.error}</span>
+					<div className="error-message error-animation">
+						<span>{name.error}</span>
+					</div>
 				</div>
 				<div className={classnames({ error: abi.error, 'error-wrap': true })}>
 					<div className="action-wrap">
@@ -62,7 +64,9 @@ class FormComponent extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					<span className="error-message">{abi.error}</span>
+					<div className="error-message error-animation">
+						<span>{abi.error}</span>
+					</div>
 				</div>
 			</React.Fragment>
 		);
@@ -89,7 +93,9 @@ class FormComponent extends React.Component {
 									onChange={(e) => this.onChange(e)}
 									autoFocus
 								/>
-								<span className="error-message">{bytecode.error}</span>
+								<div className="error-message error-animation">
+									<span>{bytecode.error}</span>
+								</div>
 							</Form.Field>
 							<div className={classnames({ active: this.props.addToWatchList, 'shrink-wrap': true })}>
 								<div className="check">

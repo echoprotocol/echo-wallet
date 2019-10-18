@@ -137,7 +137,9 @@ class ContractSettings extends React.Component {
 					/>
 				</Input>
 
-				<span className="error-message">{newName.error}</span>
+				<div className="error-message error-animation">
+					<span className="error-message">{newName.error}</span>
+				</div>
 			</div>
 		);
 	}

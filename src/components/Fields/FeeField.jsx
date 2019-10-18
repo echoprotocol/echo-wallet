@@ -146,7 +146,9 @@ class FeeComponent extends React.Component {
 					selectOnBlur={false}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
-				<span className="error-message">{this.props.feeError}</span>
+				<div className="error-message error-animation">
+					<span>{this.props.feeError}</span>
+				</div>
 			</Form.Field>
 		);
 	}

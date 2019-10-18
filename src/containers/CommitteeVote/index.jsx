@@ -186,7 +186,9 @@ class Voting extends React.Component {
 												account.error &&
 												<React.Fragment>
 													<span className="icon-error-red value-status" />
-													<span className="error-message">{account.error}</span>
+													<div className="error-message error-animation">
+														<span>{account.error}</span>
+													</div>
 												</React.Fragment>
 											}
 										</Form.Field>

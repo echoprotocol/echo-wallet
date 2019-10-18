@@ -42,7 +42,9 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					<span className="error-message">{accountName.error}</span>
+					<div className="error-message error-animation">
+						<span>{accountName.error}</span>
+					</div>
 				</Form.Field>
 				<Form.Field>
 					<label htmlFor="generatedWIF">Generated WIF</label>
@@ -63,7 +65,9 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					<span className="error-message">{confirmWIF.error}</span>
+					<div className="error-message error-animation">
+						<span>{confirmWIF.error}</span>
+					</div>
 
 				</Form.Field>
 			</div>

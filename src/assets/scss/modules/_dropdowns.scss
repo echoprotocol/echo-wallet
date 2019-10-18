@@ -159,6 +159,7 @@
         transition: border .3s;
         align-self: flex-start;
         min-height: 38px;
+        z-index: 2;
 
         &.active {
             &:not(.no-choice) {

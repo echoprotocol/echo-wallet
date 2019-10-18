@@ -61,8 +61,9 @@ class AccountField extends React.Component {
 					}
 					{ field.error ? <span className="icon-error-red value-status" /> : null }
 				</Input>
-				<span className="error-message">{field.error}</span>
-
+				<div className="error-message error-animation">
+					<span>{field.error}</span>
+				</div>
 			</Form.Field>
 		);
 	}
