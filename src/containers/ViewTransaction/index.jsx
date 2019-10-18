@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
 
 import operations from '../../constants/Operations';
 
@@ -61,22 +62,37 @@ class ViewTransaction extends React.Component {
 		return (
 			<div>
 				<div className="tab-full">
-					<div className="control-wrap">
-						<ul className="control-panel">
-							<li className="name">
-								<span className="label">Transaction:</span>
-								<span className="value pointer">
-									{data.id}
-								</span>
-							</li>
-						</ul>
-					</div>
+					<CSSTransition
+						in
+						appear
+						timeout={250}
+						classNames="fade-up"
+						unmountOnExit
+					>
+						<div className="control-wrap">
+							<ul className="control-panel">
+								<li className="name">
+									<span className="label">Transaction:</span>
+									<span className="value pointer">
+										{data.id}
+									</span>
+								</li>
+							</ul>
+						</div>
+					</CSSTransition>
 				</div>
-				<Tab
-					menu={{ tabular: true }}
-					className={classnames('tab-full', { 'hide-menu': (isLogData < 1) })}
-					panes={panes}
-				/>
+				<CSSTransition
+					in
+					appear
+					timeout={250}
+					classNames="fade-up"
+				>
+					<Tab
+						menu={{ tabular: true }}
+						className={classnames('tab-full', { 'hide-menu': (isLogData < 1) })}
+						panes={panes}
+					/>
+				</CSSTransition>
 			</div>
 		);
 	}

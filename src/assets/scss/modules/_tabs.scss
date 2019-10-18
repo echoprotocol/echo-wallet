@@ -236,3 +236,19 @@
         margin: 0
     }
 }
+
+.fade-up-appear {
+    transform: translateY(200px);
+    opacity: 0;
+}
+
+.fade-up-appear-active {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: opacity 250ms, transform 250ms;
+}
+
+.fade-up-appear-active:nth-child(2) {
+    transition-delay: 100ms;
+
+}
