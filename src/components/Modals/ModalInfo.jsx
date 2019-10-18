@@ -31,7 +31,7 @@ class ModalInfoWallet extends React.Component {
 					<div className="modal-body">
 						<div className="info-row">
 							<div className="info-title">Version:</div>
-							<div className="info-value">{version} <a href="#" target="_blank"> <span className="icon-commit" />k8b3c4e</a></div>
+							<div className="info-value">{version} <a href="#" target="_blank"> <span className="icon-commit" />{COMMITHASH.substring(0, 7)}</a></div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Website:</div>
