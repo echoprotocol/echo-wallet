@@ -19,8 +19,9 @@ class PermissionTable extends React.Component {
 	static getDerivedStateFromProps(nextProps) {
 		if (nextProps.resetAddKeys) {
 			return { addKeys: [] };
+		} else if (nextProps.error) {
+			return { addKeys: [] };
 		}
-
 		return null;
 	}
 
@@ -48,9 +49,7 @@ class PermissionTable extends React.Component {
 		const {
 			table, description, data, noInput, noBtn, keyRole, keys,
 		} = this.props;
-
 		const { addKeys } = this.state;
-
 		return (
 
 			<div className="main-table-wrap">
@@ -109,12 +108,14 @@ PermissionTable.propTypes = {
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.array.isRequired,
 	submit: PropTypes.func.isRequired,
+	error: PropTypes.string,
 };
 
 PermissionTable.defaultProps = {
 	noInput: false,
 	noBtn: false,
 	description: null,
+	error: null,
 };
 
 

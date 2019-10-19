@@ -13,7 +13,7 @@ import {
 	FORM_CALL_CONTRACT_VIA_ID,
 	FORM_FREEZE,
 } from '../constants/FormConstants';
-import { COMMITTEE_TABLE } from '../constants/TableConstants';
+import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
@@ -29,7 +29,7 @@ import {
 } from './FormActions';
 import { addContractByName } from './ContractActions';
 import { getBalanceFromAssets } from './BalanceActions';
-import { setValue as setTableValue } from './TableActions';
+import { setValue as setTableValue, setError } from './TableActions';
 import { signTransaction } from './SignActions';
 
 import { getMethod } from '../helpers/ContractHelper';
@@ -627,11 +627,14 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		}).catch((error) => {
-			error = error.toString();
-			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
-			message = (message.charAt(0).toUpperCase() + message.slice(1));
-
+			// error = error.toString();
+			// let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
+			// message = (message.charAt(0).toUpperCase() + message.slice(1));
+			const { message } = error;
+			console.log(error);
+			console.log(message);
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+			dispatch(setError(PERMISSION_TABLE, message));
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		});

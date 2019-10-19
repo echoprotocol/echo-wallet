@@ -85,7 +85,6 @@ class Permissions extends React.Component {
 		let { permissionsKeys } = this.props;
 
 		permissionsKeys = permissionsKeys.toJS();
-
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
@@ -127,6 +126,7 @@ class Permissions extends React.Component {
 									keys={keys}
 									submit={submit}
 									resetAddKeys={this.state.resetAddKeys}
+									error={permissionsKeys.error}
 								/>
 							</React.Fragment>
 						)
