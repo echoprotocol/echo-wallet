@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -134,7 +134,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
-
+		dispatch(openModal(MODAL_ADD_WIF));
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));

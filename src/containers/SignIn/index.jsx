@@ -70,7 +70,7 @@ class SignIn extends React.Component {
 
 			<Form className="main-form">
 				<div className="form-info">
-					{ isAddAccount ?
+					{isAddAccount ?
 						<button
 							type="button"
 							className="back-link"
@@ -106,7 +106,7 @@ class SignIn extends React.Component {
 				</div>
 				<div className="form-panel">
 					<span className="sign-nav">
-					Don’t have an account?
+						Don’t have an account?
 						<Link
 							className={classnames('link', 'main-link', { disabled: loading })}
 							to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
@@ -143,7 +143,7 @@ class SignIn extends React.Component {
 				{
 					(submit) => (
 						<div className="sign-scroll-fix">
-							{ this.renderSignIn(submit) }
+							{this.renderSignIn(submit)}
 						</div>
 					)
 				}

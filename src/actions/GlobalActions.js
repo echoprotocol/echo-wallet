@@ -41,7 +41,6 @@ import Services from '../services';
 
 export const initAccount = (accountName, networkName) => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-
 	try {
 		let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -70,6 +69,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
+		
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));

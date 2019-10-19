@@ -3,6 +3,7 @@ import React from 'react';
 import ModalTokens from './ModalTokens';
 import ModalLogout from './ModalLogout';
 import ModalWipe from './ModalWipe';
+import ModalAddWIF from './ModalAddWIF';
 
 export default class ModalsComponent extends React.Component {
 
@@ -12,6 +13,7 @@ export default class ModalsComponent extends React.Component {
 				<ModalTokens />
 				<ModalLogout />
 				<ModalWipe />
+				<ModalAddWIF />
 			</div>
 		);
 	}

@@ -10,6 +10,7 @@ import {
 	MODAL_CHOOSE_ACCOUNT,
 	MODAL_WIPE,
 	MODAL_LOGOUT,
+	MODAL_ADD_WIF,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -39,6 +40,7 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_LOGOUT]: Map({
 		accountName: '',
 	}),
+	[MODAL_ADD_WIF]: Map({}),
 };
 
 export default createModule({
@@ -53,12 +55,12 @@ export default createModule({
 		[MODAL_CHOOSE_ACCOUNT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CHOOSE_ACCOUNT]),
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
+		[MODAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_WIF]),
 	}),
 	transformations: {
 		open: {
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-
 				if (payload.params) {
 					Object.entries(payload.params).forEach(([field, value]) => {
 						state = state.setIn([payload.type, field], value);
