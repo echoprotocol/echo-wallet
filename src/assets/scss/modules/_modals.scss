@@ -305,12 +305,14 @@
 // style for info modal window
 .ui.modal.visible.small.unclock-size .modal-content.info {
     min-height: 200px;
-
+	padding: 20px 0 26px;
+	
     .modal-header {
         margin: 0;
-        margin-top: 16px;
+        margin-top: 21px;
         font-size: 20px;
-        text-align: center;
+		text-align: center;
+		font-weight: 600;
     }
 
     .modal-body {
@@ -322,14 +324,15 @@
             margin-bottom: 17px;
 
             .info-title {
+				font-family: proximanovaSemibold;
                 min-width: 140px;
-                color: #707070;
+                color: #5D637B;
                 opacity: 0.5;
             }
 
             .info-value {
                 color: #3B3B3B;
-
+				font-family: proximanovaSemibold;
                 a {
                     color: #4D66CD;
                 }
