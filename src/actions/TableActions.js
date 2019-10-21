@@ -56,7 +56,6 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
-
 		const { name } = await echo.api.getObject(a[0]);
 		return {
 			key: name, weight: a[1], role: 'active', type: 'accounts',

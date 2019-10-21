@@ -27,7 +27,7 @@ import AuthApi from '../api/AuthApi';
 
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
-import { PERMISSION_TABLE } from '../constants/TableConstants';
+// import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
@@ -135,13 +135,13 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
-		// console.log(await echo.api.getAccountByName('test111'));
-		console.log(getState().table.getIn([]));
-		console.log(getState().table.getIn([PERMISSION_TABLE, 'active', 'keys']));
-		// if (getState().table.getIn().length > 1) {
-		// 	console.log(45);
-		// }
-		dispatch(openModal(MODAL_ADD_WIF));
+
+		const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
+		const userPublicKeys = account.active.key_auths;
+		const accountAuth = account.active.account_auths;
+		if ((userPublicKeys.length + accountAuth.length) > userWIFKeys.length) {
+			dispatch(openModal(MODAL_ADD_WIF));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
