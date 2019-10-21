@@ -134,9 +134,7 @@ You will find your `.exe` build file in `build/binaries` directory.
 Docker (`electronuserland/builder:10`. `10` is major NodeJS version) is recommended to avoid installing system dependencies.
 
 ```bash
-docker run --rm -ti \
- -v ${PWD}:/project \
- electronuserland/builder:10
+docker run --rm -ti -v ${PWD}:/project electronuserland/builder:10
 ```
 
 Type in
