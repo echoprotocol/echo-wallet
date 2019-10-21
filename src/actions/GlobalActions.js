@@ -69,8 +69,6 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
-		
-
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {

@@ -34,7 +34,7 @@ class ModalWIF extends React.Component {
 					</div>
 					<div className="modal-body">
 						<p>Private key desription</p>
-						<div className="form-panel">	
+						<div className="form-panel">
 							<Button
 								basic
 								type="submit"
