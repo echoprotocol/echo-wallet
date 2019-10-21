@@ -1,3 +1,4 @@
+import echo from 'echojs-lib';
 import StorageService from './StorageService';
 import Storage from '../logic-components/db/Storage';
 import { DB_NAME, STORE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
@@ -224,7 +225,6 @@ class UserStorageService {
 	 */
 	async getWIFByPublicKey(publicKey, params) {
 		this.checkNetwork();
-
 		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
 		const networkId = this.getNetworkId();
 		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
@@ -298,6 +298,52 @@ class UserStorageService {
 
 		return network;
 
+	}
+	/**
+	 * @method getPublicKeysHavesWIFs
+	 * @param {Array} activeKeysData
+	 * @param {Object} params
+	 * @return {Promise.<Array>}
+	 */
+	async getPublicKeysHavesWIFs(activeKeysData, params) {
+		// console.log(activeKeysData);
+		this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
+		const WIFs = [];
+		await this.asyncForEach(activeKeysData, async (keyData) => {
+			if (keyData.type === 'keys') {
+				const wif = await this.getWIFByPublicKey(keyData.key, params);
+				let currentKey;
+				if (wif) {
+					currentKey = activeKeysData.find((key) => key.key === wif.publicKey);
+				}
+				if (currentKey) {
+					WIFs.push(currentKey);
+				}
+			} else if (keyData.type === 'accounts') {
+				const accountPublicKeys = [];
+				const account = await echo.api.getAccountByName(keyData.key);
+				const accountWifs = await this.getAllWIFKeysForAccount(account.id, params);
+				if (accountWifs.length) {
+					accountWifs.forEach((key) => accountPublicKeys.push(key.publicKey));
+				}
+				// console.log(accountPublicKeys);
+				if (accountPublicKeys.length) {
+					WIFs.push({
+						key: accountPublicKeys, // await this.getPublicKeysHavesWIFs(accountPublicKeys, params),
+						type: keyData.type,
+						role: keyData.role,
+						weight: keyData.weight,
+					});
+				}
+			}
+		});
+		return WIFs;
+	}
+
+	async asyncForEach(array, func) {
+		for (let i = 0; i < array.length; ++i) {
+			await func(array[i], i, array);
+		}
 	}
 
 }

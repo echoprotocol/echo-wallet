@@ -80,7 +80,9 @@ class Permissions extends React.Component {
 			});
 		});
 	}
-
+	onChangeResetKeys() {
+		this.setState({ resetAddKeys: !this.state.resetAddKeys });
+	}
 	render() {
 		let { permissionsKeys } = this.props;
 
@@ -97,20 +99,22 @@ class Permissions extends React.Component {
 					{
 						(submitTr) => (
 							this.props.isChanged &&
-								<div className="top-btn-container">
-									<Button
-										basic
-										className="txt-btn"
-										content="Cancel"
-										onClick={() => this.onCancel({ active })}
-									/>
-									<Button
-										basic
-										className="green"
-										content="Save"
-										onClick={submitTr}
-									/>
-								</div>
+							<div className="top-btn-container">
+								<Button
+									basic
+									className="txt-btn"
+									content="Cancel"
+									onClick={() => this.onCancel({ active })}
+								/>
+								<Button
+									basic
+									className="green"
+									content="Save"
+									onClick={() => {
+										submitTr(this.onChangeResetKeys.bind(this), active);
+									}}
+								/>
+							</div>
 						)
 					}
 				</TransactionScenario>

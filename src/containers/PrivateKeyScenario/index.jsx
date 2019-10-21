@@ -51,7 +51,6 @@ class PrivateKeyScenario extends React.Component {
 
 	submit(role, publicKey) {
 		const unlocked = this.state.keys.find((k) => k.publicKey === publicKey);
-
 		if (unlocked) {
 			this.setState((prevState) => ({
 				...prevState,
