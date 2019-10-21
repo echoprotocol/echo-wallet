@@ -235,7 +235,8 @@
                         background-color: $main-сolor;
 
                         .name {
-                            color: #fff;
+							color: #fff;
+							max-width: 150px;
                         }
 
                         .balance {
@@ -272,7 +273,7 @@
                     line-height: 16px;
                     font-family: proximaNovaSemibold;
                     font-size: 13px;
-                    font-weight: 400;
+					font-weight: 400;
                 }
 
                 .id {
