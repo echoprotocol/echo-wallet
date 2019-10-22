@@ -5,6 +5,12 @@ import classnames from 'classnames';
 
 class ModalUnlockWallet extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			isVisible: false,
+		};
+	}
 	onForgot(e) {
 		e.preventDefault();
 
@@ -23,16 +29,17 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-
+	changeVisibility() {
+		this.setState({ isVisible: !this.state.isVisible });
+	}
 	render() {
 		const {
 			show, error, disabled,
 		} = this.props;
-
+		const { isVisible } = this.state;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
-
 					<span
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
@@ -49,8 +56,12 @@ class ModalUnlockWallet extends React.Component {
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
 									<label htmlFor="Password">Password</label>
+									<Button
+										className={classnames('icon', isVisible ? 'icon-e-hide' : 'icon-e-show')}
+										onClick={() => this.changeVisibility()}
+									/>
 									<input
-										type="password"
+										type={isVisible ? 'text' : 'password'}
 										placeholder="Password"
 										name="password"
 										className="ui input"
