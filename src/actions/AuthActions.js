@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -27,6 +27,7 @@ import AuthApi from '../api/AuthApi';
 
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
+// import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
@@ -68,7 +69,6 @@ export const createAccount = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
-
 		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
 		const userStorage = Services.getUserStorage();
@@ -84,7 +84,22 @@ export const createAccount = ({
 	}
 
 };
-
+/**
+ * @method isAllWIFsAdded
+ * @param {Object} account
+ * @param {String} password
+ * @return {Boolean}
+ */
+const isAllWIFsAdded = async (account, password) => {
+	const userStorage = Services.getUserStorage();
+	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
+	const userPublicKeys = account.active.key_auths;
+	const accountAuth = account.active.account_auths;
+	if ((userPublicKeys.length + accountAuth.length) > userWIFKeys.length) {
+		return false;
+	}
+	return true;
+};
 
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
@@ -135,6 +150,10 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			dispatch(initAccount(accountName, networkName));
 		}
 
+		const hasAllWIFs = await isAllWIFsAdded(account, password);
+		if (!hasAllWIFs) {
+			dispatch(openModal(MODAL_ADD_WIF));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
@@ -276,33 +295,34 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
 
-export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
-	try {
-		dispatch(toggleModalLoading(modal, true));
+export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
+	async (dispatch) => {
+		try {
+			dispatch(toggleModalLoading(modal, true));
 
-		const userStorage = Services.getUserStorage();
-		const doesDBExist = await userStorage.doesDBExist();
+			const userStorage = Services.getUserStorage();
+			const doesDBExist = await userStorage.doesDBExist();
 
-		if (!doesDBExist) {
-			dispatch(setError(modal, 'DB doesn\'t exist'));
-			return;
+			if (!doesDBExist) {
+				dispatch(setError(modal, 'DB doesn\'t exist'));
+				return;
+			}
+
+			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+			const correctPassword = await userStorage.isMasterPassword(password);
+
+			if (!correctPassword) {
+				dispatch(setError(modal, 'Invalid password'));
+				return;
+			}
+
+			dispatch(closeModal(modal));
+
+			callback(password);
+		} catch (err) {
+			dispatch(setError(modal, err));
+		} finally {
+			dispatch(toggleModalLoading(modal, false));
 		}
 
-		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
-		const correctPassword = await userStorage.isMasterPassword(password);
-
-		if (!correctPassword) {
-			dispatch(setError(modal, 'Invalid password'));
-			return;
-		}
-
-		dispatch(closeModal(modal));
-
-		callback(password);
-	} catch (err) {
-		dispatch(setError(modal, err));
-	} finally {
-		dispatch(toggleModalLoading(modal, false));
-	}
-
-};
+	};
