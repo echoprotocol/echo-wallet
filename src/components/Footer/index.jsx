@@ -7,11 +7,17 @@ import { CACHE_MAPS } from 'echojs-lib';
 import { version } from '../../../package.json';
 import NetworkDropdown from './NetworkDropdown';
 import { connection } from '../../actions/GlobalActions';
+import { openModal } from '../../actions/ModalActions';
+import { MODAL_INFO } from '../../constants/ModalConstants';
 
 class Footer extends React.PureComponent {
 
 	onReconnect() {
 		this.props.connection();
+	}
+
+	openModal() {
+		this.props.openModal();
 	}
 
 	render() {
@@ -22,7 +28,9 @@ class Footer extends React.PureComponent {
 		const connected = (
 			<div className="footer">
 				<ul>
-					<li>Echo.{version}</li>
+					<li>
+						<button onClick={() => { this.openModal(); }}>Echo.{version}</button>
+					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} />
 					</li>
@@ -68,6 +76,7 @@ Footer.propTypes = {
 	latency: PropTypes.any,
 	error: PropTypes.string,
 	connection: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 };
 
 Footer.defaultProps = {
@@ -89,6 +98,7 @@ export default connect(
 		error: state.global.get('globalError'),
 	}),
 	(dispatch) => ({
+		openModal: () => dispatch(openModal(MODAL_INFO)),
 		connection: () => dispatch(connection()),
 	}),
 )(Footer);

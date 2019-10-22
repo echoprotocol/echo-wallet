@@ -301,3 +301,53 @@
         }
     }
 }
+
+// style for info modal window
+.ui.modal.visible.small.unclock-size .modal-content.info {
+    min-height: 200px;
+	padding: 20px 0 26px;
+	
+    .modal-header {
+        margin: 0;
+        margin-top: 21px;
+        font-size: 20px;
+		text-align: center;
+		font-weight: 600;
+    }
+
+    .modal-body {
+        margin: 33px 61px 0;
+
+        .info-row {
+            display: flex;
+            font-size: 14px;
+            margin-bottom: 17px;
+
+            .info-title {
+				font-family: proximanovaSemibold;
+                min-width: 140px;
+                color: #5D637B;
+                opacity: 0.5;
+            }
+
+            .info-value {
+                color: #3B3B3B;
+				font-family: proximanovaSemibold;
+                a {
+                    color: #4D66CD;
+                }
+
+                .icon-commit {
+                    font-size: 12px;
+                    margin-right: 5px;
+                }
+            }
+
+            &:nth-child(1) {
+                .info-value a {
+                    margin-left: 13px;
+                }
+            }
+        }
+    }
+}
