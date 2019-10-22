@@ -7,7 +7,7 @@ import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
 import { PROPOSAL_ADD_WIF } from '../../constants/ModalConstants';
 import { closeModal } from '../../actions/ModalActions';
 
-class ModalWIF extends React.Component {
+class PropoaslAddWIF extends React.Component {
 
 	onAgree(e) {
 		e.preventDefault();
@@ -59,13 +59,13 @@ class ModalWIF extends React.Component {
 
 }
 
-ModalWIF.propTypes = {
+PropoaslAddWIF.propTypes = {
 	show: PropTypes.bool,
 	hide: PropTypes.func.isRequired,
 	history: PropTypes.any.isRequired,
 };
 
-ModalWIF.defaultProps = {
+PropoaslAddWIF.defaultProps = {
 	show: false,
 };
 
@@ -76,4 +76,4 @@ export default withRouter(connect(
 	(dispatch) => ({
 		hide: () => dispatch(closeModal(PROPOSAL_ADD_WIF)),
 	}),
-)(ModalWIF));
+)(PropoaslAddWIF));

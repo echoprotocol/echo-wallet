@@ -4,7 +4,7 @@ import ModalTokens from './ModalTokens';
 import ModalLogout from './ModalLogout';
 import ModalWipe from './ModalWipe';
 import ModalInfo from './ModalInfo';
-import ModalAddWIF from './ModalAddWIF';
+import PropoaslAddWIF from './ProposalAddWIF';
 
 export default class ModalsComponent extends React.Component {
 
@@ -15,7 +15,7 @@ export default class ModalsComponent extends React.Component {
 				<ModalLogout />
 				<ModalWipe />
 				<ModalInfo />
-				<ModalAddWIF />
+				<PropoaslAddWIF />
 			</React.Fragment>
 		);
 	}
