@@ -65,8 +65,8 @@ class TransactionScenario extends React.Component {
 		let maxNextTreshold = 0;
 		if (isCheckTresholdNeed) {
 			const userStorage = Services.getUserStorage();
-			const validPublicKeys = await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
-			console.log(validPublicKeys);
+			const validPublicKeys =
+				await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
 			validPublicKeys.forEach((key) => {
 				maxNextTreshold += key.weight;
 			});

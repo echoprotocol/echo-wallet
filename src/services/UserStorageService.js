@@ -341,9 +341,12 @@ class UserStorageService {
 	}
 
 	async asyncForEach(array, func) {
-		for (let i = 0; i < array.length; ++i) {
-			await func(array[i], i, array);
+		const promises = [];
+		for (let i = 0; i < array.length; i += 1) {
+			promises.push(func(array[i], i, array));
 		}
+		const results = await Promise.all(promises);
+		return results;
 	}
 
 }

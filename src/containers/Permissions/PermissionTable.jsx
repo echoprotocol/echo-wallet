@@ -108,14 +108,12 @@ PermissionTable.propTypes = {
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.array.isRequired,
 	submit: PropTypes.func.isRequired,
-	error: PropTypes.string,
 };
 
 PermissionTable.defaultProps = {
 	noInput: false,
 	noBtn: false,
 	description: null,
-	error: null,
 };
 
 
