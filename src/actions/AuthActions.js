@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -27,7 +27,6 @@ import AuthApi from '../api/AuthApi';
 
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
-// import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
@@ -152,7 +151,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 
 		const hasAllWIFs = await isAllWIFsAdded(account, password);
 		if (!hasAllWIFs) {
-			dispatch(openModal(MODAL_ADD_WIF));
+			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 		return false;
 	} catch (err) {

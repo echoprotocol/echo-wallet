@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
-import { MODAL_ADD_WIF } from '../../constants/ModalConstants';
+import { PROPOSAL_ADD_WIF } from '../../constants/ModalConstants';
 import { closeModal } from '../../actions/ModalActions';
 
 class ModalWIF extends React.Component {
@@ -71,9 +71,9 @@ ModalWIF.defaultProps = {
 
 export default withRouter(connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_ADD_WIF, 'show']),
+		show: state.modal.getIn([PROPOSAL_ADD_WIF, 'show']),
 	}),
 	(dispatch) => ({
-		hide: () => dispatch(closeModal(MODAL_ADD_WIF)),
+		hide: () => dispatch(closeModal(PROPOSAL_ADD_WIF)),
 	}),
 )(ModalWIF));
