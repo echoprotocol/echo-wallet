@@ -351,3 +351,36 @@
         }
     }
 }
+
+.ui.modal.visible.small.unclock-size .modal-content.add-key {
+    min-height: 230px;
+	padding: 38px 0 0;
+	justify-content: flex-start;
+	
+    .modal-header {
+        margin: 0;
+        font-size: 20px;
+		text-align: center;
+		font-weight: 600;
+	}
+	.modal-body {
+        margin: 18px 55px 0px;
+	}
+	.info-text {
+		font-size: 15px;
+		line-height: 22px;
+		text-align: center;
+		color: rgba(#3B3B3B, .8);
+	}
+	.form-panel {
+		justify-content: center;
+		margin: 27px 0px 0px;
+		.button {
+			min-width: 160px;
+			min-height: 38px;
+			&:not(:last-child) {
+				margin-right: 20px;
+			}
+		}
+	}
+}
