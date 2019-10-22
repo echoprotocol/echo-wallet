@@ -62,10 +62,6 @@ ModalInfoWallet.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_INFO, 'show']),
-<<<<<<< HEAD
-		version,
-=======
->>>>>>> d402b04c35a2021323096b7f1490df2c6d519488
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_INFO)),
