@@ -81,20 +81,130 @@ class Permissions extends React.Component {
 		});
 	}
 
+	renderViewMode() {
+		return (
+			<div className="view-mode-wrap">
+				<div className="info-text">
+				Making a backup of your keys helps ensure you can always maintain access to your funds.
+				Anyone having access to your keys will take full control of the funds,
+				so we strongly recommend storing it offline in a secure place.
+				</div>
+				<div className="list-wrap">
+					<div className="list-header">
+						<h3 className="list-header-title">Public Keys and Accounts</h3>
+						<div className="list-header-info">
+							<span className="icon-info" />
+							<span className="threshold"> threshold </span>
+							<span className="threshold-value">1</span>
+						</div>
+					</div>
+					<div className="list">
+						<div className="list-item">
+							<div className="list-item-content">
+								<div className="list-item-value">8BTS5EXBBsHfr8c3yWVpkeVCezi7Ywm6pTJ7qV1BDPsrpJUaL2U5Q</div>
+								<div className="list-item-weight">
+									<span className="weight">Weight:</span>
+									<span className="value">1</span>
+								</div>
+							</div>
+							<div className="list-item-panel">
+								<Button
+									basic
+									className="txt-btn"
+									content="VIEW WIF"
+								/>
+							</div>
+						</div>
+						<div className="list-item">
+							<div className="list-item-content">
+								<div className="list-item-value">Ywm6pTJ7qV1BDPsrpJUaL2U5Q8BTS5EXBBsHfr8c3yWVpkeVCezi7</div>
+								<div className="list-item-weight">
+									<span className="weight">Weight:</span>
+									<span className="value">0.5</span>
+								</div>
+							</div>
+							<div className="list-item-panel">
+								<Button
+									basic
+									className="txt-btn"
+									content="VIEW WIF"
+								/>
+							</div>
+						</div>
+						<div className="list-item">
+							<div className="list-item-content">
+								<div className="list-item-value">accountName_1</div>
+								<div className="list-item-weight">
+									<span className="weight">Weight:</span>
+									<span className="value">1</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="list-wrap">
+					<div className="list-header">
+						<h3 className="list-header-title">EchoRand Key</h3>
+						<span className="list-header-advanced">(advanced)</span>
+					</div>
+					<div className="list-description">
+						EchoRand Key is used for participating in blocks generation and for signing
+						sidechain transactions by committee members.
+						<a className="list-header-link" href=""> Know more in Echo Docs</a>
+					</div>
+					<div className="list">
+						<div className="list-item">
+							<div className="list-item-content">
+								<div className="list-item-value">8BTS5EXBBsHfr8c3yWVpkeVCezi7Ywm6pTJ7qV1BDPsrpJUaL2U5Q</div>
+							</div>
+							<div className="list-item-panel">
+								<Button
+									basic
+									className="txt-btn"
+									content="VIEW WIF"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
-		let { permissionsKeys } = this.props;
+		// let { permissionsKeys } = this.props;
 
-		permissionsKeys = permissionsKeys.toJS();
+		// permissionsKeys = permissionsKeys.toJS();
 
-		const active = {
-			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-			threshold: permissionsKeys.active.threshold,
-		};
+		// const active = {
+		// 	keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+		// 	threshold: permissionsKeys.active.threshold,
+		// };
 
 		return (
 
 			<div className="permissions-wrap">
-				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
+				<div className="sub-header">
+
+					<div className="account-info">
+						<span className="account-info-type">Account ID:</span>
+						<span className="account-info-value">1.16.0</span>
+					</div>
+					<div className="sub-header-panel">
+						<Button
+							className="grey"
+							content="Edit mode"
+						/>
+						<Button
+							className="green"
+							content="View & backup keys"
+						/>
+					</div>
+				</div>
+				{
+					this.renderViewMode()
+				}
+				{/* <TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{
 						(submitTr) => (
 							this.props.isChanged &&
@@ -131,7 +241,7 @@ class Permissions extends React.Component {
 							</React.Fragment>
 						)
 					}
-				</PrivateKeyScenario>
+				</PrivateKeyScenario> */}
 			</div>
 		);
 	}

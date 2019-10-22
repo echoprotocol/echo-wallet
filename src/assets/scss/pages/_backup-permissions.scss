@@ -1,0 +1,132 @@
+.permissions-wrap {
+	position: relative;
+	height: calc(100vh - 121px);
+	overflow: auto;
+	.sub-header {
+		justify-content: space-between;
+	}
+
+	.info-text {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 22px;
+		color: #3B3B3B;
+		margin-top: 30px;
+		padding-right: 100px;
+		
+		& + .list-wrap {
+			margin-top: 38px;
+		}
+	}
+}
+
+.view-mode-wrap {
+	max-width: 600px;
+	margin: 0 auto;
+
+	.list-wrap {
+		margin-top: 49px;
+		.list-header {
+			display: flex;
+			align-items: center;
+		}
+
+		.list-header-title {
+			font-size: 20px;
+			line-height: 26.4px;
+			color: #5C637D;
+			font-weight: 500;
+			margin: 0;
+		}
+		.list-header-advanced {
+			color: rgba(#3B3B3B, .5);
+			font-size: 14px;
+			line-height: 18px;
+			font-weight: 500;
+			margin-left: 10px;
+		}
+		.list-header-info {
+			display: flex;
+			align-items: center;
+			margin-left: auto;
+
+			.icon-info {
+				color: #AEB4C0;
+				font-size: 12px;
+				margin-right: 6px;
+
+				&:hover {
+					color: #5C637D;
+				}
+			}
+			.threshold {
+				font-size: 12px;
+				font-family: proximaNovaSemibold;
+				color: #AEB4C0;
+				line-height: 26.4px;
+				text-transform: uppercase;
+				margin-right: 9px;
+			}
+			.threshold-value {
+				color: #3B3B3B;
+				font-size: 15px;
+				line-height: 16px;
+				font-weight: 500;
+			}
+		}
+
+		.list-header-link {
+			font-size: 14px;
+			color: #4D66CD;
+			font-family: proximaNovaSemibold;
+			line-height: 18px;
+
+		}
+		.list-description {
+			margin-top: 6px;
+			color: #3B3B3B;
+			line-height: 18px;
+			font-size: 14px;
+			font-weight: 500;
+		}
+		
+		.list {
+			margin-top: 16px;
+		}
+
+		.list-item {
+			background-color: #F5F5F6;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			height: 54px;
+			padding: 0 13px;
+			border-radius: 4px;
+
+			&:not(:last-child) {
+				margin-bottom: 10px;
+			}
+		}
+		.list-item-value {
+			font-family: proximaNovaSemibold;
+			font-size: 14px;
+			color: #5C637D;
+			line-height: 17px;
+
+		}
+
+		.list-item-weight {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 21px;
+			.weight {
+				color: rgba(#5C637D, .7);
+			}
+			.value {
+				margin-left: 6px;
+				color: #5C637D;
+			}
+		}
+	}
+}
+

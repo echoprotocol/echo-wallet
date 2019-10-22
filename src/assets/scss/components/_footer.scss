@@ -60,7 +60,30 @@
                 }
             }
         }
-    }
+	}
+	
+	&.warning {
+		background-color: #EE851C;
+		ul {
+            li {
+                &:first-child {
+                    width: 100%;
+                    text-align: center;
+                    text-transform: uppercase;
+					color: $white;
+					font-size: 13px;
+					letter-spacing: .25px;
+					line-height: 15.6px;
+                }
+
+                .button.black {
+                    margin: 0 0 0 15px;
+                    background-color: rgb(81, 84, 89);
+                    text-transform: uppercase;
+                }
+            }
+        }
+	}
 }
 
 .pipeline {

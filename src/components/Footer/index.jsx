@@ -12,6 +12,13 @@ import { MODAL_INFO } from '../../constants/ModalConstants';
 
 class Footer extends React.PureComponent {
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			warn: true,
+		};
+	}
 	onReconnect() {
 		this.props.connection();
 	}
@@ -24,7 +31,7 @@ class Footer extends React.PureComponent {
 		const {
 			isConnect, latency, lastBlock, error,
 		} = this.props;
-
+		const { warn } = this.state;
 		const connected = (
 			<div className="footer">
 				<ul>
@@ -34,6 +41,18 @@ class Footer extends React.PureComponent {
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} />
 					</li>
+				</ul>
+			</div>
+		);
+
+		const warning = (
+			<div className="footer warning">
+				<ul>
+					<li>
+						Total weight of all the keys won&rsquo;t be enough to sign a transaction.
+						<Button type="submit" size="tiny" color="black" onClick={() => {}}>Keys Parameters</Button>
+					</li>
+					<li />
 				</ul>
 			</div>
 		);
@@ -62,7 +81,16 @@ class Footer extends React.PureComponent {
 		);
 
 		if (isConnect && !latency.error) {
-			return error ? errored : connected;
+
+			if (error) {
+				return errored;
+			}
+
+			if (warn) {
+				return warning;
+			}
+
+			return connected;
 		}
 
 		return disconnected;

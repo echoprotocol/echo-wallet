@@ -1,39 +1,3 @@
-.sub-header {
-    display: flex;
-    height: 40px;
-    width: 100%;
-    padding-left: 19px;
-    background-color: #f7f7f7;
-    border-top: 1px solid #e9e9ed;
-    color: #5c637d;
-    line-height: 40px;
-
-    .icon-frozen-funds {
-        display: block;
-        font-size: 19px;
-        line-height: 41px;
-        text-align: center;
-        margin-right: 10px
-    }
-
-    .balance {
-        font-size: 16px;
-        font-family: proximaNovaSemibold;
-        font-weight: 400;
-        color: #5c637d;
-        text-transform: uppercase;
-        line-height: 38px;
-
-        span {
-            padding-left: 9px;
-
-            &:last-child {
-                padding-left: 3px;
-            }
-        }
-    }
-}
-
 .frozen {
     font-family: proxima;
     height: calc(100vh - 160px);
