@@ -68,8 +68,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	try {
 		const { fee } = options;
 
-		const core = getState()
-			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).toJS();
+		const precision = getState()
+			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
 
 		let amount = await getOperationFee(type, options);
@@ -77,9 +77,9 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
-				.times(10 ** (core.precision - feeAsset.precision));
+				.times(10 ** (precision - feeAsset.precision));
 
-			amount = new BN(amount).div(10 ** core.precision);
+			amount = new BN(amount).div(10 ** precision);
 			amount = price.times(amount).times(10 ** feeAsset.precision);
 		}
 
