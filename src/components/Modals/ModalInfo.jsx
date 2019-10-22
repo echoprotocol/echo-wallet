@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
