@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import classnames from 'classnames';
 import { version } from '../../../package.json';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
@@ -31,6 +30,7 @@ class ModalInfoWallet extends React.Component {
 					<div className="modal-body">
 						<div className="info-row">
 							<div className="info-title">Version:</div>
+							{/* eslint-disable-next-line no-undef */}
 							<div className="info-value">{version} <a href="#" target="_blank"> <span className="icon-commit" />{COMMITHASH.substring(0, 7)}</a></div>
 						</div>
 						<div className="info-row">
