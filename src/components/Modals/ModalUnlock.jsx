@@ -7,9 +7,20 @@ class ModalUnlockWallet extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-			isVisible: false,
-		};
+		if (props.warningTextValue) {
+			this.state = {
+				agree: false,
+				timerEnd: false,
+			};
+		} else {
+			this.state = {
+				agree: true,
+				timerEnd: true,
+			};
+		}
+	}
+	onCheck(e) {
+		this.setState({ agree: e.currentTarget.checked });
 	}
 	onForgot(e) {
 		e.preventDefault();
@@ -29,17 +40,36 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-	changeVisibility() {
-		this.setState({ isVisible: !this.state.isVisible });
+	timer() {
+		// this.setState({ timerEnd: true });
+		return (<span> 1 </span>);
+	}
+	renderModalHeader() {
+		const { warningTextValue, warningTextChackbox } = this.props;
+		return (
+			<React.Fragment>
+				<h3> {this.timer()} Edit Mode Warning</h3>
+				<h4>{warningTextValue}</h4>
+				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
+				<label className="label" htmlFor="agree" >
+					<span className="label-text">{warningTextChackbox}</span>
+				</label>
+			</React.Fragment>
+		);
 	}
 	render() {
 		const {
-			show, error, disabled,
+			show, error, disabled, title, warningTextValue,
 		} = this.props;
-		const { isVisible } = this.state;
+		const { agree, timerEnd } = this.state;
+		if (warningTextValue) {
+			console.log(agree, disabled);
+			console.log(disabled && !agree);
+		}
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
+
 					<span
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
@@ -47,21 +77,19 @@ class ModalUnlockWallet extends React.Component {
 						role="button"
 						tabIndex="0"
 					/>
-					<div className="modal-header" />
+					<div className="modal-header">
+						{this.props.warningTextValue ? this.renderModalHeader() : null}
+					</div >
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="form-info">
-								<h3>Unlock Wallet</h3>
+								<h3>{title}</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
 									<label htmlFor="Password">Password</label>
-									<Button
-										className={classnames('icon', isVisible ? 'icon-e-hide' : 'icon-e-show')}
-										onClick={() => this.changeVisibility()}
-									/>
 									<input
-										type={isVisible ? 'text' : 'password'}
+										type="password"
 										placeholder="Password"
 										name="password"
 										className="ui input"
@@ -86,7 +114,7 @@ class ModalUnlockWallet extends React.Component {
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled}
+									disabled={disabled || !(agree && timerEnd)}
 									content="Unlock Wallet"
 								/>
 							</div>
@@ -107,12 +135,18 @@ ModalUnlockWallet.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	title: PropTypes.string,
+	warningTextValue: PropTypes.string,
+	warningTextChackbox: PropTypes.string,
 };
 
 ModalUnlockWallet.defaultProps = {
 	show: false,
 	disabled: false,
 	error: null,
+	title: 'Unlock Wallet',
+	warningTextValue: '',
+	warningTextChackbox: '',
 };
 
 export default ModalUnlockWallet;

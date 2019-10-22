@@ -81,8 +81,18 @@ class TransactionScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
+			withWarning,
 		} = this.props;
-
+		let title;
+		let warningTextValue;
+		let warningTextChackbox;
+		if (withWarning) {
+			title = 'Edit Mode Warning';
+			warningTextValue = 'info';
+			warningTextChackbox = 'checkbox';
+		} else {
+			warningTextValue = null;
+		}
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
@@ -95,6 +105,9 @@ class TransactionScenario extends React.Component {
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
 					close={() => this.close(MODAL_UNLOCK)}
+					title={title}
+					warningTextValue={warningTextValue}
+					warningTextChackbox={warningTextChackbox}
 				/>
 				<ModalApprove
 					show={modalDetails.get('show')}
@@ -113,6 +126,7 @@ class TransactionScenario extends React.Component {
 TransactionScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	children: PropTypes.func.isRequired,
+	withWarning: PropTypes.bool,
 
 	operation: PropTypes.string,
 	showOptions: PropTypes.object,
@@ -128,6 +142,7 @@ TransactionScenario.propTypes = {
 
 TransactionScenario.defaultProps = {
 	operation: null,
+	withWarning: false,
 	showOptions: {},
 };
 
