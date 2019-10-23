@@ -26,9 +26,9 @@ class FrozenFunds extends React.Component {
 				<div className="page-wrap frozen">
 					<div className="balance-wrap">
 						<div className="frozen-about">
-						The sum you freeze will affect the reward for participating
-						 in blocks creation when re-calculated with the coefficient
-						 (the longer the period, the bigger reward you receive).
+							The sum you freeze will affect the reward for participating
+							in blocks creation when re-calculated with the coefficient
+							(the longer the period, the bigger reward you receive).
 						</div>
 						<div className="balance-scroll">
 							<Assets
