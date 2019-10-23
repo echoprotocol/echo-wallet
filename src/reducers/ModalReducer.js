@@ -11,6 +11,7 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_INFO,
+	MODAL_CONFIRM_CHANGE_TRESHOLD,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -36,6 +37,7 @@ const DEFAULT_MODAL_FIELDS = {
 		accountName: '',
 	}),
 	[MODAL_INFO]: Map({}),
+	[MODAL_CONFIRM_CHANGE_TRESHOLD]: Map({}),
 };
 
 export default createModule({
@@ -51,6 +53,8 @@ export default createModule({
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CHOOSE_ACCOUNT]),
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
+		[MODAL_CONFIRM_CHANGE_TRESHOLD]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_MODAL_FIELDS[MODAL_CONFIRM_CHANGE_TRESHOLD]),
 	}),
 	transformations: {
 		open: {

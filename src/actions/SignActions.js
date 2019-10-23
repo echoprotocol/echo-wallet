@@ -1,7 +1,6 @@
 import echo, { PrivateKey } from 'echojs-lib';
 
 import Services from '../services';
-import { stringify } from 'querystring';
 
 /**
  * Get transaction signers
@@ -13,7 +12,6 @@ import { stringify } from 'querystring';
  * @returns {Promise}
  */
 export const getSigners = async (account, keys, viewed = []) => {
-	console.log(account, JSON.stringify(keys), viewed = []);
 	let weight = 0;
 	let signers = [];
 
@@ -27,8 +25,6 @@ export const getSigners = async (account, keys, viewed = []) => {
 			keys.splice(1, keyIndex);
 		}
 	});
-	console.log(weight);
-	console.log(account.active.weight_threshold)
 	if (weight >= account.active.weight_threshold) {
 		return signers;
 	}

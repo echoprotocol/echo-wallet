@@ -80,6 +80,7 @@ class Permissions extends React.Component {
 			});
 		});
 	}
+
 	onChangeResetKeys() {
 		this.setState({ resetAddKeys: !this.state.resetAddKeys });
 		this.setState({ resetAddKeys: !this.state.resetAddKeys });
@@ -167,6 +168,7 @@ export default connect(
 			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			fullAccount: state.global.getIn(['activeUser']),
 		};
 	},
 	(dispatch) => ({
