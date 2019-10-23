@@ -86,9 +86,9 @@ class Footer extends React.PureComponent {
 				return errored;
 			}
 
-			if (warn) {
-				return warning;
-			}
+			// if (warn) {
+			// 	return warning;
+			// }
 
 			return connected;
 		}

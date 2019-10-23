@@ -80,6 +80,11 @@
 			color: #4D66CD;
 			font-family: proximaNovaSemibold;
 			line-height: 18px;
+			border-radius: 4px;
+			padding: 0 5px;
+			&:focus {
+				@include on-focus(2px);
+			}
 
 		}
 		.list-description {

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Button } from 'semantic-ui-react';
+import { Button, Popup } from 'semantic-ui-react';
 import { CACHE_MAPS } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
@@ -93,7 +93,13 @@ class Permissions extends React.Component {
 					<div className="list-header">
 						<h3 className="list-header-title">Public Keys and Accounts</h3>
 						<div className="list-header-info">
-							<span className="icon-info" />
+							<Popup
+								trigger={<span className="inner-tooltip-trigger icon-info" />}
+								content="You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction."
+								className="inner-tooltip"
+								position="bottom center"
+								style={{ width: 420 }}
+							/>
 							<span className="threshold"> threshold </span>
 							<span className="threshold-value">1</span>
 						</div>
@@ -111,7 +117,7 @@ class Permissions extends React.Component {
 								<Button
 									basic
 									className="txt-btn"
-									content="VIEW WIF"
+									content="View WIF"
 								/>
 							</div>
 						</div>
@@ -127,7 +133,7 @@ class Permissions extends React.Component {
 								<Button
 									basic
 									className="txt-btn"
-									content="VIEW WIF"
+									content="View WIF"
 								/>
 							</div>
 						</div>
@@ -150,7 +156,7 @@ class Permissions extends React.Component {
 					<div className="list-description">
 						EchoRand Key is used for participating in blocks generation and for signing
 						sidechain transactions by committee members.
-						<a className="list-header-link" href=""> Know more in Echo Docs</a>
+						<a className="list-header-link" href="">Know more in Echo Docs </a>
 					</div>
 					<div className="list">
 						<div className="list-item">

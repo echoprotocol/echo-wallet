@@ -55,7 +55,7 @@
             &:focus {
                 &:not(:active) {
                     .icon-back {
-                        @extend %onTextFocus;
+                        @include on-focus(2px);
                     }
                 }
             }
@@ -523,7 +523,7 @@
 
 input {
     &:focus {
-        @extend %onFocus;
+        @include on-focus(4px);
     }
 }
 

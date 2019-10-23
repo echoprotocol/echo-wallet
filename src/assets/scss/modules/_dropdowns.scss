@@ -505,7 +505,7 @@
                     &.active {
                         .label {
                             &:before {
-                                @extend %onFocus;
+                                @include on-focus(4px);
                             }
                         }
                     }
