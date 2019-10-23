@@ -48,7 +48,7 @@ export const setFormError = (form, field, value) => (dispatch) => {
  * @param {String} form
  * @param {String|Boolean} field
  * @param {Boolean} [loading]
- * @returns {undefined}
+ * @@returns {function(dispatch): undefined}
  */
 export const toggleLoading = (form, field, loading) => (dispatch) => {
 	if (typeof loading === 'undefined') {
@@ -66,7 +66,7 @@ export const toggleLoading = (form, field, loading) => (dispatch) => {
  * @method clearForm
  * Clear form
  * @param {String} form
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const clearForm = (form) => (dispatch) => {
 	dispatch(FormReducer.actions.clearForm({ form }));
@@ -77,7 +77,7 @@ export const clearForm = (form) => (dispatch) => {
  * Clear by field
  * @param {String} form
  * @param {String} field
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const clearByField = (form, field) => (dispatch) => {
 	dispatch(FormReducer.actions.clearByField({ form, field }));
@@ -89,7 +89,7 @@ export const clearByField = (form, field) => (dispatch) => {
  * @param {String} form
  * @param {String} field
  * @param {Object} params
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const setIn = (form, field, params) => (dispatch) => {
 	dispatch(FormReducer.actions.setIn({ form, field, params }));
@@ -101,7 +101,7 @@ export const setIn = (form, field, params) => (dispatch) => {
  * @param {String} form
  * @param {String} field
  * @param {any} value
- * @returns {undefined}
+ * @@returns {function(dispatch): undefined}
  */
 export const pushForm = (form, field, value) => (dispatch) => {
 
@@ -118,7 +118,7 @@ export const pushForm = (form, field, value) => (dispatch) => {
  * @param {String} form
  * @param {String} field
  * @param {any} value
- * @returns {undefined}
+ * @returns {function(dispatch): undefined}
  */
 export const deleteValue = (form, field, value) => (dispatch) => {
 	dispatch(FormReducer.actions.deleteValue({
@@ -134,7 +134,7 @@ export const deleteValue = (form, field, value) => (dispatch) => {
  * @param {String} form
  * @param {Array} fields
  * @param {any} value
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const setInFormValue = (form, fields, value) => (dispatch) => {
 	dispatch(FormReducer.actions.setInFormValue({ form, fields, value }));
@@ -146,7 +146,7 @@ export const setInFormValue = (form, fields, value) => (dispatch) => {
  * @param {String} form
  * @param {Array} fields
  * @param {any} value
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const setInFormError = (form, fields, value) => (dispatch) => {
 	dispatch(FormReducer.actions.setInFormError({ form, fields, value }));
@@ -158,7 +158,7 @@ export const setInFormError = (form, fields, value) => (dispatch) => {
  * @param {String} form
  * @param {Array} fields
  * @param {any} value
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
 	dispatch(FormReducer.actions.setInFormErrorConstant({ form, fields, value }));
@@ -169,7 +169,7 @@ export const setInFormErrorConstant = (form, fields, value) => (dispatch) => {
  * Remove permission key
  * @param {String} form
  * @param {Array} fields
- * @returns {Function}
+ * @returns {function(dispatch): undefined}
  */
 export const removeKey = (form, fields) => (dispatch) => {
 	dispatch(FormReducer.actions.removeKey({ form, fields }));

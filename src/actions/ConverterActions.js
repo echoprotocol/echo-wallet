@@ -16,7 +16,7 @@ export const resetConverter = () => (dispatch) => {
  * @param {String} data
  * @param {Object} component
  * @param {String} key
- * @returns {Object}
+ * @@returns {function(dispatch, getState): Promise<Object>}
  */
 export const convert = (type, data, component, key) => (dispatch, getState) => {
 	let convertedConstants = getState().converter.get('convertedConstants').toJS();

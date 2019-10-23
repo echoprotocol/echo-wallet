@@ -10,7 +10,7 @@ import Services from '../services';
  * @param {Array} keys
  * @param {Array} viewed
  *
- * @returns {Promise}
+ * @returns {Promise<Array>}
  */
 const getSigners = async (account, keys, viewed = []) => {
 	let weight = 0;
@@ -63,7 +63,7 @@ const getSigners = async (account, keys, viewed = []) => {
  * Sign transaction
  * @param {String} signer
  * @param {Object} tr
- * @returns {Promise}
+ * @returns {Promise<>undefined}
  */
 export const signTransaction = async (accountId, tr, password) => {
 	const signer = await echo.api.getObject(accountId);

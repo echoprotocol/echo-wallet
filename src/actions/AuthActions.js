@@ -30,7 +30,7 @@ import Key from '../logic-components/db/models/key';
 
 /**
  * @method generateWIF
- * @returns {undefined}
+ * @returns {function(dispatch): Promise<undefined>}
  */
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
@@ -42,7 +42,7 @@ export const generateWIF = () => (dispatch) => {
  * @method createAccount
  * @param {Object} param0
  * @param {Boolean} isAddAccount
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
@@ -99,7 +99,7 @@ export const createAccount = ({
  * @method authUser
  *
  * @param {Object} param0
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
@@ -166,7 +166,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
  * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
- * 	@returns {Object}
+ * 	@@returns {function(dispatch): Promise<Object>}
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
@@ -204,7 +204,7 @@ const getAccountsList = (accounts) => async (dispatch) => {
  *
  * 	@param {String} accountName
  *  @param {String} wif
- *	@returns {undefined}
+ *	@returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importAccount = ({ accountName, wif, password }) =>
 	async (dispatch, getState) => {
@@ -277,7 +277,7 @@ export const importAccount = ({ accountName, wif, password }) =>
  *
  *  @param {String} password
  *  @param {Array} accounts
- *  @returns {undefined}
+ *  @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
@@ -296,7 +296,7 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
  * @param {String} password
  * @param {Function} callback
  * @param {String} modal
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
 	try {

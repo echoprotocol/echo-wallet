@@ -5,7 +5,7 @@ import SortReducer from '../reducers/SortReducer';
  *
  * @param {String} container
  * @param {String} sortType
- * @returns {undefined}
+ * @returns {function(dispatch, getState): undefined}
  */
 export const toggleSort = (container, sortType) => (dispatch, getState) => {
 
@@ -31,7 +31,7 @@ export const toggleSort = (container, sortType) => (dispatch, getState) => {
  * @method initSorts
  *
  * @param {String} networkName
- * @returns {undefined}
+ * @returns {function(dispatch, getState): undefined}
  */
 export const initSorts = (networkName) => (dispatch, getState) => {
 

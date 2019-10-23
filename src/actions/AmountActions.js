@@ -10,7 +10,7 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
  * @param {String} value
  * @param {Object} currency
  * @param {string} name
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  *  */
 export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
@@ -42,7 +42,7 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
  * @method setDefaultAsset
  *
  * @param {String} form
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setDefaultAsset = (form) => async (dispatch, getState) => {
 	const currency = getState().form.getIn([form, 'currency']);

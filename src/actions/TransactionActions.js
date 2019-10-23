@@ -51,7 +51,7 @@ import TransactionReducer from '../reducers/TransactionReducer';
 
 /**
  * @method resetTransaction
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
@@ -60,7 +60,7 @@ export const resetTransaction = () => (dispatch) => {
  * @method setField
  * @param {String} field
  * @param {any} value
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
@@ -72,7 +72,7 @@ export const setField = (field, value) => (dispatch) => {
  * @param {String} form
  * @param {String} type
  * @param {Object} options
- * @returns {Object|null}
+ * @@returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 const getTransactionFee = (form, type, options) => async (dispatch, getState) => {
 	try {
@@ -106,7 +106,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
  *
  * @param {String} form
  * @param {String} asset
- * @returns {Object|null}
+ * @returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
@@ -149,7 +149,7 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
  *
  * @param {String} form
  * @param {String} asset
- * @returns {Object|null}
+ * @returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
@@ -214,7 +214,7 @@ export const checkFeePool = (echoAsset, asset, fee) => {
  * @method setAssetsToForm
  *
  * @param {String} from
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAssetsToForm = (from) => async (dispatch, getState) => {
 
@@ -231,7 +231,7 @@ export const setAssetsToForm = (from) => async (dispatch, getState) => {
  *
  * @param {String} accountName
  * @param {String} subject
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const checkAccount = (accountName, subject) => async (dispatch, getState) => {
 	try {
@@ -327,7 +327,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 
 /**
  * @method transfer
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
@@ -452,7 +452,7 @@ export const transfer = () => async (dispatch, getState) => {
 /**
  * @method freezeBalance
  *
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const freezeBalance = () => async (dispatch, getState) => {
 
@@ -548,7 +548,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
 
 /**
  * @method createContract
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const createContract = () => async (dispatch, getState) => {
 	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
@@ -618,7 +618,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @method sendTransaction
  *
  * @param {*} password
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const sendTransaction = (password) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
@@ -682,7 +682,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 /**
  * @method callContract
- * @returns { Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const callContract = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -781,7 +781,7 @@ export const callContract = () => async (dispatch, getState) => {
 
 /**
  * @method callContractViaId
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const callContractViaId = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -870,7 +870,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 
 /**
  * @method setAssetActiveAccount
- * @returns {undefined}
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAssetActiveAccount = () => (dispatch, getState) => {
 	const balances = getState().balance.get('assets');
@@ -882,6 +882,7 @@ export const setAssetActiveAccount = () => (dispatch, getState) => {
  *
  * @param {Object} asset
  * @param {String} form
+ * @returns {function(dispatch, getState): Promise<(Number | null)>}
  */
 export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
