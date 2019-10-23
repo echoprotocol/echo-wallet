@@ -12,6 +12,8 @@ import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
+import Services from '../../services';
+
 class BackupKeysScenario extends React.Component {
 
 	constructor(props) {
@@ -19,6 +21,7 @@ class BackupKeysScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			password: '',
+			activeUserKeys: [],
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -36,15 +39,32 @@ class BackupKeysScenario extends React.Component {
 	change(password) {
 		this.setState({ password });
 
-		if (this.props[MODAL_UNLOCK].get('error')) {
-			this.props.clearError(MODAL_UNLOCK);
+		if (this.props[MODAL_UNLOCK_PERMISSION].get('error')) {
+			this.props.clearError(MODAL_UNLOCK_PERMISSION);
 		}
 	}
 
-	async unlock() {
-		const key = await userStorage.getWIFByPublicKey(publicKey, { password });
+	async fetchWIFs() {
+		const { password } = this.state;
+		const { active: { keys } } = this.props.permissionsKeys.toJS();
 
-		this.props.unlock(password, () => {
+		const userStorage = Services.getUserStorage();
+
+
+		const activeUserKeys = await Promise.all(keys.map((keyItem) =>
+			userStorage.getWIFByPublicKey(keyItem.key, { password })));
+
+		this.setState((prevState) => ({
+			...prevState,
+			activeUserKeys: [...prevState.activeUserKeys, ...activeUserKeys],
+		}));
+	}
+
+	unlock() {
+		const { password } = this.state;
+
+		this.props.unlock(password, async () => {
+			await this.fetchWIFs();
 			this.props.openModal(MODAL_BACKUP_KEYS);
 		});
 	}
@@ -67,7 +87,7 @@ class BackupKeysScenario extends React.Component {
 
 	forgot() {
 		this.clear();
-		this.props.closeModal(MODAL_UNLOCK);
+		this.props.closeModal(MODAL_UNLOCK_PERMISSION);
 		this.props.openModal(MODAL_WIPE);
 	}
 
@@ -96,6 +116,7 @@ class BackupKeysScenario extends React.Component {
 					disabled={modalBackupKeys.get('loading')}
 					send={(value) => this.send(value)}
 					close={() => this.close(MODAL_BACKUP_KEYS)}
+					keys={this.state.activeUserKeys}
 				/>
 			</React.Fragment>
 		);
@@ -105,6 +126,7 @@ class BackupKeysScenario extends React.Component {
 
 BackupKeysScenario.propTypes = {
 	children: PropTypes.func.isRequired,
+	permissionsKeys: PropTypes.object,
 
 	activeUser: PropTypes.object,
 	[MODAL_UNLOCK_PERMISSION]: PropTypes.object.isRequired,
@@ -119,6 +141,7 @@ BackupKeysScenario.propTypes = {
 
 BackupKeysScenario.defaultProps = {
 	activeUser: {},
+	permissionsKeys: {},
 };
 
 export default connect(

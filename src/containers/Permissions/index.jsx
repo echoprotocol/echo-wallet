@@ -196,7 +196,9 @@ class Permissions extends React.Component {
 							className="grey"
 							content="Edit mode"
 						/>
-						<BackupKeysScenario>
+						<BackupKeysScenario
+							permissionsKeys={this.props.permissionsKeys}
+						>
 							{
 								(backup) => (
 									<Button

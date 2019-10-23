@@ -55,15 +55,40 @@ class ModalBackupKeys extends React.Component {
 		);
 	}
 
-	renderUserInfo() {
+	renderActiveKeysTextField() {
+		const { keys } = this.props;
+
+		const keysData = [];
+
+		keys.forEach((keyItem, keyIndex) => {
+			keysData.push(`Public Key ${keyIndex + 1}
+			${keyItem.publicKey}
+
+			`);
+			keysData.push(`WIF ${keyIndex + 1}
+			${keyItem.wif}
+
+			`);
+		});
+
+		return (
+			<textarea>
+				{keysData.join()}
+			</textarea>
+		);
+
+	}
+
+	renderActiveKeysInfo() {
 		const { activeUser } = this.props;
 
-		const inputs = [
+		const accountInfoinputs = [
 			this.getInput('account name', activeUser.get('id')),
 			this.getInput('id account', activeUser.get('name')),
+			this.renderActiveKeysTextField(),
 		];
 
-		return inputs;
+		return accountInfoinputs;
 	}
 
 	render() {
@@ -79,23 +104,16 @@ class ModalBackupKeys extends React.Component {
 								<h3>Backup</h3>
 							</div>
 							<div className="field-wrap">
-								{ activeUser ? this.renderUserInfo() : null }
+								{ activeUser ? this.renderActiveKeysInfo() : null }
 							</div>
 							<div className="form-panel">
 								<Button
 									basic
 									type="button"
 									className="main-btn"
-									onClick={() => this.onClose()}
-									content="Cancel"
-								/>
-								<Button
-									basic
-									type="button"
-									className="main-btn"
 									onClick={() => this.onConfirm()}
 									disabled={disabled}
-									content="Confirm"
+									content="Save as.txt"
 								/>
 							</div>
 						</Form>
@@ -113,12 +131,14 @@ ModalBackupKeys.propTypes = {
 	activeUser: PropTypes.any,
 	close: PropTypes.func.isRequired,
 	send: PropTypes.func.isRequired,
+	keys: PropTypes.array,
 };
 
 ModalBackupKeys.defaultProps = {
 	show: false,
 	disabled: false,
 	activeUser: null,
+	keys: [],
 };
 
 export default ModalBackupKeys;
