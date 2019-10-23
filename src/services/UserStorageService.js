@@ -207,7 +207,9 @@ class UserStorageService {
 	 * @return {Promise.<Key>}
 	 */
 	async getAllWIFKeysForAccount(accountId, params) {
-
+		if (!this.scheme) {
+			this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
+		}
 		this.checkNetwork();
 
 		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);

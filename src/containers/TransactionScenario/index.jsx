@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import echo from 'echojs-lib';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
@@ -16,6 +17,8 @@ import Services from '../../services';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 import { toastError } from '../../helpers/ToastHelper';
 import { getSigners } from '../../actions/SignActions';
+
+
 class TransactionScenario extends React.Component {
 
 	constructor(props) {
@@ -72,6 +75,19 @@ class TransactionScenario extends React.Component {
 		const nextTreshold = this.props.treshold.value;
 		if (isCheckTresholdNeed) {
 			const userStorage = Services.getUserStorage();
+			const accountName = this.props.account.toJS().name;
+			const account = await echo.api.getAccountByName(accountName);
+			const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
+			const accountAuth = account.active.account_auths;
+			const accountAuthKeys = [];
+			for (let i = 0; i < accountAuth.length; i += 1) {
+				// eslint-disable-next-line no-await-in-loop
+				accountAuthKeys.push(await userStorage.getAllWIFKeysForAccount(accountAuth[i][0], { password }));
+			}
+			console.log(accountAuthKeys.concat(...userWIFKeys));
+			console.log(account, userWIFKeys, accountAuthKeys);
+			const a = await getSigners(account, accountAuthKeys.concat(...userWIFKeys));
+			console.log(a);
 			const validPublicKeys =
 				await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
 			const maxNextTreshold = validPublicKeys.reduce((accumulator, currentKey) =>
@@ -159,6 +175,7 @@ TransactionScenario.propTypes = {
 	resetTransaction: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	treshold: PropTypes.object.isRequired,
+	account: PropTypes.object.isRequired,
 };
 
 TransactionScenario.defaultProps = {
@@ -172,6 +189,7 @@ export default connect(
 		showOptions: state.transaction.get('showOptions'),
 		treshold: state.form.getIn([FORM_PERMISSION_KEY, 'active', 'threshold']),
 		permissionsKeys: state.table.get(PERMISSION_TABLE),
+		account: state.global.getIn(['activeUser']),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
 	}),
