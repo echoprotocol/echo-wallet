@@ -49,27 +49,43 @@ export const clear = (table) => (dispatch) => {
 
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	if (!accountId) return;
 
 	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
 
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const storageAccount = accounts.find(({ name }) => name === account.name);
+	const storageSavedWifStatuses = (storageAccount && storageAccount.addedKeys)
+		? storageAccount.addedKeys : {};
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
 
 		const { name } = await echo.api.getObject(a[0]);
 		return {
-			key: name, weight: a[1], role: 'active', type: 'accounts',
+			key: name, weight: a[1], role: 'active', type: 'accounts', hasWif: false,
 		};
 	});
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'accounts'], new List(await Promise.all(target))));
 
-
 	// save active keys
 	target = account.active.key_auths.map((a) => ({
-		key: a[0], weight: a[1], role: 'active', type: 'keys',
+		key: a[0], weight: a[1], role: 'active', type: 'keys', hasWif: !!storageSavedWifStatuses[a[0]],
 	}));
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
+
+	target = [{
+		key: account.active.echorand_key,
+		role: 'echo_rand',
+		type: 'keys',
+		hasWif: !!storageSavedWifStatuses[account.active.echorand_key],
+	}];
+
+	dispatch(setIn(PERMISSION_TABLE, ['echo_rand', 'keys'], new List(target)));
 
 	const threshold = account.active.weight_threshold;
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'threshold'], threshold));

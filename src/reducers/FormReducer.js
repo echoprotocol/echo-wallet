@@ -183,9 +183,11 @@ const DEFAULT_FORM_FIELDS = {
 				error: null,
 			},
 		}),
-		memo: new Map({
-			keys: Map({}),
-		}),
+		echoRand: {
+			value: null,
+			error: null,
+			hasWif: false,
+		},
 		firstFetch: false,
 		isChanged: false,
 	}),
