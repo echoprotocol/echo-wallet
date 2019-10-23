@@ -82,6 +82,7 @@ class Permissions extends React.Component {
 	}
 	onChangeResetKeys() {
 		this.setState({ resetAddKeys: !this.state.resetAddKeys });
+		this.setState({ resetAddKeys: !this.state.resetAddKeys });
 	}
 	render() {
 		let { permissionsKeys } = this.props;
@@ -111,7 +112,7 @@ class Permissions extends React.Component {
 									className="green"
 									content="Save"
 									onClick={() => {
-										submitTr(this.onChangeResetKeys.bind(this), active);
+										submitTr(this.onChangeResetKeys.bind(this));
 									}}
 								/>
 							</div>

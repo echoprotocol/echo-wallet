@@ -7,6 +7,7 @@ import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
 
 import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE } from '../../constants/ModalConstants';
+import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
@@ -14,7 +15,7 @@ import { sendTransaction, resetTransaction } from '../../actions/TransactionActi
 import Services from '../../services';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 import { toastError } from '../../helpers/ToastHelper';
-
+import { getSigners } from '../../actions/SignActions';
 class TransactionScenario extends React.Component {
 
 	constructor(props) {
@@ -37,18 +38,25 @@ class TransactionScenario extends React.Component {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
-	async submit(onChangeResetKeys, activeKeysData) {
+	async submit(onFinish) {
 		const isValid = await this.props.handleTransaction();
 		if (!isValid) {
 			return;
 		}
 
 		this.props.openModal(MODAL_UNLOCK);
+		let { permissionsKeys } = this.props;
+		permissionsKeys = permissionsKeys.toJS();
+		const activeKeysData = {
+			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+			threshold: permissionsKeys.active.threshold,
+		};
 		if (activeKeysData) {
 			this.setState({ activeKeysData });
 		}
-		onChangeResetKeys();
-		onChangeResetKeys();
+		if (typeof onFinish === 'function') {
+			onFinish();
+		}
 	}
 
 	change(password) {
@@ -62,14 +70,12 @@ class TransactionScenario extends React.Component {
 	async unlock(isCheckTresholdNeed) {
 		const { password, activeKeysData } = this.state;
 		const nextTreshold = this.props.treshold.value;
-		let maxNextTreshold = 0;
 		if (isCheckTresholdNeed) {
 			const userStorage = Services.getUserStorage();
 			const validPublicKeys =
 				await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
-			validPublicKeys.forEach((key) => {
-				maxNextTreshold += key.weight;
-			});
+			const maxNextTreshold = validPublicKeys.reduce((accumulator, currentKey) =>
+				accumulator + currentKey.weight, 0);
 			if (maxNextTreshold >= nextTreshold) {
 				this.props.unlock(password, () => {
 					this.props.openModal(MODAL_DETAILS);
@@ -151,6 +157,7 @@ TransactionScenario.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	sendTransaction: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	permissionsKeys: PropTypes.object.isRequired,
 	treshold: PropTypes.object.isRequired,
 };
 
@@ -164,6 +171,7 @@ export default connect(
 		operation: state.transaction.get('operation'),
 		showOptions: state.transaction.get('showOptions'),
 		treshold: state.form.getIn([FORM_PERMISSION_KEY, 'active', 'threshold']),
+		permissionsKeys: state.table.get(PERMISSION_TABLE),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
 	}),

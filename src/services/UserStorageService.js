@@ -306,7 +306,6 @@ class UserStorageService {
 	 * @return {Promise.<Array>}
 	 */
 	async getPublicKeysHavesWIFs(activeKeysData, params) {
-		// console.log(activeKeysData);
 		this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
 		const WIFs = [];
 		await this.asyncForEach(activeKeysData, async (keyData) => {
@@ -326,10 +325,9 @@ class UserStorageService {
 				if (accountWifs.length) {
 					accountWifs.forEach((key) => accountPublicKeys.push(key.publicKey));
 				}
-				// console.log(accountPublicKeys);
 				if (accountPublicKeys.length) {
 					WIFs.push({
-						key: accountPublicKeys, // await this.getPublicKeysHavesWIFs(accountPublicKeys, params),
+						key: accountPublicKeys,
 						type: keyData.type,
 						role: keyData.role,
 						weight: keyData.weight,
