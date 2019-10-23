@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import echo, { CACHE_MAPS, validators } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators, constants } from 'echojs-lib';
 
 import history from '../history';
 
@@ -17,7 +17,7 @@ import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -68,17 +68,18 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	try {
 		const { fee } = options;
 
-		const core = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
+		const precision = getState()
+			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
 
 		let amount = await getOperationFee(type, options);
 
-		if (feeAsset.id !== ECHO_ASSET_ID) {
+		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
-				.times(10 ** (core.precision - feeAsset.precision));
+				.times(10 ** (precision - feeAsset.precision));
 
-			amount = new BN(amount).div(10 ** core.precision);
+			amount = new BN(amount).div(10 ** precision);
 			amount = price.times(amount).times(10 ** feeAsset.precision);
 		}
 
@@ -100,15 +101,12 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
-	const amount = formOptions.get('amount').value;
-	if (!amount) {
-		dispatch(setValue(form, 'isAvailableBalance', false));
-		return null;
-	}
+	const amount = formOptions.get('amount').value || '0';
 
 	let amountValue = 0;
-	if (amount) {
-		const currency = formOptions.get('currency');
+	const currency = formOptions.get('currency');
+
+	if (currency) {
 		const amountError = validateAmount(amount, currency);
 		if (!amountError) {
 			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
@@ -122,10 +120,10 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 		duration: formOptions.get('duration').value || FREEZE_BALANCE_PARAMS[0].duration,
 		amount: {
 			amount: amountValue,
-			asset_id: asset || formOptions.get('currency').id,
+			asset_id: constants.ECHO_ASSET_ID,
 		},
 		fee: {
-			asset_id: asset || formOptions.get('currency').id,
+			asset_id: asset || (currency && currency.id) || constants.ECHO_ASSET_ID,
 		},
 	};
 
@@ -272,7 +270,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 		}
 
 		if (!defaultAsset) {
-			defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
+			defaultAsset = await echo.api.getObject(constants.ECHO_ASSET_ID);
 
 			defaultAsset = {
 				balance: 0,

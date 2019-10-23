@@ -11,7 +11,11 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_INFO,
+<<<<<<< HEAD
 	MODAL_CONFIRM_CHANGE_TRESHOLD,
+=======
+	MODAL_ADD_KEY,
+>>>>>>> 64c50fc133f4ddac839de3ac1f699a628899a50d
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -37,7 +41,11 @@ const DEFAULT_MODAL_FIELDS = {
 		accountName: '',
 	}),
 	[MODAL_INFO]: Map({}),
+<<<<<<< HEAD
 	[MODAL_CONFIRM_CHANGE_TRESHOLD]: Map({}),
+=======
+	[MODAL_ADD_KEY]: Map({}),
+>>>>>>> 64c50fc133f4ddac839de3ac1f699a628899a50d
 };
 
 export default createModule({
@@ -53,8 +61,12 @@ export default createModule({
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CHOOSE_ACCOUNT]),
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
+<<<<<<< HEAD
 		[MODAL_CONFIRM_CHANGE_TRESHOLD]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CONFIRM_CHANGE_TRESHOLD]),
+=======
+		[MODAL_ADD_KEY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_KEY]),
+>>>>>>> 64c50fc133f4ddac839de3ac1f699a628899a50d
 	}),
 	transformations: {
 		open: {
