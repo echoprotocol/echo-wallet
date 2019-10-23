@@ -93,8 +93,7 @@ const isAllWIFsAdded = async (account, password) => {
 	const userStorage = Services.getUserStorage();
 	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
 	const userPublicKeys = account.active.key_auths;
-	const accountAuth = account.active.account_auths;
-	if ((userPublicKeys.length + accountAuth.length) > userWIFKeys.length) {
+	if (userPublicKeys.length > userWIFKeys.length) {
 		return false;
 	}
 	return true;
