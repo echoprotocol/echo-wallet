@@ -46,7 +46,7 @@ class Assets extends React.Component {
 							<span>{freezeParam.coefficientText}</span>
 							<Popup
 								trigger={<span className="inner-tooltip-trigger icon-info" />}
-								content="This is the value that will be used to re-calculate a new sum after unfreezing."
+								content="This is the coefficient that will be used to calculate the reward for participating in blocks creation."
 								className="inner-tooltip"
 								inverted
 							/>
