@@ -7,46 +7,41 @@ class ModalUnlockWallet extends React.Component {
 
 	constructor(props) {
 		super(props);
+		let agree;
 		if (props.warningTextValue) {
-			this.state = {
-				agree: false,
-				time: props.warningTime,
-				timerIsOn: false,
-				timeLeft: 
-			};
+			agree = false;
 		} else {
-			this.state = {
-				agree: true,
-				time: props.warningTime,
-				timerIsOn: false,
-				timeLeft: 0
-			};
+			agree = true;
 		}
+		this.state = {
+			agree,
+			time: props.warningTime,
+			timerIsOn: false,
+		};
 	}
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (nextProps.show && nextProps.warningTime && !(prevState.timerIsOn)) {
-			console.log(nextProps.warningTime);
-			const { warningTime } = nextProps;
-			const timerIsOn = setInterval(() => {
-				console.log(prevState.time);
-				return ({ time: 9 });
-			}, 1000);
-			setTimeout(() => {
-				clearInterval(timerIsOn);
-				console.log('ht');
-			}, warningTime * 1000);
-			return ({ timerIsOn: true });
+			return ({
+				timerIsOn: true,
+			});
 		}
 		return prevState;
 	}
-	// componentDidUpdate() {
-	// 	if (this.props.show && this.props.warningTime && !(this.state.timerIsOn)) {
-	// 		
-	// 	}
-	// }
+
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.show && this.props.warningTime && !(prevState.timerIsOn)) {
+			const { warningTime } = this.props;
+			const timerIsOn = setInterval(() => this.decrementTime(), 1000);
+			setTimeout(() => {
+				clearInterval(timerIsOn);
+				return ({ timerIsOn: false });
+			}, (warningTime * 1000) + 1000);
+		}
+	}
 	onCheck(e) {
 		this.setState({ agree: e.currentTarget.checked });
 	}
+
 	onForgot(e) {
 		e.preventDefault();
 
@@ -65,12 +60,14 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-
+	decrementTime() {
+		this.setState({ time: this.state.time - 1 });
+	}
 	renderModalHeader() {
 		const { warningTextValue, warningTextChackbox } = this.props;
 		return (
 			<React.Fragment>
-				<h3> {this.state.time} Edit Mode Warning</h3>
+				<h3> {this.state.time ? this.state.time : null} Edit Mode Warning</h3>
 				<h4>{warningTextValue}</h4>
 				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
 				<label className="label" htmlFor="agree" >
@@ -83,7 +80,7 @@ class ModalUnlockWallet extends React.Component {
 		const {
 			show, error, disabled, title,
 		} = this.props;
-		const { agree, timeLeft } = this.state;
+		const { agree, time } = this.state;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -132,7 +129,7 @@ class ModalUnlockWallet extends React.Component {
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled || !(agree && timeLeft === 0)}
+									disabled={disabled || !(agree && time === 0)}
 									content="Unlock Wallet"
 								/>
 							</div>
