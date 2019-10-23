@@ -2,7 +2,8 @@
     display: flex;
     height: 40px;
     width: 100%;
-    padding-left: 19px;
+	padding-left: 19px;
+	padding-right: 25px;
     background-color: #f7f7f7;
     border-top: 1px solid #e9e9ed;
     color: #5c637d;
@@ -49,5 +50,13 @@
 		color: #5C637D;
 		line-height: 26.4px;
 		margin-left: 10px;
+	}
+
+	.sub-header-panel {
+		.button {
+			&:not(:last-child) {
+				margin-right: 10px;
+			}
+		}
 	}
 }

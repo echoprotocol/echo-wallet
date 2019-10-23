@@ -384,18 +384,6 @@
 
 .field,
 .textarea-wrap {
-    .error-message {
-        display: none;
-        position: absolute;
-        right: 0;
-        margin-right: 5px;
-        background-color: $err-red;
-        padding: 0 5px;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        color: $white;
-        z-index: 5;
-    }
 
     &.error,
     .error {
@@ -486,40 +474,37 @@
 }
 
 
-.error {
-    &-wrap {
-        position: relative;
-        margin-bottom: 25px;
+.error-wrap {
+	position: relative;
+	margin-bottom: 25px;
+	&.error {
+		.error-message {
+			display: block;
+		}
 
-        &.error {
-            .error-message {
-                display: block;
-            }
-
-            input,
-            textarea {
-                border-color: $err-red !important;
-            }
-
-
-        }
-    }
-
-    &-message {
-        display: none;
-        position: absolute;
-        right: 0;
-        margin-right: 5px;
-        background-color: $err-red;
-        padding: 0 5px;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        font-size: 12px;
-        color: $white;
-        animation: fadeIn .3s;
-        line-height: 1.1;
-    }
+		input,
+		textarea {
+			border-color: $err-red !important;
+		}
+	}
 }
+.error-message {
+	display: none;
+	position: absolute;
+	right: 0;
+	margin-right: 5px;
+	background-color: $err-red;
+	padding: 0 5px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	font-size: 12px;
+	color: $white;
+	animation: fadeIn .3s;
+	line-height: 1.1;
+	z-index: 5;
+}
+
+
 
 input {
     &:focus {

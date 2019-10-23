@@ -7,6 +7,9 @@ import { CACHE_MAPS } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PermissionTable from './PermissionTable';
+import EditModeThrashold from './EditModeThrashold';
+import EditModeTableRow from './EditModeTableRow';
+
 
 import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
@@ -85,9 +88,9 @@ class Permissions extends React.Component {
 		return (
 			<div className="view-mode-wrap">
 				<div className="info-text">
-				Making a backup of your keys helps ensure you can always maintain access to your funds.
-				Anyone having access to your keys will take full control of the funds,
-				so we strongly recommend storing it offline in a secure place.
+					Making a backup of your keys helps ensure you can always maintain access to your funds.
+					Anyone having access to your keys will take full control of the funds,
+					so we strongly recommend storing it offline in a secure place.
 				</div>
 				<div className="list-wrap">
 					<div className="list-header">
@@ -100,7 +103,7 @@ class Permissions extends React.Component {
 								position="bottom center"
 								style={{ width: 420 }}
 							/>
-							<span className="threshold"> threshold </span>
+							<span className="threshold">threshold</span>
 							<span className="threshold-value">1</span>
 						</div>
 					</div>
@@ -115,8 +118,8 @@ class Permissions extends React.Component {
 							</div>
 							<div className="list-item-panel">
 								<Button
-									basic
-									className="txt-btn"
+									className="main-btn light"
+									size="medium"
 									content="View WIF"
 								/>
 							</div>
@@ -131,9 +134,9 @@ class Permissions extends React.Component {
 							</div>
 							<div className="list-item-panel">
 								<Button
-									basic
-									className="txt-btn"
-									content="View WIF"
+									className="blue-btn"
+									size="medium"
+									content="Add WIF"
 								/>
 							</div>
 						</div>
@@ -165,9 +168,9 @@ class Permissions extends React.Component {
 							</div>
 							<div className="list-item-panel">
 								<Button
-									basic
-									className="txt-btn"
-									content="VIEW WIF"
+									className="main-btn light"
+									size="medium"
+									content="View WIF"
 								/>
 							</div>
 						</div>
@@ -176,7 +179,77 @@ class Permissions extends React.Component {
 			</div>
 		);
 	}
+	renderEditMode() {
+		return (
+			<div className="edit-mode-wrap">
+				<div className="list-wrap">
+					<div className="list-header">
+						<h3 className="list-header-title">Public Keys and Accounts</h3>
+						<div className="list-header-row">
+							<div className="list-header-col">
+								<div className="list-description">
+									The settings below allow you to specify the keys and / or accounts,
+									whose signatures will be necessary to send a transaction from your account.
+									Using threshold and weight you can separate access to an account
+									between several keys and / or accounts.
+								</div>
+							</div>
+							<div className="list-header-col">
+								<EditModeThrashold />
+							</div>
 
+						</div>
+					</div>
+					<div className="list">
+						<EditModeTableRow type="keys" />
+						<EditModeTableRow type="keys" />
+						<EditModeTableRow type="account" />
+						<EditModeTableRow type="account" />
+
+					</div>
+					<div className="list-panel">
+						<Button
+							className="main-btn"
+							size="medium"
+							content="Add account"
+						>
+							<Popup
+								trigger={<span className="main-btn-popup">Add Account</span>}
+								content="Provide access to send transaction to another account"
+								className="inner-tooltip"
+								position="bottom center"
+								style={{ width: 380 }}
+							/>
+						</Button>
+						<Button
+							className="main-btn"
+							size="medium"
+							content="Add account"
+						>
+							<Popup
+								trigger={<span className="main-btn-popup">Add public key</span>}
+								content="Add an additional key to sign transactions"
+								className="inner-tooltip"
+								position="bottom center"
+								style={{ width: 300 }}
+							/>
+						</Button>
+					</div>
+				</div>
+				<div className="list-wrap">
+					<div className="list-header">
+						<h3 className="list-header-title">Public Keys and Accounts</h3>
+						<div className="list-description">
+						EchoRand Key is used for participating in blocks generation and for signing
+						sidechain transactions by committee members.
+							<a className="list-header-link" href="">Know more in Echo Docs </a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		);
+	}
 	render() {
 		// let { permissionsKeys } = this.props;
 
@@ -198,17 +271,20 @@ class Permissions extends React.Component {
 					</div>
 					<div className="sub-header-panel">
 						<Button
-							className="grey"
+							className="grey-btn"
+							size="medium"
 							content="Edit mode"
 						/>
 						<Button
-							className="green"
+							className="green-btn"
+							size="medium"
 							content="View & backup keys"
 						/>
 					</div>
 				</div>
 				{
-					this.renderViewMode()
+					this.renderEditMode()
+					// this.renderViewMode()
 				}
 				{/* <TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{

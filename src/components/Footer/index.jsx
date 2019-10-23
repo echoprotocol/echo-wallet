@@ -36,7 +36,7 @@ class Footer extends React.PureComponent {
 			<div className="footer">
 				<ul>
 					<li>
-						<button onClick={() => { this.openModal(); }}>Echo.{version}</button>
+						<button className="version-btn" onClick={() => { this.openModal(); }}>Echo.{version}</button>
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} />
@@ -50,7 +50,13 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>
 						Total weight of all the keys won&rsquo;t be enough to sign a transaction.
-						<Button type="submit" size="tiny" color="black" onClick={() => {}}>Keys Parameters</Button>
+						<Button
+							type="submit"
+							size="medium"
+							className="black-btn"
+							onClick={() => {}}
+						>Keys Parameters
+						</Button>
 					</li>
 					<li />
 				</ul>
@@ -62,7 +68,13 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>
                         Check Your Connection
-						<Button type="submit" size="tiny" color="black" onClick={() => this.onReconnect()}>Try again</Button>
+						<Button
+							type="submit"
+							size="medium"
+							className="black-btn"
+							onClick={() => this.onReconnect()}
+						>Try again
+						</Button>
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} disconnected />
@@ -86,9 +98,9 @@ class Footer extends React.PureComponent {
 				return errored;
 			}
 
-			// if (warn) {
-			// 	return warning;
-			// }
+			if (warn) {
+				return warning;
+			}
 
 			return connected;
 		}

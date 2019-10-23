@@ -54,7 +54,7 @@
         Labels
 ---------------------*/
 
-.field>label {
+.field > label {
   display: flex;
   justify-content: space-between;
   min-height: 20px;
@@ -62,7 +62,6 @@
   font-size: 12px;
   font-family: proximanovaSemibold;
   text-transform: uppercase;
-  padding-left: 2px;
   padding-top: 1px;
 }
 
@@ -70,19 +69,19 @@
     Standard Inputs
 ---------------------*/
 
-.ui.form textarea,
-.ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
+textarea,
+input:not([type]),
+input[type="date"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="text"],
+input[type="file"],
+input[type="url"] {
   width: 100%;
   vertical-align: top;
 }
@@ -93,18 +92,14 @@
   height: 1.21428571em;
 }
 
-.ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
+input:not([type]),
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="text"],
+input[type="file"],
+input[type="url"] {
   font-family: $font-family;
   margin: 0em;
   outline: none;
