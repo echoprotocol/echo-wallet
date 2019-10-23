@@ -11,6 +11,7 @@ import PermissionTable from './PermissionTable';
 import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import TransactionScenario from '../TransactionScenario';
+import BackupKeysScenario from '../BackupKeysScenario';
 import { clearForm, setInFormValue } from '../../actions/FormActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 
@@ -195,10 +196,17 @@ class Permissions extends React.Component {
 							className="grey"
 							content="Edit mode"
 						/>
-						<Button
-							className="green"
-							content="View & backup keys"
-						/>
+						<BackupKeysScenario>
+							{
+								(backup) => (
+									<Button
+										className="green"
+										content="View & backup keys"
+										onClick={backup}
+									/>
+								)
+							}
+						</BackupKeysScenario>
 					</div>
 				</div>
 				{
