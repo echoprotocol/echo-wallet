@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { version } from '../../../package.json';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
+import { GIT_REF, ECHO_REF } from '../../constants/GlobalConstants';
 
 class ModalInfoWallet extends React.Component {
 
@@ -30,12 +31,19 @@ class ModalInfoWallet extends React.Component {
 					<div className="modal-body">
 						<div className="info-row">
 							<div className="info-title">Version:</div>
-							{/* eslint-disable-next-line no-undef */}
-							<div className="info-value">{version} <a href="#" target="_blank"> <span className="icon-commit" />{COMMITHASH.substring(0, 7)}</a></div>
+							<div className="info-value">{version}
+								{/* eslint-disable-next-line no-undef */}
+								<a href={`${GIT_REF}${COMMITHASH}`} target="_blank" rel="noreferrer noopener">
+									{/* eslint-disable-next-line no-undef */}
+									<span className="icon-commit">{COMMITHASH.substring(0, 7)} </span>
+								</a>
+							</div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Website:</div>
-							<div className="info-value"><a href="#" target="_blank">echo.org</a></div>
+							<div className="info-value">
+								<a href={ECHO_REF} target="_blank" rel="noreferrer noopener">echo.org</a>
+							</div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Privacy:</div>
