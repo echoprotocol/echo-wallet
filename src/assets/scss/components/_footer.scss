@@ -1,5 +1,6 @@
 .footer {
     border-top: 1px solid $bd-gray;
+
     ul {
         display: flex;
         align-items: center;
@@ -11,17 +12,37 @@
             font-size: 1em;
             color: $gray;
             margin-left: 20px;
+
             &:first-child {
                 margin: 0 auto 0 0;
+
+                button {
+                    cursor: pointer;
+                    background-color: transparent;
+                    border: transparent;
+                    font-size: 1em;
+                    color: $gray;
+
+                    &:hover {
+                        color: rgb(109, 113, 120);
+                    }
+
+                    &:active {
+                        color: rgb(109, 113, 120);
+                    }
+                }
             }
+
             &:last-child {
                 display: flex;
             }
         }
     }
+
     &.disconnected {
         flex-shrink: 0;
         background-color: rgb(246, 92, 92);
+
         ul {
             li {
                 &:first-child {
@@ -41,10 +62,12 @@
         }
     }
 }
+
 .pipeline {
     &-block {
         line-height: 0;
         margin: 1px 10px 0 15px;
+
         span {
             font-family: source;
             margin-left: 5px;
@@ -58,6 +81,7 @@
     align-items: center;
     display: flex;
     line-height: 1;
+
     &:before {
         width: 4px;
         height: 4px;
@@ -65,23 +89,28 @@
         border-radius: 50%;
         margin-right: 6px;
     }
+
     &.connected {
         color: $main-сolor;
+
         &:before {
             background-color: $main-сolor;
         }
     }
+
     &.white {
         color: $white;
+
         &:before {
             background-color: $white;
         }
     }
 
-    & + .network-link {
+    &+.network-link {
         margin-left: 5px;
     }
-    & + .network-dropdown {
+
+    &+.network-dropdown {
         margin-left: 5px;
     }
 }
