@@ -86,10 +86,12 @@ class TransactionScenario extends React.Component {
 		let title;
 		let warningTextValue;
 		let warningTextChackbox;
+		let warningTime;
 		if (withWarning) {
 			title = 'Edit Mode Warning';
 			warningTextValue = 'info';
 			warningTextChackbox = 'checkbox';
+			warningTime = 10;
 		} else {
 			warningTextValue = null;
 		}
@@ -108,6 +110,7 @@ class TransactionScenario extends React.Component {
 					title={title}
 					warningTextValue={warningTextValue}
 					warningTextChackbox={warningTextChackbox}
+					warningTime={warningTime}
 				/>
 				<ModalApprove
 					show={modalDetails.get('show')}

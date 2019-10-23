@@ -10,15 +10,40 @@ class ModalUnlockWallet extends React.Component {
 		if (props.warningTextValue) {
 			this.state = {
 				agree: false,
-				timerEnd: false,
+				time: props.warningTime,
+				timerIsOn: false,
+				timeLeft: 
 			};
 		} else {
 			this.state = {
 				agree: true,
-				timerEnd: true,
+				time: props.warningTime,
+				timerIsOn: false,
+				timeLeft: 0
 			};
 		}
 	}
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.show && nextProps.warningTime && !(prevState.timerIsOn)) {
+			console.log(nextProps.warningTime);
+			const { warningTime } = nextProps;
+			const timerIsOn = setInterval(() => {
+				console.log(prevState.time);
+				return ({ time: 9 });
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timerIsOn);
+				console.log('ht');
+			}, warningTime * 1000);
+			return ({ timerIsOn: true });
+		}
+		return prevState;
+	}
+	// componentDidUpdate() {
+	// 	if (this.props.show && this.props.warningTime && !(this.state.timerIsOn)) {
+	// 		
+	// 	}
+	// }
 	onCheck(e) {
 		this.setState({ agree: e.currentTarget.checked });
 	}
@@ -40,15 +65,12 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-	timer() {
-		// this.setState({ timerEnd: true });
-		return (<span> 1 </span>);
-	}
+
 	renderModalHeader() {
 		const { warningTextValue, warningTextChackbox } = this.props;
 		return (
 			<React.Fragment>
-				<h3> {this.timer()} Edit Mode Warning</h3>
+				<h3> {this.state.time} Edit Mode Warning</h3>
 				<h4>{warningTextValue}</h4>
 				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
 				<label className="label" htmlFor="agree" >
@@ -59,13 +81,9 @@ class ModalUnlockWallet extends React.Component {
 	}
 	render() {
 		const {
-			show, error, disabled, title, warningTextValue,
+			show, error, disabled, title,
 		} = this.props;
-		const { agree, timerEnd } = this.state;
-		if (warningTextValue) {
-			console.log(agree, disabled);
-			console.log(disabled && !agree);
-		}
+		const { agree, timeLeft } = this.state;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -114,7 +132,7 @@ class ModalUnlockWallet extends React.Component {
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled || !(agree && timerEnd)}
+									disabled={disabled || !(agree && timeLeft === 0)}
 									content="Unlock Wallet"
 								/>
 							</div>
@@ -138,6 +156,7 @@ ModalUnlockWallet.propTypes = {
 	title: PropTypes.string,
 	warningTextValue: PropTypes.string,
 	warningTextChackbox: PropTypes.string,
+	warningTime: PropTypes.number,
 };
 
 ModalUnlockWallet.defaultProps = {
@@ -147,6 +166,7 @@ ModalUnlockWallet.defaultProps = {
 	title: 'Unlock Wallet',
 	warningTextValue: '',
 	warningTextChackbox: '',
+	warningTime: 0,
 };
 
 export default ModalUnlockWallet;
