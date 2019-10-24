@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
 import { CACHE_MAPS } from 'echojs-lib';
 
-import PrivateKeyScenario from '../PrivateKeyScenario';
+import PrivateKeysScenario from '../PrivateKeysScenario';
 // import PermissionTable from './PermissionTable';
 import ViewModeTable from './ViewModeTable';
 
@@ -98,17 +98,29 @@ class Permissions extends React.Component {
 						<span className="account-info-value">1.16.0</span>
 					</div>
 					<div className="sub-header-panel">
-						<Button
-							className="grey"
-							content="Edit mode"
-						/>
+						<PrivateKeysScenario>
+							{
+								(keys1, submit) => {
+									console.log(keys1);
+									return (
+										<React.Fragment>
+											<Button
+												className="grey"
+												content="Edit mode"
+												onClick={submit}
+											/>
+										</React.Fragment>
+									);
+								}
+							}
+						</PrivateKeysScenario>
 						<Button
 							className="green"
 							content="View & backup keys"
 						/>
 					</div>
 				</div>
-				<PrivateKeyScenario>
+				<PrivateKeysScenario>
 					{
 						(privateKeys, submit) => (
 							<React.Fragment>
@@ -131,8 +143,8 @@ class Permissions extends React.Component {
 							</React.Fragment>
 						)
 					}
-				</PrivateKeyScenario>
-				<PrivateKeyScenario>
+				</PrivateKeysScenario>
+				<PrivateKeysScenario>
 					{
 						(privateKeys, submit) => (
 							<React.Fragment>
@@ -156,45 +168,7 @@ class Permissions extends React.Component {
 							</React.Fragment>
 						)
 					}
-				</PrivateKeyScenario>
-				{/* <TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
-					{
-						(submitTr) => (
-							this.props.isChanged &&
-								<div className="top-btn-container">
-									<Button
-										basic
-										className="txt-btn"
-										content="Cancel"
-										onClick={() => this.onCancel({ active })}
-									/>
-									<Button
-										basic
-										className="green"
-										content="Save"
-										onClick={submitTr}
-									/>
-								</div>
-						)
-					}
-				</TransactionScenario>
-				<PrivateKeyScenario>
-					{
-						(keys, submit) => (
-							<React.Fragment>
-								<PermissionTable
-									keyRole="active"
-									table="Active"
-									description="Active key allows you to sign transactions Use this key to log in into wallets."
-									data={active}
-									keys={keys}
-									submit={submit}
-									resetAddKeys={this.state.resetAddKeys}
-								/>
-							</React.Fragment>
-						)
-					}
-				</PrivateKeyScenario> */}
+				</PrivateKeysScenario>
 			</div>
 		);
 	}
