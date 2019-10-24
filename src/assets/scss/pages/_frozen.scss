@@ -19,11 +19,9 @@
     button {
         flex-wrap: wrap;
         font-size: 13px;
-        color: #5c637d;
         font-weight: 400;
 
         &:hover {
-            color: #fff;
             cursor: default;
 
             .frozen-value {
@@ -151,18 +149,3 @@
     }
 }
 
-.inner-tooltip {
-    margin-left: 35px;
-    margin-bottom: -65px;
-    width: 320px;
-    height: 50px;
-    padding: 5px 10px;
-    color: #3b3b3b;
-    font-family: proxima;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 18px;
-    border-radius: 4px;
-    border: 1px solid rgba(59, 59, 59, 0.4);
-    background: #fff6d2;
-}

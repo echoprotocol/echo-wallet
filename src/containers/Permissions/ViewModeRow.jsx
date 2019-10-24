@@ -15,16 +15,16 @@ class ViewModeRow extends Component {
 
 		return hasWif ? (
 			<Button
-				basic
-				className="txt-btn"
-				content="VIEW WIF"
+				className="main-btn light"
+				size="medium"
+				content="View WIF"
 				onClick={() => viewWif(subject.value)}
 			/>
 		) : (
 			<Button
-				basic
-				className="txt-btn"
-				content="ADD WIF"
+				className="blue-btn"
+				size="medium"
+				content="Add WIF"
 				onClick={() => addWif(subject.value)}
 			/>
 		);
@@ -85,13 +85,3 @@ ViewModeRow.defaultProps = {
 };
 
 export default ViewModeRow;
-// export default connect(
-// 	(state) => ({
-// 		keys: state.form.get(FORM_PERMISSION_KEY),
-// 		firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
-// 	}),
-// 	(dispatch) => ({
-// 		unlockPrivateKey: (value) => dispatch(unlockPrivateKey(value)),
-// 		isChanged: () => dispatch(isChanged()),
-// 	}),
-// )(ViewModeRow);

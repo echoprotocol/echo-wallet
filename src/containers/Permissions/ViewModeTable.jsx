@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 
 import ViewModeRow from './ViewModeRow';
 import ViewModeThreshold from './ViewModeThreshold';
@@ -61,7 +61,7 @@ class ViewModeTable extends React.Component {
 
 	renderListHeader() {
 		const {
-			data, title, advanced,
+			data, title, advanced, tooltipText,
 		} = this.props;
 		return (
 			<div className="list-header">
@@ -71,14 +71,24 @@ class ViewModeTable extends React.Component {
 				{
 					advanced && <span className="list-header-advanced">{advanced}</span>
 				}
-				{
-					data.threshold && (
-						<div className="list-header-info">
-							<span className="icon-info" />
-							<ViewModeThreshold defaultThreshold={data.threshold} />
-						</div>
-					)
-				}
+				<div className="list-header-info">
+
+					{
+						tooltipText && (
+							<Popup
+								trigger={<span className="inner-tooltip-trigger icon-info" />}
+								content={tooltipText}
+								className="inner-tooltip"
+								position="bottom center"
+								style={{ width: 420 }}
+							/>
+						)
+					}
+					{
+						data.threshold && <ViewModeThreshold defaultThreshold={data.threshold} />
+					}
+				</div>
+
 			</div>
 		);
 	}
@@ -125,28 +135,6 @@ class ViewModeTable extends React.Component {
 						</React.Fragment>
 					</div>
 				</div>
-				{/* <div className="list-wrap">
-				
-					<div className="list-description">
-						EchoRand Key is used for participating in blocks generation and for signing
-						sidechain transactions by committee members.
-						<a className="list-header-link" href=""> Know more in Echo Docs</a>
-					</div>
-					<div className="list">
-						<div className="list-item">
-							<div className="list-item-content">
-								<div className="list-item-value">8BTS5EXBBsHfr8c3yWVpkeVCezi7Ywm6pTJ7qV1BDPsrpJUaL2U5Q</div>
-							</div>
-							<div className="list-item-panel">
-								<Button
-									basic
-									className="txt-btn"
-									content="VIEW WIF"
-								/>
-							</div>
-						</div>
-					</div>
-				</div> */}
 			</div>
 		);
 	}
@@ -155,6 +143,7 @@ class ViewModeTable extends React.Component {
 
 ViewModeTable.propTypes = {
 	title: PropTypes.string,
+	tooltipText: PropTypes.string,
 	advanced: PropTypes.string,
 	headerLinkText: PropTypes.string,
 	headerLinkUrl: PropTypes.string,
@@ -174,6 +163,7 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
+	tooltipText: null,
 };
 
 
