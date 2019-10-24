@@ -75,7 +75,7 @@ export const createAccount = ({
 		const account = await echo.api.getAccountByName(accountName);
 		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
 
-		dispatch(addAccount(accountName, network.name, [publicKey]));
+		dispatch(addAccount(accountName, network.name));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -130,7 +130,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName, [key.publicKey]));
+			dispatch(addAccount(accountName, networkName));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
@@ -299,6 +299,41 @@ export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => a
 		dispatch(closeModal(modal));
 
 		callback(password);
+	} catch (err) {
+		dispatch(setError(modal, err));
+	} finally {
+		dispatch(toggleModalLoading(modal, false));
+	}
+
+};
+
+export const asyncUnlock = (
+	password,
+	callback = () => {},
+	modal = MODAL_UNLOCK,
+) => async (dispatch) => {
+	try {
+		dispatch(toggleModalLoading(modal, true));
+
+		const userStorage = Services.getUserStorage();
+		const doesDBExist = await userStorage.doesDBExist();
+
+		if (!doesDBExist) {
+			dispatch(setError(modal, 'DB doesn\'t exist'));
+			return;
+		}
+
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+		const correctPassword = await userStorage.isMasterPassword(password);
+
+		if (!correctPassword) {
+			dispatch(setError(modal, 'Invalid password'));
+			return;
+		}
+
+		await callback(password);
+
+		dispatch(closeModal(modal));
 	} catch (err) {
 		dispatch(setError(modal, err));
 	} finally {

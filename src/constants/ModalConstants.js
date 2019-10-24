@@ -7,3 +7,5 @@ export const MODAL_CHOOSE_ACCOUNT = 'modal_choose_account';
 export const MODAL_WIPE = 'modal_wipe_data';
 export const MODAL_INFO = 'modal_info';
 export const MODAL_ADD_KEY = 'modal_add_key';
+export const MODAL_SHOW_WIF = 'modal_show_wif';
+export const MODAL_UNLOCK_SHOW_WIF = 'modal_unlock_show_wif';

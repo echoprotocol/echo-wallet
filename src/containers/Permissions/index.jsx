@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Button, Popup } from 'semantic-ui-react';
 import { CACHE_MAPS } from 'echojs-lib';
 
+import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
 import ViewModeTable from './ViewModeTable';
@@ -178,34 +179,42 @@ class Permissions extends React.Component {
 		};
 
 		return (
-			<React.Fragment>
-				<ViewModeTable
-					keyRole="active"
-					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-					description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
-					tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
-					data={active}
-					keys={form}
-					set={set}
-					setValue={this.props.setValue}
-					isChanged={this.props.isChanged}
-					firstFetch={firstFetch}
-				/>
-				<ViewModeTable
-					keyRole="echoRand"
-					title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
-					description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
-					headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
-					headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
-					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
-					data={echoRand}
-					keys={form}
-					set={set}
-					setValue={this.props.setValue}
-					isChanged={this.props.isChanged}
-					firstFetch={firstFetch}
-				/>
-			</React.Fragment>
+			<PrivateKeyScenario>
+				{
+					(showWif) => (
+						<React.Fragment>
+							<ViewModeTable
+								keyRole="active"
+								title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
+								description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
+								tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
+								data={active}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+							/>
+							<ViewModeTable
+								keyRole="echoRand"
+								title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
+								description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
+								headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+								headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
+								advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+								data={echoRand}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+							/>
+						</React.Fragment>
+					)
+				}
+			</PrivateKeyScenario>
 		);
 	}
 
