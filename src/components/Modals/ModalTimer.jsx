@@ -5,6 +5,43 @@ import classnames from 'classnames';
 
 class ModalUnlockWallet extends React.Component {
 
+	constructor(props) {
+		super(props);
+		let agree;
+		if (props.warningTextValue) {
+			agree = false;
+		} else {
+			agree = true;
+		}
+		this.state = {
+			agree,
+			time: props.warningTime,
+			timerIsOn: false,
+		};
+	}
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.show && nextProps.warningTime && !(prevState.timerIsOn)) {
+			return ({
+				timerIsOn: true,
+			});
+		}
+		return prevState;
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.show && this.props.warningTime && !(prevState.timerIsOn)) {
+			const { warningTime } = this.props;
+			const timerIsOn = setInterval(() => this.decrementTime(), 1000);
+			setTimeout(() => {
+				clearInterval(timerIsOn);
+				return ({ timerIsOn: false });
+			}, (warningTime * 1000) + 1000);
+		}
+	}
+	onCheck(e) {
+		this.setState({ agree: e.currentTarget.checked });
+	}
+
 	onForgot(e) {
 		e.preventDefault();
 
@@ -23,12 +60,27 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-
+	decrementTime() {
+		this.setState({ time: this.state.time - 1 });
+	}
+	renderModalHeader() {
+		const { warningTextValue, warningTextChackbox } = this.props;
+		return (
+			<React.Fragment>
+				<h3> {this.state.time ? this.state.time : null} Edit Mode Warning</h3>
+				<h4>{warningTextValue}</h4>
+				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
+				<label className="label" htmlFor="agree" >
+					<span className="label-text">{warningTextChackbox}</span>
+				</label>
+			</React.Fragment>
+		);
+	}
 	render() {
 		const {
-			show, error, disabled,
+			show, error, disabled, title,
 		} = this.props;
-
+		const { agree, time } = this.state;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -40,11 +92,13 @@ class ModalUnlockWallet extends React.Component {
 						role="button"
 						tabIndex="0"
 					/>
-					<div className="modal-header" />
+					<div className="modal-header">
+						{this.renderModalHeader()}
+					</div >
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="form-info">
-								<h3>Unlock Wallet</h3>
+								<h3>{title}</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
@@ -75,7 +129,7 @@ class ModalUnlockWallet extends React.Component {
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled}
+									disabled={disabled || !(agree && time === 0)}
 									content="Unlock Wallet"
 								/>
 							</div>
@@ -96,12 +150,20 @@ ModalUnlockWallet.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	title: PropTypes.string,
+	warningTextValue: PropTypes.string,
+	warningTextChackbox: PropTypes.string,
+	warningTime: PropTypes.number,
 };
 
 ModalUnlockWallet.defaultProps = {
 	show: false,
 	disabled: false,
 	error: null,
+	title: 'Unlock Wallet',
+	warningTextValue: '',
+	warningTextChackbox: '',
+	warningTime: 0,
 };
 
 export default ModalUnlockWallet;
