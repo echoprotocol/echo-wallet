@@ -1,5 +1,11 @@
 import echo, { PrivateKey } from 'echojs-lib';
 
+/**
+ * @method getKeyFromWif
+ *
+ * @param {String} wif
+ * @returns {(null | Object)}
+ */
 export const getKeyFromWif = (wif) => {
 	try {
 		const privateKey = PrivateKey.fromWif(wif);
@@ -9,6 +15,14 @@ export const getKeyFromWif = (wif) => {
 	}
 };
 
+/**
+ * @method validateAccountExist
+ *
+ * @param {String} accountName
+ * @param {Boolean} shouldExist
+ * @param {Number} limit
+ * @returns {(null | String)}
+ */
 export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 	echo.api.lookupAccounts(accountName, limit)
 		.then((result) => {
@@ -24,6 +38,13 @@ export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 		})
 );
 
+/**
+ * @method unlockWallet
+ *
+ * @param {Object} account
+ * @param {String} wif
+ * @returns {(null | Object)}
+ */
 export const unlockWallet = (account, wif) => {
 	if (!account) {
 		return null;

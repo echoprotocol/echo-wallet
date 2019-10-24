@@ -147,3 +147,6 @@ export const FREEZE_BALANCE_PARAMS = [
 		coefficientText: '1.5',
 	},
 ];
+
+export const GIT_REF = 'https://github.com/echoprotocol/echo-wallet/commit/';
+export const ECHO_REF = 'https://echo.org/';
