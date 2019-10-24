@@ -79,6 +79,13 @@ class ModalBackupKeys extends React.Component {
 		return (
 			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
 				<div className="modal-content">
+					<span
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+						onKeyDown={(e) => this.onClose(e)}
+						role="button"
+						tabIndex="0"
+					/>
 					<div className="modal-header" />
 					<div className="modal-body">
 						<Form className="main-form">
