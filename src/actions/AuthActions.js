@@ -93,10 +93,9 @@ const isAllWIFsAdded = async (account, password) => {
 	const userStorage = Services.getUserStorage();
 	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
 	const userPublicKeys = account.active.key_auths;
-	const publicEchoRandKey = account.active.echorand_key;
-	
-	console.log(publicEchoRandKey);
-	if (userPublicKeys.length > userWIFKeys.length) {
+	const publicEchorandKey = account.echorand_key;
+	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.wif === publicEchorandKey);
+	if ((userPublicKeys.length > userWIFKeys.length) || !isPrivateEchorandAdd) {
 		return false;
 	}
 	return true;
@@ -152,7 +151,6 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		}
 
 		const hasAllWIFs = await isAllWIFsAdded(account, password);
-		console.log(hasAllWIFs);
 		if (!hasAllWIFs) {
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
