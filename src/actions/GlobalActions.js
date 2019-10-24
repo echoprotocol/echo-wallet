@@ -234,10 +234,18 @@ export const isAccountAdded = (accountName, networkName) => {
 	return null;
 };
 
-export const addAccount = (accountName, networkName) => (dispatch) => {
+
+export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
 	accounts = accounts ? JSON.parse(accounts) : [];
-	accounts.push({ name: accountName, active: false });
+
+	const addedKeys = addedWifsToPubKeys.reduce((acc, key) => {
+		acc[key] = true;
+		return acc;
+	}, {});
+
+	accounts.push({ name: accountName, active: false, addedKeys });
 
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 

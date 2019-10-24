@@ -346,18 +346,53 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	return fullAccount;
 };
 
+/**
+ * @method checkKeyWeightWarning
+ *
+ * @param {String} networkName
+ * @param {String} accountId
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
+const checkKeyWeightWarning = (networkName, accountId) => async (dispatch, getState) => {
+	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
+	const currentThreshold = account.active.weight_threshold;
+	const auths = getState().echojs.getIn(['fullAccounts', accountId, 'active', 'account_auths']).toJS()
+		.concat(getState().echojs.getIn(['fullAccounts', accountId, 'active', 'key_auths']).toJS());
+	const fullKeys = Object.assign({}, ...JSON.parse(localStorage.getItem(`accounts_${networkName}`))
+		.map((acc) => acc.addedKeys));
+	let sumKeyWeight = 0;
+	// eslint-disable-next-line no-restricted-syntax
+	for (const key in fullKeys) {
+		if (fullKeys[key]) {
+			const foundedKey = auths.find((auth) => auth[0] === key);
+			if (foundedKey) {
+				sumKeyWeight += foundedKey[1];
+			}
+		}
+	}
+	if (currentThreshold > sumKeyWeight) {
+		return true;
+	}
+	return false;
+};
+
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	if (!accountId || !echo.isConnected) return;
 
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
 	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
+
+	const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, accountId));
+
+	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
@@ -396,30 +431,8 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 	if (balances && isBalanceUpdated) {
 		await dispatch(getAssetsBalances(balances, true));
-		const networkName = getState().global.getIn(['network', 'name']);
 		await dispatch(getPreviewBalances(networkName));
 		await dispatch(getFrozenBalances(accountId));
-
-		const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
-		const currentThreshold = account.active.weight_threshold;
-
-		const auths = getState().echojs.getIn(['fullAccounts', accountId, 'active', 'account_auths']).toJS()
-			.concat(getState().echojs.getIn(['fullAccounts', accountId, 'active', 'key_auths']).toJS());
-		const fullKeys = localStorage.getItem(`accounts_${networkName}`).addedKeys;
-		let sumKeyWeight = 0;
-		// eslint-disable-next-line no-restricted-syntax
-		for (const key in fullKeys) {
-			if (fullKeys[key]) {
-				const foundedKey = auths.find((auth) => auth[0] === key);
-				if (foundedKey) sumKeyWeight += foundedKey[1];
-			}
-		}
-		if (currentThreshold > sumKeyWeight) {
-			dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: true }));
-		} else {
-			dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: false }));
-		}
-
 	}
 
 	if (isCurrentTransferBalanceUpdated) {
