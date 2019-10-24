@@ -3,24 +3,11 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
+import InputEye from '../../components/InputEye';
+
 export default class ThresholdRow extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			show: false,
-		};
-	}
-
-	toggleShow(show) {
-		this.setState({
-			show: !show,
-		});
-	}
-
 	renderType(type) {
-		const { show } = this.state;
 		const { keyRole } = this.props;
 
 		if (type === 'keys') {
@@ -36,23 +23,12 @@ export default class ThresholdRow extends React.Component {
 						/>
 						{true && <span className="error-message">Some error</span>}
 					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: false })}>
-						<label htmlFor="WIF">WIF (optional)</label>
-						<div className="action-input">
-							<input
-								type={show ? 'text' : 'password'}
-								placeholder="WIF (optional)"
-								name="WIF"
-								className="input"
-							/>
-							{
-								show ?
-									<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-show" /> :
-									<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-hide" />
-							}
-						</div>
-						{false && <span className="error-message">Some error</span>}
-					</Form.Field>
+
+					<InputEye
+						inputLabel="WIF (optional)"
+						inputPlaceholder="WIF"
+						inputName="WIF"
+					/>
 				</React.Fragment>
 			);
 		}

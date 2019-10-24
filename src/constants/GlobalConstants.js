@@ -48,7 +48,7 @@ export const HEADER_TITLE = [
 	},
 	{
 		path: PERMISSIONS_PATH,
-		title: 'Permissions',
+		title: 'Backup and Permissions',
 	},
 
 	{

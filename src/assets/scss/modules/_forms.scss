@@ -496,7 +496,14 @@
 	line-height: 1.1;
 	z-index: 5;
 }
-
+.warning-message {
+	display: block;
+	margin-top: 4px;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 500;
+	color: #EE851C;
+}
 
 
 input {

@@ -12,6 +12,8 @@ import {
 	MODAL_LOGOUT,
 	MODAL_INFO,
 	MODAL_ADD_KEY,
+	MODAL_EDIT_PERMISSIONS,
+	MODAL_ADD_WIF,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -38,6 +40,10 @@ const DEFAULT_MODAL_FIELDS = {
 	}),
 	[MODAL_INFO]: Map({}),
 	[MODAL_ADD_KEY]: Map({}),
+	[MODAL_EDIT_PERMISSIONS]: Map({}),
+	[MODAL_ADD_WIF]: Map({}),
+
+
 };
 
 export default createModule({
@@ -54,6 +60,11 @@ export default createModule({
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
 		[MODAL_ADD_KEY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_KEY]),
+		[MODAL_EDIT_PERMISSIONS]: _
+			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_EDIT_PERMISSIONS]),
+		[MODAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_WIF]),
+
+
 	}),
 	transformations: {
 		open: {

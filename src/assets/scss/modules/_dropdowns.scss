@@ -230,7 +230,7 @@
             &>.item {
                 @include cut-text;
                 padding-right: 0;
-                max-width: 138px;
+                // max-width: 138px;
 
                 &:nth-child(1) {
                     &.header {
