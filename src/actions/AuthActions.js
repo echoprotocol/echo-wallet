@@ -28,12 +28,22 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 
+/**
+ * @method generateWIF
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
 
 	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
 };
 
+/**
+ * @method createAccount
+ * @param {Object} param0
+ * @param {Boolean} isAddAccount
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount) => async (dispatch, getState) => {
@@ -101,6 +111,13 @@ const isAllWIFsAdded = async (account, password) => {
 	return true;
 };
 
+
+/**
+ * @method authUser
+ *
+ * @param {Object} param0
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	const wifError = validateWIF(wif);
@@ -170,7 +187,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
  * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
- *
+ * 	@@returns {function(dispatch): Promise<Object>}
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
@@ -207,8 +224,8 @@ const getAccountsList = (accounts) => async (dispatch) => {
  *  Import account
  *
  * 	@param {String} accountName
- * @param {String} wif
- *
+ *  @param {String} wif
+ *	@returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importAccount = ({ accountName, wif, password }) =>
 	async (dispatch, getState) => {
@@ -281,7 +298,7 @@ export const importAccount = ({ accountName, wif, password }) =>
  *
  *  @param {String} password
  *  @param {Array} accounts
- *
+ *  @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
@@ -295,34 +312,40 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
 
-export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
-	async (dispatch) => {
-		try {
-			dispatch(toggleModalLoading(modal, true));
+/**
+ * @method unlock
+ * @param {String} password
+ * @param {Function} callback
+ * @param {String} modal
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
+	try {
+		dispatch(toggleModalLoading(modal, true));
 
-			const userStorage = Services.getUserStorage();
-			const doesDBExist = await userStorage.doesDBExist();
+		const userStorage = Services.getUserStorage();
+		const doesDBExist = await userStorage.doesDBExist();
 
-			if (!doesDBExist) {
-				dispatch(setError(modal, 'DB doesn\'t exist'));
-				return;
-			}
-
-			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
-			const correctPassword = await userStorage.isMasterPassword(password);
-
-			if (!correctPassword) {
-				dispatch(setError(modal, 'Invalid password'));
-				return;
-			}
-
-			dispatch(closeModal(modal));
-
-			callback(password);
-		} catch (err) {
-			dispatch(setError(modal, err));
-		} finally {
-			dispatch(toggleModalLoading(modal, false));
+		if (!doesDBExist) {
+			dispatch(setError(modal, 'DB doesn\'t exist'));
+			return;
 		}
 
-	};
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+		const correctPassword = await userStorage.isMasterPassword(password);
+
+		if (!correctPassword) {
+			dispatch(setError(modal, 'Invalid password'));
+			return;
+		}
+
+		dispatch(closeModal(modal));
+
+		callback(password);
+	} catch (err) {
+		dispatch(setError(modal, err));
+	} finally {
+		dispatch(toggleModalLoading(modal, false));
+	}
+
+};

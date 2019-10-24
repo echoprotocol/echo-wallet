@@ -12,7 +12,10 @@ class Storage {
 		this.store = store;
 		this.db = null;
 	}
-
+	/**
+	 * @method init
+	 * @returns {undefined}
+	 */
 	async init() {
 		const { store } = this;
 
@@ -25,12 +28,15 @@ class Storage {
 		console.info('[DB] Inited');
 	}
 
+	/**
+	 * @method getDB
+	 */
 	getDB() {
 		return this.db;
 	}
 
 	/**
-	 *
+	 * @method get
 	 * @param {String} key
 	 * @return {Promise.<void>}
 	 */
@@ -39,7 +45,7 @@ class Storage {
 	}
 
 	/**
-	 *
+	 * @method set
 	 * @param {String} key
 	 * @param {Object} val
 	 * @return {Promise.<*>}
@@ -49,7 +55,7 @@ class Storage {
 	}
 
 	/**
-	 *
+	 * @method delete
 	 * @param {String} key
 	 * @return {Promise.<void>}
 	 */
@@ -60,11 +66,18 @@ class Storage {
 
 		return this.getDB().delete(this.store, key);
 	}
-
+	/**
+	 * @method clear
+	 * @return {Promise.<void>}
+	 */
 	async clear() {
 		return this.getDB().clear(this.store);
 	}
 
+	/**
+	 * @method keys
+	 * @return {Promise.<void>}
+	 */
 	async keys() {
 		return this.getDB().getAllKeys(this.store);
 	}

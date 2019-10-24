@@ -7,7 +7,10 @@ class Services {
 		this.userStorageService = null;
 	}
 
-
+	/**
+	 * @method getUserStorage
+	 * @returns {(null | UserStorageService)}
+	 */
 	getUserStorage() {
 
 		if (this.userStorageService) {
