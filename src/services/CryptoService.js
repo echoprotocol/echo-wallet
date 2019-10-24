@@ -8,7 +8,7 @@ import { ACTIVE_KEY, ALGORITHM, RANDOM_SIZE } from '../constants/GlobalConstants
 class CryptoService {
 
 	/**
-	 *
+	 * @method encryptData
 	 * @param {String} encHash - hex
 	 * @param {Buffer} decryptedData
 	 * @param {Object} header
@@ -31,7 +31,7 @@ class CryptoService {
 
 
 	/**
-	 *
+	 * @method decryptData
 	 * @param {String} encHash
 	 * @param {String} encryptedData - hex
 	 * @param header
@@ -59,7 +59,7 @@ class CryptoService {
 	}
 
 	/**
-	 *
+	 * @method derivePassword
 	 * @param {String} password
 	 * @param {Object} header //TODO:: descr
 	 * @return {Promise}
@@ -101,7 +101,7 @@ class CryptoService {
 	}
 
 	/**
-	 *
+	 * @method randomBytes
 	 * @param {Number} bytes
 	 * @return {void|Buffer}
 	 */
