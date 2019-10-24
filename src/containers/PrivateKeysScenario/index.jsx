@@ -18,6 +18,7 @@ class PrivateKeysScenario extends React.Component {
 		super(props);
 
 		this.DEFAULT_STATE = {
+			onSuccess: () => {},
 			password: '',
 			keys: [],
 		};
@@ -29,7 +30,10 @@ class PrivateKeysScenario extends React.Component {
 		this.clear();
 	}
 
-	getKeys() {
+	getKeys(onSuccess) {
+		if (typeof onSuccess === 'function') {
+			this.setState({ onSuccess });
+		}
 		this.props.openModal(MODAL_UNLOCK_PERMISSION);
 	}
 
@@ -54,8 +58,8 @@ class PrivateKeysScenario extends React.Component {
 
 		this.setState((prevState) => ({
 			...prevState,
-			keys: [...prevState.keys, ...keys],
-		}));
+			keys: [...keys],
+		}), this.state.onSuccess);
 	}
 
 	unlock() {
@@ -63,7 +67,6 @@ class PrivateKeysScenario extends React.Component {
 
 		this.props.unlock(password, async () => {
 			await this.fetchWIFs(password);
-			this.props.openModal(MODAL_BACKUP_KEYS);
 		}, MODAL_UNLOCK_PERMISSION);
 	}
 

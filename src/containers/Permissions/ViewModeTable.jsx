@@ -154,7 +154,6 @@ class ViewModeTable extends React.Component {
 }
 
 ViewModeTable.propTypes = {
-	table: PropTypes.string.isRequired,
 	title: PropTypes.string,
 	advanced: PropTypes.string,
 	headerLinkText: PropTypes.string,

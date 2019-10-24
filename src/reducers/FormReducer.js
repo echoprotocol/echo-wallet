@@ -188,6 +188,7 @@ const DEFAULT_FORM_FIELDS = {
 		}),
 		firstFetch: false,
 		isChanged: false,
+		isEditMode: false,
 	}),
 	[FORM_COMMITTEE]: new Map({
 		votes: List([]),
