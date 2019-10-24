@@ -105,7 +105,7 @@ const isAllWIFsAdded = async (account, password) => {
 	const userPublicKeys = account.active.key_auths;
 	const publicEchorandKey = account.echorand_key;
 	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.wif === publicEchorandKey);
-	if ((userPublicKeys.length > userWIFKeys.length) || !isPrivateEchorandAdd) {
+	if ((userPublicKeys.length > userWIFKeys.length) || isPrivateEchorandAdd) {
 		return false;
 	}
 	return true;
