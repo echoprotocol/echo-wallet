@@ -183,11 +183,9 @@ const DEFAULT_FORM_FIELDS = {
 				error: null,
 			},
 		}),
-		echoRand: {
-			value: null,
-			error: null,
-			hasWif: false,
-		},
+		echoRand: new Map({
+			keys: Map({}),
+		}),
 		firstFetch: false,
 		isChanged: false,
 	}),

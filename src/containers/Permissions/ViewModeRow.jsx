@@ -33,7 +33,7 @@ class ViewModeRow extends Component {
 	renderWeight() {
 		const { weight, keyRole } = this.props;
 
-		if (!weight || !weight.value || keyRole !== 'echo_rand') {
+		if (!weight || !weight.value || keyRole !== 'echoRand') {
 			return undefined;
 		}
 

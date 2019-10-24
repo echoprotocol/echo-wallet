@@ -31,24 +31,74 @@ class ViewModeTable extends React.Component {
 		}
 	}
 
-	render() {
+	renderDescription() {
+		const { description, headerLinkText, headerLinkUrl } = this.props;
+
+		return (
+			(description && !headerLinkText && !headerLinkUrl) && <div className="info-text">{description}</div>
+		);
+	}
+
+	renderLinkDescription() {
+		const { description, headerLinkText, headerLinkUrl } = this.props;
+
+		return (
+			(description && headerLinkText && headerLinkUrl) && (
+				<div className="list-description">
+					{description}
+					<a
+						className="list-header-link"
+						href={headerLinkUrl}
+						target="_blank"
+						rel="noreferrer noopener"
+					>
+						{headerLinkText}
+					</a>
+				</div>
+			)
+		);
+	}
+
+	renderListHeader() {
 		const {
-			data, keys, keyRole, description,
+			data, title, advanced,
 		} = this.props;
 		return (
-
-			<div className="view-mode-wrap">
-				<div className="info-text">
-					{description}
-				</div>
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">Public Keys and Accounts</h3>
+			<div className="list-header">
+				{
+					title && <h3 className="list-header-title">{title}</h3>
+				}
+				{
+					advanced && <span className="list-header-advanced">{advanced}</span>
+				}
+				{
+					data.threshold && (
 						<div className="list-header-info">
 							<span className="icon-info" />
 							<ViewModeThreshold defaultThreshold={data.threshold} />
 						</div>
-					</div>
+					)
+				}
+			</div>
+		);
+	}
+
+	render() {
+		const {
+			data, keys, keyRole,
+		} = this.props;
+		return (
+			<div className="view-mode-wrap">
+				{
+					this.renderDescription()
+				}
+				<div className="list-wrap">
+					{
+						this.renderListHeader()
+					}
+					{
+						this.renderLinkDescription()
+					}
 					<div className="list">
 						<React.Fragment>
 							{
@@ -66,8 +116,8 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={() => {}}
-											viewWif={() => {}}
+											addWif={() => { }}
+											viewWif={() => { }}
 										/>
 									);
 								})
@@ -75,11 +125,8 @@ class ViewModeTable extends React.Component {
 						</React.Fragment>
 					</div>
 				</div>
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">EchoRand Key</h3>
-						<span className="list-header-advanced">(advanced)</span>
-					</div>
+				{/* <div className="list-wrap">
+				
 					<div className="list-description">
 						EchoRand Key is used for participating in blocks generation and for signing
 						sidechain transactions by committee members.
@@ -99,7 +146,7 @@ class ViewModeTable extends React.Component {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		);
 	}
@@ -108,13 +155,14 @@ class ViewModeTable extends React.Component {
 
 ViewModeTable.propTypes = {
 	table: PropTypes.string.isRequired,
+	title: PropTypes.string,
+	advanced: PropTypes.string,
+	headerLinkText: PropTypes.string,
+	headerLinkUrl: PropTypes.string,
 	data: PropTypes.object.isRequired,
-	noInput: PropTypes.bool,
-	noBtn: PropTypes.bool,
 	description: PropTypes.string,
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.object.isRequired,
-	submit: PropTypes.func.isRequired,
 	firstFetch: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
@@ -122,9 +170,11 @@ ViewModeTable.propTypes = {
 };
 
 ViewModeTable.defaultProps = {
-	noInput: false,
-	noBtn: false,
 	description: null,
+	advanced: null,
+	title: null,
+	headerLinkText: null,
+	headerLinkUrl: null,
 };
 
 

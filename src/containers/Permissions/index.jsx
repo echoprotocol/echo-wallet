@@ -73,18 +73,20 @@ class Permissions extends React.Component {
 	}
 
 	render() {
-		let { permissionsKeys } = this.props;
+		const permissionsKeys = this.props.permissionsKeys.toJS();
 		const {
 			keys,
 			set,
 			firstFetch,
 		} = this.props;
 
-		permissionsKeys = permissionsKeys.toJS();
-
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
+		};
+
+		const echoRand = {
+			keys: permissionsKeys.echoRand.keys,
 		};
 
 		return (
@@ -113,10 +115,36 @@ class Permissions extends React.Component {
 								<ViewModeTable
 									keyRole="active"
 									table="Active"
+									title="Public Keys and Accounts"
 									description="Making a backup of your keys helps ensure you can always maintain access to your funds.
 									Anyone having access to your keys will take full control of the funds,
 									so we strongly recommend storing it offline in a secure place."
 									data={active}
+									keys={keys}
+									privateKeys={privateKeys}
+									submit={submit}
+									set={set}
+									setValue={this.props.setValue}
+									isChanged={this.props.isChanged}
+									firstFetch={firstFetch}
+								/>
+							</React.Fragment>
+						)
+					}
+				</PrivateKeyScenario>
+				<PrivateKeyScenario>
+					{
+						(privateKeys, submit) => (
+							<React.Fragment>
+								<ViewModeTable
+									keyRole="echoRand"
+									table="Echo rand"
+									description="EchoRand Key is used for participating in blocks generation and signing sidechain transactions by committee members."
+									headerLinkText=" Know more in Echo Docs"
+									headerLinkUrl="https://docs.echo.org/"
+									title="EchoRand Key"
+									advanced="(advanced)"
+									data={echoRand}
 									keys={keys}
 									privateKeys={privateKeys}
 									submit={submit}
