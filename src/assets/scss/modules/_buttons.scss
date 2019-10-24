@@ -18,6 +18,7 @@ $stripe-width: 10px;
 	min-width: 120px;
 	padding: 0 15px;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .load {
@@ -279,6 +280,30 @@ $stripe-width: 10px;
 		border: 1px solid rgba(#A9ACB9, .5);
 		background-color: transparent;
 		color: rgba(#A9ACB9, .5);
+	}
+
+	// VARIANTS
+
+	&.inverse {
+		background-color: transparent;
+		color: rgba(#5C637D, .6);
+
+		&:hover {
+			border: 1px solid #7A8095;
+			background-color: #7A8095;
+			color: #fff;
+		}
+
+		&:active {
+			border: 1px solid rgba(#A9ACB9, .8);
+			background-color: rgba(#A9ACB9, .8);
+			color: rgba(#fff, .8);
+		}
+		&:disabled {
+			border: 1px solid rgba(#A9ACB9, .5);
+			background-color: transparent;
+			color: rgba(#A9ACB9, .5);
+		}
 	}
 
 	// SIZE

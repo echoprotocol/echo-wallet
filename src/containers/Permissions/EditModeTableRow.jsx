@@ -21,15 +21,16 @@ export default class ThresholdRow extends React.Component {
 
 	renderType(type) {
 		const { show } = this.state;
+		const { keyRole } = this.props;
 
 		if (type === 'keys') {
 			return (
 				<React.Fragment>
 					<Form.Field className={classnames('error-wrap', { error: true })}>
-						<label htmlFor="PublicKey">Public key</label>
+						<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
 						<input
 							type="text"
-							placeholder="Public key"
+							placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
 							name="PublicKey"
 							className="input"
 						/>
@@ -72,28 +73,34 @@ export default class ThresholdRow extends React.Component {
 	}
 
 	render() {
-		const { type } = this.props;
+		const { type, keyRole } = this.props;
 
 		return (
 			<div className="list-item">
 				<div className="list-item-content">
-					<div className="edit-permissions-wrap">
+					<div className={classnames('edit-permissions-wrap', { 'echo-rand': keyRole === 'echoRand' })}>
 						{ this.renderType(type) }
-
-						<Form.Field>
-							<label htmlFor="weight">Weight</label>
-							<input
-								type="text"
-								placeholder="Weight"
-								name="weight"
-								className="input"
-							/>
-						</Form.Field>
+						{
+							keyRole === 'active' &&
+							<Form.Field className="weight-field">
+								<label htmlFor="weight">Weight</label>
+								<input
+									type="text"
+									placeholder="Weight"
+									name="weight"
+									className="input"
+								/>
+							</Form.Field>
+						}
 					</div>
 				</div>
-				<div className="list-item-panel">
-					<button className="remove-btn icon-remove" />
-				</div>
+				{
+					keyRole === 'active' &&
+					<div className="list-item-panel">
+						<button className="remove-btn icon-remove" />
+					</div>
+				}
+
 			</div>
 		);
 	}
@@ -102,4 +109,5 @@ export default class ThresholdRow extends React.Component {
 
 ThresholdRow.propTypes = {
 	type: PropTypes.string.isRequired,
+	keyRole: PropTypes.string.isRequired,
 };

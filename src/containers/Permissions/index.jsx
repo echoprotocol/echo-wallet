@@ -84,6 +84,23 @@ class Permissions extends React.Component {
 		});
 	}
 
+	renderViewPanel() {
+		return (
+			<div className="view-panel-wrap">
+				<Button
+					className="grey-btn"
+					size="medium"
+					content="Edit mode"
+				/>
+				<Button
+					className="green-btn"
+					size="medium"
+					content="View & backup keys"
+				/>
+			</div>
+		);
+	}
+
 	renderViewMode() {
 		return (
 			<div className="view-mode-wrap">
@@ -179,39 +196,52 @@ class Permissions extends React.Component {
 			</div>
 		);
 	}
+
+	renderEditPanel() {
+		return (
+			<div className="edit-panel-wrap">
+				<Button
+					className="grey-btn inverse"
+					size="medium"
+					content="Cancel"
+				/>
+				<Button
+					className="grey-btn"
+					size="medium"
+					content="Save"
+				/>
+			</div>
+		);
+	}
 	renderEditMode() {
 		return (
 			<div className="edit-mode-wrap">
 				<div className="list-wrap">
 					<div className="list-header">
 						<h3 className="list-header-title">Public Keys and Accounts</h3>
-						<div className="list-header-row">
-							<div className="list-header-col">
-								<div className="list-description">
-									The settings below allow you to specify the keys and / or accounts,
-									whose signatures will be necessary to send a transaction from your account.
-									Using threshold and weight you can separate access to an account
-									between several keys and / or accounts.
-								</div>
+					</div>
+					<div className="list-header-row">
+						<div className="list-header-col">
+							<div className="list-description">
+								The settings below allow you to specify the keys and / or accounts,
+								whose signatures will be necessary to send a transaction from your account.
+								Using threshold and weight you can separate access to an account
+								between several keys and / or accounts.
 							</div>
-							<div className="list-header-col">
-								<EditModeThrashold />
-							</div>
-
+						</div>
+						<div className="list-header-col">
+							<EditModeThrashold />
 						</div>
 					</div>
 					<div className="list">
-						<EditModeTableRow type="keys" />
-						<EditModeTableRow type="keys" />
-						<EditModeTableRow type="account" />
-						<EditModeTableRow type="account" />
-
+						<EditModeTableRow type="keys" keyRole="active" />
+						<EditModeTableRow type="keys" keyRole="active" />
+						<EditModeTableRow type="account" keyRole="active" />
 					</div>
 					<div className="list-panel">
 						<Button
 							className="main-btn"
 							size="medium"
-							content="Add account"
 						>
 							<Popup
 								trigger={<span className="main-btn-popup">Add Account</span>}
@@ -224,7 +254,6 @@ class Permissions extends React.Component {
 						<Button
 							className="main-btn"
 							size="medium"
-							content="Add account"
 						>
 							<Popup
 								trigger={<span className="main-btn-popup">Add public key</span>}
@@ -238,13 +267,16 @@ class Permissions extends React.Component {
 				</div>
 				<div className="list-wrap">
 					<div className="list-header">
-						<h3 className="list-header-title">Public Keys and Accounts</h3>
-						<div className="list-description">
+						<h3 className="list-header-title">EchoRand Key</h3>
+						<span className="list-header-advanced">(for advanced users)</span>
+					</div>
+					<div className="list-description">
 						EchoRand Key is used for participating in blocks generation and for signing
 						sidechain transactions by committee members.
-							<a className="list-header-link" href="">Know more in Echo Docs </a>
-						</div>
-
+						<a className="list-header-link" href="">Know more in Echo Docs </a>
+					</div>
+					<div className="list">
+						<EditModeTableRow type="keys" keyRole="echoRand" />
 					</div>
 				</div>
 			</div>
@@ -269,22 +301,17 @@ class Permissions extends React.Component {
 						<span className="account-info-type">Account ID:</span>
 						<span className="account-info-value">1.16.0</span>
 					</div>
-					<div className="sub-header-panel">
-						<Button
-							className="grey-btn"
-							size="medium"
-							content="Edit mode"
-						/>
-						<Button
-							className="green-btn"
-							size="medium"
-							content="View & backup keys"
-						/>
+					<div className="sub-header-panel" >
+						{
+
+							// this.renderViewPanel()
+							this.renderEditPanel()
+						}
 					</div>
 				</div>
 				{
-					this.renderEditMode()
 					// this.renderViewMode()
+					this.renderEditMode()
 				}
 				{/* <TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{

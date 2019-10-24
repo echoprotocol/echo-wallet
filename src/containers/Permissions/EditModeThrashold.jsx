@@ -20,7 +20,6 @@ export default class Threshold extends React.Component {
 					<span className="threshold">threshold: </span>
 					<input
 						type="text"
-						placeholder="Threshold"
 						name="threshold"
 						className="input"
 					/>
