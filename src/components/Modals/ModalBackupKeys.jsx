@@ -8,8 +8,8 @@ class ModalBackupKeys extends React.Component {
 		this.props.close();
 	}
 
-	onConfirm() {
-		this.props.send();
+	onSave(activeKeysString) {
+		this.props.saveAsTxt(activeKeysString);
 	}
 
 	getArea(key, data) {
@@ -35,57 +35,27 @@ class ModalBackupKeys extends React.Component {
 		);
 	}
 
-	getPermissions(key, data) {
-		return (
-			<Form.Field className="field-block" key={key}>
-				<p className="field-block_title">{key.replace(/([A-Z])/g, ' $1')}</p>
-				<div className="field-block_edit">
-					{
-						data.map(([keyPermission, weight]) => (
-							<React.Fragment key={Math.random()}>
-								<div>
-									<span>{keyPermission}</span><span>, {weight}</span>
-								</div>
-							</React.Fragment>
-						))
-					}
-				</div>
-
-			</Form.Field>
-		);
-	}
-
-	renderActiveKeysTextField() {
+	getActiveKeysString() {
 		const { keys } = this.props;
 
 		const keysData = [];
 
 		keys.forEach((keyItem, keyIndex) => {
-			keysData.push(`Public Key ${keyIndex + 1}
-			${keyItem.publicKey}
-
-			`);
-			keysData.push(`WIF ${keyIndex + 1}
-			${keyItem.wif}
-
-			`);
+			keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}\n\n`);
+			keysData.push(`WIF ${keyIndex + 1}\n${keyItem.wif}\n---------------------------------------`);
 		});
 
-		return (
-			<textarea>
-				{keysData.join()}
-			</textarea>
-		);
+		const keysDataString = keysData.join('\n');
 
+		return keysDataString;
 	}
 
-	renderActiveKeysInfo() {
+	renderAccountInfo() {
 		const { activeUser } = this.props;
 
 		const accountInfoinputs = [
 			this.getInput('account name', activeUser.get('id')),
 			this.getInput('id account', activeUser.get('name')),
-			this.renderActiveKeysTextField(),
 		];
 
 		return accountInfoinputs;
@@ -93,6 +63,18 @@ class ModalBackupKeys extends React.Component {
 
 	render() {
 		const { activeUser, show, disabled } = this.props;
+
+		let infoToRender = null;
+		let activeKeysString = '';
+
+		if (activeUser) {
+			const userInfoToRender = this.renderAccountInfo();
+
+			activeKeysString = this.getActiveKeysString();
+			const activeKeysToRender = activeKeysString.length > 0 ? this.getArea('activeKeys', activeKeysString) : null;
+
+			infoToRender = [...userInfoToRender, activeKeysToRender];
+		}
 
 		return (
 			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
@@ -104,15 +86,15 @@ class ModalBackupKeys extends React.Component {
 								<h3>Backup</h3>
 							</div>
 							<div className="field-wrap">
-								{ activeUser ? this.renderActiveKeysInfo() : null }
+								{infoToRender}
 							</div>
 							<div className="form-panel">
 								<Button
 									basic
 									type="button"
 									className="main-btn"
-									onClick={() => this.onConfirm()}
-									disabled={disabled}
+									onClick={() => this.onSave(activeKeysString)}
+									disabled={disabled && activeKeysString === 0}
 									content="Save as.txt"
 								/>
 							</div>
@@ -130,7 +112,7 @@ ModalBackupKeys.propTypes = {
 	disabled: PropTypes.bool,
 	activeUser: PropTypes.any,
 	close: PropTypes.func.isRequired,
-	send: PropTypes.func.isRequired,
+	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.array,
 };
 

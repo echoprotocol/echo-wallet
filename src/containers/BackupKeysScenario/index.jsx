@@ -10,7 +10,6 @@ import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../co
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
-import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
 import Services from '../../services';
 
@@ -29,7 +28,6 @@ class BackupKeysScenario extends React.Component {
 
 	componentWillUnmount() {
 		this.clear();
-		this.props.resetTransaction();
 	}
 
 	clear() {
@@ -44,8 +42,7 @@ class BackupKeysScenario extends React.Component {
 		}
 	}
 
-	async fetchWIFs() {
-		const { password } = this.state;
+	async fetchWIFs(password) {
 		const { active: { keys } } = this.props.permissionsKeys.toJS();
 
 		const userStorage = Services.getUserStorage();
@@ -64,7 +61,7 @@ class BackupKeysScenario extends React.Component {
 		const { password } = this.state;
 
 		this.props.unlock(password, async () => {
-			await this.fetchWIFs();
+			await this.fetchWIFs(password);
 			this.props.openModal(MODAL_BACKUP_KEYS);
 		});
 	}
@@ -73,11 +70,12 @@ class BackupKeysScenario extends React.Component {
 		this.props.openModal(MODAL_UNLOCK_PERMISSION);
 	}
 
-	send() {
-		const { password } = this.state;
-
-		this.props.sendTransaction(password);
-		this.clear();
+	async saveAsTxt(activeKeysString) {
+		const donwloadElement = document.createElement('a');
+		const txtFile = new Blob([activeKeysString], { type: 'text/plain' });
+		donwloadElement.href = URL.createObjectURL(txtFile);
+		donwloadElement.download = 'echo-backup.txt';
+		donwloadElement.click();
 	}
 
 	close(modal) {
@@ -114,7 +112,7 @@ class BackupKeysScenario extends React.Component {
 					activeUser={this.props.activeUser}
 					show={modalBackupKeys.get('show')}
 					disabled={modalBackupKeys.get('loading')}
-					send={(value) => this.send(value)}
+					saveAsTxt={(backupInfo) => this.saveAsTxt(backupInfo)}
 					close={() => this.close(MODAL_BACKUP_KEYS)}
 					keys={this.state.activeUserKeys}
 				/>
@@ -135,8 +133,6 @@ BackupKeysScenario.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	clearError: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
-	sendTransaction: PropTypes.func.isRequired,
-	resetTransaction: PropTypes.func.isRequired,
 };
 
 BackupKeysScenario.defaultProps = {
@@ -155,7 +151,5 @@ export default connect(
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
-		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
-		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(BackupKeysScenario);
