@@ -12,8 +12,9 @@ class DB {
 	}
 
 	/**
-	 *
+	 * @method setEncryptedData
 	 * @param {String} encryptedData
+	 * @returns {DB}
 	 */
 	setEncryptedData(encryptedData) {
 		this.encryptedData = encryptedData;

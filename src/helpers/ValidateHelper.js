@@ -15,6 +15,12 @@ export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
 
+/**
+ * @method isAccountNameError
+ * @param {String} value
+ * @param {(null | Boolean)} allowShort
+ * @returns {String}
+ */
 const isAccountNameError = (value, allowShort) => {
 	if (allowShort == null) {
 		allowShort = false;
@@ -52,6 +58,11 @@ const isAccountNameError = (value, allowShort) => {
 	return null;
 };
 
+/**
+ * @method validateAccountName
+ * @param {String} accountName
+ * @returns {(String | null)}
+ */
 export const validateAccountName = (accountName) => {
 	if (!accountName) { return 'Account name should not be empty'; }
 
@@ -62,12 +73,22 @@ export const validateAccountName = (accountName) => {
 	return null;
 };
 
+/**
+ * @method validateWIF
+ * @param {String} wif
+ * @returns {(String | null)}
+ */
 export const validateWIF = (wif) => {
 	if (!wif) { return 'WIF should not be empty'; }
 
 	return null;
 };
 
+/**
+ * @method validateCode
+ * @param {String} code
+ * @returns {(String | null)}
+ */
 export const validateCode = (code) => {
 	if (!code) {
 		return 'field should be not empty';
@@ -84,6 +105,11 @@ export const validateCode = (code) => {
 	return null;
 };
 
+/**
+ * @method validateContractName
+ * @param {String} name
+ * @returns {(String | null)}
+ */
 export const validateContractName = (name) => {
 	if (!name) {
 		return 'Contract name should not be empty';
@@ -104,6 +130,11 @@ export const validateContractName = (name) => {
 	return null;
 };
 
+/**
+ * @method validateAbi
+ * @param {String} str
+ * @returns {(String | null)}
+ */
 export const validateAbi = (str) => {
 	if (!str) {
 		return 'Contract ABI should not be empty';
@@ -178,6 +209,13 @@ export const validateAbi = (str) => {
 	}
 };
 
+/**
+ * @method validateInt
+ * @param {Number} value
+ * @param {Boolean} isUint
+ * @param {Number} size
+ * @returns {(String | null)}
+ */
 const validateInt = (value, isUint, size = 256) => {
 	value = Number(value);
 	if (!Number.isInteger(value)) return 'value should be integer';
@@ -194,13 +232,43 @@ const validateInt = (value, isUint, size = 256) => {
 	return null;
 };
 
+/**
+ * @method validateString
+ * @param {String} value
+ * @returns {(String | null)}
+ */
 const validateString = (value) => (typeof value === 'string' ? null : 'value should be a string');
+/**
+ * @method validateAddress
+ * @param {any} value
+ * @returns {(String | null)}
+ */
 const validateAddress = (value) => (validators.isObjectId(value) ? null : 'value should be in object id format');
+/**
+ * @method validateBool
+ * @param {Boolean} value
+ * @returns {(String | null)}
+ */
 const validateBool = (value) => (typeof value === 'boolean' ? null : 'value should be a boolean');
+/**
+ * @method validateArray
+ * @param {Array} value
+ * @returns {(String | null)}
+ */
 const validateArray = (value) => (Array.isArray(value) ? null : 'value should be an array');
+/**
+ * @method validateBytes
+ * @param {String} value
+ * @returns {(String | null)}
+ */
 const validateBytes = (value) => ((typeof value === 'string' && reg.test(value)) ? null : 'value should be a hex string');
 
-
+/**
+ * @method validateByType
+ * @param {String} value
+ * @param {String} type
+ * @returns {String}
+ */
 export const validateByType = (value, type) => {
 	if (!value) return 'Value should not be empty';
 
@@ -258,6 +326,12 @@ export const validateByType = (value, type) => {
 
 };
 
+/**
+ * @method validateAmount
+ * @param {any} value
+ * @param {Object} param1
+ * @returns {(null | String)}
+ */
 export const validateAmount = (value, { symbol, precision, balance }) => {
 	let amount = new BN(value);
 
@@ -286,6 +360,14 @@ export const validateAmount = (value, { symbol, precision, balance }) => {
 	return null;
 };
 
+/**
+ * @method validateFee
+ * @param {Object} amount
+ * @param {Object} currency
+ * @param {Object} fee
+ * @param {Array} assets
+ * @returns {(null | String)}
+ */
 export const validateFee = (amount, currency, fee, assets) => {
 	if (currency && currency.id === fee.asset.id) {
 		const total = new BN(amount.value).times(10 ** currency.precision).plus(fee.value);
@@ -303,7 +385,11 @@ export const validateFee = (amount, currency, fee, assets) => {
 	return null;
 };
 
-
+/**
+ * @method validateNetworkName
+ * @param {String} name
+ * @returns {(null | String)}
+ */
 export const validateNetworkName = (name) => {
 	if (!name) {
 		return 'Network name should not be empty';
@@ -324,6 +410,11 @@ export const validateNetworkName = (name) => {
 	return null;
 };
 
+/**
+ * @method validateNetworkAddress
+ * @param {String} address
+ * @returns {(null | String)}
+ */
 export const validateNetworkAddress = (address) => {
 	if (!address) {
 		return 'Network address should not be empty';
@@ -336,8 +427,19 @@ export const validateNetworkAddress = (address) => {
 	return null;
 };
 
+/**
+ * @method isAccountId
+ * @param {String} v
+ * @returns {Boolean}
+ */
 export const isAccountId = (v) => accountIdRegex.test(v);
 
+/**
+ * @method isAccountId
+ * @param {String} v
+ * @param {String} addressPrefix
+ * @returns {(Boolean | String)}
+ */
 export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
 	if (typeof v !== 'string' || v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length)) return false;
 
@@ -352,6 +454,11 @@ export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
 	return addressPrefix === prefix;
 };
 
+/**
+ * @method isWeight
+ * @param {Number} v
+ * @returns {Boolean}
+ */
 export const isWeight = (v) => {
 	if (typeof v === 'number' && (v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER)) return false;
 
@@ -360,13 +467,28 @@ export const isWeight = (v) => {
 	return bn.isInteger();
 };
 
+/**
+ * @method isThreshold
+ * @param {Number} v
+ * @returns {Boolean}
+ */
 export const isThreshold = (v) => {
 	const thresholdNumber = Number(v);
 	return !(v === '' || !Number.isInteger(thresholdNumber) || thresholdNumber <= 0);
 };
 
+/**
+ * @method isCommitteeMemberId
+ * @param {String} v
+ * @returns {Boolean}
+ */
 export const isCommitteeMemberId = (v) => (typeof v === 'string') && committeeMemberIdRegex.test(v);
 
+/**
+ * @method validatePassword
+ * @param {String} v
+ * @returns {(Boolean | String)}
+ */
 export const validatePassword = (v) => {
 	if (!v) {
 		return 'Password should not be empty';
@@ -394,7 +516,7 @@ export const validatePassword = (v) => {
 };
 
 /**
- *
+ * @method checkErc20Contract
  * @param {String} scriptHex
  * @returns {boolean}
  */
