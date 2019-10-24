@@ -306,3 +306,38 @@ export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => a
 	}
 
 };
+
+export const asyncUnlock = (
+	password,
+	callback = () => {},
+	modal = MODAL_UNLOCK,
+) => async (dispatch) => {
+	try {
+		dispatch(toggleModalLoading(modal, true));
+
+		const userStorage = Services.getUserStorage();
+		const doesDBExist = await userStorage.doesDBExist();
+
+		if (!doesDBExist) {
+			dispatch(setError(modal, 'DB doesn\'t exist'));
+			return;
+		}
+
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+		const correctPassword = await userStorage.isMasterPassword(password);
+
+		if (!correctPassword) {
+			dispatch(setError(modal, 'Invalid password'));
+			return;
+		}
+
+		await callback(password);
+
+		dispatch(closeModal(modal));
+	} catch (err) {
+		dispatch(setError(modal, err));
+	} finally {
+		dispatch(toggleModalLoading(modal, false));
+	}
+
+};

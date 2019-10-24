@@ -9,7 +9,7 @@ import ModalBackupKeys from '../../components/Modals/ModalBackupKeys';
 import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
-import { unlock } from '../../actions/AuthActions';
+import { asyncUnlock } from '../../actions/AuthActions';
 
 import Services from '../../services';
 
@@ -60,10 +60,10 @@ class BackupKeysScenario extends React.Component {
 	unlock() {
 		const { password } = this.state;
 
-		this.props.unlock(password, async () => {
+		this.props.asyncUnlock(password, async () => {
 			await this.fetchWIFs(password);
 			this.props.openModal(MODAL_BACKUP_KEYS);
-		});
+		}, MODAL_UNLOCK_PERMISSION);
 	}
 
 	backup() {
@@ -132,7 +132,7 @@ BackupKeysScenario.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	clearError: PropTypes.func.isRequired,
-	unlock: PropTypes.func.isRequired,
+	asyncUnlock: PropTypes.func.isRequired,
 };
 
 BackupKeysScenario.defaultProps = {
@@ -150,6 +150,6 @@ export default connect(
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
-		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
+		asyncUnlock: (password, callback) => dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_PERMISSION)),
 	}),
 )(BackupKeysScenario);
