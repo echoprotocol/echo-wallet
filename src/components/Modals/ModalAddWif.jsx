@@ -30,6 +30,29 @@ class ModalAddWif extends React.Component {
 		this.props.close();
 	}
 
+	getArea(key, data) {
+		return (
+			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
+		);
+	}
+
+	getInput(key, data) {
+		if (Array.isArray(data) && !data.length) {
+			return null;
+		}
+
+		return (
+			<Form.Field key={key} >
+				<label htmlFor="amount">
+					{key.replace(/([A-Z])/g, ' $1')}
+				</label>
+				<div>
+					<input type="text" name="Fee" disabled className="ui input" value={data} />
+				</div>
+			</Form.Field>
+		);
+	}
+
 	saveWif() {
 
 		const { keys: { publicKey } } = this.props;
@@ -56,27 +79,10 @@ class ModalAddWif extends React.Component {
 		}));
 	}
 
-	getArea(key, data) {
-		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
-		);
-	}
-
-	getInput(key, data) {
-		if (Array.isArray(data) && !data.length) {
-			return null;
-		}
-
-		return (
-			<Form.Field key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1')}
-				</label>
-				<div>
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
-				</div>
-			</Form.Field>
-		);
+	toggleShow(show) {
+		this.setState({
+			show: !show,
+		});
 	}
 
 	renderWifInput() {
@@ -112,12 +118,6 @@ class ModalAddWif extends React.Component {
 			this.getInput('public key', keys.publicKey),
 			this.renderWifInput(),
 		];
-	}
-
-	toggleShow(show) {
-		this.setState({
-			show: !show,
-		});
 	}
 
 	render() {
