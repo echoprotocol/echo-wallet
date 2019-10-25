@@ -300,19 +300,8 @@ export const isAccountAdded = (accountName, networkName) => {
 	return null;
 };
 
-<<<<<<< HEAD
 
 export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {
-=======
-/**
- * @method addAccount
- *
- * @param {String} accountName
- * @param {String} networkName
- * @returns {function(dispatch): undefined}
- */
-export const addAccount = (accountName, networkName) => (dispatch) => {
->>>>>>> 4a8842879de878f6f9043e023357b58d543ff75e
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
 	accounts = accounts ? JSON.parse(accounts) : [];
