@@ -193,7 +193,7 @@ class Header extends React.Component {
 				</NavLink>
 				<div className="inner-tooltip">
 					<p>
-						Frozen funds allow you to get bigger reward for blocks creation.
+						Frozen funds allow you to get bigger reward for participating in blocks creation.
 					</p>
 				</div>
 			</div>
