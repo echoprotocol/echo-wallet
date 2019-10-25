@@ -14,7 +14,7 @@ class AutoSchemeService {
 	}
 
 	/**
-	 *
+	 * @method updateDB
 	 * @param db
 	 * @return {Promise.<void>}
 	 */
@@ -23,6 +23,10 @@ class AutoSchemeService {
 		await this.storageService.updateDBByEncryptionHash(db, encHash);
 	}
 
+	/**
+	 * @method getEncHash
+	 * @returns {String}
+	 */
 	getEncHash() {
 		if (!this._privateStorage) {
 			throw new Error('Private storage doesn\'t set');
@@ -38,7 +42,7 @@ class AutoSchemeService {
 	}
 
 	/**
-	 *
+	 * @method getDecryptedData
 	 * @return {Promise.<*>}
 	 */
 	async getDecryptedData() {
@@ -51,7 +55,7 @@ class AutoSchemeService {
 	}
 
 	/**
-	 *
+	 * @method setEncryptionHash
 	 * @param {String} password
 	 * @return {Promise.<void>}
 	 */
@@ -75,6 +79,10 @@ class AutoSchemeService {
 
 	}
 
+	/**
+	 * @method resetPrivateStorage
+	 * @returns {undefined}
+	 */
 	resetPrivateStorage() {
 		this._privateStorage = null;
 	}
