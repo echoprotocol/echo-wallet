@@ -56,7 +56,9 @@ class Footer extends React.PureComponent {
 						>Keys Parameters
 						</Button>
 					</li>
-					<li />
+					<li>
+						<NetworkDropdown lastBlock={lastBlock} warning />
+					</li>
 				</ul>
 			</div>
 		);

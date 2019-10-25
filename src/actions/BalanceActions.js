@@ -33,6 +33,13 @@ import history from '../history';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
+/**
+ * @method diffBalanceChecker
+ *
+ * @param {String} type
+ * @param {Array} balances
+ * @@returns {function(dispatch, getState): {(Object | null)}}
+ */
 const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
 	balances.map((nb) => {
@@ -53,6 +60,12 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
+/**
+ * @method getBalanceFromAssets
+ *
+ * @param {Array} assets
+ * @@returns {function(): Promise<Object>}
+ */
 export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
@@ -77,6 +90,13 @@ export const getBalanceFromAssets = (assets) => async () => {
 	return balances;
 };
 
+/**
+ * @method getAssetsBalances
+ *
+ * @param {Array} assets
+ * @param {Boolean} update
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
 
 	let balances = [];
@@ -97,6 +117,13 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
+/**
+ * @method getTokenBalances
+ *
+ * @param {String} accountId
+ * @param {String} networkName
+ * @@returns {function(dispatch): Promise<(undefined | Object)>}
+ */
 export const getTokenBalances = (accountId, networkName) => async (dispatch) => {
 
 	/**
@@ -133,6 +160,10 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch) => 
 	}));
 };
 
+/**
+ * @method updateTokenBalances
+ * @returns {function(dispatch, getState): Promise<(Object | undefined)>}
+ */
 export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	const tokens = getState().balance.get('tokens');
@@ -154,6 +185,12 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	}));
 };
 
+/**
+ * @method getPreviewBalances
+ *
+ * @param {String} networkName
+ * @@returns {function(dispatch): Promise<(undefined | Object)>}
+ */
 export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -193,8 +230,10 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 };
 
 /**
+ * @method getFrozenBalances
  *
  * @param {String} accountId
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	const frozenFunds = await echo.api.getFrozenBalances(accountId);
@@ -216,9 +255,11 @@ export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 };
 
 /**
+ * @method initBalances
  *
  * @param {String} accountId
  * @param {String} networkName
+ * @returns {function(dispatch): Promise<undefined>}
  */
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 
@@ -234,9 +275,10 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 };
 
 /**
+ * @method addToken
  *
  * @param {String} contractId
- * @returns {Function}
+ * @@returns {function(dispatch, getState): Promise<undefined>}
  */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
@@ -314,6 +356,10 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method getAccountFromTransferFrom
+ * @@returns {function(dispatch, getState): Promise<(Array | undefined)>}
+ */
 const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	const isIndexPath = history.location.pathname === INDEX_PATH;
 
@@ -378,6 +424,12 @@ export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
 		return false;
 	};
 
+/**
+ * @method handleSubscriber
+ *
+ * @param {Array} subscribeObjects
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	if (!accountId || !echo.isConnected) return;
@@ -446,6 +498,12 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	}
 };
 
+/**
+ * @method removeToken
+ *
+ * @param {String} contractId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const removeToken = (contractId) => (dispatch, getState) => {
 	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
 	if (!targetToken || !targetToken.disabled) return;
@@ -467,6 +525,12 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };
 
+/**
+ * @method enableToken
+ *
+ * @param {String} contractId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const enableToken = (contractId) => (dispatch, getState) => {
 	const intervalId = getState().balance.get('intervalId');
 	clearTimeout(intervalId);
@@ -474,7 +538,13 @@ export const enableToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
 };
 
-
+/**
+ * @method disableToken
+ *
+ * @param {String} name
+ * @param {String} contractId
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
@@ -491,11 +561,22 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	);
 };
 
+/**
+ * @method setAsset
+ *
+ * @param {Array} asset
+ * @param {Array} type
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const setAsset = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 };
 
+/**
+ * @method resetBalance
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());
 };

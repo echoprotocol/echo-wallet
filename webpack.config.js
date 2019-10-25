@@ -6,7 +6,9 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 
+const gitRevisionPlugin = new GitRevisionPlugin();
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 	template: `${__dirname}/src/assets/index.html`,
 	filename: 'index.html',
@@ -115,8 +117,12 @@ module.exports = {
 		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
+		gitRevisionPlugin,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
-		new webpack.DefinePlugin({ ELECTRON: !!process.env.ELECTRON }),
+		new webpack.DefinePlugin({
+			ELECTRON: !!process.env.ELECTRON,
+			COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+		}),
 	],
 	node: {
 		fs: 'empty',

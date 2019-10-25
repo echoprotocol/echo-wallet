@@ -10,7 +10,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method create
 	 * @param {Array} keys
 	 */
 	static create(keys) {
@@ -18,7 +18,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method addKey
 	 * @param {Key} key
 	 * @returns {Network}
 	 */
@@ -28,7 +28,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method updateKeys
 	 * @param {Key} keys
 	 * @returns {Network}
 	 */
@@ -38,7 +38,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method getAllKeys
 	 * @return {Array}
 	 */
 	getAllKeys() {

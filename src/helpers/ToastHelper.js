@@ -5,7 +5,11 @@ import { TIME_TOAST_ANIMATION } from '../constants/GlobalConstants';
 import ToastInfo from '../components/Toast/ToastInfo';
 import ToastSuccess from '../components/Toast/ToastSuccess';
 
-
+/**
+ * @method toastSuccess
+ * @param {String} text
+ * @returns {undefined}
+ */
 export const toastSuccess = (text) => {
 	toast.success(ToastSuccess(text), {
 		autoClose: TIME_TOAST_ANIMATION,
@@ -14,6 +18,13 @@ export const toastSuccess = (text) => {
 	});
 };
 
+/**
+ * @method toastInfo
+ * @param {String} text
+ * @param {Function} onUndo
+ * @param {Function} onOpen
+ * @returns {undefined}
+ */
 export const toastInfo = (text, onUndo, onOpen) => {
 	toast.info(ToastInfo(text, onUndo), {
 		autoClose: TIME_TOAST_ANIMATION,
@@ -23,6 +34,11 @@ export const toastInfo = (text, onUndo, onOpen) => {
 	});
 };
 
+/**
+ * @method toastSuccess
+ * @param {String} text
+ * @returns {undefined}
+ */
 export const toastError = (text) => {
 	toast.error(text, {
 		autoClose: TIME_TOAST_ANIMATION,

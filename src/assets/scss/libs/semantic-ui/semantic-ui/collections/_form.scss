@@ -69,22 +69,6 @@
     Standard Inputs
 ---------------------*/
 
-textarea,
-input:not([type]),
-input[type="date"],
-input[type="datetime-local"],
-input[type="email"],
-input[type="number"],
-input[type="password"],
-input[type="search"],
-input[type="tel"],
-input[type="time"],
-input[type="text"],
-input[type="file"],
-input[type="url"] {
-  width: 100%;
-  vertical-align: top;
-}
 
 /* Set max height on unusual input */
 .ui.form ::-webkit-datetime-edit,
@@ -92,53 +76,11 @@ input[type="url"] {
   height: 1.21428571em;
 }
 
-input:not([type]),
-input[type="email"],
-input[type="number"],
-input[type="password"],
-input[type="search"],
-input[type="text"],
-input[type="file"],
-input[type="url"] {
-  font-family: $font-family;
-  margin: 0em;
-  outline: none;
-  line-height: 1.1em;
-  padding: 0.67857143em 1em;
-  font-size: 1.0714em;
-  background-color: #fff;
-  border: 1px solid $inut-color;
-  color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
-  -webkit-transition: color $speed ease, border-color $speed ease;
-  transition: color $speed ease, border-color $speed ease;
-}
+
 
 /* Text Area */
-.ui.form textarea {
-  margin: 0em;
-  -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
-  padding: 0.78571429em 1em;
-  background: #FFFFFF;
-  border: 1px solid $inut-color;
-  outline: none;
-  color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
-  -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
-  box-shadow: 0em 0em 0em 0em transparent inset;
-  -webkit-transition: color $speed ease, border-color $speed ease;
-  transition: color $speed ease, border-color $speed ease;
-  font-size: 1em;
-  line-height: 1.2857;
-  resize: none;
-}
 
-.ui.form textarea:not([rows]) {
-  height: 10em;
-  min-height: 8em;
-  max-height: 24em;
-}
+
 
 .ui.form textarea,
 .ui.form input[type="checkbox"] {

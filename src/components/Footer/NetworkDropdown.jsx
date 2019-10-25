@@ -80,7 +80,9 @@ class Network extends React.PureComponent {
 	}
 
 	render() {
-		const { networks, network, loading } = this.props;
+		const {
+			networks, network, loading, disconnected, warning,
+		} = this.props;
 		let options = this.getList(NETWORKS);
 
 		if (networks.length || networks.length === 0) {
@@ -105,12 +107,13 @@ class Network extends React.PureComponent {
 				upward
 				disabled={loading}
 				className={classnames('network-dropdown', {
-					disconnected: this.props.disconnected,
+					disconnected,
+					warning,
 				})}
 				trigger={
 					<div className="network-dropdown-trigger">
 						<span className="description">
-							{ this.props.disconnected ? 'Disconnected:' : 'Network:' }
+							{ disconnected ? 'Disconnected:' : 'Network:' }
 						</span>
 						<span className="status connected">
 							<div className="ellipsis">{network.name}</div>
@@ -140,11 +143,14 @@ Network.propTypes = {
 	deleteNetwork: PropTypes.func.isRequired,
 	lastBlock: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
+	warning: PropTypes.bool,
+
 };
 
 Network.defaultProps = {
 	disconnected: false,
 	loading: false,
+	warning: false,
 };
 
 export default withRouter(connect(

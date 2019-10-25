@@ -17,6 +17,10 @@ import { FORM_COMMITTEE } from '../constants/FormConstants';
 
 import { formatError } from '../helpers/FormatHelper';
 
+/**
+ * @method fetchCommittee
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const fetchCommittee = () => async (dispatch) => {
 	try {
 		dispatch(toggleLoading(FORM_COMMITTEE, true));
@@ -33,6 +37,10 @@ export const fetchCommittee = () => async (dispatch) => {
 	}
 };
 
+/**
+ * @method formatProxy
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const formatProxy = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
@@ -57,6 +65,10 @@ export const formatProxy = () => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method formatCommitteeTable
+ * @@returns {function(dispatch, getState): Promise<(Object | null)>}
+ */
 export const formatCommitteeTable = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const accountVotes = account ? account.getIn(['options', 'votes']) : [];
@@ -100,6 +112,12 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 	dispatch(setValue(COMMITTEE_TABLE, 'backup', new List(await Promise.all(backupCommittees))));
 };
 
+/**
+ * @method getVoteIdsByAccountNames
+ *
+ * @param {Array} accountNames
+ * @@returns {function(dispatch, getState): Promise<Array>}
+ */
 const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 	const accounts = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID]);
 	const objects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
@@ -110,12 +128,23 @@ const getVoteIdsByAccountNames = (accountNames) => (dispatch, getState) => {
 	});
 };
 
-
+/**
+ * @method checkAccount
+ *
+ * @param {String} account
+ * @@returns {function( ): Promise<(Object | null)>}
+ */
 export const checkAccount = (account) => async () => {
 	const accountNameError = await validateAccountExist(account, false);
 	return accountNameError;
 };
 
+/**
+ * @method onChangeProxy
+ *
+ * @param {String} account
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 	if (!account) {
@@ -139,6 +168,10 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 	dispatch(set(FORM_COMMITTEE, 'votingAccountId', null));
 };
 
+/**
+ * @method updateAccount
+ * @@returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const updateAccount = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
