@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-class ModalWarningConfirm extends React.Component {
+class modalConfirmChangeTreshold extends React.Component {
 
 	onAgree() {
 		this.props.confirm();
@@ -37,14 +37,14 @@ class ModalWarningConfirm extends React.Component {
 }
 
 
-ModalWarningConfirm.propTypes = {
+modalConfirmChangeTreshold.propTypes = {
 	show: PropTypes.bool,
 	confirm: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
 };
 
-ModalWarningConfirm.defaultProps = {
+modalConfirmChangeTreshold.defaultProps = {
 	show: false,
 };
 
-export default ModalWarningConfirm;
+export default modalConfirmChangeTreshold;

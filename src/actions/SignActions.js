@@ -11,7 +11,7 @@ import Services from '../services';
  *
  * @returns {Promise}
  */
-export const getSigners = async (account, keys, viewed = []) => {
+const getSigners = async (account, keys, viewed = []) => {
 	let weight = 0;
 	let signers = [];
 

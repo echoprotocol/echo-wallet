@@ -10,7 +10,7 @@ import PermissionTable from './PermissionTable';
 
 import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
-import TransactionScenario from '../TransactionScenario';
+import WarningConfirmThresholScenario from '../WarningConfirmThresholScenario';
 import { clearForm, setInFormValue } from '../../actions/FormActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 
@@ -97,7 +97,7 @@ class Permissions extends React.Component {
 		return (
 
 			<div className="permissions-wrap">
-				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
+				<WarningConfirmThresholScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{
 						(submitTr) => (
 							this.props.isChanged &&
@@ -119,7 +119,7 @@ class Permissions extends React.Component {
 							</div>
 						)
 					}
-				</TransactionScenario>
+				</WarningConfirmThresholScenario>
 				<PrivateKeyScenario>
 					{
 						(keys, submit) => (
