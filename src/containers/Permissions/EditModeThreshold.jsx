@@ -1,11 +1,12 @@
 import React from 'react';
 import { Form, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
-export default class Threshold extends React.Component {
+class EditModeThreshold extends React.Component {
 
 	render() {
-
+		const { threshold } = this.props;
 
 		return (
 			<Form className="edit-threshold">
@@ -22,11 +23,22 @@ export default class Threshold extends React.Component {
 						type="text"
 						name="threshold"
 						className="input"
+						value={threshold.value}
 					/>
-					<span className="error-message">error</span>
+					{ threshold.error && <span className="error-message">{threshold.error}</span>}
 				</Form.Field>
 			</Form>
 		);
 	}
 
 }
+
+EditModeThreshold.propTypes = {
+	threshold: PropTypes.object,
+};
+
+EditModeThreshold.defaultProps = {
+	threshold: {},
+};
+
+export default EditModeThreshold;

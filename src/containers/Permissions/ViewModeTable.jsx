@@ -19,10 +19,10 @@ class ViewModeTable extends React.Component {
 			(data.keys.length !== prevProps.data.keys.length)
 		) {
 			data.keys.forEach((k) => {
-				this.props.setValue([keyRole, 'keys', k.key, 'key'], k.key);
-				this.props.setValue([keyRole, 'keys', k.key, 'weight'], k.weight);
-				this.props.setValue([keyRole, 'keys', k.key, 'type'], k.type);
-				this.props.setValue([keyRole, 'keys', k.key, 'hasWif'], k.hasWif);
+				this.props.setValue([keyRole, k.type, k.key, 'key'], k.key);
+				this.props.setValue([keyRole, k.type, k.key, 'weight'], k.weight);
+				this.props.setValue([keyRole, k.type, k.key, 'type'], k.type);
+				this.props.setValue([keyRole, k.type, k.key, 'hasWif'], k.hasWif);
 			});
 		}
 
@@ -115,8 +115,8 @@ class ViewModeTable extends React.Component {
 								data.keys.map((k) => {
 									const { type, hasWif } = k;
 
-									const key = keys.getIn([keyRole, 'keys', k.key, 'key']);
-									const weight = keys.getIn([keyRole, 'keys', k.key, 'weight']);
+									const key = keys.getIn([keyRole, type, k.key, 'key']);
+									const weight = keys.getIn([keyRole, type, k.key, 'weight']);
 
 									return (
 										<ViewModeRow

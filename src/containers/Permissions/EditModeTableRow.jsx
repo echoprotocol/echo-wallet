@@ -21,8 +21,9 @@ class EditModeTableRow extends React.Component {
 
 	renderType(type) {
 		const { show } = this.state;
-		const { keyRole, subject, wif } = this.props;
-
+		const {
+			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
+		} = this.props;
 
 		return type === 'keys' ? (
 			<React.Fragment>
@@ -31,9 +32,10 @@ class EditModeTableRow extends React.Component {
 					<input
 						type="text"
 						placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
-						name="PublicKey"
+						name={name}
 						className="input"
 						value={subject.value}
+						onChange={setPublicKey}
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
@@ -43,9 +45,10 @@ class EditModeTableRow extends React.Component {
 						<input
 							type={show ? 'text' : 'password'}
 							placeholder="WIF (optional)"
-							name="WIF"
+							name={name}
 							className="input"
 							value={wif.value}
+							onChange={setWif}
 						/>
 						{
 							show ?
@@ -62,8 +65,9 @@ class EditModeTableRow extends React.Component {
 				<input
 					type="text"
 					placeholder="Account name"
-					name="AccountName"
+					name={name}
 					value={subject.value}
+					onChange={setAccount}
 				/>
 				{subject.error && <span className="error-message">{subject.error}</span>}
 			</Form.Field>
@@ -72,7 +76,7 @@ class EditModeTableRow extends React.Component {
 
 	render() {
 		const {
-			type, keyRole, removeKey, subject, weight,
+			type, keyRole, removeKey, subject, weight, setWeight, name,
 		} = this.props;
 
 		return (
@@ -87,9 +91,10 @@ class EditModeTableRow extends React.Component {
 									<input
 										type="text"
 										placeholder="Weight"
-										name="weight"
+										name={name}
 										className="input"
 										value={weight.value}
+										onChange={setWeight}
 									/>
 									{weight.error && <span className="error-message">{weight.error}</span>}
 								</Form.Field>
@@ -118,10 +123,12 @@ EditModeTableRow.propTypes = {
 	wif: PropTypes.object,
 	weight: PropTypes.object,
 	type: PropTypes.string,
+	name: PropTypes.string.isRequired,
 	keyRole: PropTypes.string.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	setWif: PropTypes.func.isRequired,
 	setPublicKey: PropTypes.func.isRequired,
+	setAccount: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
 	// isChanged: PropTypes.func.isRequired,
 	// validateField: PropTypes.func.isRequired,

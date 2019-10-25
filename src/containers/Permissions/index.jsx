@@ -43,6 +43,7 @@ class Permissions extends React.Component {
 
 	componentWillMount() {
 		this.props.formPermissionKeys();
+		this.setState({ privateKeys: [] });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -77,6 +78,7 @@ class Permissions extends React.Component {
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
+		this.setState({ privateKeys: [] });
 	}
 
 	// onCancel(data) {
@@ -244,11 +246,6 @@ class Permissions extends React.Component {
 				value: res.wif,
 				error: '',
 			};
-			// {
-			// 	"publicKey": "ECHOEMWsCNhcvRarTC3GLvW3uJHoUuAddvWCbxBVVkHZeoTF",
-			// 	"wif": "5J4W8tnJBP7VjbgkmSwN1NMPS3249Fe2w49Ycf6HM6xzEFpEnNa",
-			// 	"accountId": "1.2.27"
-			//   }
 			return acc;
 		}, {});
 
@@ -289,73 +286,6 @@ class Permissions extends React.Component {
 				/>
 			</React.Fragment>
 		);
-		// return (
-		// 	<div className="edit-mode-wrap">
-		// 		<div className="list-wrap">
-		// 			<div className="list-header">
-		// 				<h3 className="list-header-title">Public Keys and Accounts</h3>
-		// 			</div>
-		// 			<div className="list-header-row">
-		// 				<div className="list-header-col">
-		// 					<div className="list-description">
-		// 						The settings below allow you to specify the keys and / or accounts,
-		// 						whose signatures will be necessary to send a transaction from your account.
-		// 						Using threshold and weight you can separate access to an account
-		// 						between several keys and / or accounts.
-		// 					</div>
-		// 				</div>
-		// 				<div className="list-header-col">
-		// 					<EditModeThrashold />
-		// 				</div>
-		// 			</div>
-		// 			<div className="list">
-		// 				<EditModeTableRow type="keys" keyRole="active" />
-		// 				<EditModeTableRow type="keys" keyRole="active" />
-		// 				<EditModeTableRow type="account" keyRole="active" />
-		// 			</div>
-		// 			<div className="list-panel">
-		// 				<Button
-		// 					className="main-btn"
-		// 					size="medium"
-		// 				>
-		// 					<Popup
-		// 						trigger={<span className="main-btn-popup">Add Account</span>}
-		// 						content="Provide access to send transaction to another account"
-		// 						className="inner-tooltip"
-		// 						position="bottom center"
-		// 						style={{ width: 380 }}
-		// 					/>
-		// 				</Button>
-		// 				<Button
-		// 					className="main-btn"
-		// 					size="medium"
-		// 				>
-		// 					<Popup
-		// 						trigger={<span className="main-btn-popup">Add public key</span>}
-		// 						content="Add an additional key to sign transactions"
-		// 						className="inner-tooltip"
-		// 						position="bottom center"
-		// 						style={{ width: 300 }}
-		// 					/>
-		// 				</Button>
-		// 			</div>
-		// 		</div>
-		// 		<div className="list-wrap">
-		// 			<div className="list-header">
-		// 				<h3 className="list-header-title">EchoRand Key</h3>
-		// 				<span className="list-header-advanced">(for advanced users)</span>
-		// 			</div>
-		// 			<div className="list-description">
-		// 				EchoRand Key is used for participating in blocks generation and for signing
-		// 				sidechain transactions by committee members.
-		// 				<a className="list-header-link" href="">Know more in Echo Docs </a>
-		// 			</div>
-		// 			<div className="list">
-		// 				<EditModeTableRow type="keys" keyRole="echoRand" />
-		// 			</div>
-		// 		</div>
-		// 	</div>
-		// );
 	}
 
 	renderAccountInfo() {
