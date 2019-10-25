@@ -2,46 +2,36 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import Countdown from 'react-countdown-now';
 
-class ModalUnlockWallet extends React.Component {
+class ModalTimer extends React.Component {
 
 	constructor(props) {
 		super(props);
-		let agree;
-		if (props.warningTextValue) {
-			agree = false;
-		} else {
-			agree = true;
-		}
 		this.state = {
-			agree,
-			time: props.warningTime,
+			agree: false,
 			timerIsOn: false,
+			timerComplete: false,
+			show: false,
+			changeVisiblity: false,
 		};
 	}
 	static getDerivedStateFromProps(nextProps, prevState) {
-		if (nextProps.show && nextProps.warningTime && !(prevState.timerIsOn)) {
-			return ({
-				timerIsOn: true,
-			});
-		}
-		return prevState;
+		return nextProps.show !== prevState.show ? {
+			show: nextProps.show,
+			changeVisiblity: true,
+			timerComplete: false,
+		} : {
+			changeVisiblity: false,
+		};
+	}
+	shouldComponentUpdate(nextProps, nextState) {
+		return (nextState.changeVisiblity) ? true : !(nextState.timerIsOn && !nextState.timerComplete);
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		if (this.props.show && this.props.warningTime && !(prevState.timerIsOn)) {
-			const { warningTime } = this.props;
-			const timerIsOn = setInterval(() => this.decrementTime(), 1000);
-			setTimeout(() => {
-				clearInterval(timerIsOn);
-				return ({ timerIsOn: false });
-			}, (warningTime * 1000) + 1000);
-		}
-	}
 	onCheck(e) {
 		this.setState({ agree: e.currentTarget.checked });
 	}
-
 	onForgot(e) {
 		e.preventDefault();
 
@@ -56,18 +46,28 @@ class ModalUnlockWallet extends React.Component {
 		e.preventDefault();
 		this.props.close();
 	}
-
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-	decrementTime() {
-		this.setState({ time: this.state.time - 1 });
+	timer({ seconds }) {
+		return this.state.timerComplete ? null : <span> {seconds} </span>;
 	}
 	renderModalHeader() {
-		const { warningTextValue, warningTextChackbox } = this.props;
+		const { warningTextValue, warningTextChackbox, warningTime } = this.props;
 		return (
 			<React.Fragment>
-				<h3> {this.state.time ? this.state.time : null} Edit Mode Warning</h3>
+				<h3>
+					<Countdown
+						date={Date.now() + (warningTime * 1000)}
+						renderer={(props) => this.timer(props)}
+						onStart={() => this.setState({ timerIsOn: true })}
+						onComplete={() => this.setState({
+							timerComplete: true,
+							timerIsOn: false,
+						})}
+					/>
+					Edit Mode Warning
+				</h3>
 				<h4>{warningTextValue}</h4>
 				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
 				<label className="label" htmlFor="agree" >
@@ -80,7 +80,7 @@ class ModalUnlockWallet extends React.Component {
 		const {
 			show, error, disabled, title,
 		} = this.props;
-		const { agree, time } = this.state;
+		const { agree, timerComplete } = this.state;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content">
@@ -129,7 +129,7 @@ class ModalUnlockWallet extends React.Component {
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled || !(agree && time === 0)}
+									disabled={(disabled) || !(agree && timerComplete)}
 									content="Unlock Wallet"
 								/>
 							</div>
@@ -142,7 +142,7 @@ class ModalUnlockWallet extends React.Component {
 
 }
 
-ModalUnlockWallet.propTypes = {
+ModalTimer.propTypes = {
 	show: PropTypes.bool,
 	disabled: PropTypes.bool,
 	error: PropTypes.string,
@@ -156,7 +156,7 @@ ModalUnlockWallet.propTypes = {
 	warningTime: PropTypes.number,
 };
 
-ModalUnlockWallet.defaultProps = {
+ModalTimer.defaultProps = {
 	show: false,
 	disabled: false,
 	error: null,
@@ -166,4 +166,4 @@ ModalUnlockWallet.defaultProps = {
 	warningTime: 0,
 };
 
-export default ModalUnlockWallet;
+export default ModalTimer;
