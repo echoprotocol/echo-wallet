@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 // import ModalUnlock from '../../components/Modals/ModalUnlock';
-import ModalTimer from '../../components/Modals/ModalTimer';
-
-import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS, MODAL_TIMER } from '../../constants/ModalConstants';
+import ModalEditPermissions from '../../components/Modals/ModalEditPermissions';
+import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS, MODAL_EDIT_PERMISSIONS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
@@ -31,7 +30,7 @@ class PrivateKeysScenario extends React.Component {
 	}
 
 	getKeys() {
-		this.props.openModal(MODAL_TIMER);
+		this.props.openModal(MODAL_EDIT_PERMISSIONS);
 	}
 
 	change(password) {
@@ -86,7 +85,7 @@ class PrivateKeysScenario extends React.Component {
 	render() {
 		const {
 			// [MODAL_UNLOCK_PERMISSION]: modalUnlock,
-			[MODAL_TIMER]: modalTimer,
+			[MODAL_EDIT_PERMISSIONS]: modalEditPermissions,
 		} = this.props;
 
 		return (
@@ -102,18 +101,15 @@ class PrivateKeysScenario extends React.Component {
 					forgot={() => this.forgot()}
 					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
 				/> */}
-				<ModalTimer
-					show={modalTimer.get('show')}
-					disabled={modalTimer.get('loading')}
-					error={modalTimer.get('error')}
+				<ModalEditPermissions
+					show={modalEditPermissions.get('show')}
+					disabled={modalEditPermissions.get('loading')}
+					error={modalEditPermissions.get('error')}
 					password={this.state.password}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
-					close={() => this.close(MODAL_TIMER)}
-					title="EditModeWarning"
-					warningTextValue="Text"
-					warningTextChackbox="Checkbox"
+					close={() => this.close(MODAL_EDIT_PERMISSIONS)}
 					warningTime={7}
 				/>
 			</React.Fragment>
@@ -141,13 +137,13 @@ export default connect(
 	(state) => ({
 		activeUserId: state.global.getIn(['activeUser', 'id']),
 		// [MODAL_UNLOCK_PERMISSION]: state.modal.get(MODAL_UNLOCK_PERMISSION),
-		[MODAL_TIMER]: state.modal.get(MODAL_TIMER),
+		[MODAL_EDIT_PERMISSIONS]: state.modal.get(MODAL_EDIT_PERMISSIONS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		// unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
-		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_TIMER)),
+		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_EDIT_PERMISSIONS)),
 	}),
 )(PrivateKeysScenario);

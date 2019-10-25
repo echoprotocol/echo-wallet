@@ -3,24 +3,11 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-class EditModeTableRow extends React.Component {
+import InputEye from '../../components/InputEye';
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			show: false,
-		};
-	}
-
-	toggleShow(show) {
-		this.setState({
-			show: !show,
-		});
-	}
+export default class EditModeTableRow extends React.Component {
 
 	renderType(type) {
-		const { show } = this.state;
 		const { keyRole, subject, wif } = this.props;
 
 
@@ -37,24 +24,13 @@ class EditModeTableRow extends React.Component {
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: false })}>
-					<label htmlFor="WIF">WIF (optional)</label>
-					<div className="action-input">
-						<input
-							type={show ? 'text' : 'password'}
-							placeholder="WIF (optional)"
-							name="WIF"
-							className="input"
-							value={wif.value}
-						/>
-						{
-							show ?
-								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
-								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
-						}
-					</div>
-					{wif.error && <span className="error-message">{wif.error}</span>}
-				</Form.Field>
+
+				<InputEye
+					inputLabel="WIF (optional)"
+					inputPlaceholder="WIF"
+					inputName="WIF"
+					value={wif.value}
+				/>
 			</React.Fragment>
 		) : (
 			<Form.Field className={classnames('error-wrap', { error: false })}>
@@ -134,4 +110,4 @@ EditModeTableRow.defaultProps = {
 	wif: {},
 };
 
-export default EditModeTableRow;
+EditModeTableRow;

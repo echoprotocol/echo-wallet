@@ -180,6 +180,8 @@
     align-items: flex-end;
 
     .ui.dropdown {
+		display: flex;
+
         &.active {
             .dropdown.icon {
                 line-height: 11px;
@@ -421,7 +423,8 @@
             color: $main-сolor;
             font-family: proximanovaSemibold;
             max-width: 296px;
-            @include cut-text;
+			@include cut-text;
+			user-select: none;
         }
 
     }
