@@ -190,24 +190,20 @@
         }
     }
 
-    .noFrozenFunds {
+    .empty-frozen-funds {
         text-align: center;
         margin-top: 100px;
-        color: #5C637D;
-        opacity: 0.6;
+        color: rgba(#5C637D, .6);
         line-height: 18px;
         font-size: 15px;
         font-weight: 400;
 
         .icon-frozen-funds {
+			color: rgba(#5C637D, .5);
             display: block;
             font-size: 19px;
             line-height: 41px;
             margin-right: 0px;
-
-            &:before {
-                opacity: 1;
-            }
         }
     }
 }
