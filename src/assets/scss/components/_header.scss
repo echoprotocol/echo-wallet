@@ -167,7 +167,7 @@
             z-index: 100;
             margin: 0;
             width: 255px;
-            height: 50px;
+            height: auto;
             padding: 5px 10px;
             color: #3b3b3b;
             font-size: 14px;
@@ -235,8 +235,8 @@
                         background-color: $main-сolor;
 
                         .name {
-							color: #fff;
-							max-width: 150px;
+                            color: #fff;
+                            max-width: 150px;
                         }
 
                         .balance {
@@ -273,7 +273,7 @@
                     line-height: 16px;
                     font-family: proximaNovaSemibold;
                     font-size: 13px;
-					font-weight: 400;
+                    font-weight: 400;
                 }
 
                 .id {

@@ -1,0 +1,24 @@
+.nav-popup {
+    display: block;
+    position: absolute;
+    margin-left: 56px;
+    margin-bottom: -37px;
+    padding: 4px 7px;
+    color: white;
+    background-color: #5C637D;
+    border-radius: 0 3px 3px 0;
+    font-family: proxima;
+    font-size: 16px;
+
+    &:before {
+        content: '';
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 13.5px 7px 13.5px 0;
+        border-color: transparent #5C637D transparent transparent;
+        position: absolute;
+        right: 100%;
+        top: 0;
+    }
+}
