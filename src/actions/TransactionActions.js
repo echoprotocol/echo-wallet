@@ -1,7 +1,7 @@
 import BN from 'bignumber.js';
 import { List } from 'immutable';
 
-import echo, { CACHE_MAPS, validators } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators, constants } from 'echojs-lib';
 
 import history from '../history';
 
@@ -17,7 +17,7 @@ import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, ECHO_ASSET_ID, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -49,36 +49,47 @@ import { getOperationFee } from '../api/TransactionApi';
 
 import TransactionReducer from '../reducers/TransactionReducer';
 
+/**
+ * @method resetTransaction
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const resetTransaction = () => (dispatch) => {
 	dispatch(TransactionReducer.actions.reset());
 };
-
+/**
+ * @method setField
+ * @param {String} field
+ * @param {any} value
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const setField = (field, value) => (dispatch) => {
 	dispatch(TransactionReducer.actions.set({ field, value }));
 };
 
 /**
+ * @method getTransactionFee
  *
  * @param {String} form
  * @param {String} type
  * @param {Object} options
- * @returns {Object|null}
+ * @@returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 const getTransactionFee = (form, type, options) => async (dispatch, getState) => {
 	try {
 		const { fee } = options;
 
-		const core = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
+		const precision = getState()
+			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
 
 		let amount = await getOperationFee(type, options);
 
-		if (feeAsset.id !== ECHO_ASSET_ID) {
+		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
-				.times(10 ** (core.precision - feeAsset.precision));
+				.times(10 ** (precision - feeAsset.precision));
 
-			amount = new BN(amount).div(10 ** core.precision);
+			amount = new BN(amount).div(10 ** precision);
 			amount = price.times(amount).times(10 ** feeAsset.precision);
 		}
 
@@ -92,23 +103,21 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 	}
 };
 /**
+ * @method getFreezeBalanceFee
  *
  * @param {String} form
  * @param {String} asset
- * @returns {Object|null}
+ * @returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
 
-	const amount = formOptions.get('amount').value;
-	if (!amount) {
-		dispatch(setValue(form, 'isAvailableBalance', false));
-		return null;
-	}
+	const amount = formOptions.get('amount').value || '0';
 
 	let amountValue = 0;
-	if (amount) {
-		const currency = formOptions.get('currency');
+	const currency = formOptions.get('currency');
+
+	if (currency) {
 		const amountError = validateAmount(amount, currency);
 		if (!amountError) {
 			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
@@ -122,10 +131,10 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 		duration: formOptions.get('duration').value || FREEZE_BALANCE_PARAMS[0].duration,
 		amount: {
 			amount: amountValue,
-			asset_id: asset || formOptions.get('currency').id,
+			asset_id: constants.ECHO_ASSET_ID,
 		},
 		fee: {
-			asset_id: asset || formOptions.get('currency').id,
+			asset_id: asset || (currency && currency.id) || constants.ECHO_ASSET_ID,
 		},
 	};
 
@@ -134,10 +143,11 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 };
 
 /**
+ * @method getTransferFee
  *
  * @param {String} form
  * @param {String} asset
- * @returns {Object|null}
+ * @returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	const formOptions = getState().form.get(form);
@@ -177,6 +187,14 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method checkFeePool
+ *
+ * @param {Object} echoAsset
+ * @param {Object} asset
+ * @param {String | Number} fee
+ * @returns {Boolean}
+ */
 export const checkFeePool = (echoAsset, asset, fee) => {
 	if (echoAsset.id === asset.id) { return true; }
 
@@ -191,8 +209,10 @@ export const checkFeePool = (echoAsset, asset, fee) => {
 };
 
 /**
+ * @method setAssetsToForm
  *
  * @param {String} from
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAssetsToForm = (from) => async (dispatch, getState) => {
 
@@ -205,10 +225,11 @@ export const setAssetsToForm = (from) => async (dispatch, getState) => {
 };
 
 /**
+ * @method checkAccount
  *
  * @param {String} accountName
  * @param {String} subject
- * @returns {Boolean}
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const checkAccount = (accountName, subject) => async (dispatch, getState) => {
 	try {
@@ -272,7 +293,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 		}
 
 		if (!defaultAsset) {
-			defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
+			defaultAsset = await echo.api.getObject(constants.ECHO_ASSET_ID);
 
 			defaultAsset = {
 				balance: 0,
@@ -302,6 +323,10 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 	return true;
 };
 
+/**
+ * @method transfer
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const transfer = () => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER).toJS();
 
@@ -423,7 +448,9 @@ export const transfer = () => async (dispatch, getState) => {
 };
 
 /**
- * @returns {Boolean}
+ * @method freezeBalance
+ *
+ * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const freezeBalance = () => async (dispatch, getState) => {
 
@@ -522,6 +549,10 @@ export const freezeBalance = () => async (dispatch, getState) => {
 	return true;
 };
 
+/**
+ * @method createContract
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const createContract = () => async (dispatch, getState) => {
 	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
@@ -586,6 +617,12 @@ export const createContract = () => async (dispatch, getState) => {
 	}
 };
 
+/**
+ * @method sendTransaction
+ *
+ * @param {*} password
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const sendTransaction = (password) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
@@ -647,6 +684,10 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 	dispatch(resetTransaction());
 };
 
+/**
+ * @method callContract
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const callContract = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -742,6 +783,10 @@ export const callContract = () => async (dispatch, getState) => {
 	return true;
 };
 
+/**
+ * @method callContractViaId
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const callContractViaId = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -827,11 +872,22 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	return true;
 };
 
+/**
+ * @method setAssetActiveAccount
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const setAssetActiveAccount = () => (dispatch, getState) => {
 	const balances = getState().balance.get('assets');
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List((balances.toJS())) }));
 };
 
+/**
+ * @method estimateFormFee
+ *
+ * @param {Object} asset
+ * @param {String} form
+ * @returns {function(dispatch, getState): Promise<(Number | null)>}
+ */
 export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
