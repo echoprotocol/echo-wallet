@@ -11,22 +11,20 @@ class ModalAddWif extends React.Component {
 		super(props);
 
 		this.state = {
-            show: false,
+			show: false,
 			wif: '',
 			error: null,
 		};
-    }
-    
-    onChange(e) {
-        e.persist()
-        this.setState((prevState) => {
-            return {
-                ...prevState,
-				wif: e.target.value.trim(),
-				error: null,
-            }
-        });
-    }
+	}
+
+	onChange(e) {
+		e.persist();
+		this.setState((prevState) => ({
+			...prevState,
+			wif: e.target.value.trim(),
+			error: null,
+		}));
+	}
 
 	onClose() {
 		this.props.close();
@@ -34,7 +32,7 @@ class ModalAddWif extends React.Component {
 
 	saveWif() {
 
-        const { keys: { publicKey } } = this.props;
+		const { keys: { publicKey } } = this.props;
 		const { wif } = this.state;
 
 		const privateKey = getKeyFromWif(wif);
@@ -52,12 +50,10 @@ class ModalAddWif extends React.Component {
 			}
 		}
 
-		this.setState((prevState) => {
-			return {
-				...prevState,
-				error,
-			}
-		})
+		this.setState((prevState) => ({
+			...prevState,
+			error,
+		}));
 	}
 
 	getArea(key, data) {
@@ -84,7 +80,7 @@ class ModalAddWif extends React.Component {
 	}
 
 	renderWifInput() {
-        const { show, error } = this.state;
+		const { show, error } = this.state;
 
 		return (
 			<Form.Field className={classnames('error-wrap', { error: !!error })}>
@@ -94,9 +90,9 @@ class ModalAddWif extends React.Component {
 						type={show ? 'text' : 'password'}
 						placeholder="WIF"
 						name="WIF"
-                        className="input"
-                        onChange={(e) => this.onChange(e)}
-                        autoFocus
+						className="input"
+						onChange={(e) => this.onChange(e)}
+						autoFocus
 					/>
 					{
 						show ?
@@ -113,8 +109,8 @@ class ModalAddWif extends React.Component {
 		const { keys } = this.props;
 
 		return [
-            this.getInput('public key', keys.publicKey),
-            this.renderWifInput(),
+			this.getInput('public key', keys.publicKey),
+			this.renderWifInput(),
 		];
 	}
 
@@ -168,7 +164,7 @@ class ModalAddWif extends React.Component {
 ModalAddWif.propTypes = {
 	show: PropTypes.bool,
 	disabled: PropTypes.bool,
-    close: PropTypes.func.isRequired,
+	close: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	saveWif: PropTypes.func.isRequired,
 	keys: PropTypes.object,
@@ -176,8 +172,8 @@ ModalAddWif.propTypes = {
 
 ModalAddWif.defaultProps = {
 	show: false,
-    disabled: false,
-    error: null,
+	disabled: false,
+	error: null,
 	keys: {},
 };
 
