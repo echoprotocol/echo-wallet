@@ -2,9 +2,10 @@ import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { version } from '../../../package.json';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
+import { GIT_REF, ECHO_REF } from '../../constants/GlobalConstants';
 
 class ModalInfoWallet extends React.Component {
 
@@ -30,15 +31,24 @@ class ModalInfoWallet extends React.Component {
 					<div className="modal-body">
 						<div className="info-row">
 							<div className="info-title">Version:</div>
-							<div className="info-value">1.4.4 <a href="#" target="_blank"> <span className="icon-commit" />k8b3c4e</a></div>
+							<div className="info-value">{version}
+								{/* eslint-disable-next-line no-undef */}
+								<a href={`${GIT_REF}${COMMITHASH}`} target="_blank" rel="noreferrer noopener">
+									<span className="icon-commit" />
+									{/* eslint-disable-next-line no-undef */}
+									<span>{COMMITHASH.substring(0, 7)}</span>
+								</a>
+							</div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Website:</div>
-							<div className="info-value"><a href="#" target="_blank">echo.org</a></div>
+							<div className="info-value">
+								<a href={ECHO_REF} target="_blank" rel="noreferrer noopener">echo.org</a>
+							</div>
 						</div>
 						<div className="info-row">
 							<div className="info-title">Privacy:</div>
-							<div className="info-value">&#169; 2019 PixelPlex. All Rights Reserved</div>
+							<div className="info-value">&#169; {(new Date()).getFullYear()} PixelPlex. All Rights Reserved</div>
 						</div>
 					</div>
 				</div>
