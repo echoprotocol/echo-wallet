@@ -1,158 +1,88 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import { getKeyFromWif } from '../../api/WalletApi';
+import InputEye from '../InputEye';
 
-class ModalAddWif extends React.Component {
+
+class ModalAddWIF extends React.Component {
+
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			show: false,
 			wif: '',
-			error: null,
 		};
 	}
 
 	onChange(e) {
-		e.persist();
-		this.setState((prevState) => ({
-			...prevState,
+		this.setState({
 			wif: e.target.value.trim(),
-			error: null,
-		}));
+		});
 	}
 
 	onClose() {
 		this.props.close();
 	}
 
-	getArea(key, data) {
-		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
-		);
-	}
-
-	getInput(key, data) {
-		if (Array.isArray(data) && !data.length) {
-			return null;
-		}
-
-		return (
-			<Form.Field key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1')}
-				</label>
-				<div>
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
-				</div>
-			</Form.Field>
-		);
-	}
-
 	saveWif() {
-
-		const { keys: { publicKey } } = this.props;
 		const { wif } = this.state;
 
-		const privateKey = getKeyFromWif(wif);
-
-		let error = privateKey ? null : 'Invalid WIF';
-
-		if (!error) {
-			const publicKeyStringFromWif = privateKey.toPublicKey().toPublicKeyString();
-
-			if (publicKeyStringFromWif !== publicKey) {
-				error = 'Wrong WIF';
-			} else {
-				this.props.saveWif(wif);
-				return;
-			}
-		}
-
-		this.setState((prevState) => ({
-			...prevState,
-			error,
-		}));
-	}
-
-	toggleShow(show) {
-		this.setState({
-			show: !show,
-		});
-	}
-
-	renderWifInput() {
-		const { show, error } = this.state;
-
-		return (
-			<Form.Field className={classnames('error-wrap', { error: !!error })}>
-				<label htmlFor="WIF">WIF</label>
-				<div className="action-input">
-					<input
-						type={show ? 'text' : 'password'}
-						placeholder="WIF"
-						name="WIF"
-						className="input"
-						onChange={(e) => this.onChange(e)}
-						autoFocus
-					/>
-					{
-						show ?
-							<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-show" /> :
-							<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-hide" />
-					}
-				</div>
-				{false && <span className="error-message">Some error</span>}
-			</Form.Field>
-		);
-	}
-
-	renderKeys() {
-		const { keys } = this.props;
-
-		return [
-			this.getInput('public key', keys.publicKey),
-			this.renderWifInput(),
-		];
+		this.props.saveWif(wif);
 	}
 
 	render() {
-		const { show, disabled } = this.props;
+		const { show, error, disabled } = this.props;
 
 		return (
-			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<span
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
+			<Modal className="add-wif-modal" open={show} dimmer="inverted">
+				<span
+					className="icon-close"
+					onClick={(e) => this.onClose(e)}
+					onKeyDown={(e) => this.onClose(e)}
+					role="button"
+					tabIndex="0"
+				/>
+				<div className="modal-header">
+					<h3 className="modal-header-title">Add WIF</h3>
+				</div>
+				<div className="modal-body">
+
+					<Form.Field className={classnames('error-wrap', { error: false })}>
+						<label htmlFor="public-key">Public Key</label>
+						<input
+							type="text"
+							placeholder="Public Key"
+							disabled
+							name="public-key"
+							onChange={() => {}}
+							autoFocus
+						/>
+						{
+							false && <span className="error-message">Some Error</span>
+						}
+					</Form.Field>
+
+					<InputEye
+						inputLabel="WIF (optional)"
+						inputPlaceholder="WIF"
+						inputName="WIF"
+						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+						errorMessage={error}
+						onChange={(e) => this.onChange(e)}
 					/>
-					<div className="modal-header" />
-					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Add WIF</h3>
-							</div>
-							<div className="field-wrap">
-								{this.renderKeys()}
-							</div>
-							<div className="form-panel">
-								<Button
-									basic
-									type="button"
-									className="main-btn"
-									onClick={() => this.saveWif()}
-									disabled={disabled}
-									content="Confirm"
-								/>
-							</div>
-						</Form>
+
+					<div className="form-panel">
+						<Button
+							basic
+							type="submit"
+							className="main-btn"
+							onClick={() => this.saveWif()}
+							disabled={disabled}
+							content="Confirm"
+						/>
 					</div>
 				</div>
 			</Modal>
@@ -161,20 +91,27 @@ class ModalAddWif extends React.Component {
 
 }
 
-ModalAddWif.propTypes = {
+ModalAddWIF.propTypes = {
+	show: PropTypes.bool,
+	close: PropTypes.func.isRequired,
+};
+
+ModalAddWIF.defaultProps = {
+	show: false,
+};
+
+ModalAddWIF.propTypes = {
 	show: PropTypes.bool,
 	disabled: PropTypes.bool,
 	close: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	saveWif: PropTypes.func.isRequired,
-	keys: PropTypes.object,
 };
 
-ModalAddWif.defaultProps = {
+ModalAddWIF.defaultProps = {
 	show: false,
 	disabled: false,
 	error: null,
-	keys: {},
 };
 
-export default ModalAddWif;
+export default ModalAddWIF;

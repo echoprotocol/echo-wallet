@@ -13,6 +13,12 @@ import { setField } from './TransactionActions';
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 
+/**
+ * @method viewTransaction
+ *
+ * @param {Object} transaction
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
 		if (!echo.isConnected) return;
@@ -26,6 +32,12 @@ export const viewTransaction = (transaction) => async (dispatch) => {
 	history.push(VIEW_TRANSACTION_PATH);
 };
 
+/**
+ * @method formatOperation
+ *
+ * @param {Object} data
+ * @returns {function(dispatch, getState): Promise<Object>}
+ */
 const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
@@ -139,6 +151,12 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	return result;
 };
 
+/**
+ * @method formatHistory
+ *
+ * @param {Array} activity
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }
 

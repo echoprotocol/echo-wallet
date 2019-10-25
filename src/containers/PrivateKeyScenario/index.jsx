@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalShowWif from '../../components/Modals/ModalShowWif';
-import ModalAddWif from '../../components/Modals/ModalAddWif';
+import ModalAddWIF from '../../components/Modals/ModalAddWIF';
 
 import { MODAL_UNLOCK_SHOW_WIF, MODAL_WIPE, MODAL_SHOW_WIF, MODAL_UNLOCK_ADD_WIF, MODAL_ADD_WIF } from '../../constants/ModalConstants';
 import { toastError } from '../../helpers/ToastHelper';
@@ -55,7 +55,7 @@ class PrivateKeyScenario extends React.Component {
 	saveWif(wif) {
 		const { password, publicKey } = this.state;
 		const { account } = this.props;
-		console.log('saveWif => saveWifToDb')
+
 		this.props.saveWifToDb(publicKey, wif, account.toJS(), password);
 	}
 
@@ -82,7 +82,6 @@ class PrivateKeyScenario extends React.Component {
 	}
 
 	unlockToShow() {
-		console.log('unlockToShow')
 		const { password } = this.state;
 
 		this.props.asyncUnlock(password, async () => {
@@ -92,7 +91,6 @@ class PrivateKeyScenario extends React.Component {
 	}
 
 	unlockToAdd() {
-		console.log('unlockToAdd')
 		const { password } = this.state;
 
 		this.props.unlock(password, async () => {
@@ -150,13 +148,12 @@ class PrivateKeyScenario extends React.Component {
 					close={() => this.close(MODAL_SHOW_WIF)}
 					keys={this.state}
 				/>
-				<ModalAddWif
+				<ModalAddWIF
 					show={modalAddWif.get('show')}
 					disabled={modalAddWif.get('loading')}
 					error={modalAddWif.get('error')}
 					saveWif={(wif) => this.saveWif(wif)}
 					close={() => this.close(MODAL_ADD_WIF)}
-					keys={this.state}
 				/>
 			</React.Fragment>
 		);

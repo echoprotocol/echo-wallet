@@ -35,7 +35,6 @@ class FormComponent extends React.Component {
 					<label htmlFor="accountName">Account name (public)</label>
 					<input
 						name="accountName"
-						className="ui input"
 						placeholder="Account Name"
 						value={accountName.value}
 						onChange={(e) => this.onChange(e, true)}
@@ -57,7 +56,6 @@ class FormComponent extends React.Component {
 					<label htmlFor="confirmWIF">Confirm WIF</label>
 					<input
 						name="confirmWIF"
-						className="ui input"
 						placeholder="Confirm WIF"
 						value={confirmWIF.value}
 						onChange={(e) => this.onChange(e)}
