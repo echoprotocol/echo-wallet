@@ -353,28 +353,30 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
  * @param {String} accountId
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-const checkKeyWeightWarning = (networkName, accountId) => async (dispatch, getState) => {
-	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
-	const currentThreshold = account.active.weight_threshold;
-	const auths = getState().echojs.getIn(['fullAccounts', accountId, 'active', 'account_auths']).toJS()
-		.concat(getState().echojs.getIn(['fullAccounts', accountId, 'active', 'key_auths']).toJS());
-	const fullKeys = Object.assign({}, ...JSON.parse(localStorage.getItem(`accounts_${networkName}`))
-		.map((acc) => acc.addedKeys));
-	let sumKeyWeight = 0;
-	// eslint-disable-next-line no-restricted-syntax
-	for (const key in fullKeys) {
-		if (fullKeys[key]) {
-			const foundedKey = auths.find((auth) => auth[0] === key);
-			if (foundedKey) {
-				sumKeyWeight += foundedKey[1];
+export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
+	async (dispatch, getState) => {
+		let account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]);
+		account = account.toJS();
+		const currentThreshold = threshold || account.active.weight_threshold;
+		const auths = getState().echojs.getIn(['fullAccounts', accountId, 'active', 'account_auths']).toJS()
+			.concat(getState().echojs.getIn(['fullAccounts', accountId, 'active', 'key_auths']).toJS());
+		const fullKeys = Object.assign({}, ...JSON.parse(localStorage.getItem(`accounts_${networkName}`))
+			.map((acc) => acc.addedKeys));
+		let sumKeyWeight = 0;
+		// eslint-disable-next-line no-restricted-syntax
+		for (const key in fullKeys) {
+			if (fullKeys[key]) {
+				const foundedKey = auths.find((auth) => auth[0] === key);
+				if (foundedKey) {
+					sumKeyWeight += foundedKey[1];
+				}
 			}
 		}
-	}
-	if (currentThreshold > sumKeyWeight) {
-		return true;
-	}
-	return false;
-};
+		if (currentThreshold > sumKeyWeight) {
+			return true;
+		}
+		return false;
+	};
 
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
