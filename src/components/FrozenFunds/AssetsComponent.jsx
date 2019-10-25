@@ -85,8 +85,12 @@ class Assets extends React.Component {
 }
 
 Assets.propTypes = {
-	frozenFunds: PropTypes.array.isRequired,
+	frozenFunds: PropTypes.array,
 	coreAsset: PropTypes.object.isRequired,
+};
+
+Assets.defaultProps = {
+	frozenFunds: [],
 };
 
 export default Assets;

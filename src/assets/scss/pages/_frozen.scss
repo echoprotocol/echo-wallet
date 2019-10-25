@@ -1,11 +1,3 @@
-.icon-frozen-funds {
-    display: block;
-    font-size: 19px;
-    line-height: 41px;
-    text-align: center;
-    margin-right: 10px;
-}
-
 .sub-header {
     display: flex;
     height: 40px;
@@ -15,6 +7,14 @@
     border-top: 1px solid #e9e9ed;
     color: #5c637d;
     line-height: 40px;
+
+    .icon-frozen-funds {
+        display: block;
+        font-size: 19px;
+        line-height: 41px;
+        text-align: center;
+        margin-right: 10px;
+    }
 
     .balance {
         font-size: 16px;
@@ -200,6 +200,9 @@
         font-weight: 400;
 
         .icon-frozen-funds {
+            display: block;
+            font-size: 19px;
+            line-height: 41px;
             margin-right: 0px;
 
             &:before {

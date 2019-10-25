@@ -82,7 +82,7 @@ class FrozenFunds extends React.Component {
 }
 
 FrozenFunds.propTypes = {
-	frozenFunds: PropTypes.array.isRequired,
+	frozenFunds: PropTypes.array,
 	totalFrozenFunds: PropTypes.string,
 	coreAsset: PropTypes.object.isRequired,
 	fees: PropTypes.array.isRequired,
@@ -109,6 +109,7 @@ FrozenFunds.propTypes = {
 FrozenFunds.defaultProps = {
 	currency: null,
 	totalFrozenFunds: '0',
+	frozenFunds: [],
 };
 
 export default FrozenFunds;
