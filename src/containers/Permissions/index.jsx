@@ -167,6 +167,7 @@ class Permissions extends React.Component {
 			form,
 			set,
 			firstFetch,
+			account,
 		} = this.props;
 
 		const active = {
@@ -179,9 +180,11 @@ class Permissions extends React.Component {
 		};
 
 		return (
-			<PrivateKeyScenario>
+			<PrivateKeyScenario
+				account={account}
+			>
 				{
-					(showWif) => (
+					(showWif, addWif) => (
 						<React.Fragment>
 							<ViewModeTable
 								keyRole="active"
@@ -195,6 +198,7 @@ class Permissions extends React.Component {
 								isChanged={this.props.isChanged}
 								firstFetch={firstFetch}
 								showWif={showWif}
+								addWif={addWif}
 							/>
 							<ViewModeTable
 								keyRole="echoRand"
@@ -210,6 +214,7 @@ class Permissions extends React.Component {
 								isChanged={this.props.isChanged}
 								firstFetch={firstFetch}
 								showWif={showWif}
+								addWif={addWif}
 							/>
 						</React.Fragment>
 					)

@@ -3,7 +3,7 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, initAccount, setGlobalError } from './GlobalActions';
+import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage } from './GlobalActions';
 
 import {
 	setFormValue,
@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -340,4 +340,29 @@ export const asyncUnlock = (
 		dispatch(toggleModalLoading(modal, false));
 	}
 
+};
+
+export const saveWifToDb = (
+	publicKey,
+	wif,
+	account,
+	password,
+	callback = () => {},
+	modal = MODAL_ADD_WIF,
+) => async (dispatch, getState) => {
+	try {
+		const { id, name } = account;
+		const networkName = getState().global.getIn(['network', 'name']);
+		const userStorage = Services.getUserStorage();
+
+		await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+
+		dispatch(saveWifToStorage(name, networkName, publicKey));
+		callback();
+		dispatch(closeModal(modal));
+	} catch (err) {
+		dispatch(setError(modal, err));
+	} finally {
+		dispatch(toggleModalLoading(modal, false));
+	}
 };

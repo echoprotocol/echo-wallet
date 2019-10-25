@@ -33,7 +33,7 @@ import {
 } from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
-import { clearTable } from './TableActions';
+import { clearTable, formPermissionKeys } from './TableActions';
 import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
 import { closeModal, setError } from './ModalActions';
 
@@ -252,6 +252,23 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(resetBalance());
 
 	dispatch(initAccount(accountName, networkName));
+};
+
+export const saveWifToStorage = (accountName, networkName, publicKey) => (dispatch) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	for (let accountKey = 0; accountKey < accounts.length; accountKey += 1) {
+		const currentAccount = accounts[accountKey];
+		if (currentAccount.name === accountName) {
+			currentAccount.addedKeys[publicKey] = true;
+			break;
+		}
+	}
+
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+	dispatch(formPermissionKeys());
+
 };
 
 export const saveNetwork = (network) => async (dispatch) => {

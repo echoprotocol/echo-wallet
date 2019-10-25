@@ -9,3 +9,5 @@ export const MODAL_INFO = 'modal_info';
 export const MODAL_ADD_KEY = 'modal_add_key';
 export const MODAL_SHOW_WIF = 'modal_show_wif';
 export const MODAL_UNLOCK_SHOW_WIF = 'modal_unlock_show_wif';
+export const MODAL_ADD_WIF = 'modal_add_wif';
+export const MODAL_UNLOCK_ADD_WIF = 'modal_unlock_add_wif';
