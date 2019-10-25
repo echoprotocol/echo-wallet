@@ -91,16 +91,6 @@ class PrivateKeysScenario extends React.Component {
 		return (
 			<React.Fragment>
 				{this.props.children(/*this.state.keys, */this.getKeys.bind(this))}
-				{/* <ModalUnlock
-					show={modalUnlock.get('show')}
-					disabled={modalUnlock.get('loading')}
-					error={modalUnlock.get('error')}
-					password={this.state.password}
-					change={(value) => this.change(value)}
-					unlock={() => this.unlock()}
-					forgot={() => this.forgot()}
-					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
-				/> */}
 				<ModalEditPermissions
 					show={modalEditPermissions.get('show')}
 					disabled={modalEditPermissions.get('loading')}
@@ -136,14 +126,12 @@ PrivateKeysScenario.defaultProps = {
 export default connect(
 	(state) => ({
 		activeUserId: state.global.getIn(['activeUser', 'id']),
-		// [MODAL_UNLOCK_PERMISSION]: state.modal.get(MODAL_UNLOCK_PERMISSION),
 		[MODAL_EDIT_PERMISSIONS]: state.modal.get(MODAL_EDIT_PERMISSIONS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
-		// unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
 		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_EDIT_PERMISSIONS)),
 	}),
 )(PrivateKeysScenario);

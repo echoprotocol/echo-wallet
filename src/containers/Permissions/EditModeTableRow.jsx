@@ -109,5 +109,3 @@ EditModeTableRow.defaultProps = {
 	type: '',
 	wif: {},
 };
-
-EditModeTableRow;
