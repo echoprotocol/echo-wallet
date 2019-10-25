@@ -12,10 +12,11 @@ import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
-import { sendTransaction, resetTransaction, maxAvailableTreshold } from '../../actions/TransactionActions';
+import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 import { toastError } from '../../helpers/ToastHelper';
+import { checkKeyWeightWarning } from '../../actions/BalanceActions';
 
 class WarningConfirmThresholScenario extends React.Component {
 
@@ -45,6 +46,8 @@ class WarningConfirmThresholScenario extends React.Component {
 		}
 		const nextTreshold = this.props.treshold.value;
 		let { permissionsKeys } = this.props;
+		const { network, account } = this.props;
+		const accountId = account.toJS().id;
 		permissionsKeys = permissionsKeys.toJS();
 		const activeKeysData = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
@@ -56,9 +59,9 @@ class WarningConfirmThresholScenario extends React.Component {
 			this.props.closeModal(MODAL_UNLOCK);
 			toastError('Threshold is too big. You do not have that much private key weight');
 		} else {
-			const goodNextTreshold = await maxAvailableTreshold(activeKeysData, 'Echo1234');
-
-			if (goodNextTreshold >= nextTreshold) {
+			const isNextThresholdGood =
+                !(await this.props.checkThreshold(network, accountId, nextTreshold));
+			if (isNextThresholdGood) {
 				this.props.openModal(MODAL_UNLOCK);
 			} else {
 				this.props.openModal(MODAL_CONFIRM_CHANGE_TRESHOLD);
@@ -158,10 +161,12 @@ WarningConfirmThresholScenario.propTypes = {
 	clearError: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
 	sendTransaction: PropTypes.func.isRequired,
+	checkThreshold: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	treshold: PropTypes.object.isRequired,
 	account: PropTypes.object.isRequired,
+	network: PropTypes.string.isRequired,
 };
 
 WarningConfirmThresholScenario.defaultProps = {
@@ -176,6 +181,7 @@ export default connect(
 		treshold: state.form.getIn([FORM_PERMISSION_KEY, 'active', 'threshold']),
 		permissionsKeys: state.table.get(PERMISSION_TABLE),
 		account: state.global.getIn(['activeUser']),
+		network: state.global.getIn(['network', 'name']),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
 		[MODAL_CONFIRM_CHANGE_TRESHOLD]: state.modal.get(MODAL_CONFIRM_CHANGE_TRESHOLD),
@@ -187,5 +193,7 @@ export default connect(
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		checkThreshold: (network, accountId, nextTreshold) =>
+			dispatch(checkKeyWeightWarning(network, accountId, nextTreshold)),
 	}),
 )(WarningConfirmThresholScenario);

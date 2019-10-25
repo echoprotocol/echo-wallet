@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 class modalConfirmChangeTreshold extends React.Component {
 
-	onAgree() {
+	onConfirm() {
 		this.props.confirm();
 	}
-	onDisagree() {
+	onClose() {
 		this.props.close();
 	}
 	render() {
@@ -15,21 +15,40 @@ class modalConfirmChangeTreshold extends React.Component {
 			show,
 		} = this.props;
 		return (
-			<Modal className="small unclock-size" open={show} dimmer="inverted">
-				<p>Confirm plz</p>
-				<Button
-					basic
-					type="submit"
-					className="main-btn"
-					onClick={(e) => this.onAgree(e)}
-					content="YES"
-				/><Button
-					basic
-					type="submit"
-					className="main-btn"
-					onClick={() => this.onDisagree()}
-					content="NO"
-				/>
+			<Modal className="small" open={show} dimmer="inverted">
+				<div className="modal-content">
+					<span
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+						onKeyDown={(e) => this.onClose(e)}
+						role="button"
+						tabIndex="0"
+					/>
+					<div className="modal-header" />
+					<div className="modal-body">
+						<div className="form-info">
+							<h3>Confirm logout</h3>
+						</div>
+						If these changes are applied, you won&apos;t have
+						enough keys to sign transactions. Do you want to proceed?.
+						<div className="form-panel">
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={() => this.onClose()}
+								content="Close"
+							/>
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={() => this.onConfirm()}
+								content="Proceed"
+							/>
+						</div>
+					</div>
+				</div>
 			</Modal>
 		);
 	}

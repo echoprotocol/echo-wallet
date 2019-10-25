@@ -1,4 +1,3 @@
-import echo from 'echojs-lib';
 import StorageService from './StorageService';
 import Storage from '../logic-components/db/Storage';
 import { DB_NAME, STORE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
@@ -301,53 +300,53 @@ class UserStorageService {
 		return network;
 
 	}
-	/**
-	 * @method getPublicKeysHavesWIFs
-	 * @param {Array} activeKeysData
-	 * @param {Object} params
-	 * @return {Promise.<Array>}
-	 */
-	async getPublicKeysHavesWIFs(activeKeysData, params) {
-		this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
-		const WIFs = [];
-		await this.asyncForEach(activeKeysData, async (keyData) => {
-			if (keyData.type === 'keys') {
-				const wif = await this.getWIFByPublicKey(keyData.key, params);
-				let currentKey;
-				if (wif) {
-					currentKey = activeKeysData.find((key) => key.key === wif.publicKey);
-				}
-				if (currentKey) {
-					WIFs.push(currentKey);
-				}
-			} else if (keyData.type === 'accounts') {
-				const accountPublicKeys = [];
-				const account = await echo.api.getAccountByName(keyData.key);
-				const accountWifs = await this.getAllWIFKeysForAccount(account.id, params);
-				if (accountWifs.length) {
-					accountWifs.forEach((key) => accountPublicKeys.push(key.publicKey));
-				}
-				if (accountPublicKeys.length) {
-					WIFs.push({
-						key: accountPublicKeys,
-						type: keyData.type,
-						role: keyData.role,
-						weight: keyData.weight,
-					});
-				}
-			}
-		});
-		return WIFs;
-	}
+// 	/**
+// 	 * @method getPublicKeysHavesWIFs
+// 	 * @param {Array} activeKeysData
+// 	 * @param {Object} params
+// 	 * @return {Promise.<Array>}
+// 	 */
+// 	async getPublicKeysHavesWIFs(activeKeysData, params) {
+// 		this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
+// 		const WIFs = [];
+// 		await this.asyncForEach(activeKeysData, async (keyData) => {
+// 			if (keyData.type === 'keys') {
+// 				const wif = await this.getWIFByPublicKey(keyData.key, params);
+// 				let currentKey;
+// 				if (wif) {
+// 					currentKey = activeKeysData.find((key) => key.key === wif.publicKey);
+// 				}
+// 				if (currentKey) {
+// 					WIFs.push(currentKey);
+// 				}
+// 			} else if (keyData.type === 'accounts') {
+// 				const accountPublicKeys = [];
+// 				const account = await echo.api.getAccountByName(keyData.key);
+// 				const accountWifs = await this.getAllWIFKeysForAccount(account.id, params);
+// 				if (accountWifs.length) {
+// 					accountWifs.forEach((key) => accountPublicKeys.push(key.publicKey));
+// 				}
+// 				if (accountPublicKeys.length) {
+// 					WIFs.push({
+// 						key: accountPublicKeys,
+// 						type: keyData.type,
+// 						role: keyData.role,
+// 						weight: keyData.weight,
+// 					});
+// 				}
+// 			}
+// 		});
+// 		return WIFs;
+// 	}
 
-	async asyncForEach(array, func) {
-		const promises = [];
-		for (let i = 0; i < array.length; i += 1) {
-			promises.push(func(array[i], i, array));
-		}
-		const results = await Promise.all(promises);
-		return results;
-	}
+// 	async asyncForEach(array, func) {
+// 		const promises = [];
+// 		for (let i = 0; i < array.length; i += 1) {
+// 			promises.push(func(array[i], i, array));
+// 		}
+// 		const results = await Promise.all(promises);
+// 		return results;
+// 	}
 
 }
 

@@ -97,7 +97,9 @@ class Permissions extends React.Component {
 		return (
 
 			<div className="permissions-wrap">
-				<WarningConfirmThresholScenario handleTransaction={() => this.props.permissionTransaction()}>
+				<WarningConfirmThresholScenario handleTransaction={() =>
+					this.props.permissionTransaction()}
+				>
 					{
 						(submitTr) => (
 							this.props.isChanged &&

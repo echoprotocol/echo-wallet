@@ -46,7 +46,6 @@ import { formatError } from '../helpers/FormatHelper';
 
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
-import Services from '../services';
 import TransactionReducer from '../reducers/TransactionReducer';
 
 export const resetTransaction = () => (dispatch) => {
@@ -924,11 +923,11 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue ? feeValue.value : null;
 };
 
-export const maxAvailableTreshold = async (activeKeysData, password) => {
-	const userStorage = Services.getUserStorage();
-	const validPublicKeys =
-		await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
-	const maxNextTreshold = validPublicKeys.reduce((accumulator, currentKey) =>
-		accumulator + currentKey.weight, 0);
-	return maxNextTreshold;
-};
+// export const maxAvailableTreshold = async (activeKeysData, password) => {
+// 	const userStorage = Services.getUserStorage();
+// 	const validPublicKeys =
+// 		await userStorage.getPublicKeysHavesWIFs(activeKeysData.keys, { password });
+// 	const maxNextTreshold = validPublicKeys.reduce((accumulator, currentKey) =>
+// 		accumulator + currentKey.weight, 0);
+// 	return maxNextTreshold;
+// };
