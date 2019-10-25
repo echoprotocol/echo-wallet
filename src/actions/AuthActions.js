@@ -104,13 +104,9 @@ const isAllWIFsAdded = async (account, password) => {
 	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
 	const userPublicKeys = account.active.key_auths;
 	const publicEchorandKey = account.echorand_key;
-	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.wif === publicEchorandKey);
-	if ((userPublicKeys.length > userWIFKeys.length) || isPrivateEchorandAdd) {
-		return false;
-	}
-	return true;
+	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.publicKey === publicEchorandKey);
+	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
 };
-
 
 /**
  * @method authUser
