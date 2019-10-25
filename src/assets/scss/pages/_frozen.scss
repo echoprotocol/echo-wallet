@@ -13,7 +13,7 @@
         font-size: 19px;
         line-height: 41px;
         text-align: center;
-        margin-right: 10px
+        margin-right: 10px;
     }
 
     .balance {
@@ -32,11 +32,15 @@
             }
         }
     }
+
+    &+.frozen {
+        height: calc(100vh - 160px);
+    }
 }
 
 .frozen {
     font-family: proxima;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 120px);
 
     .frozen-about {
         margin-top: 17px;
@@ -183,6 +187,23 @@
                     }
                 }
             }
+        }
+    }
+
+    .empty-frozen-funds {
+        text-align: center;
+        margin-top: 100px;
+        color: rgba(#5C637D, .6);
+        line-height: 18px;
+        font-size: 15px;
+        font-weight: 400;
+
+        .icon-frozen-funds {
+			color: rgba(#5C637D, .5);
+            display: block;
+            font-size: 19px;
+            line-height: 41px;
+            margin-right: 0px;
         }
     }
 }

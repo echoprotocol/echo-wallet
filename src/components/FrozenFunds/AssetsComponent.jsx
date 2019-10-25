@@ -62,23 +62,28 @@ class Assets extends React.Component {
 	}
 
 	render() {
-		return (
+		return this.props.frozenFunds.length ?
 			<React.Fragment>
 				<div className="currency-title">Frozen amounts</div>
 				<ul className="currency-list">
-					{
-						this.renderList()
-					}
+					{ this.renderList() }
 				</ul>
-			</React.Fragment>
-		);
+			</React.Fragment> :
+			<div className="empty-frozen-funds">
+				<span className="icon-frozen-funds" />
+				<span>You have not frozen <br /> any funds yet</span>
+			</div>;
 	}
 
 }
 
 Assets.propTypes = {
-	frozenFunds: PropTypes.array.isRequired,
+	frozenFunds: PropTypes.array,
 	coreAsset: PropTypes.object.isRequired,
+};
+
+Assets.defaultProps = {
+	frozenFunds: [],
 };
 
 export default Assets;

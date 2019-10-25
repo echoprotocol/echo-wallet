@@ -2,10 +2,22 @@ import { List } from 'immutable';
 import ConverterReducer from '../reducers/ConverterReducer';
 import { converter } from '../helpers/FormatHelper';
 
+/**
+ * @method resetConverter
+ */
 export const resetConverter = () => (dispatch) => {
 	dispatch(ConverterReducer.actions.reset());
 };
 
+/**
+ * @method convert
+ *
+ * @param {String} type
+ * @param {String} data
+ * @param {Object} component
+ * @param {String} key
+ * @@returns {function(dispatch, getState): Promise<Object>}
+ */
 export const convert = (type, data, component, key) => (dispatch, getState) => {
 	let convertedConstants = getState().converter.get('convertedConstants').toJS();
 	let topics = getState().converter.get('topics').toJS();

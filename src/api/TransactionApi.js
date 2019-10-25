@@ -1,6 +1,13 @@
 import echo from 'echojs-lib';
 import operations from '../constants/Operations';
 
+/**
+ * @method getOperationFee
+ *
+ * @param {String} type
+ * @param {Object} options
+ * @returns {Number}
+ */
 export const getOperationFee = async (type, options) => {
 	const { value: operationId } = operations[type];
 	const [result] = await echo.api.getRequiredFees([[operationId, options]], options.asset_id);
