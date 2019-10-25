@@ -6,15 +6,14 @@ import Transfer from './Transfer';
 
 class FrozenFunds extends React.Component {
 
-	render() {
+	renderSubHeader() {
+
 		const {
-			frozenFunds, totalFrozenFunds, coreAsset,
-			assets, tokens, amount, currency,
-			fee, isAvailableBalance, fees, duration, activeUserId,
+			frozenFunds, totalFrozenFunds,
 		} = this.props;
 
-		return (
-			<div>
+		if (frozenFunds.length) {
+			return (
 				<div className="sub-header">
 					<span className="icon-frozen-funds" />
 					<span>Total Frozen Amount:</span>
@@ -23,6 +22,20 @@ class FrozenFunds extends React.Component {
 						<span>ECHO</span>
 					</div>
 				</div>
+			);
+		} return null;
+	}
+
+	render() {
+		const {
+			frozenFunds, coreAsset,
+			assets, tokens, amount, currency,
+			fee, isAvailableBalance, fees, duration, activeUserId,
+		} = this.props;
+
+		return (
+			<div>
+				{this.renderSubHeader()}
 				<div className="page-wrap frozen">
 					<div className="balance-wrap">
 						<div className="frozen-about">
@@ -68,7 +81,7 @@ class FrozenFunds extends React.Component {
 }
 
 FrozenFunds.propTypes = {
-	frozenFunds: PropTypes.array.isRequired,
+	frozenFunds: PropTypes.array,
 	totalFrozenFunds: PropTypes.string,
 	coreAsset: PropTypes.object.isRequired,
 	fees: PropTypes.array.isRequired,
@@ -95,6 +108,7 @@ FrozenFunds.propTypes = {
 FrozenFunds.defaultProps = {
 	currency: null,
 	totalFrozenFunds: '0',
+	frozenFunds: [],
 };
 
 export default FrozenFunds;
