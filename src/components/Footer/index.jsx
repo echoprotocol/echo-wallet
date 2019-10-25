@@ -8,7 +8,7 @@ import { version } from '../../../package.json';
 import NetworkDropdown from './NetworkDropdown';
 import { connection } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
-import { MODAL_INFO, MODAL_ADD_WIF } from '../../constants/ModalConstants';
+import { MODAL_INFO } from '../../constants/ModalConstants';
 
 class Footer extends React.PureComponent {
 
@@ -58,7 +58,9 @@ class Footer extends React.PureComponent {
 						>Keys Parameters
 						</Button>
 					</li>
-					<li />
+					<li>
+						<NetworkDropdown lastBlock={lastBlock} warning />
+					</li>
 				</ul>
 			</div>
 		);
@@ -98,9 +100,9 @@ class Footer extends React.PureComponent {
 				return errored;
 			}
 
-			// if (warn) {
-			// 	return warning;
-			// }
+			if (warn) {
+				return warning;
+			}
 
 			return connected;
 		}
@@ -138,7 +140,7 @@ export default connect(
 		error: state.global.get('globalError'),
 	}),
 	(dispatch) => ({
-		openModal: () => dispatch(openModal(MODAL_ADD_WIF)), // MODAL_INFO
+		openModal: () => dispatch(openModal(MODAL_INFO)),
 		connection: () => dispatch(connection()),
 	}),
 )(Footer);

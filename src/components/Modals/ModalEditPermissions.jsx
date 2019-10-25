@@ -52,7 +52,6 @@ class ModalEditPermissions extends React.Component {
 							type="password"
 							placeholder="Password"
 							name="password"
-							className="ui input"
 							onChange={() => {}}
 							autoFocus
 						/>

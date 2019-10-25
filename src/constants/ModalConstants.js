@@ -9,4 +9,7 @@ export const MODAL_INFO = 'modal_info';
 export const MODAL_ADD_KEY = 'modal_add_key';
 export const MODAL_EDIT_PERMISSIONS = 'modal_edit_permissions';
 export const MODAL_ADD_WIF = 'modal_add_wif';
+export const MODAL_VIEW_WIF = 'modal_view_wif';
+export const MODAL_BACKUP = 'modal_backup';
+export const MODAL_CONFIRM_EDITING_OF_PERMISSIONS = 'modal_confirm_editing_of_permissions';
 

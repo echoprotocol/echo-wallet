@@ -1,4 +1,4 @@
-.add-wif-modal {
+.confirm-editing-of-permissions-modal {
 	max-width: 600px;
 	flex-direction: column;
 	padding: 38px 0 47px;
@@ -22,19 +22,24 @@
 		margin: 13px auto 0;
 	}
 
-	.field {
-		& > label {
-			min-height: 18px;
-		}
-	}
-	.input-eye {
-		margin-bottom: 0;
+	
+	.info-text {
+		font-size: 15px;
+		font-weight: 500;
+		line-height: 22px;
+		color: rgba(#3B3B3B, .8);
+		text-align: center;
+		padding: 0 15px;
+		margin-top: 4px;
 	}
 
 	.form-panel {
-		margin: 12px 0 0;
+		margin: 27px 0 0;
+		justify-content: center;
 		.main-btn {
-			margin-left: auto;
+			&:not(:last-child) {
+				margin-right: 20px;
+			}
 			min-width: 160px;
 		}
 	}

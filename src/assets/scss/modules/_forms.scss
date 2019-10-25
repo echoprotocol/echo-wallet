@@ -26,75 +26,71 @@
             }
         }
     }
+}
 
+.form-info {
+	display: flex;
+	align-items: center;
+	width: 100%;
 
+	.back-link {
+		background-color: transparent;
+		border: 0;
+		margin-right: -48px;
+		transform: translate(0);
+		color: rgb(156, 160, 176);
+		display: flex;
+		align-items: center;
+		line-height: 25px;
+		text-transform: uppercase;
+		font-family: proximanovaSemibold;
+		cursor: pointer;
+		padding: 0;
+		font-size: 12px;
+		font-weight: 400;
+
+		&:focus {
+			&:not(:active) {
+				.icon-back {
+					@include on-focus(2px);
+				}
+			}
+		}
+
+		&:hover {
+			.icon-back {
+				color: $main-сolor;
+			}
+		}
+
+		.icon-back {
+			transition: color $speed;
+			margin: -2px 5px 0 -5px;
+			padding: 5px 6px 5px 5px;
+			border-radius: $angulars;
+		}
+	}
+
+	h3 {
+		font-size: 1.428571429em;
+		margin: 0 auto;
+		text-align: center;
+		margin-top: -4px;
+		padding: 0 0 1px 1px;
+	}
+}
+
+.form-info-description {
+	font-size: 14px;
+	font-family: proxima;
+	font-weight: 400;
+	color: rgba(59, 59, 59, 0.8);
+	line-height: 1.429;
+	text-align: center;
+	max-width: 432px;
 }
 
 .form {
-    &-info {
-        display: flex;
-        align-items: center;
-        width: 100%;
-
-        .back-link {
-            background-color: transparent;
-            border: 0;
-            margin-right: -48px;
-            transform: translate(0);
-            color: rgb(156, 160, 176);
-            display: flex;
-            align-items: center;
-            line-height: 25px;
-            text-transform: uppercase;
-            font-family: proximanovaSemibold;
-            cursor: pointer;
-            padding: 0;
-            font-size: 12px;
-            font-weight: 400;
-
-            &:focus {
-                &:not(:active) {
-                    .icon-back {
-                        @include on-focus(2px);
-                    }
-                }
-            }
-
-            &:hover {
-                .icon-back {
-                    color: $main-сolor;
-                }
-            }
-
-            .icon-back {
-                transition: color $speed;
-                margin: -2px 5px 0 -5px;
-                padding: 5px 6px 5px 5px;
-                border-radius: $angulars;
-            }
-        }
-
-        h3 {
-            font-size: 1.428571429em;
-            margin: 0 auto;
-            text-align: center;
-            margin-top: -4px;
-            padding: 0 0 1px 1px;
-        }
-
-
-    }
-
-    .form-info-description {
-        font-size: 14px;
-        font-family: proxima;
-        font-weight: 400;
-        color: rgba(59, 59, 59, 0.8);
-        line-height: 1.429;
-        text-align: center;
-        max-width: 432px;
-    }
-
     &.main-form {
         display: flex;
         flex-direction: column;
@@ -410,7 +406,7 @@
     }
 }
 
-.ui.input.label-in-left {
+.input.label-in-left {
     display: flex;
     position: relative;
     max-width: 350px;
@@ -481,6 +477,7 @@
 		}
 	}
 }
+
 .error-message {
 	display: none;
 	position: absolute;
@@ -496,6 +493,7 @@
 	line-height: 1.1;
 	z-index: 5;
 }
+
 .warning-message {
 	display: block;
 	margin-top: 4px;
@@ -506,12 +504,6 @@
 }
 
 
-input {
-    &:focus {
-        @include on-focus(4px);
-    }
-}
-
 
 .amount-wrap {
     input:focus {
@@ -520,7 +512,6 @@ input {
 }
 
 .horizontal-input {
-
     .field {
         display: inline-flex;
         align-items: center;

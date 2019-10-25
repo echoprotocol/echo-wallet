@@ -40,7 +40,6 @@ export default class InputEye extends React.PureComponent {
 						type={show ? 'text' : 'password'}
 						placeholder={inputPlaceholder}
 						name={inputName}
-						className="input"
 					/>
 					{
 						show ?

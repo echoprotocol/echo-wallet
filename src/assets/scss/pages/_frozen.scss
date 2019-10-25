@@ -20,10 +20,12 @@
         flex-wrap: wrap;
         font-size: 13px;
         font-weight: 400;
+		color: rgb(92, 99, 125);
 
         &:hover {
             cursor: default;
-
+			color: #fff;
+			
             .frozen-value {
                 color: $yellow;
             }

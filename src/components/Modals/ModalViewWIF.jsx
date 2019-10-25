@@ -2,14 +2,12 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
-import { MODAL_ADD_WIF } from '../../constants/ModalConstants';
-import InputEye from '../InputEye';
+import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
 
 
-class ModalAddWIF extends React.Component {
+class ModalViewWIF extends React.Component {
 
 	onClose() {
 		this.props.close();
@@ -19,7 +17,7 @@ class ModalAddWIF extends React.Component {
 		const { show } = this.props;
 
 		return (
-			<Modal className="add-wif-modal" open={show} dimmer="inverted">
+			<Modal className="view-wif-modal" open={show} dimmer="inverted">
 				<span
 					className="icon-close"
 					onClick={(e) => this.onClose(e)}
@@ -28,31 +26,33 @@ class ModalAddWIF extends React.Component {
 					tabIndex="0"
 				/>
 				<div className="modal-header">
-					<h3 className="modal-header-title">Add WIF</h3>
+					<h3 className="modal-header-title">View WIF</h3>
 				</div>
 				<div className="modal-body">
 
-					<Form.Field className={classnames('error-wrap', { error: false })}>
+					<Form.Field>
 						<label htmlFor="public-key">Public Key</label>
 						<input
 							type="text"
 							placeholder="Public Key"
 							disabled
 							name="public-key"
-							onChange={() => {}}
-							autoFocus
 						/>
-						{
-							false && <span className="error-message">Some Error</span>
-						}
 					</Form.Field>
 
-					<InputEye
-						inputLabel="WIF (optional)"
-						inputPlaceholder="WIF"
-						inputName="WIF"
-						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
-					/>
+					<Form.Field>
+						<label htmlFor="public-key">WIF *</label>
+						<input
+							type="text"
+							placeholder="WIF"
+							disabled
+							name="wif"
+						/>
+						<span className="warning-message">
+							* Warning: Anyone who has this key can steal all your Echo
+							assets and this key can never be recovered if you lose it.
+						</span>
+					</Form.Field>
 
 					<div className="form-panel">
 						<Button
@@ -60,8 +60,7 @@ class ModalAddWIF extends React.Component {
 							type="submit"
 							className="main-btn"
 							onClick={() => {}}
-							disabled={false}
-							content="Confirm"
+							content="Save As .TXT"
 						/>
 					</div>
 				</div>
@@ -71,22 +70,22 @@ class ModalAddWIF extends React.Component {
 
 }
 
-ModalAddWIF.propTypes = {
+ModalViewWIF.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
 };
 
-ModalAddWIF.defaultProps = {
+ModalViewWIF.defaultProps = {
 	show: false,
 };
 
 
 export default connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_ADD_WIF, 'show']),
+		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
 	}),
 	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_ADD_WIF)),
+		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
 	}),
-)(ModalAddWIF);
+)(ModalViewWIF);
 

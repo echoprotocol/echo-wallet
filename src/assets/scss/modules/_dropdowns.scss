@@ -337,7 +337,29 @@
                     color: #fff;
                 }
             }
-        }
+		}
+		
+		&.warning {
+			.network-dropdown-trigger {
+				&:hover {
+					background-color: transparent;
+				}
+	
+				.status.connected {
+					color: #fff;
+	
+					&:before {
+						background-color: #fff;
+					}
+				}
+	
+				.pipeline-block,
+				.icon-dropdown_arrow,
+				.description {
+					color: rgba(#fff, .7);
+				}
+			}
+		}
 
         .network-dropdown-trigger {
             height: 39px;
@@ -588,7 +610,7 @@
             display: none !important;
         }
 
-        .dropdown.icon {
+        .icon {
             display: none;
         }
     }
