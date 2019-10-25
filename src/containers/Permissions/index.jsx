@@ -2,17 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Button, Popup } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { CACHE_MAPS } from 'echojs-lib';
 
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
-
-// import EditModeThrashold from './EditModeThrashold';
-// import EditModeTableRow from './EditModeTableRow';
-
 
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
@@ -27,11 +23,23 @@ import {
 	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT,
 	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL,
 	FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT,
+	FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION,
+	ADD_ACCOUNT_BUTTON_TEXT,
+	ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT,
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
 
 class Permissions extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			privateKeys: [],
+		};
+	}
 
 	componentWillMount() {
 		this.props.formPermissionKeys();
@@ -92,28 +100,31 @@ class Permissions extends React.Component {
 	// 	});
 	// }
 
-	changeMode(mode) {
-		if (mode === FORM_PERMISSION_MODE_EDIT) {
-			this.props.set('isEditMode', true);
-		} else if (mode === FORM_PERMISSION_MODE_VIEW) {
-			this.props.set('isEditMode', false);
-		}
+	changeMode(mode, privateKeys) {
+		this.setState({ privateKeys }, () => {
+			if (mode === FORM_PERMISSION_MODE_EDIT) {
+				this.props.set('isEditMode', true);
+			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
+				this.props.set('isEditMode', false);
+			}
+		});
 	}
 
 	renderViewPanel() {
 		return (
 			<div className="sub-header-panel">
 				<div className="view-panel-wrap">
-					<PrivateKeysScenario>
+					<PrivateKeysScenario
+						onKeys={(privateKeys) => this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys)}
+					>
 						{
-							(privateKeys, getKeys) => (
+							(getKeys) => (
 								<React.Fragment>
 									<Button
 										className="grey-btn"
 										size="medium"
 										content="Edit mode"
-										onClick={() => getKeys(() =>
-											this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys))}
+										onClick={getKeys}
 									/>
 								</React.Fragment>
 							)
@@ -228,18 +239,38 @@ class Permissions extends React.Component {
 			keys: permissionsKeys.echoRand.keys,
 		};
 
+		const privateKeys = this.state.privateKeys.reduce((acc, res) => {
+			acc[res.publicKey] = {
+				value: res.wif,
+				error: '',
+			};
+			// {
+			// 	"publicKey": "ECHOEMWsCNhcvRarTC3GLvW3uJHoUuAddvWCbxBVVkHZeoTF",
+			// 	"wif": "5J4W8tnJBP7VjbgkmSwN1NMPS3249Fe2w49Ycf6HM6xzEFpEnNa",
+			// 	"accountId": "1.2.27"
+			//   }
+			return acc;
+		}, {});
+
 		return (
 			<React.Fragment>
 				<EditModeTable
 					keyRole="active"
 					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-					description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
+					description={FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION}
+					addAccountButtonText={ADD_ACCOUNT_BUTTON_TEXT}
+					addAccountButtonTooltipText={ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT}
+					addPublicKeyButtonText={ADD_PUBLIC_KEY_BUTTON_TEXT}
+					addPublicKeyButtonTooltipText={ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT}
 					data={active}
 					keys={form}
+					privateKeys={privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
+					addAccount={() => {}}
+					addPublicKey={() => {}}
 				/>
 				<EditModeTable
 					keyRole="echoRand"
@@ -250,6 +281,7 @@ class Permissions extends React.Component {
 					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
 					data={echoRand}
 					keys={form}
+					privateKeys={privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}

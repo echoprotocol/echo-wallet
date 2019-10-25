@@ -2,11 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup, Button } from 'semantic-ui-react';
 
-import ViewModeRow from './ViewModeRow';
 import EditModeThrashold from './EditModeThrashold';
 import EditModeTableRow from './EditModeTableRow';
-
-
 
 class ViewModeTable extends React.Component {
 
@@ -96,7 +93,7 @@ class ViewModeTable extends React.Component {
 
 	renderList() {
 		const {
-			data, keys, keyRole,
+			data, keys, keyRole, setValue, set, privateKeys,
 		} = this.props;
 
 		return (
@@ -104,13 +101,28 @@ class ViewModeTable extends React.Component {
 				<React.Fragment>
 					{
 						data.keys.map((k) => {
-							// const { type, hasWif } = k;
+							const { type } = k;
 
-							// const key = keys.getIn([keyRole, 'keys', k.key, 'key']);
-							// const weight = keys.getIn([keyRole, 'keys', k.key, 'weight']);
+							const key = keys.getIn([keyRole, 'keys', k.key, 'key']);
+							const weight = keys.getIn([keyRole, 'keys', k.key, 'weight']);
+							const wif = privateKeys[k.key];
 
 							return (
-								<EditModeTableRow key={k.key} type="keys" keyRole="active" />
+								<EditModeTableRow
+									key={k.key}
+									subject={key}
+									wif={wif}
+									weight={weight}
+									type={type}
+									keyRole={keyRole}
+									removeKey={() => { }}
+									setValue={setValue}
+									set={set}
+									validateField={() => { }}
+									setWif={() => {}}
+									setPublicKey={() => {}}
+									setWeight={() => {}}
+								/>
 							);
 						})
 					}
@@ -120,15 +132,26 @@ class ViewModeTable extends React.Component {
 	}
 
 	renderAddButtons() {
-		return (
+		const {
+			addAccount,
+			addPublicKey,
+			keyRole,
+			addAccountButtonText,
+			addAccountButtonTooltipText,
+			addPublicKeyButtonText,
+			addPublicKeyButtonTooltipText,
+		} = this.props;
+
+		return keyRole === 'active' && (
 			<div className="list-panel">
 				<Button
 					className="main-btn"
 					size="medium"
+					onClick={addAccount}
 				>
 					<Popup
-						trigger={<span className="main-btn-popup">Add Account</span>}
-						content="Provide access to send transaction to another account"
+						trigger={<span className="main-btn-popup">{addAccountButtonText}</span>}
+						content={addAccountButtonTooltipText}
 						className="inner-tooltip"
 						position="bottom center"
 						style={{ width: 380 }}
@@ -137,10 +160,11 @@ class ViewModeTable extends React.Component {
 				<Button
 					className="main-btn"
 					size="medium"
+					onClick={addPublicKey}
 				>
 					<Popup
-						trigger={<span className="main-btn-popup">Add public key</span>}
-						content="Add an additional key to sign transactions"
+						trigger={<span className="main-btn-popup">{addPublicKeyButtonText}</span>}
+						content={addPublicKeyButtonTooltipText}
 						className="inner-tooltip"
 						position="bottom center"
 						style={{ width: 300 }}
@@ -176,14 +200,21 @@ ViewModeTable.propTypes = {
 	advanced: PropTypes.string,
 	headerLinkText: PropTypes.string,
 	headerLinkUrl: PropTypes.string,
+	addAccountButtonText: PropTypes.string,
+	addAccountButtonTooltipText: PropTypes.string,
+	addPublicKeyButtonText: PropTypes.string,
+	addPublicKeyButtonTooltipText: PropTypes.string,
 	data: PropTypes.object.isRequired,
 	description: PropTypes.string,
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.object.isRequired,
-	firstFetch: PropTypes.bool.isRequired,
+	privateKeys: PropTypes.object.isRequired,
+	// firstFetch: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
-	isChanged: PropTypes.func.isRequired,
+	// isChanged: PropTypes.func.isRequired,
+	addAccount: PropTypes.func,
+	addPublicKey: PropTypes.func,
 };
 
 ViewModeTable.defaultProps = {
@@ -192,6 +223,12 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
+	addAccount: () => {},
+	addPublicKey: () => {},
+	addAccountButtonText: null,
+	addAccountButtonTooltipText: null,
+	addPublicKeyButtonText: null,
+	addPublicKeyButtonTooltipText: null,
 };
 
 
