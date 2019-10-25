@@ -34,8 +34,8 @@ class ModalInfoWallet extends React.Component {
 							<div className="info-value">{version}
 								{/* eslint-disable-next-line no-undef */}
 								<a href={`${GIT_REF}${COMMITHASH}`} target="_blank" rel="noreferrer noopener">
+									<span className="icon-commit" />
 									{/* eslint-disable-next-line no-undef */}
-									<span className="icon-commit"></span>
 									<span>{COMMITHASH.substring(0, 7)}</span>
 								</a>
 							</div>
