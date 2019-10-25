@@ -181,6 +181,7 @@ class Header extends React.Component {
 				<NavLink
 					exact
 					to="/frozen-funds"
+					className="inner-tooltip-trigger"
 				>
 					<div className="inner-info">
 						<div className="balance">
@@ -192,9 +193,7 @@ class Header extends React.Component {
 					<span className="icon-frozen-funds" />
 				</NavLink>
 				<div className="inner-tooltip">
-					<p>
-						Frozen funds allow you to get bigger reward for blocks creation.
-					</p>
+					Frozen funds allow you to get bigger reward for blocks creation.
 				</div>
 			</div>
 		);
@@ -231,9 +230,7 @@ class Header extends React.Component {
 				<div className="page-title">{this.getTitle()}</div>
 				{
 					this.props.location.pathname === INDEX_PATH ?
-						this.renderLinkToFrozenFunds()
-						:
-						null
+						this.renderLinkToFrozenFunds() : null
 
 
 				}

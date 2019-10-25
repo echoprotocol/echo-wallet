@@ -13,6 +13,7 @@ import {
 	MODAL_INFO,
 	MODAL_ADD_KEY,
 	MODAL_BACKUP_KEYS,
+	MODAL_UNLOCK_BACKUP_KEYS,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -40,6 +41,7 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_INFO]: Map({}),
 	[MODAL_ADD_KEY]: Map({}),
 	[MODAL_BACKUP_KEYS]: Map({}),
+	[MODAL_UNLOCK_BACKUP_KEYS]: Map({}),
 };
 
 export default createModule({
@@ -57,6 +59,8 @@ export default createModule({
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
 		[MODAL_ADD_KEY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_KEY]),
 		[MODAL_BACKUP_KEYS]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_BACKUP_KEYS]),
+		[MODAL_UNLOCK_BACKUP_KEYS]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_MODAL_FIELDS[MODAL_UNLOCK_BACKUP_KEYS]),
 	}),
 	transformations: {
 		open: {

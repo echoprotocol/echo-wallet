@@ -49,7 +49,7 @@ class FormComponent extends React.Component {
 					<div className="ui action input">
 						<input name="generatedWIF" className="ui input" placeholder="Genereted WIF" value={generatedWIF.value} readOnly />
 						<CopyToClipboard text={generatedWIF.value}>
-							<Button icon="copy" className="main-btn" />
+							<Button icon="copy" className="input-copy-btn" />
 						</CopyToClipboard>
 					</div>
 				</Form.Field>

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalBackupKeys from '../../components/Modals/ModalBackupKeys';
 
-import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK_BACKUP_KEYS, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { asyncUnlock } from '../../actions/AuthActions';
@@ -37,8 +37,8 @@ class BackupKeysScenario extends React.Component {
 	change(password) {
 		this.setState({ password });
 
-		if (this.props[MODAL_UNLOCK_PERMISSION].get('error')) {
-			this.props.clearError(MODAL_UNLOCK_PERMISSION);
+		if (this.props[MODAL_UNLOCK_BACKUP_KEYS].get('error')) {
+			this.props.clearError(MODAL_UNLOCK_BACKUP_KEYS);
 		}
 	}
 
@@ -63,11 +63,11 @@ class BackupKeysScenario extends React.Component {
 		this.props.asyncUnlock(password, async () => {
 			await this.fetchWIFs(password);
 			this.props.openModal(MODAL_BACKUP_KEYS);
-		}, MODAL_UNLOCK_PERMISSION);
+		}, MODAL_UNLOCK_BACKUP_KEYS);
 	}
 
 	backup() {
-		this.props.openModal(MODAL_UNLOCK_PERMISSION);
+		this.props.openModal(MODAL_UNLOCK_BACKUP_KEYS);
 	}
 
 	async saveAsTxt(activeKeysString) {
@@ -85,13 +85,13 @@ class BackupKeysScenario extends React.Component {
 
 	forgot() {
 		this.clear();
-		this.props.closeModal(MODAL_UNLOCK_PERMISSION);
+		this.props.closeModal(MODAL_UNLOCK_BACKUP_KEYS);
 		this.props.openModal(MODAL_WIPE);
 	}
 
 	render() {
 		const {
-			[MODAL_UNLOCK_PERMISSION]: modalUnlock,
+			[MODAL_UNLOCK_BACKUP_KEYS]: modalUnlockBackupKeys,
 			[MODAL_BACKUP_KEYS]: modalBackupKeys,
 		} = this.props;
 
@@ -99,14 +99,14 @@ class BackupKeysScenario extends React.Component {
 			<React.Fragment>
 				{this.props.children(this.backup.bind(this))}
 				<ModalUnlock
-					show={modalUnlock.get('show')}
-					disabled={modalUnlock.get('loading')}
-					error={modalUnlock.get('error')}
+					show={modalUnlockBackupKeys.get('show')}
+					disabled={modalUnlockBackupKeys.get('loading')}
+					error={modalUnlockBackupKeys.get('error')}
 					password={this.state.password}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
-					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
+					close={() => this.close(MODAL_UNLOCK_BACKUP_KEYS)}
 				/>
 				<ModalBackupKeys
 					activeUser={this.props.activeUser}
@@ -127,7 +127,7 @@ BackupKeysScenario.propTypes = {
 	permissionsKeys: PropTypes.object,
 
 	activeUser: PropTypes.object,
-	[MODAL_UNLOCK_PERMISSION]: PropTypes.object.isRequired,
+	[MODAL_UNLOCK_BACKUP_KEYS]: PropTypes.object.isRequired,
 	[MODAL_BACKUP_KEYS]: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
@@ -143,13 +143,13 @@ BackupKeysScenario.defaultProps = {
 export default connect(
 	(state) => ({
 		activeUser: state.global.get('activeUser'),
-		[MODAL_UNLOCK_PERMISSION]: state.modal.get(MODAL_UNLOCK_PERMISSION),
+		[MODAL_UNLOCK_BACKUP_KEYS]: state.modal.get(MODAL_UNLOCK_BACKUP_KEYS),
 		[MODAL_BACKUP_KEYS]: state.modal.get(MODAL_BACKUP_KEYS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
-		asyncUnlock: (password, callback) => dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_PERMISSION)),
+		asyncUnlock: (password, callback) => dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_BACKUP_KEYS)),
 	}),
 )(BackupKeysScenario);

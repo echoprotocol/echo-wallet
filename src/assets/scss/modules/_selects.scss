@@ -68,7 +68,7 @@
         &:focus {
             &~.label {
                 &:before {
-                    @extend %onFocus;
+                    @include on-focus(4px);
                 }
 
             }
@@ -198,7 +198,7 @@
         &:focus {
             &~.label {
                 &:before {
-                    @extend %onFocus;
+                    @include on-focus(4px);
                 }
 
             }

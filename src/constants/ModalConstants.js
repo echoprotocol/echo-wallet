@@ -8,3 +8,4 @@ export const MODAL_WIPE = 'modal_wipe_data';
 export const MODAL_INFO = 'modal_info';
 export const MODAL_ADD_KEY = 'modal_add_key';
 export const MODAL_BACKUP_KEYS = 'modal_backup_keys';
+export const MODAL_UNLOCK_BACKUP_KEYS = 'modal_unlock_backup_keys';

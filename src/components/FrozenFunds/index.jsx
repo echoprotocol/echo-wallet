@@ -14,7 +14,7 @@ class FrozenFunds extends React.Component {
 		} = this.props;
 
 		return (
-			<div>
+			<React.Fragment>
 				<div className="sub-header">
 					<span className="icon-frozen-funds" />
 					<span>Total Frozen Amount:</span>
@@ -62,7 +62,7 @@ class FrozenFunds extends React.Component {
 						/>
 					</div>
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 
