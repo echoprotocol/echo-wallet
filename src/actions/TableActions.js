@@ -103,27 +103,44 @@ export const clear = (table) => (dispatch) => {
  */
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	if (!accountId) return;
 
-	const account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]).toJS();
+	const [account] = await echo.api.getFullAccounts([accountId]);
 
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const storageAccount = accounts.find(({ name }) => name === account.name);
+	const storageSavedWifStatuses = (storageAccount && storageAccount.addedKeys)
+		? storageAccount.addedKeys : {};
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
 
 		const { name } = await echo.api.getObject(a[0]);
 		return {
-			key: name, weight: a[1], role: 'active', type: 'accounts',
+			key: name, weight: a[1], role: 'active', type: 'accounts', hasWif: false,
 		};
 	});
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'accounts'], new List(await Promise.all(target))));
 
-
 	// save active keys
 	target = account.active.key_auths.map((a) => ({
-		key: a[0], weight: a[1], role: 'active', type: 'keys',
+		key: a[0], weight: a[1], role: 'active', type: 'keys', hasWif: !!storageSavedWifStatuses[a[0]],
 	}));
+
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
+
+	target = [{
+		key: account.echorand_key,
+		role: 'echoRand',
+		type: 'keys',
+		hasWif: !!storageSavedWifStatuses[account.echorand_key],
+	}];
+
+	dispatch(setIn(PERMISSION_TABLE, ['echoRand', 'keys'], new List(target)));
 
 	const threshold = account.active.weight_threshold;
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'threshold'], threshold));
@@ -160,7 +177,7 @@ export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active'];
+	const roles = ['active', 'echoRand'];
 
 	return roles.some((role) => permissionForm.getIn([role, 'keys']).some((keyForm) => {
 		let tableAccountsKeys = permissionTable.getIn([role, 'keys']);

@@ -1,6 +1,26 @@
 $stripe-color: rgba(255,255,255,.7);
 $stripe-width: 10px;
 
+@keyframes loading-stripes {
+    0% {background-position: 0px}
+    100% {background-position: $stripe-width}
+}
+
+@mixin btn() {
+	position: relative;
+	font-size: 12px;
+	font-family: proximanovaSemibold;
+	text-transform: uppercase;
+	border-radius: 4px;
+	height: 38px;
+	line-height: 38px;
+	transition: background-color $speed, color $speed, border-color $speed;
+	min-width: 120px;
+	padding: 0 15px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
 .load {
     position: relative;
     &:after {
@@ -24,168 +44,350 @@ $stripe-width: 10px;
         animation: loading-stripes .4s linear infinite;
     }
 }
-.ui {
-    &.button {
-        &.capitalize {
-            text-transform: capitalize;
-        }
-        &.main-btn {
-            &.buttons .button,
-            &.button {
-                border: 1px solid $main-сolor;
-                color: #FFFFFF;
-                text-shadow: none;
-                background-color: $main-сolor;
-                &:focus {
-                    text-shadow: none;
-                }
-                &:hover {
-                    text-shadow: none;
-                    background-color: $main-сolor;
-                }
-			}
-        }
-        &.basic {
-            &.main-btn {
-                &.buttons .button,
-                &.button {
-                    border: 1px solid $main-сolor;
-                    background-color: transparent;
-                    color: $main-сolor;
-                    &:focus {
-                        color: $main-сolor;
 
-                    }
-                    &:hover {
-                        background-color: $main-сolor;
-                        color: #fff;
-                    }
-                }
-            }
-        }
-        &.transparent {
-            background-color: transparent;
-            border-color: transparent;
-            color: #aeb4c0;
-            text-transform: capitalize;
-            font-size: 1em;
-            padding: 5px 10px;
-            margin: 0;
-            &:hover {
-                color: #9ca2ac;
-                background-color: $bg-hover;
-            }
-        }
-        &.copy {
-            &:focus {
-                box-shadow: none;
-                background-color: rgba($main-сolor,.185);
-                color: $main-сolor;
-            }
-        }
-        &.icon-remove {
-            box-shadow: none;
-            background-color: transparent;
-            border: 0;
-            color: #bcbcbc;
-            transition: color $speed,
-                        background-color $speed;
-        }
-        &.send {
-            font-family: proximanovaSemibold;
-            background-color: transparent;
-            color: $link-gray;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            border-right: 1px solid $bd-gray;
-            border-left: 1px solid $bd-gray;
-            height: 50px;
-            border-radius: 0;
-            width: 106px;
-            background-color: transparent;
-            transition: background-color .3s;
-            i {
-                &:before {
-                    margin: -2px 5px 0 0;
-                    display: block;
-                }
-                font-size: 1.3rem;
-                color: rgba($main-сolor, .9);
-                transition: .3s;
-            }
-            &:focus,
-            &:hover {
-                box-shadow: none;
-                background-color: $bg-gray;
-                i {
-                    color: $main-сolor;
-                }
-            }
-        }
+.main-btn {
+	@include btn();
+	color: $main-сolor;
+	border: 1px solid $main-сolor;
+	background-color: transparent;
+	
+	&:hover {
+		color: #fff;
+		background-color: $main-сolor;
+	}
 
-        &.green {
-            background-color: #62C69B;
-            color: #fff;
-            border: 0;
-            padding-left: 40px;
-            padding-right: 40px;
-        }
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
 
-        &.btn-lock {
-            background-color: transparent;
-            border: 0;
-            color: rgba(#5D637B, 0.5);
-            font-size: 20px;
-            padding: 0;
-        }
-    }
-}
-.nav-link.active {
-    pointer-events: none;
-    .ui {
-        &.button {
-            &.send {
-                box-shadow: none;
-                background-color: $bg-gray;
-                i {
-                    color: $main-сolor;
-                }
-            }
-        }
-    }
+	&:active {
+		border: 1px solid rgba($main-сolor, .8);
+		background-color: rgba($main-сolor, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-сolor, .5);
+		background-color: transparent;
+		color: rgba($main-сolor, .5);
+	}
+
+	// SIZE
+
+	&.compact {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.light {
+		border: 1px solid rgba($main-сolor, .2);
+	}
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-сolor;
+	}
+
+	.main-btn-popup {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
 }
 
-@keyframes loading-stripes {
-    0% {background-position: 0px}
-    100% {background-position: $stripe-width}
+.blue-btn {
+	@include btn();
+	color: #fff;
+	border: 1px solid $main-сolor;
+	background-color: $main-сolor;
+
+	&:hover {
+		border: 1px solid #3E51A3;
+		background-color: #3E51A3;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba($main-сolor, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-сolor, .5);
+		background-color: transparent;
+		color: rgba($main-сolor, .5);
+	}
+	// SIZE
+	
+	&.compact {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+	
+	// VARIANTS
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-сolor;
+	}
 }
+
+.black-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #515459;
+	background-color: #515459;
+
+	&:hover {
+		border: 1px solid #73777E;
+		background-color: #73777E;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#515459, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#515459, .5);
+		background-color: rgba(#515459, .5);
+		color: rgba($main-сolor, .5);
+	}
+
+	&.compact {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+.green-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #62C69B;
+	background-color: #62C69B;
+
+	&:hover {
+		border: 1px solid rgb(105, 175, 145);
+		background-color: rgb(105, 175, 145);
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#62C69B, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#62C69B, .5);
+		background-color: transparent;
+		color: rgba(#62C69B, .5);
+	}
+
+	// SIZE
+	&.compact {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+.grey-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #A9ACB9;
+	background-color: #A9ACB9;
+
+	&:hover {
+		border: 1px solid #7A8095;
+		background-color: #7A8095;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#A9ACB9, .8);
+		background-color: rgba(#A9ACB9, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#A9ACB9, .5);
+		background-color: transparent;
+		color: rgba(#A9ACB9, .5);
+	}
+
+	// VARIANTS
+
+	&.inverse {
+		background-color: transparent;
+		color: rgba(#5C637D, .6);
+
+		&:hover {
+			border: 1px solid #7A8095;
+			background-color: #7A8095;
+			color: #fff;
+		}
+
+		&:active {
+			border: 1px solid rgba(#A9ACB9, .8);
+			background-color: rgba(#A9ACB9, .8);
+			color: rgba(#fff, .8);
+		}
+		&:disabled {
+			border: 1px solid rgba(#A9ACB9, .5);
+			background-color: transparent;
+			color: rgba(#A9ACB9, .5);
+		}
+	}
+
+	// SIZE
+	&.compact {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+
+.input-copy-btn {
+	border: 1px solid $main-сolor;
+	background-color: $main-сolor;
+	color: #fff;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+}
+
+.version-btn {
+	background-color: transparent;
+	padding: 0;
+	color: rgba(#5C637D, .5);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.025px;
+	border: 0;
+	cursor: pointer;
+}
+
+
+.btn-lock {
+	background-color: transparent;
+	border: 0;
+	color: rgba(#5D637B, 0.5);
+	font-size: 20px;
+	padding: 0;
+}
+
+.remove-btn {
+	height: 22px;
+	min-width: 22px;
+	color: rgba(#5C637D, .7);
+	padding: 0;
+	border-radius: 4px;
+	transition: background-color $speed, color $speed;
+	&:hover {
+		color: #5C637D;
+	}
+
+	&:active {
+		background-color: #D7D9DB;
+		color: rgba(#5C637D, .5);
+	}
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
+
+.icon-remove {
+	box-shadow: none;
+	background-color: transparent;
+	border: 0;
+	color: #bcbcbc;
+	transition: color $speed, background-color $speed;
+}
+
+
 
 .btn-list {
     padding: 20px;
-    .ui.button {
+    .button {
         margin: 0 10px 0 0;
-    }
-}
-
-.top-btn-container {
-
-    .ui.button.green {
-        background-color: #30c998;
-        border: 0;
-        color: #ffffff !important;
-        margin-right: 0;
-        min-width: 100px;
-        min-height: 25px;
-        padding: 6px 10px;
-        font-size: 12px;
-        box-shadow: 0px 0px 0px 1px #30c998 inset !important;
-    }
-    .ui.button.txt-btn {
-        padding: 6px 10px;
-        margin-right: 10px;
     }
 }

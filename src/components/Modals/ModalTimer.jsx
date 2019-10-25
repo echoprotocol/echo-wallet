@@ -21,6 +21,7 @@ class ModalTimer extends React.Component {
 			show: nextProps.show,
 			changeVisiblity: true,
 			timerComplete: false,
+			agree: false,
 		} : {
 			changeVisiblity: false,
 		};

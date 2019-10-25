@@ -100,7 +100,7 @@
                 flex-direction: row-reverse;
 
                 &:focus {
-                    @extend %onFocus;
+                    @include on-focus(4px);
                 }
 
                 &:hover {
@@ -194,7 +194,7 @@
                     top: 8px;
                     bottom: 10px;
                     border-radius: 3px;
-                    @extend %onTextFocus;
+                    @include on-focus(2px);
                 }
             }
 
