@@ -107,7 +107,7 @@ class ModalEditPermissions extends React.Component {
 							autoFocus
 						/>
 						{
-							false && <span className="error-message">Some Error</span>
+							error && <span className="error-message">{error}</span>
 						}
 					</Form.Field>
 					<div className="form-panel">
