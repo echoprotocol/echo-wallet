@@ -62,15 +62,23 @@ class Assets extends React.Component {
 	}
 
 	render() {
+		if (this.props.frozenFunds.length) {
+			return (
+				<React.Fragment>
+					<div className="currency-title">Frozen amounts</div>
+					<ul className="currency-list">
+						{
+							this.renderList()
+						}
+					</ul>
+				</React.Fragment>
+			);
+		}
 		return (
-			<React.Fragment>
-				<div className="currency-title">Frozen amounts</div>
-				<ul className="currency-list">
-					{
-						this.renderList()
-					}
-				</ul>
-			</React.Fragment>
+			<div className="noFrozenFunds">
+				<span className="icon-frozen-funds" />
+				<span>You have not frozen <br /> any funds yet</span>
+			</div>
 		);
 	}
 
