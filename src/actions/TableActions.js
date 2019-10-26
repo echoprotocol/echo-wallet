@@ -316,6 +316,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			keys: [],
 			accounts: [],
 			threshold: null,
+			echorand_key: null,
 		},
 	};
 
@@ -391,6 +392,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		permissionData.active.keys.length
 		|| permissionData.active.accounts.length
 		|| permissionData.active.threshold
+		|| permissionData.echorand_key
 	) {
 		const keysMap = [];
 
@@ -432,6 +434,13 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		} else if (transaction.active.account_auths.length) {
 			showOptions.activeAccounts = transaction.active.account_auths;
 		}
+
+		if (permissionData.echorand_key) {
+			showOptions.echoRandKey = permissionData.echorand_key;
+
+			transaction.echorand_key = permissionData.echorand_key;
+		}
+
 	}
 
 	const feeValue = await getOperationFee('account_update', transaction);

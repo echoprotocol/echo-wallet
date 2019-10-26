@@ -11,6 +11,7 @@ import TransactionScenario from '../TransactionScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
 
+import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import { clearForm, setInFormValue, setValue, setInFormError } from '../../actions/FormActions';
@@ -110,6 +111,7 @@ class Permissions extends React.Component {
 		const field = e.target.name;
 		const wif = e.target.value;
 
+		// TODO: separate by keyRole [echorand, active]
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[field]) {
 			newPrivateKeys[field] = {};
@@ -120,9 +122,9 @@ class Permissions extends React.Component {
 			if (wif) {
 				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 				const key = form.getIn([keyRole, type, field, 'key']);
-	
+				
 				if (key && key.value) {
-					if (key.value !== publicKey) {
+					if (isPublicKey(key.value) && key.value !== publicKey) {
 						newPrivateKeys[field].error = 'invalide private key for current private key';
 					}
 				} else {
