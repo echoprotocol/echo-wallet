@@ -1,0 +1,33 @@
+.input-eye {
+	.icon-e-show {
+		padding: 0 10px;
+		font-size: 11px;
+	}
+	.icon-e-hide {
+		padding: 0 10px;
+		font-size: 14px;
+	}
+
+	.action-input {
+		position: relative;
+
+		button {
+			position: absolute;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			border: 0;
+			background-color: transparent;
+			color: rgba(#5C637D, .5);
+			cursor: pointer;
+			transition: color $speed;
+
+			&:hover {
+				color: rgba(#5C637D, .4);
+			}
+			&:active {
+				color: rgba(#5C637D, .3);
+			}
+		}
+	}
+}

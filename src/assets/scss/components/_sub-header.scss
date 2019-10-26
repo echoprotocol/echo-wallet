@@ -35,6 +35,10 @@
             }
         }
 	}
+
+	& + .frozen {
+        height: calc(100vh - 160px);
+	}
 	
 	// backup and permissions page
 

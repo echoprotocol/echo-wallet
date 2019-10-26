@@ -29,7 +29,6 @@ class ModalInfoWallet extends React.Component {
 							<Button
 								basic
 								type="button"
-
 								className="main-btn"
 								onClick={() => this.onClose()}
 								content="Do it later"

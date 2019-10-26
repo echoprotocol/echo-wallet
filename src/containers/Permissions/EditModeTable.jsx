@@ -141,27 +141,6 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, 'keys', field, type], value);
 	}
 
-	// setWif(keyRole, type, e) {
-	// 	const { keys } = this.props;
-
-	// 	const field = e.target.name;
-	// 	const wif = e.target.value;
-	// 	try {
-	// 		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
-	// 		const key = keys.getIn([keyRole, type, field, 'key']);
-	// 		if (key && key.value) {
-	// 			console.log('public key exist')
-
-	// 			// key.value === publicKey
-	// 		} else {
-	// 			this.props.setValue([keyRole, type, field, 'key'], publicKey);
-
-	// 		}
-	// 	} catch (e) {
-	// 		console.log('error key')
-	// 	}
-	// }
-
 	setPublicKey(keyRole, e) {
 		const field = e.target.name;
 		const newValue = e.target.value;
@@ -177,10 +156,14 @@ class ViewModeTable extends React.Component {
 	setAccount(keyRole, e) {
 		const field = e.target.name;
 		const newValue = e.target.value;
-
 		this.props.setValue([keyRole, 'accounts', field, 'key'], newValue);
 	}
 
+	setThreshold(keyRole, e) {
+		const field = e.target.name;
+		const newValue = e.target.value;
+		this.props.setValue([keyRole, field], newValue);
+	}
 
 	addNewField(num, type) {
 		const { keyRole } = this.props;
@@ -262,9 +245,11 @@ class ViewModeTable extends React.Component {
 
 	renderDescription() {
 		const {
-			data, description, headerLinkText, headerLinkUrl,
+			data, description, headerLinkText, headerLinkUrl, keys, keyRole,
 		} = this.props;
-		// console.log(data.threshold)
+
+		const threshold = keys.getIn([keyRole, 'threshold']);
+
 		return (
 			(description && headerLinkText && headerLinkUrl) ? (
 				<div className="list-description">
@@ -290,7 +275,11 @@ class ViewModeTable extends React.Component {
 					{
 						data.threshold && (
 							<div className="list-header-col">
-								<EditModeThreshold threshold={data.threshold} />
+								<EditModeThreshold
+									defaultThreshold={data.threshold}
+									threshold={threshold}
+									setThreshold={(e) => this.setThreshold(keyRole, e)}
+								/>
 							</div>
 						)
 					}
@@ -423,12 +412,12 @@ class ViewModeTable extends React.Component {
 
 							const key = keys.getIn([keyRole, type, num.toString(), 'key']);
 							const weight = keys.getIn([keyRole, type, num.toString(), 'weight']);
-							const wif = privateKeys[key];
+							const wif = privateKeys[num];
 
 							return (
 								<EditModeTableRow
 									key={num}
-									name={num}
+									name={num.toString()}
 									subject={key}
 									wif={wif}
 									weight={weight}
@@ -436,7 +425,7 @@ class ViewModeTable extends React.Component {
 									keyRole={keyRole}
 									removeKey={() => this.removeField(num)}
 									validateField={() => {}}
-									setWif={(e) => setWif(num, e)}
+									setWif={(e) => setWif(keyRole, type, e)}
 									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
@@ -561,6 +550,7 @@ ViewModeTable.propTypes = {
 	// addAccount: PropTypes.func,
 	// addPublicKey: PropTypes.func,
 	setWif: PropTypes.func,
+	setThreashold: PropTypes.func,
 };
 
 ViewModeTable.defaultProps = {
@@ -572,6 +562,7 @@ ViewModeTable.defaultProps = {
 	// addAccount: () => {},
 	// addPublicKey: () => {},
 	setWif: () => {},
+	setThreashold: () => {},
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,

@@ -25,11 +25,11 @@ class EditModeTableRow extends React.Component {
 			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
 		} = this.props;
 
-		console.log('wif ', wif);
+		// console.log('wif ', wif);
 
 		return type === 'keys' ? (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: true })}>
+				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
 					<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
 					<input
 						type="text"
@@ -41,7 +41,7 @@ class EditModeTableRow extends React.Component {
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: false })}>
+				<Form.Field className={classnames('input-eye error-wrap', { error: wif.error })}>
 					<label htmlFor="WIF">WIF (optional)</label>
 					<div className="action-input">
 						<input
@@ -57,12 +57,12 @@ class EditModeTableRow extends React.Component {
 								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
 								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
 						}
-						{wif.error && <span className="error-message">{wif.error}</span>}
 					</div>
+					{wif.error && <span className="error-message">{wif.error}</span>}
 				</Form.Field>
 			</React.Fragment>
 		) : (
-			<Form.Field className={classnames('error-wrap', { error: false })}>
+			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
 				<label htmlFor="AccountName">Account name</label>
 				<input
 					type="text"
@@ -132,8 +132,6 @@ EditModeTableRow.propTypes = {
 	setPublicKey: PropTypes.func.isRequired,
 	setAccount: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
-	// isChanged: PropTypes.func.isRequired,
-	// validateField: PropTypes.func.isRequired,
 };
 
 EditModeTableRow.defaultProps = {

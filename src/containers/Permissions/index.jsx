@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,7 +13,7 @@ import EditModeTable from './EditModeTable';
 
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
-import { clearForm, setInFormValue, setValue } from '../../actions/FormActions';
+import { clearForm, setInFormValue, setValue, setInFormError } from '../../actions/FormActions';
 import {
 	FORM_PERMISSION_KEY,
 	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
@@ -103,32 +104,34 @@ class Permissions extends React.Component {
 	// }
 
 	setWif(keyRole, type, e) {
-		console.log('setWif');
 		const { form } = this.props;
 		const { privateKeys } = this.state;
 
 		const field = e.target.name;
 		const wif = e.target.value;
+
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[field]) {
 			newPrivateKeys[field] = {};
 		}
+		newPrivateKeys[field].value = wif;
+		newPrivateKeys[field].error = '';
 		try {
-			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
-			const key = form.getIn([keyRole, type, field, 'key']);
-			if (key && key.value) {
-				console.log('public key exist');
-
-				// key.value === publicKey
-			} else {
-				this.props.setValue([keyRole, type, field, 'key'], publicKey);
-
+			if (wif) {
+				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+				const key = form.getIn([keyRole, type, field, 'key']);
+	
+				if (key && key.value) {
+					if (key.value !== publicKey) {
+						newPrivateKeys[field].error = 'invalide private key for current private key';
+					}
+				} else {
+					this.props.setValue([keyRole, type, field, 'key'], publicKey);
+				}
 			}
-			newPrivateKeys[field].value = wif;
-			newPrivateKeys[field].error = '';
+
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
-			console.log('error key');
 			newPrivateKeys[field].error = 'invalide private key';
 			newPrivateKeys[field].value = wif;
 			this.setState({ privateKeys: newPrivateKeys });
@@ -381,6 +384,7 @@ Permissions.propTypes = {
 	permissionTransaction: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	setError: PropTypes.func.isRequired,
 	form: PropTypes.object.isRequired,
 	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
@@ -399,7 +403,6 @@ export default connect(
 			accountId: state.global.getIn(['activeUser', 'id']),
 			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
-			// isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 		};
 	},
@@ -409,6 +412,7 @@ export default connect(
 		permissionTransaction: () => dispatch(permissionTransaction()),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
+		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
 	}),
