@@ -25,6 +25,8 @@ class EditModeTableRow extends React.Component {
 			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
 		} = this.props;
 
+		console.log('wif ', wif);
+
 		return type === 'keys' ? (
 			<React.Fragment>
 				<Form.Field className={classnames('error-wrap', { error: true })}>
@@ -55,8 +57,8 @@ class EditModeTableRow extends React.Component {
 								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
 								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
 						}
+						{wif.error && <span className="error-message">{wif.error}</span>}
 					</div>
-					{wif.error && <span className="error-message">{wif.error}</span>}
 				</Form.Field>
 			</React.Fragment>
 		) : (

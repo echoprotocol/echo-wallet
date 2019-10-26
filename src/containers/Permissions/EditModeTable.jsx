@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup, Button } from 'semantic-ui-react';
-import { PrivateKey, PublicKey } from 'echojs-lib';
 
 import EditModeThreshold from './EditModeThreshold';
 import EditModeTableRow from './EditModeTableRow';
-import { KeyObject } from 'crypto';
 
 class ViewModeTable extends React.Component {
 
@@ -133,10 +131,6 @@ class ViewModeTable extends React.Component {
 	// 	this.setState({ removedRows });
 	// }
 
-	
-
-	
-
 	onInput(e, type) {
 		e.preventDefault();
 		const { keyRole } = this.props;
@@ -147,26 +141,27 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, 'keys', field, type], value);
 	}
 
-	setWif(keyRole, type, e) {
-		const { keys } = this.props;
+	// setWif(keyRole, type, e) {
+	// 	const { keys } = this.props;
 
-		const field = e.target.name;
-		const wif = e.target.value;
-		try {
-			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
-			const key = keys.getIn([keyRole, type, field, 'key']);
-			if (key && key.value) {
-				console.log('public key exist')
+	// 	const field = e.target.name;
+	// 	const wif = e.target.value;
+	// 	try {
+	// 		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+	// 		const key = keys.getIn([keyRole, type, field, 'key']);
+	// 		if (key && key.value) {
+	// 			console.log('public key exist')
 
-				// key.value === publicKey
-			} else {
-				this.props.setValue([keyRole, type, field, 'key'], publicKey);
+	// 			// key.value === publicKey
+	// 		} else {
+	// 			this.props.setValue([keyRole, type, field, 'key'], publicKey);
 
-			}
-		} catch (e) {
-			console.log('error key')
-		}
-	}
+	// 		}
+	// 	} catch (e) {
+	// 		console.log('error key')
+	// 	}
+	// }
+
 	setPublicKey(keyRole, e) {
 		const field = e.target.name;
 		const newValue = e.target.value;
@@ -200,15 +195,12 @@ class ViewModeTable extends React.Component {
 		this.setState({ addedFields });
 	}
 
-	removeField(num, type) {
-		const { keyRole } = this.props;
+	removeField(num) {
 		const { addedFields } = this.state;
 
 		addedFields.splice(addedFields.indexOf(num), 1);
 
 		this.setState({ addedFields });
-		// this.props.set([keyRole, type, num.toString()], undefined);
-
 	}
 
 	// async saveAddKey(e, num, key, weight, keyRole) {
@@ -272,7 +264,7 @@ class ViewModeTable extends React.Component {
 		const {
 			data, description, headerLinkText, headerLinkUrl,
 		} = this.props;
-		console.log(data.threshold)
+		// console.log(data.threshold)
 		return (
 			(description && headerLinkText && headerLinkUrl) ? (
 				<div className="list-description">
@@ -356,7 +348,7 @@ class ViewModeTable extends React.Component {
 									keyRole={keyRole}
 									removeKey={() => { }}
 									validateField={() => {}}
-									setWif={(e) => this.setWif(keyRole, type, e)}
+									setWif={(e) => setWif(keyRole, type, e)}
 									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
@@ -371,8 +363,6 @@ class ViewModeTable extends React.Component {
 
 	renderAddButtons() {
 		const {
-			// addAccount,
-			addPublicKey,
 			keyRole,
 			addAccountButtonText,
 			addAccountButtonTooltipText,
@@ -414,10 +404,10 @@ class ViewModeTable extends React.Component {
 
 	renderAddedFields() {
 		const {
-			keys, keyRole, data,
+			keys, keyRole,
 		} = this.props;
 
-		const { editedAddKeys, removedRows, addedFields } = this.state;
+		const { addedFields } = this.state;
 
 		// const keysLength = (data.length + editedAddKeys.length) - removedRows.length;
 
@@ -564,12 +554,12 @@ ViewModeTable.propTypes = {
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.object.isRequired,
 	privateKeys: PropTypes.object.isRequired,
-	firstFetch: PropTypes.bool.isRequired,
+	// firstFetch: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
-	set: PropTypes.func.isRequired,
-	isChanged: PropTypes.func.isRequired,
-	addAccount: PropTypes.func,
-	addPublicKey: PropTypes.func,
+	// set: PropTypes.func.isRequired,
+	// isChanged: PropTypes.func.isRequired,
+	// addAccount: PropTypes.func,
+	// addPublicKey: PropTypes.func,
 	setWif: PropTypes.func,
 };
 
@@ -579,8 +569,8 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
-	addAccount: () => {},
-	addPublicKey: () => {},
+	// addAccount: () => {},
+	// addPublicKey: () => {},
 	setWif: () => {},
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,

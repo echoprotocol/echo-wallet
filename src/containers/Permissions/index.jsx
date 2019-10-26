@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
-import { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS, PrivateKey, PublicKey } from 'echojs-lib';
 
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
@@ -37,13 +37,13 @@ class Permissions extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			privateKeys: [],
+			privateKeys: {},
 		};
 	}
 
 	componentWillMount() {
 		this.props.formPermissionKeys();
-		this.setState({ privateKeys: [] });
+		this.setState({ privateKeys: {} });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -78,7 +78,7 @@ class Permissions extends React.Component {
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
-		this.setState({ privateKeys: [] });
+		this.setState({ privateKeys: {} });
 	}
 
 	// onCancel(data) {
@@ -102,8 +102,49 @@ class Permissions extends React.Component {
 	// 	});
 	// }
 
+	setWif(keyRole, type, e) {
+		console.log('setWif');
+		const { form } = this.props;
+		const { privateKeys } = this.state;
+
+		const field = e.target.name;
+		const wif = e.target.value;
+		const newPrivateKeys = { ...privateKeys };
+		if (!newPrivateKeys[field]) {
+			newPrivateKeys[field] = {};
+		}
+		try {
+			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+			const key = form.getIn([keyRole, type, field, 'key']);
+			if (key && key.value) {
+				console.log('public key exist');
+
+				// key.value === publicKey
+			} else {
+				this.props.setValue([keyRole, type, field, 'key'], publicKey);
+
+			}
+			newPrivateKeys[field].value = wif;
+			newPrivateKeys[field].error = '';
+			this.setState({ privateKeys: newPrivateKeys });
+		} catch (e) {
+			console.log('error key');
+			newPrivateKeys[field].error = 'invalide private key';
+			newPrivateKeys[field].value = wif;
+			this.setState({ privateKeys: newPrivateKeys });
+		}
+	}
+
 	changeMode(mode, privateKeys) {
-		this.setState({ privateKeys }, () => {
+		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
+			acc[res.publicKey] = {
+				value: res.wif,
+				error: '',
+			};
+			return acc;
+		}, {}) : {};
+
+		this.setState({ privateKeys: newPrivateKeys }, () => {
 			if (mode === FORM_PERMISSION_MODE_EDIT) {
 				this.props.set('isEditMode', true);
 			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
@@ -241,14 +282,6 @@ class Permissions extends React.Component {
 			keys: permissionsKeys.echoRand.keys,
 		};
 
-		const privateKeys = this.state.privateKeys.reduce((acc, res) => {
-			acc[res.publicKey] = {
-				value: res.wif,
-				error: '',
-			};
-			return acc;
-		}, {});
-
 		return (
 			<React.Fragment>
 				<EditModeTable
@@ -261,13 +294,14 @@ class Permissions extends React.Component {
 					addPublicKeyButtonTooltipText={ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT}
 					data={active}
 					keys={form}
-					privateKeys={privateKeys}
+					privateKeys={this.state.privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
 					addAccount={() => {}}
 					addPublicKey={() => {}}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 				/>
 				<EditModeTable
 					keyRole="echoRand"
@@ -278,11 +312,12 @@ class Permissions extends React.Component {
 					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
 					data={echoRand}
 					keys={form}
-					privateKeys={privateKeys}
+					privateKeys={this.state.privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 				/>
 			</React.Fragment>
 		);
@@ -338,7 +373,7 @@ class Permissions extends React.Component {
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	accountId: PropTypes.string.isRequired,
-	isChanged: PropTypes.bool.isRequired,
+	isChanged: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
 	formPermissionKeys: PropTypes.func.isRequired,
@@ -364,7 +399,7 @@ export default connect(
 			accountId: state.global.getIn(['activeUser', 'id']),
 			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
-			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			// isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 		};
 	},
