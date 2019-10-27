@@ -377,7 +377,6 @@ export const saveWifToDb = (
 		const { id, name } = account;
 		const networkName = getState().global.getIn(['network', 'name']);
 		const userStorage = Services.getUserStorage();
-		console.log(11111)
 		if (!CryptoService.isWIF(wif)) {
 			dispatch(setError(modal, 'Invalid WIF'));
 			return;

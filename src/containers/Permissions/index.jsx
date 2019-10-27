@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Button, Popup } from 'semantic-ui-react';
-import { CACHE_MAPS } from 'echojs-lib';
+import { Button } from 'semantic-ui-react';
+import { CACHE_MAPS, PrivateKey, PublicKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
@@ -12,13 +12,10 @@ import TransactionScenario from '../TransactionScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
 
-// import EditModeThrashold from './EditModeThrashold';
-// import EditModeTableRow from './EditModeTableRow';
-
-
+import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
-import { clearForm, setInFormValue, setValue } from '../../actions/FormActions';
+import { clearForm, setInFormValue, setValue, setInFormError } from '../../actions/FormActions';
 import {
 	FORM_PERMISSION_KEY,
 	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
@@ -29,14 +26,27 @@ import {
 	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT,
 	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL,
 	FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT,
+	FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION,
+	ADD_ACCOUNT_BUTTON_TEXT,
+	ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT,
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
 
 class Permissions extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			privateKeys: {},
+		};
+	}
+
 	componentWillMount() {
 		this.props.formPermissionKeys();
+		this.setState({ privateKeys: {} });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -71,6 +81,7 @@ class Permissions extends React.Component {
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
+		this.setState({ privateKeys: {} });
 	}
 
 	// onCancel(data) {
@@ -94,28 +105,75 @@ class Permissions extends React.Component {
 	// 	});
 	// }
 
-	changeMode(mode) {
-		if (mode === FORM_PERMISSION_MODE_EDIT) {
-			this.props.set('isEditMode', true);
-		} else if (mode === FORM_PERMISSION_MODE_VIEW) {
-			this.props.set('isEditMode', false);
+	setWif(keyRole, type, e) {
+		const { form } = this.props;
+		const { privateKeys } = this.state;
+
+		const field = e.target.name;
+		const wif = e.target.value;
+
+		// TODO: separate by keyRole [echorand, active]
+		const newPrivateKeys = { ...privateKeys };
+		if (!newPrivateKeys[field]) {
+			newPrivateKeys[field] = {};
 		}
+		newPrivateKeys[field].value = wif;
+		newPrivateKeys[field].error = '';
+		try {
+			if (wif) {
+				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+				const key = form.getIn([keyRole, type, field, 'key']);
+				
+				if (key && key.value) {
+					if (isPublicKey(key.value) && key.value !== publicKey) {
+						newPrivateKeys[field].error = 'invalide private key for current private key';
+					}
+				} else {
+					this.props.setValue([keyRole, type, field, 'key'], publicKey);
+				}
+			}
+
+			this.setState({ privateKeys: newPrivateKeys });
+		} catch (e) {
+			newPrivateKeys[field].error = 'invalide private key';
+			newPrivateKeys[field].value = wif;
+			this.setState({ privateKeys: newPrivateKeys });
+		}
+	}
+
+	changeMode(mode, privateKeys) {
+		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
+			acc[res.publicKey] = {
+				value: res.wif,
+				error: '',
+			};
+			return acc;
+		}, {}) : {};
+
+		this.setState({ privateKeys: newPrivateKeys }, () => {
+			if (mode === FORM_PERMISSION_MODE_EDIT) {
+				this.props.set('isEditMode', true);
+			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
+				this.props.set('isEditMode', false);
+			}
+		});
 	}
 
 	renderViewPanel() {
 		return (
 			<div className="sub-header-panel">
 				<div className="view-panel-wrap">
-					<PrivateKeysScenario>
+					<PrivateKeysScenario
+						onKeys={(privateKeys) => this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys)}
+					>
 						{
-							(privateKeys, getKeys) => (
+							(getKeys) => (
 								<React.Fragment>
 									<Button
 										className="grey-btn"
 										size="medium"
 										content="Edit mode"
-										onClick={() => getKeys(() =>
-											this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys))}
+										onClick={getKeys}
 									/>
 								</React.Fragment>
 							)
@@ -234,10 +292,10 @@ class Permissions extends React.Component {
 			firstFetch,
 		} = this.props;
 
-		const active = {
-			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-			threshold: permissionsKeys.active.threshold,
-		};
+		// const active = {
+		// 	keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+		// 	threshold: permissionsKeys.active.threshold,
+		// };
 
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
@@ -248,13 +306,21 @@ class Permissions extends React.Component {
 				<EditModeTable
 					keyRole="active"
 					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-					description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
+					description={FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION}
+					addAccountButtonText={ADD_ACCOUNT_BUTTON_TEXT}
+					addAccountButtonTooltipText={ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT}
+					addPublicKeyButtonText={ADD_PUBLIC_KEY_BUTTON_TEXT}
+					addPublicKeyButtonTooltipText={ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT}
 					data={active}
 					keys={form}
+					privateKeys={this.state.privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
+					addAccount={() => {}}
+					addPublicKey={() => {}}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 				/>
 				<EditModeTable
 					keyRole="echoRand"
@@ -265,80 +331,15 @@ class Permissions extends React.Component {
 					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
 					data={echoRand}
 					keys={form}
+					privateKeys={this.state.privateKeys}
 					set={set}
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 				/>
 			</React.Fragment>
 		);
-		// return (
-		// 	<div className="edit-mode-wrap">
-		// 		<div className="list-wrap">
-		// 			<div className="list-header">
-		// 				<h3 className="list-header-title">Public Keys and Accounts</h3>
-		// 			</div>
-		// 			<div className="list-header-row">
-		// 				<div className="list-header-col">
-		// 					<div className="list-description">
-		// 						The settings below allow you to specify the keys and / or accounts,
-		// 						whose signatures will be necessary to send a transaction from your account.
-		// 						Using threshold and weight you can separate access to an account
-		// 						between several keys and / or accounts.
-		// 					</div>
-		// 				</div>
-		// 				<div className="list-header-col">
-		// 					<EditModeThrashold />
-		// 				</div>
-		// 			</div>
-		// 			<div className="list">
-		// 				<EditModeTableRow type="keys" keyRole="active" />
-		// 				<EditModeTableRow type="keys" keyRole="active" />
-		// 				<EditModeTableRow type="account" keyRole="active" />
-		// 			</div>
-		// 			<div className="list-panel">
-		// 				<Button
-		// 					className="main-btn"
-		// 					size="medium"
-		// 				>
-		// 					<Popup
-		// 						trigger={<span className="main-btn-popup">Add Account</span>}
-		// 						content="Provide access to send transaction to another account"
-		// 						className="inner-tooltip"
-		// 						position="bottom center"
-		// 						style={{ width: 380 }}
-		// 					/>
-		// 				</Button>
-		// 				<Button
-		// 					className="main-btn"
-		// 					size="medium"
-		// 				>
-		// 					<Popup
-		// 						trigger={<span className="main-btn-popup">Add public key</span>}
-		// 						content="Add an additional key to sign transactions"
-		// 						className="inner-tooltip"
-		// 						position="bottom center"
-		// 						style={{ width: 300 }}
-		// 					/>
-		// 				</Button>
-		// 			</div>
-		// 		</div>
-		// 		<div className="list-wrap">
-		// 			<div className="list-header">
-		// 				<h3 className="list-header-title">EchoRand Key</h3>
-		// 				<span className="list-header-advanced">(for advanced users)</span>
-		// 			</div>
-		// 			<div className="list-description">
-		// 				EchoRand Key is used for participating in blocks generation and for signing
-		// 				sidechain transactions by committee members.
-		// 				<a className="list-header-link" href="">Know more in Echo Docs </a>
-		// 			</div>
-		// 			<div className="list">
-		// 				<EditModeTableRow type="keys" keyRole="echoRand" />
-		// 			</div>
-		// 		</div>
-		// 	</div>
-		// );
 	}
 
 	renderAccountInfo() {
@@ -379,9 +380,9 @@ class Permissions extends React.Component {
 						this.renderPanel()
 					}
 				</div>
-				{
-					this.renderTable()
-				}
+					{
+						this.renderTable()
+					}
 			</div>
 		);
 	}
@@ -391,7 +392,7 @@ class Permissions extends React.Component {
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	accountId: PropTypes.string.isRequired,
-	isChanged: PropTypes.bool.isRequired,
+	isChanged: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
 	formPermissionKeys: PropTypes.func.isRequired,
@@ -399,6 +400,7 @@ Permissions.propTypes = {
 	permissionTransaction: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	setError: PropTypes.func.isRequired,
 	form: PropTypes.object.isRequired,
 	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
@@ -417,7 +419,6 @@ export default connect(
 			accountId: state.global.getIn(['activeUser', 'id']),
 			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
-			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 		};
 	},
@@ -427,6 +428,7 @@ export default connect(
 		permissionTransaction: () => dispatch(permissionTransaction()),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
+		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
 	}),

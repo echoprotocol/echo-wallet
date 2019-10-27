@@ -18,9 +18,8 @@ class PrivateKeysScenario extends React.Component {
 		super(props);
 
 		this.DEFAULT_STATE = {
-			onSuccess: () => {},
 			password: '',
-			keys: [],
+			// keys: [],
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -30,10 +29,7 @@ class PrivateKeysScenario extends React.Component {
 		this.clear();
 	}
 
-	getKeys(onSuccess) {
-		if (typeof onSuccess === 'function') {
-			this.setState({ onSuccess });
-		}
+	getKeys() {
 		this.props.openModal(MODAL_UNLOCK_PERMISSION);
 	}
 
@@ -56,10 +52,11 @@ class PrivateKeysScenario extends React.Component {
 
 		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
 
-		this.setState((prevState) => ({
-			...prevState,
-			keys: [...keys],
-		}), this.state.onSuccess);
+		this.props.onKeys(keys);
+		// this.setState((prevState) => ({
+		// 	...prevState,
+		// 	keys: [...keys],
+		// }));
 	}
 
 	unlock() {
@@ -92,7 +89,7 @@ class PrivateKeysScenario extends React.Component {
 
 		return (
 			<React.Fragment>
-				{this.props.children(this.state.keys, this.getKeys.bind(this))}
+				{this.props.children(this.getKeys.bind(this))}
 				<ModalUnlock
 					show={modalUnlock.get('show')}
 					disabled={modalUnlock.get('loading')}
@@ -117,6 +114,7 @@ PrivateKeysScenario.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	clearError: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
+	onKeys: PropTypes.func.isRequired,
 };
 
 PrivateKeysScenario.defaultProps = {
