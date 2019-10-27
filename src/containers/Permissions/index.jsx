@@ -278,10 +278,10 @@ class Permissions extends React.Component {
 			firstFetch,
 		} = this.props;
 
-		const active = {
-			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-			threshold: permissionsKeys.active.threshold,
-		};
+		// const active = {
+		// 	keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+		// 	threshold: permissionsKeys.active.threshold,
+		// };
 
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
@@ -366,9 +366,9 @@ class Permissions extends React.Component {
 						this.renderPanel()
 					}
 				</div>
-				{
-					this.renderTable()
-				}
+					{
+						this.renderTable()
+					}
 			</div>
 		);
 	}
