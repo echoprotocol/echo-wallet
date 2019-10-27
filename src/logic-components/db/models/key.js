@@ -15,7 +15,7 @@ class Key {
 	}
 
 	/**
-	 *
+	 * @method create
 	 * @param {String} publicKey
 	 * @param {String} wif
 	 * @param {String} accountId

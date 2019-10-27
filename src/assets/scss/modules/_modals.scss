@@ -1,32 +1,30 @@
+.modal-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 250px;
+	width: 100%;
+	padding: 50px 20px;
+	position: relative;
+}
 .modal {
+	.icon-close {
+		width: 35px;
+		height: 35px;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		color: #c4c5ca;
+		transition: color .3s;
 
-    &-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-height: 250px;
-        width: 100%;
-        padding: 50px 20px;
-        position: relative;
-
-        .icon-close {
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #c4c5ca;
-            transition: color .3s;
-
-            &:hover {
-                color: #6d7178;
-            }
-        }
-    }
+		&:hover {
+			color: #6d7178;
+		}
+	}
 
     .form.main-form {
         padding: 0;
@@ -163,35 +161,19 @@
             overflow: auto;
 
             &::-webkit-scrollbar {
-
                 width: 7px;
-
             }
 
-            *
-
-            /* Track */
-            * &::-webkit-scrollbar-track {
-
+            &::-webkit-scrollbar-track {
                 background: transparent;
-
             }
 
-            *
-
-            /* Handle */
-            * &::-webkit-scrollbar-thumb {
+            &::-webkit-scrollbar-thumb {
                 background-color: rgba(0, 0, 0, .1);
-
             }
 
-            *
-
-            /* Handle on hover */
-            * &::-webkit-scrollbar-thumb:hover {
-
+           &::-webkit-scrollbar-thumb:hover {
                 background: #555;
-
             }
 
             .line {
@@ -272,7 +254,7 @@
     }
 }
 
-.ui.small.modal.visible.unclock-size {
+.small.modal.visible.unclock-size {
     max-width: 600px;
 
     .modal-content {
@@ -303,7 +285,7 @@
 }
 
 // style for info modal window
-.ui.modal.visible.small.unclock-size .modal-content.info {
+.modal.visible.small.unclock-size .modal-content.info {
     min-height: 200px;
 	padding: 20px 0 26px;
 	
@@ -352,7 +334,7 @@
     }
 }
 
-.ui.modal.visible.small.unclock-size .modal-content.add-key {
+.modal.visible.small.unclock-size .modal-content.add-key {
     min-height: 230px;
 	padding: 38px 0 0;
 	justify-content: flex-start;
@@ -360,8 +342,8 @@
     .modal-header {
         margin: 0;
         font-size: 20px;
-		text-align: center;
 		font-weight: 600;
+		text-align: center;
 	}
 	.modal-body {
         margin: 18px 55px 0px;

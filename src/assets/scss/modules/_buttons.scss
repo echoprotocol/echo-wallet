@@ -360,6 +360,8 @@ $stripe-width: 10px;
 	padding: 0;
 	border-radius: 4px;
 	transition: background-color $speed, color $speed;
+	cursor: pointer;
+	
 	&:hover {
 		color: #5C637D;
 	}

@@ -16,37 +16,91 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
+/**
+ * @method setValue
+ *
+ * @param {String} table
+ * @param {String} field
+ * @param {any} value
+ * @returns {function(dispatch): undefined}
+ */
 export const setValue = (table, field, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field, value }));
 };
 
+/**
+ * @method clearTable
+ *
+ * @param {String} table
+ * @returns {function(dispatch): undefined}
+ */
 export const clearTable = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
 };
 
+/**
+ * @method toggleLoading
+ *
+ * @param {String} table
+ * @param {any} value
+ * @returns {function(dispatch): undefined}
+ */
 export const toggleLoading = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'loading', value }));
 };
 
+/**
+ * @method setError
+ *
+ * @param {String} table
+ * @param {any} value
+ * @returns {function(dispatch): undefined}
+ */
 export const setError = (table, value) => (dispatch) => {
 	dispatch(TableReducer.actions.set({ table, field: 'error', value }));
 };
 
+/**
+ * @method setIn
+ *
+ * @param {String} table
+ * @param {String} fields
+ * @param {any} value
+ * @returns {function(dispatch): undefined}
+ */
 export const setIn = (table, fields, value) => (dispatch) => {
 	dispatch(TableReducer.actions.setIn({ table, fields, value }));
 };
 
+/**
+ * @method update
+ *
+ * @param {String} table
+ * @param {String} fields
+ * @param {String} param
+ * @param {any} value
+ * @returns {function(dispatch): undefined}
+ */
 export const update = (table, fields, param, value) => (dispatch) => {
 	dispatch(TableReducer.actions.update({
 		table, fields, param, value,
 	}));
 };
 
+/**
+ * @method clear
+ *
+ * @param {String} table
+ * @returns {function(dispatch): undefined}
+ */
 export const clear = (table) => (dispatch) => {
 	dispatch(TableReducer.actions.clear({ table }));
 };
 
-
+/**
+ * @method formPermissionKeys
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const formPermissionKeys = () => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
@@ -94,6 +148,12 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	dispatch(setFormValue(FORM_PERMISSION_KEY, 'firstFetch', true));
 };
 
+/**
+ * @method unlockPrivateKey
+ *
+ * @param {String} k
+ * @returns {function(dispatch): undefined}
+ */
 export const unlockPrivateKey = (k) => (dispatch) => {
 	const {
 		key, unlocked, role, type,
@@ -109,6 +169,10 @@ export const unlockPrivateKey = (k) => (dispatch) => {
 	dispatch(openModal(MODAL_UNLOCK));
 };
 
+/**
+ * @method isChanged
+ * @@returns {function(dispatch, getState): Boolean}
+ */
 export const isChanged = () => (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
@@ -147,6 +211,15 @@ export const isChanged = () => (dispatch, getState) => {
 	}));
 };
 
+/**
+ * @method validateKey
+ *
+ * @param {String} role
+ * @param {String} tableKey
+ * @param {Object} key
+ * @param {Object} weight
+ * @returns {function(dispatch): Promise<Boolean>}
+ */
 export const validateKey = (role, tableKey, key, weight) => async (dispatch) => {
 	let error = false;
 
@@ -199,6 +272,10 @@ export const validateKey = (role, tableKey, key, weight) => async (dispatch) => 
 	return error;
 };
 
+/**
+ * @method permissionTransaction
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const permissionTransaction = () => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
@@ -239,6 +316,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			keys: [],
 			accounts: [],
 			threshold: null,
+			echorand_key: null,
 		},
 	};
 
@@ -314,6 +392,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		permissionData.active.keys.length
 		|| permissionData.active.accounts.length
 		|| permissionData.active.threshold
+		|| permissionData.echorand_key
 	) {
 		const keysMap = [];
 
@@ -355,6 +434,13 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		} else if (transaction.active.account_auths.length) {
 			showOptions.activeAccounts = transaction.active.account_auths;
 		}
+
+		if (permissionData.echorand_key) {
+			showOptions.echoRandKey = permissionData.echorand_key;
+
+			transaction.echorand_key = permissionData.echorand_key;
+		}
+
 	}
 
 	const feeValue = await getOperationFee('account_update', transaction);
