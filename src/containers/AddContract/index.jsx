@@ -8,7 +8,7 @@ import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
 
 import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
-
+import { version } from '../../../package.json';
 import { contractIdRegex } from '../../helpers/ValidateHelper';
 
 
@@ -51,12 +51,14 @@ class AddContractComponent extends React.Component {
 							type="text"
 							placeholder="Name"
 							name="name"
-							className="ui input"
 							value={name.value}
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						<span className="error-message">{name.error}</span>
+						{
+							name.error &&
+								<span className="error-message">{name.error}</span>
+						}
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
@@ -64,11 +66,14 @@ class AddContractComponent extends React.Component {
 							type="text"
 							placeholder="Contract ID"
 							name="id"
-							className="ui input"
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<span className="error-message">{id.error}</span>
+						{
+							id.error &&
+								<span className="error-message">{id.error}</span>
+						}
+
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">ABI</label>
@@ -76,11 +81,13 @@ class AddContractComponent extends React.Component {
 							type="text"
 							placeholder="Contract ABI"
 							name="abi"
-							className="ui input"
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<span className="error-message">{abi.error}</span>
+						{
+							abi.error &&
+								<span className="error-message">{abi.error}</span>
+						}
 					</Form.Field>
 					<div className="form-panel">
 						<Button
@@ -115,6 +122,7 @@ export default connect(
 		name: state.form.getIn([FORM_ADD_CONTRACT, 'name']),
 		id: state.form.getIn([FORM_ADD_CONTRACT, 'id']),
 		abi: state.form.getIn([FORM_ADD_CONTRACT, 'abi']),
+		version,
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_ADD_CONTRACT)),

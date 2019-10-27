@@ -12,6 +12,10 @@ class StorageService {
 		this.storage = storage;
 	}
 
+	/**
+	 * @method init
+	 * @returns {Boolean}
+	 */
 	async init() {
 
 		await this.storage.init();
@@ -21,7 +25,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method decryptDBByPassword
 	 * @param {String} password
 	 * @return {Promise.<*>}
 	 */
@@ -37,7 +41,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method getDB
 	 * @return {Promise.<DB>}
 	 */
 	async getDB() {
@@ -50,7 +54,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method decryptDBByEncryptionHash
 	 * @param {String} encHash
 	 * @return {Promise.<*>}
 	 */
@@ -65,7 +69,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method doesDBExist
 	 * @return {Promise.<boolean>}
 	 */
 	async doesDBExist() {
@@ -75,7 +79,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method generateNewHeader
 	 * @return {{
 	 *      version: number,
 	 *      created_at: string,
@@ -104,7 +108,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method getEncHash
 	 * @param {String} password
 	 * @return {Promise}
 	 */
@@ -118,7 +122,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method createDB
 	 * @param {String} password
 	 * @return {Promise.<void>}
 	 */
@@ -154,7 +158,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method deleteDB
 	 * @return {Promise.<void>}
 	 */
 	async deleteDB() {
@@ -162,7 +166,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method updateDBByEncryptionHash
 	 * @param {Object} decryptedData
 	 * @param {String} encHash - hex
 	 * @return {Promise.<void>}
@@ -179,7 +183,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method updateDBByPassword
 	 * @param {Object} decryptedData
 	 * @param {String} password
 	 * @return {Promise.<void>}
@@ -198,7 +202,7 @@ class StorageService {
 	}
 
 	/**
-	 *
+	 * @method saveDb
 	 * @param {DB} preparedDB
 	 * @return {Promise.<void>}
 	 */

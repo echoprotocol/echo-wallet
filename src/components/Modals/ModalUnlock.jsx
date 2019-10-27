@@ -53,7 +53,6 @@ class ModalUnlockWallet extends React.Component {
 										type="password"
 										placeholder="Password"
 										name="password"
-										className="ui input"
 										onChange={(e) => this.onChange(e)}
 										autoFocus
 									/>
