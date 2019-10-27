@@ -300,6 +300,13 @@ export const isAccountAdded = (accountName, networkName) => {
 	return null;
 };
 
+/**
+ * @method addAccount
+ *
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {function(dispatch): undefined}
+ */
 export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
