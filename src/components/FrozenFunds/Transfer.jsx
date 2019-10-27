@@ -86,7 +86,7 @@ class Transfer extends React.Component {
 									/>
 								</Form.Field>
 								<div className="form-panel">
-									{duration.isSelected ?
+									{duration.isSelected &&
 										<React.Fragment>
 											<div className="coefficient-value">
 
@@ -97,12 +97,11 @@ class Transfer extends React.Component {
 													trigger={<span className="inner-tooltip-trigger icon-info" />}
 													content="This is the value that will be used to re-calculate a new sum after unfreezing."
 													className="inner-tooltip"
+													style={{ width: 336, marginBottom: 20 }}
 													inverted
 												/>
 											</div>
 										</React.Fragment>
-										:
-										null
 									}
 									<Button
 										basic

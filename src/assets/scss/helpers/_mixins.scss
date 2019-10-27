@@ -27,3 +27,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin on-focus($shadow-size) {
+    box-shadow:
+    0 0 0 $shadow-size rgba($inut-color, .2),
+    0 0 0 $shadow-size rgba($inut-color, .2);
+}

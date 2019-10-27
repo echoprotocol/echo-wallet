@@ -127,8 +127,11 @@
     content: "\e904";
 }
 
-.icon-copy:before {
-    content: "\e905";
+i.copy,
+.icon-copy {
+	&:before {
+		content: "\e905";
+	}
 }
 
 .icon-dotted:before {
