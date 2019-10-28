@@ -16,6 +16,7 @@ import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '../../actions/FormActions';
+import { addWif } from '../../actions/AuthActions';
 import {
 	FORM_PERMISSION_KEY,
 	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
@@ -81,17 +82,38 @@ class Permissions extends React.Component {
 		}
 	}
 
-	saveWifs(password) {
+	async saveWifs(password) {
+		const { form } = this.props;
 		const { privateKeys } = this.state;
 
-		const result = {};
-		if (Object.keys(privateKeys.active).length) {
+		const account = this.props.account.toJS();
 
+		const newActiveWifs = Object.entries(privateKeys.active).map(([index, wif]) => {
+			console.log('index, wif', index, wif)
+			const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+			console.log('publicKey', publicKey)
+
+			if (publicKey && wif.value && !wif.error) {
+				return this.props.addWif(publicKey, wif.value, account, password);
+			}
+		})
+
+		const newEchoRandWifs = Object.entries(privateKeys.echoRand).map(([index, wif]) => {
+			const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+			if (publicKey && wif.value && !wif.error) {
+				return this.props.addWif(publicKey, wif.value, account, password);
+			}
+		})
+
+		try {
+			await Promise.all([
+				Promise.all(newActiveWifs),
+				Promise.all(newEchoRandWifs), 
+			])
+		} catch (error) {
+			console.log(error)
 		}
 
-		if (Object.keys(privateKeys.echoRand).length) {
-			
-		}
 	}
 
 	componentWillUnmount() {
@@ -209,7 +231,10 @@ class Permissions extends React.Component {
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>
-					<TransactionScenario handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}>
+					<TransactionScenario
+						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
+						onUnlock={(password) => this.saveWifs(password)}
+					>
 						{
 							(submit) => (
 								<React.Fragment>
@@ -415,6 +440,7 @@ Permissions.propTypes = {
 	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
+	addWif: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -443,5 +469,6 @@ export default connect(
 		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
+		addWif: (publicKey, wif, account, password) => dispatch(addWif(publicKey, wif, account, password)),
 	}),
 )(Permissions);
