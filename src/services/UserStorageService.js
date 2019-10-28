@@ -163,6 +163,11 @@ class UserStorageService {
 		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
 
 		network.addKey(key);
+		console.log('=============')
+		console.log(key);
+		console.log(params);
+		console.log(decryptedData);
+		console.log('=============')
 
 		await this.updateDB(decryptedData, params);
 

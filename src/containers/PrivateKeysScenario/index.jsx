@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import ModalUnlock from '../../components/Modals/ModalUnlock';
+import ModalEditPermissions from '../../components/Modals/ModalEditPermissions';
 
-import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
@@ -19,7 +19,7 @@ class PrivateKeysScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			password: '',
-			// keys: [],
+			keys: [],
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -53,10 +53,6 @@ class PrivateKeysScenario extends React.Component {
 		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
 
 		this.props.onKeys(keys);
-		// this.setState((prevState) => ({
-		// 	...prevState,
-		// 	keys: [...keys],
-		// }));
 	}
 
 	unlock() {
@@ -65,6 +61,8 @@ class PrivateKeysScenario extends React.Component {
 		this.props.unlock(password, async () => {
 			await this.fetchWIFs(password);
 		}, MODAL_UNLOCK_PERMISSION);
+		this.setState(_.cloneDeep(this.DEFAULT_STATE));
+
 	}
 
 	clear() {
@@ -90,7 +88,7 @@ class PrivateKeysScenario extends React.Component {
 		return (
 			<React.Fragment>
 				{this.props.children(this.getKeys.bind(this))}
-				<ModalUnlock
+				<ModalEditPermissions
 					show={modalUnlock.get('show')}
 					disabled={modalUnlock.get('loading')}
 					error={modalUnlock.get('error')}
@@ -99,6 +97,7 @@ class PrivateKeysScenario extends React.Component {
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
 					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
+					warningTime={7}
 				/>
 			</React.Fragment>
 		);

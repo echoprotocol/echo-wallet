@@ -6,7 +6,7 @@ class ViewModeRow extends Component {
 
 	renderButton() {
 		const {
-			subject, type, hasWif, showWif, addWif,	
+			subject, type, hasWif, showWif, addWif,
 		} = this.props;
 
 		if (!type || type !== 'keys') {

@@ -86,7 +86,7 @@ export const createAccount = ({
 		const account = await echo.api.getAccountByName(accountName);
 		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
 
-		dispatch(addAccount(accountName, network.name));
+		dispatch(addAccount(accountName, network.name, [publicKey]));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -146,7 +146,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName));
+			dispatch(addAccount(accountName, networkName, [key.publicKey]));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
@@ -299,40 +299,41 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
  * @param {String} modal
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
-	try {
-		dispatch(toggleModalLoading(modal, true));
+export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
+	async (dispatch) => {
+		try {
+			dispatch(toggleModalLoading(modal, true));
 
-		const userStorage = Services.getUserStorage();
-		const doesDBExist = await userStorage.doesDBExist();
+			const userStorage = Services.getUserStorage();
+			const doesDBExist = await userStorage.doesDBExist();
 
-		if (!doesDBExist) {
-			dispatch(setError(modal, 'DB doesn\'t exist'));
-			return;
+			if (!doesDBExist) {
+				dispatch(setError(modal, 'DB doesn\'t exist'));
+				return;
+			}
+
+			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+			const correctPassword = await userStorage.isMasterPassword(password);
+
+			if (!correctPassword) {
+				dispatch(setError(modal, 'Invalid password'));
+				return;
+			}
+
+			dispatch(closeModal(modal));
+
+			callback(password);
+		} catch (err) {
+			dispatch(setError(modal, err));
+		} finally {
+			dispatch(toggleModalLoading(modal, false));
 		}
 
-		await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
-		const correctPassword = await userStorage.isMasterPassword(password);
-
-		if (!correctPassword) {
-			dispatch(setError(modal, 'Invalid password'));
-			return;
-		}
-
-		dispatch(closeModal(modal));
-
-		callback(password);
-	} catch (err) {
-		dispatch(setError(modal, err));
-	} finally {
-		dispatch(toggleModalLoading(modal, false));
-	}
-
-};
+	};
 
 export const asyncUnlock = (
 	password,
-	callback = () => {},
+	callback = () => { },
 	modal = MODAL_UNLOCK,
 ) => async (dispatch) => {
 	try {
@@ -365,12 +366,44 @@ export const asyncUnlock = (
 
 };
 
+/**
+ *
+ * @param {String} publicKey
+ * @param {String} wif
+ * @param {Object} account
+ * @param {String} password
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const addWif = (
+	publicKey,
+	wif,
+	account,
+	password,
+) => async (dispatch, getState) => {
+	const { id, name } = account;
+	const networkName = getState().global.getIn(['network', 'name']);
+	const userStorage = Services.getUserStorage();
+	if (!CryptoService.isWIF(wif)) {
+		throw Error('Invalid WIF');
+	}
+
+	const privateKey = PrivateKey.fromWif(wif);
+
+	if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
+		throw Error('Wrong WIF');
+	}
+
+	await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+
+	dispatch(saveWifToStorage(name, networkName, publicKey));
+};
+
 export const saveWifToDb = (
 	publicKey,
 	wif,
 	account,
 	password,
-	callback = () => {},
+	callback = () => { },
 	modal = MODAL_ADD_WIF,
 ) => async (dispatch, getState) => {
 	try {
@@ -381,7 +414,6 @@ export const saveWifToDb = (
 			dispatch(setError(modal, 'Invalid WIF'));
 			return;
 		}
-		console.log(22222)
 
 		const privateKey = PrivateKey.fromWif(wif);
 
