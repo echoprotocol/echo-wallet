@@ -7,6 +7,7 @@ import { Button } from 'semantic-ui-react';
 import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
+
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
@@ -89,20 +90,25 @@ class Permissions extends React.Component {
 
 		const account = this.props.account.toJS();
 
-		const newActiveWifs = Object.entries(privateKeys.active).map(([index, wif]) => {
-			const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-
-			if (publicKey && wif.value && !wif.error) {
+		const newActiveWifs = Object.entries(privateKeys.active)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
 				return this.props.addWif(publicKey, wif.value, account, password);
-			}
-		})
+			})
 
-		const newEchoRandWifs = Object.entries(privateKeys.echoRand).map(([index, wif]) => {
-			const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-			if (publicKey && wif.value && !wif.error) {
+		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
 				return this.props.addWif(publicKey, wif.value, account, password);
-			}
-		})
+			})
 
 		try {
 			await Promise.all([
@@ -331,7 +337,7 @@ class Permissions extends React.Component {
 			set,
 			firstFetch,
 		} = this.props;
-
+		
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,

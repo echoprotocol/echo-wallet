@@ -6,6 +6,7 @@ const DEFAULT_FIELDS = Map({
 	globalLoading: true,
 	globalError: null,
 	error: null,
+	keyWeightWarn: false,
 	activeUser: new Map({
 		id: '',
 		name: '',

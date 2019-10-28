@@ -33,14 +33,14 @@ class ViewModeRow extends Component {
 	renderWeight() {
 		const { weight, keyRole } = this.props;
 
-		if (!weight || !weight.value || keyRole !== 'echoRand') {
+		if (!weight.value || keyRole === 'echoRand') {
 			return undefined;
 		}
 
 		return (
 			<div className="list-item-weight">
 				<span className="weight">Weight:</span>
-				<span className="value">{weight}</span>
+				<span className="value">{weight.value}</span>
 			</div>
 		);
 	}
