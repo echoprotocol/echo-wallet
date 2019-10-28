@@ -127,8 +127,11 @@
     content: "\e904";
 }
 
-.icon-copy:before {
-    content: "\e905";
+i.copy,
+.icon-copy {
+	&:before {
+		content: "\e905";
+	}
 }
 
 .icon-dotted:before {
@@ -166,8 +169,6 @@
 
 .icon-frozen-funds:before {
     content: "\e909";
-    color: #5c637d;
-    opacity: 0.5;
 }
 
 .icon-coin {
@@ -182,4 +183,8 @@
     &:hover {
         opacity: 1;
     }
+}
+
+.icon-commit:before {
+    content: "\e90b";
 }

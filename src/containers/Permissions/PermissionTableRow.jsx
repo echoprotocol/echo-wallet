@@ -28,7 +28,6 @@ class PermissionTableRow extends Component {
 		const {
 			keyRole, keys, data, addKeys,
 		} = nextProps;
-
 		const keysLength = prevState.editedAddKeys.length;
 		const editedAddKeys = [];
 

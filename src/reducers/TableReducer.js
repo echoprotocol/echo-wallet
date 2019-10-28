@@ -21,6 +21,9 @@ const DEFAULT_TABLE_FIELDS = {
 			accounts: new List(),
 			keys: new List(),
 		}),
+		echoRand: new Map({
+			keys: new List(),
+		}),
 		permissionKey: {
 			key: '',
 			type: '',

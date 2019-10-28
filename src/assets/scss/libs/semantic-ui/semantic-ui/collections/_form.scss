@@ -54,7 +54,7 @@
         Labels
 ---------------------*/
 
-.field>label {
+.field > label {
   display: flex;
   justify-content: space-between;
   min-height: 20px;
@@ -62,7 +62,6 @@
   font-size: 12px;
   font-family: proximanovaSemibold;
   text-transform: uppercase;
-  padding-left: 2px;
   padding-top: 1px;
 }
 
@@ -70,22 +69,6 @@
     Standard Inputs
 ---------------------*/
 
-.ui.form textarea,
-.ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
-  width: 100%;
-  vertical-align: top;
-}
 
 /* Set max height on unusual input */
 .ui.form ::-webkit-datetime-edit,
@@ -93,57 +76,11 @@
   height: 1.21428571em;
 }
 
-.ui.form input:not([type]),
-.ui.form input[type="date"],
-.ui.form input[type="datetime-local"],
-.ui.form input[type="email"],
-.ui.form input[type="number"],
-.ui.form input[type="password"],
-.ui.form input[type="search"],
-.ui.form input[type="tel"],
-.ui.form input[type="time"],
-.ui.form input[type="text"],
-.ui.form input[type="file"],
-.ui.form input[type="url"] {
-  font-family: $font-family;
-  margin: 0em;
-  outline: none;
-  line-height: 1.1em;
-  padding: 0.67857143em 1em;
-  font-size: 1.0714em;
-  background-color: #fff;
-  border: 1px solid $inut-color;
-  color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
-  -webkit-transition: color $speed ease, border-color $speed ease;
-  transition: color $speed ease, border-color $speed ease;
-}
+
 
 /* Text Area */
-.ui.form textarea {
-  margin: 0em;
-  -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
-  padding: 0.78571429em 1em;
-  background: #FFFFFF;
-  border: 1px solid $inut-color;
-  outline: none;
-  color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
-  -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
-  box-shadow: 0em 0em 0em 0em transparent inset;
-  -webkit-transition: color $speed ease, border-color $speed ease;
-  transition: color $speed ease, border-color $speed ease;
-  font-size: 1em;
-  line-height: 1.2857;
-  resize: none;
-}
 
-.ui.form textarea:not([rows]) {
-  height: 10em;
-  min-height: 8em;
-  max-height: 24em;
-}
+
 
 .ui.form textarea,
 .ui.form input[type="checkbox"] {
@@ -372,7 +309,7 @@
   border-color: $inut-hover;
   border-radius: 0.28571429rem;
   background: #FFFFFF;
-  @extend %onFocus;
+  @include on-focus(4px);
 }
 
 /*--------------------
@@ -402,7 +339,7 @@
   border-color: $inut-hover;
   border-radius: 0.28571429rem;
   background: #FFFFFF;
-  @extend %onFocus;
+  @include on-focus(4px);
 }
 
 

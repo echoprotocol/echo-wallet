@@ -46,7 +46,7 @@ class Assets extends React.Component {
 							<span>{freezeParam.coefficientText}</span>
 							<Popup
 								trigger={<span className="inner-tooltip-trigger icon-info" />}
-								content="This is the value that will be used to re-calculate a new sum after unfreezing."
+								content="This is the coefficient that will be used to calculate the reward for participating in blocks creation."
 								className="inner-tooltip"
 								inverted
 							/>
@@ -62,23 +62,28 @@ class Assets extends React.Component {
 	}
 
 	render() {
-		return (
+		return this.props.frozenFunds.length ?
 			<React.Fragment>
 				<div className="currency-title">Frozen amounts</div>
 				<ul className="currency-list">
-					{
-						this.renderList()
-					}
+					{ this.renderList() }
 				</ul>
-			</React.Fragment>
-		);
+			</React.Fragment> :
+			<div className="empty-frozen-funds">
+				<span className="icon-frozen-funds" />
+				<span>You have not frozen <br /> any funds yet</span>
+			</div>;
 	}
 
 }
 
 Assets.propTypes = {
-	frozenFunds: PropTypes.array.isRequired,
+	frozenFunds: PropTypes.array,
 	coreAsset: PropTypes.object.isRequired,
+};
+
+Assets.defaultProps = {
+	frozenFunds: [],
 };
 
 export default Assets;

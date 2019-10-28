@@ -14,6 +14,7 @@ import {
 	closeModal,
 	toggleLoading,
 } from './ModalActions';
+
 import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -26,11 +27,19 @@ import { INDEX_PATH } from '../constants/RouterConstants';
 import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
+/**
+ * @method diffBalanceChecker
+ *
+ * @param {String} type
+ * @param {Array} balances
+ * @@returns {function(dispatch, getState): {(Object | null)}}
+ */
 const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	const oldBalances = getState().balance.get(type).toJS();
 	balances.map((nb) => {
@@ -51,6 +60,12 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 	});
 };
 
+/**
+ * @method getBalanceFromAssets
+ *
+ * @param {Array} assets
+ * @@returns {function(): Promise<Object>}
+ */
 export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
@@ -75,6 +90,13 @@ export const getBalanceFromAssets = (assets) => async () => {
 	return balances;
 };
 
+/**
+ * @method getAssetsBalances
+ *
+ * @param {Array} assets
+ * @param {Boolean} update
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
 
 	let balances = [];
@@ -95,6 +117,13 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch) =>
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
+/**
+ * @method getTokenBalances
+ *
+ * @param {String} accountId
+ * @param {String} networkName
+ * @@returns {function(dispatch): Promise<(undefined | Object)>}
+ */
 export const getTokenBalances = (accountId, networkName) => async (dispatch) => {
 
 	/**
@@ -131,6 +160,10 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch) => 
 	}));
 };
 
+/**
+ * @method updateTokenBalances
+ * @returns {function(dispatch, getState): Promise<(Object | undefined)>}
+ */
 export const updateTokenBalances = () => async (dispatch, getState) => {
 
 	const tokens = getState().balance.get('tokens');
@@ -152,6 +185,12 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	}));
 };
 
+/**
+ * @method getPreviewBalances
+ *
+ * @param {String} networkName
+ * @@returns {function(dispatch): Promise<(undefined | Object)>}
+ */
 export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -191,8 +230,10 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 };
 
 /**
+ * @method getFrozenBalances
  *
  * @param {String} accountId
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 	const frozenFunds = await echo.api.getFrozenBalances(accountId);
@@ -214,9 +255,11 @@ export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
 };
 
 /**
+ * @method initBalances
  *
  * @param {String} accountId
  * @param {String} networkName
+ * @returns {function(dispatch): Promise<undefined>}
  */
 export const initBalances = (accountId, networkName) => async (dispatch) => {
 
@@ -232,9 +275,10 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 };
 
 /**
+ * @method addToken
  *
  * @param {String} contractId
- * @returns {Function}
+ * @@returns {function(dispatch, getState): Promise<undefined>}
  */
 export const addToken = (contractId) => async (dispatch, getState) => {
 
@@ -312,6 +356,10 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 };
 
+/**
+ * @method getAccountFromTransferFrom
+ * @@returns {function(dispatch, getState): Promise<(Array | undefined)>}
+ */
 const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	const isIndexPath = history.location.pathname === INDEX_PATH;
 
@@ -344,19 +392,61 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	return fullAccount;
 };
 
+/**
+ * @method checkKeyWeightWarning
+ *
+ * @param {String} networkName
+ * @param {String} accountId
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
+export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
+	async (dispatch, getState) => {
+		let account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]);
+		account = account.toJS();
+		const currentThreshold = threshold || account.active.weight_threshold;
+		const auths = getState().echojs.getIn(['fullAccounts', accountId, 'active', 'account_auths']).toJS()
+			.concat(getState().echojs.getIn(['fullAccounts', accountId, 'active', 'key_auths']).toJS());
+		const fullKeys = Object.assign({}, ...JSON.parse(localStorage.getItem(`accounts_${networkName}`))
+			.map((acc) => acc.addedKeys));
+		let sumKeyWeight = 0;
+		// eslint-disable-next-line no-restricted-syntax
+		for (const key in fullKeys) {
+			if (fullKeys[key]) {
+				const foundedKey = auths.find((auth) => auth[0] === key);
+				if (foundedKey) {
+					sumKeyWeight += foundedKey[1];
+				}
+			}
+		}
+		if (currentThreshold > sumKeyWeight) {
+			return true;
+		}
+		return false;
+	};
+
+/**
+ * @method handleSubscriber
+ *
+ * @param {Array} subscribeObjects
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-
 	if (!accountId || !echo.isConnected) return;
 
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
 	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
+
+	const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, accountId));
+
+	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
@@ -388,13 +478,13 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		}
 	}
 
+
 	if (isTokenUpdated) {
 		await dispatch(updateTokenBalances());
 	}
 
 	if (balances && isBalanceUpdated) {
 		await dispatch(getAssetsBalances(balances, true));
-		const networkName = getState().global.getIn(['network', 'name']);
 		await dispatch(getPreviewBalances(networkName));
 		await dispatch(getFrozenBalances(accountId));
 	}
@@ -408,6 +498,12 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	}
 };
 
+/**
+ * @method removeToken
+ *
+ * @param {String} contractId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const removeToken = (contractId) => (dispatch, getState) => {
 	const targetToken = getState().balance.get('tokens').find((t) => t.id === contractId);
 	if (!targetToken || !targetToken.disabled) return;
@@ -429,6 +525,12 @@ export const removeToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.delete({ field: 'tokens', value: index }));
 };
 
+/**
+ * @method enableToken
+ *
+ * @param {String} contractId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const enableToken = (contractId) => (dispatch, getState) => {
 	const intervalId = getState().balance.get('intervalId');
 	clearTimeout(intervalId);
@@ -436,7 +538,13 @@ export const enableToken = (contractId) => (dispatch, getState) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: false } }));
 };
 
-
+/**
+ * @method disableToken
+ *
+ * @param {String} name
+ * @param {String} contractId
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
@@ -453,11 +561,22 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	);
 };
 
+/**
+ * @method setAsset
+ *
+ * @param {Array} asset
+ * @param {Array} type
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const setAsset = (asset, type) => (dispatch, getState) => {
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 };
 
+/**
+ * @method resetBalance
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());
 };
