@@ -53,10 +53,6 @@ class PrivateKeysScenario extends React.Component {
 		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
 
 		this.props.onKeys(keys);
-		// this.setState((prevState) => ({
-		// 	...prevState,
-		// 	keys: [...keys],
-		// }));
 	}
 
 	unlock() {

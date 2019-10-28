@@ -25,42 +25,6 @@ class ViewModeTable extends React.Component {
 		return null;
 	}
 
-	// }
-
-	// static getDerivedStateFromProps(nextProps, prevState) {
-	// 	const {
-	// 		keyRole, keys, data, addedFields,
-	// 	} = nextProps;
-
-	// 	const keysLength = prevState.editedAddKeys.length;
-	// 	const editedAddKeys = [];
-
-	// 	if (!keysLength && !addedFields.length && keys.getIn([keyRole, 'keys']).size - data.length !== keysLength) {
-	// 		keys.getIn([keyRole, 'keys']).mapEntries(([key, value]) => {
-
-	// 			if (Number.isNaN(Number(key)) || value || !value.get('key').value || !value.get('weight').value) {
-	// 				return;
-	// 			}
-
-	// 			nextProps.onAddKey(parseInt(key, 10));
-	// 			editedAddKeys.push(parseInt(key, 10));
-	// 		});
-	// 	}
-
-	// 	if (nextProps.resetAddKeys) {
-	// 		return {
-	// 			editedAddKeys: [],
-	// 			removedRows: [],
-	// 		};
-	// 	}
-
-	// 	if (editedAddKeys.length) {
-	// 		return { editedAddKeys };
-	// 	}
-
-	// 	return null;
-	// }
-
 	componentDidUpdate(prevProps) {
 		const {
 			keys, firstFetch, data, keyRole,
@@ -93,6 +57,8 @@ class ViewModeTable extends React.Component {
 		removedRows.push(key);
 
 		this.setState({ removedRows });
+
+		this.props.setWif(keyRole, type, { target: { name: key, value: '' } });
 	}
 
 	setPublicKey(keyRole, e) {
@@ -141,6 +107,8 @@ class ViewModeTable extends React.Component {
 		addedFields.splice(addedFields.findIndex((o) => o.num === num), 1);
 
 		this.setState({ addedFields });
+
+		this.props.setWif(keyRole, type, { target: { name: num.toString(), value: '' } });
 	}
 
 	renderDescription() {

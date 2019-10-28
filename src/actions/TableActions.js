@@ -8,7 +8,7 @@ import { resetTransaction } from './TransactionActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
-import { isThreshold, isPublicKey, isAccountId, isWeight } from '../helpers/ValidateHelper';
+import { isThreshold, isPublicKey, isWeight } from '../helpers/ValidateHelper';
 import { setInFormError, setInFormValue, setValue as setFormValue } from './FormActions';
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 import { getOperationFee } from '../api/TransactionApi';
@@ -215,9 +215,12 @@ export const isChanged = () => (dispatch, getState) => {
  * @param {Object} privateKeys
  * @returns {Object}
  */
-export const validatePrivateKeys = (privateKeys) =>
-	Object.values(privateKeys.active).some(({ error }) => !!error)
-		|| Object.values(privateKeys.echoRand).some(({ error }) => !!error);
+export const validatePrivateKeys = (privateKeys) => {
+	console.log(Object.values(privateKeys.active))
+	console.log(Object.values(privateKeys.echoRand))
+	return Object.values(privateKeys.active).some(({ error }) => !!error)
+	|| Object.values(privateKeys.echoRand).some(({ error }) => !!error);
+}
 
 /**
  * @method validateKey
@@ -335,7 +338,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 	const removed = [];
 
 	['active'].forEach((role) => {
-		permissionForm.getIn([role, 'keys']).some((keyForm) => {
+		(permissionForm.getIn([role, 'keys']) || []).some((keyForm) => {
 			const threshold = permissionForm.getIn([role, 'threshold']);
 			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
 				permissionData[role].threshold = Number(threshold.value);
@@ -396,7 +399,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 
 	['active'].forEach((role) => {
 		const accountsPromises = [];
-		permissionForm.getIn([role, 'accounts']).some((keyForm) => {
+		(permissionForm.getIn([role, 'accounts']) || []).some((keyForm) => {
 			const threshold = permissionForm.getIn([role, 'threshold']);
 			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
 				permissionData[role].threshold = Number(threshold.value);
