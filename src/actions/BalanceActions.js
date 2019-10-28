@@ -14,6 +14,7 @@ import {
 	closeModal,
 	toggleLoading,
 } from './ModalActions';
+
 import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -26,6 +27,7 @@ import { INDEX_PATH } from '../constants/RouterConstants';
 import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
 
@@ -390,6 +392,13 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	return fullAccount;
 };
 
+/**
+ * @method checkKeyWeightWarning
+ *
+ * @param {String} networkName
+ * @param {String} accountId
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
 	async (dispatch, getState) => {
 		let account = getState().echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]);
@@ -423,17 +432,21 @@ export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
  */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-
 	if (!accountId || !echo.isConnected) return;
 
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
+	const networkName = getState().global.getIn(['network', 'name']);
 
 	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
 
 	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
+
+	const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, accountId));
+
+	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
@@ -465,13 +478,13 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		}
 	}
 
+
 	if (isTokenUpdated) {
 		await dispatch(updateTokenBalances());
 	}
 
 	if (balances && isBalanceUpdated) {
 		await dispatch(getAssetsBalances(balances, true));
-		const networkName = getState().global.getIn(['network', 'name']);
 		await dispatch(getPreviewBalances(networkName));
 		await dispatch(getFrozenBalances(accountId));
 	}

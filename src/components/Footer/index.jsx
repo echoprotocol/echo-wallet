@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,6 +10,8 @@ import NetworkDropdown from './NetworkDropdown';
 import { connection } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
+import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
+
 
 class Footer extends React.PureComponent {
 
@@ -19,20 +22,41 @@ class Footer extends React.PureComponent {
 	openModal() {
 		this.props.openModal();
 	}
-
+	toPermissions() {
+		this.props.history.push(PERMISSIONS_PATH);
+	}
 	render() {
 		const {
-			isConnect, latency, lastBlock, error,
+			isConnect, latency, lastBlock, error, keyWeightWarn,
 		} = this.props;
-
 		const connected = (
 			<div className="footer">
 				<ul>
 					<li>
-						<button onClick={() => { this.openModal(); }}>Echo.{version}</button>
+						<button className="version-btn" onClick={() => { this.openModal(); }}>Echo.{version}</button>
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} />
+					</li>
+				</ul>
+			</div>
+		);
+
+		const warning = (
+			<div className="footer warning">
+				<ul>
+					<li>
+						Total weight of all the keys won&rsquo;t be enough to sign a transaction.
+						<Button
+							type="submit"
+							size="medium"
+							className="black-btn"
+							onClick={() => this.toPermissions()}
+						>Keys Parameters
+						</Button>
+					</li>
+					<li>
+						<NetworkDropdown lastBlock={lastBlock} warning />
 					</li>
 				</ul>
 			</div>
@@ -43,7 +67,13 @@ class Footer extends React.PureComponent {
 				<ul>
 					<li>
                         Check Your Connection
-						<Button type="submit" size="tiny" color="black" onClick={() => this.onReconnect()}>Try again</Button>
+						<Button
+							type="submit"
+							size="medium"
+							className="black-btn"
+							onClick={() => this.onReconnect()}
+						>Try again
+						</Button>
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} disconnected />
@@ -62,7 +92,16 @@ class Footer extends React.PureComponent {
 		);
 
 		if (isConnect && !latency.error) {
-			return error ? errored : connected;
+
+			if (error) {
+				return errored;
+			}
+
+			if (keyWeightWarn) {
+				return warning;
+			}
+
+			return connected;
 		}
 
 		return disconnected;
@@ -77,6 +116,8 @@ Footer.propTypes = {
 	error: PropTypes.string,
 	connection: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
+	history: PropTypes.object.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Footer.defaultProps = {
@@ -90,15 +131,16 @@ Footer.defaultProps = {
 };
 
 
-export default connect(
+export default withRouter(connect(
 	(state) => ({
 		latency: state.echojs.getIn(['meta', 'latency']),
 		lastBlock: state.echojs.getIn([CACHE_MAPS.DYNAMIC_GLOBAL_PROPERTIES, 'head_block_number']),
 		isConnect: state.global.get('isConnected'),
 		error: state.global.get('globalError'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openModal: () => dispatch(openModal(MODAL_INFO)),
 		connection: () => dispatch(connection()),
 	}),
-)(Footer);
+)(Footer));

@@ -82,7 +82,10 @@ class WarningConfirmThresholScenario extends React.Component {
 
 	async unlock() {
 		const { password } = this.state;
+		const { onUnlock } = this.props;
+
 		this.props.unlock(password, () => {
+			onUnlock(password);
 			this.props.openModal(MODAL_DETAILS);
 		});
 
@@ -167,11 +170,13 @@ WarningConfirmThresholScenario.propTypes = {
 	treshold: PropTypes.object.isRequired,
 	account: PropTypes.object.isRequired,
 	network: PropTypes.string.isRequired,
+	onUnlock: PropTypes.func,
 };
 
 WarningConfirmThresholScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
+	onUnlock: () => {},
 };
 
 export default connect(

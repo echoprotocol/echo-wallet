@@ -12,6 +12,7 @@ class FrozenFunds extends React.Component {
 			frozenFunds, totalFrozenFunds,
 		} = this.props;
 
+
 		if (frozenFunds.length) {
 			return (
 				<div className="sub-header">
@@ -23,7 +24,8 @@ class FrozenFunds extends React.Component {
 					</div>
 				</div>
 			);
-		} return null;
+		}
+		return null;
 	}
 
 	render() {
@@ -34,7 +36,7 @@ class FrozenFunds extends React.Component {
 		} = this.props;
 
 		return (
-			<div>
+			<React.Fragment>
 				{this.renderSubHeader()}
 				<div className="page-wrap frozen">
 					<div className="balance-wrap">
@@ -74,7 +76,7 @@ class FrozenFunds extends React.Component {
 						/>
 					</div>
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 

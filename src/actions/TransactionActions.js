@@ -12,6 +12,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
 	FORM_FREEZE,
+	FORM_PERMISSION_KEY,
 } from '../constants/FormConstants';
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
@@ -674,8 +675,12 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
 	toastSuccess(`${operations[operation].name} transaction was sent`);
-	if (operationId === operations.account_update.value) history.push(PERMISSIONS_PATH);
-	else history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+	if (operationId === operations.account_update.value) {
+		dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
+		history.push(PERMISSIONS_PATH);
+	} else {
+		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+	}
 
 	dispatch(closeModal(MODAL_DETAILS));
 	dispatch(resetTransaction());
