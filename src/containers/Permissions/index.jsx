@@ -89,9 +89,7 @@ class Permissions extends React.Component {
 		const account = this.props.account.toJS();
 
 		const newActiveWifs = Object.entries(privateKeys.active).map(([index, wif]) => {
-			console.log('index, wif', index, wif)
 			const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-			console.log('publicKey', publicKey)
 
 			if (publicKey && wif.value && !wif.error) {
 				return this.props.addWif(publicKey, wif.value, account, password);
@@ -110,9 +108,7 @@ class Permissions extends React.Component {
 				Promise.all(newActiveWifs),
 				Promise.all(newEchoRandWifs), 
 			])
-		} catch (error) {
-			console.log(error)
-		}
+		} catch (error) {}
 
 	}
 
