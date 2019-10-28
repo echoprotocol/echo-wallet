@@ -84,45 +84,35 @@ class Permissions extends React.Component {
 	}
 
 	async saveWifs(password) {
-		const { form } = this.props;
-		const { privateKeys } = this.state;
-
-		const account = this.props.account.toJS();
-
-		const newActiveWifs = Object.entries(privateKeys.active).map((zalupka, lol) => {
-			const [index, wif] = zalupka;
-			try {
-			console.log(lol)
-			console.log(zalupka);
-			const kek = form.getIn(['active', 'keys', index, 'key'])
-			console.log(kek);
-			console.log(wif);
-			const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-
-			if (publicKey && wif.value && !wif.error) {
-				return this.props.addWif(publicKey, wif.value, account, password);
-			}
-			}catch(e) {
-				console.log(e)
-			}
-
-		})
-
-		const newEchoRandWifs = Object.entries(privateKeys.echoRand).map(([index, wif]) => {
-			const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-			if (publicKey && wif.value && !wif.error) {
-				return this.props.addWif(publicKey, wif.value, account, password);
-			}
-		})
-
-		try {
-			await Promise.all([
-				Promise.all(newActiveWifs),
-				Promise.all(newEchoRandWifs), 
-			])
-		} catch (error) {}
-
-	}
+        const { form } = this.props;
+        const { privateKeys } = this.state;
+        const account = this.props.account.toJS();
+        const newActiveWifs = Object.entries(privateKeys.active)
+            .filter(([index, wif]) => {
+                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+                return publicKey && wif && wif.value && !wif.error
+            })
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value };
+            })
+        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+            .filter(([index, wif]) => {
+                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+                return publicKey && wif && wif.value && !wif.error
+            })
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value };
+            })
+        const wifs = [...newActiveWifs, ...newEchoRandWifs];
+        for(let i = 0; i < wifs.length; i++) {
+            const { publicKey, wif } = wifs[i];
+            try {
+                await this.props.addWif(publicKey, wif, account, password);
+            } catch (error) {}
+        }
+    }
 
 	componentWillUnmount() {
 		this.props.clear();

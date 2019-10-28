@@ -1,6 +1,10 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { closeModal } from '../../actions/ModalActions';
+import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
 
 class ModalViewWIF extends React.Component {
 
@@ -85,4 +89,12 @@ ModalViewWIF.defaultProps = {
 	keys: {},
 };
 
-export default ModalViewWIF;
+
+export default connect(
+	(state) => ({
+		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
+	}),
+	(dispatch) => ({
+		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
+	}),
+)(ModalViewWIF);

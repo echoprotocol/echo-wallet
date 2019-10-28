@@ -665,10 +665,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		}).catch((error) => {
-			error = error.toString();
-			let message = error.substring(error.indexOf(':') + 2, error.indexOf('\n'));
-			message = (message.charAt(0).toUpperCase() + message.slice(1));
-
+			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));

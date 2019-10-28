@@ -1,6 +1,10 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { closeModal } from '../../actions/ModalActions';
+import { MODAL_BACKUP } from '../../constants/ModalConstants';
 
 class ModalBackup extends React.Component {
 
@@ -98,16 +102,24 @@ class ModalBackup extends React.Component {
 
 ModalBackup.propTypes = {
 	show: PropTypes.bool,
-	activeUser: PropTypes.any,
 	close: PropTypes.func.isRequired,
+	activeUser: PropTypes.any,
 	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.array,
 };
 
 ModalBackup.defaultProps = {
-	show: false,
 	activeUser: null,
+	show: false,
 	keys: [],
 };
 
-export default ModalBackup;
+
+export default connect(
+	(state) => ({
+		show: state.modal.getIn([MODAL_BACKUP, 'show']),
+	}),
+	(dispatch) => ({
+		close: () => dispatch(closeModal(MODAL_BACKUP)),
+	}),
+)(ModalBackup);
