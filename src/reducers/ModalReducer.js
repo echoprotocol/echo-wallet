@@ -11,7 +11,7 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_INFO,
-	MODAL_ADD_KEY,
+	PROPOSAL_ADD_WIF,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -37,7 +37,7 @@ const DEFAULT_MODAL_FIELDS = {
 		accountName: '',
 	}),
 	[MODAL_INFO]: Map({}),
-	[MODAL_ADD_KEY]: Map({}),
+	[PROPOSAL_ADD_WIF]: Map({}),
 };
 
 export default createModule({
@@ -53,7 +53,7 @@ export default createModule({
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CHOOSE_ACCOUNT]),
 		[MODAL_LOGOUT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_LOGOUT]),
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
-		[MODAL_ADD_KEY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_KEY]),
+		[PROPOSAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[PROPOSAL_ADD_WIF]),
 	}),
 	transformations: {
 		open: {

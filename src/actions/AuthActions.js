@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -78,7 +78,6 @@ export const createAccount = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
-
 		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
 		const userStorage = Services.getUserStorage();
@@ -93,6 +92,20 @@ export const createAccount = ({
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
 
+};
+/**
+ * @method isAllWIFsAdded
+ * @param {Object} account
+ * @param {String} password
+ * @return {Boolean}
+ */
+const isAllWIFsAdded = async (account, password) => {
+	const userStorage = Services.getUserStorage();
+	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
+	const userPublicKeys = account.active.key_auths;
+	const publicEchorandKey = account.echorand_key;
+	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.publicKey === publicEchorandKey);
+	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
 };
 
 /**
@@ -150,6 +163,10 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			dispatch(initAccount(accountName, networkName));
 		}
 
+		const hasAllWIFs = await isAllWIFsAdded(account, password);
+		if (!hasAllWIFs) {
+			dispatch(openModal(PROPOSAL_ADD_WIF));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
