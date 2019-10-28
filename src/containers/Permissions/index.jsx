@@ -157,8 +157,6 @@ class Permissions extends React.Component {
 	}
 
 	changeMode(mode, privateKeys) {
-
-		console.log('changeMode', privateKeys);
 		const permissionsKeys = this.props.permissionsKeys.toJS();
 		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
 			acc[res.publicKey] = {
@@ -182,7 +180,6 @@ class Permissions extends React.Component {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
 		}
-		console.log(privateKeysByRole)
 
 		this.setState({ privateKeys: privateKeysByRole }, () => {
 			if (mode === FORM_PERMISSION_MODE_EDIT) {
