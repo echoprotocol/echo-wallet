@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalViewWIF from '../../components/Modals/ModalViewWIF';
-import ModalAddWIF from '../../components/Modals/ModalAddWIF';
+import ModalAddWIF from '../../components/Modals/ModalAddWif';
 
 import { MODAL_UNLOCK_VIEW_WIF, MODAL_WIPE, MODAL_VIEW_WIF, MODAL_UNLOCK_ADD_WIF, MODAL_ADD_WIF } from '../../constants/ModalConstants';
 import { toastError } from '../../helpers/ToastHelper';
