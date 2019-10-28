@@ -325,6 +325,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			keys: [],
 			accounts: [],
 			threshold: null,
+			echorand_key: null,
 		},
 		echoRand: {
 			key: null,

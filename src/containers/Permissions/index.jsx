@@ -9,6 +9,7 @@ import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
+import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
 
@@ -207,11 +208,20 @@ class Permissions extends React.Component {
 							)
 						}
 					</PrivateKeysScenario>
-					<Button
-						className="green-btn"
-						size="medium"
-						content="View & backup keys"
-					/>
+					<BackupKeysScenario
+						permissionsKeys={this.props.permissionsKeys}
+					>
+						{
+							(backup) => (
+								<Button
+									className="green-btn"
+									size="medium"
+									content="View & backup keys"
+									onClick={backup}
+								/>
+							)
+						}
+					</BackupKeysScenario>
 				</div>
 			</div >
 		);
