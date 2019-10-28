@@ -1,17 +1,23 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
+import { PROPOSAL_ADD_WIF } from '../../constants/ModalConstants';
 import { closeModal } from '../../actions/ModalActions';
-import { MODAL_ADD_KEY } from '../../constants/ModalConstants';
 
-class ModalInfoWallet extends React.Component {
+class ModalWIF extends React.Component {
 
-	onClose() {
-		this.props.close();
+	onAgree(e) {
+		e.preventDefault();
+		this.props.history.push(PERMISSIONS_PATH);
+		this.props.hide();
 	}
-	onConfirm() { }
+	onClose(e) {
+		e.preventDefault();
+		this.props.hide();
+	}
 
 	render() {
 		const { show } = this.props;
@@ -31,14 +37,14 @@ class ModalInfoWallet extends React.Component {
 								type="button"
 
 								className="main-btn"
-								onClick={() => this.onClose()}
+								onClick={(e) => this.onClose(e)}
 								content="Do it later"
 							/>
 							<Button
 								basic
 								type="button"
 								className="main-btn"
-								onClick={() => this.onConfirm()}
+								onClick={(e) => this.onAgree(e)}
 								content="Proceed"
 							/>
 						</div>
@@ -50,22 +56,21 @@ class ModalInfoWallet extends React.Component {
 
 }
 
-ModalInfoWallet.propTypes = {
+ModalWIF.propTypes = {
 	show: PropTypes.bool,
-	close: PropTypes.func.isRequired,
+	hide: PropTypes.func.isRequired,
+	history: PropTypes.any.isRequired,
 };
 
-ModalInfoWallet.defaultProps = {
+ModalWIF.defaultProps = {
 	show: false,
 };
 
-
-export default connect(
+export default withRouter(connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_ADD_KEY, 'show']),
+		show: state.modal.getIn([PROPOSAL_ADD_WIF, 'show']),
 	}),
 	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_ADD_KEY)),
+		hide: () => dispatch(closeModal(PROPOSAL_ADD_WIF)),
 	}),
-)(ModalInfoWallet);
-
+)(ModalWIF));

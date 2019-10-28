@@ -7,4 +7,4 @@ export const MODAL_CHOOSE_ACCOUNT = 'modal_choose_account';
 export const MODAL_WIPE = 'modal_wipe_data';
 export const MODAL_INFO = 'modal_info';
 export const MODAL_CONFIRM_CHANGE_TRESHOLD = 'modal_confirm_check_treshold';
-export const MODAL_ADD_KEY = 'modal_add_key';
+export const PROPOSAL_ADD_WIF = 'modal_proposal_WIF';

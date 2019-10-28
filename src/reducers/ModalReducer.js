@@ -12,7 +12,7 @@ import {
 	MODAL_LOGOUT,
 	MODAL_INFO,
 	MODAL_CONFIRM_CHANGE_TRESHOLD,
-	MODAL_ADD_KEY,
+	PROPOSAL_ADD_WIF,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -39,7 +39,7 @@ const DEFAULT_MODAL_FIELDS = {
 	}),
 	[MODAL_INFO]: Map({}),
 	[MODAL_CONFIRM_CHANGE_TRESHOLD]: Map({}),
-	[MODAL_ADD_KEY]: Map({}),
+	[PROPOSAL_ADD_WIF]: Map({}),
 };
 
 export default createModule({
@@ -57,7 +57,7 @@ export default createModule({
 		[MODAL_INFO]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_INFO]),
 		[MODAL_CONFIRM_CHANGE_TRESHOLD]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_MODAL_FIELDS[MODAL_CONFIRM_CHANGE_TRESHOLD]),
-		[MODAL_ADD_KEY]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ADD_KEY]),
+		[PROPOSAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[PROPOSAL_ADD_WIF]),
 	}),
 	transformations: {
 		open: {
