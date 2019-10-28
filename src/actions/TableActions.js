@@ -215,12 +215,9 @@ export const isChanged = () => (dispatch, getState) => {
  * @param {Object} privateKeys
  * @returns {Object}
  */
-export const validatePrivateKeys = (privateKeys) => {
-	console.log(Object.values(privateKeys.active))
-	console.log(Object.values(privateKeys.echoRand))
-	return Object.values(privateKeys.active).some(({ error }) => !!error)
-	|| Object.values(privateKeys.echoRand).some(({ error }) => !!error);
-}
+export const validatePrivateKeys = (privateKeys) =>
+	Object.values(privateKeys.active).some((wif) => wif && !!wif.error)
+		|| Object.values(privateKeys.echoRand).some((wif) => wif && !!wif.error);
 
 /**
  * @method validateKey
@@ -328,6 +325,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			keys: [],
 			accounts: [],
 			threshold: null,
+			echorand_key: null,
 		},
 		echoRand: {
 			key: null,

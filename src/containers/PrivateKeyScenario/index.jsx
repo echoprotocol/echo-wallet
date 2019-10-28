@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
-import ModalShowWif from '../../components/Modals/ModalShowWif';
-import ModalAddWIF from '../../components/Modals/ModalAddWIF';
+import ModalViewWIF from '../../components/Modals/ModalViewWIF';
+import ModalAddWIF from '../../components/Modals/ModalAddWif';
 
-import { MODAL_UNLOCK_SHOW_WIF, MODAL_WIPE, MODAL_SHOW_WIF, MODAL_UNLOCK_ADD_WIF, MODAL_ADD_WIF } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK_VIEW_WIF, MODAL_WIPE, MODAL_VIEW_WIF, MODAL_UNLOCK_ADD_WIF, MODAL_ADD_WIF } from '../../constants/ModalConstants';
 import { toastError } from '../../helpers/ToastHelper';
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock, asyncUnlock, saveWifToDb } from '../../actions/AuthActions';
@@ -21,7 +21,7 @@ class PrivateKeyScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			publicKey: '',
-			wif: ''
+			wif: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -40,6 +40,7 @@ class PrivateKeyScenario extends React.Component {
 
 		this.setState(() => ({
 			publicKey,
+			// eslint-disable-next-line react/no-unused-state
 			wif: key.wif,
 		}));
 	}
@@ -65,7 +66,7 @@ class PrivateKeyScenario extends React.Component {
 
 	showWif(publicKey) {
 		this.setState({ password: '', publicKey });
-		this.props.openModal(MODAL_UNLOCK_SHOW_WIF);
+		this.props.openModal(MODAL_UNLOCK_VIEW_WIF);
 	}
 
 	addWif(publicKey) {
@@ -76,8 +77,8 @@ class PrivateKeyScenario extends React.Component {
 	change(password) {
 		this.setState({ password });
 
-		if (this.props[MODAL_UNLOCK_SHOW_WIF].get('error')) {
-			this.props.clear(MODAL_UNLOCK_SHOW_WIF);
+		if (this.props[MODAL_UNLOCK_VIEW_WIF].get('error')) {
+			this.props.clear(MODAL_UNLOCK_VIEW_WIF);
 		}
 	}
 
@@ -86,8 +87,8 @@ class PrivateKeyScenario extends React.Component {
 
 		this.props.asyncUnlock(password, async () => {
 			await this.setWIFKey();
-			this.props.openModal(MODAL_SHOW_WIF);
-		}, MODAL_UNLOCK_SHOW_WIF);
+			this.props.openModal(MODAL_VIEW_WIF);
+		}, MODAL_UNLOCK_VIEW_WIF);
 	}
 
 	unlockToAdd() {
@@ -105,15 +106,15 @@ class PrivateKeyScenario extends React.Component {
 
 	forgot() {
 		this.setState({ password: '' });
-		this.props.closeModal(MODAL_UNLOCK_SHOW_WIF);
+		this.props.closeModal(MODAL_UNLOCK_VIEW_WIF);
 		this.props.openModal(MODAL_WIPE);
 	}
 
 	render() {
 		const {
-			[MODAL_UNLOCK_SHOW_WIF]: modalShowWifUnlockUnlock,
+			[MODAL_UNLOCK_VIEW_WIF]: ModalViewWIFUnlockUnlock,
 			[MODAL_UNLOCK_ADD_WIF]: modalAddWifUnlock,
-			[MODAL_SHOW_WIF]: modalShowWif,
+			[MODAL_VIEW_WIF]: ModalViewWif,
 			[MODAL_ADD_WIF]: modalAddWif,
 		} = this.props;
 
@@ -121,13 +122,13 @@ class PrivateKeyScenario extends React.Component {
 			<React.Fragment>
 				{this.props.children(this.showWif.bind(this), this.addWif.bind(this))}
 				<ModalUnlock
-					show={modalShowWifUnlockUnlock.get('show')}
-					disabled={modalShowWifUnlockUnlock.get('loading')}
-					error={modalShowWifUnlockUnlock.get('error')}
+					show={ModalViewWIFUnlockUnlock.get('show')}
+					disabled={ModalViewWIFUnlockUnlock.get('loading')}
+					error={ModalViewWIFUnlockUnlock.get('error')}
 					password={this.state.password}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlockToShow()}
-					close={() => this.close(MODAL_UNLOCK_SHOW_WIF)}
+					close={() => this.close(MODAL_UNLOCK_VIEW_WIF)}
 					forgot={() => this.forgot()}
 				/>
 				<ModalUnlock
@@ -140,12 +141,12 @@ class PrivateKeyScenario extends React.Component {
 					close={() => this.close(MODAL_UNLOCK_ADD_WIF)}
 					forgot={() => this.forgot()}
 				/>
-				<ModalShowWif
-					show={modalShowWif.get('show')}
-					disabled={modalShowWif.get('loading')}
-					error={modalShowWif.get('error')}
+				<ModalViewWIF
+					show={ModalViewWif.get('show')}
+					disabled={ModalViewWif.get('loading')}
+					error={ModalViewWif.get('error')}
 					saveAsTxt={(backupInfo) => this.saveAsTxt(backupInfo)}
-					close={() => this.close(MODAL_SHOW_WIF)}
+					close={() => this.close(MODAL_VIEW_WIF)}
 					keys={this.state}
 				/>
 				<ModalAddWIF
@@ -164,9 +165,9 @@ class PrivateKeyScenario extends React.Component {
 PrivateKeyScenario.propTypes = {
 	children: PropTypes.func.isRequired,
 
-	[MODAL_UNLOCK_SHOW_WIF]: PropTypes.object.isRequired,
+	[MODAL_UNLOCK_VIEW_WIF]: PropTypes.object.isRequired,
 	[MODAL_UNLOCK_ADD_WIF]: PropTypes.object.isRequired,
-	[MODAL_SHOW_WIF]: PropTypes.object.isRequired,
+	[MODAL_VIEW_WIF]: PropTypes.object.isRequired,
 	[MODAL_ADD_WIF]: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
@@ -179,9 +180,9 @@ PrivateKeyScenario.propTypes = {
 
 export default connect(
 	(state) => ({
-		[MODAL_UNLOCK_SHOW_WIF]: state.modal.get(MODAL_UNLOCK_SHOW_WIF),
+		[MODAL_UNLOCK_VIEW_WIF]: state.modal.get(MODAL_UNLOCK_VIEW_WIF),
 		[MODAL_UNLOCK_ADD_WIF]: state.modal.get(MODAL_UNLOCK_ADD_WIF),
-		[MODAL_SHOW_WIF]: state.modal.get(MODAL_SHOW_WIF),
+		[MODAL_VIEW_WIF]: state.modal.get(MODAL_VIEW_WIF),
 		[MODAL_ADD_WIF]: state.modal.get(MODAL_ADD_WIF),
 	}),
 	(dispatch) => ({
@@ -190,7 +191,7 @@ export default connect(
 		clear: (modal) => dispatch(setError(modal, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_ADD_WIF)),
 		asyncUnlock: (password, callback) =>
-			dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_SHOW_WIF)),
+			dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_VIEW_WIF)),
 		saveWifToDb: (publicKey, wif, account, password, callback) =>
 			dispatch(saveWifToDb(publicKey, wif, account, password, callback)),
 	}),

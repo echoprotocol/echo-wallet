@@ -1,11 +1,6 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
-
 
 class ModalViewWIF extends React.Component {
 
@@ -13,8 +8,14 @@ class ModalViewWIF extends React.Component {
 		this.props.close();
 	}
 
+	onSave() {
+		const { keys } = this.props;
+		const keysString = `Public key:\n${keys.publicKey}\n\nWIF:${keys.wif}`;
+		this.props.saveAsTxt(keysString);
+	}
+
 	render() {
-		const { show } = this.props;
+		const { show, keys } = this.props;
 
 		return (
 			<Modal className="view-wif-modal" open={show} dimmer="inverted">
@@ -37,6 +38,7 @@ class ModalViewWIF extends React.Component {
 							placeholder="Public Key"
 							disabled
 							name="public-key"
+							value={keys.publicKey}
 						/>
 					</Form.Field>
 
@@ -47,6 +49,7 @@ class ModalViewWIF extends React.Component {
 							placeholder="WIF"
 							disabled
 							name="wif"
+							value={keys.wif}
 						/>
 						<span className="warning-message">
 							* Warning: Anyone who has this key can steal all your Echo
@@ -59,7 +62,7 @@ class ModalViewWIF extends React.Component {
 							basic
 							type="submit"
 							className="main-btn"
-							onClick={() => {}}
+							onClick={() => this.onSave()}
 							content="Save As .TXT"
 						/>
 					</div>
@@ -73,19 +76,13 @@ class ModalViewWIF extends React.Component {
 ModalViewWIF.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
+	saveAsTxt: PropTypes.func.isRequired,
+	keys: PropTypes.object,
 };
 
 ModalViewWIF.defaultProps = {
 	show: false,
+	keys: {},
 };
 
-
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
-	}),
-)(ModalViewWIF);
-
+export default ModalViewWIF;

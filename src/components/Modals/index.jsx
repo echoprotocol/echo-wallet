@@ -5,9 +5,6 @@ import ModalLogout from './ModalLogout';
 import ModalWipe from './ModalWipe';
 import ModalInfo from './ModalInfo';
 import ModalAddKey from './ModalAddKey';
-import ModalEditPermissions from './ModalEditPermissions';
-import ModalViewWIF from './ModalViewWIF';
-import ModalBackup from './ModalBackup';
 import ModalConfirmEditingOfPermissions from './ModalConfirmEditingOfPermissions';
 
 export default class ModalsComponent extends React.Component {
@@ -20,9 +17,6 @@ export default class ModalsComponent extends React.Component {
 				<ModalWipe />
 				<ModalInfo />
 				<ModalAddKey />
-				<ModalEditPermissions />
-				<ModalViewWIF />
-				<ModalBackup />
 				<ModalConfirmEditingOfPermissions />
 			</React.Fragment>
 		);

@@ -3,7 +3,7 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-export default class EditModeTableRow extends React.Component {
+class EditModeTableRow extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -139,3 +139,5 @@ EditModeTableRow.defaultProps = {
 	type: '',
 	wif: {},
 };
+
+export default EditModeTableRow;

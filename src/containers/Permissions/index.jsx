@@ -9,6 +9,7 @@ import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
+import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
 
@@ -89,9 +90,7 @@ class Permissions extends React.Component {
 		const account = this.props.account.toJS();
 
 		const newActiveWifs = Object.entries(privateKeys.active).map(([index, wif]) => {
-			console.log('index, wif', index, wif)
 			const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-			console.log('publicKey', publicKey)
 
 			if (publicKey && wif.value && !wif.error) {
 				return this.props.addWif(publicKey, wif.value, account, password);
@@ -110,9 +109,7 @@ class Permissions extends React.Component {
 				Promise.all(newActiveWifs),
 				Promise.all(newEchoRandWifs), 
 			])
-		} catch (error) {
-			console.log(error)
-		}
+		} catch (error) {}
 
 	}
 
@@ -211,11 +208,20 @@ class Permissions extends React.Component {
 							)
 						}
 					</PrivateKeysScenario>
-					<Button
-						className="green-btn"
-						size="medium"
-						content="View & backup keys"
-					/>
+					<BackupKeysScenario
+						permissionsKeys={this.props.permissionsKeys}
+					>
+						{
+							(backup) => (
+								<Button
+									className="green-btn"
+									size="medium"
+									content="View & backup keys"
+									onClick={backup}
+								/>
+							)
+						}
+					</BackupKeysScenario>
 				</div>
 			</div >
 		);
