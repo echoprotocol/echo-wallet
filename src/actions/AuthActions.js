@@ -108,10 +108,6 @@ const isAllWIFsAdded = async (account, password) => {
 	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4304f8fe13b7e073d5332cf8a8961a0c8b8efdcd
 /**
  * @method authUser
  *
