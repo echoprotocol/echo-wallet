@@ -21,7 +21,7 @@ class PrivateKeyScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			publicKey: '',
-			wif: ''
+			wif: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -40,6 +40,7 @@ class PrivateKeyScenario extends React.Component {
 
 		this.setState(() => ({
 			publicKey,
+			// eslint-disable-next-line react/no-unused-state
 			wif: key.wif,
 		}));
 	}

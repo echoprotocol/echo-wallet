@@ -9,8 +9,8 @@ class ModalBackupKeys extends React.Component {
 	}
 
 	onSave() {
-        const { keys } = this.props;
-        const keysString = `Public key:\n${keys.publicKey}\n\nWIF:${keys.wif}`;
+		const { keys } = this.props;
+		const keysString = `Public key:\n${keys.publicKey}\n\nWIF:${keys.wif}`;
 		this.props.saveAsTxt(keysString);
 	}
 
@@ -37,17 +37,17 @@ class ModalBackupKeys extends React.Component {
 		);
 	}
 
-    renderKeys() {
-        const { keys } = this.props;
+	renderKeys() {
+		const { keys } = this.props;
 
-        return [
-            this.getInput('public key', keys.publicKey),
-            this.getInput('wif', keys.wif)
-        ]
-    }
+		return [
+			this.getInput('public key', keys.publicKey),
+			this.getInput('wif', keys.wif),
+		];
+	}
 
 	render() {
-        const { show, disabled } = this.props;
+		const { show, disabled } = this.props;
 
 		return (
 			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
