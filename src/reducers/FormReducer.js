@@ -182,11 +182,9 @@ const DEFAULT_FORM_FIELDS = {
 				value: null,
 				error: null,
 			},
-			privateKeys: Map({}),
 		}),
 		echoRand: new Map({
 			keys: Map({}),
-			privateKeys: Map({}),
 		}),
 		firstFetch: false,
 		isChanged: false,

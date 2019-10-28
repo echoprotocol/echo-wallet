@@ -220,53 +220,52 @@ export const isChanged = () => (dispatch, getState) => {
  * @param {Object} weight
  * @returns {function(dispatch): Promise<Boolean>}
  */
-export const validateKey = (role, tableKey, key, weight) => async (dispatch) => {
+export const validateKey = (role, tableKey, type, key, weight) => async (dispatch) => {
 	let error = false;
 
 	if (!key) {
-		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], ''));
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], ''));
 	}
 
 	let account = null;
 
 	if (!key) {
 		error = true;
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+	} else if (type === 'keys') {
+		if (!isPublicKey(key.value, 'ECHO')) {
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+		}
 	} else {
 		try {
-
-			if (!isPublicKey(key.value, 'ECHO')) {
-				if (isAccountId(key.value)) {
-					account = await echo.api.getObject(key.value);
-				} else {
-					account = await echo.api.getAccountByName(key.value);
-				}
-
-				if (!account) {
-					error = true;
-					dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect account'));
-				}
+			if (isAccountId(key.value)) {
+				account = await echo.api.getObject(key.value);
+			} else {
+				account = await echo.api.getAccountByName(key.value);
 			}
 
+			if (!account) {
+				error = true;
+				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
+			}
 		} catch (e) {
 			error = true;
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], 'Incorrect key'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
 		}
-
 	}
 
-	if (!weight) {
-		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], ''));
+	if (!weight && role === 'active') {
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], ''));
 	}
 
-	if (!weight || !isWeight(weight.value)) {
+	if ((!weight || !isWeight(weight.value)) && role === 'active') {
 		error = true;
 
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'weight'], 'Incorrect weight'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'Incorrect weight'));
 	}
 
 	if (!error && account) {
-		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, 'keys', tableKey, 'key'], account.name));
+		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], account.name));
 	}
 
 	return error;
@@ -282,14 +281,19 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 	const permissionTable = getState().table.get(PERMISSION_TABLE);
 
-	const roles = ['active'];
+	const roles = ['active', 'echoRand'];
 
 	const validateFields = [];
 	roles.forEach((role) => {
 		permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
-			validateFields.push(dispatch(validateKey(role, keyTable, keyForm.get('key'), keyForm.get('weight'))));
+			validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
 		});
 	});
+
+	permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
+		validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
+	});
+
 	const errors = await Promise.all(validateFields);
 
 	if (errors.includes(true)) {
@@ -316,15 +320,15 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			keys: [],
 			accounts: [],
 			threshold: null,
-			echorand_key: null,
+		},
+		echoRand: {
+			key: null,
 		},
 	};
 
 	const rolesPromises = [];
 
-	roles.forEach((role) => {
-		const accountsPromises = [];
-
+	['active'].forEach((role) => {
 		permissionForm.getIn([role, 'keys']).some((keyForm) => {
 			const threshold = permissionForm.getIn([role, 'threshold']);
 			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
@@ -344,13 +348,64 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 						return;
 					}
 
-					if (isPublicKey(value.get('key').value)) {
-						permissionData[role].keys.push([value.get('key').value, weightInt]);
-					} else {
-						// TODO: check result
-						accountsPromises.push(echo.api.getAccountByName(value.get('key').value));
-						permissionData[role].accounts.push([value.get('key').value, weightInt]);
+					permissionData[role].keys.push([value.get('key').value, weightInt]);
+				});
+
+				return true;
+			}
+
+			return false;
+		});
+
+	});
+
+	['echoRand'].forEach((role) => {
+		permissionForm.getIn([role, 'keys']).some((keyForm) => {
+
+			if (
+				!permissionTable.getIn([role, 'keys']).some((keyTable) => keyTable.key === keyForm.get('key').value)
+			) {
+				permissionForm.getIn([role, 'keys']).forEach((value) => {
+
+					if (!value.get('key').value) {
+						return;
 					}
+
+					permissionData[role].key = value.get('key').value;
+				});
+
+				return true;
+			}
+
+			return false;
+		});
+
+	});
+
+	['active'].forEach((role) => {
+		const accountsPromises = [];
+
+		permissionForm.getIn([role, 'accounts']).some((keyForm) => {
+			const threshold = permissionForm.getIn([role, 'threshold']);
+			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
+				permissionData[role].threshold = Number(threshold.value);
+			}
+
+			if (
+				!permissionTable
+					.getIn([role, 'accounts'])
+					.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+				|| keyForm.get('remove')
+			) {
+				permissionForm.getIn([role, 'accounts']).forEach((value) => {
+					const weightInt = parseInt(value.get('weight').value, 10);
+
+					if (value.get('remove') || !value.get('key').value || !weightInt) {
+						return;
+					}
+
+					accountsPromises.push(echo.api.getAccountByName(value.get('key').value));
+					permissionData[role].accounts.push([value.get('key').value, weightInt]);
 				});
 
 				return true;
@@ -372,6 +427,8 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	if (
 		!permissionData.active.keys.length
+		&& !permissionData.active.accounts.length
+		&& !permissionData.echoRand.key
 		&& permissionData.active.threshold === null
 	) {
 		return false;
@@ -392,21 +449,18 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		permissionData.active.keys.length
 		|| permissionData.active.accounts.length
 		|| permissionData.active.threshold
-		|| permissionData.echorand_key
+		|| permissionData.echoRand.key
 	) {
 		const keysMap = [];
 
 		permissionForm.getIn(['active', 'keys']).forEach((value) => {
-			if (!isPublicKey(value.get('key').value)) {
-				return;
-			}
-
 			keysMap.push([value.get('key').value, parseInt(value.get('weight').value, 10)]);
 		});
 
 		transaction.active = {
 			weight_threshold: currentFullAccount.getIn(['active', 'weight_threshold']),
 			account_auths: currentFullAccount.getIn(['active', 'account_auths']).toJS(),
+			echorand_key: currentFullAccount.get('echorand_key'),
 			key_auths: keysMap,
 			address_auths: [],
 		};
@@ -435,10 +489,10 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			showOptions.activeAccounts = transaction.active.account_auths;
 		}
 
-		if (permissionData.echorand_key) {
-			showOptions.echoRandKey = permissionData.echorand_key;
+		if (permissionData.echoRand.key) {
+			showOptions.echoRandKey = permissionData.echoRand.key;
 
-			transaction.echorand_key = permissionData.echorand_key;
+			transaction.echorand_key = permissionData.echoRand.key;
 		}
 
 	}
