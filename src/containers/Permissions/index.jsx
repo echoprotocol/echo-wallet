@@ -257,7 +257,7 @@ class Permissions extends React.Component {
 
 				</div>
 			</div >
-		);G
+		);
 	}
 
 	renderViewTable() {
