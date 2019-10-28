@@ -20,35 +20,32 @@ class ModalWIF extends React.Component {
 	}
 
 	render() {
-		const {
-			show,
-		} = this.props;
-
-		// const { checked } = this.state;
+		const { show } = this.props;
 
 		return (
-			<Modal className="small wipe-data" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<div className="modal-header">
-						<h3> Do you want to add WIF keys right now?</h3>
-					</div>
+			<Modal className="small unclock-size" open={show} dimmer="inverted">
+				<div className="modal-content add-key">
+					<div className="modal-header">Would you like to add other keys now?</div>
 					<div className="modal-body">
-						<p>Private key desription</p>
+						<div className="info-text">
+							Your account settings require more than one key to sign a transaction. <br />
+							You can add more keys now or later on the Backup and Permissions page.
+						</div>
 						<div className="form-panel">
 							<Button
 								basic
-								type="submit"
+								type="button"
+
 								className="main-btn"
-								role="button"
-								onClick={(e) => this.onAgree(e)}
-								content="YES"
+								onClick={(e) => this.onClose(e)}
+								content="Do it later"
 							/>
 							<Button
 								basic
-								type="submit"
+								type="button"
 								className="main-btn"
-								onClick={(e) => this.onClose(e)}
-								content="DO IT LATER"
+								onClick={(e) => this.onAgree(e)}
+								content="Proceed"
 							/>
 						</div>
 					</div>

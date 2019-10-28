@@ -1,5 +1,12 @@
 import SortReducer from '../reducers/SortReducer';
 
+/**
+ * @method toggleSort
+ *
+ * @param {String} container
+ * @param {String} sortType
+ * @returns {function(dispatch, getState): undefined}
+ */
 export const toggleSort = (container, sortType) => (dispatch, getState) => {
 
 	const sortInc = getState().sort.getIn([container, 'sortType']) === sortType ? !getState().sort.getIn([container, 'sortInc']) : true;
@@ -20,6 +27,12 @@ export const toggleSort = (container, sortType) => (dispatch, getState) => {
 	localStorage.setItem(`sorts_${networkName}`, JSON.stringify(sorts));
 };
 
+/**
+ * @method initSorts
+ *
+ * @param {String} networkName
+ * @returns {function(dispatch, getState): undefined}
+ */
 export const initSorts = (networkName) => (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
