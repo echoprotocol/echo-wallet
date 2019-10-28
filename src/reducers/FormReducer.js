@@ -182,12 +182,15 @@ const DEFAULT_FORM_FIELDS = {
 				value: null,
 				error: null,
 			},
+			privateKeys: Map({}),
 		}),
-		memo: new Map({
+		echoRand: new Map({
 			keys: Map({}),
+			privateKeys: Map({}),
 		}),
 		firstFetch: false,
 		isChanged: false,
+		isEditMode: false,
 	}),
 	[FORM_COMMITTEE]: new Map({
 		votes: List([]),

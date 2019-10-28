@@ -27,9 +27,8 @@ class Footer extends React.PureComponent {
 	}
 	render() {
 		const {
-			isConnect, latency, lastBlock, error,
+			isConnect, latency, lastBlock, error, keyWeightWarn,
 		} = this.props;
-		const { keyWeightWarn } = this.props;
 		const connected = (
 			<div className="footer">
 				<ul>

@@ -3,77 +3,112 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import InputEye from '../../components/InputEye';
+class EditModeTableRow extends React.Component {
 
-export default class ThresholdRow extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			show: false,
+		};
+	}
+
+	toggleShow(show) {
+		this.setState({
+			show: !show,
+		});
+	}
 
 	renderType(type) {
-		const { keyRole } = this.props;
+		const { show } = this.state;
+		const {
+			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
+		} = this.props;
 
-		if (type === 'keys') {
-			return (
-				<React.Fragment>
-					<Form.Field className={classnames('error-wrap', { error: true })}>
-						<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
-						<input
-							type="text"
-							placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
-							name="PublicKey"
-							className="input"
-						/>
-						{true && <span className="error-message">Some error</span>}
-					</Form.Field>
-
-					<InputEye
-						inputLabel="WIF (optional)"
-						inputPlaceholder="WIF"
-						inputName="WIF"
+		return type === 'keys' ? (
+			<React.Fragment>
+				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
+					<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
+					<input
+						type="text"
+						placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
+						name={name}
+						className="input"
+						value={subject.value}
+						onChange={setPublicKey}
 					/>
-				</React.Fragment>
-			);
-		}
-
-
-		return (
-			<Form.Field className={classnames('error-wrap', { error: false })}>
+					{subject.error && <span className="error-message">{subject.error}</span>}
+				</Form.Field>
+				<Form.Field className={classnames('input-eye error-wrap', { error: wif.error })}>
+					<label htmlFor="WIF">WIF (optional)</label>
+					<div className="action-input">
+						<input
+							type={show ? 'text' : 'password'}
+							placeholder="WIF (optional)"
+							name={name}
+							className="input"
+							value={wif.value}
+							onChange={setWif}
+						/>
+						{
+							show ?
+								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
+								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
+						}
+					</div>
+					{wif.error && <span className="error-message">{wif.error}</span>}
+				</Form.Field>
+			</React.Fragment>
+		) : (
+			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
 				<label htmlFor="AccountName">Account name</label>
 				<input
 					type="text"
 					placeholder="Account name"
-					name="AccountName"
-					className="input"
+					name={name}
+					value={subject.value}
+					onChange={setAccount}
 				/>
-				{false && <span className="error-message">Some error</span>}
+				{subject.error && <span className="error-message">{subject.error}</span>}
 			</Form.Field>
 		);
 	}
 
 	render() {
-		const { type, keyRole } = this.props;
+		const {
+			type, keyRole, removeKey, subject, weight, setWeight, name, showRemove,
+		} = this.props;
 
 		return (
 			<div className="list-item">
 				<div className="list-item-content">
 					<div className={classnames('edit-permissions-wrap', { 'echo-rand': keyRole === 'echoRand' })}>
-						{ this.renderType(type) }
+						{this.renderType(type)}
 						{
-							keyRole === 'active' &&
-							<Form.Field className="weight-field">
-								<label htmlFor="weight">Weight</label>
-								<input
-									type="text"
-									placeholder="Weight"
-									name="weight"
-									className="input"
-								/>
-							</Form.Field>
+							keyRole === 'active' && (
+								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
+									<label htmlFor="weight">Weight</label>
+									<input
+										type="text"
+										placeholder="Weight"
+										name={name}
+										className="input"
+										value={weight.value}
+										onChange={setWeight}
+									/>
+									{weight.error && <span className="error-message">{weight.error}</span>}
+								</Form.Field>
+							)
 						}
 					</div>
 				</div>
 				{
-					keyRole === 'active' &&
+					(keyRole === 'active' && showRemove) &&
 					<div className="list-item-panel">
-						<button className="remove-btn icon-remove" />
+						<button
+							className="remove-btn icon-remove"
+							onClick={() => removeKey(subject.key)}
+						/>
 					</div>
 				}
 
@@ -83,7 +118,26 @@ export default class ThresholdRow extends React.Component {
 
 }
 
-ThresholdRow.propTypes = {
-	type: PropTypes.string.isRequired,
+EditModeTableRow.propTypes = {
+	subject: PropTypes.object,
+	wif: PropTypes.object,
+	weight: PropTypes.object,
+	type: PropTypes.string,
+	name: PropTypes.string.isRequired,
+	showRemove: PropTypes.bool.isRequired,
 	keyRole: PropTypes.string.isRequired,
+	removeKey: PropTypes.func.isRequired,
+	setWif: PropTypes.func.isRequired,
+	setPublicKey: PropTypes.func.isRequired,
+	setAccount: PropTypes.func.isRequired,
+	setWeight: PropTypes.func.isRequired,
 };
+
+EditModeTableRow.defaultProps = {
+	subject: {},
+	weight: {},
+	type: '',
+	wif: {},
+};
+
+export default EditModeTableRow;

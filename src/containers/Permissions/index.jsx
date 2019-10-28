@@ -3,33 +3,56 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Button, Popup } from 'semantic-ui-react';
-import { CACHE_MAPS } from 'echojs-lib';
+import { Button } from 'semantic-ui-react';
+import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
-import PermissionTable from './PermissionTable';
-import EditModeThrashold from './EditModeThrashold';
-import EditModeTableRow from './EditModeTableRow';
 
-
-import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
-import { PERMISSION_TABLE } from '../../constants/TableConstants';
+import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
-import { clearForm, setInFormValue } from '../../actions/FormActions';
-import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
+import BackupKeysScenario from '../BackupKeysScenario';
+import ViewModeTable from './ViewModeTable';
+import EditModeTable from './EditModeTable';
+
+import { isPublicKey } from '../../helpers/ValidateHelper';
+import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
+import { PERMISSION_TABLE } from '../../constants/TableConstants';
+import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '../../actions/FormActions';
+import { addWif } from '../../actions/AuthActions';
+import {
+	FORM_PERMISSION_KEY,
+	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
+	FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION,
+	FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT,
+	FORM_PERMISSION_ECHO_RAND_TABLE_TITLE,
+	FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION,
+	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT,
+	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL,
+	FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT,
+	FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION,
+	ADD_ACCOUNT_BUTTON_TEXT,
+	ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TEXT,
+	ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT,
+	FORM_PERMISSION_MODE_EDIT,
+	FORM_PERMISSION_MODE_VIEW,
+} from '../../constants/FormConstants';
 
 class Permissions extends React.Component {
 
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			resetAddKeys: false,
+			privateKeys: {
+				active: {},
+				echoRand: {},
+			},
 		};
 	}
 
 	componentWillMount() {
 		this.props.formPermissionKeys();
+		this.setState({ privateKeys: { active: {}, echoRand: {} } });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -55,303 +78,358 @@ class Permissions extends React.Component {
 		if (!_.isEqual(prevAccount.active, account.active)) {
 			this.props.formPermissionKeys();
 		}
+
+		if (!_.isEqual(prevAccount.echo_rand, account.echo_rand)) {
+			this.props.formPermissionKeys();
+		}
+	}
+
+	async saveWifs(password) {
+		const { form } = this.props;
+		const { privateKeys } = this.state;
+
+		const account = this.props.account.toJS();
+
+		const newActiveWifs = Object.entries(privateKeys.active)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+				return this.props.addWif(publicKey, wif.value, account, password);
+			})
+
+		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return this.props.addWif(publicKey, wif.value, account, password);
+			})
+
+		try {
+			await Promise.all([
+				Promise.all(newActiveWifs),
+				Promise.all(newEchoRandWifs), 
+			])
+		} catch (error) {}
+
 	}
 
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
+		this.setState({ privateKeys: { active: {}, echoRand: {} } });
 	}
 
-	onCancel(data) {
-		this.props.clearForm();
+	setWif(keyRole, type, e) {
+		const { form } = this.props;
+		const { privateKeys } = this.state;
 
-		this.setState({ resetAddKeys: true }, () => { this.setState({ resetAddKeys: false }); });
+		const field = e.target.name;
+		const wif = e.target.value;
 
-		const roles = ['active'];
-
-		roles.forEach((role) => {
-			if (data[role].threshold) {
-				this.props.setValue([role, 'threshold'], data[role].threshold);
+		const newPrivateKeys = { ...privateKeys };
+		if (!newPrivateKeys[keyRole][field]) {
+			newPrivateKeys[keyRole][field] = {};
+		}
+		newPrivateKeys[keyRole][field].value = wif;
+		newPrivateKeys[keyRole][field].error = '';
+		try {
+			if (wif) {
+				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+				const key = form.getIn([keyRole, type, field, 'key']);
+				
+				if (key && key.value) {
+					if (isPublicKey(key.value) && key.value !== publicKey) {
+						newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+					}
+				} else {
+					this.props.setValue([keyRole, type, field, 'key'], publicKey);
+				}
 			}
 
-			if (!data[role].keys) {
-				return;
-			}
+			this.setState({ privateKeys: newPrivateKeys });
+		} catch (e) {
+			newPrivateKeys[keyRole][field].error = 'Invalide private key';
+			newPrivateKeys[keyRole][field].value = wif;
+			this.setState({ privateKeys: newPrivateKeys });
+		}
+	}
 
-			data[role].keys.forEach((k) => {
-				this.props.setValue([role, 'keys', k.key, 'key'], k.key);
-				this.props.setValue([role, 'keys', k.key, 'weight'], k.weight);
-			});
+	changeMode(mode, privateKeys) {
+		const permissionsKeys = this.props.permissionsKeys.toJS();
+		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
+			acc[res.publicKey] = {
+				value: res.wif,
+				error: '',
+			};
+			return acc;
+		}, {}) : {};
+
+		const activePrivetKeys = permissionsKeys.active.keys.reduce((acc, { key }) => {
+			acc[key] = newPrivateKeys[key] && { ... newPrivateKeys[key] };
+			return acc;
+		}, {})
+
+		const echoRandPrivetKeys = permissionsKeys.echoRand.keys.reduce((acc, { key }) => {
+			acc[key] = newPrivateKeys[key] && { ... newPrivateKeys[key] };
+			return acc;
+		}, {})
+		
+		const privateKeysByRole = {
+			active: activePrivetKeys,
+			echoRand: echoRandPrivetKeys,
+		}
+
+		this.setState({ privateKeys: privateKeysByRole }, () => {
+			if (mode === FORM_PERMISSION_MODE_EDIT) {
+				this.props.set('isEditMode', true);
+			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
+				this.props.set('isEditMode', false);
+			}
 		});
 	}
 
 	renderViewPanel() {
 		return (
-			<div className="view-panel-wrap">
-				<Button
-					className="grey-btn"
-					size="medium"
-					content="Edit mode"
-				/>
-				<Button
-					className="green-btn"
-					size="medium"
-					content="View & backup keys"
-				/>
-			</div>
-		);
-	}
-
-	renderViewMode() {
-		return (
-			<div className="view-mode-wrap">
-				<div className="info-text">
-					Making a backup of your keys helps ensure you can always maintain access to your funds.
-					Anyone having access to your keys will take full control of the funds,
-					so we strongly recommend storing it offline in a secure place.
-				</div>
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">Public Keys and Accounts</h3>
-						<div className="list-header-info">
-							<Popup
-								trigger={<span className="inner-tooltip-trigger icon-info" />}
-								content="You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction."
-								className="inner-tooltip"
-								position="bottom center"
-								style={{ width: 420 }}
-							/>
-							<span className="threshold">threshold</span>
-							<span className="threshold-value">1</span>
-						</div>
-					</div>
-					<div className="list">
-						<div className="list-item">
-							<div className="list-item-content">
-								<div className="list-item-value">8BTS5EXBBsHfr8c3yWVpkeVCezi7Ywm6pTJ7qV1BDPsrpJUaL2U5Q</div>
-								<div className="list-item-weight">
-									<span className="weight">Weight:</span>
-									<span className="value">1</span>
-								</div>
-							</div>
-							<div className="list-item-panel">
+			<div className="sub-header-panel">
+				<div className="view-panel-wrap">
+					<PrivateKeysScenario
+						onKeys={(privateKeys) => this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys)}
+					>
+						{
+							(getKeys) => (
+								<React.Fragment>
+									<Button
+										className="grey-btn"
+										size="medium"
+										content="Edit mode"
+										onClick={getKeys}
+									/>
+								</React.Fragment>
+							)
+						}
+					</PrivateKeysScenario>
+					<BackupKeysScenario
+						permissionsKeys={this.props.permissionsKeys}
+					>
+						{
+							(backup) => (
 								<Button
-									className="main-btn light"
+									className="green-btn"
 									size="medium"
-									content="View WIF"
+									content="View & backup keys"
+									onClick={backup}
 								/>
-							</div>
-						</div>
-						<div className="list-item">
-							<div className="list-item-content">
-								<div className="list-item-value">Ywm6pTJ7qV1BDPsrpJUaL2U5Q8BTS5EXBBsHfr8c3yWVpkeVCezi7</div>
-								<div className="list-item-weight">
-									<span className="weight">Weight:</span>
-									<span className="value">0.5</span>
-								</div>
-							</div>
-							<div className="list-item-panel">
-								<Button
-									className="blue-btn"
-									size="medium"
-									content="Add WIF"
-								/>
-							</div>
-						</div>
-						<div className="list-item">
-							<div className="list-item-content">
-								<div className="list-item-value">accountName_1</div>
-								<div className="list-item-weight">
-									<span className="weight">Weight:</span>
-									<span className="value">1</span>
-								</div>
-							</div>
-						</div>
-					</div>
+							)
+						}
+					</BackupKeysScenario>
 				</div>
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">EchoRand Key</h3>
-						<span className="list-header-advanced">(advanced)</span>
-					</div>
-					<div className="list-description">
-						EchoRand Key is used for participating in blocks generation and for signing
-						sidechain transactions by committee members.
-						<a className="list-header-link" href="">Know more in Echo Docs </a>
-					</div>
-					<div className="list">
-						<div className="list-item">
-							<div className="list-item-content">
-								<div className="list-item-value">8BTS5EXBBsHfr8c3yWVpkeVCezi7Ywm6pTJ7qV1BDPsrpJUaL2U5Q</div>
-							</div>
-							<div className="list-item-panel">
-								<Button
-									className="main-btn light"
-									size="medium"
-									content="View WIF"
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			</div >
 		);
 	}
 
 	renderEditPanel() {
 		return (
-			<div className="edit-panel-wrap">
-				<Button
-					className="grey-btn inverse"
-					size="medium"
-					content="Cancel"
-				/>
-				<Button
-					className="grey-btn"
-					size="medium"
-					content="Save"
-				/>
-			</div>
+			<div className="sub-header-panel">
+				<div className="edit-panel-wrap">
+					<Button
+						className="grey-btn inverse"
+						size="medium"
+						content="Cancel"
+						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
+					/>
+					<TransactionScenario
+						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
+						onUnlock={(password) => this.saveWifs(password)}
+					>
+						{
+							(submit) => (
+								<React.Fragment>
+									<Button
+										className="grey-btn"
+										size="medium"
+										content="Save"
+										onClick={submit}
+									/>
+								</React.Fragment>
+							)
+						}
+					</TransactionScenario>
+
+				</div>
+			</div >
 		);
 	}
-	renderEditMode() {
+
+	renderViewTable() {
+		const permissionsKeys = this.props.permissionsKeys.toJS();
+
+		const {
+			form,
+			set,
+			firstFetch,
+			account,
+		} = this.props;
+
+		const active = {
+			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+			threshold: permissionsKeys.active.threshold,
+		};
+
+		const echoRand = {
+			keys: permissionsKeys.echoRand.keys,
+		};
+
 		return (
-			<div className="edit-mode-wrap">
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">Public Keys and Accounts</h3>
-					</div>
-					<div className="list-header-row">
-						<div className="list-header-col">
-							<div className="list-description">
-								The settings below allow you to specify the keys and / or accounts,
-								whose signatures will be necessary to send a transaction from your account.
-								Using threshold and weight you can separate access to an account
-								between several keys and / or accounts.
-							</div>
-						</div>
-						<div className="list-header-col">
-							<EditModeThrashold />
-						</div>
-					</div>
-					<div className="list">
-						<EditModeTableRow type="keys" keyRole="active" />
-						<EditModeTableRow type="keys" keyRole="active" />
-						<EditModeTableRow type="account" keyRole="active" />
-					</div>
-					<div className="list-panel">
-						<Button
-							className="main-btn"
-							size="medium"
-						>
-							<Popup
-								trigger={<span className="main-btn-popup">Add Account</span>}
-								content="Provide access to send transaction to another account"
-								className="inner-tooltip"
-								position="bottom center"
-								style={{ width: 380 }}
+			<PrivateKeyScenario
+				account={account}
+			>
+				{
+					(showWif, addWif) => (
+						<React.Fragment>
+							<ViewModeTable
+								keyRole="active"
+								title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
+								description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
+								tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
+								data={active}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+								addWif={addWif}
 							/>
-						</Button>
-						<Button
-							className="main-btn"
-							size="medium"
-						>
-							<Popup
-								trigger={<span className="main-btn-popup">Add public key</span>}
-								content="Add an additional key to sign transactions"
-								className="inner-tooltip"
-								position="bottom center"
-								style={{ width: 300 }}
+							<ViewModeTable
+								keyRole="echoRand"
+								title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
+								description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
+								headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+								headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
+								advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+								data={echoRand}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+								addWif={addWif}
 							/>
-						</Button>
-					</div>
-				</div>
-				<div className="list-wrap">
-					<div className="list-header">
-						<h3 className="list-header-title">EchoRand Key</h3>
-						<span className="list-header-advanced">(for advanced users)</span>
-					</div>
-					<div className="list-description">
-						EchoRand Key is used for participating in blocks generation and for signing
-						sidechain transactions by committee members.
-						<a className="list-header-link" href="">Know more in Echo Docs </a>
-					</div>
-					<div className="list">
-						<EditModeTableRow type="keys" keyRole="echoRand" />
-					</div>
-				</div>
+						</React.Fragment>
+					)
+				}
+			</PrivateKeyScenario>
+		);
+	}
+
+	renderEditTable() {
+		const permissionsKeys = this.props.permissionsKeys.toJS();
+
+		const {
+			form,
+			set,
+			firstFetch,
+		} = this.props;
+		
+		const active = {
+			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
+			threshold: permissionsKeys.active.threshold,
+		};
+
+		const echoRand = {
+			keys: permissionsKeys.echoRand.keys,
+		};
+
+		return (
+			<React.Fragment>
+				<EditModeTable
+					keyRole="active"
+					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
+					description={FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION}
+					addAccountButtonText={ADD_ACCOUNT_BUTTON_TEXT}
+					addAccountButtonTooltipText={ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT}
+					addPublicKeyButtonText={ADD_PUBLIC_KEY_BUTTON_TEXT}
+					addPublicKeyButtonTooltipText={ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT}
+					data={active}
+					keys={form}
+					privateKeys={this.state.privateKeys.active}
+					set={set}
+					setValue={this.props.setValue}
+					isChanged={this.props.isChanged}
+					firstFetch={firstFetch}
+					addAccount={() => {}}
+					addPublicKey={() => {}}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
+					removeKey={(fields) => this.props.removeKey(fields)}
+				/>
+				<EditModeTable
+					keyRole="echoRand"
+					title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
+					description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
+					headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+					headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
+					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+					data={echoRand}
+					keys={form}
+					privateKeys={this.state.privateKeys.echoRand}
+					set={set}
+					setValue={this.props.setValue}
+					isChanged={this.props.isChanged}
+					firstFetch={firstFetch}
+					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
+				/>
+			</React.Fragment>
+		);
+	}
+
+	renderAccountInfo() {
+		const { accountId } = this.props;
+
+		return (
+			<div className="account-info">
+				<span className="account-info-type">Account ID:</span>
+				<span className="account-info-value">{accountId}</span>
 			</div>
 		);
 	}
+
+	renderPanel() {
+		const { form } = this.props;
+
+		const isEditMode = form.get('isEditMode');
+
+		return isEditMode ? this.renderEditPanel() : this.renderViewPanel();
+	}
+
+	renderTable() {
+		const { form } = this.props;
+
+		const isEditMode = form.get('isEditMode');
+
+		return isEditMode ? this.renderEditTable() : this.renderViewTable();
+	}
+
 	render() {
-		// let { permissionsKeys } = this.props;
-
-		// permissionsKeys = permissionsKeys.toJS();
-
-		// const active = {
-		// 	keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-		// 	threshold: permissionsKeys.active.threshold,
-		// };
-
 		return (
-
 			<div className="permissions-wrap">
 				<div className="sub-header">
-
-					<div className="account-info">
-						<span className="account-info-type">Account ID:</span>
-						<span className="account-info-value">1.16.0</span>
-					</div>
-					<div className="sub-header-panel" >
-						{
-
-							// this.renderViewPanel()
-							this.renderEditPanel()
-						}
-					</div>
+					{
+						this.renderAccountInfo()
+					}
+					{
+						this.renderPanel()
+					}
 				</div>
-				{
-					// this.renderViewMode()
-					this.renderEditMode()
-				}
-				{/* <TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
 					{
-						(submitTr) => (
-							this.props.isChanged &&
-								<div className="top-btn-container">
-									<Button
-										basic
-										className="txt-btn"
-										content="Cancel"
-										onClick={() => this.onCancel({ active })}
-									/>
-									<Button
-										basic
-										className="green"
-										content="Save"
-										onClick={submitTr}
-									/>
-								</div>
-						)
+						this.renderTable()
 					}
-				</TransactionScenario>
-				<PrivateKeyScenario>
-					{
-						(keys, submit) => (
-							<React.Fragment>
-								<PermissionTable
-									keyRole="active"
-									table="Active"
-									description="Active key allows you to sign transactions Use this key to log in into wallets."
-									data={active}
-									keys={keys}
-									submit={submit}
-									resetAddKeys={this.state.resetAddKeys}
-								/>
-							</React.Fragment>
-						)
-					}
-				</PrivateKeyScenario> */}
 			</div>
 		);
 	}
@@ -360,7 +438,8 @@ class Permissions extends React.Component {
 
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
-	isChanged: PropTypes.bool.isRequired,
+	accountId: PropTypes.string.isRequired,
+	isChanged: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
 	formPermissionKeys: PropTypes.func.isRequired,
@@ -368,6 +447,12 @@ Permissions.propTypes = {
 	permissionTransaction: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	setError: PropTypes.func.isRequired,
+	form: PropTypes.object.isRequired,
+	firstFetch: PropTypes.bool.isRequired,
+	set: PropTypes.func.isRequired,
+	removeKey: PropTypes.func.isRequired,
+	addWif: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -378,17 +463,24 @@ export default connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		return {
+			form: state.form.get(FORM_PERMISSION_KEY),
 			accountName: state.global.getIn(['activeUser', 'name']),
-			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
+			accountId: state.global.getIn(['activeUser', 'id']),
+			account: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
-			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 		};
 	},
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
 		clear: () => dispatch(clear(PERMISSION_TABLE)),
-		permissionTransaction: () => dispatch(permissionTransaction()),
+		permissionTransaction: (privateKeys) => dispatch(permissionTransaction(privateKeys)),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
+		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
+		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
+		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
+		isChanged: () => dispatch(isChanged()),
+		addWif: (publicKey, wif, account, password) => dispatch(addWif(publicKey, wif, account, password)),
 	}),
 )(Permissions);

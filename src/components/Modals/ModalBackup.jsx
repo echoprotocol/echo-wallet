@@ -6,15 +6,35 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_BACKUP } from '../../constants/ModalConstants';
 
-
 class ModalBackup extends React.Component {
 
 	onClose() {
 		this.props.close();
 	}
 
+	onSave(activeKeysString) {
+		this.props.saveAsTxt(activeKeysString);
+	}
+
+	getActiveKeysString() {
+		const { keys } = this.props;
+
+		const keysData = [];
+
+		keys.forEach((keyItem, keyIndex) => {
+			keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}\n\n`);
+			keysData.push(`WIF ${keyIndex + 1}\n${keyItem.wif}\n---------------------------------------`);
+		});
+
+		const keysDataString = keysData.join('\n');
+
+		return keysDataString;
+	}
+
 	render() {
-		const { show } = this.props;
+		const { activeUser, show } = this.props;
+
+		const activeKeysString = this.getActiveKeysString();
 
 		return (
 			<Modal className="backup-modal" open={show} dimmer="inverted">
@@ -36,6 +56,7 @@ class ModalBackup extends React.Component {
 							placeholder="Account name"
 							disabled
 							name="account-name"
+							value={activeUser.get('id')}
 						/>
 					</Form.Field>
 					<Form.Field>
@@ -45,6 +66,7 @@ class ModalBackup extends React.Component {
 							placeholder="ID account"
 							disabled
 							name="id-account"
+							value={activeUser.get('name')}
 						/>
 					</Form.Field>
 					<Form.Field>
@@ -53,6 +75,8 @@ class ModalBackup extends React.Component {
 							type="text"
 							placeholder="Backup data"
 							name="backup-data"
+							value={activeKeysString}
+							readOnly
 						/>
 						<span className="warning-message">
 							Warning: Anyone who has access to your private key can steal all your Echo
@@ -65,7 +89,7 @@ class ModalBackup extends React.Component {
 							basic
 							type="submit"
 							className="main-btn"
-							onClick={() => {}}
+							onClick={() => this.onSave(activeKeysString)}
 							content="Save As .TXT"
 						/>
 					</div>
@@ -79,10 +103,15 @@ class ModalBackup extends React.Component {
 ModalBackup.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
+	activeUser: PropTypes.any,
+	saveAsTxt: PropTypes.func.isRequired,
+	keys: PropTypes.array,
 };
 
 ModalBackup.defaultProps = {
+	activeUser: null,
 	show: false,
+	keys: [],
 };
 
 
@@ -94,4 +123,3 @@ export default connect(
 		close: () => dispatch(closeModal(MODAL_BACKUP)),
 	}),
 )(ModalBackup);
-
