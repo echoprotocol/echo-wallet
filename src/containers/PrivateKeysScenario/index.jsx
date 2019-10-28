@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 
-import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE, MODAL_BACKUP_KEYS } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
@@ -53,10 +53,6 @@ class PrivateKeysScenario extends React.Component {
 		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
 
 		this.props.onKeys(keys);
-		// this.setState((prevState) => ({
-		// 	...prevState,
-		// 	keys: [...keys],
-		// }));
 	}
 
 	unlock() {

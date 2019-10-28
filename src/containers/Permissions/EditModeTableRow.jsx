@@ -25,8 +25,6 @@ class EditModeTableRow extends React.Component {
 			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
 		} = this.props;
 
-		// console.log('wif ', wif);
-
 		return type === 'keys' ? (
 			<React.Fragment>
 				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
@@ -78,7 +76,7 @@ class EditModeTableRow extends React.Component {
 
 	render() {
 		const {
-			type, keyRole, removeKey, subject, weight, setWeight, name,
+			type, keyRole, removeKey, subject, weight, setWeight, name, showRemove,
 		} = this.props;
 
 		return (
@@ -88,7 +86,7 @@ class EditModeTableRow extends React.Component {
 						{this.renderType(type)}
 						{
 							keyRole === 'active' && (
-								<Form.Field className="weight-field">
+								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
 									<label htmlFor="weight">Weight</label>
 									<input
 										type="text"
@@ -105,7 +103,7 @@ class EditModeTableRow extends React.Component {
 					</div>
 				</div>
 				{
-					keyRole === 'active' &&
+					(keyRole === 'active' && showRemove) &&
 					<div className="list-item-panel">
 						<button
 							className="remove-btn icon-remove"
@@ -126,6 +124,7 @@ EditModeTableRow.propTypes = {
 	weight: PropTypes.object,
 	type: PropTypes.string,
 	name: PropTypes.string.isRequired,
+	showRemove: PropTypes.bool.isRequired,
 	keyRole: PropTypes.string.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	setWif: PropTypes.func.isRequired,

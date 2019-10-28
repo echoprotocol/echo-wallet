@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-class ModalBackupKeys extends React.Component {
+class ModalViewWIF extends React.Component {
 
 	onClose() {
 		this.props.close();
@@ -14,40 +14,8 @@ class ModalBackupKeys extends React.Component {
 		this.props.saveAsTxt(keysString);
 	}
 
-	getArea(key, data) {
-		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
-		);
-	}
-
-	getInput(key, data) {
-		if (Array.isArray(data) && !data.length) {
-			return null;
-		}
-
-		return (
-			<Form.Field key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1')}
-				</label>
-				<div>
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
-				</div>
-			</Form.Field>
-		);
-	}
-
-	renderKeys() {
-		const { keys } = this.props;
-
-		return [
-			this.getInput('public key', keys.publicKey),
-			this.getInput('wif', keys.wif),
-		];
-	}
-
 	render() {
-		const { show, disabled, keys } = this.props;
+		const { show, keys } = this.props;
 
 		return (
 			<Modal className="view-wif-modal" open={show} dimmer="inverted">
@@ -105,18 +73,16 @@ class ModalBackupKeys extends React.Component {
 
 }
 
-ModalBackupKeys.propTypes = {
+ModalViewWIF.propTypes = {
 	show: PropTypes.bool,
-	disabled: PropTypes.bool,
 	close: PropTypes.func.isRequired,
 	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.object,
 };
 
-ModalBackupKeys.defaultProps = {
+ModalViewWIF.defaultProps = {
 	show: false,
-	disabled: false,
 	keys: {},
 };
 
-export default ModalBackupKeys;
+export default ModalViewWIF;

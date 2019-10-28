@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
+import _ from 'lodash';
 
 import ViewModeRow from './ViewModeRow';
 import ViewModeThreshold from './ViewModeThreshold';
@@ -95,7 +96,7 @@ class ViewModeTable extends React.Component {
 
 	render() {
 		const {
-			data, keys, keyRole, showWif,
+			data, keys, keyRole, showWif, addWif,
 		} = this.props;
 		return (
 			<div className="view-mode-wrap">
@@ -126,7 +127,7 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={() => { }}
+											addWif={addWif}
 											showWif={showWif}
 										/>
 									);
@@ -156,6 +157,7 @@ ViewModeTable.propTypes = {
 	set: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
 	showWif: PropTypes.func.isRequired,
+	addWif: PropTypes.func.isRequired,
 };
 
 ViewModeTable.defaultProps = {

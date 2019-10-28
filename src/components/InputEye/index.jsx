@@ -28,10 +28,11 @@ export default class InputEye extends React.PureComponent {
 			inputLabel,
 			inputPlaceholder,
 			inputName,
+			onChange,
 		} = this.props;
 
 		return (
-			<Form.Field className={classnames('input-eye error-wrap', { error: false })}>
+			<Form.Field className={classnames('input-eye error-wrap', { error: !!errorMessage })}>
 				{
 					inputLabel && <label htmlFor="WIF">{ inputLabel }</label>
 				}
@@ -40,6 +41,7 @@ export default class InputEye extends React.PureComponent {
 						type={show ? 'text' : 'password'}
 						placeholder={inputPlaceholder}
 						name={inputName}
+						onChange={(e) => onChange(e)}
 					/>
 					{
 						show ?
@@ -48,7 +50,7 @@ export default class InputEye extends React.PureComponent {
 					}
 				</div>
 				<div>
-					{false && errorMessage && <span className="error-message">{ errorMessage }</span>}
+					{errorMessage && <span className="error-message">{ errorMessage }</span>}
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>
@@ -66,6 +68,7 @@ InputEye.propTypes = {
 	inputLabel: PropTypes.string,
 	inputPlaceholder: PropTypes.string,
 	inputName: PropTypes.string,
+	onChange: PropTypes.func,
 };
 
 InputEye.defaultProps = {
@@ -74,4 +77,5 @@ InputEye.defaultProps = {
 	inputLabel: '',
 	inputPlaceholder: '',
 	inputName: '',
+	onChange: () => {},
 };
