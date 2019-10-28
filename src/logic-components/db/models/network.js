@@ -18,12 +18,14 @@ class Network {
 	}
 
 	/**
-	 * @method addKey
-	 * @param {Key} key
-	 * @returns {Network}
-	 */
+     * @method addKey
+     * @param {Key} key
+     * @returns {Network}
+     */
 	addKey(key) {
-		this.keys.push(key);
+		if (!this.keys.find(({ wif }) => wif === key.wif)) {
+			this.keys.push(key);
+		}
 		return this;
 	}
 

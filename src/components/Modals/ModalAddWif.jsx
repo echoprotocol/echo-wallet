@@ -34,7 +34,9 @@ class ModalAddWIF extends React.Component {
 	}
 
 	render() {
-		const { show, error, disabled } = this.props;
+		const {
+			show, error, disabled, publicKey,
+		} = this.props;
 
 		return (
 			<Modal className="add-wif-modal" open={show} dimmer="inverted">
@@ -58,7 +60,7 @@ class ModalAddWIF extends React.Component {
 							disabled
 							name="public-key"
 							onChange={() => {}}
-							autoFocus
+							value={publicKey}
 						/>
 						{
 							false && <span className="error-message">Some Error</span>
@@ -72,6 +74,7 @@ class ModalAddWIF extends React.Component {
 						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
 						errorMessage={error}
 						onChange={(e) => this.onChange(e)}
+						autoFocus
 					/>
 
 					<div className="form-panel">
@@ -106,6 +109,7 @@ ModalAddWIF.propTypes = {
 	close: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	saveWif: PropTypes.func.isRequired,
+	publicKey: PropTypes.string.isRequired,
 };
 
 ModalAddWIF.defaultProps = {

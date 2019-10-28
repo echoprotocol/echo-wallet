@@ -7,7 +7,6 @@ import { Button } from 'semantic-ui-react';
 import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
-
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
@@ -37,6 +36,7 @@ import {
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
+import WarningConfirmThresholScenario from '../WarningConfirmThresholScenario';
 
 class Permissions extends React.Component {
 
@@ -85,39 +85,35 @@ class Permissions extends React.Component {
 	}
 
 	async saveWifs(password) {
-		const { form } = this.props;
-		const { privateKeys } = this.state;
-
-		const account = this.props.account.toJS();
-
-		const newActiveWifs = Object.entries(privateKeys.active)
-			.filter(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-				return publicKey && wif && wif.value && !wif.error
-			})
-			.map(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-				return this.props.addWif(publicKey, wif.value, account, password);
-			})
-
-		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
-			.filter(([index, wif]) => {
-				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-				return publicKey && wif && wif.value && !wif.error
-			})
-			.map(([index, wif]) => {
-				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-				return this.props.addWif(publicKey, wif.value, account, password);
-			})
-
-		try {
-			await Promise.all([
-				Promise.all(newActiveWifs),
-				Promise.all(newEchoRandWifs), 
-			])
-		} catch (error) {}
-
-	}
+        const { form } = this.props;
+        const { privateKeys } = this.state;
+        const account = this.props.account.toJS();
+        const newActiveWifs = Object.entries(privateKeys.active)
+            .filter(([index, wif]) => {
+                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+                return publicKey && wif && wif.value && !wif.error
+            })
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value };
+            })
+        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+            .filter(([index, wif]) => {
+                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+                return publicKey && wif && wif.value && !wif.error
+            })
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value };
+            })
+        const wifs = [...newActiveWifs, ...newEchoRandWifs];
+        for(let i = 0; i < wifs.length; i++) {
+            const { publicKey, wif } = wifs[i];
+            try {
+                await this.props.addWif(publicKey, wif, account, password);
+            } catch (error) {}
+        }
+    }
 
 	componentWillUnmount() {
 		this.props.clear();
@@ -161,6 +157,8 @@ class Permissions extends React.Component {
 	}
 
 	changeMode(mode, privateKeys) {
+
+		console.log('changeMode', privateKeys);
 		const permissionsKeys = this.props.permissionsKeys.toJS();
 		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
 			acc[res.publicKey] = {
@@ -184,6 +182,7 @@ class Permissions extends React.Component {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
 		}
+		console.log(privateKeysByRole)
 
 		this.setState({ privateKeys: privateKeysByRole }, () => {
 			if (mode === FORM_PERMISSION_MODE_EDIT) {
@@ -242,8 +241,8 @@ class Permissions extends React.Component {
 						size="medium"
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
-					/>
-					<TransactionScenario
+					/>				
+					<WarningConfirmThresholScenario
 						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
 						onUnlock={(password) => this.saveWifs(password)}
 					>
@@ -259,7 +258,7 @@ class Permissions extends React.Component {
 								</React.Fragment>
 							)
 						}
-					</TransactionScenario>
+					</WarningConfirmThresholScenario>
 
 				</div>
 			</div >
@@ -337,7 +336,7 @@ class Permissions extends React.Component {
 			set,
 			firstFetch,
 		} = this.props;
-		
+
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
@@ -469,6 +468,8 @@ export default connect(
 			account: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
+			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			fullAccount: state.global.getIn(['activeUser']),
 		};
 	},
 	(dispatch) => ({
