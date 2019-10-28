@@ -26,7 +26,6 @@ const getSigners = async (account, keys, viewed = []) => {
 			keys.splice(1, keyIndex);
 		}
 	});
-
 	if (weight >= account.active.weight_threshold) {
 		return signers;
 	}

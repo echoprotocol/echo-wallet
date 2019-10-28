@@ -84,7 +84,7 @@ export const createAccount = ({
 		const account = await echo.api.getAccountByName(accountName);
 		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
 
-		dispatch(addAccount(accountName, network.name));
+		dispatch(addAccount(accountName, network.name, [publicKey]));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -158,7 +158,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName));
+			dispatch(addAccount(accountName, networkName, [key.publicKey]));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}

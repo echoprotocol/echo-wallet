@@ -10,7 +10,7 @@ import PermissionTable from './PermissionTable';
 
 import { formPermissionKeys, clear, permissionTransaction } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
-import TransactionScenario from '../TransactionScenario';
+import WarningConfirmThresholScenario from '../WarningConfirmThresholScenario';
 import { clearForm, setInFormValue } from '../../actions/FormActions';
 import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 
@@ -81,11 +81,14 @@ class Permissions extends React.Component {
 		});
 	}
 
+	onChangeResetKeys() {
+		this.setState({ resetAddKeys: !this.state.resetAddKeys });
+		this.setState({ resetAddKeys: !this.state.resetAddKeys });
+	}
 	render() {
 		let { permissionsKeys } = this.props;
 
 		permissionsKeys = permissionsKeys.toJS();
-
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
@@ -94,27 +97,31 @@ class Permissions extends React.Component {
 		return (
 
 			<div className="permissions-wrap">
-				<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
+				<WarningConfirmThresholScenario handleTransaction={() =>
+					this.props.permissionTransaction()}
+				>
 					{
 						(submitTr) => (
 							this.props.isChanged &&
-								<div className="top-btn-container">
-									<Button
-										basic
-										className="txt-btn"
-										content="Cancel"
-										onClick={() => this.onCancel({ active })}
-									/>
-									<Button
-										basic
-										className="green"
-										content="Save"
-										onClick={submitTr}
-									/>
-								</div>
+							<div className="top-btn-container">
+								<Button
+									basic
+									className="txt-btn"
+									content="Cancel"
+									onClick={() => this.onCancel({ active })}
+								/>
+								<Button
+									basic
+									className="green"
+									content="Save"
+									onClick={() => {
+										submitTr(this.onChangeResetKeys.bind(this));
+									}}
+								/>
+							</div>
 						)
 					}
-				</TransactionScenario>
+				</WarningConfirmThresholScenario>
 				<PrivateKeyScenario>
 					{
 						(keys, submit) => (
@@ -127,6 +134,7 @@ class Permissions extends React.Component {
 									keys={keys}
 									submit={submit}
 									resetAddKeys={this.state.resetAddKeys}
+									error={permissionsKeys.error}
 								/>
 							</React.Fragment>
 						)
@@ -162,6 +170,7 @@ export default connect(
 			account: state.echojs.getIn([CACHE_MAPS.ACCOUNTS_BY_ID, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			fullAccount: state.global.getIn(['activeUser']),
 		};
 	},
 	(dispatch) => ({
