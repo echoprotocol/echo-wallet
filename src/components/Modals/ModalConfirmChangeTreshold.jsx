@@ -15,35 +15,28 @@ class modalConfirmChangeTreshold extends React.Component {
 			show,
 		} = this.props;
 		return (
-			<Modal className="small" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<span
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
-					/>
-					<div className="modal-header" />
+			<Modal className="small unclock-size" open={show} dimmer="inverted">
+				<div className="modal-content add-key">
+					<div className="modal-header">Confirm transaction</div>
 					<div className="modal-body">
-						<div className="form-info">
-							<h3>Confirm logout</h3>
-						</div>
+						<div className="info-text">
 						If these changes are applied, you won&apos;t have
 						enough keys to sign transactions. Do you want to proceed?.
+						</div>
 						<div className="form-panel">
 							<Button
 								basic
 								type="button"
+
 								className="main-btn"
-								onClick={() => this.onClose()}
-								content="Close"
+								onClick={(e) => this.onClose(e)}
+								content="Do it later"
 							/>
 							<Button
 								basic
 								type="button"
 								className="main-btn"
-								onClick={() => this.onConfirm()}
+								onClick={(e) => this.onConfirm(e)}
 								content="Proceed"
 							/>
 						</div>
