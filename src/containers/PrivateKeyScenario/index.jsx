@@ -69,6 +69,16 @@ class PrivateKeyScenario extends React.Component {
 		this.props.openModal(MODAL_UNLOCK_VIEW_WIF);
 	}
 
+	submit(role, publicKey) {
+		const unlocked = this.state.keys.find((k) => k.publicKey === publicKey);
+		if (unlocked) {
+			this.setState((prevState) => ({
+				...prevState,
+				keys: prevState.keys.filter((k) => k.publicKey !== publicKey),
+			}));
+		}
+	}
+
 	addWif(publicKey) {
 		this.setState({ password: '', publicKey });
 		this.props.openModal(MODAL_UNLOCK_ADD_WIF);

@@ -36,6 +36,7 @@ import {
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
+import WarningConfirmThresholScenario from '../WarningConfirmThresholScenario';
 
 class Permissions extends React.Component {
 
@@ -237,8 +238,8 @@ class Permissions extends React.Component {
 						size="medium"
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
-					/>
-					<TransactionScenario
+					/>				
+					<WarningConfirmThresholScenario
 						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
 						onUnlock={(password) => this.saveWifs(password)}
 					>
@@ -254,7 +255,7 @@ class Permissions extends React.Component {
 								</React.Fragment>
 							)
 						}
-					</TransactionScenario>
+					</WarningConfirmThresholScenario>
 
 				</div>
 			</div >
@@ -464,6 +465,8 @@ export default connect(
 			account: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
+			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
+			fullAccount: state.global.getIn(['activeUser']),
 		};
 	},
 	(dispatch) => ({
