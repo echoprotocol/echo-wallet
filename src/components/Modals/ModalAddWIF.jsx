@@ -1,22 +1,40 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_ADD_WIF } from '../../constants/ModalConstants';
 import InputEye from '../InputEye';
 
 
 class ModalAddWIF extends React.Component {
 
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			wif: '',
+		};
+	}
+
+	onChange(e) {
+		this.setState({
+			wif: e.target.value.trim(),
+		});
+	}
+
 	onClose() {
 		this.props.close();
 	}
 
+	saveWif() {
+		const { wif } = this.state;
+
+		this.props.saveWif(wif);
+	}
+
 	render() {
-		const { show } = this.props;
+		const { show, error, disabled } = this.props;
 
 		return (
 			<Modal className="add-wif-modal" open={show} dimmer="inverted">
@@ -52,6 +70,8 @@ class ModalAddWIF extends React.Component {
 						inputPlaceholder="WIF"
 						inputName="WIF"
 						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+						errorMessage={error}
+						onChange={(e) => this.onChange(e)}
 					/>
 
 					<div className="form-panel">
@@ -59,8 +79,8 @@ class ModalAddWIF extends React.Component {
 							basic
 							type="submit"
 							className="main-btn"
-							onClick={() => {}}
-							disabled={false}
+							onClick={() => this.saveWif()}
+							disabled={disabled}
 							content="Confirm"
 						/>
 					</div>
@@ -80,13 +100,18 @@ ModalAddWIF.defaultProps = {
 	show: false,
 };
 
+ModalAddWIF.propTypes = {
+	show: PropTypes.bool,
+	disabled: PropTypes.bool,
+	close: PropTypes.func.isRequired,
+	error: PropTypes.string,
+	saveWif: PropTypes.func.isRequired,
+};
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_ADD_WIF, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_ADD_WIF)),
-	}),
-)(ModalAddWIF);
+ModalAddWIF.defaultProps = {
+	show: false,
+	disabled: false,
+	error: null,
+};
 
+export default ModalAddWIF;
