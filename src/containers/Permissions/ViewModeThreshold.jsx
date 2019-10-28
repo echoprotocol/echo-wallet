@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import classnames from 'classnames';
+// import { Form } from 'semantic-ui-react';
+// import { connect } from 'react-redux';
+// import classnames from 'classnames';
 
-import { setInFormValue } from '../../actions/FormActions';
+// import { setInFormValue } from '../../actions/FormActions';
 
-import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
+// import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 
 class ThresholdRow extends React.Component {
 

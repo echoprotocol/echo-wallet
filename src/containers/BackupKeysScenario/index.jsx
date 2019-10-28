@@ -150,6 +150,7 @@ export default connect(
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
-		asyncUnlock: (password, callback) => dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_BACKUP)),
+		asyncUnlock: (password, callback) =>
+			dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_BACKUP)),
 	}),
 )(BackupKeysScenario);

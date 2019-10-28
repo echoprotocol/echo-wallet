@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
+import _ from 'lodash';
 
 import ViewModeRow from './ViewModeRow';
 import ViewModeThreshold from './ViewModeThreshold';

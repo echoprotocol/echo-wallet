@@ -44,10 +44,12 @@ class ViewModeTable extends React.Component {
 	// 	const keysLength = prevState.editedAddKeys.length;
 	// 	const editedAddKeys = [];
 
-	// 	if (!keysLength && !addedFields.length && keys.getIn([keyRole, 'keys']).size - data.length !== keysLength) {
+	// 	if (!keysLength && !addedFields.length &&
+	//  	keys.getIn([keyRole, 'keys']).size - data.length !== keysLength) {
 	// 		keys.getIn([keyRole, 'keys']).mapEntries(([key, value]) => {
 
-	// 			if (Number.isNaN(Number(key)) || value || !value.get('key').value || !value.get('weight').value) {
+	// 			if (Number.isNaN(Number(key)) ||
+	// 			value || !value.get('key').value || !value.get('weight').value) {
 	// 				return;
 	// 			}
 
@@ -469,7 +471,7 @@ class ViewModeTable extends React.Component {
 		// 								isSaved ?
 		// 									<div className="td-txt">{newWeight ? newWeight.value : ''}</div>
 		// 									:
-		// 									<div className={classnames('field', { error: newWeight && newWeight.error })}>
+		// 							<div className={classnames('field', { error: newWeight && newWeight.error })}>
 		// 										<input
 		// 											type="text"
 		// 											name={num}
@@ -486,13 +488,15 @@ class ViewModeTable extends React.Component {
 		// 								{
 		// 									(isSaved) ? (
 		// 										<React.Fragment>
-		// 											<button onClick={(e) => this.editAddKey(e, num)} className="edit-row-btn" />
-		// 											{keysLength > 1 && <button onClick={(e) => this.removeAddkey(e, num)} className="remove-row-btn" />}
+		// 									<button onClick={(e) => this.editAddKey(e, num)} className="edit-row-btn" />
+		// 									{keysLength > 1 && <button onClick={(e) =>
+		// 									this.removeAddkey(e, num)} className="remove-row-btn" />}
 		// 										</React.Fragment>
 		// 									) : (
 		// 										<React.Fragment>
-		// 											<button onClick={(e) => this.saveAddKey(e, num, newKey, newWeight, keyRole)} className="save-row-btn" />
-		// 											<button onClick={(e) => this.cancelAddKey(e, num)} className="cancel-row-changes" />
+		// 				<button onClick={(e) =>
+		// 				this.saveAddKey(e, num, newKey, newWeight, keyRole)} className="save-row-btn" />
+		// 				<button onClick={(e) => this.cancelAddKey(e, num)} className="cancel-row-changes" />
 		// 										</React.Fragment>
 		// 									)
 		// 								}
@@ -550,7 +554,7 @@ ViewModeTable.propTypes = {
 	// addAccount: PropTypes.func,
 	// addPublicKey: PropTypes.func,
 	setWif: PropTypes.func,
-	setThreashold: PropTypes.func,
+	// setThreashold: PropTypes.func,
 };
 
 ViewModeTable.defaultProps = {
@@ -562,7 +566,7 @@ ViewModeTable.defaultProps = {
 	// addAccount: () => {},
 	// addPublicKey: () => {},
 	setWif: () => {},
-	setThreashold: () => {},
+	// setThreashold: () => {},
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,
