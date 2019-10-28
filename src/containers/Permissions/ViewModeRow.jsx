@@ -6,7 +6,7 @@ class ViewModeRow extends Component {
 
 	renderButton() {
 		const {
-			subject, type, hasWif, viewWif, addWif,
+			subject, type, hasWif, showWif, addWif,
 		} = this.props;
 
 		if (!type || type !== 'keys') {
@@ -18,7 +18,7 @@ class ViewModeRow extends Component {
 				className="main-btn light"
 				size="medium"
 				content="View WIF"
-				onClick={() => viewWif(subject.value)}
+				onClick={() => showWif(subject.value)}
 			/>
 		) : (
 			<Button
@@ -73,7 +73,7 @@ ViewModeRow.propTypes = {
 	type: PropTypes.string,
 	hasWif: PropTypes.bool,
 	keyRole: PropTypes.string.isRequired,
-	viewWif: PropTypes.func.isRequired,
+	showWif: PropTypes.func.isRequired,
 	addWif: PropTypes.func.isRequired,
 };
 

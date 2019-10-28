@@ -212,6 +212,14 @@ export const isChanged = () => (dispatch, getState) => {
 };
 
 /**
+ * @param {Object} privateKeys
+ * @returns {Object}
+ */
+export const validatePrivateKeys = (privateKeys) =>
+	Object.values(privateKeys.active).some(({ error }) => !!error)
+		|| Object.values(privateKeys.echoRand).some(({ error }) => !!error);
+
+/**
  * @method validateKey
  *
  * @param {String} role
@@ -238,11 +246,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 		}
 	} else {
 		try {
-			if (isAccountId(key.value)) {
-				account = await echo.api.getObject(key.value);
-			} else {
-				account = await echo.api.getAccountByName(key.value);
-			}
+			account = await echo.api.getAccountByName(key.value);
 
 			if (!account) {
 				error = true;
@@ -264,10 +268,6 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'Incorrect weight'));
 	}
 
-	if (!error && account) {
-		dispatch(setInFormValue(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], account.name));
-	}
-
 	return error;
 };
 
@@ -275,7 +275,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
  * @method permissionTransaction
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-export const permissionTransaction = () => async (dispatch, getState) => {
+export const permissionTransaction = (privateKeys) => async (dispatch, getState) => {
 	const currentAccount = getState().global.get('activeUser');
 	const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
@@ -290,9 +290,14 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		});
 	});
 
-	permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
-		validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
-	});
+	if (permissionForm.getIn(['active', 'accounts'])) {
+		permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
+			validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
+		});
+	}
+
+
+	validateFields.push(validatePrivateKeys(privateKeys));
 
 	const errors = await Promise.all(validateFields);
 
@@ -327,6 +332,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 	};
 
 	const rolesPromises = [];
+	const removed = [];
 
 	['active'].forEach((role) => {
 		permissionForm.getIn([role, 'keys']).some((keyForm) => {
@@ -340,11 +346,17 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 					.getIn([role, 'keys'])
 					.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
 				|| keyForm.get('remove')
+				|| permissionForm.getIn([role, 'keys']).size !== permissionTable.getIn([role, 'keys']).length
 			) {
 				permissionForm.getIn([role, 'keys']).forEach((value) => {
 					const weightInt = parseInt(value.get('weight').value, 10);
 
-					if (value.get('remove') || !value.get('key').value || !weightInt) {
+					if (value.get('remove')) {
+						removed.push('keys');
+						return;
+					}
+
+					if (!value.get('key').value || !weightInt) {
 						return;
 					}
 
@@ -384,7 +396,6 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 
 	['active'].forEach((role) => {
 		const accountsPromises = [];
-
 		permissionForm.getIn([role, 'accounts']).some((keyForm) => {
 			const threshold = permissionForm.getIn([role, 'threshold']);
 			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
@@ -396,11 +407,17 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 					.getIn([role, 'accounts'])
 					.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
 				|| keyForm.get('remove')
+				|| permissionForm.getIn([role, 'accounts']).size !== permissionTable.getIn([role, 'accounts']).size
 			) {
 				permissionForm.getIn([role, 'accounts']).forEach((value) => {
 					const weightInt = parseInt(value.get('weight').value, 10);
 
-					if (value.get('remove') || !value.get('key').value || !weightInt) {
+					if (value.get('remove')) {
+						removed.push('accounts');
+						return;
+					}
+
+					if (!value.get('key').value || !weightInt) {
 						return;
 					}
 
@@ -430,6 +447,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		&& !permissionData.active.accounts.length
 		&& !permissionData.echoRand.key
 		&& permissionData.active.threshold === null
+		&& !removed.length
 	) {
 		return false;
 	}
@@ -450,6 +468,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 		|| permissionData.active.accounts.length
 		|| permissionData.active.threshold
 		|| permissionData.echoRand.key
+		|| removed.length
 	) {
 		const keysMap = [];
 
@@ -473,7 +492,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			showOptions.activeThreshold = transaction.active.weight_threshold;
 		}
 
-		if (permissionData.active.keys.length) {
+		if (permissionData.active.keys.length || removed.includes('keys')) {
 			showOptions.activeKeys = permissionData.active.keys;
 
 			transaction.active.key_auths = permissionData.active.keys;
@@ -481,7 +500,7 @@ export const permissionTransaction = () => async (dispatch, getState) => {
 			showOptions.activeKeys = transaction.active.key_auths;
 		}
 
-		if (permissionData.active.accounts.length) {
+		if (permissionData.active.accounts.length || removed.includes('accounts')) {
 			showOptions.activeAccounts = permissionData.active.accounts;
 
 			transaction.active.account_auths = permissionData.active.accounts;

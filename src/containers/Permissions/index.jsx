@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
 import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
+import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
 import TransactionScenario from '../TransactionScenario';
 import ViewModeTable from './ViewModeTable';
@@ -80,6 +81,19 @@ class Permissions extends React.Component {
 		}
 	}
 
+	saveWifs(password) {
+		const { privateKeys } = this.state;
+
+		const result = {};
+		if (Object.keys(privateKeys.active).length) {
+
+		}
+
+		if (Object.keys(privateKeys.echoRand).length) {
+			
+		}
+	}
+
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
@@ -93,7 +107,6 @@ class Permissions extends React.Component {
 		const field = e.target.name;
 		const wif = e.target.value;
 
-		// TODO: separate by keyRole [echorand, active]
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
@@ -107,7 +120,7 @@ class Permissions extends React.Component {
 				
 				if (key && key.value) {
 					if (isPublicKey(key.value) && key.value !== publicKey) {
-						newPrivateKeys[keyRole][field].error = 'invalide private key for current private key';
+						newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
 					}
 				} else {
 					this.props.setValue([keyRole, type, field, 'key'], publicKey);
@@ -116,7 +129,7 @@ class Permissions extends React.Component {
 
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
-			newPrivateKeys[keyRole][field].error = 'invalide private key';
+			newPrivateKeys[keyRole][field].error = 'Invalide private key';
 			newPrivateKeys[keyRole][field].value = wif;
 			this.setState({ privateKeys: newPrivateKeys });
 		}
@@ -196,7 +209,7 @@ class Permissions extends React.Component {
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>
-					<TransactionScenario handleTransaction={() => this.props.permissionTransaction()}>
+					<TransactionScenario handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}>
 						{
 							(submit) => (
 								<React.Fragment>
@@ -223,6 +236,7 @@ class Permissions extends React.Component {
 			form,
 			set,
 			firstFetch,
+			account,
 		} = this.props;
 
 		const active = {
@@ -235,34 +249,46 @@ class Permissions extends React.Component {
 		};
 
 		return (
-			<React.Fragment>
-				<ViewModeTable
-					keyRole="active"
-					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-					description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
-					tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
-					data={active}
-					keys={form}
-					set={set}
-					setValue={this.props.setValue}
-					isChanged={this.props.isChanged}
-					firstFetch={firstFetch}
-				/>
-				<ViewModeTable
-					keyRole="echoRand"
-					title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
-					description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
-					headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
-					headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
-					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
-					data={echoRand}
-					keys={form}
-					set={set}
-					setValue={this.props.setValue}
-					isChanged={this.props.isChanged}
-					firstFetch={firstFetch}
-				/>
-			</React.Fragment>
+			<PrivateKeyScenario
+				account={account}
+			>
+				{
+					(showWif, addWif) => (
+						<React.Fragment>
+							<ViewModeTable
+								keyRole="active"
+								title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
+								description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
+								tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
+								data={active}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+								addWif={addWif}
+							/>
+							<ViewModeTable
+								keyRole="echoRand"
+								title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
+								description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
+								headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+								headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
+								advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+								data={echoRand}
+								keys={form}
+								set={set}
+								setValue={this.props.setValue}
+								isChanged={this.props.isChanged}
+								firstFetch={firstFetch}
+								showWif={showWif}
+								addWif={addWif}
+							/>
+						</React.Fragment>
+					)
+				}
+			</PrivateKeyScenario>
 		);
 	}
 
@@ -410,7 +436,7 @@ export default connect(
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
 		clear: () => dispatch(clear(PERMISSION_TABLE)),
-		permissionTransaction: () => dispatch(permissionTransaction()),
+		permissionTransaction: (privateKeys) => dispatch(permissionTransaction(privateKeys)),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),

@@ -55,6 +55,7 @@ class TransactionScenario extends React.Component {
 		const { password } = this.state;
 
 		this.props.unlock(password, () => {
+			this.props.onUnlock(password);
 			this.props.openModal(MODAL_DETAILS);
 		});
 	}
@@ -112,6 +113,7 @@ class TransactionScenario extends React.Component {
 
 TransactionScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
+	onUnlock: PropTypes.func,
 	children: PropTypes.func.isRequired,
 
 	operation: PropTypes.string,
@@ -129,6 +131,7 @@ TransactionScenario.propTypes = {
 TransactionScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
+	onUnlock: () => {},
 };
 
 export default connect(
