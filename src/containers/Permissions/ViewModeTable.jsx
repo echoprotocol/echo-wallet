@@ -96,7 +96,7 @@ class ViewModeTable extends React.Component {
 
 	render() {
 		const {
-			data, keys, keyRole,
+			data, keys, keyRole, showWif, addWif,
 		} = this.props;
 		return (
 			<div className="view-mode-wrap">
@@ -127,8 +127,8 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={() => { }}
-											viewWif={() => { }}
+											addWif={addWif}
+											showWif={showWif}
 										/>
 									);
 								})
@@ -156,6 +156,8 @@ ViewModeTable.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
+	showWif: PropTypes.func.isRequired,
+	addWif: PropTypes.func.isRequired,
 };
 
 ViewModeTable.defaultProps = {
