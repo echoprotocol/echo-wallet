@@ -1,22 +1,65 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
+import Countdown from 'react-countdown-now';
 
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_EDIT_PERMISSIONS } from '../../constants/ModalConstants';
-import Timer from '../Timer';
 
 class ModalEditPermissions extends React.Component {
 
-	onClose() {
+	constructor(props) {
+		super(props);
+		this.state = {
+			agree: false,
+			timerIsOn: false,
+			timerComplete: false,
+			show: false,
+			changeVisiblity: false,
+		};
+	}
+	static getDerivedStateFromProps(nextProps, prevState) {
+		return nextProps.show !== prevState.show ? {
+			show: nextProps.show,
+			changeVisiblity: true,
+			timerComplete: false,
+			agree: false,
+		} : {
+			changeVisiblity: false,
+		};
+	}
+	shouldComponentUpdate(nextProps, nextState) {
+		return (nextState.changeVisiblity) ? true : !(nextState.timerIsOn && !nextState.timerComplete);
+	}
+
+	onCheck(e) {
+		this.setState({ agree: e.currentTarget.checked });
+	}
+	onForgot(e) {
+		e.preventDefault();
+
+		this.props.forgot();
+	}
+
+	onSuccess() {
+		this.props.unlock();
+	}
+
+	onClose(e) {
+		e.preventDefault();
 		this.props.close();
 	}
-	onConfirm() { }
+	onChange(e) {
+		this.props.change(e.target.value.trim());
+	}
+	timer({ seconds }) {
+		return this.state.timerComplete ? null : <div className="timer"> {seconds} </div>;
+	}
 
 	render() {
-		const { show } = this.props;
+		const {
+			show, error, disabled, warningTime,
+		} = this.props;
+		const { agree, timerComplete } = this.state;
 
 		return (
 			<Modal className="edit-permissions-modal" open={show} dimmer="inverted">
@@ -28,7 +71,15 @@ class ModalEditPermissions extends React.Component {
 					tabIndex="0"
 				/>
 				<div className="modal-header">
-					<Timer />
+					<Countdown
+						date={Date.now() + (warningTime * 1000)}
+						renderer={(props) => this.timer(props)}
+						onStart={() => this.setState({ timerIsOn: true })}
+						onComplete={() => this.setState({
+							timerComplete: true,
+							timerIsOn: false,
+						})}
+					/>
 					<h3 className="modal-header-title">Edit Mode Warning</h3>
 				</div>
 				<div className="modal-body">
@@ -40,31 +91,31 @@ class ModalEditPermissions extends React.Component {
 					</div>
 					<div className="check-list">
 						<div className="check">
-							<input type="checkbox" id="edit-mode-checkbox" />
+							<input type="checkbox" id="edit-mode-checkbox" onChange={(e) => this.onCheck(e)} />
 							<label className="label" htmlFor="edit-mode-checkbox">
 								<span className="label-text">I have read and understood the possible consequences of editing</span>
 							</label>
 						</div>
 					</div>
-					<Form.Field className={classnames('error-wrap', { error: true })}>
+					<Form.Field className={classnames('error-wrap', { error: !!error })}>
 						<label htmlFor="Password">Password</label>
 						<input
 							type="password"
 							placeholder="Password"
 							name="password"
-							onChange={() => {}}
+							onChange={(e) => this.onChange(e)}
 							autoFocus
 						/>
 						{
-							false && <span className="error-message">Some Error</span>
+							error && <span className="error-message">{error}</span>
 						}
 					</Form.Field>
 					<div className="form-panel">
 						<a
 							className="action-link"
 							role="button"
-							onClick={() => {}}
-							onKeyPress={() => {}}
+							onClick={(e) => this.onForgot(e)}
+							onKeyPress={(e) => this.onForgot(e)}
 							tabIndex="0"
 						>
 							Forgot password?
@@ -73,8 +124,8 @@ class ModalEditPermissions extends React.Component {
 							basic
 							type="submit"
 							className="main-btn"
-							onClick={() => {}}
-							disabled={false}
+							onClick={(e) => this.onSuccess(e)}
+							disabled={(disabled) || !(agree && timerComplete)}
 							content="Go to edit mode"
 						/>
 					</div>
@@ -87,20 +138,20 @@ class ModalEditPermissions extends React.Component {
 
 ModalEditPermissions.propTypes = {
 	show: PropTypes.bool,
+	disabled: PropTypes.bool,
+	error: PropTypes.string,
+	change: PropTypes.func.isRequired,
+	unlock: PropTypes.func.isRequired,
+	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	warningTime: PropTypes.number,
 };
 
 ModalEditPermissions.defaultProps = {
 	show: false,
+	disabled: false,
+	error: null,
+	warningTime: 0,
 };
 
-
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_EDIT_PERMISSIONS, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_EDIT_PERMISSIONS)),
-	}),
-)(ModalEditPermissions);
-
+export default ModalEditPermissions;
