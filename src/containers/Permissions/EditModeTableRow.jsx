@@ -3,43 +3,71 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import InputEye from '../../components/InputEye';
-
 export default class EditModeTableRow extends React.Component {
 
-	renderType(type) {
-		const { keyRole, subject, wif } = this.props;
+	constructor(props) {
+		super(props);
 
+		this.state = {
+			show: false,
+		};
+	}
+
+	toggleShow(show) {
+		this.setState({
+			show: !show,
+		});
+	}
+
+	renderType(type) {
+		const { show } = this.state;
+		const {
+			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
+		} = this.props;
 
 		return type === 'keys' ? (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: true })}>
+				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
 					<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
 					<input
 						type="text"
 						placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
-						name="PublicKey"
+						name={name}
 						className="input"
 						value={subject.value}
+						onChange={setPublicKey}
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
-
-				<InputEye
-					inputLabel="WIF (optional)"
-					inputPlaceholder="WIF"
-					inputName="WIF"
-					value={wif.value}
-				/>
+				<Form.Field className={classnames('input-eye error-wrap', { error: wif.error })}>
+					<label htmlFor="WIF">WIF (optional)</label>
+					<div className="action-input">
+						<input
+							type={show ? 'text' : 'password'}
+							placeholder="WIF (optional)"
+							name={name}
+							className="input"
+							value={wif.value}
+							onChange={setWif}
+						/>
+						{
+							show ?
+								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
+								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
+						}
+					</div>
+					{wif.error && <span className="error-message">{wif.error}</span>}
+				</Form.Field>
 			</React.Fragment>
 		) : (
-			<Form.Field className={classnames('error-wrap', { error: false })}>
+			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
 				<label htmlFor="AccountName">Account name</label>
 				<input
 					type="text"
 					placeholder="Account name"
-					name="AccountName"
+					name={name}
 					value={subject.value}
+					onChange={setAccount}
 				/>
 				{subject.error && <span className="error-message">{subject.error}</span>}
 			</Form.Field>
@@ -48,7 +76,7 @@ export default class EditModeTableRow extends React.Component {
 
 	render() {
 		const {
-			type, keyRole, removeKey, subject, weight,
+			type, keyRole, removeKey, subject, weight, setWeight, name, showRemove,
 		} = this.props;
 
 		return (
@@ -58,14 +86,15 @@ export default class EditModeTableRow extends React.Component {
 						{this.renderType(type)}
 						{
 							keyRole === 'active' && (
-								<Form.Field className="weight-field">
+								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
 									<label htmlFor="weight">Weight</label>
 									<input
 										type="text"
 										placeholder="Weight"
-										name="weight"
+										name={name}
 										className="input"
 										value={weight.value}
+										onChange={setWeight}
 									/>
 									{weight.error && <span className="error-message">{weight.error}</span>}
 								</Form.Field>
@@ -74,7 +103,7 @@ export default class EditModeTableRow extends React.Component {
 					</div>
 				</div>
 				{
-					keyRole === 'active' &&
+					(keyRole === 'active' && showRemove) &&
 					<div className="list-item-panel">
 						<button
 							className="remove-btn icon-remove"
@@ -94,13 +123,14 @@ EditModeTableRow.propTypes = {
 	wif: PropTypes.object,
 	weight: PropTypes.object,
 	type: PropTypes.string,
+	name: PropTypes.string.isRequired,
+	showRemove: PropTypes.bool.isRequired,
 	keyRole: PropTypes.string.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	setWif: PropTypes.func.isRequired,
 	setPublicKey: PropTypes.func.isRequired,
+	setAccount: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
-	// isChanged: PropTypes.func.isRequired,
-	// validateField: PropTypes.func.isRequired,
 };
 
 EditModeTableRow.defaultProps = {

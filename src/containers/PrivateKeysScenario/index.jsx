@@ -19,7 +19,7 @@ class PrivateKeysScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			password: '',
-			keys: [],
+			// keys: [],
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -36,8 +36,8 @@ class PrivateKeysScenario extends React.Component {
 	change(password) {
 		this.setState({ password });
 
-		if (this.props[MODAL_UNLOCK_PERMISSION].get('error')) {
-			this.props.clearError(MODAL_UNLOCK_PERMISSION);
+		if (this.props[MODAL_EDIT_PERMISSIONS].get('error')) {
+			this.props.clearError(MODAL_EDIT_PERMISSIONS);
 		}
 	}
 
@@ -53,10 +53,10 @@ class PrivateKeysScenario extends React.Component {
 		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
 
 		this.props.onKeys(keys);
-		this.setState((prevState) => ({
-			...prevState,
-			keys: [...keys],
-		}));
+		// this.setState((prevState) => ({
+		// 	...prevState,
+		// 	keys: [...keys],
+		// }));
 	}
 
 	unlock() {
@@ -64,7 +64,7 @@ class PrivateKeysScenario extends React.Component {
 
 		this.props.unlock(password, async () => {
 			await this.fetchWIFs(password);
-		}, MODAL_UNLOCK_PERMISSION);
+		}, MODAL_EDIT_PERMISSIONS);
 	}
 
 	clear() {
@@ -78,7 +78,7 @@ class PrivateKeysScenario extends React.Component {
 
 	forgot() {
 		this.clear();
-		this.props.closeModal(MODAL_UNLOCK_PERMISSION);
+		this.props.closeModal(MODAL_EDIT_PERMISSIONS);
 		this.props.openModal(MODAL_WIPE);
 	}
 
@@ -90,7 +90,7 @@ class PrivateKeysScenario extends React.Component {
 
 		return (
 			<React.Fragment>
-				{this.props.children(/*this.state.keys, */this.getKeys.bind(this))}
+				{this.props.children(this.getKeys.bind(this))}
 				<ModalEditPermissions
 					show={modalEditPermissions.get('show')}
 					disabled={modalEditPermissions.get('loading')}
@@ -111,7 +111,7 @@ class PrivateKeysScenario extends React.Component {
 PrivateKeysScenario.propTypes = {
 	children: PropTypes.func.isRequired,
 	activeUserId: PropTypes.string,
-	[MODAL_UNLOCK_PERMISSION]: PropTypes.object.isRequired,
+	[MODAL_EDIT_PERMISSIONS]: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	clearError: PropTypes.func.isRequired,

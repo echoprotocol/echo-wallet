@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
+import _ from 'lodash';
 
 import ViewModeRow from './ViewModeRow';
 import ViewModeThreshold from './ViewModeThreshold';
@@ -19,10 +20,10 @@ class ViewModeTable extends React.Component {
 			(data.keys.length !== prevProps.data.keys.length)
 		) {
 			data.keys.forEach((k) => {
-				this.props.setValue([keyRole, 'keys', k.key, 'key'], k.key);
-				this.props.setValue([keyRole, 'keys', k.key, 'weight'], k.weight);
-				this.props.setValue([keyRole, 'keys', k.key, 'type'], k.type);
-				this.props.setValue([keyRole, 'keys', k.key, 'hasWif'], k.hasWif);
+				this.props.setValue([keyRole, k.type, k.key, 'key'], k.key);
+				this.props.setValue([keyRole, k.type, k.key, 'weight'], k.weight);
+				this.props.setValue([keyRole, k.type, k.key, 'type'], k.type);
+				this.props.setValue([keyRole, k.type, k.key, 'hasWif'], k.hasWif);
 			});
 		}
 
@@ -95,7 +96,7 @@ class ViewModeTable extends React.Component {
 
 	render() {
 		const {
-			data, keys, keyRole,
+			data, keys, keyRole, showWif, addWif,
 		} = this.props;
 		return (
 			<div className="view-mode-wrap">
@@ -115,8 +116,8 @@ class ViewModeTable extends React.Component {
 								data.keys.map((k) => {
 									const { type, hasWif } = k;
 
-									const key = keys.getIn([keyRole, 'keys', k.key, 'key']);
-									const weight = keys.getIn([keyRole, 'keys', k.key, 'weight']);
+									const key = keys.getIn([keyRole, type, k.key, 'key']);
+									const weight = keys.getIn([keyRole, type, k.key, 'weight']);
 
 									return (
 										<ViewModeRow
@@ -126,8 +127,8 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={() => { }}
-											viewWif={() => { }}
+											addWif={addWif}
+											showWif={showWif}
 										/>
 									);
 								})
@@ -155,6 +156,8 @@ ViewModeTable.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	set: PropTypes.func.isRequired,
 	isChanged: PropTypes.func.isRequired,
+	showWif: PropTypes.func.isRequired,
+	addWif: PropTypes.func.isRequired,
 };
 
 ViewModeTable.defaultProps = {

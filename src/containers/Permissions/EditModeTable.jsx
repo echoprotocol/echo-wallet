@@ -1,39 +1,154 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup, Button } from 'semantic-ui-react';
+import _ from 'lodash';
 
-import EditModeThrashold from './EditModeThrashold';
+import EditModeThreshold from './EditModeThreshold';
 import EditModeTableRow from './EditModeTableRow';
 
 class ViewModeTable extends React.Component {
 
-	// componentDidUpdate(prevProps) {
-	// 	const {
-	// 		keys, firstFetch, data, keyRole,
-	// 	} = this.props;
-	// 	const { keys: prevKeys, firstFetch: prevFetch } = prevProps;
+	constructor(props) {
+		super(props);
 
-	// 	if (
-	// 		(firstFetch !== prevFetch && firstFetch) ||
-	// 		(data.keys.length !== prevProps.data.keys.length)
-	// 	) {
-	// 		data.keys.forEach((k) => {
-	// 			this.props.setValue([keyRole, 'keys', k.key, 'key'], k.key);
-	// 			this.props.setValue([keyRole, 'keys', k.key, 'weight'], k.weight);
-	// 			this.props.setValue([keyRole, 'keys', k.key, 'type'], k.type);
-	// 			this.props.setValue([keyRole, 'keys', k.key, 'hasWif'], k.hasWif);
+		this.state = {
+			addedFields: [],
+			removedRows: [],
+		};
+	}
+
+	static getDerivedStateFromProps(nextProps) {
+		if (nextProps.resetAddKeys) {
+			return { addedFields: [], removedRows: [] };
+		}
+
+		return null;
+	}
+
+	// }
+
+	// static getDerivedStateFromProps(nextProps, prevState) {
+	// 	const {
+	// 		keyRole, keys, data, addedFields,
+	// 	} = nextProps;
+
+	// 	const keysLength = prevState.editedAddKeys.length;
+	// 	const editedAddKeys = [];
+
+	// 	if (!keysLength && !addedFields.length && keys.getIn([keyRole, 'keys']).size - data.length !== keysLength) {
+	// 		keys.getIn([keyRole, 'keys']).mapEntries(([key, value]) => {
+
+	// 			if (Number.isNaN(Number(key)) || value || !value.get('key').value || !value.get('weight').value) {
+	// 				return;
+	// 			}
+
+	// 			nextProps.onAddKey(parseInt(key, 10));
+	// 			editedAddKeys.push(parseInt(key, 10));
 	// 		});
 	// 	}
 
-	// 	if (!_.isEqual(keys, prevKeys)) {
-	// 		this.props.set('isChanged', this.props.isChanged());
+	// 	if (nextProps.resetAddKeys) {
+	// 		return {
+	// 			editedAddKeys: [],
+	// 			removedRows: [],
+	// 		};
 	// 	}
+
+	// 	if (editedAddKeys.length) {
+	// 		return { editedAddKeys };
+	// 	}
+
+	// 	return null;
 	// }
+
+	componentDidUpdate(prevProps) {
+		const {
+			keys, firstFetch, data, keyRole,
+		} = this.props;
+		const { keys: prevKeys, firstFetch: prevFetch } = prevProps;
+
+		if (
+			(firstFetch !== prevFetch && firstFetch) ||
+			(data.keys.length !== prevProps.data.keys.length)
+		) {
+			data.keys.forEach((k) => {
+				this.props.setValue([keyRole, k.type, k.key, 'key'], k.key);
+				this.props.setValue([keyRole, k.type, k.key, 'weight'], k.weight);
+				this.props.setValue([keyRole, k.type, k.key, 'type'], k.type);
+			});
+		}
+
+		if (!_.isEqual(keys, prevKeys)) {
+			this.props.set('isChanged', this.props.isChanged());
+		}
+	}
+
+	onRemoveOriginField(key, type) {
+		const { keyRole } = this.props;
+
+		this.props.setValue([keyRole, type, key, 'remove'], true);
+
+		const { removedRows } = this.state;
+
+		removedRows.push(key);
+
+		this.setState({ removedRows });
+	}
+
+	setPublicKey(keyRole, e) {
+		const field = e.target.name;
+		const newValue = e.target.value;
+		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
+	}
+
+	setWeight(keyRole, type, e) {
+		const field = e.target.name;
+		const newValue = e.target.value;
+		this.props.setValue([keyRole, type, field, 'weight'], newValue);
+	}
+
+	setAccount(keyRole, e) {
+		const field = e.target.name;
+		const newValue = e.target.value;
+		this.props.setValue([keyRole, 'accounts', field, 'key'], newValue);
+	}
+
+	setThreshold(keyRole, e) {
+		const field = e.target.name;
+		const newValue = e.target.value;
+		this.props.setValue([keyRole, field], newValue);
+	}
+
+	addNewField(num, type) {
+		const { keyRole } = this.props;
+		const { addedFields } = this.state;
+
+		const index = num || (addedFields.length ? addedFields[addedFields.length - 1].num + 1 : 0);
+		addedFields.push({ num: index, type });
+		this.props.setValue([keyRole, type, index.toString(), 'key'], '');
+		this.props.setValue([keyRole, type, index.toString(), 'weight'], '');
+		this.props.setValue([keyRole, type, index.toString(), 'type'], type);
+
+		this.setState({ addedFields });
+	}
+
+	removeField(num, type) {
+		const { keyRole } = this.props;
+		const { addedFields } = this.state;
+
+		this.props.removeKey([keyRole, type, num.toString()]);
+
+		addedFields.splice(addedFields.findIndex((o) => o.num === num), 1);
+
+		this.setState({ addedFields });
+	}
 
 	renderDescription() {
 		const {
-			data, description, headerLinkText, headerLinkUrl,
+			data, description, headerLinkText, headerLinkUrl, keys, keyRole,
 		} = this.props;
+
+		const threshold = keys.getIn([keyRole, 'threshold']);
 
 		return (
 			(description && headerLinkText && headerLinkUrl) ? (
@@ -60,7 +175,11 @@ class ViewModeTable extends React.Component {
 					{
 						data.threshold && (
 							<div className="list-header-col">
-								<EditModeThrashold />
+								<EditModeThreshold
+									defaultThreshold={data.threshold}
+									threshold={threshold}
+									setThreshold={(e) => this.setThreshold(keyRole, e)}
+								/>
 							</div>
 						)
 					}
@@ -93,35 +212,91 @@ class ViewModeTable extends React.Component {
 
 	renderList() {
 		const {
-			data, keys, keyRole, setValue, set, privateKeys,
+			data, keys, keyRole, privateKeys, setWif,
 		} = this.props;
+
+		const { addedFields, removedRows } = this.state;
+
+		const keysLength = (data.keys.length + addedFields.length) - removedRows.length;
 
 		return (
 			<div className="list">
 				<React.Fragment>
 					{
 						data.keys.map((k) => {
+							if (this.state.removedRows.includes(k.key)) {
+								return null;
+							}
 							const { type } = k;
 
-							const key = keys.getIn([keyRole, 'keys', k.key, 'key']);
-							const weight = keys.getIn([keyRole, 'keys', k.key, 'weight']);
+							const key = keys.getIn([keyRole, type, k.key, 'key']);
+							const weight = keys.getIn([keyRole, type, k.key, 'weight']);
 							const wif = privateKeys[k.key];
 
 							return (
 								<EditModeTableRow
 									key={k.key}
+									name={k.key}
 									subject={key}
 									wif={wif}
 									weight={weight}
 									type={type}
 									keyRole={keyRole}
-									removeKey={() => { }}
-									setValue={setValue}
-									set={set}
-									validateField={() => { }}
-									setWif={() => {}}
-									setPublicKey={() => {}}
-									setWeight={() => {}}
+									removeKey={() => this.onRemoveOriginField(k.key, type)}
+									validateField={() => {}}
+									setWif={(e) => setWif(keyRole, type, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setWeight={(e) => this.setWeight(keyRole, type, e)}
+									setAccount={(e) => this.setAccount(keyRole, e)}
+									showRemove={keysLength > 1}
+								/>
+							);
+						})
+					}
+				</React.Fragment>
+			</div>
+		);
+	}
+
+	renderAddedFields() {
+		const {
+			keys, keyRole, data,
+		} = this.props;
+
+		const { addedFields, removedRows } = this.state;
+
+		const keysLength = (data.keys.length + addedFields.length) - removedRows.length;
+
+		const {
+			privateKeys, setWif,
+		} = this.props;
+
+		return (
+			<div className="list">
+				<React.Fragment>
+					{
+						addedFields.map(({ num, type }) => {
+
+							const key = keys.getIn([keyRole, type, num.toString(), 'key']);
+							const weight = keys.getIn([keyRole, type, num.toString(), 'weight']);
+							const wif = privateKeys[num];
+
+							return (
+								<EditModeTableRow
+									key={num}
+									name={num.toString()}
+									subject={key}
+									wif={wif}
+									weight={weight}
+									type={type}
+									keyRole={keyRole}
+									removeKey={() => this.removeField(num, type)}
+									validateField={() => {}}
+									setWif={(e) => setWif(keyRole, type, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setWeight={(e) => this.setWeight(keyRole, type, e)}
+									setAccount={(e) => this.setAccount(keyRole, e)}
+									showRemove={keysLength > 1}
 								/>
 							);
 						})
@@ -133,8 +308,6 @@ class ViewModeTable extends React.Component {
 
 	renderAddButtons() {
 		const {
-			addAccount,
-			addPublicKey,
 			keyRole,
 			addAccountButtonText,
 			addAccountButtonTooltipText,
@@ -147,7 +320,7 @@ class ViewModeTable extends React.Component {
 				<Button
 					className="main-btn"
 					size="medium"
-					onClick={addAccount}
+					onClick={() => this.addNewField(undefined, 'accounts')}
 				>
 					<Popup
 						trigger={<span className="main-btn-popup">{addAccountButtonText}</span>}
@@ -160,7 +333,7 @@ class ViewModeTable extends React.Component {
 				<Button
 					className="main-btn"
 					size="medium"
-					onClick={addPublicKey}
+					onClick={() => this.addNewField(undefined, 'keys')}
 				>
 					<Popup
 						trigger={<span className="main-btn-popup">{addPublicKeyButtonText}</span>}
@@ -185,9 +358,11 @@ class ViewModeTable extends React.Component {
 						this.renderList()
 					}
 					{
+						this.renderAddedFields()
+					}
+					{
 						this.renderAddButtons()
 					}
-
 				</div>
 			</div>
 		);
@@ -209,12 +384,12 @@ ViewModeTable.propTypes = {
 	keyRole: PropTypes.string.isRequired,
 	keys: PropTypes.object.isRequired,
 	privateKeys: PropTypes.object.isRequired,
-	// firstFetch: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
+	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
-	// isChanged: PropTypes.func.isRequired,
-	addAccount: PropTypes.func,
-	addPublicKey: PropTypes.func,
+	isChanged: PropTypes.func.isRequired,
+	setWif: PropTypes.func,
+	removeKey: PropTypes.func,
 };
 
 ViewModeTable.defaultProps = {
@@ -223,8 +398,8 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
-	addAccount: () => {},
-	addPublicKey: () => {},
+	setWif: () => {},
+	removeKey: () => {},
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,
