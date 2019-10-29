@@ -30,7 +30,7 @@ export const FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT = '(for advanced user
 export const FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION = 'The settings below allow you to specify the keys and / or accounts, whose signatures will be necessary to send a transaction from your account. Using threshold and weight you can separate access to an account between several keys and / or accounts.';
 
 export const ADD_ACCOUNT_BUTTON_TEXT = 'Add Account';
-export const ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT = 'Add Account';
+export const ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT = 'Grant access for sending transactions to another account';
 export const ADD_PUBLIC_KEY_BUTTON_TEXT = 'Add public key';
 export const ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT = 'Add an additional key to sign transactions';
 export const FORM_PERMISSION_MODE_EDIT = 'edit';
