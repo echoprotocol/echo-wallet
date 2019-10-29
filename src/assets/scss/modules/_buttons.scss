@@ -106,9 +106,15 @@ $stripe-width: 10px;
 		right: 0;
 		left: 0;
 		bottom: 0;
+	}
+
+	&.countdown-wrap {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		.countdown {
+			margin-right: 5px;
+		}
 	}
 
 }

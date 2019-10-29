@@ -51,8 +51,11 @@ class ModalEditPermissions extends React.Component {
 	onChange(e) {
 		this.props.change(e.target.value.trim());
 	}
-	timer({ seconds }) {
-		return this.state.timerComplete ? null : <div className="timer"> {seconds} </div>;
+	countdown({ seconds }) {
+		return !this.state.timerComplete &&
+			<div className="countdown">
+				<div className="countdown-text">{seconds}</div>
+			</div>;
 	}
 
 	render() {
@@ -71,18 +74,9 @@ class ModalEditPermissions extends React.Component {
 					tabIndex="0"
 				/>
 				<div className="modal-header">
-					<Countdown
-						date={Date.now() + (warningTime * 1000)}
-						renderer={(props) => this.timer(props)}
-						onStart={() => this.setState({ timerIsOn: true })}
-						onComplete={() => this.setState({
-							timerComplete: true,
-							timerIsOn: false,
-						})}
-					/>
 					<h3 className="modal-header-title">Edit Mode Warning</h3>
 				</div>
-				<div className="modal-body">
+				<form className="modal-body">
 					<div className="info-text">
 						Please, keep in mind that uncontrolled changes may lead to
 						loosing access to the wallet or restricting your actions within it.
@@ -123,13 +117,23 @@ class ModalEditPermissions extends React.Component {
 						<Button
 							basic
 							type="submit"
-							className="main-btn"
+							className="main-btn countdown-wrap"
 							onClick={(e) => this.onSuccess(e)}
 							disabled={(disabled) || !(agree && timerComplete)}
-							content="Go to edit mode"
-						/>
+						>
+							<Countdown
+								date={Date.now() + (warningTime * 1000)}
+								renderer={(props) => this.countdown(props)}
+								onStart={() => this.setState({ timerIsOn: true })}
+								onComplete={() => this.setState({
+									timerComplete: true,
+									timerIsOn: false,
+								})}
+							/>
+							Go to edit mode
+						</Button>
 					</div>
-				</div>
+				</form>
 			</Modal>
 		);
 	}
