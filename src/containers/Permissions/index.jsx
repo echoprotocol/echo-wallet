@@ -36,7 +36,7 @@ import {
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
-import WarningConfirmThresholScenario from '../WarningConfirmThresholScenario';
+import WarningConfirmThresholdScenario from '../WarningConfirmThresholdScenario';
 
 class Permissions extends React.Component {
 
@@ -239,7 +239,7 @@ class Permissions extends React.Component {
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>				
-					<WarningConfirmThresholScenario
+					<WarningConfirmThresholdScenario
 						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
 						onUnlock={(password) => this.saveWifs(password)}
 					>
@@ -253,7 +253,7 @@ class Permissions extends React.Component {
 								/>
 							)
 						}
-					</WarningConfirmThresholScenario>
+					</WarningConfirmThresholdScenario>
 
 				</div>
 			</div >
@@ -340,7 +340,6 @@ class Permissions extends React.Component {
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
 		};
-
 		return (
 			<React.Fragment>
 				<EditModeTable
