@@ -12,7 +12,7 @@ class modalConfirmChangeTreshold extends React.Component {
 	}
 	render() {
 		const {
-			show,
+			show, warningMessage,
 		} = this.props;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
@@ -20,8 +20,7 @@ class modalConfirmChangeTreshold extends React.Component {
 					<div className="modal-header">Confirm transaction</div>
 					<div className="modal-body">
 						<div className="info-text">
-						If these changes are applied, you won&apos;t have
-						enough keys to sign transactions. Do you want to proceed?
+							{warningMessage}
 						</div>
 						<div className="form-panel">
 							<Button
@@ -53,6 +52,7 @@ modalConfirmChangeTreshold.propTypes = {
 	show: PropTypes.bool,
 	confirm: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	warningMessage: PropTypes.string.isRequired,
 };
 
 modalConfirmChangeTreshold.defaultProps = {
