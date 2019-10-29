@@ -61,10 +61,12 @@ class WarningConfirmThresholdScenario extends React.Component {
 			maxNextThreshold += (+accounts[account].weight.value);
 			for (const activeAccount in activeAccounts) {
 				if (activeAccount === account) {
+					console.log(accounts[account].weight.value)
 					goodNextThreshold += (+accounts[account].weight.value);
 				}
 			}
 		}
+		console.log(maxNextThreshold, goodNextThreshold);
 		// const { echoRand } = permissionsKeys;
 		// for (const key in echoRand.keys) {
 		// 	console.log(1)
@@ -79,7 +81,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		if (maxNextThreshold < nextTreshold) {
 			this.props.closeModal(MODAL_UNLOCK);
 			toastError('Threshold is too big. You do not have that much private key weight');
-		} else if (nextTreshold >= goodNextThreshold) {
+		} else if (nextTreshold > goodNextThreshold) {
 			this.setState({
 				warningMessage: `${this.state.warningMessage} If these changes are applied, you won't have enough keys to sign transactions. Do you want to proceed?`,
 			});
