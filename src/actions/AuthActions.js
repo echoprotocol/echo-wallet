@@ -3,7 +3,7 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, initAccount, setGlobalError } from './GlobalActions';
+import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage } from './GlobalActions';
 
 import {
 	setFormValue,
@@ -12,7 +12,7 @@ import {
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
-import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT } from '../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
 import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
@@ -27,13 +27,24 @@ import AuthApi from '../api/AuthApi';
 
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
+import CryptoService from '../services/CryptoService';
 
+/**
+ * @method generateWIF
+ * @returns {function(dispatch): Promise<undefined>}
+ */
 export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
 
 	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
 };
 
+/**
+ * @method createAccount
+ * @param {Object} param0
+ * @param {Boolean} isAddAccount
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount) => async (dispatch, getState) => {
@@ -68,14 +79,13 @@ export const createAccount = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
-
 		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
 		const userStorage = Services.getUserStorage();
 		const account = await echo.api.getAccountByName(accountName);
 		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
 
-		dispatch(addAccount(accountName, network.name));
+		dispatch(addAccount(accountName, network.name, [publicKey]));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -84,8 +94,27 @@ export const createAccount = ({
 	}
 
 };
+/**
+ * @method isAllWIFsAdded
+ * @param {Object} account
+ * @param {String} password
+ * @return {Boolean}
+ */
+const isAllWIFsAdded = async (account, password) => {
+	const userStorage = Services.getUserStorage();
+	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
+	const userPublicKeys = account.active.key_auths;
+	const publicEchorandKey = account.echorand_key;
+	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.publicKey === publicEchorandKey);
+	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
+};
 
-
+/**
+ * @method authUser
+ *
+ * @param {Object} param0
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
 export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	const wifError = validateWIF(wif);
@@ -130,11 +159,15 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName));
+			dispatch(addAccount(accountName, networkName, [key.publicKey]));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
 
+		const hasAllWIFs = await isAllWIFsAdded(account, password);
+		if (!hasAllWIFs) {
+			dispatch(openModal(PROPOSAL_ADD_WIF));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
@@ -151,7 +184,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
  * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
- *
+ * 	@@returns {function(dispatch): Promise<Object>}
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
@@ -188,8 +221,8 @@ const getAccountsList = (accounts) => async (dispatch) => {
  *  Import account
  *
  * 	@param {String} accountName
- * @param {String} wif
- *
+ *  @param {String} wif
+ *	@returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importAccount = ({ accountName, wif, password }) =>
 	async (dispatch, getState) => {
@@ -262,7 +295,7 @@ export const importAccount = ({ accountName, wif, password }) =>
  *
  *  @param {String} password
  *  @param {Array} accounts
- *
+ *  @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
@@ -276,7 +309,50 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
 
-export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => async (dispatch) => {
+/**
+ * @method unlock
+ * @param {String} password
+ * @param {Function} callback
+ * @param {String} modal
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
+	async (dispatch) => {
+		try {
+			dispatch(toggleModalLoading(modal, true));
+
+			const userStorage = Services.getUserStorage();
+			const doesDBExist = await userStorage.doesDBExist();
+
+			if (!doesDBExist) {
+				dispatch(setError(modal, 'DB doesn\'t exist'));
+				return;
+			}
+
+			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
+			const correctPassword = await userStorage.isMasterPassword(password);
+
+			if (!correctPassword) {
+				dispatch(setError(modal, 'Invalid password'));
+				return;
+			}
+
+			dispatch(closeModal(modal));
+
+			callback(password);
+		} catch (err) {
+			dispatch(setError(modal, err));
+		} finally {
+			dispatch(toggleModalLoading(modal, false));
+		}
+
+	};
+
+export const asyncUnlock = (
+	password,
+	callback = () => { },
+	modal = MODAL_UNLOCK,
+) => async (dispatch) => {
 	try {
 		dispatch(toggleModalLoading(modal, true));
 
@@ -296,13 +372,81 @@ export const unlock = (password, callback = () => {}, modal = MODAL_UNLOCK) => a
 			return;
 		}
 
-		dispatch(closeModal(modal));
+		await callback(password);
 
-		callback(password);
+		dispatch(closeModal(modal));
 	} catch (err) {
 		dispatch(setError(modal, err));
 	} finally {
 		dispatch(toggleModalLoading(modal, false));
 	}
 
+};
+
+/**
+ *
+ * @param {String} publicKey
+ * @param {String} wif
+ * @param {Object} account
+ * @param {String} password
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const addWif = (
+	publicKey,
+	wif,
+	account,
+	password,
+) => async (dispatch, getState) => {
+	const { id, name } = account;
+	const networkName = getState().global.getIn(['network', 'name']);
+	const userStorage = Services.getUserStorage();
+	if (!CryptoService.isWIF(wif)) {
+		throw Error('Invalid WIF');
+	}
+
+	const privateKey = PrivateKey.fromWif(wif);
+
+	if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
+		throw Error('Wrong WIF');
+	}
+
+	await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+
+	dispatch(saveWifToStorage(name, networkName, publicKey));
+};
+
+export const saveWifToDb = (
+	publicKey,
+	wif,
+	account,
+	password,
+	callback = () => { },
+	modal = MODAL_ADD_WIF,
+) => async (dispatch, getState) => {
+	try {
+		const { id, name } = account;
+		const networkName = getState().global.getIn(['network', 'name']);
+		const userStorage = Services.getUserStorage();
+		if (!CryptoService.isWIF(wif)) {
+			dispatch(setError(modal, 'Invalid WIF'));
+			return;
+		}
+
+		const privateKey = PrivateKey.fromWif(wif);
+
+		if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
+			dispatch(setError(modal, 'Wrong WIF'));
+			return;
+		}
+
+		await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+
+		dispatch(saveWifToStorage(name, networkName, publicKey));
+		callback();
+		dispatch(closeModal(modal));
+	} catch (err) {
+		dispatch(setError(modal, err));
+	} finally {
+		dispatch(toggleModalLoading(modal, false));
+	}
 };

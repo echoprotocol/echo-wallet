@@ -26,11 +26,13 @@ class AmountField extends React.Component {
 
 	componentDidMount() {
 		this.props.setDefaultAsset();
+		this.props.getTransferFee().then((fee) => fee && this.onFee(fee));
 	}
 
 	componentDidUpdate(prevProps) {
 		if (!prevProps.currency && prevProps.currency !== this.props.currency) {
 			this.props.setDefaultAsset();
+			this.props.getTransferFee().then((fee) => fee && this.onFee(fee));
 		}
 	}
 

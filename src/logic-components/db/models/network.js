@@ -10,7 +10,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method create
 	 * @param {Array} keys
 	 */
 	static create(keys) {
@@ -18,17 +18,19 @@ class Network {
 	}
 
 	/**
-	 *
-	 * @param {Key} key
-	 * @returns {Network}
-	 */
+     * @method addKey
+     * @param {Key} key
+     * @returns {Network}
+     */
 	addKey(key) {
-		this.keys.push(key);
+		if (!this.keys.find(({ wif }) => wif === key.wif)) {
+			this.keys.push(key);
+		}
 		return this;
 	}
 
 	/**
-	 *
+	 * @method updateKeys
 	 * @param {Key} keys
 	 * @returns {Network}
 	 */
@@ -38,7 +40,7 @@ class Network {
 	}
 
 	/**
-	 *
+	 * @method getAllKeys
 	 * @return {Array}
 	 */
 	getAllKeys() {

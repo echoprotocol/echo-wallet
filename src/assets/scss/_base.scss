@@ -8,11 +8,15 @@
     box-sizing: border-box;
 }
 
-body,
-ul,
-li {
-    margin: 0;
-    padding: 0;
+html {
+	font-size: 14px;
+}
+body {
+	font-family: $font-name;
+}
+body,ul,li {
+    margin:0;
+    padding:0;
 }
 
 a {

@@ -7,9 +7,8 @@ const ToastInfo = (text, onUndo) => (
 		<Button
 			type="button"
 			compact
-			size="tiny"
+			className="black-btn"
 			content="Undo"
-			color="black"
 			onClick={() => onUndo()}
 		/>
 	</React.Fragment>
