@@ -5,6 +5,7 @@ import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import TableReducer from '../reducers/TableReducer';
 import { resetTransaction } from './TransactionActions';
+import { getAvailableWifStatusesFromStorage } from './GlobalActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
@@ -271,6 +272,70 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 	return error;
 };
 
+const validateThreshold = (permissionForm) => (dispatch) => {
+	const threshold = permissionForm.getIn(['active', 'threshold']).value;
+	if (!isThreshold(threshold)) {
+		dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], 'Invalid threshold'));
+		return false;
+	}
+	return true;
+};
+
+const addWIFsToBufferObject = (permissionForm, privateKeys, bufferObject) => {
+
+};
+
+
+const addKeysToBufferObject = (permissionForm, bufferObject, removed) => {
+	const role = 'active';
+	permissionForm.getIn([role, 'keys']).forEach((value) => {
+		const weightInt = parseInt(value.get('weight').value, 10);
+
+		if (value.get('remove')) {
+			removed.push('keys');
+			return;
+		}
+
+		if (!value.get('key').value || !weightInt) {
+			return;
+		}
+
+		bufferObject[role].keys.push([value.get('key').value, weightInt]);
+	});
+};
+
+/**
+ *
+ * @param {Object} permissionForm
+ * @param {Object} permissionTable
+ * @returns {Boolean}
+ */
+const isThresholdChanged = (permissionForm, permissionTable) => {
+	const role = 'active';
+	const threshold = permissionForm.getIn([role, 'threshold']);
+	return (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value);
+};
+
+
+const isActiveKeysChanged = (permissionForm, permissionTable) => {
+	const role = 'active';
+	const formKeys = permissionForm.getIn([role, 'keys']);
+	const tableKeys = permissionTable.getIn([role, 'keys']);
+
+
+	(formKeys || []).some((keyForm) => {
+		if (
+			!tableKeys.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+			|| keyForm.get('remove')
+			|| formKeys.size !== tableKeys.length
+		) {
+			return true;
+		}
+
+		return false;
+	});
+};
+
 /**
  * @method permissionTransaction
  * @returns {function(dispatch, getState): Promise<Boolean>}
@@ -285,9 +350,11 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 
 	const validateFields = [];
 	roles.forEach((role) => {
-		permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
-			validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
-		});
+		if (permissionForm.getIn([role, 'keys'])) {
+			permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
+				validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
+			});
+		}
 	});
 
 	if (permissionForm.getIn(['active', 'accounts'])) {
@@ -296,27 +363,12 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 		});
 	}
 
-
+	validateFields.push(!dispatch(validateThreshold(permissionForm)));
 	validateFields.push(validatePrivateKeys(privateKeys));
 
 	const errors = await Promise.all(validateFields);
 
 	if (errors.includes(true)) {
-		return false;
-	}
-
-	const isError = ['active'].some((role) => {
-		const threshold = permissionForm.getIn([role, 'threshold']).value;
-
-		if (!isThreshold(threshold)) {
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'threshold'], 'Invalide threshold'));
-			return true;
-		}
-
-		return false;
-	});
-
-	if (isError) {
 		return false;
 	}
 
@@ -349,20 +401,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 				|| keyForm.get('remove')
 				|| permissionForm.getIn([role, 'keys']).size !== permissionTable.getIn([role, 'keys']).length
 			) {
-				permissionForm.getIn([role, 'keys']).forEach((value) => {
-					const weightInt = parseInt(value.get('weight').value, 10);
-
-					if (value.get('remove')) {
-						removed.push('keys');
-						return;
-					}
-
-					if (!value.get('key').value || !weightInt) {
-						return;
-					}
-
-					permissionData[role].keys.push([value.get('key').value, weightInt]);
-				});
+				addKeysToBufferObject(permissionForm, permissionData, removed);
 
 				return true;
 			}

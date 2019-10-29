@@ -320,6 +320,12 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(initAccount(accountName, networkName));
 };
 
+/**
+ *
+ * @param {String} accountName
+ * @param {String} networkName
+ * @param {String} publicKey
+ */
 export const saveWifToStorage = (accountName, networkName, publicKey) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
@@ -334,7 +340,21 @@ export const saveWifToStorage = (accountName, networkName, publicKey) => (dispat
 
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 	dispatch(formPermissionKeys());
+};
 
+/**
+ *
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {Object}
+ */
+export const getAvailableWifStatusesFromStorage = (accountName, networkName) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const currentAccount = accounts.find(({ name }) => accountName === name);
+
+	return (currentAccount && currentAccount.addedKeys) ? currentAccount.addedKeys : {};
 };
 
 /**
