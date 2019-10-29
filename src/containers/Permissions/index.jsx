@@ -132,31 +132,28 @@ class Permissions extends React.Component {
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
 		}
-		console.log(form.toJS());
-
-		console.log(field, wif);
-		console.log(privateKeys);
 		newPrivateKeys[keyRole][field].value = wif;
 		newPrivateKeys[keyRole][field].error = '';
 		try {
 			if (wif) {
 				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 				const key = form.getIn([keyRole, type, field, 'key']);
-				console.log(publicKey)
-				console.log(key);
 				if (key && key.value) {
 					if (isPublicKey(key.value) && key.value !== publicKey) {
 						newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
 					}
 				} else {
 					this.props.setValue([keyRole, type, field, 'key'], publicKey);
+					this.props.setValue([keyRole, type, field, 'hasWif'], true);
 				}
+			} else {
+				this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			}
-			console.log(newPrivateKeys);
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
 			newPrivateKeys[keyRole][field].error = 'Invalide private key';
 			newPrivateKeys[keyRole][field].value = wif;
+			this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			this.setState({ privateKeys: newPrivateKeys });
 		}
 	}

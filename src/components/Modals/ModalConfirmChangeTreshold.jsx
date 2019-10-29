@@ -29,7 +29,7 @@ class modalConfirmChangeTreshold extends React.Component {
 
 								className="main-btn"
 								onClick={(e) => this.onClose(e)}
-								content="Do it later"
+								content="No"
 							/>
 							<Button
 								basic
