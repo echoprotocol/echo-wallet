@@ -86,11 +86,9 @@ class SignIn extends React.Component {
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
 						<label htmlFor="AccountName">Account name</label>
-
 						<input
 							placeholder="Account Name"
 							name="accountName"
-							className="ui input"
 							value={accountName.value}
 							onChange={(e) => this.onChange(e, true)}
 							autoFocus
@@ -101,7 +99,13 @@ class SignIn extends React.Component {
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
 						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
-						<input type="password" placeholder="Password or WIF-key" name="wif" className="ui input" value={wif.value} onChange={(e) => this.onChange(e)} />
+						<input
+							type="password"
+							placeholder="Password or WIF-key"
+							name="wif"
+							value={wif.value}
+							onChange={(e) => this.onChange(e)}
+						/>
 						<div className="error-message error-animation">
 							<span>{wif.error}</span>
 						</div>
@@ -120,8 +124,7 @@ class SignIn extends React.Component {
 						loading ?
 							<Button
 								type="submit"
-								color="orange"
-								className="load main-btn fix-width"
+								className="load main-btn"
 								content="Loading..."
 							/> :
 							<Button
@@ -129,7 +132,7 @@ class SignIn extends React.Component {
 								type="submit"
 								disabled={this.isDisabledSubmit()}
 								onClick={submit}
-								className={classnames('main-btn fix-width', { disabled: this.isDisabledSubmit() })}
+								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
 								content={isAddAccount ? 'Add Account' : 'Login'}
 							/>
 					}

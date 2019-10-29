@@ -41,12 +41,8 @@
 
     @include max-vw(1000) {
         padding: 0 20px;
-    }
-
-    .ui.button.main-btn.basic {
-        background-color: #fff;
-    }
-
+	}
+	
     .form-info {
         h3 {
             color: #5c637d;

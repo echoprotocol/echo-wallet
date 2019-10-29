@@ -3,13 +3,14 @@ import echo, { PrivateKey } from 'echojs-lib';
 import Services from '../services';
 
 /**
+ * @method getSigners
  * Get transaction signers
  *
- * @param account
- * @param keys
- * @param viewed
+ * @param {Object} account
+ * @param {Array} keys
+ * @param {Array} viewed
  *
- * @returns {Promise}
+ * @returns {Promise<Array>}
  */
 const getSigners = async (account, keys, viewed = []) => {
 	let weight = 0;
@@ -25,7 +26,6 @@ const getSigners = async (account, keys, viewed = []) => {
 			keys.splice(1, keyIndex);
 		}
 	});
-
 	if (weight >= account.active.weight_threshold) {
 		return signers;
 	}
@@ -58,10 +58,11 @@ const getSigners = async (account, keys, viewed = []) => {
 };
 
 /**
+ * @method signTransaction
  * Sign transaction
- * @param signer
- * @param tr
- * @returns {Promise}
+ * @param {String} signer
+ * @param {Object} tr
+ * @returns {Promise<>undefined}
  */
 export const signTransaction = async (accountId, tr, password) => {
 	const signer = await echo.api.getObject(accountId);
