@@ -48,6 +48,7 @@ class Assets extends React.Component {
 								trigger={<span className="inner-tooltip-trigger icon-info" />}
 								content="This is the coefficient that will be used to calculate the reward for participating in blocks creation."
 								className="inner-tooltip"
+								style={{ width: 373 }}
 								inverted
 							/>
 						</div>
