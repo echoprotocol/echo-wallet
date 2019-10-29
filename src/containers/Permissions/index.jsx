@@ -361,8 +361,6 @@ class Permissions extends React.Component {
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
-					addAccount={() => { }}
-					addPublicKey={() => { }}
 					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 					removeKey={(fields) => this.props.removeKey(fields)}
 				/>

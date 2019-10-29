@@ -12,7 +12,7 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 	}
 	render() {
 		const {
-			show,
+			show, warningMessage, echoRandMessage,
 		} = this.props;
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
@@ -20,8 +20,13 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 					<div className="modal-header">Please, confirm applying changes</div>
 					<div className="modal-body">
 						<div className="info-text">
-						If these changes are applied, you won&apos;t have
-						enough keys to sign transactions. Do you want to proceed?.
+							{
+								echoRandMessage && <span>{echoRandMessage}</span>
+							}
+							{
+								warningMessage && <span>{warningMessage}</span>
+							}
+
 						</div>
 						<div className="form-panel">
 							<Button
@@ -37,7 +42,7 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 								type="button"
 								className="main-btn"
 								onClick={(e) => this.onConfirm(e)}
-								content="Proceed"
+								content="No"
 							/>
 						</div>
 					</div>
@@ -53,10 +58,14 @@ ModalConfirmEditingOfPermissions.propTypes = {
 	show: PropTypes.bool,
 	confirm: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	warningMessage: PropTypes.string,
+	echoRandMessage: PropTypes.string,
 };
 
 ModalConfirmEditingOfPermissions.defaultProps = {
 	show: false,
+	warningMessage: '',
+	echoRandMessage: '',
 };
 
 export default ModalConfirmEditingOfPermissions;
