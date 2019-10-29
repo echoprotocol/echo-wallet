@@ -295,7 +295,7 @@ class ViewModeTable extends React.Component {
 						content={addAccountButtonTooltipText}
 						className="inner-tooltip"
 						position="bottom center"
-						style={{ width: 380 }}
+						style={{ width: 300 }}
 					/>
 				</Button>
 				<Button

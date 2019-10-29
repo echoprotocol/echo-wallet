@@ -245,14 +245,12 @@ class Permissions extends React.Component {
 					>
 						{
 							(submit) => (
-								<React.Fragment>
-									<Button
-										className="grey-btn"
-										size="medium"
-										content="Save"
-										onClick={submit}
-									/>
-								</React.Fragment>
+								<Button
+									className="blue-btn"
+									size="medium"
+									content="Save"
+									onClick={submit}
+								/>
 							)
 						}
 					</WarningConfirmThresholScenario>
