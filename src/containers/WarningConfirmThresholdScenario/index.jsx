@@ -138,13 +138,13 @@ class WarningConfirmThresholdScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
-			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmChangeTreshold,
+			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmEditingOfPermissions,
 		} = this.props;
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalConfirmEditingOfPermissions
-					show={modalConfirmChangeTreshold.get('show')}
+					show={modalConfirmEditingOfPermissions.get('show')}
 					confirm={() => {
 						this.open(MODAL_UNLOCK);
 						this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
