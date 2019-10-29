@@ -88,7 +88,6 @@ class ViewModeTable extends React.Component {
 	addNewField(num, type) {
 		const { keyRole } = this.props;
 		const { addedFields } = this.state;
-
 		const index = num || (addedFields.length ? addedFields[addedFields.length - 1].num + 1 : 0);
 		addedFields.push({ num: index, type });
 		this.props.setValue([keyRole, type, index.toString(), 'key'], '');
@@ -96,6 +95,7 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, type, index.toString(), 'type'], type);
 
 		this.setState({ addedFields });
+		console.log(addedFields);
 	}
 
 	removeField(num, type) {
@@ -316,6 +316,7 @@ class ViewModeTable extends React.Component {
 	}
 
 	render() {
+		console.log(this.state.addedFields);
 		return (
 			<div className="edit-mode-wrap">
 				<div className="list-wrap">

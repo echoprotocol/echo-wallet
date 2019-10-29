@@ -18,7 +18,7 @@ import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
 import { toastError } from '../../helpers/ToastHelper';
 import { checkKeyWeightWarning } from '../../actions/BalanceActions';
 
-class WarningConfirmThresholScenario extends React.Component {
+class WarningConfirmThresholdScenario extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -151,7 +151,7 @@ class WarningConfirmThresholScenario extends React.Component {
 
 }
 
-WarningConfirmThresholScenario.propTypes = {
+WarningConfirmThresholdScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	children: PropTypes.func.isRequired,
 
@@ -173,7 +173,7 @@ WarningConfirmThresholScenario.propTypes = {
 	onUnlock: PropTypes.func,
 };
 
-WarningConfirmThresholScenario.defaultProps = {
+WarningConfirmThresholdScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
 	onUnlock: () => {},
@@ -201,4 +201,4 @@ export default connect(
 		checkThreshold: (network, accountId, nextTreshold) =>
 			dispatch(checkKeyWeightWarning(network, accountId, nextTreshold)),
 	}),
-)(WarningConfirmThresholScenario);
+)(WarningConfirmThresholdScenario);
