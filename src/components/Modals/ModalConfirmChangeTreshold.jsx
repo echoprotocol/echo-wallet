@@ -21,7 +21,7 @@ class modalConfirmChangeTreshold extends React.Component {
 					<div className="modal-body">
 						<div className="info-text">
 						If these changes are applied, you won&apos;t have
-						enough keys to sign transactions. Do you want to proceed?.
+						enough keys to sign transactions. Do you want to proceed?
 						</div>
 						<div className="form-panel">
 							<Button

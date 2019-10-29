@@ -242,6 +242,7 @@ class Permissions extends React.Component {
 					<WarningConfirmThresholdScenario
 						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
 						onUnlock={(password) => this.saveWifs(password)}
+						
 					>
 						{
 							(submit) => (
@@ -342,7 +343,7 @@ class Permissions extends React.Component {
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
 		};
-		console.log(form.keys);
+		// console.log(form.keys);
 		return (
 			<React.Fragment>
 				<EditModeTable
