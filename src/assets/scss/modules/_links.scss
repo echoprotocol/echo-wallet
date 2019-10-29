@@ -3,5 +3,11 @@
     font-family: proximanovaSemibold;
     color: rgb(77, 102, 205);
     line-height: 1.214;
-    cursor: pointer;
+	cursor: pointer;
+	border-radius: 4px;
+    padding: 1px 3px 0;
+    margin-left: -3px;
+	&:focus {
+		@include on-focus(2px);
+	}
 }
