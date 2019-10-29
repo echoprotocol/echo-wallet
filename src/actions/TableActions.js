@@ -309,7 +309,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 		const threshold = permissionForm.getIn([role, 'threshold']).value;
 
 		if (!isThreshold(threshold)) {
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'threshold'], 'Invalide threshold'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, 'threshold'], 'Invalid threshold'));
 			return true;
 		}
 

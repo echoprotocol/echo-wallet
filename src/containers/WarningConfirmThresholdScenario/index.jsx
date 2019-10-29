@@ -7,11 +7,12 @@ import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
-import ModalConfirmChangeTreshold from '../../components/Modals/ModalConfirmChangeTreshold';
+import ModalConfirmEditingOfPermissions from '../../components/Modals/ModalConfirmEditingOfPermissions';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_CHANGE_TRESHOLD } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_EDITING_OF_PERMISSIONS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
+
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
@@ -84,7 +85,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			});
 		}
 		if (this.state.warningMessage) {
-			this.props.openModal(MODAL_CONFIRM_CHANGE_TRESHOLD);
+			this.props.openModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
 		} else {
 			this.props.openModal(MODAL_UNLOCK);
 		}
@@ -137,18 +138,18 @@ class WarningConfirmThresholdScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
-			[MODAL_CONFIRM_CHANGE_TRESHOLD]: modalConfirmChangeTreshold,
+			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmChangeTreshold,
 		} = this.props;
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
-				<ModalConfirmChangeTreshold
+				<ModalConfirmEditingOfPermissions
 					show={modalConfirmChangeTreshold.get('show')}
 					confirm={() => {
 						this.open(MODAL_UNLOCK);
-						this.close(MODAL_CONFIRM_CHANGE_TRESHOLD);
+						this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
 					}}
-					close={() => this.close(MODAL_CONFIRM_CHANGE_TRESHOLD)}
+					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
 					warningMessage={this.state.warningMessage}
 				/>
 				<ModalUnlock
@@ -210,7 +211,7 @@ export default connect(
 		activeAccounts: state.echojs.getIn(['accountsByName']),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
-		[MODAL_CONFIRM_CHANGE_TRESHOLD]: state.modal.get(MODAL_CONFIRM_CHANGE_TRESHOLD),
+		[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: state.modal.get(MODAL_CONFIRM_EDITING_OF_PERMISSIONS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
