@@ -104,7 +104,7 @@ class Password extends React.Component {
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
 						<div className="error-message error-animation">
-						<span>Passwords do not match</span>
+							<span>Passwords do not match</span>
 						</div>
 
 					</Form.Field>
