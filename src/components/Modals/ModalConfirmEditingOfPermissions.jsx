@@ -1,47 +1,45 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_CONFIRM_EDITING_OF_PERMISSIONS } from '../../constants/ModalConstants';
-
 
 class ModalConfirmEditingOfPermissions extends React.Component {
 
+	onConfirm() {
+		this.props.confirm();
+	}
 	onClose() {
 		this.props.close();
 	}
-
 	render() {
-		const { show } = this.props;
-
+		const {
+			show,
+		} = this.props;
 		return (
-			<Modal className="confirm-editing-of-permissions-modal" open={show} dimmer="inverted">
+			<Modal className="small unclock-size" open={show} dimmer="inverted">
+				<div className="modal-content add-key">
+					<div className="modal-header">Please, confirm applying changes</div>
+					<div className="modal-body">
+						<div className="info-text">
+						If these changes are applied, you won&apos;t have
+						enough keys to sign transactions. Do you want to proceed?.
+						</div>
+						<div className="form-panel">
+							<Button
+								basic
+								type="button"
 
-				<div className="modal-header">
-					<h3 className="modal-header-title">Please, confirm applying changes</h3>
-				</div>
-				<div className="modal-body">
-					<div className="info-text">
-						I understand that uncontrolled changes may lead to loosing access
-						to my wallet or restrict my actions within it.
-					</div>
-					<div className="form-panel">
-						<Button
-							basic
-							type="submit"
-							className="main-btn"
-							onClick={() => {}}
-							content="Back to edit mode"
-						/>
-						<Button
-							basic
-							type="submit"
-							className="main-btn"
-							onClick={() => {}}
-							content="Confirm"
-						/>
+								className="main-btn"
+								onClick={(e) => this.onClose(e)}
+								content="Do it later"
+							/>
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={(e) => this.onConfirm(e)}
+								content="Proceed"
+							/>
+						</div>
 					</div>
 				</div>
 			</Modal>
@@ -50,8 +48,10 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 
 }
 
+
 ModalConfirmEditingOfPermissions.propTypes = {
 	show: PropTypes.bool,
+	confirm: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
 };
 
@@ -59,13 +59,4 @@ ModalConfirmEditingOfPermissions.defaultProps = {
 	show: false,
 };
 
-
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_CONFIRM_EDITING_OF_PERMISSIONS, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)),
-	}),
-)(ModalConfirmEditingOfPermissions);
-
+export default ModalConfirmEditingOfPermissions;
