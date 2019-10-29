@@ -281,27 +281,40 @@ const validateThreshold = (permissionForm) => (dispatch) => {
 	return true;
 };
 
-const addWIFsToBufferObject = (permissionForm, privateKeys, bufferObject) => {
-
-};
-
-
-const addKeysToBufferObject = (permissionForm, bufferObject, removed) => {
+const addActiveKeysToBufferObject = (permissionForm) => {
 	const role = 'active';
+	const result = [];
 	permissionForm.getIn([role, 'keys']).forEach((value) => {
 		const weightInt = parseInt(value.get('weight').value, 10);
-
-		if (value.get('remove')) {
-			removed.push('keys');
-			return;
-		}
 
 		if (!value.get('key').value || !weightInt) {
 			return;
 		}
 
-		bufferObject[role].keys.push([value.get('key').value, weightInt]);
+		result.push([value.get('key').value, weightInt]);
 	});
+
+	return result;
+};
+
+const addWIFsToBufferObject = (permissionForm, privateKeys, bufferObject) => {
+
+};
+
+const addEchoRandKeyToBufferObject = (permissionForm) => {
+	const role = 'echoRand';
+	const result = [];
+	permissionForm.getIn([role, 'keys']).forEach((value) => {
+		const weightInt = parseInt(value.get('weight').value, 10);
+
+		if (!value.get('key').value || !weightInt) {
+			return;
+		}
+
+		result.push(value.get('key').value);
+	});
+
+	return result[0];
 };
 
 /**
@@ -316,24 +329,72 @@ const isThresholdChanged = (permissionForm, permissionTable) => {
 	return (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value);
 };
 
+/**
+ *
+ * @param {Object} permissionForm
+ * @returns {Number}
+ */
+const addThresholdToBufferObject = (permissionForm) => {
+	const role = 'active';
+	const threshold = permissionForm.getIn([role, 'threshold']);
+	return Number(threshold.value);
+};
 
+/**
+ *
+ * @param {Object} permissionForm
+ * @param {Object} permissionTable
+ * @returns {Boolean}
+ */
 const isActiveKeysChanged = (permissionForm, permissionTable) => {
 	const role = 'active';
 	const formKeys = permissionForm.getIn([role, 'keys']);
 	const tableKeys = permissionTable.getIn([role, 'keys']);
 
+	if (formKeys.size !== tableKeys.size) {
+		return true;
+	}
 
-	(formKeys || []).some((keyForm) => {
-		if (
-			!tableKeys.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-			|| keyForm.get('remove')
-			|| formKeys.size !== tableKeys.length
-		) {
-			return true;
-		}
+	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
+		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+		|| keyForm.get('remove')
+	));
+};
 
-		return false;
-	});
+/**
+ *
+ * @param {Object} permissionForm
+ * @param {Object} permissionTable
+ * @returns {Boolean}
+ */
+const isEchoRandKeysChanged = (permissionForm, permissionTable) => {
+	const role = 'echoRand';
+	const formKeys = permissionForm.getIn([role, 'keys']);
+	const tableKeys = permissionTable.getIn([role, 'keys']);
+
+	return formKeys.some((keyForm) => !tableKeys.some((keyTable) => keyTable.key === keyForm.get('key').value));
+};
+
+/**
+ *
+ * @param {Object} permissionForm
+ * @param {Object} permissionTable
+ * @returns {Boolean}
+ */
+const isActiveAccountsChanged = (permissionForm, permissionTable) => {
+	const role = 'echoRand';
+	const formKeys = permissionForm.getIn([role, 'accounts']);
+	const tableKeys = permissionTable.getIn([role, 'accounts']);
+
+	if (formKeys.size !== tableKeys.size) {
+		return true;
+	}
+
+	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
+		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+		|| keyForm.get('remove')
+	));
+
 };
 
 /**
@@ -350,18 +411,14 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 
 	const validateFields = [];
 	roles.forEach((role) => {
-		if (permissionForm.getIn([role, 'keys'])) {
-			permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
-				validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
-			});
-		}
+		permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
+			validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
+		});
 	});
 
-	if (permissionForm.getIn(['active', 'accounts'])) {
-		permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
-			validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
-		});
-	}
+	permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
+		validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
+	});
 
 	validateFields.push(!dispatch(validateThreshold(permissionForm)));
 	validateFields.push(validatePrivateKeys(privateKeys));
@@ -384,64 +441,90 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 		},
 	};
 
+	const dataChanged = {
+		active: {
+			keys: false,
+			accounts: false,
+			threshold: false,
+			wif: false,
+		},
+		echoRand: {
+			key: null,
+			wif: false,
+		},
+	};
+
 	const rolesPromises = [];
 	const removed = [];
 
-	['active'].forEach((role) => {
-		(permissionForm.getIn([role, 'keys']) || []).some((keyForm) => {
-			const threshold = permissionForm.getIn([role, 'threshold']);
-			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
-				permissionData[role].threshold = Number(threshold.value);
-			}
+	dataChanged.active.keys = isActiveKeysChanged(permissionForm, permissionTable);
+	dataChanged.active.threshold = isThresholdChanged(permissionForm, permissionTable);
+	dataChanged.echoRand.key = isEchoRandKeysChanged(permissionForm, permissionTable);
+	dataChanged.active.accounts = isActiveAccountsChanged(permissionForm, permissionTable);
 
-			if (
-				!permissionTable
-					.getIn([role, 'keys'])
-					.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-				|| keyForm.get('remove')
-				|| permissionForm.getIn([role, 'keys']).size !== permissionTable.getIn([role, 'keys']).length
-			) {
-				addKeysToBufferObject(permissionForm, permissionData, removed);
+	if (dataChanged.active.keys) {
+		permissionData.active.keys = addActiveKeysToBufferObject(permissionForm, permissionData);
+	}
 
-				return true;
-			}
+	if (dataChanged.active.threshold) {
+		permissionData.active.threshold = addThresholdToBufferObject(permissionForm);
+	}
 
-			return false;
-		});
+	if (dataChanged.echoRand.key) {
+		permissionData.echoRand.key = addEchoRandKeyToBufferObject(permissionForm);
+	}
 
-	});
+	// ['active'].forEach((role) => {
+	// 	(permissionForm.getIn([role, 'keys']) || []).some((keyForm) => {
+	// 		const threshold = permissionForm.getIn([role, 'threshold']);
+	// 		if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
+	// 			permissionData[role].threshold = Number(threshold.value);
+	// 		}
 
-	['echoRand'].forEach((role) => {
-		permissionForm.getIn([role, 'keys']).some((keyForm) => {
+	// 		if (
+	// 			!permissionTable
+	// 				.getIn([role, 'keys'])
+	// 				.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+	// 			|| keyForm.get('remove')
+	// 			|| permissionForm.getIn([role, 'keys']).size !== permissionTable.getIn([role, 'keys']).length
+	// 		) {
+	// 			addActiveKeysToBufferObject(permissionForm, permissionData, removed);
 
-			if (
-				!permissionTable.getIn([role, 'keys']).some((keyTable) => keyTable.key === keyForm.get('key').value)
-			) {
-				permissionForm.getIn([role, 'keys']).forEach((value) => {
+	// 			return true;
+	// 		}
 
-					if (!value.get('key').value) {
-						return;
-					}
+	// 		return false;
+	// 	});
 
-					permissionData[role].key = value.get('key').value;
-				});
+	// });
 
-				return true;
-			}
+	// ['echoRand'].forEach((role) => {
+	// 	permissionForm.getIn([role, 'keys']).some((keyForm) => {
 
-			return false;
-		});
+	// 		if (
+	// 			!permissionTable.getIn([role, 'keys']).some((keyTable) => keyTable.key === keyForm.get('key').value)
+	// 		) {
+	// 			permissionForm.getIn([role, 'keys']).forEach((value) => {
 
-	});
+	// 				if (!value.get('key').value) {
+	// 					return;
+	// 				}
+
+	// 				permissionData[role].key = value.get('key').value;
+	// 			});
+
+	// 			return true;
+	// 		}
+
+	// 		return false;
+	// 	});
+
+	// });
 
 	['active'].forEach((role) => {
 		const accountsPromises = [];
 		(permissionForm.getIn([role, 'accounts']) || []).some((keyForm) => {
-			const threshold = permissionForm.getIn([role, 'threshold']);
-			if (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value) {
-				permissionData[role].threshold = Number(threshold.value);
-			}
-
+		
 			if (
 				!permissionTable
 					.getIn([role, 'accounts'])
