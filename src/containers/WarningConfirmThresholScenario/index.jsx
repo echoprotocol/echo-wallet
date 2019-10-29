@@ -8,14 +8,19 @@ import ModalApprove from '../../components/Modals/ModalDetails';
 import ModalConfirmChangeTreshold from '../../components/Modals/ModalConfirmChangeTreshold';
 
 import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_CHANGE_TRESHOLD } from '../../constants/ModalConstants';
+
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
+import { setInFormError } from '../../actions/FormActions';
+
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
-import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
-import { toastError } from '../../helpers/ToastHelper';
+import {
+	FORM_PERMISSION_KEY,
+	FORM_PERMISSION_TRESHOLD_SUM_ERROR,
+} from '../../constants/FormConstants';
 import { checkKeyWeightWarning } from '../../actions/BalanceActions';
 
 class WarningConfirmThresholScenario extends React.Component {
@@ -57,7 +62,7 @@ class WarningConfirmThresholScenario extends React.Component {
 			.reduce((accumulator, currentKey) => accumulator + currentKey.weight, 0);
 		if (maxNextThreshold < nextTreshold) {
 			this.props.closeModal(MODAL_UNLOCK);
-			toastError('Threshold is too big. You do not have that much private key weight');
+			this.props.setInFormError();
 		} else {
 			const isNextThresholdGood =
                 !(await this.props.checkThreshold(network, accountId, nextTreshold));
@@ -166,6 +171,7 @@ WarningConfirmThresholScenario.propTypes = {
 	sendTransaction: PropTypes.func.isRequired,
 	checkThreshold: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	setInFormError: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	treshold: PropTypes.object.isRequired,
 	account: PropTypes.object.isRequired,
@@ -198,6 +204,7 @@ export default connect(
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
 		checkThreshold: (network, accountId, nextTreshold) =>
 			dispatch(checkKeyWeightWarning(network, accountId, nextTreshold)),
 	}),

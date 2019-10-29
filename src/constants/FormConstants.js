@@ -35,3 +35,4 @@ export const ADD_PUBLIC_KEY_BUTTON_TEXT = 'Add public key';
 export const ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT = 'Add an additional key to sign transactions';
 export const FORM_PERMISSION_MODE_EDIT = 'edit';
 export const FORM_PERMISSION_MODE_VIEW = 'view';
+export const FORM_PERMISSION_TRESHOLD_SUM_ERROR = "Sum of the keys weight can't be less than threshold";
