@@ -45,7 +45,12 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 
 	async submit(onFinish) {
-		const isValid = await this.props.handleTransaction();
+		let isValid;
+		try {
+			isValid = await this.props.handleTransaction();
+		} catch (e) {
+			return;
+		}
 		if (!isValid) {
 			return;
 		}

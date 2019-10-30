@@ -127,7 +127,6 @@ class Permissions extends React.Component {
 
 		const field = e.target.name;
 		const wif = e.target.value;
-
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
@@ -344,7 +343,6 @@ class Permissions extends React.Component {
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
 		};
-		console.log(form.keys);
 		return (
 			<React.Fragment>
 				<EditModeTable
