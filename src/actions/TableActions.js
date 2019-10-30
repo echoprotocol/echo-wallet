@@ -581,8 +581,6 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			account: currentAccount.get('name'),
 		};
 
-		console.log(dataChanged);
-
 		const isWifChangingOnly =
 			!dataChanged.active.keys
 			&& !dataChanged.active.accounts

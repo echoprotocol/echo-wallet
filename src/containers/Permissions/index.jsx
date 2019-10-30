@@ -138,7 +138,6 @@ class Permissions extends React.Component {
 
 		const field = e.target.name;
 		const wif = e.target.value;
-
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};

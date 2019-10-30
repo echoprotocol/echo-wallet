@@ -47,13 +47,18 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 
 	async submit(onFinish) {
-		const { validation: isValid, isWifChangingOnly } = await this.props.handleTransaction();
+		try {
+			const { validation, isWifChangingOnly } = await this.props.handleTransaction();
 
-		if (!isValid) {
+			if (!validation) {
+				return;
+			}
+			this.setState({ isWifChangingOnly });
+
+		} catch (error) {
 			return;
 		}
 
-		this.setState({ isWifChangingOnly });
 		const permissionsKeys = this.props.form.toJS();
 		const network = this.props.network.toJS();
 		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
@@ -62,12 +67,14 @@ class WarningConfirmThresholdScenario extends React.Component {
 		let enoughNextThreshold = new BN(0);
 		let maxNextValue = new BN(0);
 		for (const key in keys) {
+			if (!keys[key].key.value) return;
 			maxNextValue = maxNextValue.plus(keys[key].weight.value);
 			if (keys[key].hasWif && keys[key].hasWif.value) {
 				enoughNextThreshold = enoughNextThreshold.plus(keys[key].weight.value);
 			}
 		}
 		for (const account in accounts) {
+			if (!accounts[account].key.value) return;
 			maxNextValue = maxNextValue.plus(accounts[account].weight.value);
 			for (let i = 0; i < accs.length; i += 1) {
 				if (accs[i].name === account) {
