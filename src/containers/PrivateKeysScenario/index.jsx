@@ -8,7 +8,7 @@ import ModalEditPermissions from '../../components/Modals/ModalEditPermissions';
 import { MODAL_UNLOCK_PERMISSION, MODAL_WIPE } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
-import { unlock } from '../../actions/AuthActions';
+import { asyncUnlock } from '../../actions/AuthActions';
 
 import Services from '../../services';
 
@@ -129,6 +129,7 @@ export default connect(
 		openModal: (value) => dispatch(openModal(value)),
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
-		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_UNLOCK_PERMISSION)),
+		unlock: (password, callback) =>
+			dispatch(asyncUnlock(password, callback, MODAL_UNLOCK_PERMISSION)),
 	}),
 )(PrivateKeysScenario);
