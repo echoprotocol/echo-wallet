@@ -1,10 +1,6 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_BACKUP } from '../../constants/ModalConstants';
 
 class ModalBackup extends React.Component {
 
@@ -115,11 +111,4 @@ ModalBackup.defaultProps = {
 };
 
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_BACKUP, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_BACKUP)),
-	}),
-)(ModalBackup);
+export default ModalBackup;
