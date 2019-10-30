@@ -18,7 +18,7 @@ import { openModal, closeModal, setError } from '../../actions/ModalActions';
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
-import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR } from '../../constants/FormConstants';
+import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR, REPEATING_KEYS_ERROR } from '../../constants/FormConstants';
 import { setInFormError, setValue } from '../../actions/FormActions';
 
 
@@ -45,7 +45,33 @@ class WarningConfirmThresholdScenario extends React.Component {
 	clear() {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
-
+	isRepeat(keys, accounts) {
+		const items = [];
+		const repeatingItems = [];
+		for (const key in keys) {
+			items.push({
+				index: key,
+				value: keys[key].key.value,
+				type: 'keys',
+			});
+		}
+		for (const account in accounts) {
+			items.push({
+				index: account,
+				value: accounts[account].key.value,
+				type: 'accounts',
+			});
+		}
+		for (let i = 0; i < items.length; i += 1) {
+			for (let j = i + 1; j < items.length; j += 1) {
+				if (items[i].value === items[j].value) {
+					repeatingItems.push(items[j]);
+					break;
+				}
+			}
+		}
+		return repeatingItems;
+	}
 	async submit(onFinish) {
 		try {
 			const { validation, isWifChangingOnly } = await this.props.handleTransaction();
@@ -63,6 +89,13 @@ class WarningConfirmThresholdScenario extends React.Component {
 		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
 		const nextTreshold = new BN(this.props.treshold.value);
 		const { keys, accounts } = permissionsKeys.active;
+		const repeatingItems = this.isRepeat(keys, accounts);
+		if (repeatingItems.length) {
+			for (let i = 0; i < repeatingItems.length; i += 1) {
+				this.props.setKeyError(repeatingItems[i]);
+			}
+			return;
+		}
 		let enoughNextThreshold = new BN(0);
 		let maxNextValue = new BN(0);
 		for (const key in keys) {
@@ -218,6 +251,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	sendTransaction: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	setInFormError: PropTypes.func.isRequired,
+	setKeyError: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
@@ -247,6 +281,7 @@ export default connect(
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
 		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
+		setKeyError: (item) => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', item.type, item.index, 'key'], REPEATING_KEYS_ERROR)),
 		setValue: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),

@@ -493,19 +493,35 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const validateFields = [];
 		roles.forEach((role) => {
 			permissionForm.getIn([role, 'keys']).mapEntries(([keyTable, keyForm]) => {
-				validateFields.push(dispatch(validateKey(role, keyTable, 'keys', keyForm.get('key'), keyForm.get('weight'))));
+				if (!keyForm.get('remove')) {
+					validateFields.push(dispatch(validateKey(
+						role,
+						keyTable,
+						'keys',
+						keyForm.get('key'),
+						keyForm.get('weight'),
+					)));
+				}
 			});
 		});
 
 		permissionForm.getIn(['active', 'accounts']).mapEntries(([keyTable, keyForm]) => {
-			validateFields.push(dispatch(validateKey('active', keyTable, 'accounts', keyForm.get('key'), keyForm.get('weight'))));
+			if (!keyForm.get('remove')) {
+				validateFields.push(dispatch(validateKey(
+					'active',
+					keyTable,
+					'accounts',
+					keyForm.get('key'),
+					keyForm.get('weight'),
+				)));
+			}
 		});
 
 		validateFields.push(!dispatch(validateThreshold(permissionForm)));
 		validateFields.push(validatePrivateKeys(privateKeys));
 
 		const errors = await Promise.all(validateFields);
-
+		console.log(errors);
 		if (errors.includes(true)) {
 			return { validation: false, isWifChangingOnly: false };
 		}

@@ -118,13 +118,17 @@ class ViewModeTable extends React.Component {
 		const { keyRole } = this.props;
 		const { addedFields } = this.state;
 
-		this.props.removeKey([keyRole, type, num.toString()]);
 
 		addedFields.splice(addedFields.findIndex((o) => o.num === num), 1);
 
-		this.setState({ addedFields });
+		this.setState({ addedFields }, () => {
+			this.props.setWif(keyRole, type, { target: { name: num.toString(), value: '' } });
 
-		this.props.setWif(keyRole, type, { target: { name: num.toString(), value: '' } });
+			setTimeout(() => {
+				this.props.removeKey([keyRole, type, num.toString()]);
+			}, 0);
+		});
+
 	}
 
 	renderDescription() {
@@ -253,7 +257,6 @@ class ViewModeTable extends React.Component {
 		const {
 			privateKeys, setWif,
 		} = this.props;
-
 		return (
 			<div className="list">
 				<React.Fragment>
