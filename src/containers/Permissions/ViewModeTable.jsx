@@ -127,7 +127,7 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={addWif}
+											addWif={(publicKey) => addWif(publicKey, keyRole)}
 											showWif={showWif}
 										/>
 									);

@@ -306,7 +306,8 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	accounts = accounts ? JSON.parse(accounts) : [];
 
 	const addedKeys = addedWifsToPubKeys.reduce((acc, key) => {
-		acc[key] = true;
+		const [publicKey, type] = key;
+		acc[publicKey] = type;
 		return acc;
 	}, {});
 
@@ -320,21 +321,72 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(initAccount(accountName, networkName));
 };
 
-export const saveWifToStorage = (accountName, networkName, publicKey) => (dispatch) => {
+/**
+ *
+ * @param {String} accountName
+ * @param {String} networkName
+ * @param {String} publicKey
+ * @param {String} type
+ */
+export const saveWifToStorage = (accountName, networkName, publicKey, type = 'active') => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
 	for (let accountKey = 0; accountKey < accounts.length; accountKey += 1) {
 		const currentAccount = accounts[accountKey];
 		if (currentAccount.name === accountName) {
-			currentAccount.addedKeys[publicKey] = true;
+			if (!currentAccount.addedKeys[publicKey]) {
+				currentAccount.addedKeys[publicKey] = { active: false, echoRand: false };
+			}
+
+			currentAccount.addedKeys[publicKey][type] = true;
 			break;
 		}
 	}
 
 	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 	dispatch(formPermissionKeys());
+};
 
+/**
+ *
+ * @param {String} accountName
+ * @param {String} networkName
+ * @returns {Object}
+ */
+export const getAvailableWifStatusesFromStorage = (accountName, networkName) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const currentAccount = accounts.find(({ name }) => accountName === name);
+
+	return (currentAccount && currentAccount.addedKeys) ? currentAccount.addedKeys : {};
+};
+
+export const updateStorage = (accountName, networkName, keys) => (dispatch) => {
+	let accounts = localStorage.getItem(`accounts_${networkName}`);
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	for (let accountKey = 0; accountKey < accounts.length; accountKey += 1) {
+		const currentAccount = accounts[accountKey];
+		if (currentAccount.name === accountName) {
+			currentAccount.addedKeys = {};
+			keys.forEach((key) => {
+				const { publicKey, type } = key;
+
+				if (!currentAccount.addedKeys[publicKey]) {
+					currentAccount.addedKeys[publicKey] = { active: false, echoRand: false };
+				}
+
+				currentAccount.addedKeys[publicKey][type] = true;
+			});
+			break;
+		}
+	}
+
+	localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
+
+	dispatch(formPermissionKeys());
 };
 
 /**

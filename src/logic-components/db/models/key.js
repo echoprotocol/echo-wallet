@@ -8,10 +8,11 @@ class Key {
 	 * @param {String} wif
 	 * @param {String} accountId
 	 */
-	constructor(publicKey, wif, accountId) {
+	constructor(publicKey, wif, accountId, type) {
 		this.publicKey = publicKey;
 		this.wif = wif;
 		this.accountId = accountId;
+		this.type = type;
 	}
 
 	/**
@@ -21,7 +22,7 @@ class Key {
 	 * @param {String} accountId
 	 * @return {Account}
 	 */
-	static create(publicKey, wif, accountId) {
+	static create(publicKey, wif, accountId, type) {
 
 		if (!publicKey) {
 			throw new Error('publicKey is required.');
@@ -35,7 +36,7 @@ class Key {
 			throw new Error('Account id is required.');
 		}
 
-		return new Key(publicKey, wif, accountId);
+		return new Key(publicKey, wif, accountId, type);
 
 	}
 

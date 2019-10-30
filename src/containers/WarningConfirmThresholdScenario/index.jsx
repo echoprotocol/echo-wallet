@@ -19,7 +19,8 @@ import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
 import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR, REPEATING_KEYS_ERROR } from '../../constants/FormConstants';
-import { setInFormError } from '../../actions/FormActions';
+import { setInFormError, setValue } from '../../actions/FormActions';
+
 
 class WarningConfirmThresholdScenario extends React.Component {
 
@@ -30,6 +31,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			password: '',
 			warningMessage: '',
 			echoRandMessage: '',
+			isWifChangingOnly: false,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -71,10 +73,17 @@ class WarningConfirmThresholdScenario extends React.Component {
 		return repeatingItems;
 	}
 	async submit(onFinish) {
-		const isValid = await this.props.handleTransaction();
-		if (!isValid) {
+		try {
+			const { validation, isWifChangingOnly } = await this.props.handleTransaction();
+			if (!validation) {
+				return;
+			}
+			this.setState({ isWifChangingOnly });
+
+		} catch (error) {
 			return;
 		}
+
 		const permissionsKeys = this.props.form.toJS();
 		const network = this.props.network.toJS();
 		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
@@ -90,12 +99,14 @@ class WarningConfirmThresholdScenario extends React.Component {
 		let enoughNextThreshold = new BN(0);
 		let maxNextValue = new BN(0);
 		for (const key in keys) {
+			if (!keys[key].key.value) return;
 			maxNextValue = maxNextValue.plus(keys[key].weight.value);
 			if (keys[key].hasWif && keys[key].hasWif.value) {
 				enoughNextThreshold = enoughNextThreshold.plus(keys[key].weight.value);
 			}
 		}
 		for (const account in accounts) {
+			if (!accounts[account].key.value) return;
 			maxNextValue = maxNextValue.plus(accounts[account].weight.value);
 			for (let i = 0; i < accs.length; i += 1) {
 				if (accs[i].name === account) {
@@ -104,15 +115,17 @@ class WarningConfirmThresholdScenario extends React.Component {
 				}
 			}
 		}
+		/*
 		const { echoRand } = permissionsKeys;
 		for (const key in echoRand.keys) {
 			if (!echoRand.keys[key].hasWif.value) {
-				this.setState({
-					echoRandMessage:
-						'You removed your EchoRand Key and after submitting this action you will lose access to it.',
+				this.setState({ echoRandMessage:
+					'You removed your EchoRand Key and after
+					submitting this action you will lose access to it.',
 				});
 			}
 		}
+		*/
 		if (maxNextValue.lt(nextTreshold)) {
 			this.props.closeModal(MODAL_UNLOCK);
 			this.props.setInFormError();
@@ -127,6 +140,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		} else {
 			this.props.openModal(MODAL_UNLOCK);
 		}
+
 		if (typeof onFinish === 'function') {
 			onFinish();
 		}
@@ -142,10 +156,8 @@ class WarningConfirmThresholdScenario extends React.Component {
 
 	async unlock() {
 		const { password } = this.state;
-		const { onUnlock } = this.props;
 
 		this.props.unlock(password, () => {
-			onUnlock(password);
 			this.props.openModal(MODAL_DETAILS);
 		});
 
@@ -155,9 +167,17 @@ class WarningConfirmThresholdScenario extends React.Component {
 		this.props.openModal(modal);
 	}
 	send() {
-		const { password } = this.state;
+		const { onUnlock } = this.props;
+		const { password, isWifChangingOnly } = this.state;
+		if (isWifChangingOnly) {
+			onUnlock(password);
+			this.props.setValue('isEditMode', false);
+			this.props.closeModal(MODAL_DETAILS);
+			this.props.resetTransaction();
+		} else {
+			this.props.sendTransaction(password, () => onUnlock(password));
+		}
 
-		this.props.sendTransaction(password);
 		this.clear();
 	}
 
@@ -185,7 +205,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 					show={modalConfirmEditingOfPermissions.get('show')}
 					confirm={() => {
 						this.open(MODAL_UNLOCK);
-						this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
+						this.props.closeModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
 					}}
 					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
 					warningMessage={this.state.warningMessage}
@@ -232,6 +252,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	resetTransaction: PropTypes.func.isRequired,
 	setInFormError: PropTypes.func.isRequired,
 	setKeyError: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
@@ -259,9 +280,10 @@ export default connect(
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
-		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
 		setKeyError: (item) => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', item.type, item.index, 'key'], REPEATING_KEYS_ERROR)),
+		setValue: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
+		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(WarningConfirmThresholdScenario);
