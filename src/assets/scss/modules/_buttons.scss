@@ -1,9 +1,14 @@
-$stripe-color: rgba(255,255,255,.7);
+$stripe-color: rgba(255, 255, 255, .7);
 $stripe-width: 10px;
 
 @keyframes loading-stripes {
-    0% {background-position: 0px}
-    100% {background-position: $stripe-width}
+	0% {
+		background-position: 0px
+	}
+
+	100% {
+		background-position: $stripe-width
+	}
 }
 
 @mixin btn() {
@@ -22,27 +27,26 @@ $stripe-width: 10px;
 }
 
 .load {
-    position: relative;
-    &:after {
-        position: absolute;
-        bottom: -2px;
-        right: 0;
-        left: 0;
-        height: 4px;
-        content: "";
-        display: block;
-        background-image: linear-gradient(
-          -45deg, $stripe-color 25%,
-          transparent 25%,
-          transparent 50%,
-          $stripe-color 50%,
-          $stripe-color 75%,
-          transparent 75%,
-          transparent
-        );
-        background-size: $stripe-width $stripe-width;
-        animation: loading-stripes .4s linear infinite;
-    }
+	position: relative;
+
+	&:after {
+		position: absolute;
+		bottom: -2px;
+		right: 0;
+		left: 0;
+		height: 4px;
+		content: "";
+		display: block;
+		background-image: linear-gradient(-45deg, $stripe-color 25%,
+				transparent 25%,
+				transparent 50%,
+				$stripe-color 50%,
+				$stripe-color 75%,
+				transparent 75%,
+				transparent);
+		background-size: $stripe-width $stripe-width;
+		animation: loading-stripes .4s linear infinite;
+	}
 }
 
 .main-btn {
@@ -50,7 +54,7 @@ $stripe-width: 10px;
 	color: $main-сolor;
 	border: 1px solid $main-сolor;
 	background-color: transparent;
-	
+
 	&:hover {
 		color: #fff;
 		background-color: $main-сolor;
@@ -112,6 +116,7 @@ $stripe-width: 10px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+
 		.countdown {
 			margin-right: 5px;
 		}
@@ -147,8 +152,9 @@ $stripe-width: 10px;
 		background-color: transparent;
 		color: rgba($main-сolor, .5);
 	}
+
 	// SIZE
-	
+
 	&.compact {
 		line-height: 20px;
 		height: 20px;
@@ -160,7 +166,7 @@ $stripe-width: 10px;
 		height: 24px;
 		min-width: auto;
 	}
-	
+
 	// VARIANTS
 
 	&.load {
@@ -305,6 +311,7 @@ $stripe-width: 10px;
 			background-color: rgba(#A9ACB9, .8);
 			color: rgba(#fff, .8);
 		}
+
 		&:disabled {
 			border: 1px solid rgba(#A9ACB9, .5);
 			background-color: transparent;
@@ -340,12 +347,14 @@ $stripe-width: 10px;
 }
 
 .version-btn {
+	font-family: proxima;
 	background-color: transparent;
 	padding: 0;
-	color: rgba(#5C637D, .5);
+	padding-right: 5px;
+	color: #4D66CD;
 	font-size: 13px;
 	font-weight: 500;
-	letter-spacing: 0.025px;
+	letter-spacing: 0.3px;
 	border: 0;
 	cursor: pointer;
 }
@@ -367,7 +376,7 @@ $stripe-width: 10px;
 	border-radius: 4px;
 	transition: background-color $speed, color $speed;
 	cursor: pointer;
-	
+
 	&:hover {
 		color: #5C637D;
 	}
@@ -376,6 +385,7 @@ $stripe-width: 10px;
 		background-color: #D7D9DB;
 		color: rgba(#5C637D, .5);
 	}
+
 	&:not(:active) {
 		&:focus {
 			@include on-focus(2px);
@@ -394,8 +404,9 @@ $stripe-width: 10px;
 
 
 .btn-list {
-    padding: 20px;
-    .button {
-        margin: 0 10px 0 0;
-    }
+	padding: 20px;
+
+	.button {
+		margin: 0 10px 0 0;
+	}
 }

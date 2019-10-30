@@ -33,7 +33,8 @@ class Footer extends React.PureComponent {
 			<div className="footer">
 				<ul>
 					<li>
-						<button className="version-btn" onClick={() => { this.openModal(); }}>Echo.{version}</button>
+						<button className="version-btn" onClick={() => { this.openModal(); }}>About wallet</button>
+						Echo {version}
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} />
