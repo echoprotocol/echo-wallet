@@ -155,17 +155,14 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		}
 
 		const keyAndType = [key.publicKey, {
-			active: !!account.active.key_auths.find((keyAuth) => keyAuth[0] === key.publicKey),
+			active: true,
 			echoRand: key.publicKey === account.echorand_key,
 		}];
 
-		if (keyAndType && keyAndType[1]) {
-			if (keyAndType[1].active) {
-				await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'active'), { password });
-			}
-			if (keyAndType[1].echoRand) {
-				await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRan'), { password });
-			}
+		await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'active'), { password });
+
+		if (keyAndType[1].echoRand) {
+			await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRan'), { password });
 		}
 
 		if (!isAccountAdded(accountName, networkName)) {
