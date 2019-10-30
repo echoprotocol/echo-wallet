@@ -37,7 +37,9 @@ class EditModeTableRow extends React.Component {
 						value={subject.value}
 						onChange={setPublicKey}
 					/>
-					{subject.error && <span className="error-message">{subject.error}</span>}
+					<div className="error-message error-animation">
+						<span>{subject.error}</span>
+					</div>
 				</Form.Field>
 				<Form.Field className={classnames('input-eye error-wrap', { error: wif.error })}>
 					<label htmlFor="WIF">WIF (optional)</label>
@@ -56,7 +58,9 @@ class EditModeTableRow extends React.Component {
 								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
 						}
 					</div>
-					{wif.error && <span className="error-message">{wif.error}</span>}
+					<div className="error-message error-animation">
+						<span>{wif.error}</span>
+					</div>
 				</Form.Field>
 			</React.Fragment>
 		) : (
@@ -69,7 +73,9 @@ class EditModeTableRow extends React.Component {
 					value={subject.value}
 					onChange={setAccount}
 				/>
-				{subject.error && <span className="error-message">{subject.error}</span>}
+				<div className="error-message error-animation">
+					<span>{subject.error}</span>
+				</div>
 			</Form.Field>
 		);
 	}
@@ -96,7 +102,9 @@ class EditModeTableRow extends React.Component {
 										value={weight.value}
 										onChange={setWeight}
 									/>
-									{weight.error && <span className="error-message">{weight.error}</span>}
+									<div className="error-message error-animation">
+										<span>{weight.error}</span>
+									</div>
 								</Form.Field>
 							)
 						}

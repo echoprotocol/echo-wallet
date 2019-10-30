@@ -47,7 +47,9 @@ class ThresholdRow extends React.Component {
 						onChange={(e) => this.onInput(e)}
 						autoFocus={keyRole === 'active'}
 					/>
-					<span className="error-message">{threshold.error}</span>
+					<div className="error-message error-animation">
+						<span>{threshold.error}</span>
+					</div>
 				</Form.Field>
 			</Form>
 		);

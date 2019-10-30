@@ -64,8 +64,7 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 									/>
 									<div className="error-message error-animation">
-										<span className="error-message">		{bytecode.error}
-										</span>
+										<span>{bytecode.error}</span>
 									</div>
 								</Form.Field>
 								<AmountField

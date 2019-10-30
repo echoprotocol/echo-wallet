@@ -224,7 +224,9 @@ class PermissionTableRow extends Component {
 									onChange={(e) => this.onInput(e, 'weight')}
 									autoFocus
 								/>
-								<span className="error-message">{editWeight && editWeight.error}</span>
+								<div className="error-message error-animation">
+									<span>{editWeight && editWeight.error}</span>
+								</div>
 							</div>
 						) : (
 							<div className="td-txt">{editWeight ? editWeight.value : ''}</div>
@@ -284,7 +286,9 @@ class PermissionTableRow extends Component {
 											onChange={(e) => this.onInput(e, 'key')}
 											value={newKey ? newKey.value : ''}
 										/>
-										<span className="error-message">{newKey && newKey.error}</span>
+										<div className="error-message error-animation">
+											<span>{newKey && newKey.error}</span>
+										</div>
 									</div>
 							}
 						</Table.Cell>
@@ -304,7 +308,9 @@ class PermissionTableRow extends Component {
 													onChange={(e) => this.onInput(e, 'weight')}
 													value={newWeight ? newWeight.value : ''}
 												/>
-												<span className="error-message">{newWeight && newWeight.error}</span>
+												<div className="error-message error-animation">
+													<span>{newWeight && newWeight.error}</span>
+												</div>
 											</div>
 									}
 								</Table.Cell>
@@ -364,7 +370,9 @@ class PermissionTableRow extends Component {
 													onChange={(e) => this.onInput(e, 'key')}
 													value={editKey ? editKey.value : ''}
 												/>
-												<span className="error-message">{editKey && editKey.error}</span>
+												<div className="error-message error-animation">
+													<span>{editKey && editKey.error}</span>
+												</div>
 											</div>
 										) : (
 											<div className="td-txt">{editKey ? editKey.value : ''}</div>

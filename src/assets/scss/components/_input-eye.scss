@@ -3,6 +3,7 @@
 		padding: 0 10px;
 		font-size: 11px;
 	}
+
 	.icon-e-hide {
 		padding: 0 10px;
 		font-size: 14px;
@@ -10,6 +11,7 @@
 
 	.action-input {
 		position: relative;
+		z-index: 2;
 
 		button {
 			position: absolute;
@@ -25,6 +27,7 @@
 			&:hover {
 				color: rgba(#5C637D, .4);
 			}
+
 			&:active {
 				color: rgba(#5C637D, .3);
 			}

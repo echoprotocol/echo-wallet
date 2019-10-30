@@ -106,9 +106,9 @@ class ModalEditPermissions extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							autoFocus
 						/>
-						{
-							error && <span className="error-message">{error}</span>
-						}
+						<div className="error-message error-animation">
+							<span>{error}</span>
+						</div>
 					</Form.Field>
 					<div className="form-panel">
 						<a

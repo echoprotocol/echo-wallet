@@ -1,91 +1,53 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
+import { PROPOSAL_ADD_WIF } from '../../constants/ModalConstants';
+import { closeModal } from '../../actions/ModalActions';
 
-import InputEye from '../InputEye';
+class ModalWIF extends React.Component {
 
-
-class ModalAddWIF extends React.Component {
-
-
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			wif: '',
-		};
+	onAgree(e) {
+		e.preventDefault();
+		this.props.history.push(PERMISSIONS_PATH);
+		this.props.hide();
 	}
-
-	onChange(e) {
-		this.setState({
-			wif: e.target.value.trim(),
-		});
-	}
-
-	onClose() {
-		this.props.close();
-	}
-
-	saveWif() {
-		const { wif } = this.state;
-
-		this.props.saveWif(wif);
+	onClose(e) {
+		e.preventDefault();
+		this.props.hide();
 	}
 
 	render() {
-		const {
-			show, error, disabled, publicKey,
-		} = this.props;
+		const { show } = this.props;
 
 		return (
-			<Modal className="add-wif-modal" open={show} dimmer="inverted">
-				<span
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
-				/>
-				<div className="modal-header">
-					<h3 className="modal-header-title">Add WIF</h3>
-				</div>
-				<div className="modal-body">
+			<Modal className="small unclock-size" open={show} dimmer="inverted">
+				<div className="modal-content add-key">
+					<div className="modal-header">Would you like to add other keys now?</div>
+					<div className="modal-body">
+						<div className="info-text">
+							Your account settings require more than one key to sign a transaction. <br />
+							You can add more keys now or later on the Backup and Permissions page.
+						</div>
+						<div className="form-panel">
+							<Button
+								basic
+								type="button"
 
-					<Form.Field className={classnames('error-wrap', { error: false })}>
-						<label htmlFor="public-key">Public Key</label>
-						<input
-							type="text"
-							placeholder="Public Key"
-							disabled
-							name="public-key"
-							onChange={() => {}}
-							value={publicKey}
-						/>
-						{
-							false && <span className="error-message">Some Error</span>
-						}
-					</Form.Field>
-
-					<InputEye
-						inputLabel="WIF (optional)"
-						inputPlaceholder="WIF"
-						inputName="WIF"
-						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
-						errorMessage={error}
-						onChange={(e) => this.onChange(e)}
-						autoFocus
-					/>
-
-					<div className="form-panel">
-						<Button
-							basic
-							type="submit"
-							className="main-btn"
-							onClick={() => this.saveWif()}
-							disabled={disabled}
-							content="Confirm"
-						/>
+								className="main-btn"
+								onClick={(e) => this.onClose(e)}
+								content="Do it later"
+							/>
+							<Button
+								basic
+								type="button"
+								className="main-btn"
+								onClick={(e) => this.onAgree(e)}
+								content="Proceed"
+							/>
+						</div>
 					</div>
 				</div>
 			</Modal>
@@ -94,28 +56,21 @@ class ModalAddWIF extends React.Component {
 
 }
 
-ModalAddWIF.propTypes = {
+ModalWIF.propTypes = {
 	show: PropTypes.bool,
-	close: PropTypes.func.isRequired,
+	hide: PropTypes.func.isRequired,
+	history: PropTypes.any.isRequired,
 };
 
-ModalAddWIF.defaultProps = {
+ModalWIF.defaultProps = {
 	show: false,
 };
 
-ModalAddWIF.propTypes = {
-	show: PropTypes.bool,
-	disabled: PropTypes.bool,
-	close: PropTypes.func.isRequired,
-	error: PropTypes.string,
-	saveWif: PropTypes.func.isRequired,
-	publicKey: PropTypes.string.isRequired,
-};
-
-ModalAddWIF.defaultProps = {
-	show: false,
-	disabled: false,
-	error: null,
-};
-
-export default ModalAddWIF;
+export default withRouter(connect(
+	(state) => ({
+		show: state.modal.getIn([PROPOSAL_ADD_WIF, 'show']),
+	}),
+	(dispatch) => ({
+		hide: () => dispatch(closeModal(PROPOSAL_ADD_WIF)),
+	}),
+)(ModalWIF));

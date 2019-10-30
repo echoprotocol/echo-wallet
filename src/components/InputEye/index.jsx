@@ -49,8 +49,10 @@ export default class InputEye extends React.PureComponent {
 							<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-hide" />
 					}
 				</div>
+				<div className="error-message error-animation">
+					<span>{ errorMessage }</span>
+				</div>
 				<div>
-					{errorMessage && <span className="error-message">{ errorMessage }</span>}
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>
