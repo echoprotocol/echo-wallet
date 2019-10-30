@@ -24,6 +24,7 @@ class EditModeTableRow extends React.Component {
 		const {
 			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
 		} = this.props;
+		const inputType = show ? 'text' : 'password';
 
 		return type === 'keys' ? (
 			<React.Fragment>
@@ -43,7 +44,7 @@ class EditModeTableRow extends React.Component {
 					<label htmlFor="WIF">WIF (optional)</label>
 					<div className="action-input">
 						<input
-							type={show ? 'text' : 'password'}
+							type={inputType}
 							placeholder="WIF (optional)"
 							name={name}
 							className="input"
