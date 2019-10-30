@@ -8,7 +8,6 @@ import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
-import TransactionScenario from '../TransactionScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
@@ -43,6 +42,10 @@ class Permissions extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			basePrivateKeys: {
+				active: {},
+				echoRand: {},
+			},
 			privateKeys: {
 				active: {},
 				echoRand: {},
@@ -60,8 +63,8 @@ class Permissions extends React.Component {
 			return;
 		}
 
-		const { accountName: prevAccountName } = prevProps;
-		const { accountName } = this.props;
+		const { accountName: prevAccountName, form: prevForm } = prevProps;
+		const { accountName, form } = this.props;
 		const prevAccount = prevProps.account.toJS();
 		const account = this.props.account.toJS();
 
@@ -80,6 +83,14 @@ class Permissions extends React.Component {
 		}
 
 		if (!_.isEqual(prevAccount.echo_rand, account.echo_rand)) {
+			this.props.formPermissionKeys();
+		}
+
+		if (!_.isEqual(prevAccount.echo_rand, account.echo_rand)) {
+			this.props.formPermissionKeys();
+		}
+
+		if (form.get('isEditMode') !== prevForm.get('isEditMode')) {
 			this.props.formPermissionKeys();
 		}
 	}
@@ -181,13 +192,16 @@ class Permissions extends React.Component {
 			echoRand: echoRandPrivetKeys,
 		}
 
-		this.setState({ privateKeys: privateKeysByRole }, () => {
-			if (mode === FORM_PERMISSION_MODE_EDIT) {
-				this.props.set('isEditMode', true);
-			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
-				this.props.set('isEditMode', false);
+		this.setState(
+			{ privateKeys: privateKeysByRole, basePrivateKeys: _.cloneDeep(privateKeysByRole) },
+			() => {
+				if (mode === FORM_PERMISSION_MODE_EDIT) {
+					this.props.set('isEditMode', true);
+				} else if (mode === FORM_PERMISSION_MODE_VIEW) {
+					this.props.set('isEditMode', false);
+				}
 			}
-		});
+		);
 	}
 
 	renderViewPanel() {
@@ -240,7 +254,9 @@ class Permissions extends React.Component {
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>				
 					<WarningConfirmThresholdScenario
-						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
+						handleTransaction={
+							() => this.props.permissionTransaction(this.state.privateKeys, this.state.basePrivateKeys)
+						}
 						onUnlock={(password) => this.saveWifs(password)}
 					>
 						{
