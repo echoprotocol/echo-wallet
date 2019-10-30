@@ -30,6 +30,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			password: '',
 			warningMessage: '',
 			echoRandMessage: '',
+			isWifChangingOnly: false,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -45,10 +46,12 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 
 	async submit(onFinish) {
-		const isValid = await this.props.handleTransaction();
+		const { validation: isValid, isWifChangingOnly } = await this.props.handleTransaction();
 		if (!isValid) {
 			return;
 		}
+
+		this.setState({ isWifChangingOnly });
 		const permissionsKeys = this.props.form.toJS();
 		const network = this.props.network.toJS();
 		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
@@ -94,6 +97,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		} else {
 			this.props.openModal(MODAL_UNLOCK);
 		}
+
 		if (typeof onFinish === 'function') {
 			onFinish();
 		}
@@ -122,9 +126,12 @@ class WarningConfirmThresholdScenario extends React.Component {
 		this.props.openModal(modal);
 	}
 	send() {
-		const { password } = this.state;
+		const { password, isWifChangingOnly } = this.state;
 
-		this.props.sendTransaction(password);
+		if (!isWifChangingOnly) {
+			this.props.sendTransaction(password);
+		}
+
 		this.clear();
 	}
 

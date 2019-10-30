@@ -333,10 +333,6 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 	return Promise.all(result);
 };
 
-const addWIFsToBufferObject = async (basePrivateKeys, privateKeys) => {
-
-};
-
 /**
  *
  * @param {Object} permissionForm
@@ -377,7 +373,7 @@ const isActiveKeysChanged = (permissionForm, permissionTable) => {
 
 	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
 		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-		|| !keyForm.get('remove')
+		|| keyForm.get('remove')
 	));
 };
 
@@ -399,16 +395,62 @@ const isEchoRandKeysChanged = (permissionForm, permissionTable) => {
  *
  * @param {Object} privateKey
  * @param {Object} basePrivateKeys
+ * @param {Object} permissionForm
  * @returns {Boolean}
  */
-const isActiveWifChanged = (privateKey, basePrivateKeys) => {
+const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 	const role = 'active';
-	console.log(privateKey)
-	console.log(basePrivateKeys)
-	// const formKeys = permissionForm.getIn([role, 'keys']);
-	// const tableKeys = permissionTable.getIn([role, 'keys']);
+	const formKeys = permissionForm.getIn([role, 'keys']);
+	const activeKeys = privateKey.active;
+	const baseActiveKeys = basePrivateKeys.active;
 
-	// return formKeys.some((keyForm) => !tableKeys.some((keyTable) => keyTable.key === keyForm.get('key').value));
+	const newPrivateKeys = Object.entries(activeKeys)
+		.reduce((acc, [index, wif]) => {
+			acc[formKeys.getIn([index, 'key']).value] = (wif && wif.value) ?
+				{ value: wif.value } : { value: undefined };
+			return acc;
+		}, {});
+
+	const oldPrivateKeys = Object.entries(baseActiveKeys)
+		.reduce((acc, [key, wif]) => {
+			acc[key] = (wif && wif.value) ? { value: wif.value } : { value: undefined };
+			return acc;
+		}, {});
+
+	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
+		!Object.entries(oldPrivateKeys).every(([key, wif]) =>
+			(newPrivateKeys[key] && !!newPrivateKeys[key].value === !!wif.value));
+};
+
+/**
+ *
+ * @param {Object} privateKey
+ * @param {Object} basePrivateKeys
+ * @param {Object} permissionForm
+ * @returns {Boolean}
+ */
+const isEchoRandWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
+	const role = 'echoRand';
+	const formKeys = permissionForm.getIn([role, 'keys']);
+	const echoRandKeys = privateKey.echoRand;
+	const baseEchoRandKeys = basePrivateKeys.echoRand;
+
+	const newPrivateKeys = Object.entries(echoRandKeys)
+		.reduce((acc, [index, wif]) => {
+			acc[formKeys.getIn([index, 'key']).value] = (wif && wif.value) ?
+				{ value: wif.value } : { value: undefined };
+			return acc;
+		}, {});
+
+	const oldPrivateKeys = Object.entries(baseEchoRandKeys)
+		.reduce((acc, [key, wif]) => {
+			acc[key] = (wif && wif.value) ? { value: wif.value } : { value: undefined };
+			return acc;
+		}, {});
+
+	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
+		!Object.entries(oldPrivateKeys).every(([key, wif]) =>
+			(newPrivateKeys[key] && !!newPrivateKeys[key].value === !!wif.value));
 };
 
 /**
@@ -428,7 +470,7 @@ const isActiveAccountsChanged = (permissionForm, permissionTable) => {
 
 	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
 		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-		|| !keyForm.get('remove')
+		|| keyForm.get('remove')
 	));
 
 };
@@ -463,7 +505,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const errors = await Promise.all(validateFields);
 
 		if (errors.includes(true)) {
-			return false;
+			return { validation: false, isWifChangingOnly: false };
 		}
 
 		const permissionData = {
@@ -495,8 +537,8 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		dataChanged.active.accounts = isActiveAccountsChanged(permissionForm, permissionTable);
 		dataChanged.active.threshold = isThresholdChanged(permissionForm, permissionTable);
 		dataChanged.echoRand.key = isEchoRandKeysChanged(permissionForm, permissionTable);
-		dataChanged.active.wif = isActiveWifChanged(privateKeys, basePrivateKeys);
-		// dataChanged.echoRand.wif = isActiveWifChanged(privateKeys, basePrivateKeys);
+		dataChanged.active.wif = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
+		dataChanged.echoRand.wif = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
 
 		if (dataChanged.active.keys) {
 			permissionData.active.keys = addActiveKeysToBufferObject(permissionForm);
@@ -524,7 +566,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				|| dataChanged.echoRand.wif
 			)
 		) {
-			return false;
+			return { validation: false, isWifChangingOnly: false };
 		}
 
 		await echo.api.getGlobalProperties(true);
@@ -537,6 +579,14 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const showOptions = {
 			account: currentAccount.get('name'),
 		};
+
+		const isWifChangingOnly =
+			!dataChanged.active.keys
+			|| !dataChanged.active.accounts
+			|| !dataChanged.active.threshold
+			|| dataChanged.active.wif
+			|| !dataChanged.echoRand.key
+			|| dataChanged.echoRand.wif;
 
 		if (
 			dataChanged.active.keys
@@ -582,24 +632,33 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				transaction.echorand_key = permissionData.echoRand.key;
 			}
 
+			if (dataChanged.active.wif || dataChanged.echoRand.wif) {
+				showOptions.wif = {
+					active: dataChanged.active.wif,
+					echoRand: dataChanged.echoRand.wif,
+				};
+			}
+
 		}
 
-		const feeValue = await getOperationFee('account_update', transaction);
+		if (isWifChangingOnly) {
+			const feeValue = await getOperationFee('account_update', transaction);
 
-		transaction.fee = {
-			amount: feeValue,
-			asset_id: ECHO_ASSET_ID,
-		};
+			transaction.fee = {
+				amount: feeValue,
+				asset_id: ECHO_ASSET_ID,
+			};
 
-		showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
+			showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
+		}
 
 		dispatch(resetTransaction());
 
 		dispatch(TransactionReducer.actions.setOperation({
 			operation: 'account_update',
-			options: transaction,
+			options: isWifChangingOnly ? {} : transaction,
 			showOptions,
 		}));
 
-		return true;
+		return { validation: true, isWifChangingOnly };
 	};

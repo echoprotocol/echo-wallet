@@ -487,7 +487,8 @@ export default connect(
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
 		clear: () => dispatch(clear(PERMISSION_TABLE)),
-		permissionTransaction: (privateKeys) => dispatch(permissionTransaction(privateKeys)),
+		permissionTransaction: (privateKeys, basePrivateKeys) =>
+			dispatch(permissionTransaction(privateKeys, basePrivateKeys)),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),

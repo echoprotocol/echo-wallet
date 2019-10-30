@@ -114,22 +114,20 @@ class ModalEditPermissions extends React.Component {
 						>
 							Forgot password?
 						</a>
+						<Countdown
+							date={Date.now() + (warningTime * 1000)}
+							renderer={(props) => this.countdown(props)}
+							onStart={() => this.setState({ timerIsOn: true })}
+							onComplete={() => this.setState({
+								timerComplete: true,
+								timerIsOn: false,
+							})}
+						/>
 						<Button
 							basic
-							type="submit"
-							className="main-btn countdown-wrap"
 							onClick={(e) => this.onSuccess(e)}
 							disabled={(disabled) || !(agree && timerComplete)}
 						>
-							<Countdown
-								date={Date.now() + (warningTime * 1000)}
-								renderer={(props) => this.countdown(props)}
-								onStart={() => this.setState({ timerIsOn: true })}
-								onComplete={() => this.setState({
-									timerComplete: true,
-									timerIsOn: false,
-								})}
-							/>
 							Go to edit mode
 						</Button>
 					</div>
