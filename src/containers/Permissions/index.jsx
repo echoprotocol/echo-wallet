@@ -120,12 +120,21 @@ class Permissions extends React.Component {
 
         const wifs = [...newActiveWifs, ...newEchoRandWifs];
 		await this.props.editWifs(wifs, account, password);
+		this.clear();
     }
 
 	componentWillUnmount() {
 		this.props.clear();
 		this.props.clearForm();
 		this.setState({ privateKeys: { active: {}, echoRand: {} } });
+	}
+
+	clear() {
+		this.props.clear();
+		this.props.clearForm();
+		this.setState({ privateKeys: { active: {}, echoRand: {} } }, () => {
+			this.props.formPermissionKeys();
+		});
 	}
 
 	setWif(keyRole, type, e) {
@@ -255,7 +264,6 @@ class Permissions extends React.Component {
 							() => this.props.permissionTransaction(this.state.privateKeys, this.state.basePrivateKeys)
 						}
 						onUnlock={(password) => this.saveWifs(password)}
-
 					>
 						{
 							(submit) => (
