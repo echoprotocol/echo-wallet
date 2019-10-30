@@ -28,6 +28,7 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 import CryptoService from '../services/CryptoService';
+import { checkKeyWeightWarning } from './BalanceActions';
 
 /**
  * @method generateWIF
@@ -100,14 +101,6 @@ export const createAccount = ({
  * @param {String} password
  * @return {Boolean}
  */
-const isAllWIFsAdded = async (account, password) => {
-	const userStorage = Services.getUserStorage();
-	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
-	const userPublicKeys = account.active.key_auths;
-	const publicEchorandKey = account.echorand_key;
-	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.publicKey === publicEchorandKey);
-	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
-};
 
 /**
  * @method authUser
@@ -164,8 +157,8 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			dispatch(initAccount(accountName, networkName));
 		}
 
-		const hasAllWIFs = await isAllWIFsAdded(account, password);
-		if (!hasAllWIFs) {
+		const hasWifWarning = await dispatch(checkKeyWeightWarning(networkName, account.id));
+		if (hasWifWarning) {
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 		return false;
