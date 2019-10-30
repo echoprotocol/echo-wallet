@@ -65,21 +65,23 @@ class ViewModeTable extends React.Component {
 		const field = e.target.name;
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
-		if (this.props.privateKeys[newValue]) {
-			this.props.setWif(keyRole, type, {
-				target: {
-					name: field,
-					value: this.props.privateKeys[field].value,
-				},
-			});
-		} else {
-			this.props.setWif(keyRole, type, {
-				target: {
-					name: field,
-					value: '',
-				},
-			});
-		}
+		setTimeout(() => {
+			if (this.props.privateKeys[field]) {
+				this.props.setWif(keyRole, type, {
+					target: {
+						name: field,
+						value: this.props.privateKeys[field].value,
+					},
+				});
+			} else {
+				this.props.setWif(keyRole, type, {
+					target: {
+						name: field,
+						value: '',
+					},
+				});
+			}
+		}, 0);
 	}
 
 	setWeight(keyRole, type, e) {
@@ -146,27 +148,27 @@ class ViewModeTable extends React.Component {
 					</a>
 				</div>
 			) : (
-				<div className="list-header-row">
-					{
-						description && (
-							<div className="list-header-col">
-								<div className="list-description">{description}</div>
-							</div>
-						)
-					}
-					{
-						data.threshold && (
-							<div className="list-header-col">
-								<EditModeThreshold
-									defaultThreshold={data.threshold}
-									threshold={threshold}
-									setThreshold={(e) => this.setThreshold(keyRole, e)}
-								/>
-							</div>
-						)
-					}
-				</div>
-			)
+					<div className="list-header-row">
+						{
+							description && (
+								<div className="list-header-col">
+									<div className="list-description">{description}</div>
+								</div>
+							)
+						}
+						{
+							data.threshold && (
+								<div className="list-header-col">
+									<EditModeThreshold
+										defaultThreshold={data.threshold}
+										threshold={threshold}
+										setThreshold={(e) => this.setThreshold(keyRole, e)}
+									/>
+								</div>
+							)
+						}
+					</div>
+				)
 		);
 	}
 
