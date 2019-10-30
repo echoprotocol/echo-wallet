@@ -56,7 +56,7 @@ class ModalBackup extends React.Component {
 							placeholder="Account name"
 							disabled
 							name="account-name"
-							value={activeUser.get('id')}
+							value={activeUser.get('name')}
 						/>
 					</Form.Field>
 					<Form.Field>
@@ -66,7 +66,7 @@ class ModalBackup extends React.Component {
 							placeholder="ID account"
 							disabled
 							name="id-account"
-							value={activeUser.get('name')}
+							value={activeUser.get('id')}
 						/>
 					</Form.Field>
 					<Form.Field>
