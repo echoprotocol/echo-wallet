@@ -52,7 +52,7 @@ class ModalAddWIF extends React.Component {
 				</div>
 				<div className="modal-body">
 
-					<Form.Field className={classnames('error-wrap', { error: false })}>
+					<Form.Field className={classnames('error-wrap', { error: !!error })}>
 						<label htmlFor="public-key">Public Key</label>
 						<input
 							type="text"
@@ -63,7 +63,7 @@ class ModalAddWIF extends React.Component {
 							value={publicKey}
 						/>
 						{
-							false && <span className="error-message">Some Error</span>
+							error && <span className="error-message">{error.message}</span>
 						}
 					</Form.Field>
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ class ModalInfoWallet extends React.Component {
 
 	render() {
 		const { show } = this.props;
-
+		const commithash = ''.concat(COMMITHASH);
 		return (
 			<Modal className="small unclock-size" open={show} dimmer="inverted">
 				<div className="modal-content info">
@@ -32,12 +33,12 @@ class ModalInfoWallet extends React.Component {
 						<div className="info-row">
 							<div className="info-title">Version:</div>
 							<div className="info-value">{version}
-								{/* eslint-disable-next-line no-undef */}
-								<a href={`${GIT_REF}${COMMITHASH}`} target="_blank" rel="noreferrer noopener">
-									<span className="icon-commit" />
-									{/* eslint-disable-next-line no-undef */}
-									<span>{COMMITHASH.substring(0, 7)}</span>
-								</a>
+								{commithash ?
+									<a href={`${GIT_REF}${commithash}`} target="_blank" rel="noreferrer noopener">
+										<span className="icon-commit" />
+										<span>{commithash.substring(0, 7)}</span>
+									</a>
+									: null}
 							</div>
 						</div>
 						<div className="info-row">

@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -121,7 +122,7 @@ module.exports = {
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
 		new webpack.DefinePlugin({
 			ELECTRON: !!process.env.ELECTRON,
-			COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+			COMMITHASH: fs.existsSync('./.git') ? JSON.stringify(gitRevisionPlugin.commithash()) : '',
 		}),
 	],
 	node: {
