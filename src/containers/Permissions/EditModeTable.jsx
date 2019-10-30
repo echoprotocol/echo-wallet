@@ -225,7 +225,6 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.onRemoveOriginField(k.key, type)}
-									validateField={() => { }}
 									setWif={(e) => setWif(keyRole, type, e)}
 									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
@@ -273,7 +272,6 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.removeField(num, type)}
-									validateField={() => { }}
 									setWif={(e) => setWif(keyRole, type, e)}
 									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
