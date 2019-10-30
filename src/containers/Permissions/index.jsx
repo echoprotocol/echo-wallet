@@ -204,7 +204,7 @@ class Permissions extends React.Component {
 							(getKeys) => (
 								<React.Fragment>
 									<Button
-										className="grey-btn"
+										className="blue-btn"
 										size="medium"
 										content="Edit mode"
 										onClick={getKeys}
