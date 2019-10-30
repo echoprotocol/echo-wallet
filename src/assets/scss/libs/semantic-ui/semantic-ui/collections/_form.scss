@@ -18,24 +18,16 @@
         Form
 ---------------------*/
 
-.ui.form {
+.form {
   position: relative;
   max-width: 100%;
-}
-
-/*--------------------
-        Content
----------------------*/
-
-.ui.form>p {
-  margin: 1em 0em;
 }
 
 /*--------------------
         Field
 ---------------------*/
 
-.ui.form .field {
+.form .field {
   clear: both;
   margin: 0em 0em 20px;
 }
@@ -166,16 +158,16 @@
 }
 
 /* Full Width Input */
-.ui.form .ten.fields .ui.input input,
-.ui.form .nine.fields .ui.input input,
-.ui.form .eight.fields .ui.input input,
-.ui.form .seven.fields .ui.input input,
-.ui.form .six.fields .ui.input input,
-.ui.form .five.fields .ui.input input,
-.ui.form .four.fields .ui.input input,
-.ui.form .three.fields .ui.input input,
-.ui.form .two.fields .ui.input input,
-.ui.form .wide.field .ui.input input {
+.form .ten.fields .input input,
+.form .nine.fields .input input,
+.form .eight.fields .input input,
+.form .seven.fields .input input,
+.form .six.fields .input input,
+.form .five.fields .input input,
+.form .four.fields .input input,
+.form .three.fields .input input,
+.form .two.fields .input input,
+.form .wide.field .input input {
   -webkit-box-flex: 1;
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
@@ -286,19 +278,19 @@
 /*--------------------
         Hover
 ---------------------*/
-.ui.form textarea:hover,
-.ui.form input:not([type]):hover,
-.ui.form input[type="date"]:hover,
-.ui.form input[type="datetime-local"]:hover,
-.ui.form input[type="email"]:hover,
-.ui.form input[type="number"]:hover,
-.ui.form input[type="password"]:hover,
-.ui.form input[type="search"]:hover,
-.ui.form input[type="tel"]:hover,
-.ui.form input[type="time"]:hover,
-.ui.form input[type="text"]:hover,
-.ui.form input[type="file"]:hover,
-.ui.form input[type="url"]:hover {
+.form textarea:hover,
+.form input:not([type]):hover,
+.form input[type="date"]:hover,
+.form input[type="datetime-local"]:hover,
+.form input[type="email"]:hover,
+.form input[type="number"]:hover,
+.form input[type="password"]:hover,
+.form input[type="search"]:hover,
+.form input[type="tel"]:hover,
+.form input[type="time"]:hover,
+.form input[type="text"]:hover,
+.form input[type="file"]:hover,
+.form input[type="url"]:hover {
   &:not(:disabled) {
     border-color: $inut-hover;
   }
@@ -420,25 +412,25 @@
     Checkbox Error
 ---------------------*/
 
-.ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) label,
-.ui.form .field.error .checkbox:not(.toggle):not(.slider) label,
-.ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box,
-.ui.form .field.error .checkbox:not(.toggle):not(.slider) .box {
+.form .fields.error .field .checkbox:not(.toggle):not(.slider) label,
+.form .field.error .checkbox:not(.toggle):not(.slider) label,
+.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box,
+.form .field.error .checkbox:not(.toggle):not(.slider) .box {
   color: #9F3A38;
 }
 
-.ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before,
-.ui.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
-.ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before,
-.ui.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
+.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before,
+.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
+.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before,
+.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
   background: #FFF6F6;
   border-color: #E0B4B4;
 }
 
-.ui.form .fields.error .field .checkbox label:after,
-.ui.form .field.error .checkbox label:after,
-.ui.form .fields.error .field .checkbox .box:after,
-.ui.form .field.error .checkbox .box:after {
+.form .fields.error .field .checkbox label:after,
+.form .field.error .checkbox label:after,
+.form .fields.error .field .checkbox .box:after,
+.form .field.error .checkbox .box:after {
   color: #9F3A38;
 }
 
@@ -662,52 +654,6 @@
   box-shadow: none;
 }
 
-/* Other Combinations */
-.ui.form .two.fields>.fields,
-.ui.form .two.fields>.field {
-  width: 50%;
-}
-
-.ui.form .three.fields>.fields,
-.ui.form .three.fields>.field {
-  width: 33.33333333%;
-}
-
-.ui.form .four.fields>.fields,
-.ui.form .four.fields>.field {
-  width: 25%;
-}
-
-.ui.form .five.fields>.fields,
-.ui.form .five.fields>.field {
-  width: 20%;
-}
-
-.ui.form .six.fields>.fields,
-.ui.form .six.fields>.field {
-  width: 16.66666667%;
-}
-
-.ui.form .seven.fields>.fields,
-.ui.form .seven.fields>.field {
-  width: 14.28571429%;
-}
-
-.ui.form .eight.fields>.fields,
-.ui.form .eight.fields>.field {
-  width: 12.5%;
-}
-
-.ui.form .nine.fields>.fields,
-.ui.form .nine.fields>.field {
-  width: 11.11111111%;
-}
-
-.ui.form .ten.fields>.fields,
-.ui.form .ten.fields>.field {
-  width: 10%;
-}
-
 /* Swap to full width on mobile */
 @media only screen and (max-width: 767px) {
   .ui.form .fields {
@@ -739,78 +685,6 @@
     margin: 0em 0em 1em;
   }
 }
-
-/* Sizing Combinations */
-.ui.form .fields .wide.field {
-  width: 6.25%;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-.ui.form .one.wide.field {
-  width: 6.25% !important;
-}
-
-.ui.form .two.wide.field {
-  width: 12.5% !important;
-}
-
-.ui.form .three.wide.field {
-  width: 18.75% !important;
-}
-
-.ui.form .four.wide.field {
-  width: 25% !important;
-}
-
-.ui.form .five.wide.field {
-  width: 31.25% !important;
-}
-
-.ui.form .six.wide.field {
-  width: 37.5% !important;
-}
-
-.ui.form .seven.wide.field {
-  width: 43.75% !important;
-}
-
-.ui.form .eight.wide.field {
-  width: 50% !important;
-}
-
-.ui.form .nine.wide.field {
-  width: 56.25% !important;
-}
-
-.ui.form .ten.wide.field {
-  width: 62.5% !important;
-}
-
-.ui.form .eleven.wide.field {
-  width: 68.75% !important;
-}
-
-.ui.form .twelve.wide.field {
-  width: 75% !important;
-}
-
-.ui.form .thirteen.wide.field {
-  width: 81.25% !important;
-}
-
-.ui.form .fourteen.wide.field {
-  width: 87.5% !important;
-}
-
-.ui.form .fifteen.wide.field {
-  width: 93.75% !important;
-}
-
-.ui.form .sixteen.wide.field {
-  width: 100% !important;
-}
-
 /* Swap to full width on mobile */
 @media only screen and (max-width: 767px) {
 

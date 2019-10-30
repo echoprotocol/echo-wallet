@@ -88,7 +88,6 @@ class ViewModeTable extends React.Component {
 	addNewField(num, type) {
 		const { keyRole } = this.props;
 		const { addedFields } = this.state;
-
 		const index = num || (addedFields.length ? addedFields[addedFields.length - 1].num + 1 : 0);
 		addedFields.push({ num: index, type });
 		this.props.setValue([keyRole, type, index.toString(), 'key'], '');
@@ -295,7 +294,7 @@ class ViewModeTable extends React.Component {
 						content={addAccountButtonTooltipText}
 						className="inner-tooltip"
 						position="bottom center"
-						style={{ width: 380 }}
+						style={{ width: 300 }}
 					/>
 				</Button>
 				<Button

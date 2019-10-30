@@ -89,7 +89,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	}
 
 	if (idError) {
-		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
 		return;
 	}
 

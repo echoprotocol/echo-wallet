@@ -281,6 +281,22 @@ const validateThreshold = (permissionForm) => (dispatch) => {
 	return true;
 };
 
+const addEchoRandKeyToBufferObject = (permissionForm) => {
+	const role = 'echoRand';
+	const result = [];
+	permissionForm.getIn([role, 'keys']).forEach((value) => {
+		const weightInt = parseInt(value.get('weight').value, 10);
+
+		if (!value.get('key').value || !weightInt) {
+			return;
+		}
+
+		result.push(value.get('key').value);
+	});
+
+	return result[0];
+};
+
 const addActiveKeysToBufferObject = (permissionForm) => {
 	const role = 'active';
 	const result = [];
@@ -297,24 +313,28 @@ const addActiveKeysToBufferObject = (permissionForm) => {
 	return result;
 };
 
-const addWIFsToBufferObject = (permissionForm, privateKeys, bufferObject) => {
-
-};
-
-const addEchoRandKeyToBufferObject = (permissionForm) => {
-	const role = 'echoRand';
+const addActiveAccountsToBufferObject = (permissionForm) => {
+	const role = 'active';
 	const result = [];
-	permissionForm.getIn([role, 'keys']).forEach((value) => {
+	permissionForm.getIn([role, 'accounts']).forEach((value) => {
 		const weightInt = parseInt(value.get('weight').value, 10);
 
 		if (!value.get('key').value || !weightInt) {
 			return;
 		}
 
-		result.push(value.get('key').value);
+		const accountInfo = new Promise(async (res) => {
+			const account = await echo.api.getAccountByName(value.get('key').value);
+			return res([account.id, weightInt]);
+		});
+		result.push(accountInfo);
 	});
 
-	return result[0];
+	return Promise.all(result);
+};
+
+const addWIFsToBufferObject = async (permissionForm, privateKeys) => {
+
 };
 
 /**
@@ -449,13 +469,13 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			wif: false,
 		},
 		echoRand: {
-			key: null,
+			key: false,
 			wif: false,
 		},
 	};
 
-	const rolesPromises = [];
-	const removed = [];
+	// const rolesPromises = [];
+	// const removed = [];
 
 	dataChanged.active.keys = isActiveKeysChanged(permissionForm, permissionTable);
 	dataChanged.active.threshold = isThresholdChanged(permissionForm, permissionTable);
@@ -472,6 +492,10 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 
 	if (dataChanged.echoRand.key) {
 		permissionData.echoRand.key = addEchoRandKeyToBufferObject(permissionForm);
+	}
+
+	if (dataChanged.active.accounts) {
+		permissionData.active.accounts = await addActiveAccountsToBufferObject(permissionForm);
 	}
 
 	// ['active'].forEach((role) => {
@@ -521,56 +545,59 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 
 	// });
 
-	['active'].forEach((role) => {
-		const accountsPromises = [];
-		(permissionForm.getIn([role, 'accounts']) || []).some((keyForm) => {
+	// ['active'].forEach((role) => {
+	// 	const accountsPromises = [];
+	// 	(permissionForm.getIn([role, 'accounts']) || []).some((keyForm) => {
 		
-			if (
-				!permissionTable
-					.getIn([role, 'accounts'])
-					.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-				|| keyForm.get('remove')
-				|| permissionForm.getIn([role, 'accounts']).size !== permissionTable.getIn([role, 'accounts']).size
-			) {
-				permissionForm.getIn([role, 'accounts']).forEach((value) => {
-					const weightInt = parseInt(value.get('weight').value, 10);
+	// 		if (
+	// 			!permissionTable
+	// 				.getIn([role, 'accounts'])
+	// 				.some((keyTable) => keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
+	// 			|| keyForm.get('remove')
+	// 			|| permissionForm.getIn([role, 'accounts']).size !== permissionTable.getIn([role, 'accounts']).size
+	// 		) {
+	// 			permissionForm.getIn([role, 'accounts']).forEach((value) => {
+	// 				const weightInt = parseInt(value.get('weight').value, 10);
 
-					if (value.get('remove')) {
-						removed.push('accounts');
-						return;
-					}
+	// 				if (value.get('remove')) {
+	// 					removed.push('accounts');
+	// 					return;
+	// 				}
 
-					if (!value.get('key').value || !weightInt) {
-						return;
-					}
+	// 				if (!value.get('key').value || !weightInt) {
+	// 					return;
+	// 				}
 
-					accountsPromises.push(echo.api.getAccountByName(value.get('key').value));
-					permissionData[role].accounts.push([value.get('key').value, weightInt]);
-				});
+	// 				accountsPromises.push(echo.api.getAccountByName(value.get('key').value));
+	// 				permissionData[role].accounts.push([value.get('key').value, weightInt]);
+	// 			});
 
-				return true;
-			}
+	// 			return true;
+	// 		}
 
-			return false;
-		});
+	// 		return false;
+	// 	});
 
-		rolesPromises.push(Promise.all(accountsPromises));
-	});
+	// 	rolesPromises.push(Promise.all(accountsPromises));
+	// });
 
-	const accountsResults = await Promise.all(rolesPromises);
+	// const accountsResults = await Promise.all(rolesPromises);
 
-	['active'].forEach((role, index) => {
-		accountsResults[index].forEach((account, i) => {
-			permissionData[role].accounts[i][0] = account.id;
-		});
-	});
+	// ['active'].forEach((role, index) => {
+	// 	accountsResults[index].forEach((account, i) => {
+	// 		permissionData[role].accounts[i][0] = account.id;
+	// 	});
+	// });
 
 	if (
-		!permissionData.active.keys.length
-		&& !permissionData.active.accounts.length
-		&& !permissionData.echoRand.key
-		&& permissionData.active.threshold === null
-		&& !removed.length
+		!(
+			dataChanged.active.keys
+			|| dataChanged.active.accounts
+			|| dataChanged.active.threshold
+			|| dataChanged.active.wif
+			|| dataChanged.echoRand.key
+			|| dataChanged.echoRand.wif
+		)
 	) {
 		return false;
 	}
@@ -587,11 +614,12 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 	};
 
 	if (
-		permissionData.active.keys.length
-		|| permissionData.active.accounts.length
-		|| permissionData.active.threshold
-		|| permissionData.echoRand.key
-		|| removed.length
+		dataChanged.active.keys
+		|| dataChanged.active.accounts
+		|| dataChanged.active.threshold
+		|| dataChanged.active.wif
+		|| dataChanged.echoRand.key
+		|| dataChanged.echoRand.wif
 	) {
 		const keysMap = [];
 
@@ -607,7 +635,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			address_auths: [],
 		};
 
-		if (permissionData.active.threshold) {
+		if (dataChanged.active.threshold) {
 			showOptions.activeThreshold = permissionData.active.threshold;
 
 			transaction.active.weight_threshold = permissionData.active.threshold;
@@ -615,7 +643,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			showOptions.activeThreshold = transaction.active.weight_threshold;
 		}
 
-		if (permissionData.active.keys.length || removed.includes('keys')) {
+		if (dataChanged.active.keys.length) {
 			showOptions.activeKeys = permissionData.active.keys;
 
 			transaction.active.key_auths = permissionData.active.keys;
@@ -623,7 +651,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			showOptions.activeKeys = transaction.active.key_auths;
 		}
 
-		if (permissionData.active.accounts.length || removed.includes('accounts')) {
+		if (dataChanged.active.accounts.length) {
 			showOptions.activeAccounts = permissionData.active.accounts;
 
 			transaction.active.account_auths = permissionData.active.accounts;
@@ -631,7 +659,7 @@ export const permissionTransaction = (privateKeys) => async (dispatch, getState)
 			showOptions.activeAccounts = transaction.active.account_auths;
 		}
 
-		if (permissionData.echoRand.key) {
+		if (dataChanged.echoRand.key) {
 			showOptions.echoRandKey = permissionData.echoRand.key;
 
 			transaction.echorand_key = permissionData.echoRand.key;

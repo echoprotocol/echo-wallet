@@ -79,7 +79,7 @@ class ModalBackup extends React.Component {
 							readOnly
 						/>
 						<span className="warning-message">
-							Warning: Anyone who has access to your private key can steal all your Echo
+							Warning: Anyone who has access to your WIF can steal all your Echo
 							assets and this key can never be recovered if you lose it.
 						</span>
 					</Form.Field>
