@@ -88,7 +88,7 @@ class SidebarMenu extends React.Component {
 					to={PERMISSIONS_PATH}
 				>
 					<span className="icon icon-permission" />
-					<span className="sidebar-nav-text">Permissions</span>
+					<span className="sidebar-nav-text">Backup and Permissions</span>
 				</NavLink>
 			</li>
 		);
@@ -146,7 +146,7 @@ class SidebarMenu extends React.Component {
 							}
 							{
 								this.props.visibleBar ? this.renderPermissions(parsedLocation) : <Popup
-									content="Permissions"
+									content="Backup and Permissions"
 									className="nav-popup"
 									trigger={this.renderPermissions(parsedLocation)}
 								/>

@@ -101,8 +101,8 @@ class Permissions extends React.Component {
 		const account = this.props.account.toJS();
 		const newActiveWifs = Object.entries(privateKeys.active)
 			.filter(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-				return publicKey && wif && wif.value && !wif.error
+				const publicKey = form.getIn(['active', 'keys', index, 'key']);
+				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
 			.map(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
@@ -110,8 +110,8 @@ class Permissions extends React.Component {
 			})
 		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
 			.filter(([index, wif]) => {
-				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-				return publicKey && wif && wif.value && !wif.error
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
+				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
 			.map(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;

@@ -19,7 +19,8 @@ import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
 import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR } from '../../constants/FormConstants';
-import { setInFormError } from '../../actions/FormActions';
+import { setInFormError, setValue } from '../../actions/FormActions';
+
 
 class WarningConfirmThresholdScenario extends React.Component {
 
@@ -47,6 +48,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 
 	async submit(onFinish) {
 		const { validation: isValid, isWifChangingOnly } = await this.props.handleTransaction();
+
 		if (!isValid) {
 			return;
 		}
@@ -128,7 +130,11 @@ class WarningConfirmThresholdScenario extends React.Component {
 	send() {
 		const { password, isWifChangingOnly } = this.state;
 
-		if (!isWifChangingOnly) {
+		if (isWifChangingOnly) {
+			this.props.setValue(FORM_PERMISSION_KEY, 'isEditMode', false);
+			this.props.closeModal(MODAL_DETAILS);
+			this.props.resetTransaction();
+		} else {
 			this.props.sendTransaction(password);
 		}
 
@@ -205,6 +211,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	sendTransaction: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	setInFormError: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
@@ -234,6 +241,7 @@ export default connect(
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
 		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
+		setValue: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(WarningConfirmThresholdScenario);

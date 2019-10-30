@@ -93,7 +93,6 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, type, index.toString(), 'key'], '');
 		this.props.setValue([keyRole, type, index.toString(), 'weight'], '');
 		this.props.setValue([keyRole, type, index.toString(), 'type'], type);
-		// this.props.setWif(keyRole, type, { target: { name: index.toString(), value: '' } });
 
 		this.setState({ addedFields });
 	}

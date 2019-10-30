@@ -5,7 +5,6 @@ import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import TableReducer from '../reducers/TableReducer';
 import { resetTransaction } from './TransactionActions';
-import { getAvailableWifStatusesFromStorage } from './GlobalActions';
 import TransactionReducer from '../reducers/TransactionReducer';
 import { openModal } from './ModalActions';
 import { FORM_PERMISSION_KEY } from '../constants/FormConstants';
@@ -405,6 +404,7 @@ const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 	const baseActiveKeys = basePrivateKeys.active;
 
 	const newPrivateKeys = Object.entries(activeKeys)
+		.filter(([index]) => formKeys.getIn([index, 'key']) && formKeys.getIn([index, 'key']).value)
 		.reduce((acc, [index, wif]) => {
 			acc[formKeys.getIn([index, 'key']).value] = (wif && wif.value) ?
 				{ value: wif.value } : { value: undefined };
@@ -436,6 +436,7 @@ const isEchoRandWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 	const baseEchoRandKeys = basePrivateKeys.echoRand;
 
 	const newPrivateKeys = Object.entries(echoRandKeys)
+		.filter(([index]) => formKeys.getIn([index, 'key']) && formKeys.getIn([index, 'key']).value)
 		.reduce((acc, [index, wif]) => {
 			acc[formKeys.getIn([index, 'key']).value] = (wif && wif.value) ?
 				{ value: wif.value } : { value: undefined };
@@ -580,13 +581,15 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			account: currentAccount.get('name'),
 		};
 
+		console.log(dataChanged);
+
 		const isWifChangingOnly =
 			!dataChanged.active.keys
-			|| !dataChanged.active.accounts
-			|| !dataChanged.active.threshold
-			|| dataChanged.active.wif
-			|| !dataChanged.echoRand.key
-			|| dataChanged.echoRand.wif;
+			&& !dataChanged.active.accounts
+			&& !dataChanged.active.threshold
+			&& !dataChanged.echoRand.key
+			&& (dataChanged.active.wif
+			|| dataChanged.echoRand.wif);
 
 		if (
 			dataChanged.active.keys
@@ -633,15 +636,18 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			}
 
 			if (dataChanged.active.wif || dataChanged.echoRand.wif) {
-				showOptions.wif = {
-					active: dataChanged.active.wif,
-					echoRand: dataChanged.echoRand.wif,
-				};
+				showOptions.wif = [];
+				if (dataChanged.active.wif) {
+					showOptions.wif.push('Change active wif');
+				}
+				if (dataChanged.echoRand.wif) {
+					showOptions.wif.push('Change echo rand wif');
+				}
 			}
 
 		}
 
-		if (isWifChangingOnly) {
+		if (!isWifChangingOnly) {
 			const feeValue = await getOperationFee('account_update', transaction);
 
 			transaction.fee = {
