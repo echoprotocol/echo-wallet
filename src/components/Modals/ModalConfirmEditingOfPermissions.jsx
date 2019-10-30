@@ -21,15 +21,14 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 					<div className="modal-body">
 						<div className="info-text">
 							{
-								echoRandMessage && <span>{echoRandMessage}</span>
-							}
-							{
-								echoRandMessage && warningMessage && <hr />
-							}
-							{
 								warningMessage && <span>{warningMessage}</span>
 							}
-
+							{
+								echoRandMessage && warningMessage && <br />
+							}
+							{
+								echoRandMessage && <span>{echoRandMessage}</span>
+							}
 						</div>
 						<div className="form-panel">
 							<Button

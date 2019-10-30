@@ -76,7 +76,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			if (!echoRand.keys[key].hasWif.value) {
 				this.setState({
 					echoRandMessage:
-						'You remove your EchoRandKey and now will lose access to it.',
+						'You removed your EchoRand Key and after submitting this action you will lose access to it.',
 				});
 			}
 		}
