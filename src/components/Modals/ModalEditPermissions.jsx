@@ -130,7 +130,7 @@ class ModalEditPermissions extends React.Component {
 									timerIsOn: false,
 								})}
 							/>
-							Go to edit mode
+							{(agree && timerComplete) ? 'Go to edit mode' : 'READ PLEASE'}
 						</Button>
 					</div>
 				</form>
