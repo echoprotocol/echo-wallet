@@ -24,6 +24,9 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 								echoRandMessage && <span>{echoRandMessage}</span>
 							}
 							{
+								echoRandMessage && warningMessage && <hr />
+							}
+							{
 								warningMessage && <span>{warningMessage}</span>
 							}
 
@@ -35,14 +38,14 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 
 								className="main-btn"
 								onClick={(e) => this.onClose(e)}
-								content="Do it later"
+								content="No"
 							/>
 							<Button
 								basic
 								type="button"
 								className="main-btn"
 								onClick={(e) => this.onConfirm(e)}
-								content="No"
+								content="Proceed"
 							/>
 						</div>
 					</div>

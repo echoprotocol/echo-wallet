@@ -52,22 +52,22 @@ class WarningConfirmThresholdScenario extends React.Component {
 		const permissionsKeys = this.props.form.toJS();
 		const network = this.props.network.toJS();
 		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
-		const nextTreshold = new BN(this.props.treshold.value).toString(10);
+		const nextTreshold = new BN(this.props.treshold.value);
 		const { keys, accounts } = permissionsKeys.active;
-		let enoughNextThreshold = new BN(0).toString(10);
-		let maxNextValue = new BN(0).toString(10);
+		let enoughNextThreshold = new BN(0);
+		let maxNextValue = new BN(0);
 		for (const key in keys) {
-			maxNextValue = new BN(maxNextValue).plus(keys[key].weight.value).toString(10);
+			maxNextValue = maxNextValue.plus(keys[key].weight.value);
 			if (keys[key].hasWif && keys[key].hasWif.value) {
-				enoughNextThreshold = new BN(enoughNextThreshold).plus(keys[key].weight.value).toString(10);
+				enoughNextThreshold = enoughNextThreshold.plus(keys[key].weight.value);
 			}
 		}
 		for (const account in accounts) {
-			maxNextValue = new BN(maxNextValue).plus(accounts[account].weight.value).toString(10);
+			maxNextValue = maxNextValue.plus(accounts[account].weight.value);
 			for (let i = 0; i < accs.length; i += 1) {
 				if (accs[i].name === account) {
 					enoughNextThreshold =
-						new BN(enoughNextThreshold).plus(accounts[account].weight.value).toString(10);
+						enoughNextThreshold.plus(accounts[account].weight.value);
 				}
 			}
 		}
@@ -80,11 +80,11 @@ class WarningConfirmThresholdScenario extends React.Component {
 				});
 			}
 		}
-		if (new BN(maxNextValue).lt(new BN(nextTreshold))) {
+		if (maxNextValue.lt(nextTreshold)) {
 			this.props.closeModal(MODAL_UNLOCK);
 			this.props.setInFormError();
 			return;
-		} else if (new BN(nextTreshold).gt(new BN(enoughNextThreshold))) {
+		} else if (nextTreshold.gt(enoughNextThreshold)) {
 			this.setState({
 				warningMessage: 'If these changes are applied, you won\'t have enough keys to sign transactions. Do you want to proceed?',
 			});
