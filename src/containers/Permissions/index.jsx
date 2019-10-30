@@ -17,7 +17,7 @@ import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '../../actions/FormActions';
-import { addWif, editWifs } from '../../actions/AuthActions';
+import { editWifs } from '../../actions/AuthActions';
 import {
 	FORM_PERMISSION_KEY,
 	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
@@ -442,7 +442,6 @@ Permissions.propTypes = {
 	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
-	addWif: PropTypes.func.isRequired,
 	editWifs: PropTypes.func.isRequired,
 };
 
@@ -474,7 +473,6 @@ export default connect(
 		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
-		addWif: (publicKey, wif, account, password) => dispatch(addWif(publicKey, wif, account, password)),
 		editWifs: (keys, account, password) => dispatch(editWifs(keys, account, password)),
 	}),
 )(Permissions);

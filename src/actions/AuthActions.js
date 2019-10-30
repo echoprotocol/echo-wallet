@@ -393,37 +393,6 @@ export const asyncUnlock = (
 
 };
 
-/**
- *
- * @param {String} publicKey
- * @param {String} wif
- * @param {Object} account
- * @param {String} password
- * @returns {function(dispatch, getState): Promise<undefined>}
- */
-export const addWif = (
-	publicKey,
-	wif,
-	account,
-	password,
-) => async (dispatch, getState) => {
-	const { id, name } = account;
-	const networkName = getState().global.getIn(['network', 'name']);
-	const userStorage = Services.getUserStorage();
-	if (!CryptoService.isWIF(wif)) {
-		throw Error('Invalid WIF');
-	}
-
-	const privateKey = PrivateKey.fromWif(wif);
-
-	if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
-		throw Error('Wrong WIF');
-	}
-	await userStorage.addKey(Key.create(publicKey, wif, id, type), { password });
-
-	dispatch(saveWifToStorage(name, networkName, publicKey));
-};
-
 export const editWifs = (keysData, account, password) => async (dispatch, getState) => {
 	const { id, name } = account;
 	const networkName = getState().global.getIn(['network', 'name']);
