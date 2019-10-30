@@ -69,7 +69,7 @@ class ViewModeTable extends React.Component {
 			this.props.setWif(keyRole, type, {
 				target: {
 					name: field,
-					value: this.props.privateKeys[newValue].value,
+					value: this.props.privateKeys[field].value,
 				},
 			});
 		} else {
