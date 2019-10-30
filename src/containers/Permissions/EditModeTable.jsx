@@ -95,7 +95,6 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, type, index.toString(), 'type'], type);
 
 		this.setState({ addedFields });
-		console.log(addedFields);
 	}
 
 	removeField(num, type) {
@@ -238,7 +237,6 @@ class ViewModeTable extends React.Component {
 		const {
 			privateKeys, setWif,
 		} = this.props;
-
 		return (
 			<div className="list">
 				<React.Fragment>
@@ -316,7 +314,6 @@ class ViewModeTable extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.addedFields);
 		return (
 			<div className="edit-mode-wrap">
 				<div className="list-wrap">
