@@ -146,27 +146,27 @@ class ViewModeTable extends React.Component {
 					</a>
 				</div>
 			) : (
-					<div className="list-header-row">
-						{
-							description && (
-								<div className="list-header-col">
-									<div className="list-description">{description}</div>
-								</div>
-							)
-						}
-						{
-							data.threshold && (
-								<div className="list-header-col">
-									<EditModeThreshold
-										defaultThreshold={data.threshold}
-										threshold={threshold}
-										setThreshold={(e) => this.setThreshold(keyRole, e)}
-									/>
-								</div>
-							)
-						}
-					</div>
-				)
+				<div className="list-header-row">
+					{
+						description && (
+							<div className="list-header-col">
+								<div className="list-description">{description}</div>
+							</div>
+						)
+					}
+					{
+						data.threshold && (
+							<div className="list-header-col">
+								<EditModeThreshold
+									defaultThreshold={data.threshold}
+									threshold={threshold}
+									setThreshold={(e) => this.setThreshold(keyRole, e)}
+								/>
+							</div>
+						)
+					}
+				</div>
+			)
 		);
 	}
 
