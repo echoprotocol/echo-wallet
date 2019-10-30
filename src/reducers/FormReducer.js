@@ -178,15 +178,14 @@ const DEFAULT_FORM_FIELDS = {
 	[FORM_PERMISSION_KEY]: Map({
 		active: new Map({
 			keys: Map({}),
+			accounts: Map({}),
 			threshold: {
 				value: null,
 				error: null,
 			},
-			privateKeys: Map({}),
 		}),
 		echoRand: new Map({
 			keys: Map({}),
-			privateKeys: Map({}),
 		}),
 		firstFetch: false,
 		isChanged: false,

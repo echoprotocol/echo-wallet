@@ -8,7 +8,6 @@ import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
 import PrivateKeysScenario from '../PrivateKeysScenario';
-import TransactionScenario from '../TransactionScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
@@ -43,6 +42,10 @@ class Permissions extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			basePrivateKeys: {
+				active: {},
+				echoRand: {},
+			},
 			privateKeys: {
 				active: {},
 				echoRand: {},
@@ -60,8 +63,8 @@ class Permissions extends React.Component {
 			return;
 		}
 
-		const { accountName: prevAccountName } = prevProps;
-		const { accountName } = this.props;
+		const { accountName: prevAccountName, form: prevForm } = prevProps;
+		const { accountName, form } = this.props;
 		const prevAccount = prevProps.account.toJS();
 		const account = this.props.account.toJS();
 
@@ -82,6 +85,14 @@ class Permissions extends React.Component {
 		if (!_.isEqual(prevAccount.echo_rand, account.echo_rand)) {
 			this.props.formPermissionKeys();
 		}
+
+		if (!_.isEqual(prevAccount.echo_rand, account.echo_rand)) {
+			this.props.formPermissionKeys();
+		}
+
+		if (form.get('isEditMode') !== prevForm.get('isEditMode')) {
+			this.props.formPermissionKeys();
+		}
 	}
 
 	async saveWifs(password) {
@@ -90,18 +101,18 @@ class Permissions extends React.Component {
         const account = this.props.account.toJS();
         const newActiveWifs = Object.entries(privateKeys.active)
             .filter(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return publicKey && wif && wif.value && !wif.error
-            })
+				const publicKey = form.getIn(['active', 'keys', index, 'key']);
+				return publicKey && publicKey.value && wif && wif.value && !wif.error
+			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
                 return { publicKey, wif: wif.value, type: wif.type };
             })
         const newEchoRandWifs = Object.entries(privateKeys.echoRand)
-            .filter(([index, wif]) => {
-                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return publicKey && wif && wif.value && !wif.error
-            })
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
+				return publicKey && publicKey.value && wif && wif.value && !wif.error
+			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
                 return { publicKey, wif: wif.value, type: wif.type };
@@ -178,14 +189,16 @@ class Permissions extends React.Component {
 			echoRand: echoRandPrivetKeys,
 		}
 
-
-		this.setState({ privateKeys: privateKeysByRole }, () => {
-			if (mode === FORM_PERMISSION_MODE_EDIT) {
-				this.props.set('isEditMode', true);
-			} else if (mode === FORM_PERMISSION_MODE_VIEW) {
-				this.props.set('isEditMode', false);
+		this.setState(
+			{ privateKeys: privateKeysByRole, basePrivateKeys: _.cloneDeep(privateKeysByRole) },
+			() => {
+				if (mode === FORM_PERMISSION_MODE_EDIT) {
+					this.props.set('isEditMode', true);
+				} else if (mode === FORM_PERMISSION_MODE_VIEW) {
+					this.props.set('isEditMode', false);
+				}
 			}
-		});
+		);
 	}
 
 	renderViewPanel() {
@@ -238,7 +251,9 @@ class Permissions extends React.Component {
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>
 					<WarningConfirmThresholdScenario
-						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
+						handleTransaction={
+							() => this.props.permissionTransaction(this.state.privateKeys, this.state.basePrivateKeys)
+						}
 						onUnlock={(password) => this.saveWifs(password)}
 
 					>
@@ -466,7 +481,8 @@ export default connect(
 	(dispatch) => ({
 		formPermissionKeys: () => dispatch(formPermissionKeys()),
 		clear: () => dispatch(clear(PERMISSION_TABLE)),
-		permissionTransaction: (privateKeys) => dispatch(permissionTransaction(privateKeys)),
+		permissionTransaction: (privateKeys, basePrivateKeys) =>
+			dispatch(permissionTransaction(privateKeys, basePrivateKeys)),
 		clearForm: () => dispatch(clearForm(FORM_PERMISSION_KEY)),
 		setValue: (fields, value) => dispatch(setInFormValue(FORM_PERMISSION_KEY, fields, value)),
 		setError: (fields, value) => dispatch(setInFormError(FORM_PERMISSION_KEY, fields, value)),
