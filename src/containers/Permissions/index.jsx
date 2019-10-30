@@ -85,35 +85,35 @@ class Permissions extends React.Component {
 	}
 
 	async saveWifs(password) {
-        const { form } = this.props;
-        const { privateKeys } = this.state;
-        const account = this.props.account.toJS();
-        const newActiveWifs = Object.entries(privateKeys.active)
-            .filter(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return publicKey && wif && wif.value && !wif.error
-            })
-            .map(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value };
-            })
-        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
-            .filter(([index, wif]) => {
-                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return publicKey && wif && wif.value && !wif.error
-            })
-            .map(([index, wif]) => {
-                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value };
-            })
-        const wifs = [...newActiveWifs, ...newEchoRandWifs];
-        for(let i = 0; i < wifs.length; i++) {
-            const { publicKey, wif } = wifs[i];
-            try {
-                await this.props.addWif(publicKey, wif, account, password);
-            } catch (error) {}
-        }
-    }
+		const { form } = this.props;
+		const { privateKeys } = this.state;
+		const account = this.props.account.toJS();
+		const newActiveWifs = Object.entries(privateKeys.active)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+				return { publicKey, wif: wif.value };
+			})
+		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+			.filter(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return publicKey && wif && wif.value && !wif.error
+			})
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return { publicKey, wif: wif.value };
+			})
+		const wifs = [...newActiveWifs, ...newEchoRandWifs];
+		for (let i = 0; i < wifs.length; i++) {
+			const { publicKey, wif } = wifs[i];
+			try {
+				await this.props.addWif(publicKey, wif, account, password);
+			} catch (error) { }
+		}
+	}
 
 	componentWillUnmount() {
 		this.props.clear();
@@ -138,20 +138,23 @@ class Permissions extends React.Component {
 			if (wif) {
 				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 				const key = form.getIn([keyRole, type, field, 'key']);
-				
 				if (key && key.value) {
 					if (isPublicKey(key.value) && key.value !== publicKey) {
 						newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+					} else {
+						this.props.setValue([keyRole, type, field, 'hasWif'], true);
 					}
 				} else {
 					this.props.setValue([keyRole, type, field, 'key'], publicKey);
 				}
+			} else {
+				this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			}
-
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
 			newPrivateKeys[keyRole][field].error = 'Invalide private key';
 			newPrivateKeys[keyRole][field].value = wif;
+			this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			this.setState({ privateKeys: newPrivateKeys });
 		}
 	}
@@ -167,15 +170,15 @@ class Permissions extends React.Component {
 		}, {}) : {};
 
 		const activePrivetKeys = permissionsKeys.active.keys.reduce((acc, { key }) => {
-			acc[key] = newPrivateKeys[key] && { ... newPrivateKeys[key] };
+			acc[key] = newPrivateKeys[key] && { ...newPrivateKeys[key] };
 			return acc;
 		}, {})
 
 		const echoRandPrivetKeys = permissionsKeys.echoRand.keys.reduce((acc, { key }) => {
-			acc[key] = newPrivateKeys[key] && { ... newPrivateKeys[key] };
+			acc[key] = newPrivateKeys[key] && { ...newPrivateKeys[key] };
 			return acc;
 		}, {})
-		
+
 		const privateKeysByRole = {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
@@ -238,10 +241,11 @@ class Permissions extends React.Component {
 						size="medium"
 						content="Cancel"
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
-					/>				
+					/>
 					<WarningConfirmThresholdScenario
 						handleTransaction={() => this.props.permissionTransaction(this.state.privateKeys)}
 						onUnlock={(password) => this.saveWifs(password)}
+
 					>
 						{
 							(submit) => (
@@ -358,8 +362,6 @@ class Permissions extends React.Component {
 					setValue={this.props.setValue}
 					isChanged={this.props.isChanged}
 					firstFetch={firstFetch}
-					addAccount={() => {}}
-					addPublicKey={() => {}}
 					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 					removeKey={(fields) => this.props.removeKey(fields)}
 				/>
@@ -421,9 +423,9 @@ class Permissions extends React.Component {
 						this.renderPanel()
 					}
 				</div>
-					{
-						this.renderTable()
-					}
+				{
+					this.renderTable()
+				}
 			</div>
 		);
 	}
