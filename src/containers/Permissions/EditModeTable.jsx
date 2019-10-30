@@ -61,10 +61,25 @@ class ViewModeTable extends React.Component {
 		this.props.setWif(keyRole, type, { target: { name: key, value: '' } });
 	}
 
-	setPublicKey(keyRole, e) {
+	setPublicKey(keyRole, type, e) {
 		const field = e.target.name;
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
+		if (this.props.privateKeys[newValue]) {
+			this.props.setWif(keyRole, type, {
+				target: {
+					name: field,
+					value: this.props.privateKeys[newValue].value,
+				},
+			});
+		} else {
+			this.props.setWif(keyRole, type, {
+				target: {
+					name: field,
+					value: '',
+				},
+			});
+		}
 	}
 
 	setWeight(keyRole, type, e) {
@@ -131,27 +146,27 @@ class ViewModeTable extends React.Component {
 					</a>
 				</div>
 			) : (
-				<div className="list-header-row">
-					{
-						description && (
-							<div className="list-header-col">
-								<div className="list-description">{description}</div>
-							</div>
-						)
-					}
-					{
-						data.threshold && (
-							<div className="list-header-col">
-								<EditModeThreshold
-									defaultThreshold={data.threshold}
-									threshold={threshold}
-									setThreshold={(e) => this.setThreshold(keyRole, e)}
-								/>
-							</div>
-						)
-					}
-				</div>
-			)
+					<div className="list-header-row">
+						{
+							description && (
+								<div className="list-header-col">
+									<div className="list-description">{description}</div>
+								</div>
+							)
+						}
+						{
+							data.threshold && (
+								<div className="list-header-col">
+									<EditModeThreshold
+										defaultThreshold={data.threshold}
+										threshold={threshold}
+										setThreshold={(e) => this.setThreshold(keyRole, e)}
+									/>
+								</div>
+							)
+						}
+					</div>
+				)
 		);
 	}
 
@@ -210,9 +225,9 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.onRemoveOriginField(k.key, type)}
-									validateField={() => {}}
+									validateField={() => { }}
 									setWif={(e) => setWif(keyRole, type, e)}
-									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
 									showRemove={keysLength > 1}
@@ -258,9 +273,9 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.removeField(num, type)}
-									validateField={() => {}}
+									validateField={() => { }}
 									setWif={(e) => setWif(keyRole, type, e)}
-									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
 									showRemove={keysLength > 1}
@@ -365,8 +380,8 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
-	setWif: () => {},
-	removeKey: () => {},
+	setWif: () => { },
+	removeKey: () => { },
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,

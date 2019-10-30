@@ -48,7 +48,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		let isValid;
 		try {
 			isValid = await this.props.handleTransaction();
-		} catch (e) {
+		} catch (error) {
 			return;
 		}
 		if (!isValid) {
@@ -62,12 +62,14 @@ class WarningConfirmThresholdScenario extends React.Component {
 		let enoughNextThreshold = new BN(0);
 		let maxNextValue = new BN(0);
 		for (const key in keys) {
+			if (!keys[key].key.value) return;
 			maxNextValue = maxNextValue.plus(keys[key].weight.value);
 			if (keys[key].hasWif && keys[key].hasWif.value) {
 				enoughNextThreshold = enoughNextThreshold.plus(keys[key].weight.value);
 			}
 		}
 		for (const account in accounts) {
+			if (!accounts[account].key.value) return;
 			maxNextValue = maxNextValue.plus(accounts[account].weight.value);
 			for (let i = 0; i < accs.length; i += 1) {
 				if (accs[i].name === account) {
