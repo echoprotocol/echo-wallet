@@ -87,10 +87,8 @@ class WarningConfirmThresholdScenario extends React.Component {
 
 	async unlock() {
 		const { password } = this.state;
-		const { onUnlock } = this.props;
 
 		this.props.unlock(password, () => {
-			onUnlock(password);
 			this.props.openModal(MODAL_DETAILS);
 		});
 
@@ -100,9 +98,10 @@ class WarningConfirmThresholdScenario extends React.Component {
 		this.props.openModal(modal);
 	}
 	send() {
+		const { onUnlock } = this.props;
 		const { password } = this.state;
 
-		this.props.sendTransaction(password);
+		this.props.sendTransaction(password, () => onUnlock(password));
 		this.clear();
 	}
 
@@ -202,7 +201,7 @@ export default connect(
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
-		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
+		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
 		checkThreshold: (network, accountId, nextTreshold) =>

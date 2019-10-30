@@ -3,7 +3,7 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage } from './GlobalActions';
+import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage, updateStorage } from './GlobalActions';
 
 import {
 	setFormValue,
@@ -83,9 +83,14 @@ export const createAccount = ({
 
 		const userStorage = Services.getUserStorage();
 		const account = await echo.api.getAccountByName(accountName);
-		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
 
-		dispatch(addAccount(accountName, network.name, [publicKey]));
+		dispatch(addAccount(
+			accountName,
+			network.name,
+			[[publicKey, { active: true, echoRand: true }]],
+		));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -156,10 +161,22 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			return false;
 		}
 
-		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
+		const keyAndType = [key.publicKey, {
+			active: !!account.active.key_auths.find((keyAuth) => keyAuth[0] === key.publicKey),
+			echoRand: key.publicKey === account.echorand_key,
+		}];
+
+		if (keyAndType && keyAndType[1]) {
+			if (keyAndType[1].active) {
+				await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'active'), { password });
+			}
+			if (keyAndType[1].echoRand) {
+				await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRan'), { password });
+			}
+		}
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName, [key.publicKey]));
+			dispatch(addAccount(accountName, networkName, [keyAndType]));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
@@ -409,10 +426,32 @@ export const addWif = (
 	if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
 		throw Error('Wrong WIF');
 	}
-
-	await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+	await userStorage.addKey(Key.create(publicKey, wif, id, type), { password });
 
 	dispatch(saveWifToStorage(name, networkName, publicKey));
+};
+
+export const editWifs = (keysData, account, password) => async (dispatch, getState) => {
+	const { id, name } = account;
+	const networkName = getState().global.getIn(['network', 'name']);
+	const userStorage = Services.getUserStorage();
+	const keys = keysData.map((keyData) => {
+		const { publicKey, wif, type } = keyData;
+
+		if (!CryptoService.isWIF(wif)) {
+			throw Error('Invalid WIF');
+		}
+
+		const privateKey = PrivateKey.fromWif(wif);
+
+		if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
+			throw Error('Wrong WIF');
+		}
+		return Key.create(publicKey, wif, id, type);
+	});
+
+	await userStorage.updateKeys(keys, { password });
+	dispatch(updateStorage(name, networkName, keys));
 };
 
 export const saveWifToDb = (
@@ -420,6 +459,7 @@ export const saveWifToDb = (
 	wif,
 	account,
 	password,
+	type,
 	callback = () => { },
 	modal = MODAL_ADD_WIF,
 ) => async (dispatch, getState) => {
@@ -438,10 +478,9 @@ export const saveWifToDb = (
 			dispatch(setError(modal, 'Wrong WIF'));
 			return;
 		}
+		await userStorage.addKey(Key.create(publicKey, wif, id, type), { password });
 
-		await userStorage.addKey(Key.create(publicKey, wif, id), { password });
-
-		dispatch(saveWifToStorage(name, networkName, publicKey));
+		dispatch(saveWifToStorage(name, networkName, publicKey, type));
 		callback();
 		dispatch(closeModal(modal));
 	} catch (err) {

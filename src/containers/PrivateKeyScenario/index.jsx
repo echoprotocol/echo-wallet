@@ -22,6 +22,7 @@ class PrivateKeyScenario extends React.Component {
 		this.DEFAULT_STATE = {
 			publicKey: '',
 			wif: '',
+			type: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -54,10 +55,10 @@ class PrivateKeyScenario extends React.Component {
 	}
 
 	saveWif(wif) {
-		const { password, publicKey } = this.state;
+		const { password, publicKey, type } = this.state;
 		const { account } = this.props;
 
-		this.props.saveWifToDb(publicKey, wif, account.toJS(), password);
+		this.props.saveWifToDb(publicKey, wif, account.toJS(), password, type);
 	}
 
 	clear() {
@@ -79,8 +80,8 @@ class PrivateKeyScenario extends React.Component {
 		}
 	}
 
-	addWif(publicKey) {
-		this.setState({ password: '', publicKey });
+	addWif(publicKey, type) {
+		this.setState({ password: '', publicKey, type });
 		this.props.openModal(MODAL_UNLOCK_ADD_WIF);
 	}
 

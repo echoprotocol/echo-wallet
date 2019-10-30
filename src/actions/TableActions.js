@@ -128,7 +128,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	// save active keys
 	target = account.active.key_auths.map((a) => ({
-		key: a[0], weight: a[1], role: 'active', type: 'keys', hasWif: !!storageSavedWifStatuses[a[0]],
+		key: a[0], weight: a[1], role: 'active', type: 'keys', hasWif: !!(storageSavedWifStatuses[a[0]] && storageSavedWifStatuses[a[0]].active),
 	}));
 
 	dispatch(setIn(PERMISSION_TABLE, ['active', 'keys'], new List(target)));
@@ -137,7 +137,8 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 		key: account.echorand_key,
 		role: 'echoRand',
 		type: 'keys',
-		hasWif: !!storageSavedWifStatuses[account.echorand_key],
+		hasWif: !!(storageSavedWifStatuses[account.echorand_key] &&
+			storageSavedWifStatuses[account.echorand_key].echoRand),
 	}];
 
 	dispatch(setIn(PERMISSION_TABLE, ['echoRand', 'keys'], new List(target)));
