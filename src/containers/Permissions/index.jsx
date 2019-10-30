@@ -16,7 +16,7 @@ import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '../../actions/FormActions';
-import { addWif } from '../../actions/AuthActions';
+import { editWifs } from '../../actions/AuthActions';
 import {
 	FORM_PERMISSION_KEY,
 	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
@@ -96,35 +96,31 @@ class Permissions extends React.Component {
 	}
 
 	async saveWifs(password) {
-		const { form } = this.props;
-		const { privateKeys } = this.state;
-		const account = this.props.account.toJS();
-		const newActiveWifs = Object.entries(privateKeys.active)
-			.filter(([index, wif]) => {
+        const { form } = this.props;
+        const { privateKeys } = this.state;
+        const account = this.props.account.toJS();
+        const newActiveWifs = Object.entries(privateKeys.active)
+            .filter(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
-			.map(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-				return { publicKey, wif: wif.value };
-			})
-		const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value, type: wif.type };
+            })
+        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
-			.map(([index, wif]) => {
-				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-				return { publicKey, wif: wif.value };
-			})
-		const wifs = [...newActiveWifs, ...newEchoRandWifs];
-		for (let i = 0; i < wifs.length; i++) {
-			const { publicKey, wif } = wifs[i];
-			try {
-				await this.props.addWif(publicKey, wif, account, password);
-			} catch (error) { }
-		}
-	}
+            .map(([index, wif]) => {
+                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+                return { publicKey, wif: wif.value, type: wif.type };
+            })
+
+        const wifs = [...newActiveWifs, ...newEchoRandWifs];
+		await this.props.editWifs(wifs, account, password);
+    }
 
 	componentWillUnmount() {
 		this.props.clear();
@@ -144,6 +140,7 @@ class Permissions extends React.Component {
 		}
 		newPrivateKeys[keyRole][field].value = wif;
 		newPrivateKeys[keyRole][field].error = '';
+		newPrivateKeys[keyRole][field].type = keyRole;
 		try {
 			if (wif) {
 				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
@@ -171,24 +168,22 @@ class Permissions extends React.Component {
 
 	changeMode(mode, privateKeys) {
 		const permissionsKeys = this.props.permissionsKeys.toJS();
-		const newPrivateKeys = privateKeys ? privateKeys.reduce((acc, res) => {
-			acc[res.publicKey] = {
-				value: res.wif,
-				error: '',
-			};
-			return acc;
-		}, {}) : {};
+		const newPrivateKeys = privateKeys || [];
 
-		const activePrivetKeys = permissionsKeys.active.keys.reduce((acc, { key }) => {
-			acc[key] = newPrivateKeys[key] && { ...newPrivateKeys[key] };
-			return acc;
-		}, {})
+		const activePrivetKeys = permissionsKeys.active.keys
+			.reduce((acc, { key }) => {
+				const privateKey = newPrivateKeys.find(({ publicKey, type }) => key === publicKey && type === 'active');
+				acc[key] = privateKey && { value: privateKey.wif, error: '', type: privateKey.type };
+				return acc;
+			}, {})
 
-		const echoRandPrivetKeys = permissionsKeys.echoRand.keys.reduce((acc, { key }) => {
-			acc[key] = newPrivateKeys[key] && { ...newPrivateKeys[key] };
-			return acc;
-		}, {})
-
+		const echoRandPrivetKeys = permissionsKeys.echoRand.keys
+			.reduce((acc, { key }) => {
+				const privateKey = newPrivateKeys.find(({ publicKey, type }) => key === publicKey && type === 'echoRand');
+				acc[key] = privateKey && { value: privateKey.wif, error: '', type: privateKey.type };
+				return acc;
+			}, {})
+		
 		const privateKeysByRole = {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
@@ -462,7 +457,7 @@ Permissions.propTypes = {
 	firstFetch: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
-	addWif: PropTypes.func.isRequired,
+	editWifs: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -494,6 +489,6 @@ export default connect(
 		removeKey: (fields) => dispatch(removeKey(FORM_PERMISSION_KEY, fields)),
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
-		addWif: (publicKey, wif, account, password) => dispatch(addWif(publicKey, wif, account, password)),
+		editWifs: (keys, account, password) => dispatch(editWifs(keys, account, password)),
 	}),
 )(Permissions);
