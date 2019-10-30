@@ -15,6 +15,13 @@ class ModalInfoWallet extends React.Component {
 		this.props.close();
 	}
 
+	goToExternalLink(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
+	}
+
 	render() {
 		const { show } = this.props;
 		const commithash = ''.concat(COMMITHASH);
@@ -34,7 +41,7 @@ class ModalInfoWallet extends React.Component {
 							<div className="info-title">Version:</div>
 							<div className="info-value">{version}
 								{commithash ?
-									<a href={`${GIT_REF}${commithash}`} target="_blank" rel="noreferrer noopener">
+									<a href={`${GIT_REF}${commithash}`} target="_blank" rel="noreferrer noopener" onClick={(e) => this.goToExternalLink(e, `${GIT_REF}${commithash}`)}>
 										<span className="icon-commit" />
 										<span>{commithash.substring(0, 7)}</span>
 									</a>
@@ -44,7 +51,7 @@ class ModalInfoWallet extends React.Component {
 						<div className="info-row">
 							<div className="info-title">Website:</div>
 							<div className="info-value">
-								<a href={ECHO_REF} target="_blank" rel="noreferrer noopener">echo.org</a>
+								<a href={ECHO_REF} target="_blank" rel="noreferrer noopener" onClick={(e) => this.goToExternalLink(e, ECHO_REF)}>echo.org</a>
 							</div>
 						</div>
 						<div className="info-row">
