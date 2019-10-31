@@ -65,15 +65,15 @@ class ViewModeTable extends React.Component {
 		const field = e.target.name;
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
-
-		if (!this.props.privateKeys[field]) {
-			this.props.setWif(keyRole, type, {
-				target: {
-					name: field,
-					value: '',
-				},
-			});
-		}
+		this.props.validateWif(keyRole, type, field, newValue);
+		// if (!this.props.privateKeys[field]) {
+		// 	this.props.setWif(keyRole, type, {
+		// 		target: {
+		// 			name: field,
+		// 			value: '',
+		// 		},
+		// 	});
+		// }
 	}
 
 	setWeight(keyRole, type, e) {
@@ -375,6 +375,7 @@ ViewModeTable.propTypes = {
 	isChanged: PropTypes.func.isRequired,
 	setWif: PropTypes.func,
 	removeKey: PropTypes.func,
+	validateWif: PropTypes.func,
 };
 
 ViewModeTable.defaultProps = {
@@ -389,6 +390,7 @@ ViewModeTable.defaultProps = {
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,
 	addPublicKeyButtonTooltipText: null,
+	validateWif: () => {},
 };
 
 

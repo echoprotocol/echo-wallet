@@ -243,6 +243,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
 	} else if (type === 'keys') {
 		if (!isPublicKey(key.value, 'ECHO')) {
+			error = true;
 			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
 		}
 	} else {
