@@ -18,14 +18,16 @@ class ModalBackup extends React.Component {
 		const keysData = [];
 
 		keys.forEach((keyItem, keyIndex) => {
-			if (keyItem) {
-				if (keyItem.publicKey) {
-					keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}${(keyIndex !== (keys.length - 1) && keyItem.wif === undefined) && '\n---------------------------------------'}`);
-				}
-				if (keyItem.wif) {
-					keysData.push(`\n\nWIF ${keyIndex + 1}\n${keyItem.wif}${keyIndex !== (keys.length - 1) && '\n---------------------------------------'}`);
-				}
+
+			keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}`);
+			if (keyItem.wif) {
+				keysData.push(`\n\nWIF ${keyIndex + 1}\n${keyItem.wif}`);
 			}
+
+			if (keyIndex !== (keys.length - 1)) {
+				keysData.push('---------------------------------------');
+			}
+
 		});
 
 		const keysDataString = keysData.join('\n');
