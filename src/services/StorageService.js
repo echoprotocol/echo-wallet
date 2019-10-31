@@ -152,8 +152,6 @@ class StorageService {
 
 		await this.saveDb(newDB);
 
-		console.info(`[DB] Created. DB: ${ENCRYPTED_DB_NAME}`);
-
 		return true;
 	}
 
