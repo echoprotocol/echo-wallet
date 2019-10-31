@@ -155,10 +155,12 @@ class Permissions extends React.Component {
 				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 				const key = form.getIn([keyRole, type, field, 'key']);
 				if (key && key.value) {
-					if (isPublicKey(key.value) && key.value !== publicKey) {
-						newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
-					} else {
-						this.props.setValue([keyRole, type, field, 'hasWif'], true);
+					if (isPublicKey(key.value)) {
+						if (key.value !== publicKey) {
+							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+						} else {
+							this.props.setValue([keyRole, type, field, 'hasWif'], true);
+						}
 					}
 				} else {
 					this.props.setValue([keyRole, type, field, 'key'], publicKey);
@@ -170,6 +172,41 @@ class Permissions extends React.Component {
 		} catch (e) {
 			newPrivateKeys[keyRole][field].error = 'Invalide private key';
 			newPrivateKeys[keyRole][field].value = wif;
+			this.props.setValue([keyRole, type, field, 'hasWif'], false);
+			this.setState({ privateKeys: newPrivateKeys });
+		}
+	}
+
+	validateWif(keyRole, type, field, key) {
+		const { privateKeys } = this.state;
+
+		const newPrivateKeys = { ...privateKeys };
+		if (!newPrivateKeys[keyRole][field]) {
+			newPrivateKeys[keyRole][field] = { value: '', type: keyRole, error: '' };
+		}
+
+		newPrivateKeys[keyRole][field].error = '';
+
+		const wif = newPrivateKeys[keyRole][field].value;
+
+		try {
+			if (wif) {
+				const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+				if (key) {
+					if (isPublicKey(key)) {
+						if (key !== publicKey) {
+							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+						} else {
+							this.props.setValue([keyRole, type, field, 'hasWif'], true);
+						}
+					}
+				}
+			} else {
+				this.props.setValue([keyRole, type, field, 'hasWif'], false);
+			}
+			this.setState({ privateKeys: newPrivateKeys });
+		} catch (e) {
+			newPrivateKeys[keyRole][field].error = 'Invalide private key';
 			this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			this.setState({ privateKeys: newPrivateKeys });
 		}
@@ -381,6 +418,7 @@ class Permissions extends React.Component {
 					firstFetch={firstFetch}
 					setWif={(keyRole, type, e) => this.setWif(keyRole, type, e)}
 					removeKey={(fields) => this.props.removeKey(fields)}
+					validateWif={(keyRole, type, field, key) => this.validateWif(keyRole, type, field, key)}
 				/>
 				<EditModeTable
 					keyRole="echoRand"
