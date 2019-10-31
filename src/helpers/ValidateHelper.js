@@ -7,6 +7,7 @@ import {
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
 	PUBLIC_KEY_LENGTH,
+	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
 const reg = /^[0-9a-fA-F]+$/;
@@ -441,7 +442,9 @@ export const isAccountId = (v) => accountIdRegex.test(v);
  * @returns {(Boolean | String)}
  */
 export const isPublicKey = (v, addressPrefix = ADDRESS_PREFIX) => {
-	if (typeof v !== 'string' || v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length)) return false;
+	if (typeof v !== 'string' ||
+		(v.length !== (PUBLIC_KEY_LENGTH + addressPrefix.length) &&
+		v.length !== (PUBLIC_KEY_LENGTH_43 + addressPrefix.length))) return false;
 
 	const prefix = v.slice(0, addressPrefix.length);
 
