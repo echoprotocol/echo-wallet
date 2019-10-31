@@ -94,6 +94,13 @@ class ViewModeTable extends React.Component {
 		this.props.setValue([keyRole, field], newValue);
 	}
 
+	goToExternalLink(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
+	}
+
 	addNewField(num, type) {
 		const { keyRole } = this.props;
 		const { addedFields } = this.state;
@@ -138,6 +145,7 @@ class ViewModeTable extends React.Component {
 						className="list-header-link"
 						href={headerLinkUrl}
 						target="_blank"
+						onClick={(e) => this.goToExternalLink(e, headerLinkUrl)}
 						rel="noreferrer noopener"
 					>
 						{headerLinkText}
