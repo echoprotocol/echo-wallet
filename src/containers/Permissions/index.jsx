@@ -362,7 +362,6 @@ class Permissions extends React.Component {
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
 		};
-		console.log(form.keys);
 		return (
 			<React.Fragment>
 				<EditModeTable
