@@ -623,7 +623,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @param {*} password
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const sendTransaction = (password) => async (dispatch, getState) => {
+export const sendTransaction = (password, onSuccess = () => {}) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
@@ -663,6 +663,7 @@ export const sendTransaction = (password) => async (dispatch, getState) => {
 
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
+			onSuccess();
 		}).catch((error) => {
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);

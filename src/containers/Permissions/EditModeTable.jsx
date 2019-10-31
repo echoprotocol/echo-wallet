@@ -33,7 +33,7 @@ class ViewModeTable extends React.Component {
 
 		if (
 			(firstFetch !== prevFetch && firstFetch) ||
-			(data.keys.length !== prevProps.data.keys.length)
+			(!_.isEqual(data.keys, prevProps.data.keys))
 		) {
 			data.keys.forEach((k) => {
 				this.props.setValue([keyRole, k.type, k.key, 'key'], k.key);
@@ -61,10 +61,19 @@ class ViewModeTable extends React.Component {
 		this.props.setWif(keyRole, type, { target: { name: key, value: '' } });
 	}
 
-	setPublicKey(keyRole, e) {
+	setPublicKey(keyRole, type, e) {
 		const field = e.target.name;
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
+
+		if (!this.props.privateKeys[field]) {
+			this.props.setWif(keyRole, type, {
+				target: {
+					name: field,
+					value: '',
+				},
+			});
+		}
 	}
 
 	setWeight(keyRole, type, e) {
@@ -102,13 +111,17 @@ class ViewModeTable extends React.Component {
 		const { keyRole } = this.props;
 		const { addedFields } = this.state;
 
-		this.props.removeKey([keyRole, type, num.toString()]);
 
 		addedFields.splice(addedFields.findIndex((o) => o.num === num), 1);
 
-		this.setState({ addedFields });
+		this.setState({ addedFields }, () => {
+			this.props.setWif(keyRole, type, { target: { name: num.toString(), value: '' } });
 
-		this.props.setWif(keyRole, type, { target: { name: num.toString(), value: '' } });
+			setTimeout(() => {
+				this.props.removeKey([keyRole, type, num.toString()]);
+			}, 0);
+		});
+
 	}
 
 	renderDescription() {
@@ -211,9 +224,8 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.onRemoveOriginField(k.key, type)}
-									validateField={() => {}}
 									setWif={(e) => setWif(keyRole, type, e)}
-									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
 									showRemove={keysLength > 1}
@@ -238,7 +250,6 @@ class ViewModeTable extends React.Component {
 		const {
 			privateKeys, setWif,
 		} = this.props;
-
 		return (
 			<div className="list">
 				<React.Fragment>
@@ -259,9 +270,8 @@ class ViewModeTable extends React.Component {
 									type={type}
 									keyRole={keyRole}
 									removeKey={() => this.removeField(num, type)}
-									validateField={() => {}}
 									setWif={(e) => setWif(keyRole, type, e)}
-									setPublicKey={(e) => this.setPublicKey(keyRole, e)}
+									setPublicKey={(e) => this.setPublicKey(keyRole, type, e)}
 									setWeight={(e) => this.setWeight(keyRole, type, e)}
 									setAccount={(e) => this.setAccount(keyRole, e)}
 									showRemove={keysLength > 1}
@@ -367,8 +377,8 @@ ViewModeTable.defaultProps = {
 	title: null,
 	headerLinkText: null,
 	headerLinkUrl: null,
-	setWif: () => {},
-	removeKey: () => {},
+	setWif: () => { },
+	removeKey: () => { },
 	addAccountButtonText: null,
 	addAccountButtonTooltipText: null,
 	addPublicKeyButtonText: null,
