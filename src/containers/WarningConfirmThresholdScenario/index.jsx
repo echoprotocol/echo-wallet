@@ -261,7 +261,7 @@ WarningConfirmThresholdScenario.propTypes = {
 WarningConfirmThresholdScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
-	onUnlock: () => { },
+	onUnlock: () => {},
 };
 
 export default connect(

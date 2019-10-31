@@ -47,9 +47,14 @@ class BackupKeysScenario extends React.Component {
 
 		const userStorage = Services.getUserStorage();
 
+		const activeUserKeys = await Promise.all(keys.map(async (keyItem) => {
+			const wif = await userStorage.getWIFByPublicKey(keyItem.key, { password });
+			if (!wif) {
+				return { publicKey: keyItem.key };
+			}
 
-		const activeUserKeys = await Promise.all(keys.map((keyItem) =>
-			userStorage.getWIFByPublicKey(keyItem.key, { password })));
+			return wif;
+		}));
 
 		this.setState((prevState) => ({
 			...prevState,

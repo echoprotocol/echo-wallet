@@ -33,7 +33,7 @@ class ViewModeTable extends React.Component {
 
 		if (
 			(firstFetch !== prevFetch && firstFetch) ||
-			(data.keys.length !== prevProps.data.keys.length)
+			(!_.isEqual(data.keys, prevProps.data.keys))
 		) {
 			data.keys.forEach((k) => {
 				this.props.setValue([keyRole, k.type, k.key, 'key'], k.key);
@@ -65,23 +65,15 @@ class ViewModeTable extends React.Component {
 		const field = e.target.name;
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
-		setTimeout(() => {
-			if (this.props.privateKeys[field]) {
-				this.props.setWif(keyRole, type, {
-					target: {
-						name: field,
-						value: this.props.privateKeys[field].value,
-					},
-				});
-			} else {
-				this.props.setWif(keyRole, type, {
-					target: {
-						name: field,
-						value: '',
-					},
-				});
-			}
-		}, 0);
+
+		if (!this.props.privateKeys[field]) {
+			this.props.setWif(keyRole, type, {
+				target: {
+					name: field,
+					value: '',
+				},
+			});
+		}
 	}
 
 	setWeight(keyRole, type, e) {

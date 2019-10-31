@@ -24,8 +24,6 @@ class Storage {
 				db.createObjectStore(store);
 			},
 		});
-
-		console.info('[DB] Inited');
 	}
 
 	/**

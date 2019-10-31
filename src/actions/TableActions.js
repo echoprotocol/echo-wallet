@@ -521,7 +521,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		validateFields.push(validatePrivateKeys(privateKeys));
 
 		const errors = await Promise.all(validateFields);
-		console.log(errors);
+
 		if (errors.includes(true)) {
 			return { validation: false, isWifChangingOnly: false };
 		}
