@@ -242,6 +242,7 @@ class Permissions extends React.Component {
 					this.props.set('isEditMode', true);
 				} else if (mode === FORM_PERMISSION_MODE_VIEW) {
 					this.props.set('isEditMode', false);
+					this.clear();
 				}
 			}
 		);
