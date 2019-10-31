@@ -237,6 +237,14 @@
 	.field {
 		display: flex;
 		align-items: center;
+		&.error {
+			input:hover,
+			input:focus,
+			input:active,
+			input {
+				border-color: $err-red;
+			}
+		}
 	}
 	.icon-info {
 		color: rgb(174, 180, 192);
@@ -258,6 +266,14 @@
 		color: #3B3B3B;
 		padding: 0 10px;
 		border-color: #DDDDDD;
+	}
+
+	.error-message {
+		white-space: nowrap;
+		border-radius: 4px;
+		top: calc(100% + 3px);
+		right: -4px;
+		padding-top: 2px;
 	}
 }
 

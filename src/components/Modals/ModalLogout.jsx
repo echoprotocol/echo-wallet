@@ -115,7 +115,7 @@ class ModalLogout extends React.Component {
 								/>
 								<Button
 									basic
-									type="button"
+									type="submit"
 									className="main-btn"
 									onClick={() => this.onConfirm()}
 									content="Confirm"

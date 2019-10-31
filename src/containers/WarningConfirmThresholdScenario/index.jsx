@@ -1,30 +1,35 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import BN from 'bignumber.js';
+
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
-import ModalConfirmChangeTreshold from '../../components/Modals/ModalConfirmChangeTreshold';
+import ModalConfirmEditingOfPermissions from '../../components/Modals/ModalConfirmEditingOfPermissions';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_CHANGE_TRESHOLD } from '../../constants/ModalConstants';
-import { PERMISSION_TABLE } from '../../constants/TableConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_EDITING_OF_PERMISSIONS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
+
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
-import { FORM_PERMISSION_KEY } from '../../constants/FormConstants';
-import { toastError } from '../../helpers/ToastHelper';
-import { checkKeyWeightWarning } from '../../actions/BalanceActions';
+import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR } from '../../constants/FormConstants';
+import { setInFormError } from '../../actions/FormActions';
 
-class WarningConfirmThresholScenario extends React.Component {
+class WarningConfirmThresholdScenario extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.DEFAULT_STATE = {
 			password: '',
+			warningMessage: '',
+			echoRandMessage: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -44,28 +49,50 @@ class WarningConfirmThresholScenario extends React.Component {
 		if (!isValid) {
 			return;
 		}
-		const nextTreshold = this.props.treshold.value;
-		let { permissionsKeys } = this.props;
-		const { network, account } = this.props;
-		const accountId = account.toJS().id;
-		permissionsKeys = permissionsKeys.toJS();
-		const activeKeysData = {
-			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
-			threshold: permissionsKeys.active.threshold,
-		};
-		const maxNextThreshold = activeKeysData.keys
-			.reduce((accumulator, currentKey) => accumulator + currentKey.weight, 0);
-		if (maxNextThreshold < nextTreshold) {
-			this.props.closeModal(MODAL_UNLOCK);
-			toastError('Threshold is too big. You do not have that much private key weight');
-		} else {
-			const isNextThresholdGood =
-                !(await this.props.checkThreshold(network, accountId, nextTreshold));
-			if (isNextThresholdGood) {
-				this.props.openModal(MODAL_UNLOCK);
-			} else {
-				this.props.openModal(MODAL_CONFIRM_CHANGE_TRESHOLD);
+		const permissionsKeys = this.props.form.toJS();
+		const network = this.props.network.toJS();
+		const accs = JSON.parse(localStorage.getItem(`accounts_${network.name}`));
+		const nextTreshold = new BN(this.props.treshold.value);
+		const { keys, accounts } = permissionsKeys.active;
+		let enoughNextThreshold = new BN(0);
+		let maxNextValue = new BN(0);
+		for (const key in keys) {
+			maxNextValue = maxNextValue.plus(keys[key].weight.value);
+			if (keys[key].hasWif && keys[key].hasWif.value) {
+				enoughNextThreshold = enoughNextThreshold.plus(keys[key].weight.value);
 			}
+		}
+		for (const account in accounts) {
+			maxNextValue = maxNextValue.plus(accounts[account].weight.value);
+			for (let i = 0; i < accs.length; i += 1) {
+				if (accs[i].name === account) {
+					enoughNextThreshold =
+						enoughNextThreshold.plus(accounts[account].weight.value);
+				}
+			}
+		}
+		const { echoRand } = permissionsKeys;
+		for (const key in echoRand.keys) {
+			if (!echoRand.keys[key].hasWif.value) {
+				this.setState({
+					echoRandMessage:
+						'You removed your EchoRand Key and after submitting this action you will lose access to it.',
+				});
+			}
+		}
+		if (maxNextValue.lt(nextTreshold)) {
+			this.props.closeModal(MODAL_UNLOCK);
+			this.props.setInFormError();
+			return;
+		} else if (nextTreshold.gt(enoughNextThreshold)) {
+			this.setState({
+				warningMessage: 'If these changes are applied, you won\'t have enough keys to sign transactions. Do you want to proceed?',
+			});
+		}
+		if (this.state.warningMessage || this.state.echoRandMessage) {
+			this.props.openModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
+		} else {
+			this.props.openModal(MODAL_UNLOCK);
 		}
 		if (typeof onFinish === 'function') {
 			onFinish();
@@ -116,16 +143,20 @@ class WarningConfirmThresholScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
-			[MODAL_CONFIRM_CHANGE_TRESHOLD]: modalConfirmChangeTreshold,
+			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmEditingOfPermissions,
 		} = this.props;
-
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
-				<ModalConfirmChangeTreshold
-					show={modalConfirmChangeTreshold.get('show')}
-					confirm={() => this.open(MODAL_CONFIRM_CHANGE_TRESHOLD)}
-					close={() => this.close(MODAL_CONFIRM_CHANGE_TRESHOLD)}
+				<ModalConfirmEditingOfPermissions
+					show={modalConfirmEditingOfPermissions.get('show')}
+					confirm={() => {
+						this.open(MODAL_UNLOCK);
+						this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
+					}}
+					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
+					warningMessage={this.state.warningMessage}
+					echoRandMessage={this.state.echoRandMessage}
 				/>
 				<ModalUnlock
 					show={modalUnlock.get('show')}
@@ -133,7 +164,7 @@ class WarningConfirmThresholScenario extends React.Component {
 					error={modalUnlock.get('error')}
 					password={this.state.password}
 					change={(value) => this.change(value)}
-					unlock={() => this.unlock(true)}
+					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
 					close={() => this.close(MODAL_UNLOCK)}
 				/>
@@ -151,11 +182,12 @@ class WarningConfirmThresholScenario extends React.Component {
 
 }
 
-WarningConfirmThresholScenario.propTypes = {
+WarningConfirmThresholdScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	children: PropTypes.func.isRequired,
 
 	operation: PropTypes.string,
+	network: PropTypes.object.isRequired,
 	showOptions: PropTypes.object,
 	[MODAL_UNLOCK]: PropTypes.object.isRequired,
 	[MODAL_DETAILS]: PropTypes.object.isRequired,
@@ -164,32 +196,29 @@ WarningConfirmThresholScenario.propTypes = {
 	clearError: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
 	sendTransaction: PropTypes.func.isRequired,
-	checkThreshold: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
-	permissionsKeys: PropTypes.object.isRequired,
+	setInFormError: PropTypes.func.isRequired,
 	treshold: PropTypes.object.isRequired,
-	account: PropTypes.object.isRequired,
-	network: PropTypes.string.isRequired,
+	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
 };
 
-WarningConfirmThresholScenario.defaultProps = {
+WarningConfirmThresholdScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
-	onUnlock: () => {},
+	onUnlock: () => { },
 };
 
 export default connect(
 	(state) => ({
 		operation: state.transaction.get('operation'),
 		showOptions: state.transaction.get('showOptions'),
+		form: state.form.get(FORM_PERMISSION_KEY),
 		treshold: state.form.getIn([FORM_PERMISSION_KEY, 'active', 'threshold']),
-		permissionsKeys: state.table.get(PERMISSION_TABLE),
-		account: state.global.getIn(['activeUser']),
-		network: state.global.getIn(['network', 'name']),
+		network: state.global.getIn(['network']),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
-		[MODAL_CONFIRM_CHANGE_TRESHOLD]: state.modal.get(MODAL_CONFIRM_CHANGE_TRESHOLD),
+		[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: state.modal.get(MODAL_CONFIRM_EDITING_OF_PERMISSIONS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -197,8 +226,7 @@ export default connect(
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
 		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
+		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
 		resetTransaction: () => dispatch(resetTransaction()),
-		checkThreshold: (network, accountId, nextTreshold) =>
-			dispatch(checkKeyWeightWarning(network, accountId, nextTreshold)),
 	}),
-)(WarningConfirmThresholScenario);
+)(WarningConfirmThresholdScenario);

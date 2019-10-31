@@ -14,5 +14,4 @@ export const MODAL_UNLOCK_VIEW_WIF = 'modal_unlock_view_wif';
 export const MODAL_UNLOCK_ADD_WIF = 'modal_unlock_add_wif';
 export const MODAL_BACKUP = 'modal_backup';
 export const MODAL_CONFIRM_EDITING_OF_PERMISSIONS = 'modal_confirm_editing_of_permissions';
-export const MODAL_CONFIRM_CHANGE_TRESHOLD = 'modal_confirm_check_treshold';
 export const PROPOSAL_ADD_WIF = 'modal_proposal_WIF';

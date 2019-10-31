@@ -15,11 +15,12 @@
 
 		button {
 			position: absolute;
-			right: 0;
-			top: 0;
-			bottom: 0;
+			right: 1px;
+			top: 1px;
+			bottom: 1px;
 			border: 0;
-			background-color: transparent;
+			border-top-right-radius: 0.285714rem;
+			border-bottom-right-radius: 0.285714rem;
 			color: rgba(#5C637D, .5);
 			cursor: pointer;
 			transition: color $speed;

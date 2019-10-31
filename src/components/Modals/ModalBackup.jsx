@@ -1,10 +1,6 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { closeModal } from '../../actions/ModalActions';
-import { MODAL_BACKUP } from '../../constants/ModalConstants';
 
 class ModalBackup extends React.Component {
 
@@ -23,7 +19,7 @@ class ModalBackup extends React.Component {
 
 		keys.forEach((keyItem, keyIndex) => {
 			keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}\n\n`);
-			keysData.push(`WIF ${keyIndex + 1}\n${keyItem.wif}\n---------------------------------------`);
+			keysData.push(`WIF ${keyIndex + 1}\n${keyItem.wif}${keyIndex !== (keys.length - 1) && '\n---------------------------------------'}`);
 		});
 
 		const keysDataString = keysData.join('\n');
@@ -56,7 +52,7 @@ class ModalBackup extends React.Component {
 							placeholder="Account name"
 							disabled
 							name="account-name"
-							value={activeUser.get('id')}
+							value={activeUser.get('name')}
 						/>
 					</Form.Field>
 					<Form.Field>
@@ -66,7 +62,7 @@ class ModalBackup extends React.Component {
 							placeholder="ID account"
 							disabled
 							name="id-account"
-							value={activeUser.get('name')}
+							value={activeUser.get('id')}
 						/>
 					</Form.Field>
 					<Form.Field>
@@ -79,7 +75,7 @@ class ModalBackup extends React.Component {
 							readOnly
 						/>
 						<span className="warning-message">
-							Warning: Anyone who has access to your private key can steal all your Echo
+							Warning: Anyone who has access to your WIF can steal all your Echo
 							assets and this key can never be recovered if you lose it.
 						</span>
 					</Form.Field>
@@ -115,11 +111,4 @@ ModalBackup.defaultProps = {
 };
 
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_BACKUP, 'show']),
-	}),
-	(dispatch) => ({
-		close: () => dispatch(closeModal(MODAL_BACKUP)),
-	}),
-)(ModalBackup);
+export default ModalBackup;
