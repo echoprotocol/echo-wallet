@@ -66,14 +66,6 @@ class ViewModeTable extends React.Component {
 		const newValue = e.target.value;
 		this.props.setValue([keyRole, 'keys', field, 'key'], newValue);
 		this.props.validateWif(keyRole, type, field, newValue);
-		// if (!this.props.privateKeys[field]) {
-		// 	this.props.setWif(keyRole, type, {
-		// 		target: {
-		// 			name: field,
-		// 			value: '',
-		// 		},
-		// 	});
-		// }
 	}
 
 	setWeight(keyRole, type, e) {
