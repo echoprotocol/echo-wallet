@@ -165,8 +165,6 @@ class UserStorageService {
 		network.addKey(key);
 
 		await this.updateDB(decryptedData, params);
-
-		console.info(`[DB] Key added. Public Key: ${JSON.stringify(key.publicKey)}. Network: ${networkId}`);
 	}
 
 	/**
@@ -185,8 +183,6 @@ class UserStorageService {
 		network.updateKeys(keys);
 
 		await this.updateDB(decryptedData, params);
-
-		console.info(`[DB] Keys updated. Public Keys: ${JSON.stringify(keys)}. Network: ${networkId}`);
 	}
 
 	/**
@@ -207,8 +203,6 @@ class UserStorageService {
 		network.updateKeys(resultKeys);
 
 		await this.updateDB(decryptedData, params);
-
-		console.info(`[DB] Keys removed. Public Keys: ${JSON.stringify(keys)}. Network: ${networkId}`);
 	}
 
 	/**

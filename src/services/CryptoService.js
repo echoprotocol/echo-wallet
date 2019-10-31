@@ -86,9 +86,7 @@ class CryptoService {
 					}
 
 					if (key) {
-						console.info(`[SCRYPT] Creation time ${Date.now() - t1}`);
 						return resolve(Buffer.from(key).toString('hex'));
-
 					}
 
 					return false;
