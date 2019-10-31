@@ -69,7 +69,6 @@ class CryptoService {
 			const passwordHash = crypto.createHash('sha256').update(password, 'utf8').digest('hex');
 			const passwordHashBuffer = Buffer.from(passwordHash, 'hex');
 			const saltBuffer = Buffer.from(header.salt, 'hex');
-			const t1 = Date.now();
 
 			scrypt(
 				passwordHashBuffer,
