@@ -164,6 +164,7 @@ class Permissions extends React.Component {
 					}
 				} else {
 					this.props.setValue([keyRole, type, field, 'key'], publicKey);
+					this.props.setValue([keyRole, type, field, 'hasWif'], true);
 				}
 			} else {
 				this.props.setValue([keyRole, type, field, 'hasWif'], false);
