@@ -1,5 +1,6 @@
 import utf8 from 'utf8';
 import BN from 'bignumber.js';
+import { constants } from 'echojs-lib';
 
 import operations from '../constants/Operations';
 
@@ -75,7 +76,7 @@ export const toIntBN = (hex) => new BN(hex, 16).toString(10);
  */
 export const toID = (hex) => {
 	const isContract = !!toInt(hex.slice(0, 26), 16);
-	return `1.${isContract ? 16 : 2}.${new BN(hex.substr(26), 16)}`;
+	return `1.${isContract ? constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT : 2}.${new BN(hex.substr(26), 16)}`;
 };
 
 /**
