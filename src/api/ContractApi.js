@@ -18,7 +18,7 @@ export const getTokenBalance = async (accountId, contractId) => {
 	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		ECHO_ASSET_ID,
+		{ amount: 0, asset_id: ECHO_ASSET_ID },
 		getMethod(method, args),
 	);
 
@@ -37,7 +37,7 @@ export const getTokenSymbol = async (accountId, contractId) => {
 	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		ECHO_ASSET_ID,
+		{ amount: 0, asset_id: ECHO_ASSET_ID },
 		getMethod(method),
 	);
 
@@ -56,7 +56,7 @@ export const getTokenPrecision = async (accountId, contractId) => {
 	const result = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		ECHO_ASSET_ID,
+		{ amount: 0, asset_id: ECHO_ASSET_ID },
 		getMethod(method),
 	);
 
