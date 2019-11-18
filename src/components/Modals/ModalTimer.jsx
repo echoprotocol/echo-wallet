@@ -54,7 +54,7 @@ class ModalTimer extends React.Component {
 		return this.state.timerComplete ? null : <span> {seconds} </span>;
 	}
 	renderModalHeader() {
-		const { warningTextValue, warningTextChackbox, warningTime } = this.props;
+		const { warningTextValue, warningTextCheckbox, warningTime } = this.props;
 		return (
 			<React.Fragment>
 				<h3>
@@ -72,7 +72,7 @@ class ModalTimer extends React.Component {
 				<h4>{warningTextValue}</h4>
 				<input type="checkbox" id="agree" onChange={(e) => this.onCheck(e)} />
 				<label className="label" htmlFor="agree" >
-					<span className="label-text">{warningTextChackbox}</span>
+					<span className="label-text">{warningTextCheckbox}</span>
 				</label>
 			</React.Fragment>
 		);
@@ -153,7 +153,7 @@ ModalTimer.propTypes = {
 	close: PropTypes.func.isRequired,
 	title: PropTypes.string,
 	warningTextValue: PropTypes.string,
-	warningTextChackbox: PropTypes.string,
+	warningTextCheckbox: PropTypes.string,
 	warningTime: PropTypes.number,
 };
 
@@ -163,7 +163,7 @@ ModalTimer.defaultProps = {
 	error: null,
 	title: 'Unlock Wallet',
 	warningTextValue: '',
-	warningTextChackbox: '',
+	warningTextCheckbox: '',
 	warningTime: 0,
 };
 

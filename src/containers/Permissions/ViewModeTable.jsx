@@ -32,6 +32,13 @@ class ViewModeTable extends React.Component {
 		}
 	}
 
+	goToExternalLink(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
+	}
+
 	renderDescription() {
 		const { description, headerLinkText, headerLinkUrl } = this.props;
 
@@ -51,6 +58,7 @@ class ViewModeTable extends React.Component {
 						className="list-header-link"
 						href={headerLinkUrl}
 						target="_blank"
+						onClick={(e) => this.goToExternalLink(e, headerLinkUrl)}
 						rel="noreferrer noopener"
 					>
 						{headerLinkText}
@@ -127,7 +135,7 @@ class ViewModeTable extends React.Component {
 											type={type}
 											hasWif={hasWif}
 											keyRole={keyRole}
-											addWif={addWif}
+											addWif={(publicKey) => addWif(publicKey, keyRole)}
 											showWif={showWif}
 										/>
 									);

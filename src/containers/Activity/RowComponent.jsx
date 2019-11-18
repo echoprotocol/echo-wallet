@@ -78,7 +78,7 @@ class RowComponent extends React.Component {
 									{value.amount && value.precision ?
 										formatAmount(value.amount, value.precision) : value.amount}
 								</span>
-								<span>{value.amount && value.symbol}</span>
+								<span>{Number.isInteger(Number(value.amount)) && value.symbol}</span>
 							</span>
 						) : null
 					}

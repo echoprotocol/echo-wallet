@@ -29,65 +29,65 @@
 }
 
 .form-info {
-	display: flex;
-	align-items: center;
-	width: 100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
 
-	.back-link {
-		background-color: transparent;
-		border: 0;
-		margin-right: -48px;
-		transform: translate(0);
-		color: rgb(156, 160, 176);
-		display: flex;
-		align-items: center;
-		line-height: 25px;
-		text-transform: uppercase;
-		font-family: proximanovaSemibold;
-		cursor: pointer;
-		padding: 0;
-		font-size: 12px;
-		font-weight: 400;
+    .back-link {
+        background-color: transparent;
+        border: 0;
+        margin-right: -48px;
+        transform: translate(0);
+        color: rgb(156, 160, 176);
+        display: flex;
+        align-items: center;
+        line-height: 25px;
+        text-transform: uppercase;
+        font-family: proximanovaSemibold;
+        cursor: pointer;
+        padding: 0;
+        font-size: 12px;
+        font-weight: 400;
 
-		&:focus {
-			&:not(:active) {
-				.icon-back {
-					@include on-focus(2px);
-				}
-			}
-		}
+        &:focus {
+            &:not(:active) {
+                .icon-back {
+                    @include on-focus(2px);
+                }
+            }
+        }
 
-		&:hover {
-			.icon-back {
-				color: $main-сolor;
-			}
-		}
+        &:hover {
+            .icon-back {
+                color: $main-сolor;
+            }
+        }
 
-		.icon-back {
-			transition: color $speed;
-			margin: -2px 5px 0 -5px;
-			padding: 5px 6px 5px 5px;
-			border-radius: $angulars;
-		}
-	}
+        .icon-back {
+            transition: color $speed;
+            margin: -2px 5px 0 -5px;
+            padding: 5px 6px 5px 5px;
+            border-radius: $angulars;
+        }
+    }
 
-	h3 {
-		font-size: 1.428571429em;
-		margin: 0 auto;
-		text-align: center;
-		margin-top: -4px;
-		padding: 0 0 1px 1px;
-	}
+    h3 {
+        font-size: 1.428571429em;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: -4px;
+        padding: 0 0 1px 1px;
+    }
 }
 
 .form-info-description {
-	font-size: 14px;
-	font-family: proxima;
-	font-weight: 400;
-	color: rgba(59, 59, 59, 0.8);
-	line-height: 1.429;
-	text-align: center;
-	max-width: 432px;
+    font-size: 14px;
+    font-family: proxima;
+    font-weight: 400;
+    color: rgba(59, 59, 59, 0.8);
+    line-height: 1.429;
+    text-align: center;
+    max-width: 432px;
 }
 
 .form {
@@ -140,15 +140,13 @@
             .button[type=submit],
             .button[type=button] {
                 margin: 0 0 0 auto;
+                width: 160px;
 
                 &:not(:last-child) {
                     margin-right: 20px;
                 }
             }
 
-            .button[type=button] {
-                width: 160px;
-            }
 
             .sign-nav {
                 margin: 0 auto 0 0;
@@ -464,43 +462,44 @@
 
 
 .error-wrap {
-	position: relative;
-	margin-bottom: 25px;
-	&.error {
-		.error-message {
-			display: block;
-		}
+    position: relative;
+    margin-bottom: 25px;
 
-		input,
-		textarea {
-			border-color: $err-red !important;
-		}
-	}
+    &.error {
+        .error-message {
+            display: block;
+        }
+
+        input,
+        textarea {
+            border-color: $err-red !important;
+        }
+    }
 }
 
 .error-message {
-	display: none;
-	position: absolute;
-	right: 0;
-	margin-right: 3px;
-	background-color: $err-red;
-	padding: 0 5px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	font-size: 12px;
-	color: $white;
-	animation: fadeIn .3s;
-	line-height: 1.1;
-	z-index: 5;
+    display: none;
+    position: absolute;
+    right: 0;
+    margin-right: 3px;
+    background-color: $err-red;
+    padding: 0 5px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    font-size: 12px;
+    color: $white;
+    animation: fadeIn .3s;
+    line-height: 1.1;
+    z-index: 5;
 }
 
 .warning-message {
-	display: block;
-	margin-top: 4px;
-	font-size: 12px;
-	line-height: 16px;
-	font-weight: 500;
-	color: #EE851C;
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    color: #EE851C;
 }
 
 

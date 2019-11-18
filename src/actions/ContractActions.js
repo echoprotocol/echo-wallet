@@ -89,7 +89,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	}
 
 	if (idError) {
-		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', idError));
+		dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
 		return;
 	}
 
@@ -339,7 +339,7 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 	const queryResult = await echo.api.callContractNoChangingState(
 		contractId,
 		accountId,
-		ECHO_ASSET_ID,
+		{ amount: 0, asset_id: ECHO_ASSET_ID },
 		getMethod(method, args),
 	);
 
@@ -396,7 +396,7 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 		const constantValue = await echo.api.callContractNoChangingState(
 			contractId,
 			accountId,
-			ECHO_ASSET_ID,
+			{ amount: 0, asset_id: ECHO_ASSET_ID },
 			method,
 		);
 		constant.constantValue = constantValue.substr(-64);
@@ -496,4 +496,3 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
 	return fee;
 };
-

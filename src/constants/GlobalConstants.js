@@ -60,6 +60,7 @@ export const HEADER_TITLE = [
 export const SORT_CONTRACTS = 'contracts';
 export const ADDRESS_PREFIX = 'ECHO';
 export const PUBLIC_KEY_LENGTH = 44;
+export const PUBLIC_KEY_LENGTH_43 = 43;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
 export const CONTRACT_ID_PREFIX = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT}`;

@@ -165,8 +165,24 @@ class UserStorageService {
 		network.addKey(key);
 
 		await this.updateDB(decryptedData, params);
+	}
 
-		console.info(`[DB] Key added. Public Key: ${JSON.stringify(key.publicKey)}. Network: ${networkId}`);
+	/**
+	 * @method updateKeys
+	 * @param {Array<Key>} keys
+	 * @param {Array} params
+	 * @return {Promise.<void>}
+	 */
+	async updateKeys(keys, params) {
+		this.checkNetwork();
+
+		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
+		const networkId = this.getNetworkId();
+		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
+
+		network.updateKeys(keys);
+
+		await this.updateDB(decryptedData, params);
 	}
 
 	/**
@@ -187,8 +203,6 @@ class UserStorageService {
 		network.updateKeys(resultKeys);
 
 		await this.updateDB(decryptedData, params);
-
-		console.info(`[DB] Keys removed. Public Keys: ${JSON.stringify(keys)}. Network: ${networkId}`);
 	}
 
 	/**
@@ -289,7 +303,6 @@ class UserStorageService {
 	 * @return {Promise.<Network>}
 	 */
 	async getNetworkFromDecryptedData(networkId, decryptedData) {
-
 		let network;
 
 		if (!decryptedData.data.networks) {
@@ -300,7 +313,8 @@ class UserStorageService {
 		} else {
 			const rawNetwork = decryptedData.data.networks[networkId];
 			network = Network
-				.create(rawNetwork.keys.map((key) => Key.create(key.publicKey, key.wif, key.accountId)));
+				.create(rawNetwork.keys.map((key) =>
+					Key.create(key.publicKey, key.wif, key.accountId, key.type)));
 		}
 
 		decryptedData.data.networks[networkId] = network;

@@ -3,7 +3,7 @@ import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage } from './GlobalActions';
+import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage, updateStorage } from './GlobalActions';
 
 import {
 	setFormValue,
@@ -28,6 +28,7 @@ import AuthApi from '../api/AuthApi';
 import Services from '../services';
 import Key from '../logic-components/db/models/key';
 import CryptoService from '../services/CryptoService';
+import { checkKeyWeightWarning } from './BalanceActions';
 
 /**
  * @method generateWIF
@@ -83,9 +84,14 @@ export const createAccount = ({
 
 		const userStorage = Services.getUserStorage();
 		const account = await echo.api.getAccountByName(accountName);
-		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id), { password });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
 
-		dispatch(addAccount(accountName, network.name, [publicKey]));
+		dispatch(addAccount(
+			accountName,
+			network.name,
+			[[publicKey, { active: true, echoRand: true }]],
+		));
 
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
@@ -100,14 +106,6 @@ export const createAccount = ({
  * @param {String} password
  * @return {Boolean}
  */
-const isAllWIFsAdded = async (account, password) => {
-	const userStorage = Services.getUserStorage();
-	const userWIFKeys = await userStorage.getAllWIFKeysForAccount(account.id, { password });
-	const userPublicKeys = account.active.key_auths;
-	const publicEchorandKey = account.echorand_key;
-	const isPrivateEchorandAdd = userWIFKeys.find((key) => key.publicKey === publicEchorandKey);
-	return ((userPublicKeys.length === userWIFKeys.length) && isPrivateEchorandAdd);
-};
 
 /**
  * @method authUser
@@ -156,16 +154,25 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 			return false;
 		}
 
-		await userStorage.addKey(Key.create(key.publicKey, wif, account.id), { password });
+		const keyAndType = [key.publicKey, {
+			active: true,
+			echoRand: key.publicKey === account.echorand_key,
+		}];
+
+		await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'active'), { password });
+
+		if (keyAndType[1].echoRand) {
+			await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRan'), { password });
+		}
 
 		if (!isAccountAdded(accountName, networkName)) {
-			dispatch(addAccount(accountName, networkName, [key.publicKey]));
+			dispatch(addAccount(accountName, networkName, [keyAndType]));
 		} else {
 			dispatch(initAccount(accountName, networkName));
 		}
 
-		const hasAllWIFs = await isAllWIFsAdded(account, password);
-		if (!hasAllWIFs) {
+		const hasWifWarning = await dispatch(checkKeyWeightWarning(networkName, account.id));
+		if (hasWifWarning) {
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 		return false;
@@ -383,36 +390,27 @@ export const asyncUnlock = (
 
 };
 
-/**
- *
- * @param {String} publicKey
- * @param {String} wif
- * @param {Object} account
- * @param {String} password
- * @returns {function(dispatch, getState): Promise<undefined>}
- */
-export const addWif = (
-	publicKey,
-	wif,
-	account,
-	password,
-) => async (dispatch, getState) => {
+export const editWifs = (keysData, account, password) => async (dispatch, getState) => {
 	const { id, name } = account;
 	const networkName = getState().global.getIn(['network', 'name']);
 	const userStorage = Services.getUserStorage();
-	if (!CryptoService.isWIF(wif)) {
-		throw Error('Invalid WIF');
-	}
+	const keys = keysData.map((keyData) => {
+		const { publicKey, wif, type } = keyData;
 
-	const privateKey = PrivateKey.fromWif(wif);
+		if (!CryptoService.isWIF(wif)) {
+			throw Error('Invalid WIF');
+		}
 
-	if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
-		throw Error('Wrong WIF');
-	}
+		const privateKey = PrivateKey.fromWif(wif);
 
-	await userStorage.addKey(Key.create(publicKey, wif, id), { password });
+		if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
+			throw Error('Wrong WIF');
+		}
+		return Key.create(publicKey, wif, id, type);
+	});
 
-	dispatch(saveWifToStorage(name, networkName, publicKey));
+	await userStorage.updateKeys(keys, { password });
+	dispatch(updateStorage(name, networkName, keys));
 };
 
 export const saveWifToDb = (
@@ -420,6 +418,7 @@ export const saveWifToDb = (
 	wif,
 	account,
 	password,
+	type,
 	callback = () => { },
 	modal = MODAL_ADD_WIF,
 ) => async (dispatch, getState) => {
@@ -438,10 +437,9 @@ export const saveWifToDb = (
 			dispatch(setError(modal, 'Wrong WIF'));
 			return;
 		}
+		await userStorage.addKey(Key.create(publicKey, wif, id, type), { password });
 
-		await userStorage.addKey(Key.create(publicKey, wif, id), { password });
-
-		dispatch(saveWifToStorage(name, networkName, publicKey));
+		dispatch(saveWifToStorage(name, networkName, publicKey, type));
 		callback();
 		dispatch(closeModal(modal));
 	} catch (err) {
