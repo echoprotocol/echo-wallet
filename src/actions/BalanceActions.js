@@ -30,6 +30,8 @@ import BalanceReducer from '../reducers/BalanceReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
+import TableReducer from '../reducers/TableReducer';
+import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -447,6 +449,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, accountId));
 
 	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
+	dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];

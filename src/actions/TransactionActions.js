@@ -48,6 +48,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
+import TableReducer from '../reducers/TableReducer';
 
 /**
  * @method resetTransaction
@@ -633,6 +634,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 		return;
 	}
 
+	setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false })), 20 * 1000);
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);

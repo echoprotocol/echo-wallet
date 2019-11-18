@@ -29,6 +29,7 @@ const DEFAULT_TABLE_FIELDS = {
 			type: '',
 			role: '',
 		},
+		showLoader: false,
 	}),
 	[COMMITTEE_TABLE]: Map({
 		active: List([]),
