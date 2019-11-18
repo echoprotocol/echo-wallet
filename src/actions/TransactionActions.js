@@ -75,23 +75,31 @@ export const setField = (field, value) => (dispatch) => {
  * @@returns {function(dispatch, getState): Promise<(Object | null)>}
  */
 const getTransactionFee = (form, type, options) => async (dispatch, getState) => {
+	console.log('getTransactionFee 11111')
 	try {
 		const { fee } = options;
+		console.log('getTransactionFee 222222')
 
 		const precision = getState()
 			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
+		console.log('getTransactionFee 333333', type, options);
 
 		let amount = await getOperationFee(type, options);
+		console.log('getTransactionFee 444444', amount);
 
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
 				.times(10 ** (precision - feeAsset.precision));
+				console.log('getTransactionFee 444444')
 
 			amount = new BN(amount).div(10 ** precision);
 			amount = price.times(amount).times(10 ** feeAsset.precision);
 		}
+
+	console.log('getTransactionFee 555555')
+
 
 		return {
 			value: new BN(amount).integerValue(BN.ROUND_UP).toString(10),
@@ -806,7 +814,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const bytecodeError = validateCode(bytecode.value);
+	const bytecodeError = validateCode(bytecode.value, true);
 
 	if (bytecodeError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
@@ -819,12 +827,15 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', 'Invalid contract ID'));
 		return false;
 	}
-
+	console.log('1111111')
 	dispatch(resetTransaction());
 
 	const { amount, currency } = form;
 
 	// if method payable check amount and currency
+	console.log('22222222')
+	console.log('currency ', currency)
+	console.log('fee ', fee)
 
 	if (!currency || !fee || !fee.value) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', 'Fee can\'t be calculated'));
@@ -834,6 +845,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	if (!amount) {
 		amount.value = 0;
 	}
+	console.log('3333333')
 
 	const assets = getState().balance.get('assets').toArray();
 
@@ -842,6 +854,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', feeError));
 		return false;
 	}
+	console.log('4444444')
 
 	let amountValue = 0;
 
@@ -853,6 +866,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		}
 		amountValue = amount.value * (10 ** currency.precision);
 	}
+	console.log('555555')
 
 	const options = {
 		fee: { asset_id: fee.asset.id, amount: fee.value },
@@ -861,14 +875,17 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		code: bytecode.value,
 		callee: id.value,
 	};
+	console.log('66666666')
 
 	const showOptions = {
 		from: activeUserName,
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 		code: bytecode.value,
 	};
+	console.log('77777777')
 
 	showOptions.value = `${amount.value} ${currency.symbol}`;
+	console.log('88888888')
 
 	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
 
@@ -937,6 +954,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		}
 	} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
 		const formValues = getState().form.get(FORM_CALL_CONTRACT_VIA_ID).toJS();
+		console.log('formValues ', formValues);
 		contractId = formValues.id.value || contractId;
 		bytecode = formValues.bytecode.value;
 
@@ -977,10 +995,13 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		callee: contractId,
 	};
 
+	console.log('options ', options);
+
 	let feeValue = null;
 	try {
 		feeValue = await dispatch(getTransactionFee(form, 'contract_call', options));
 	} catch (error) {
+		console.log('getTransactionFee error', error);
 		return null;
 	}
 

@@ -10,7 +10,16 @@ import operations from '../constants/Operations';
  */
 export const getOperationFee = async (type, options) => {
 	const { value: operationId } = operations[type];
-	const [result] = await echo.api.getRequiredFees([[operationId, options]], options.asset_id);
+
+	console.log('getOperationFee', operationId);
+	try {
+		const [result] = await echo.api.getRequiredFees([[operationId, options]], options.asset_id);
+		
+	} catch (error) {
+		console.log('resultresultresult', error);
+	}
+	const result = {};
+	console.log('getOperationFee', result);
 
 	switch (operationId) {
 		case operations.transfer.value: return result.amount;

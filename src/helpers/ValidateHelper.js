@@ -10,7 +10,7 @@ import {
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
-const reg = /^[0-9a-fA-F]+$/;
+const reg = /^(([\da-fA-F]){2})*$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
@@ -88,10 +88,11 @@ export const validateWIF = (wif) => {
 /**
  * @method validateCode
  * @param {String} code
+ * @param {Boolean} canBeEmpty
  * @returns {(String | null)}
  */
-export const validateCode = (code) => {
-	if (!code) {
+export const validateCode = (code, canBeEmpty = false) => {
+	if (!code && !canBeEmpty) {
 		return 'field should be not empty';
 	}
 
@@ -105,6 +106,7 @@ export const validateCode = (code) => {
 
 	return null;
 };
+
 
 /**
  * @method validateContractName
