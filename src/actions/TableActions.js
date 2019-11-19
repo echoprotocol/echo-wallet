@@ -422,7 +422,7 @@ const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 	for (let i = 0; i < Object.keys(newPrivateKeys).length; i += 1) {
 		if (!oldPrivateKeys[Object.keys(newPrivateKeys)[i]] &&
 			!newPrivateKeys[Object.keys(newPrivateKeys)[i]].value) {
-			delete newPrivateKeys[[Object.keys(newPrivateKeys)[i]]];
+			delete newPrivateKeys[Object.keys(newPrivateKeys)[i]];
 		}
 	}
 	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
