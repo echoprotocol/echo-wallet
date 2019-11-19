@@ -72,7 +72,7 @@ class RowComponent extends React.Component {
 				</Table.Cell>
 				<Table.Cell>
 					{
-						value ? (
+						value.amount ? (
 							<span className="ellips">
 								<span className="text-bold">
 									{value.amount && value.precision ?
