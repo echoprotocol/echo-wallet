@@ -30,6 +30,7 @@ import {
 	handleSubscriber,
 	resetBalance,
 	getPreviewBalances,
+	checkKeyWeightWarning,
 } from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
@@ -77,6 +78,9 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
+
+		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
+		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
