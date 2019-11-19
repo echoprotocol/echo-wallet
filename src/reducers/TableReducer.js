@@ -30,7 +30,6 @@ const DEFAULT_TABLE_FIELDS = {
 			role: '',
 		},
 		showLoader: false,
-		isWaitBlock: true,
 	}),
 	[COMMITTEE_TABLE]: Map({
 		active: List([]),
