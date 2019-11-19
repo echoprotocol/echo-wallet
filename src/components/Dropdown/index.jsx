@@ -59,9 +59,6 @@ DropdownComponent.propTypes = {
 
 DropdownComponent.defaultProps = {
 	index: null,
-};
-
-DropdownComponent.defaultProps = {
 	activeType: null,
 	data: null,
 	variativeOptions: null,

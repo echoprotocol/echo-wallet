@@ -1,6 +1,6 @@
 .sidebar {
     display: flex;
-
+	flex-direction: column;
     &.menu {
         background-color: $bg-gray;
     }

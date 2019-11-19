@@ -160,7 +160,6 @@ class ContractSettings extends React.Component {
 						<li className="name">
 							<span className="label">Name:</span>
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
-							{/* {this.renderChangeName()} */}
 						</li>
 						<li className="act">
 							<Button

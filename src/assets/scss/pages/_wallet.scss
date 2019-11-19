@@ -34,15 +34,6 @@
 }
 
 .send-wrap {
-    width: 100%;
-    max-height: calc(100vh - 120px);
-    overflow: overlay;
-    background-color: #FCFCFC;
-
-    @include max-vw(1000) {
-        padding: 0 20px;
-	}
-	
     .form-info {
         h3 {
             color: #5c637d;
@@ -53,14 +44,12 @@
             line-height: 26.4px;
         }
 
-        &+.field-wrap {
+        & + .field-wrap {
             margin-top: 15px;
             margin-left: 2px;
         }
     }
-
 }
-
 
 
 .balance-wrap {
@@ -100,7 +89,7 @@
 
 .currency-list {
 
-    &+.currency-title {
+    & + .currency-title {
         margin-top: 35px;
     }
 
@@ -189,4 +178,21 @@
         }
 
     }
+}
+
+.balance-wrap + div {
+    width: 100%;
+	max-height: calc(100vh - 122px);
+    overflow: overlay;
+    background-color: #FCFCFC;
+	
+
+    @include max-vw(1000) {
+		padding: 0 20px;
+	}
+
+	.send-wrap {
+		border-top: 2px solid rgba(#DEDEDE, 0.2);
+		margin-top: -2px;
+	}
 }

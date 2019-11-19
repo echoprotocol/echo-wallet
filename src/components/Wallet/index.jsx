@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import { Button, Tab } from 'semantic-ui-react';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
+
 import Transfer from '../Transfer';
+import Recieve from '../Recieve';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 class Wallet extends React.Component {
@@ -14,6 +16,76 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency,
 			fee, isAvailableBalance, fees,
 		} = this.props;
+
+		const externalTabs = [
+			{
+				menuItem: <Button
+					className="tab-btn"
+					key="0"
+					onClick={(e) => e.target.blur()}
+					content="CREATE PAYMENT"
+				/>,
+				render: () => (
+					<div className="send-wrap">
+						<Transfer
+							fees={fees}
+							tokens={tokens}
+							assets={assets}
+							accountName={accountName}
+							from={from}
+							to={to}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							isAvailableBalance={isAvailableBalance}
+							transfer={this.props.transfer}
+							resetTransaction={this.props.resetTransaction}
+							setIn={this.props.setIn}
+							checkAccount={this.props.checkAccount}
+							clearForm={this.props.clearForm}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							setFormValue={this.props.setFormValue}
+							getTransferFee={this.props.getTransferFee}
+							setContractFees={this.props.setContractFees}
+						/>
+					</div>),
+			},
+			{
+				menuItem: <Button
+					className="tab-btn"
+					key="1"
+					onClick={(e) => e.target.blur()}
+					content="RECEIVE PAYMENT"
+				/>,
+				render: () => (
+					<div className="send-wrap">
+						<Recieve
+							// for Amount
+							fees={fees}
+							tokens={tokens}
+							assets={assets}
+							from={from}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							isAvailableBalance={isAvailableBalance}
+							setIn={this.props.setIn}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							setFormValue={this.props.setFormValue}
+							getTransferFee={this.props.getTransferFee}
+							setContractFees={this.props.setContractFees}
+							//
+							clearForm={this.props.clearForm}
+						/>
+					</div>),
+			},
+		];
 
 		return (
 			<div className="page-wrap">
@@ -51,32 +123,15 @@ class Wallet extends React.Component {
 						/>
 					</div>
 				</div>
-				<div className="send-wrap">
-					<Transfer
-						fees={fees}
-						tokens={tokens}
-						assets={assets}
-						accountName={accountName}
-						from={from}
-						to={to}
-						amount={amount}
-						fee={fee}
-						currency={currency}
-						isAvailableBalance={isAvailableBalance}
-						transfer={this.props.transfer}
-						resetTransaction={this.props.resetTransaction}
-						setIn={this.props.setIn}
-						checkAccount={this.props.checkAccount}
-						clearForm={this.props.clearForm}
-						amountInput={this.props.amountInput}
-						setFormError={this.props.setFormError}
-						setDefaultAsset={this.props.setDefaultAsset}
-						setValue={this.props.setValue}
-						setFormValue={this.props.setFormValue}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
-					/>
-				</div>
+				<Tab
+					defaultActiveIndex="1"
+					menu={{
+						tabular: false,
+						className: 'wallet-tab-menu',
+					}}
+					panes={externalTabs}
+				/>
+
 			</div>
 		);
 	}
@@ -85,7 +140,6 @@ class Wallet extends React.Component {
 
 Wallet.propTypes = {
 	fees: PropTypes.array.isRequired,
-
 	amount: PropTypes.object.isRequired,
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
