@@ -35,7 +35,7 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
-	if (!/[.\-/0-9]/.test(value) || !(value.match(/[.\-/0-9aeiouy]/ig).length !== value.length)) {
+	if (!(/[.\-/0-9]/.test(value) || value.match(/[.\-/0-9aeiouy]/ig).length === value.length)) {
 		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
