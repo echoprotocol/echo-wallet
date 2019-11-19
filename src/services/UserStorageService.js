@@ -174,7 +174,7 @@ class UserStorageService {
 	 * @return {Promise.<void>}
 	 */
 	async updateKeys(keys, params) {
-		const { accountId } = keys;
+		const { accountId } = params;
 		this.checkNetwork();
 
 		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
