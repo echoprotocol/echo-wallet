@@ -681,7 +681,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 	if (operationId === operations.account_update.value) {
 		dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
 		history.push(PERMISSIONS_PATH);
-	} else {
+	} else if (operationId !== operations.balance_freeze.value) {
 		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 	}
 
