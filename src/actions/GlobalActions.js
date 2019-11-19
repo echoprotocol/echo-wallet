@@ -251,8 +251,11 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 	}
 
 	const account = await echo.api.getAccountByName(accountName);
-
-	await userStorage.removeKeys(account.active.key_auths.map(([k]) => k), { password });
+	console.log(account);
+	await userStorage.removeKeys(
+		account.active.key_auths.map(([k]) => k),
+		{ password, accountId: account.id },
+	);
 
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
 	const networkName = getState().global.getIn(['network', 'name']);
