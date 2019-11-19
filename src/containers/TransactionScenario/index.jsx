@@ -79,7 +79,6 @@ class TransactionScenario extends React.Component {
 	}
 
 	render() {
-
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
