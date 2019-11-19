@@ -626,7 +626,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @param {*} password
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const sendTransaction = (password, onSuccess = () => { }) => async (dispatch, getState) => {
+export const sendTransaction = (password, onSuccess = () => {}) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
@@ -653,7 +653,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
 		tr.broadcast().then((res) => {
-
 			if (addToWatchList) {
 				dispatch(addContractByName(
 					res[0].trx.operation_results[0][1],

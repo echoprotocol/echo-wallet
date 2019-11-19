@@ -30,8 +30,6 @@ import BalanceReducer from '../reducers/BalanceReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
 
 import history from '../history';
-import TableReducer from '../reducers/TableReducer';
-import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
