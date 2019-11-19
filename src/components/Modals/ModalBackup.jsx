@@ -13,7 +13,6 @@ class ModalBackup extends React.Component {
 	}
 
 	getActiveKeysString() {
-		console.log(this.props.activeUser)
 		const { keys, activeUser } = this.props;
 
 		const keysData = [];
