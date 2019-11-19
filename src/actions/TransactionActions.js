@@ -33,7 +33,7 @@ import { getBalanceFromAssets } from './BalanceActions';
 import { setValue as setTableValue, setError } from './TableActions';
 import { signTransaction } from './SignActions';
 
-import { getMethod } from '../helpers/ContractHelper';
+import { getMethod, trim0xFomCode } from '../helpers/ContractHelper';
 import { toastSuccess, toastError } from '../helpers/ToastHelper';
 import {
 	validateCode,
@@ -562,7 +562,9 @@ export const createContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const error = validateCode(bytecode.value);
+	const bytecodeValue = trim0xFomCode(bytecode.value);
+
+	const error = validateCode(bytecodeValue);
 
 	if (error) {
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
@@ -590,7 +592,7 @@ export const createContract = () => async (dispatch, getState) => {
 		registrar: activeUserId,
 		value: { amount: 0, asset_id: '1.3.0' },
 		fee: { amount: 0, asset_id: '1.3.0' },
-		code: bytecode.value,
+		code: bytecodeValue,
 		eth_accuracy: true,
 		supported_asset_id: '1.3.0',
 	};
@@ -605,7 +607,7 @@ export const createContract = () => async (dispatch, getState) => {
 		const showOptions = {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
-			code: bytecode.value,
+			code: bytecodeValue,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_create', options, showOptions }));
@@ -679,7 +681,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 	if (operationId === operations.account_update.value) {
 		dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
 		history.push(PERMISSIONS_PATH);
-	} else {
+	} else if (operationId !== operations.balance_freeze.value) {
 		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 	}
 
@@ -806,7 +808,9 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const bytecodeError = validateCode(bytecode.value);
+	const bytecodeValue = trim0xFomCode(bytecode.value);
+
+	const bytecodeError = validateCode(bytecodeValue);
 
 	if (bytecodeError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
@@ -858,14 +862,14 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		fee: { asset_id: fee.asset.id, amount: fee.value },
 		registrar: activeUserId,
 		value: { amount: amountValue, asset_id: '1.3.0' },
-		code: bytecode.value,
+		code: bytecodeValue,
 		callee: id.value,
 	};
 
 	const showOptions = {
 		from: activeUserName,
 		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
-		code: bytecode.value,
+		code: bytecodeValue,
 	};
 
 	showOptions.value = `${amount.value} ${currency.symbol}`;
