@@ -180,6 +180,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			this.props.sendTransaction(password, () => onUnlock(password));
 		}
 		this.props.setTableValue('showLoader', true);
+		this.props.setTableValue('isWaitBlock', false);
 		this.clear();
 	}
 

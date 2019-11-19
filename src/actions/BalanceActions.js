@@ -450,6 +450,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 	dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false }));
+	dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'isWaitBlock', value: true }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
