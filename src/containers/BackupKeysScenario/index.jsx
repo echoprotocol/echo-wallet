@@ -96,7 +96,6 @@ class BackupKeysScenario extends React.Component {
 	}
 
 	render() {
-		const { active: { accounts } } = this.props.permissionsKeys.toJS();
 
 		const {
 			[MODAL_UNLOCK_BACKUP]: modalUnlockBackup,
@@ -123,7 +122,6 @@ class BackupKeysScenario extends React.Component {
 					saveAsTxt={(backupInfo) => this.saveAsTxt(backupInfo)}
 					close={() => this.close(MODAL_BACKUP)}
 					keys={this.state.activeUserKeys}
-					accounts={accounts}
 				/>
 			</React.Fragment>
 		);
