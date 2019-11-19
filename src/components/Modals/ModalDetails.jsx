@@ -84,6 +84,8 @@ class ModalDetails extends React.Component {
 	render() {
 		const { showOptions, show, disabled } = this.props;
 
+		// console.log(3)
+
 		return (
 			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
 				<div className="modal-content">
