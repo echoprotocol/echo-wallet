@@ -419,6 +419,12 @@ const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 			return acc;
 		}, {});
 
+	for (let i = 0; i < Object.keys(newPrivateKeys).length; i += 1) {
+		if (!oldPrivateKeys[Object.keys(newPrivateKeys)[i]] &&
+			!newPrivateKeys[Object.keys(newPrivateKeys)[i]].value) {
+			delete newPrivateKeys[[Object.keys(newPrivateKeys)[i]]];
+		}
+	}
 	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
 		!Object.entries(oldPrivateKeys).every(([key, wif]) =>
 			(newPrivateKeys[key] && !!newPrivateKeys[key].value === !!wif.value));
@@ -559,6 +565,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		dataChanged.active.wif = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
 		dataChanged.echoRand.wif = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
 
+		console.log(dataChanged);
 		if (dataChanged.active.keys) {
 			permissionData.active.keys = addActiveKeysToBufferObject(permissionForm);
 		}
