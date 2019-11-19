@@ -174,13 +174,15 @@ class UserStorageService {
 	 * @return {Promise.<void>}
 	 */
 	async updateKeys(keys, params) {
+		const { accountId } = params;
 		this.checkNetwork();
 
 		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
 		const networkId = this.getNetworkId();
 		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
 
-		network.updateKeys(keys);
+		const storageKeys = network.getAllKeys().filter((keyItem) => keyItem.accountId !== accountId);
+		network.updateKeys([...storageKeys, ...keys]);
 
 		await this.updateDB(decryptedData, params);
 	}
@@ -192,14 +194,15 @@ class UserStorageService {
 	 * @return {Promise.<void>}
 	 */
 	async removeKeys(keys, params) {
+		const { accountId } = params;
+
 		this.checkNetwork();
 
 		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
 		const networkId = this.getNetworkId();
 		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
-
-		const resultKeys = network.getAllKeys().filter((key) => !keys.includes(key.publicKey));
-
+		const resultKeys = network.getAllKeys().filter((key) =>
+			!(keys.includes(key.publicKey) && key.accountId === accountId));
 		network.updateKeys(resultKeys);
 
 		await this.updateDB(decryptedData, params);
