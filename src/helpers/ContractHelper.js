@@ -7,6 +7,13 @@ const zero64String = '0000000000000000000000000000000000000000000000000000000000
 export const getHash = (str) => keccak256(str);
 
 /**
+ * @method trim0xFomCode
+ * @param {String} code
+ * @returns {String}
+ */
+export const trim0xFomCode = (code) => (code.startsWith('0x') ? code.slice(2) : code);
+
+/**
  * @method getMethodId
  * @param {Object} method
  * @returns {String}
