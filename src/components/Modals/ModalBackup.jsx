@@ -13,7 +13,7 @@ class ModalBackup extends React.Component {
 	}
 
 	getActiveKeysString() {
-		const { keys } = this.props;
+		const { keys, accounts } = this.props;
 
 		const keysData = [];
 
@@ -30,6 +30,9 @@ class ModalBackup extends React.Component {
 
 		});
 
+		// if (keys.length && accounts.length){
+
+		// }
 		const keysDataString = keysData.join('\n');
 
 		return keysDataString;
@@ -110,12 +113,14 @@ ModalBackup.propTypes = {
 	activeUser: PropTypes.any,
 	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.array,
+	accounts: PropTypes.array,
 };
 
 ModalBackup.defaultProps = {
 	activeUser: null,
 	show: false,
 	keys: [],
+	accounts: [],
 };
 
 

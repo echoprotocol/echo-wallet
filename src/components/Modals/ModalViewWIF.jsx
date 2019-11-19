@@ -13,9 +13,9 @@ class ModalViewWIF extends React.Component {
 	}
 
 	onSave() {
-		const { keys } = this.props;
+		const { keys, activeUser } = this.props;
 		const keysString = `Public key:\n${keys.publicKey}\n\nWIF:${keys.wif}`;
-		this.props.saveAsTxt(keysString);
+		this.props.saveAsTxt(keysString, activeUser, keys.publicKey.replace('ECHO', '').substring(0, 8));
 	}
 
 	render() {
@@ -79,6 +79,7 @@ class ModalViewWIF extends React.Component {
 
 ModalViewWIF.propTypes = {
 	show: PropTypes.bool,
+	activeUser: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.object,
@@ -86,6 +87,7 @@ ModalViewWIF.propTypes = {
 
 ModalViewWIF.defaultProps = {
 	show: false,
+	activeUser: '',
 	keys: {},
 };
 
@@ -93,6 +95,7 @@ ModalViewWIF.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
+		activeUser: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
