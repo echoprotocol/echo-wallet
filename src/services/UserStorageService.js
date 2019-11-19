@@ -202,7 +202,7 @@ class UserStorageService {
 		const networkId = this.getNetworkId();
 		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
 		const resultKeys = network.getAllKeys().filter((key) =>
-			!keys.includes(key.publicKey) && key.accountId === accountId);
+			!(keys.includes(key.publicKey) && key.accountId === accountId));
 		network.updateKeys(resultKeys);
 
 		await this.updateDB(decryptedData, params);
