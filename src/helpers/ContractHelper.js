@@ -1,6 +1,7 @@
 import { keccak256 } from 'js-sha3';
 import BigNumber from 'bignumber.js';
 import BN from 'bn.js';
+import { constants, validators } from 'echojs-lib';
 
 const zero64String = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -49,10 +50,12 @@ const to64HexString = (v, type, mode = 256) => {
 		}
 		case 'address': {
 			const sourceAddress = v || '1.2.0';
-			if (!/^1\.(2|9)\.[1-9]\d*$/.test(sourceAddress)) throw new Error('invalid address format');
+			if (!validators.isAccountId(sourceAddress) && !validators.isContractId(sourceAddress)) {
+				throw new Error('invalid address format');
+			}
 			const preRes = new BigNumber(sourceAddress.split('.')[2]).toString(16);
 			if (preRes.length > 38) throw new Error('invalid address id');
-			const isContract = sourceAddress.split('.')[1] === '9';
+			const isContract = sourceAddress.split('.')[1] === constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT;
 			return [
 				new Array(25).fill(null).map(() => 0).join(''),
 				isContract ? '1' : '0',
