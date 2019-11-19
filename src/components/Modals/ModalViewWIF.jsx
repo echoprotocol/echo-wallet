@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
+import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 
 class ModalViewWIF extends React.Component {
 
@@ -14,8 +15,8 @@ class ModalViewWIF extends React.Component {
 
 	onSave() {
 		const { keys, activeUserName } = this.props;
-		const keysString = `Account: ${activeUserName}\nPublic key:\n${keys.publicKey}\nWIF:\n${keys.wif}`;
-		this.props.saveAsTxt(keysString, activeUserName, keys.publicKey.replace('ECHO', '').substring(0, 8));
+		const keysString = `Account: ${activeUserName}\n\nPublic key:\n${keys.publicKey}\nWIF:\n${keys.wif}`;
+		this.props.saveAsTxt(keysString, activeUserName, keys.publicKey.replace(ADDRESS_PREFIX, '').substring(0, 8));
 	}
 
 	render() {

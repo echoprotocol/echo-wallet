@@ -80,7 +80,7 @@ class BackupKeysScenario extends React.Component {
 		const { activeUser } = this.props;
 		const txtFile = new Blob([activeKeysString], { type: 'text/plain' });
 		donwloadElement.href = URL.createObjectURL(txtFile);
-		donwloadElement.download = `echo-backup_${activeUser.toJS().name}_${new Date().toISOString()}.txt`;
+		donwloadElement.download = `echo-backup_${activeUser.get('name')}_${new Date().toISOString()}.txt`;
 		donwloadElement.click();
 	}
 

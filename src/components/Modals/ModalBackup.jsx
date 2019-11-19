@@ -16,7 +16,7 @@ class ModalBackup extends React.Component {
 		const { keys, activeUser } = this.props;
 
 		const keysData = [];
-		keysData.push(`Account: ${activeUser.toJS().name}\n`);
+		keysData.push(`Account: ${activeUser.get('name')}\n`);
 
 		keys.forEach((keyItem, keyIndex) => {
 
