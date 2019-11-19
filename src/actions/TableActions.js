@@ -565,7 +565,6 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		dataChanged.active.wif = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
 		dataChanged.echoRand.wif = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
 
-		console.log(dataChanged);
 		if (dataChanged.active.keys) {
 			permissionData.active.keys = addActiveKeysToBufferObject(permissionForm);
 		}

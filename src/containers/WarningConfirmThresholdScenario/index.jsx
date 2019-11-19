@@ -193,7 +193,6 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 
 	render() {
-		console.log(this.props.showOptions && this.props.showOptions.toJS())
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
