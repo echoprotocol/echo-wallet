@@ -346,6 +346,15 @@ $stripe-width: 10px;
 	}
 }
 
+.dropdown-copy-btn {
+	color: $main-сolor;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+}
 .version-btn {
 	font-family: proxima;
 	background-color: transparent;

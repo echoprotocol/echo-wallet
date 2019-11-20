@@ -72,9 +72,6 @@ class Recieve extends React.Component {
 		return (
 
 			<Form className="main-form">
-				<div className="form-info">
-					<h3>Create Payment</h3>
-				</div>
 				<div className="field-wrap">
 					<Tab
 						defaultActiveIndex="0"

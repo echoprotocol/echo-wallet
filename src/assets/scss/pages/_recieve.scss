@@ -1,0 +1,11 @@
+.payment-wrap {
+	margin: 17px 0 0 0;
+}
+.payment-description {
+	font-size: 14px;
+	line-height: 20px;
+	color: #3B3B3B;
+	& + .payment-description {
+		margin: 18px 0 0;
+	}
+}

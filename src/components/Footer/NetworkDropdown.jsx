@@ -97,9 +97,6 @@ class Network extends React.PureComponent {
 			content: (<div className="network-link">+ Add custom Network</div>),
 		});
 
-		console.log(options);
-
-
 		return (
 			<Dropdown
 				options={options}

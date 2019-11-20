@@ -281,8 +281,8 @@ $thead-height: 46px;
         border-radius: 0;
 
         @media (min-width: 1060px) {
-            margin: 46px 0 0 0;
-            height: calc(100vh - 236px);
+            margin: $thead-height 0 0 0;
+            height: calc(100vh - 244px)
         }
 
         thead {

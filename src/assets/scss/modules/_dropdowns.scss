@@ -115,7 +115,6 @@
             }
         }
     }
-
     &.contract-type-dropdown {
         display: flex;
         align-items: center;
@@ -146,8 +145,13 @@
                         opacity: 1;
                     }
                 }
-            }
-        }
+			}
+			& > .item:not(.disabled):hover {
+				background: rgba(0, 0, 0, 0.05);
+				color: rgba(0, 0, 0, 0.95);
+				z-index: 13;
+			}
+		}
     }
 
     &.assets-tokens-dropdown {
@@ -670,4 +674,131 @@
 .dropdown > .selected.item {
 	background: rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, 0.95);
+}
+
+
+.dropdown-wrap {
+	.dropdown-label {
+		font-family: proximanovaSemibold;
+		font-size: 12px;
+		line-height: 26.4px;
+		color: #AEB4C0;
+		text-transform: uppercase;
+	}
+	.ui.dropdown {
+		width: 100%;
+		background-color: #fff;
+		height: 38px;
+		border: 1px solid #DDDDDD;
+		border-radius: 4px;
+
+		& > .dropdown.icon {
+			position: absolute;
+			right: 12px;
+			top: 0px;
+			bottom: 4px;
+			margin: auto;
+		}
+		&.active {
+			& > .dropdown.icon {
+				bottom: 0;
+			}
+		}
+
+		.menu {
+			min-width: 100%;
+			max-width: 100%;
+		}
+
+		input.search {
+			height: 36px;
+			padding: 0.678571em 1em;
+		}
+
+		input.search + .text {
+			line-height: 36px;
+			padding: 0 1em;
+			font-size: 15px;
+			font-family: proxima;
+			font-weight: 400;
+			&:not(.filtered) {
+				color: rgba(#3B3B3B, 0.5);
+			}
+		}
+		.dropdown-header {
+			padding: 0 20px;
+			display: flex;
+			justify-content: space-between;
+			cursor: default;
+			.title {
+				line-height: 48px;
+				font-family: proximanovaSemibold;
+				font-size: 12px;
+				line-height: 26.4px;
+				color: rgba(#3B3B3B, 0.3);
+				text-transform: uppercase;
+			}
+		}
+		.user-item {
+			display: flex;
+			align-items: center;
+			padding: 0 20px;
+			min-height: 44px;
+
+			.avatar-wrap {
+				min-width: 20px;
+				width: 20px;
+				height: 20px;
+				margin-right: 10px;
+			}
+
+			.name {
+				font-size: 15px;
+				line-height: 16px;
+				font-weight: 400;
+			}
+		}
+
+		.address-item-wrap {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding: 0 20px;
+			min-height: 44px;
+		}
+
+		.address-item {
+			display: flex;
+			justify-content: space-between;
+
+			.address {
+				font-size: 15px;
+				line-height: 17px;
+				@include cut-text;
+				max-width: 277px;
+			}
+
+			.name {
+				font-size: 13px;
+				color: rgba(#3B3B3B, .8);
+			}
+		}
+		.add-icon {
+			&:before {
+				font-family: 'icomoon';
+				speak: none;
+				font-style: normal;
+				font-weight: normal;
+				font-variant: normal;
+				text-transform: none;
+				line-height: 1px;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				font-size: 12px;
+				content: "\e900";
+			}
+		}
+	}
+
+
 }

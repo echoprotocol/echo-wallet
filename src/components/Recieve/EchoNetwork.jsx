@@ -1,12 +1,116 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Button } from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
+import Avatar from '../../components/Avatar';
 import AmountField from '../Fields/AmountField';
 
 class EchoNetwork extends React.Component {
 
+	renderAccontsList() {
+
+		const users = [{ name: 'valik_pruss456' }];
+
+		const acconutHeaderTitle = (<div className="title">Account</div>);
+
+		const header = [{
+			className: 'dropdown-header',
+			value: 'accounts-header',
+			key: 'accounts-header',
+			content: acconutHeaderTitle,
+			disabled: true,
+		}];
+
+		const options = users.map(({
+			name,
+		}) => {
+			const content = (
+				<React.Fragment>
+					<div className="avatar-wrap">
+						<Avatar accountName={name} />
+					</div>
+					<div className="name">{name}</div>
+				</React.Fragment>
+			);
+
+			return ({
+				className: 'user-item',
+				value: name,
+				key: name,
+				content,
+
+			});
+		});
+
+		return header.concat(options);
+	}
+
+
+	renderAddressesList() {
+		const users = [
+			{ name: 'Valik1', address: 'f0d6if8k5d87g5hw2ej548d3r7h4kr7fn34kj123kl4444' },
+			{ name: 'Valik2', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
+			{ name: 'Valik3', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
+			{ name: 'Valik4', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
+			{ name: 'Valik5', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
+		];
+
+		const addressHeaderTitle = (
+			<React.Fragment>
+				<div className="title">Account</div>
+				<button
+					onClick={() => { console.log('kokoko'); }}
+					className="add-icon"
+				/>
+			</React.Fragment>
+		);
+
+		const header = [{
+			className: 'dropdown-header',
+			value: 'address-header',
+			key: 'address-header',
+			content: addressHeaderTitle,
+			onClick: () => {},
+			selected: false,
+		}];
+
+		const generateAddressItem = [{
+			value: 'generate-address',
+			key: 'generate-address',
+			content: 'Generate new address',
+			onClick: () => {},
+			selected: false,
+		}];
+
+		const options = users.map(({
+			name, address,
+		}) => {
+			const content = (
+				<React.Fragment key={name} >
+					<div className="address-item">
+						<div className="address">{address}</div>
+						<CopyToClipboard text={address}>
+							<Button icon="copy" className="dropdown-copy-btn" />
+						</CopyToClipboard>
+					</div>
+					<div className="name">{name}</div>
+				</React.Fragment>
+			);
+
+			return ({
+				className: 'address-item-wrap',
+				value: name,
+				key: name,
+				content,
+				onClick: () => {},
+			});
+		});
+
+		return header.concat(options).concat(generateAddressItem);
+	}
 
 	render() {
 
@@ -15,37 +119,23 @@ class EchoNetwork extends React.Component {
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
-		const options = [
-			{
-				value: 'testnet',
-				key: 'testnet',
-				selected: true,
-				content: (
-					<React.Fragment>
-						<div className="label-text">
-							<span className="name">koko22</span>
-						</div>
-						<span className="label-link">koko</span>
-						<Button
-							id="btn-dlt"
-							className="icon-remove"
-						/>
-					</React.Fragment>
-				),
-			},
-		];
-
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
-				<Dropdown
-					options={options}
-					search
-					closeOnChange
-				/>
+				<div className="dropdown-wrap">
+					<div className="dropdown-label">recipient Account OR address</div>
+					<Dropdown
+						open
+						placeholder="Choose account or address"
+						options={this.renderAccontsList().concat(this.renderAddressesList())}
+						search
+						text="Choose account or address"
+						closeOnChange
+					/>
+				</div>
 				<AmountField
 					fees={fees}
 					form={FORM_TRANSFER}

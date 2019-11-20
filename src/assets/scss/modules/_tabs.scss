@@ -178,21 +178,20 @@
 	border: 0;
 	font-size: 12px;
 	font-weight: 600;
-	margin: 0 0 -3px;
 	color: rgb(168, 168, 168);
 	border-bottom: 2px solid transparent;
 	border-radius: 0;
-	margin: 0 0 -2px 0;
 	transition: border $speed ease, color $speed ease;
 	padding: 0;
 	z-index: 2;
+	margin: 5px 0 2px;
 	background-color: transparent;
 	position: relative;
 	cursor: pointer;
 	text-transform: uppercase;
-
+	font-family: proximaNovaSemibold;
 	&:not(:last-child) {
-		margin-right: 35px;
+		margin-right: 36px;
 	}
 
 	&:hover {
@@ -202,7 +201,6 @@
 
 	&.active {
 		color: $main-сolor;
-		line-height: 0px;
 		border-top-right-radius: 8px;
 		border-top-left-radius: 8px;
 		border-bottom: 2px solid;
