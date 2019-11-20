@@ -36,7 +36,7 @@ const isAccountNameError = (value, allowShort) => {
 	}
 
 	if (!(/[.\-/0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
-		return `${suffix} be cheap (contain digit, number, dash, slash or consist only of consonants)`;
+		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
 		suffix = 'Each account segment should';
