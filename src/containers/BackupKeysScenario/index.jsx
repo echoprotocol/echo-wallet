@@ -77,9 +77,10 @@ class BackupKeysScenario extends React.Component {
 
 	async saveAsTxt(activeKeysString) {
 		const donwloadElement = document.createElement('a');
+		const { activeUser } = this.props;
 		const txtFile = new Blob([activeKeysString], { type: 'text/plain' });
 		donwloadElement.href = URL.createObjectURL(txtFile);
-		donwloadElement.download = 'echo-backup.txt';
+		donwloadElement.download = `echo-backup_${activeUser.get('name')}_${new Date().toISOString()}.txt`;
 		donwloadElement.click();
 	}
 
@@ -95,6 +96,7 @@ class BackupKeysScenario extends React.Component {
 	}
 
 	render() {
+
 		const {
 			[MODAL_UNLOCK_BACKUP]: modalUnlockBackup,
 			[MODAL_BACKUP]: modalBackup,
