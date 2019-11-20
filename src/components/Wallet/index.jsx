@@ -67,12 +67,10 @@ class Wallet extends React.Component {
 							fees={fees}
 							tokens={tokens}
 							assets={assets}
-							from={from}
 							amount={amount}
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
-							setIn={this.props.setIn}
 							amountInput={this.props.amountInput}
 							setFormError={this.props.setFormError}
 							setDefaultAsset={this.props.setDefaultAsset}
@@ -80,6 +78,11 @@ class Wallet extends React.Component {
 							setFormValue={this.props.setFormValue}
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
+							// for To field
+							accountName={accountName}
+							setIn={this.props.setIn}
+							checkAccount={this.props.checkAccount}
+							from={from}
 							//
 							clearForm={this.props.clearForm}
 						/>

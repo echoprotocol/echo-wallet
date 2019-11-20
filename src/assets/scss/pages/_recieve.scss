@@ -8,4 +8,15 @@
 	& + .payment-description {
 		margin: 18px 0 0;
 	}
+	& + .field {
+		margin-top: 21px;
+	}
+}
+
+.payment-description + .dropdown-wrap {
+	margin-top: 5px;
+}
+
+.dropdown-wrap + .field {
+	margin-top: 24px;
 }

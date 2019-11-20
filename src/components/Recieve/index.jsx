@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
-import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
@@ -10,15 +9,19 @@ import EchoNetwork from './EchoNetwork';
 class Recieve extends React.Component {
 
 
+	componentDidMount() {
+		const { accountName } = this.props;
+		this.props.setIn('from', { value: accountName, checked: true });
+	}
+
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
 
 	render() {
 
-
 		const {
-			currency,
+			currency, from, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
@@ -32,8 +35,8 @@ class Recieve extends React.Component {
 				/>,
 				render: () => (
 					<EchoNetwork
+						// for Amount field
 						fees={fees}
-						form={FORM_TRANSFER}
 						fee={fee}
 						assets={assets}
 						tokens={tokens}
@@ -47,6 +50,10 @@ class Recieve extends React.Component {
 						setDefaultAsset={this.props.setDefaultAsset}
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
+						// for From field
+						from={from}
+						setIn={setIn}
+						checkAccount={checkAccount}
 					/>),
 			},
 			{
@@ -104,6 +111,11 @@ Recieve.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	// for From field
+	from: PropTypes.object.isRequired,
+	setIn: PropTypes.func.isRequired,
+	checkAccount: PropTypes.func.isRequired,
+	accountName: PropTypes.string.isRequired,
 	//
 	clearForm: PropTypes.func.isRequired,
 };

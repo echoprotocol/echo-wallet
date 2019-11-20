@@ -42,7 +42,7 @@ div,span {
     top: 0;
     display: flex;
     justify-content: flex-end;
-    background-color: $main-сolor;
+    background-color: $main-color;
     width: 150px;
     button {
         background-color: transparent;
@@ -124,17 +124,17 @@ div,span {
 	}
 }
 .link {
-    color: $main-сolor;
+    color: $main-color;
     transition: color $speed;
 
     &:hover {
-        color: $main-сolor;
+        color: $main-color;
     }
     &:focus {
         text-decoration: underline;
     }
     &.main-link {
-        color: $main-сolor;
+        color: $main-color;
     }
     &.disabled {
       pointer-events: none;

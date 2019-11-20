@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Button } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import Avatar from '../../components/Avatar';
 import AmountField from '../Fields/AmountField';
+import AccountField from '../Fields/AccountField';
+import QrCode from '../QrCode';
 
 class EchoNetwork extends React.Component {
 
@@ -14,7 +16,7 @@ class EchoNetwork extends React.Component {
 
 		const users = [{ name: 'valik_pruss456' }];
 
-		const acconutHeaderTitle = (<div className="title">Account</div>);
+		const acconutHeaderTitle = <div className="title">Account</div>;
 
 		const header = [{
 			className: 'dropdown-header',
@@ -59,13 +61,7 @@ class EchoNetwork extends React.Component {
 		];
 
 		const addressHeaderTitle = (
-			<React.Fragment>
-				<div className="title">Account</div>
-				<button
-					onClick={() => { console.log('kokoko'); }}
-					className="add-icon"
-				/>
-			</React.Fragment>
+			<div className="title">ADDRESSES</div>
 		);
 
 		const header = [{
@@ -74,10 +70,11 @@ class EchoNetwork extends React.Component {
 			key: 'address-header',
 			content: addressHeaderTitle,
 			onClick: () => {},
-			selected: false,
+			disabled: true,
 		}];
 
 		const generateAddressItem = [{
+			className: 'generate-address',
 			value: 'generate-address',
 			key: 'generate-address',
 			content: 'Generate new address',
@@ -93,7 +90,7 @@ class EchoNetwork extends React.Component {
 					<div className="address-item">
 						<div className="address">{address}</div>
 						<CopyToClipboard text={address}>
-							<Button icon="copy" className="dropdown-copy-btn" />
+							<button className="dropdown-copy-btn icon-icopy-tiny" />
 						</CopyToClipboard>
 					</div>
 					<div className="name">{name}</div>
@@ -115,20 +112,33 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency,
+			currency, from, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+
+				<AccountField
+					disabled
+					field={from}
+					currency={currency}
+					subject="from"
+					checkAccount={checkAccount}
+					setIn={setIn}
+					setFormValue={this.props.setFormValue}
+					getTransferFee={this.props.getTransferFee}
+					setContractFees={this.props.setContractFees}
+					setValue={this.props.setValue}
+				/>
+
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
 				<div className="dropdown-wrap">
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
-						open
 						placeholder="Choose account or address"
 						options={this.renderAccontsList().concat(this.renderAddressesList())}
 						search
@@ -136,6 +146,7 @@ class EchoNetwork extends React.Component {
 						closeOnChange
 					/>
 				</div>
+
 				<AmountField
 					fees={fees}
 					form={FORM_TRANSFER}
@@ -153,6 +164,7 @@ class EchoNetwork extends React.Component {
 					getTransferFee={this.props.getTransferFee}
 					setContractFees={this.props.setContractFees}
 				/>
+				<QrCode />
 			</div>
 		);
 	}
@@ -174,6 +186,9 @@ EchoNetwork.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	from: PropTypes.object.isRequired,
+	setIn: PropTypes.func.isRequired,
+	checkAccount: PropTypes.func.isRequired,
 };
 
 EchoNetwork.defaultProps = {

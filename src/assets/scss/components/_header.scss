@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: $main-сolor;
+        background-color: $main-color;
         color: #fff;
         height: 30px;
         padding: 0 18px;
@@ -208,7 +208,7 @@
                     transition: background-color $speed;
 
                     &:hover {
-                        background-color: $main-сolor;
+                        background-color: $main-color;
 
                         .name {
                             color: #fff;
@@ -242,7 +242,7 @@
 
                 .name {
                     @include cut-text;
-                    color: $main-сolor;
+                    color: $main-color;
                     max-width: 180px;
                     color: #3B3B3B;
                     transition: color $speed;
@@ -419,7 +419,7 @@
         }
 
         &>.text {
-            color: $main-сolor;
+            color: $main-color;
             font-family: proximanovaSemibold;
             max-width: 296px;
 			@include cut-text;
