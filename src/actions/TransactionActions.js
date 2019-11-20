@@ -809,8 +809,7 @@ export const callContractViaId = () => async (dispatch, getState) => {
 	}
 
 	const bytecodeValue = trim0xFomCode(bytecode.value);
-
-	const bytecodeError = validateCode(bytecodeValue);
+	const bytecodeError = validateCode(bytecode.value, true);
 
 	if (bytecodeError) {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
@@ -823,7 +822,6 @@ export const callContractViaId = () => async (dispatch, getState) => {
 		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', 'Invalid contract ID'));
 		return false;
 	}
-
 	dispatch(resetTransaction());
 
 	const { amount, currency } = form;
@@ -981,10 +979,12 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 		callee: contractId,
 	};
 
+
 	let feeValue = null;
 	try {
 		feeValue = await dispatch(getTransactionFee(form, 'contract_call', options));
 	} catch (error) {
+		console.log('getTransactionFee error', error);
 		return null;
 	}
 

@@ -457,16 +457,18 @@ export const setFunction = (functionName) => (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Object>}
  */
 export const setContractFees = (form) => async (dispatch, getState) => {
-
 	const assets = getState().balance.get('assets').toArray();
-
 	let fees = assets.reduce((arr, asset) => {
 		const value = dispatch(estimateFormFee(asset, form));
 		arr.push(value);
 		return arr;
 	}, []);
 
-	fees = await Promise.all(fees);
+	try {
+		fees = await Promise.all(fees);
+	} catch (e) {
+		throw e;
+	}
 
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
