@@ -70,6 +70,10 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 			checked: false,
 		},
+		bytecode: {
+			value: '',
+			error: null,
+		},
 		amount: {
 			value: '',
 			error: null,
@@ -84,6 +88,7 @@ const DEFAULT_FORM_FIELDS = {
 			assets: new List([]),
 		},
 		isAvailableBalance: false,
+		subjectTransferType: '',
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
 		bytecode: {

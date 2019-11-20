@@ -18,7 +18,16 @@ import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+import {
+	CONTRACT_ID_PREFIX,
+	ECHO_ASSET_ID,
+	FREEZE_BALANCE_PARAMS,
+} from '../constants/GlobalConstants';
+import {
+	ACCOUNT_ID_SUBJECT_TYPE,
+	ACCOUNT_NAME_SUBJECT_TYPE, ADDRESS_SUBJECT_TYPE,
+	CONTRACT_ID_SUBJECT_TYPE,
+} from '../constants/TransferConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -48,6 +57,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
+import ContractFeeReducer from '../reducers/ContractFeeReducer';
 
 /**
  * @method resetTransaction
@@ -142,6 +152,115 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
 };
 
+export const setTransferFee = (assetId) => async (dispatch, getState) => {
+	const form = getState().form.get(FORM_TRANSFER);
+	switch (form.get('subjectTransferType')) {
+		case CONTRACT_ID_SUBJECT_TYPE: {
+			try {
+				const activeUserId = getState()
+					.global
+					.getIn(['activeUser', 'id']);
+
+				if (!activeUserId) return null;
+
+				const to = form.get('to').value;
+				const amount = form.get('amount').value;
+				const bytecode = form.get('bytecode').value;
+				const currency = form.get('currency');
+
+				let amountValue = 0;
+				if (amount) {
+					const amountError = validateAmount(amount, currency);
+					if (!amountError) {
+						amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
+							.toString(10);
+					}
+				}
+
+				if (!currency || !currency.precision) return null;
+
+				const echoAsset = await echo.api.getObject('1.3.0');
+
+				const options = {
+					fee: {
+						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
+						amount: 0,
+					},
+					registrar: activeUserId,
+					value: {
+						amount: amountValue || 0,
+						asset_id: currency.id || ECHO_ASSET_ID,
+					},
+					code: bytecode,
+					callee: to,
+				};
+
+				const fee = await dispatch(getTransactionFee(FORM_TRANSFER, 'contract_call', options));
+
+				return {
+					value: fee.value,
+					asset: echoAsset,
+				};
+
+			} catch (error) {
+				return null;
+			}
+		}
+		case ADDRESS_SUBJECT_TYPE: {
+			try {
+				const activeUserId = getState()
+					.global
+					.getIn(['activeUser', 'id']);
+
+				if (!activeUserId) return null;
+
+				const to = form.get('to').value;
+				const amount = form.get('amount').value;
+				const currency = form.get('currency');
+
+				let amountValue = 0;
+				if (amount) {
+					const amountError = validateAmount(amount, currency);
+					if (!amountError) {
+						amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
+							.toString(10);
+					}
+				}
+
+				if (!currency || !currency.precision) return null;
+
+				const echoAsset = await echo.api.getObject('1.3.0');
+
+				const fromAccount = await echo.api.getAccountByName(form.get('from').value);
+				const options = {
+					fee: {
+						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
+						amount: 0,
+					},
+					from: fromAccount.id,
+					to: to.slice(2),
+					amount: {
+						amount: amountValue || 0,
+						asset_id: currency.id || ECHO_ASSET_ID,
+					},
+				};
+
+				const fee = await dispatch(getTransactionFee(FORM_TRANSFER, 'transfer_to_address', options));
+
+				return {
+					value: fee ? fee.value : '',
+					asset: echoAsset,
+				};
+
+			} catch (error) {
+				return null;
+			}
+		}
+		default:
+			return null;
+	}
+};
+
 /**
  * @method getTransferFee
  *
@@ -156,6 +275,20 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 		dispatch(setValue(form, 'isAvailableBalance', false));
 		return null;
 	}
+
+	const subjectTransferType = formOptions.get('subjectTransferType');
+
+	if (
+		subjectTransferType &&
+		![ACCOUNT_ID_SUBJECT_TYPE, ACCOUNT_NAME_SUBJECT_TYPE].includes(subjectTransferType)
+	) {
+		const fee = await dispatch(setTransferFee(asset));
+
+		dispatch(setValue(form, 'isAvailableBalance', true));
+
+		return fee;
+	}
+
 	try {
 		const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
 		const fromAccountId = getState().global.getIn(['activeUser', 'id']);
@@ -323,12 +456,58 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 	return true;
 };
 
+export const subjectToSendSwitch = (value) => async (dispatch) => {
+	if (value.startsWith('0x')) {
+		if (!value.match(/^0x[a-fA-F0-9]{40}$/)) {
+			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid address'));
+			return false;
+		}
+		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
+
+		dispatch(setIn(FORM_TRANSFER, 'to', {
+			checked: true,
+			error: null,
+		}));
+
+		return ADDRESS_SUBJECT_TYPE;
+
+	} else if (validators.isContractId(value)) {
+
+		const contract = await echo.api.getContract(value);
+		if (!contract) {
+			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid contract ID'));
+			return false;
+		}
+		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', CONTRACT_ID_SUBJECT_TYPE));
+
+		dispatch(setIn(FORM_TRANSFER, 'to', {
+			checked: true,
+			error: null,
+		}));
+
+		return CONTRACT_ID_SUBJECT_TYPE;
+
+	} else if (validators.isAccountId(value)) {
+
+		const account = await echo.api.getObject(value);
+		if (!account) {
+			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid account ID'));
+			return false;
+		}
+		value = account.name;
+		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
+
+	}
+
+	dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
+	return dispatch(checkAccount(value, 'to'));
+};
+
 /**
  * @method transfer
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-export const transfer = () => async (dispatch, getState) => {
-	const form = getState().form.get(FORM_TRANSFER).toJS();
+export const transfer = (form) => async (dispatch, getState) => {
 
 	const {
 		from,
@@ -338,15 +517,6 @@ export const transfer = () => async (dispatch, getState) => {
 
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString(10);
-
-	if (to.error || from.error || form.amount.error || fee.error) {
-		return false;
-	}
-
-	if (!from.value) {
-		dispatch(setFormError(FORM_TRANSFER, 'from', 'Account name should not be empty'));
-		return false;
-	}
 
 	if (!to.value) {
 		dispatch(setFormError(FORM_TRANSFER, 'to', 'Account name should not be empty'));
@@ -445,6 +615,219 @@ export const transfer = () => async (dispatch, getState) => {
 	}));
 
 	return true;
+};
+
+export const transferSwitch = () => async (dispatch, getState) => {
+	const form = getState().form.get(FORM_TRANSFER).toJS();
+
+	const {
+		from,
+		to,
+		currency,
+	} = form;
+
+	let { fee } = form;
+	const amount = new BN(form.amount.value).toString(10);
+
+	if (to.error || from.error || form.amount.error || fee.error) {
+		return false;
+	}
+
+	if (!from.value) {
+		dispatch(setFormError(FORM_TRANSFER, 'from', 'Account name should not be empty'));
+		return false;
+	}
+
+	switch (form.subjectTransferType) {
+		case ADDRESS_SUBJECT_TYPE: {
+			if (!to.value) {
+				dispatch(setFormError(FORM_TRANSFER, 'to', 'Contract id should not be empty'));
+				return false;
+			}
+
+			const amountError = validateAmount(amount, currency);
+
+			if (amountError) {
+				dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
+				return false;
+			}
+
+			if (!fee.value || !fee.asset) {
+				fee = await dispatch(setTransferFee());
+			}
+
+			const echoAsset = getState()
+				.echojs
+				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0'])
+				.toJS();
+			const feeAsset = getState()
+				.echojs
+				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id])
+				.toJS();
+
+			if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
+				dispatch(setFormError(
+					FORM_TRANSFER,
+					'fee',
+					`${fee.asset.symbol} fee pool balance is less than fee amount`,
+				));
+				return false;
+			}
+
+			if (currency.id === fee.asset.id) {
+				const total = new BN(amount).times(10 ** currency.precision)
+					.plus(fee.value);
+
+				if (total.gt(currency.balance)) {
+					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+					return false;
+				}
+			} else {
+				const asset = getState()
+					.balance
+					.get('assets')
+					.toArray()
+					.find((i) => i.id === fee.asset.id);
+				if (new BN(fee.value).gt(asset.balance)) {
+					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+					return false;
+				}
+			}
+
+			dispatch(toggleLoading(FORM_TRANSFER, true));
+			const fromAccount = await echo.api.getAccountByName(from.value);
+
+			const options = {
+				fee: {
+					asset_id: form.fee.asset.id || ECHO_ASSET_ID,
+					amount: fee.value || 0,
+				},
+				from: fromAccount.id,
+				to: to.value.slice(2).toLowerCase(),
+				amount: {
+					amount: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
+					asset_id: currency.id || ECHO_ASSET_ID,
+				},
+			};
+
+			const precision = new BN(10).pow(fee.asset.precision);
+			const showOptions = {
+				fee: `${new BN(fee.value).div(precision)
+					.toString(10)} ${fee.asset.symbol}`,
+				from: fromAccount.name,
+				to_address: to.value.slice(2),
+				amount: `${amount} ${currency.symbol}`,
+			};
+
+			dispatch(resetTransaction());
+
+			dispatch(TransactionReducer.actions.setOperation({
+				operation: 'transfer_to_address',
+				options,
+				showOptions,
+			}));
+
+			return true;
+		}
+		case CONTRACT_ID_SUBJECT_TYPE: {
+
+			if (!to.value) {
+				dispatch(setFormError(FORM_TRANSFER, 'to', 'Contract id should not be empty'));
+				return false;
+			}
+
+			const amountError = validateAmount(amount, currency);
+
+			if (amountError) {
+				dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
+				return false;
+			}
+
+			if (!fee.value || !fee.asset) {
+				fee = await dispatch(setTransferFee());
+			}
+
+			const echoAsset = getState()
+				.echojs
+				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0'])
+				.toJS();
+			const feeAsset = getState()
+				.echojs
+				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id])
+				.toJS();
+
+			if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
+				dispatch(setFormError(
+					FORM_TRANSFER,
+					'fee',
+					`${fee.asset.symbol} fee pool balance is less than fee amount`,
+				));
+				return false;
+			}
+
+			if (currency.id === fee.asset.id) {
+				const total = new BN(amount).times(10 ** currency.precision)
+					.plus(fee.value);
+
+				if (total.gt(currency.balance)) {
+					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+					return false;
+				}
+			} else {
+				const asset = getState()
+					.balance
+					.get('assets')
+					.toArray()
+					.find((i) => i.id === fee.asset.id);
+				if (new BN(fee.value).gt(asset.balance)) {
+					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+					return false;
+				}
+			}
+
+			dispatch(toggleLoading(FORM_TRANSFER, true));
+			const fromAccount = await echo.api.getAccountByName(from.value);
+
+			const options = {
+				fee: {
+					asset_id: form.fee.asset.id || ECHO_ASSET_ID,
+					amount: fee.value || 0,
+				},
+				registrar: fromAccount.id,
+				value: {
+					amount: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
+					asset_id: currency.id || ECHO_ASSET_ID,
+				},
+				code: form.bytecode.value,
+				callee: to.value,
+			};
+
+			const precision = new BN(10).pow(fee.asset.precision);
+			const showOptions = {
+				fee: `${new BN(fee.value).div(precision)
+					.toString(10)} ${fee.asset.symbol}`,
+				from: fromAccount.name,
+				to_contract: to.value,
+				amount: `${amount} ${currency.symbol}`,
+			};
+
+			dispatch(resetTransaction());
+
+			dispatch(TransactionReducer.actions.setOperation({
+				operation: 'contract_call',
+				options,
+				showOptions,
+			}));
+
+			return true;
+		}
+		case ACCOUNT_ID_SUBJECT_TYPE:
+		case ACCOUNT_NAME_SUBJECT_TYPE:
+			return dispatch(transfer(form));
+		default:
+	}
+
+	return null;
 };
 
 /**
@@ -644,10 +1027,9 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
-	const tr = echo.createTransaction();
-	tr.addOperation(operationId, options);
-
 	try {
+		const tr = echo.createTransaction();
+		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
 		tr.broadcast().then((res) => {

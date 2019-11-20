@@ -7,8 +7,18 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 import TransactionScenario from '../../containers/TransactionScenario';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
+import BytecodeField from '../Fields/BytecodeField';
 
 class Transfer extends React.Component {
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			bytecodeVisible: false,
+		};
+	}
+
 
 	componentDidMount() {
 		const { accountName } = this.props;
@@ -19,11 +29,21 @@ class Transfer extends React.Component {
 		this.props.clearForm();
 		this.props.resetTransaction();
 	}
+
+	setVisibility(field, isVisible) {
+		if (field === 'bytecode') {
+			this.setState({
+				bytecodeVisible: isVisible,
+			});
+		}
+	}
+
 	render() {
 		const {
 			from, to, currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees,
+			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, subjectTransferType,
 		} = this.props;
+		const { bytecodeVisible } = this.state;
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
@@ -51,13 +71,22 @@ class Transfer extends React.Component {
 									subject="to"
 									field={to}
 									autoFocus
-									checkAccount={this.props.checkAccount}
+									subjectToSendSwitch={this.props.subjectToSendSwitch}
+									setTransferFee={this.props.setTransferFee}
 									setIn={this.props.setIn}
 									setFormValue={this.props.setFormValue}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
+									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
 								/>
+								{
+									bytecodeVisible &&
+									<BytecodeField
+										field={bytecode}
+										setIn={this.props.setIn}
+									/>
+								}
 								<AmountField
 									fees={fees}
 									form={FORM_TRANSFER}
@@ -74,6 +103,7 @@ class Transfer extends React.Component {
 									setDefaultAsset={this.props.setDefaultAsset}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
+									setTransferFee={this.props.setTransferFee}
 								/>
 								<div className="form-panel">
 									<Button
@@ -98,12 +128,16 @@ Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
+	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	subjectTransferType: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
+	subjectToSendSwitch: PropTypes.func.isRequired,
+	setTransferFee: PropTypes.func.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,

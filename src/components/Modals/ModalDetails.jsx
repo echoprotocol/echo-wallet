@@ -33,7 +33,7 @@ class ModalDetails extends React.Component {
 		return (
 			<Form.Field key={key} >
 				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1')}
+					{key.replace(/([A-Z])/g, ' $1').split('_').join(' ')}
 				</label>
 				<div className={classnames({ 'image-input': isImageInput })}>
 					{isImageInput && <Avatar accountName={data} />}

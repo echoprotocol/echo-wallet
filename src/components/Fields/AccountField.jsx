@@ -4,6 +4,7 @@ import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
+import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
 
 class AccountField extends React.Component {
 
@@ -31,15 +32,29 @@ class AccountField extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(async () => {
-				const isValidAccount =
-					await this.props.checkAccount(this.props.field.value, this.props.subject);
-				if (!isValidAccount) return;
-				const { currency } = this.props;
-				if (currency && currency.id.startsWith(PREFIX_ASSET)) {
-					this.props.getTransferFee()
-						.then((fee) => fee && this.props.setValue('fee', fee));
+				if (this.props.subject === 'to') {
+					const validValue =
+						await this.props.subjectToSendSwitch(this.props.field.value, this.props.subject);
+					if (!validValue) return;
+
+					if (validValue === CONTRACT_ID_SUBJECT_TYPE) {
+						this.props.setVisibility('bytecode', true);
+					} else {
+						this.props.setVisibility('bytecode', false);
+					}
+
+					this.props.setTransferFee();
 				} else {
-					this.props.setContractFees();
+					const isValidValue =
+						await this.props.checkAccount(this.props.field.value, this.props.subject);
+					if (!isValidValue) return;
+					const { currency } = this.props;
+					if (currency && currency.id.startsWith(PREFIX_ASSET)) {
+						this.props.getTransferFee()
+							.then((fee) => fee && this.props.setValue('fee', fee));
+					} else {
+						this.props.setContractFees();
+					}
 				}
 			}, 300),
 		});
@@ -54,7 +69,13 @@ class AccountField extends React.Component {
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
 				<label htmlFor={`account${subject}`}>{subject}</label>
-				<Input type="text" placeholder="Account Name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus} disabled={disabled}>
+				<Input
+					type="text"
+					placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
+					className={classnames('action-wrap', { loading: field.loading && !field.error })}
+					autoFocus={autoFocus}
+					disabled={disabled}
+				>
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
 					{ field.checked && !field.error && !disabled &&
 						<span className={classnames('icon-checked value-status', { success: field.checked })} />
@@ -74,11 +95,14 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	checkAccount: PropTypes.func.isRequired,
+	checkAccount: PropTypes.func,
+	subjectToSendSwitch: PropTypes.func,
+	setTransferFee: PropTypes.func,
 	setIn: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	setVisibility: PropTypes.func,
 	disabled: PropTypes.bool,
 };
 
@@ -86,6 +110,10 @@ AccountField.defaultProps = {
 	autoFocus: false,
 	currency: null,
 	disabled: false,
+	checkAccount: null,
+	subjectToSendSwitch: null,
+	setTransferFee: null,
+	setVisibility: null,
 };
 
 export default AccountField;
