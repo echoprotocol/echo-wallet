@@ -50,7 +50,15 @@ class Permissions extends React.Component {
 				active: {},
 				echoRand: {},
 			},
-		};
+			deletedKeys: {
+				active: {},
+				echoRand: {},
+			},
+			addedKeys: {
+				active: {},
+				echoRand: {},
+			},
+		}
 	}
 
 	componentWillMount() {
@@ -97,28 +105,80 @@ class Permissions extends React.Component {
 
 	async saveWifs(password) {
         const { form } = this.props;
-        const { privateKeys } = this.state;
+        const { privateKeys, basePrivateKeys } = this.state;
         const account = this.props.account.toJS();
-        const newActiveWifs = Object.entries(privateKeys.active)
+
+		let activePrivateKeysEntries = Object.entries(privateKeys.active);
+		let echoRandPrivateKeysEntries = Object.entries(privateKeys.echoRand);
+
+		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
+		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
+
+        const newActiveWifs = activePrivateKeysEntries
             .filter(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
+
+				if (publicKey && publicKey.value && wif) {
+					console.log('publicKey && publicKey.value && wif');
+					if (!wif.error) {
+						console.log('	!wif.error')
+						if (!wif.value) {
+							console.log('		!wif.value')
+							if (
+								activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								console.log('			BIG IF 1')
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.filter(([indexA]) => indexA !== publicKey.value);
+							}
+
+							return false;
+						} else {
+							console.log('		!wif.value ---> else');
+							if (
+								!activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								console.log('			BIG IF 2');
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((keysItem) => {
+									const [indexA, wifA] = keysItem;
+									
+									if (indexA === publicKey.value && (!wifA || !wifA.value)) {
+										console.log('				indexA === publicKey.value && !wifA.value')
+										return [publicKey.value, wif];
+									}
+									return keysItem;
+								})
+							}
+						}
+					} else {
+						return false;
+					}
+
+					return true;
+				}
+
+				console.log('PIZODS')
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
+                return { publicKey, wif: wif.value, type: 'active' };
             })
-        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+        const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
+                return { publicKey, wif: wif.value, type: 'echoRand' };
             })
 
         const wifs = [...newActiveWifs, ...newEchoRandWifs];
+		console.log('at saveWifs', wifs);
 		await this.props.editWifs(wifs, account, password);
 		this.clear();
     }
@@ -138,11 +198,13 @@ class Permissions extends React.Component {
 	}
 
 	setWif(keyRole, type, e) {
+		console.log('at setWif, keyRole', keyRole);
 		const { form } = this.props;
 		const { privateKeys } = this.state;
 
 		const field = e.target.name;
 		const wif = e.target.value;
+		console.log('at setWif, wif', wif);
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
