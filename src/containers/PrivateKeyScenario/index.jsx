@@ -46,11 +46,11 @@ class PrivateKeyScenario extends React.Component {
 		}));
 	}
 
-	saveAsTxt(keysString) {
+	saveAsTxt(keysString, user, pubKey) {
 		const donwloadElement = document.createElement('a');
 		const txtFile = new Blob([keysString], { type: 'text/plain' });
 		donwloadElement.href = URL.createObjectURL(txtFile);
-		donwloadElement.download = 'echo-backup.txt';
+		donwloadElement.download = `echo-backup_${user}_${pubKey}.txt`;
 		donwloadElement.click();
 	}
 
@@ -156,7 +156,7 @@ class PrivateKeyScenario extends React.Component {
 					show={ModalViewWif.get('show')}
 					disabled={ModalViewWif.get('loading')}
 					error={ModalViewWif.get('error')}
-					saveAsTxt={(backupInfo) => this.saveAsTxt(backupInfo)}
+					saveAsTxt={(backupInfo, user, key) => this.saveAsTxt(backupInfo, user, key)}
 					close={() => this.close(MODAL_VIEW_WIF)}
 					keys={this.state}
 				/>
