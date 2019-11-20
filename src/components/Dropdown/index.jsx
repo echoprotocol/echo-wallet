@@ -8,13 +8,21 @@ import { convert } from '../../actions/ConverterActions';
 //	TODO endure all dropdowns in that component!!
 class DropdownComponent extends React.Component {
 
+	componentDidMount() {
+		const {
+			data, component, index, defaultType,
+		} = this.props;
+
+		this.props.convert(defaultType, data, component, index);
+	}
+
 	onChange(e, { value: type }) {
 		const { data, component, index } = this.props;
 		this.props.convert(type, data, component, index);
 	}
 
 	render() {
-		const { variativeOptions, activeType } = this.props;
+		const { variativeOptions, activeType, defaultType } = this.props;
 		const options = [
 			{
 				text: 'hex',
@@ -34,14 +42,15 @@ class DropdownComponent extends React.Component {
 			},
 		];
 
+
 		return (
 			<Dropdown
-				placeholder={activeType || 'hex'}
+				placeholder={activeType || defaultType}
 				compact
 				selection
 				className="contract-type-dropdown air"
 				options={variativeOptions || options}
-				onChange={(e, data) => this.onChange(e, data)}
+				onChange={(e, d) => this.onChange(e, d)}
 			/>
 		);
 	}
@@ -50,6 +59,7 @@ class DropdownComponent extends React.Component {
 
 DropdownComponent.propTypes = {
 	variativeOptions: PropTypes.any,
+	defaultType: PropTypes.string,
 	component: PropTypes.any.isRequired,
 	index: PropTypes.any,
 	data: PropTypes.any,
@@ -59,12 +69,10 @@ DropdownComponent.propTypes = {
 
 DropdownComponent.defaultProps = {
 	index: null,
-};
-
-DropdownComponent.defaultProps = {
 	activeType: null,
 	data: null,
 	variativeOptions: null,
+	defaultType: 'hex',
 };
 
 export default connect(
