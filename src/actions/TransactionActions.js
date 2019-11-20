@@ -984,7 +984,6 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	try {
 		feeValue = await dispatch(getTransactionFee(form, 'contract_call', options));
 	} catch (error) {
-		console.log('getTransactionFee error', error);
 		return null;
 	}
 
