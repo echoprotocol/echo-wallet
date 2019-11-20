@@ -21,7 +21,7 @@ class InputComponent extends React.Component {
 
 	render() {
 		const {
-			inputData, field: currentField, inputs,
+			inputData, field: currentField, inputs, onKeyDown,
 		} = this.props;
 
 		const { value } = inputs.toJS()[currentField.name][currentField.id];
@@ -34,6 +34,7 @@ class InputComponent extends React.Component {
 				size="mini"
 				value={value}
 				onChange={(e) => this.onChange(e)}
+				onKeyDown={onKeyDown}
 				placeholder={placeholder}
 			/>
 		);
@@ -46,6 +47,11 @@ InputComponent.propTypes = {
 	inputs: PropTypes.object.isRequired,
 	field: PropTypes.any.isRequired,
 	setInFormValue: PropTypes.func.isRequired,
+	onKeyDown: PropTypes.func,
+};
+
+InputComponent.defaultProps = {
+	onKeyDown: () => {},
 };
 
 export default connect(
