@@ -1,0 +1,58 @@
+
+.toggle {
+	background-color: transparent;
+	border: 0;
+	padding: 0;
+	position: relative;
+	display: inline-block;
+	outline: none;
+	position: relative;
+	width: 38px;
+	height: 16px;
+
+	.slider {
+		border-radius: 20px;
+		background-color: rgba(#5C637D, 0.3);
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		&:before {
+			border-radius: 50%;
+			width: 23px;
+			height: 23px;
+			position: absolute;
+			background-color: #AEB4C0;
+			border: 1px solid #fff;
+			content: '';
+			margin: 0;
+			padding: 0;
+			top: 50%;
+			left: 0;
+			transform: translateY(-50%);
+			cursor: pointer;
+			transition: transform $speed, background-color $speed;
+		}
+		
+		&.checked {
+			&:before {
+				left: calc(100% - 23px);
+				background-color: $main-color;
+			}
+		}
+	}
+}
+
+.toggle-wrap {
+	display: flex;
+	align-items: center;
+
+}
+
+.toggle-label {
+	color: #3B3B3B;
+	margin-left: 9px;
+	font-size: 15px;
+}
