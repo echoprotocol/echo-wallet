@@ -464,11 +464,8 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 		return arr;
 	}, []);
 
-	try {
-		fees = await Promise.all(fees);
-	} catch (e) {
-		throw e;
-	}
+	fees = await Promise.all(fees);
+
 
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
