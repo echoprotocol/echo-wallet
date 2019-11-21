@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
+import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 
 class ModalViewWIF extends React.Component {
 
@@ -14,9 +15,9 @@ class ModalViewWIF extends React.Component {
 	}
 
 	onSave() {
-		const { keys } = this.props;
-		const keysString = `Public key:\n${keys.publicKey}\n\nWIF:${keys.wif}`;
-		this.props.saveAsTxt(keysString);
+		const { keys, activeUserName } = this.props;
+		const keysString = `Account: ${activeUserName}\n\nPublic key:\n${keys.publicKey}\nWIF:\n${keys.wif}`;
+		this.props.saveAsTxt(keysString, activeUserName, keys.publicKey.replace(ADDRESS_PREFIX, '').substring(0, 8));
 	}
 
 	render() {
@@ -90,6 +91,7 @@ class ModalViewWIF extends React.Component {
 
 ModalViewWIF.propTypes = {
 	show: PropTypes.bool,
+	activeUserName: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	saveAsTxt: PropTypes.func.isRequired,
 	keys: PropTypes.object,
@@ -97,6 +99,7 @@ ModalViewWIF.propTypes = {
 
 ModalViewWIF.defaultProps = {
 	show: false,
+	activeUserName: '',
 	keys: {},
 };
 
@@ -104,6 +107,7 @@ ModalViewWIF.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
+		activeUserName: state.global.getIn(['activeUser', 'name']),
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),

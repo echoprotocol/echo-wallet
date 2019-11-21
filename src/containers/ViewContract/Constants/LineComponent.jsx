@@ -27,6 +27,12 @@ class LineComponent extends React.Component {
 
 	}
 
+	onKeyDown(e) {
+		if (e.keyCode === 13) {
+			this.onQuery();
+		}
+	}
+
 	renderConstant() {
 		const { constant, convertedConstants } = this.props;
 
@@ -51,7 +57,11 @@ class LineComponent extends React.Component {
 						return (
 							<Form.Field key={id} className={classnames({ error: errorValue, 'error-wrap': true })}>
 								{ id !== 0 && <span className="comma item">,</span> }
-								<InputComponent field={{ id, name: constant.name }} inputData={input} />
+								<InputComponent
+									field={{ id, name: constant.name }}
+									inputData={input}
+									onKeyDown={(e) => this.onKeyDown(e)}
+								/>
 								<span className="error-message">{errorValue}</span>
 							</Form.Field>
 						);
@@ -78,44 +88,98 @@ class LineComponent extends React.Component {
 			<React.Fragment>
 				{
 					constant.showQueryResult &&
-					<div className="watchlist-row">
-						<div className="result-value">
-							{convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`}
-						</div>
-					</div>
+							(convertedConstant ? convertedConstant.value : `0x${constant.constantValue}`)
 				}
 			</React.Fragment>
+		);
+
+	}
+
+	renderDropdown() {
+		const {
+			constant, typeOptions, convertedConstants, defaultType,
+		} = this.props;
+
+		const convertedConstant = convertedConstants.find((val) => constant.name === val.name);
+
+		return (
+			<Dropdown
+				defaultType={defaultType}
+				data={constant.constantValue}
+				variativeOptions={typeOptions}
+				component={constant}
+				activeType={convertedConstant ? convertedConstant.type : null}
+			/>
 		);
 	}
 
 	render() {
-		const { constant, typeOptions, convertedConstants } = this.props;
-		const convertedConstant = convertedConstants.find((val) => constant.name === val.name);
+		const { constant } = this.props;
 
 		return (
 			<div className="watchlist-line">
 				<div className="watchlist-row">
 					<span className="row-title"> {formatCallContractField(constant.name)} </span>
 				</div>
-				<div className="watchlist-row">
-					<div className="watchlist-col">
-						<span className="icon-dotted" />
-					</div>
-					<div className="watchlist-col">
-						<Dropdown
-							data={constant.constantValue}
-							variativeOptions={typeOptions}
-							component={constant}
-							activeType={convertedConstant ? convertedConstant.type : null}
-						/>
-						{
-							constant.inputs.length
-								? this.renderInput()
-								: this.renderConstant()
-						}
-					</div>
-				</div>
-				{this.renderQueryResult()}
+				{
+					constant.inputs.length ? (
+						<React.Fragment>
+							<div className="watchlist-row">
+								<div className="watchlist-col">
+									<span className="icon-dotted" />
+								</div>
+								<div className="watchlist-col">
+									{
+										this.renderInput()
+									}
+								</div>
+							</div>
+							{
+								constant.showQueryResult && (
+									<div className="watchlist-row inner">
+										<div className="watchlist-col">
+											{
+												this.renderDropdown()
+											}
+										</div>
+										<div className="watchlist-col">
+											{
+												this.renderQueryResult()
+											}
+										</div>
+									</div>
+								)
+							}
+						</React.Fragment>
+					) : (
+						<React.Fragment>
+							<div className="watchlist-row">
+								<div className="watchlist-col">
+									<span className="icon-dotted" />
+								</div>
+								<div className="watchlist-col">
+									{
+										this.renderDropdown()
+									}
+									{
+										this.renderConstant()
+									}
+								</div>
+							</div>
+							{
+								constant.showQueryResult && (
+									<div className="watchlist-row">
+										<div className="watchlist-col">
+											{
+												this.renderQueryResult()
+											}
+										</div>
+									</div>
+								)
+							}
+						</React.Fragment>
+					)
+				}
 			</div>
 		);
 	}
@@ -129,6 +193,7 @@ LineComponent.propTypes = {
 	inputs: PropTypes.object.isRequired,
 	contractId: PropTypes.string.isRequired,
 	contractQuery: PropTypes.func.isRequired,
+	defaultType: PropTypes.string.isRequired,
 };
 
 export default connect(
