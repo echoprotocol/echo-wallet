@@ -811,6 +811,8 @@
 				transition: color $speed;
 			}
 			.name {
+				@include cut-text;
+				max-width: 324px;
 				font-size: 13px;
 				color: rgba(#3B3B3B, .8);
 				transition: color $speed;
