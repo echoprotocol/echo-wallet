@@ -21,7 +21,7 @@
 	background-color: #FFFFFF;
 	border: 1px solid $inut-color;
 	color: rgba(0, 0, 0, 0.87);
-	border-radius: 0.28571429rem;
+	border-radius: 4px;
 	-webkit-transition: border-color $speed ease, -webkit-box-shadow $speed ease;
 	transition: border-color $speed ease, -webkit-box-shadow $speed ease;
 	transition: box-shadow $speed ease, border-color $speed ease;
@@ -47,7 +47,7 @@ input[type="url"] {
 	font-size: 1.0714em;
 	border: 1px solid $inut-color;
 	color: rgba(0, 0, 0, 0.87);
-	border-radius: 0.28571429rem;
+	border-radius: 4px;
 	transition: color $speed ease, border-color $speed ease;
 }
 

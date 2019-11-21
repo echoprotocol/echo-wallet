@@ -99,17 +99,21 @@ div,span {
 .hidden {
     display: none;
 }
+
 .pointer {
     cursor: pointer;
 }
+
 .global-wrapper {
     padding-top: 30px;
 }
+
 .wrapper {
 	display: flex;
 	min-height: calc(100vh - 30px);
 	flex-direction: column;
 }
+
 .content {
 	flex: 1;
 	&.center-mode {
@@ -123,6 +127,7 @@ div,span {
 		}
 	}
 }
+
 .link {
     color: $main-color;
     transition: color $speed;
@@ -159,7 +164,9 @@ div,span {
         line-height: 0;
     }
 }
-
+.t-center {
+	text-align: center;
+}
 // ANIMATIONS
 
 @-webkit-keyframes rotating /* Safari and Chrome */ {

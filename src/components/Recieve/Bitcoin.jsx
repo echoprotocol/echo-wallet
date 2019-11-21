@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Button } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -10,6 +10,7 @@ import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
+import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
 
 class EchoNetwork extends React.Component {
 
@@ -110,7 +111,7 @@ class EchoNetwork extends React.Component {
 		return header.concat(options).concat(generateAddressItem);
 	}
 
-	render() {
+	renderPayment() {
 
 		const {
 			currency, from, setIn, checkAccount,
@@ -118,7 +119,7 @@ class EchoNetwork extends React.Component {
 		} = this.props;
 
 		return (
-			<div className="payment-wrap">
+			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
 				<AccountField
@@ -167,6 +168,47 @@ class EchoNetwork extends React.Component {
 					assetDropdown={false}
 				/>
 				<QrCode />
+			</React.Fragment>
+		);
+	}
+	renderGenerateAdressProcess() {
+		const { address } = this.props;
+
+		return address ? (
+			<React.Fragment>
+				<h2 className="payment-header t-center">
+					You should generate address<br /> to receive payment.
+				</h2>
+				<p className="payment-description t-center">
+					Please, allow some time for address generation as it may take up to one hour.
+					It will appear on this page when generated.
+				</p>
+				<Button
+					className="main-btn"
+					content="Generate address"
+					onClick={() => this.props.openModal(MODAL_GENERATE_ADDRESS)}
+				/>
+			</React.Fragment>
+		) :
+			<React.Fragment>
+				<h2 className="payment-header t-center">
+					Wait please, <br /> address is not ready yet
+				</h2>
+				<p className="payment-description t-center">
+					Please, allow some time for address generation as it may take up to one hour.
+					It will appear on this page when generated.
+				</p>
+			</React.Fragment>;
+	}
+
+	render() {
+
+
+		return (
+			<div className="payment-wrap" >
+				{this.renderGenerateAdressProcess()}
+
+				{/* {this.renderPayment()} */}
 			</div>
 		);
 	}
@@ -191,10 +233,14 @@ EchoNetwork.propTypes = {
 	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
+	address: PropTypes.bool,
+	openModal: PropTypes.func.isRequired,
+
 };
 
 EchoNetwork.defaultProps = {
 	currency: null,
+	address: true,
 };
 
 

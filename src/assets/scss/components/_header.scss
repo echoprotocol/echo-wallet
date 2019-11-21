@@ -35,7 +35,7 @@
         cursor: pointer;
 
         &:focus {
-            border-radius: 0.28571429rem;
+            border-radius: 4px;
             @include on-focus(4px);
         }
 

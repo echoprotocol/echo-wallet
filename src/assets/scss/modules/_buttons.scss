@@ -350,6 +350,19 @@ $stripe-width: 10px;
 	color: $main-color;
 	padding: 0 2px;
 	transition: color $speed;
+	margin: 0 -3px;
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
+
+.link-copy-btn {
+	color: $main-color;
+	padding: 2px;
+	margin: -2px;
+	transition: color $speed;
 
 	&:not(:active) {
 		&:focus {

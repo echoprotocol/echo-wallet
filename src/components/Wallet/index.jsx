@@ -85,6 +85,7 @@ class Wallet extends React.Component {
 							from={from}
 							//
 							clearForm={this.props.clearForm}
+							openModal={(value) => this.props.openModal(value)}
 						/>
 					</div>),
 			},
@@ -122,7 +123,6 @@ class Wallet extends React.Component {
 								this.props.setContractFees();
 							}}
 							removeToken={this.props.removeToken}
-							openModal={this.props.openModal}
 						/>
 					</div>
 				</div>

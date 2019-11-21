@@ -4,10 +4,10 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
+import Bitcoin from './Bitcoin';
 
 
 class Recieve extends React.Component {
-
 
 	componentDidMount() {
 		const { accountName } = this.props;
@@ -63,7 +63,29 @@ class Recieve extends React.Component {
 					onClick={(e) => e.target.blur()}
 					content="Bitcoin"
 				/>,
-				render: () => ('Bitcoin'),
+				render: () => (
+					<Bitcoin
+						// for Amount field
+						fees={fees}
+						fee={fee}
+						assets={assets}
+						tokens={tokens}
+						amount={amount}
+						currency={currency}
+						isAvailableBalance={isAvailableBalance}
+						amountInput={this.props.amountInput}
+						setFormError={this.props.setFormError}
+						setFormValue={this.props.setFormValue}
+						setValue={this.props.setValue}
+						setDefaultAsset={this.props.setDefaultAsset}
+						getTransferFee={this.props.getTransferFee}
+						setContractFees={this.props.setContractFees}
+						// for From field
+						from={from}
+						setIn={setIn}
+						checkAccount={checkAccount}
+						openModal={(value) => this.props.openModal(value)}
+					/>),
 			},
 			{
 				menuItem: <Button
@@ -84,7 +106,7 @@ class Recieve extends React.Component {
 						defaultActiveIndex="0"
 						menu={{
 							tabular: false,
-							className: 'wallet-tab-menu',
+							className: 'recieve-tab-menu',
 						}}
 						panes={internalTabs}
 					/>
@@ -118,6 +140,7 @@ Recieve.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	//
 	clearForm: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 };
 
 Recieve.defaultProps = {

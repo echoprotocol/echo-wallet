@@ -100,7 +100,7 @@
             min-width: 151px;
             margin-left: -1px;
             overflow: auto;
-            border-radius: 0.28571429rem;
+            border-radius: 4px;
             border-top: 1px solid #96C8DA;
 
             &>.item {
@@ -165,9 +165,6 @@
         min-height: 38px;
 
         &.active {
-            &:not(.no-choice) {
-                border-bottom-right-radius: 0 !important;
-            }
 
             .filtered {
                 display: none;
@@ -181,32 +178,6 @@
 
         .dropdown.icon {
             padding-left: 1em;
-        }
-
-        &.no-choice {
-            cursor: auto;
-
-            input.search {
-                position: absolute;
-                z-index: -1;
-                opacity: 0;
-            }
-
-            .menu {
-                display: none !important;
-            }
-
-            .dropdown.icon {
-                display: none;
-            }
-
-            &>input.search {
-                &:focus {
-                    &+.text {
-                        color: $main-color;
-                    }
-                }
-            }
         }
 
         &>input.search {
@@ -234,7 +205,6 @@
             &>.item {
                 @include cut-text;
                 padding-right: 0;
-                // max-width: 138px;
 
                 &:nth-child(1) {
                     &.header {
@@ -779,7 +749,7 @@
 
 		input.search {
 			height: 36px;
-			padding: 0.678571em 1em;
+			padding: 0.678571em 32px 0.678571em 1em
 		}
 
 		input.search + .text {
