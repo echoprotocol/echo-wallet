@@ -157,12 +157,11 @@ class WarningConfirmThresholdScenario extends React.Component {
 	async unlock() {
 		const { password } = this.state;
 
-		const isTransactionNeed = !this.state.isWifChangingOnly;
 		this.props.unlock(password, () => {
-			if (isTransactionNeed) {
-				this.props.openModal(MODAL_DETAILS);
-			} else {
+			if (this.state.isWifChangingOnly) {
 				this.send();
+			} else {
+				this.props.openModal(MODAL_DETAILS);
 			}
 		});
 
