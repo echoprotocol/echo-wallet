@@ -7,7 +7,7 @@ import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
 
 
-class Recieve extends React.Component {
+class Receive extends React.Component {
 
 	componentDidMount() {
 		const { accountName } = this.props;
@@ -106,7 +106,7 @@ class Recieve extends React.Component {
 						defaultActiveIndex="0"
 						menu={{
 							tabular: false,
-							className: 'recieve-tab-menu',
+							className: 'receive-tab-menu',
 						}}
 						panes={internalTabs}
 					/>
@@ -117,7 +117,7 @@ class Recieve extends React.Component {
 
 }
 
-Recieve.propTypes = {
+Receive.propTypes = {
 	// for Amount
 	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
@@ -143,9 +143,9 @@ Recieve.propTypes = {
 	openModal: PropTypes.func.isRequired,
 };
 
-Recieve.defaultProps = {
+Receive.defaultProps = {
 	currency: null,
 };
 
 
-export default Recieve;
+export default Receive;

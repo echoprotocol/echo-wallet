@@ -6,7 +6,7 @@ import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
 
 import Transfer from '../Transfer';
-import Recieve from '../Recieve';
+import Receive from '../Receive';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 class Wallet extends React.Component {
@@ -62,7 +62,7 @@ class Wallet extends React.Component {
 				/>,
 				render: () => (
 					<div className="send-wrap">
-						<Recieve
+						<Receive
 							// for Amount
 							fees={fees}
 							tokens={tokens}

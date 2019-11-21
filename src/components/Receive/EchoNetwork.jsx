@@ -5,7 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
-import Avatar from '../../components/Avatar';
+import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
