@@ -154,33 +154,32 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 
 export const setTransferFee = (assetId) => async (dispatch, getState) => {
 	const form = getState().form.get(FORM_TRANSFER);
+	const activeUserId = getState()
+		.global
+		.getIn(['activeUser', 'id']);
+
+	if (!activeUserId) return null;
+
+	const to = form.get('to').value;
+	const amount = form.get('amount').value;
+	const bytecode = form.get('bytecode').value;
+	const currency = form.get('currency');
+
+	let amountValue = 0;
+	if (amount) {
+		const amountError = validateAmount(amount, currency);
+		if (!amountError) {
+			amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
+				.toString(10);
+		}
+	}
+
+	if (!currency || !currency.precision) return null;
+
+	const echoAsset = await echo.api.getObject('1.3.0');
 	switch (form.get('subjectTransferType')) {
 		case CONTRACT_ID_SUBJECT_TYPE: {
 			try {
-				const activeUserId = getState()
-					.global
-					.getIn(['activeUser', 'id']);
-
-				if (!activeUserId) return null;
-
-				const to = form.get('to').value;
-				const amount = form.get('amount').value;
-				const bytecode = form.get('bytecode').value;
-				const currency = form.get('currency');
-
-				let amountValue = 0;
-				if (amount) {
-					const amountError = validateAmount(amount, currency);
-					if (!amountError) {
-						amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
-							.toString(10);
-					}
-				}
-
-				if (!currency || !currency.precision) return null;
-
-				const echoAsset = await echo.api.getObject('1.3.0');
-
 				const options = {
 					fee: {
 						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
@@ -198,7 +197,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 				const fee = await dispatch(getTransactionFee(FORM_TRANSFER, 'contract_call', options));
 
 				return {
-					value: fee.value,
+					value: fee ? fee.value : '',
 					asset: echoAsset,
 				};
 
@@ -208,29 +207,6 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 		}
 		case ADDRESS_SUBJECT_TYPE: {
 			try {
-				const activeUserId = getState()
-					.global
-					.getIn(['activeUser', 'id']);
-
-				if (!activeUserId) return null;
-
-				const to = form.get('to').value;
-				const amount = form.get('amount').value;
-				const currency = form.get('currency');
-
-				let amountValue = 0;
-				if (amount) {
-					const amountError = validateAmount(amount, currency);
-					if (!amountError) {
-						amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
-							.toString(10);
-					}
-				}
-
-				if (!currency || !currency.precision) return null;
-
-				const echoAsset = await echo.api.getObject('1.3.0');
-
 				const fromAccount = await echo.api.getAccountByName(form.get('from').value);
 				const options = {
 					fee: {
