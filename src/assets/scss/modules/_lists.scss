@@ -60,7 +60,14 @@
     &-row {
         display: flex;
         align-items: center;
-
+        &:not(:first-child) {
+            &:not(:last-child) {
+                margin: 0 0 12px 0;
+            }
+        }
+        &.inner {
+            margin-left: 29px;
+        }
         &--h {
             display: flex;
         }

@@ -10,7 +10,7 @@ import {
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
-const reg = /^[0-9a-fA-F]+$/;
+const reg = /^(([\da-fA-F]){2})*$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
@@ -35,6 +35,9 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
+	if (!(/[.\-/0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
+		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
+	}
 	if (/\./.test(value)) {
 		suffix = 'Each account segment should';
 	}
@@ -88,10 +91,11 @@ export const validateWIF = (wif) => {
 /**
  * @method validateCode
  * @param {String} code
+ * @param {Boolean} canBeEmpty
  * @returns {(String | null)}
  */
-export const validateCode = (code) => {
-	if (!code) {
+export const validateCode = (code, canBeEmpty = false) => {
+	if (!code && !canBeEmpty) {
 		return 'field should be not empty';
 	}
 
@@ -105,6 +109,7 @@ export const validateCode = (code) => {
 
 	return null;
 };
+
 
 /**
  * @method validateContractName
