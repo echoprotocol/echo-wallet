@@ -29,6 +29,7 @@ import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstant
 import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -443,6 +444,9 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	let isCurrentTransferBalanceUpdated = false;
 
 	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
+
+	const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, accountId));
+	dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	for (let i = 0; i < subscribeObjects.length; i += 1) {
 		const object = subscribeObjects[i];
