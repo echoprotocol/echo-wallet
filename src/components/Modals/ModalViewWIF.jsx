@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -38,24 +39,34 @@ class ModalViewWIF extends React.Component {
 
 					<Form.Field>
 						<label htmlFor="public-key">Public Key</label>
-						<input
-							type="text"
-							placeholder="Public Key"
-							disabled
-							name="public-key"
-							value={keys.publicKey}
-						/>
+						<div className="ui action input">
+							<input
+								type="text"
+								placeholder="Public Key"
+								disabled
+								name="public-key"
+								value={keys.publicKey}
+							/>
+							<CopyToClipboard text={keys.publicKey}>
+								<Button icon="copy" className="input-copy-btn" />
+							</CopyToClipboard>
+						</div>
 					</Form.Field>
 
 					<Form.Field>
 						<label htmlFor="public-key">WIF *</label>
-						<input
-							type="text"
-							placeholder="WIF"
-							disabled
-							name="wif"
-							value={keys.wif}
-						/>
+						<div className="ui action input">
+							<input
+								type="text"
+								placeholder="WIF"
+								disabled
+								name="wif"
+								value={keys.wif}
+							/>
+							<CopyToClipboard text={keys.wif}>
+								<Button icon="copy" className="input-copy-btn" />
+							</CopyToClipboard>
+						</div>
 						<span className="warning-message">
 							* Warning: Anyone who has this key can steal all your Echo
 							assets and this key can never be recovered if you lose it.
