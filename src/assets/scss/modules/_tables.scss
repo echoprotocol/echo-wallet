@@ -202,12 +202,12 @@ $thead-height: 46px;
                     background-color: #fafafa;
 
                     &:hover {
-                        background-color: $main-сolor;
+                        background-color: $main-color;
                     }
                 }
 
                 &:hover {
-                    background-color: $main-сolor;
+                    background-color: $main-color;
 
                     .label-operation {
                         border-right: 1px solid #fff;
@@ -249,7 +249,7 @@ $thead-height: 46px;
                     &:nth-child(2),
                     &:nth-child(3),
                     &:nth-child(4) {
-                        color: $main-сolor;
+                        color: $main-color;
                     }
 
                     &:nth-child(5),
@@ -281,8 +281,8 @@ $thead-height: 46px;
         border-radius: 0;
 
         @media (min-width: 1060px) {
-            margin: 46px 0 0 0;
-            height: calc(100vh - 236px);
+            margin: $thead-height 0 0 0;
+            height: calc(100vh - 244px)
         }
 
         thead {
@@ -328,12 +328,12 @@ $thead-height: 46px;
 
                 &:nth-child(2n) {
                     &:hover {
-                        background-color: $main-сolor;
+                        background-color: $main-color;
                     }
                 }
 
                 &:hover {
-                    background-color: $main-сolor;
+                    background-color: $main-color;
 
                     td {
                         color: #fff;
@@ -420,7 +420,7 @@ $thead-height: 46px;
                 }
 
                 &:hover {
-                    background-color: $main-сolor;
+                    background-color: $main-color;
 
                     td {
                         color: rgba(#fff, 1);
@@ -489,7 +489,7 @@ $thead-height: 46px;
             &:last-child {
                 &:not(:first-child) {
                     transition: color $speed;
-                    color: $main-сolor;
+                    color: $main-color;
                 }
             }
 
@@ -508,7 +508,7 @@ $thead-height: 46px;
                 background-color: transparent;
                 border: 0;
                 width: 100%;
-                color: $main-сolor;
+                color: $main-color;
                 transition: color $speed;
                 font-size: .85em;
                 letter-spacing: -.2px;
@@ -656,7 +656,7 @@ $thead-height: 46px;
                     align-items: center;
 
                     &:first-child {
-                        color: $main-сolor;
+                        color: $main-color;
                         line-height: 30px;
                         font-family: proximanovaSemibold;
                     }
@@ -684,7 +684,7 @@ $thead-height: 46px;
             tr,
             tr:nth-child(2n-1) {
                 &:not(.msg-empty):hover {
-                    background-color: $main-сolor;
+                    background-color: $main-color;
 
                     .icon-close {
                         display: inline-block;

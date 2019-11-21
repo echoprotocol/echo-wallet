@@ -24,7 +24,25 @@
             input {
                 text-indent: 30px;
             }
-        }
+		}
+		.input.icon {
+			.avatar-wrap {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				display: flex;
+				align-items: center;
+				left: 10px;
+			}
+		}
+		.input.icon > input {
+			z-index: 3;
+			background-color: transparent;
+			padding-left: 40px;
+		}
+		.input.icon.disabled {
+			background-color: rgba(233, 233, 237, 0.5);
+		}
     }
 }
 
@@ -59,7 +77,7 @@
 
         &:hover {
             .icon-back {
-                color: $main-сolor;
+                color: $main-color;
             }
         }
 
@@ -271,7 +289,7 @@
         .total-sum {
             span {
                 margin-left: 5px;
-                color: $main-сolor;
+                color: $main-color;
             }
         }
     }
@@ -314,56 +332,67 @@
                     width: 100%;
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
-                    // clip-path: inset(-5px 0px -5px -5px);
+				}
+				.amount-wrap {
+					width: 100%;
+					position: relative;
+					display: flex;
 
-                    &-wrap {
-                        width: 100%;
-                        position: relative;
-                        display: flex;
+					&:hover {
+						&+.assets-tokens-dropdown {
+							border-color: $inut-hover;
+						}
+					}
 
-                        &:hover {
-                            &+.assets-tokens-dropdown {
-                                border-color: $inut-hover;
-                            }
-                        }
+					&:after {
+						width: 1px;
+						background: #fff;
+						content: "";
+						height: 10px;
+						position: absolute;
+						right: 0;
+						top: 1px;
+						z-index: 2;
+					}
 
-                        &:after {
-                            width: 1px;
-                            background: #fff;
-                            content: "";
-                            height: 10px;
-                            position: absolute;
-                            right: 0;
-                            top: 1.2px;
-                            z-index: 2;
-                        }
+					&:before {
+						width: 1px;
+						background: #fff;
+						content: "";
+						height: 10px;
+						position: absolute;
+						right: 0;
+						bottom: 1px;
+						z-index: 2;
+					}
 
-                        &:before {
-                            width: 1px;
-                            background: #fff;
-                            content: "";
-                            height: 10px;
-                            position: absolute;
-                            right: 0;
-                            bottom: 1px;
-                            z-index: 2;
-                        }
+					&.without-dropdown {
 
-                        &.without-dropdown {
+						&:after,
+						&:before {
+							content: none;
+						}
 
-                            &:after,
-                            &:before {
-                                content: none;
-                            }
+						.amount {
+							padding-right: 75px;
+							border-top-right-radius: 4px;
+							border-bottom-right-radius: 4px;
+						}
+					}
 
-                            .amount {
-                                border-top-right-radius: 0.28571429rem;
-                                border-bottom-right-radius: 0.28571429rem;
-                            }
-                        }
-                    }
+				}
+				.currency-label {
+					font-size: 15px;
+					position: absolute;
+					right: 16px;
+					top: 0;
+					bottom: 0;
+					margin: auto;
+					display: flex;
+					align-items: center;
+					color: rgba(#3B3B3B, 0.8);
 
-                }
+				}
             }
         }
     }
@@ -501,8 +530,6 @@
     font-weight: 500;
     color: #EE851C;
 }
-
-
 
 .amount-wrap {
     input:focus {

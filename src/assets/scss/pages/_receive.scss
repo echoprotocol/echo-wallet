@@ -1,0 +1,39 @@
+.payment-wrap {
+	margin: 17px 0 0 0;
+}
+.payment-description {
+	font-size: 14px;
+	line-height: 20px;
+	color: #3B3B3B;
+	& + .payment-description {
+		margin: 18px 0 0;
+	}
+	& + .field {
+		margin-top: 21px;
+	}
+	&.t-center + .main-btn {
+		margin: 19px auto 0;
+		display: block;
+		min-width: 160px;
+	}
+}
+
+.payment-description + .dropdown-wrap {
+	margin-top: 5px;
+}
+
+.dropdown-wrap + .field {
+	margin-top: 24px;
+}
+
+.field + .qr-section {
+	margin-top: 25px;
+}
+
+.payment-header {
+	font-family: proximaNovaSemibold;
+	font-size: 20px;
+	line-height: 26px;
+	color: rgba(#3B3B3B, 0.8);
+	margin: 45px 0 10px
+}

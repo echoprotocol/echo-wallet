@@ -19,6 +19,7 @@ class Transfer extends React.Component {
 		this.props.clearForm();
 		this.props.resetTransaction();
 	}
+
 	render() {
 		const {
 			from, to, currency,
@@ -31,9 +32,6 @@ class Transfer extends React.Component {
 				{
 					(submit) => (
 						<Form className="main-form">
-							<div className="form-info">
-								<h3>Create Payment</h3>
-							</div>
 							<div className="field-wrap">
 								<AccountField
 									currency={currency}

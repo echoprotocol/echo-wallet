@@ -51,13 +51,13 @@ $stripe-width: 10px;
 
 .main-btn {
 	@include btn();
-	color: $main-сolor;
-	border: 1px solid $main-сolor;
+	color: $main-color;
+	border: 1px solid $main-color;
 	background-color: transparent;
 
 	&:hover {
 		color: #fff;
-		background-color: $main-сolor;
+		background-color: $main-color;
 	}
 
 	&:not(:active) {
@@ -67,15 +67,15 @@ $stripe-width: 10px;
 	}
 
 	&:active {
-		border: 1px solid rgba($main-сolor, .8);
-		background-color: rgba($main-сolor, .8);
+		border: 1px solid rgba($main-color, .8);
+		background-color: rgba($main-color, .8);
 		color: rgba(#fff, .8);
 	}
 
 	&:disabled {
-		border: 1px solid rgba($main-сolor, .5);
+		border: 1px solid rgba($main-color, .5);
 		background-color: transparent;
-		color: rgba($main-сolor, .5);
+		color: rgba($main-color, .5);
 	}
 
 	// SIZE
@@ -95,13 +95,13 @@ $stripe-width: 10px;
 	// VARIANTS
 
 	&.light {
-		border: 1px solid rgba($main-сolor, .2);
+		border: 1px solid rgba($main-color, .2);
 	}
 
 	&.load {
 		color: #fff;
 		background-color: #fff;
-		background-color: $main-сolor;
+		background-color: $main-color;
 	}
 
 	.main-btn-popup {
@@ -127,8 +127,8 @@ $stripe-width: 10px;
 .blue-btn {
 	@include btn();
 	color: #fff;
-	border: 1px solid $main-сolor;
-	background-color: $main-сolor;
+	border: 1px solid $main-color;
+	background-color: $main-color;
 
 	&:hover {
 		border: 1px solid #3E51A3;
@@ -143,14 +143,14 @@ $stripe-width: 10px;
 	}
 
 	&:active {
-		border: 1px solid rgba($main-сolor, .8);
+		border: 1px solid rgba($main-color, .8);
 		color: rgba(#fff, .8);
 	}
 
 	&:disabled {
-		border: 1px solid rgba($main-сolor, .5);
+		border: 1px solid rgba($main-color, .5);
 		background-color: transparent;
-		color: rgba($main-сolor, .5);
+		color: rgba($main-color, .5);
 	}
 
 	// SIZE
@@ -172,7 +172,7 @@ $stripe-width: 10px;
 	&.load {
 		color: #fff;
 		background-color: #fff;
-		background-color: $main-сolor;
+		background-color: $main-color;
 	}
 }
 
@@ -203,7 +203,7 @@ $stripe-width: 10px;
 	&:disabled {
 		border: 1px solid rgba(#515459, .5);
 		background-color: rgba(#515459, .5);
-		color: rgba($main-сolor, .5);
+		color: rgba($main-color, .5);
 	}
 
 	&.compact {
@@ -335,8 +335,8 @@ $stripe-width: 10px;
 
 
 .input-copy-btn {
-	border: 1px solid $main-сolor;
-	background-color: $main-сolor;
+	border: 1px solid $main-color;
+	background-color: $main-color;
 	color: #fff;
 
 	&:not(:active) {
@@ -346,6 +346,30 @@ $stripe-width: 10px;
 	}
 }
 
+.dropdown-copy-btn {
+	color: $main-color;
+	padding: 0 2px;
+	transition: color $speed;
+	margin: 0 -3px;
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
+
+.link-copy-btn {
+	color: $main-color;
+	padding: 2px;
+	margin: -2px;
+	transition: color $speed;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
 .version-btn {
 	font-family: proxima;
 	background-color: transparent;

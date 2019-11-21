@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
 import classnames from 'classnames';
+import Avatar from '../../components/Avatar';
 
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 
@@ -54,7 +55,20 @@ class AccountField extends React.Component {
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
 				<label htmlFor={`account${subject}`}>{subject}</label>
-				<Input type="text" placeholder="Account Name" className={classnames('action-wrap', { loading: field.loading && !field.error })} autoFocus={autoFocus} disabled={disabled}>
+				<Input
+					icon={field.checked && !field.error}
+					type="text"
+					placeholder="Account Name"
+					className={classnames('action-wrap', { loading: field.loading && !field.error })}
+					autoFocus={autoFocus}
+					disabled={disabled}
+				>
+					{
+						field.checked && !field.error &&
+						<div className="avatar-wrap">
+							<Avatar accountName={field.value} />
+						</div>
+					}
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
 					{ field.checked && !field.error && !disabled &&
 						<span className={classnames('icon-checked value-status', { success: field.checked })} />
