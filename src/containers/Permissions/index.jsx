@@ -114,62 +114,84 @@ class Permissions extends React.Component {
 		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
 		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
 
+		console.log(activePrivateKeysEntries);
+		console.log(activeBasePrivateKeysEntries);
+
         const newActiveWifs = activePrivateKeysEntries
-            .filter(([index, wif]) => {
+            .map(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
 
-				if (publicKey && publicKey.value && wif) {
-					console.log('publicKey && publicKey.value && wif');
-					if (!wif.error) {
-						console.log('	!wif.error')
-						if (!wif.value) {
-							console.log('		!wif.value')
+				if (wif && wif.error) {
+					console.log('wif && wif.error')
+					return null;
+				}
+
+				if (publicKey && publicKey.value) {
+					console.log('publicKey && publicKey.value', publicKey.value)
+					if (!wif || !wif.value) {
+						console.log('	!wif || !wif.value')
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							console.log('		ebanina 1')
 							if (
-								activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
 								echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
 								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
 							) {
-								console.log('			BIG IF 1')
+								console.log('			ebanina 2')
 								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.filter(([indexA]) => indexA !== publicKey.value);
 							}
-
-							return false;
 						} else {
-							console.log('		!wif.value ---> else');
-							if (
-								!activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
-								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
-								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
-							) {
-								console.log('			BIG IF 2');
-								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((keysItem) => {
-									const [indexA, wifA] = keysItem;
-									
-									if (indexA === publicKey.value && (!wifA || !wifA.value)) {
-										console.log('				indexA === publicKey.value && !wifA.value')
-										return [publicKey.value, wif];
-									}
-									return keysItem;
-								})
+							console.log('			ebanina 1 else')
+							const echoRandPrivateKeyData = echoRandPrivateKeysEntries.find(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							console.log(echoRandPrivateKeyData);
+							console.log(echoRandBasePrivateKeysEntries);
+							if (echoRandPrivateKeyData) {
+								console.log('			ebanina 2')
+								const [, echoRandPrivateKeyWif] = echoRandPrivateKeyData;
+								return { publicKey: publicKey.value, wif: echoRandPrivateKeyWif.value, type: 'active' };
 							}
 						}
 					} else {
-						return false;
-					}
+						console.log('	!wif || !wif.value else')
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							console.log('		ebanina 1')
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								console.log('			ebanina 2');
+								return null;
+							}
+						} else {
+							console.log('		ebanina 1 else')
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								console.log('			ebanina 2')
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((privateKeyEntryItem) => {
+									const [indexA] = privateKeyEntryItem;
 
-					return true;
+									if (indexA === publicKey.value) {
+										return [indexA, { value: wif.value }];
+									}
+
+									return privateKeyEntryItem;
+								});
+							}
+						}
+
+						return { publicKey: publicKey.value, wif: wif.value, type: 'active' };
+					}
 				}
 
-				console.log('PIZODS')
-				return publicKey && publicKey.value && wif && wif.value && !wif.error
+				return null;
 			})
-            .map(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: 'active' };
-            })
+            .filter((activeKeyItem) => activeKeyItem);
+
         const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
+				
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
             .map(([index, wif]) => {
