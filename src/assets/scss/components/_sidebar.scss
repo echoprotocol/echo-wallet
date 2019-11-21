@@ -1,6 +1,6 @@
 .sidebar {
     display: flex;
-
+	flex-direction: column;
     &.menu {
         background-color: $bg-gray;
     }
@@ -142,7 +142,7 @@
                 }
 
                 &.active {
-                    border-left: 2px solid $main-сolor;
+                    border-left: 2px solid $main-color;
                     background-color: rgba(215, 217, 223, 1);
                 }
             }

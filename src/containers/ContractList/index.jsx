@@ -118,20 +118,17 @@ class ContractList extends React.Component {
 				<div className="btn-list" >
 					<Button
 						className="main-btn"
-						basic
 						content="watch contract"
 						onClick={(e) => this.onLink(ADD_CONTRACT_PATH, e)}
 					/>
 					<Button
 						content="create new contract"
 						className="main-btn"
-						basic
 						onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)}
 					/>
 					<Button
 						content="call contract"
 						className="main-btn"
-						basic
 						onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)}
 					/>
 				</div>

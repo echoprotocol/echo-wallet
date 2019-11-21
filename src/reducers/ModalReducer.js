@@ -20,6 +20,7 @@ import {
 	MODAL_BACKUP,
 	MODAL_CONFIRM_EDITING_OF_PERMISSIONS,
 	PROPOSAL_ADD_WIF,
+	MODAL_GENERATE_ADDRESS,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -54,6 +55,8 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_BACKUP]: Map({}),
 	[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: Map({}),
 	[PROPOSAL_ADD_WIF]: Map({}),
+	[MODAL_GENERATE_ADDRESS]: Map({}),
+
 };
 
 export default createModule({
@@ -83,9 +86,13 @@ export default createModule({
 		[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: _
 			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]),
 		[PROPOSAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[PROPOSAL_ADD_WIF]),
+		[MODAL_GENERATE_ADDRESS]: _
+			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ADDRESS]),
+
 	}),
 	transformations: {
 		open: {
+
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
 
