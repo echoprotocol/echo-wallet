@@ -638,7 +638,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 
 	let permissionTableLoaderTimer;
 	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
-		permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false })), APPLY_CHANGES_TIMEOUT);
+		permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
@@ -668,13 +668,13 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 			}
 
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false }));
+			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false }));
+			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setError(PERMISSION_TABLE, message));

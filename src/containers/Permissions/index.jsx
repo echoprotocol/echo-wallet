@@ -529,7 +529,7 @@ export default connect(
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
-			showLoader: state.table.getIn([PERMISSION_TABLE, 'showLoader']),
+			showLoader: state.table.getIn([PERMISSION_TABLE, 'loading']),
 		};
 	},
 	(dispatch) => ({
