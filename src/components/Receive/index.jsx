@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 
@@ -147,5 +148,10 @@ Receive.defaultProps = {
 	currency: null,
 };
 
-
-export default Receive;
+export default connect(
+	(state) => ({
+		from: state.global.getIn(['activeUser']).toJS(),
+	}),
+	(dispatch) => ({
+	}),
+)(Receive);
