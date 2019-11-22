@@ -636,7 +636,10 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 		return;
 	}
 
-	const permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false })), APPLY_CHANGES_TIMEOUT);
+	let permissionTableLoaderTimer;
+	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
+		permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'showLoader', value: false })), APPLY_CHANGES_TIMEOUT);
+	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -648,7 +651,6 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 
 	const tr = echo.createTransaction();
 	tr.addOperation(operationId, options);
-
 	try {
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
