@@ -12,7 +12,7 @@ class ContractBar extends React.Component {
 		super(props);
 		this.state = {
 			searchText: '',
-			supportedAssets: 'All',
+			supportedAssets: 'all',
 		};
 	}
 
