@@ -22,7 +22,7 @@ class Receive extends React.Component {
 
 		const {
 			currency, from, setIn, checkAccount,
-			fee, assets, tokens, amount, isAvailableBalance, fees,
+			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 		} = this.props;
 
 		const internalTabs = [
@@ -43,6 +43,8 @@ class Receive extends React.Component {
 						amount={amount}
 						currency={currency}
 						isAvailableBalance={isAvailableBalance}
+						accountAddresses={accountAddresses}
+						accountName={accountName}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
 						setFormValue={this.props.setFormValue}
@@ -50,10 +52,7 @@ class Receive extends React.Component {
 						setDefaultAsset={this.props.setDefaultAsset}
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
-						// for From field
-						from={from}
-						setIn={setIn}
-						checkAccount={checkAccount}
+						updateAccountAddresses={this.props.updateAccountAddresses}
 					/>),
 			},
 			{
@@ -118,13 +117,13 @@ class Receive extends React.Component {
 }
 
 Receive.propTypes = {
-	// for Amount
 	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
+	accountAddresses: PropTypes.object.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -133,14 +132,13 @@ Receive.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	// for From field
 	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
-	//
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
+	updateAccountAddresses: PropTypes.func.isRequired,
 };
 
 Receive.defaultProps = {

@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { CACHE_MAPS } from 'echojs-lib';
+import { List } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -13,9 +15,10 @@ import {
 	transfer,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
+import { setContractFees } from '../../actions/ContractActions';
+import { updateAccountAddresses } from '../../actions/AccountActions';
 
 import Wallet from '../../components/Wallet';
-import { setContractFees } from '../../actions/ContractActions';
 
 export default connect(
 	(state) => ({
@@ -30,6 +33,7 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
+		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -49,6 +53,7 @@ export default connect(
 		setContractFees: () => dispatch(setContractFees(FORM_TRANSFER)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
+		updateAccountAddresses: () => dispatch(updateAccountAddresses()),
 	}),
 )(Wallet);
 
