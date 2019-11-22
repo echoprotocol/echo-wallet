@@ -37,6 +37,8 @@ import {
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
 import WarningConfirmThresholdScenario from '../WarningConfirmThresholdScenario';
+import { checkKeyWeightWarning } from '../../actions/BalanceActions';
+import GlobalReducer from '../../reducers/GlobalReducer';
 
 class Permissions extends React.Component {
 
@@ -59,13 +61,13 @@ class Permissions extends React.Component {
 		this.setState({ privateKeys: { active: {}, echoRand: {} } });
 	}
 
-	componentDidUpdate(prevProps) {
+	async componentDidUpdate(prevProps) {
 		if (_.isEqual(prevProps, this.props)) {
 			return;
 		}
 
-		const { accountName: prevAccountName, form: prevForm } = prevProps;
-		const { accountName, form } = this.props;
+		const { accountName: prevAccountName, form: prevForm, permissionsKeys: prevPermissionsKeys } = prevProps;
+		const { accountName, form, permissionsKeys, networkName, accountId } = this.props;
 		const prevAccount = prevProps.account.toJS();
 		const account = this.props.account.toJS();
 
@@ -93,6 +95,11 @@ class Permissions extends React.Component {
 
 		if (form.get('isEditMode') !== prevForm.get('isEditMode')) {
 			this.props.formPermissionKeys();
+		}
+
+		if (permissionsKeys !== prevPermissionsKeys) {
+			const keyWeight = await this.props.checkKeyWeightWarning(networkName, accountId);
+			this.props.setWeightWarning(keyWeight);
 		}
 	}
 
@@ -231,7 +238,7 @@ class Permissions extends React.Component {
 				acc[key] = privateKey && { value: privateKey.wif, error: '', type: privateKey.type };
 				return acc;
 			}, {})
-		
+
 		const privateKeysByRole = {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
@@ -496,6 +503,7 @@ class Permissions extends React.Component {
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	accountId: PropTypes.string.isRequired,
+	networkName: PropTypes.string.isRequired,
 	isChanged: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
@@ -511,6 +519,8 @@ Permissions.propTypes = {
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	editWifs: PropTypes.func.isRequired,
+	checkKeyWeightWarning: PropTypes.func.isRequired,
+	setWeightWarning: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -524,6 +534,7 @@ export default connect(
 			form: state.form.get(FORM_PERMISSION_KEY),
 			accountName: state.global.getIn(['activeUser', 'name']),
 			accountId: state.global.getIn(['activeUser', 'id']),
+			networkName: state.global.getIn(['network', 'name']),
 			account: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
@@ -544,5 +555,8 @@ export default connect(
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
 		editWifs: (keys, account, password) => dispatch(editWifs(keys, account, password)),
+		checkKeyWeightWarning: (networkName, accountId) =>
+			dispatch(checkKeyWeightWarning(networkName, accountId)),
+		setWeightWarning: (keyWeightWarn) => dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn })),
 	}),
 )(Permissions);

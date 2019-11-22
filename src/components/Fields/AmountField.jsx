@@ -201,6 +201,20 @@ class AmountField extends React.Component {
 		}, list);
 	}
 
+	renderErrorStaus(assetDropdown, amountError, feeError) {
+		if (!assetDropdown) {
+			return null;
+		}
+		return (amountError || feeError) &&
+			<span className="icon-error-red value-status" />;
+	}
+
+	renderCurrencyLabel(currency) {
+		if (currency) {
+			return <div className="currency-label">{currency.symbol}</div>;
+		}
+		return null;
+	}
 	render() {
 		const {
 			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText,
@@ -255,7 +269,13 @@ class AmountField extends React.Component {
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
 				>
-					<div className={classnames('amount-wrap', 'action-wrap', { 'without-dropdown': !assetDropdown })} >
+					<div
+						className={classnames(
+							'amount-wrap',
+							'action-wrap',
+							{ 'without-dropdown': !assetDropdown },
+						)}
+					>
 						<input
 							className="amount"
 							placeholder="0.00"
@@ -265,24 +285,31 @@ class AmountField extends React.Component {
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 						/>
-						{amount.error || fee.error ? <span className="icon-error-red value-status" /> : null}
+						{
+							this.renderErrorStaus(assetDropdown, amount.error, fee.error)
+						}
 					</div>
-					{amount.error || fee.error ? <span className="error-message">{amount.error || fee.error}</span> : null}
 					{
-						assetDropdown && <Dropdown
+						amount.error || fee.error ?
+							<span className="error-message">{amount.error || fee.error}</span> : null
+					}
+					{
+						assetDropdown ? <Dropdown
 							search
+							disabled={(this.props.tokens.size + assets.size) <= 1}
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 							searchQuery={searchText}
 							closeOnChange
+							icon={(this.props.tokens.size + assets.size) <= 1 ? null : 'dropdown'}
 							onSearchChange={(e) => this.onSearch(e)}
 							text={currency ? currency.symbol : ''}
-							selection
+							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
 							options={this.renderList('assets').concat(this.renderList('tokens'))}
 							noResultsMessage="No results are found"
-							className={classnames('assets-tokens-dropdown', { 'no-choice': (this.props.tokens.length + assets.length) <= 1 })}
+							className="assets-tokens-dropdown"
 							onClose={() => this.clearSearchText()}
-						/>
+						/> : this.renderCurrencyLabel(currency)
 					}
 
 

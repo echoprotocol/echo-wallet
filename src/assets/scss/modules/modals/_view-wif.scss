@@ -24,6 +24,11 @@
 
 	.field {
 		margin-bottom: 24px;
+		display: flex;
+		flex-direction: column;
+		.input {
+			max-width: calc(100% - 38px);
+		}
 		& > label {
 			min-height: 18px;
 		}
@@ -36,4 +41,5 @@
 			min-width: 160px;
 		}
 	}
+	
 }
