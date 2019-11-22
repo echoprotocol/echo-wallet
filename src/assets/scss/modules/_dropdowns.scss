@@ -1,9 +1,7 @@
-.ui.dropdown {
-    &.active {
-
+.dropdown {
+    &.active:not(.empty) {
         i.icon,
-        .dropdown.icon,
-        .icon-dropdown_arrow {
+        .dropdown.icon {
             transform: rotate(180deg);
         }
 
@@ -15,7 +13,7 @@
     }
 
     &.fee-default-dropdown {
-        &.no-choice {
+        &.empty {
             cursor: auto;
 
             .menu {
@@ -199,7 +197,7 @@
         }
     }
 
-    .ui.dropdown.fee-dropdown {
+    &.fee-dropdown {
         display: flex;
         align-items: center;
         border: 0;
@@ -211,7 +209,7 @@
         min-height: auto;
         background: transparent;
 
-        &.no-choice {
+        &.empty {
             cursor: auto;
 
             input.search {
@@ -234,6 +232,7 @@
         }
 
         &>.text {
+			font-size: 12px;
             color: $main-color;
         }
 
@@ -283,21 +282,9 @@
         }
 	}
 
-    &.no-choice {
-        cursor: auto;
-
-        input.search {
-            position: absolute;
-            z-index: -1;
-            opacity: 0;
-        }
-
+    &.empty {
         .menu {
             display: none !important;
-        }
-
-        .icon {
-            display: none;
         }
     }
 
@@ -305,7 +292,7 @@
 
 
 .error {
-    .ui.dropdown {
+    .dropdown {
         &.fee-default-dropdown {
             border: 1px solid #ff4848;
         }
@@ -316,7 +303,7 @@
     z-index: 10;
 
     .fee-dropdown {
-        &.ui.dropdown.active {
+        &.dropdown.active {
             box-shadow: none;
 
             &:hover {
@@ -359,16 +346,14 @@
 	color: rgba(0, 0, 0, 0.95);
 }
 
-
 .dropdown-wrap {
+
 	.dropdown-label {
-		font-family: proximanovaSemibold;
-		font-size: 12px;
+		@include label()
 		line-height: 20px;
-		color: #AEB4C0;
-		text-transform: uppercase;
 	}
-	.ui.dropdown {
+
+	.dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
@@ -446,6 +431,7 @@
 			bottom: 4px;
 			margin: auto;
 		}
+
 		&.active {
 			& > .dropdown.icon {
 				bottom: 0;
@@ -475,6 +461,7 @@
 				color: rgba(#3B3B3B, 0.5);
 			}
 		}
+
 		.dropdown-header {
 			padding: 0 15px;
 			display: flex;
@@ -515,6 +502,7 @@
 			justify-content: center;
 			padding: 0 15px;
 			min-height: 44px;
+
 			.address {
 				@include cut-text;
 				font-size: 15px;
@@ -558,6 +546,4 @@
 			}
 		}
 	}
-
-
 }

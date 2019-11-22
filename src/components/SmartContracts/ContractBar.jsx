@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import { Popup, Form } from 'semantic-ui-react';
+import { Popup, Dropdown, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import Toggle from '../Toggle';
@@ -8,8 +8,26 @@ import Toggle from '../Toggle';
 
 class ContractBar extends React.Component {
 
-	render() {
+	constructor(props) {
+		super(props);
+		this.state = {
+			searchText: '',
+			supportedAssets: 'All',
+		};
+	}
 
+	assetSearchHanler(e, data) {
+		this.setState({
+			searchText: data.searchQuery,
+		});
+	}
+
+	render() {
+		const options = [
+			{ key: 1, text: 'Choice 1', value: 1 },
+			{ key: 2, text: 'Choice 2', value: 2 },
+			{ key: 3, text: 'Choice 3', value: 3 }];
+		const { searchText, supportedAssets } = this.state;
 		return (
 			<div className="contract-bar">
 				<h3 className="contract-bar-title">Contract deploy parameters</h3>
@@ -40,30 +58,35 @@ class ContractBar extends React.Component {
 						</div>
 						<div className="param-subline">
 							<div className="radio-list">
-								<div className="radio">
-									<input type="radio" id="all-option" checked name="selector" />
-									<label className="label" htmlFor="all-option">
-										<span className="label-text">All</span>
-									</label>
-								</div>
-								<div className="radio">
-									<input type="radio" id="custom-option" name="selector" />
-									<label className="label" htmlFor="custom-option">
-										<span className="label-text">Choose asset</span>
-									</label>
-								</div>
-							</div>
-							<Form.Field className={classnames('error-wrap', { error: false })}>
-								<input
-									type="text"
-									placeholder="Asset name"
-									name="asset-name"
-									onChange={() => {}}
+								<Button
+									className={classnames('radio', { checked: supportedAssets === 'all' })}
+									onClick={() => { this.setState({ supportedAssets: 'all' }); }}
+									content="All"
 								/>
-								{
-									false && <span className="error-message">some error</span>
-								}
-							</Form.Field>
+								<Button
+									className={classnames('radio', { checked: supportedAssets === 'custom' })}
+									onClick={() => { this.setState({ supportedAssets: 'custom' }); }}
+									content="Choose asset"
+								/>
+							</div>
+							{
+								supportedAssets === 'custom' &&
+								<Dropdown
+									icon={false}
+									className={classnames({ empty: !searchText })}
+									options={searchText ? options : []}
+									searchQuery={searchText}
+									search
+									selection
+									fluid
+									text={searchText || 'Asset name'}
+									onSearchChange={(e, data) => this.assetSearchHanler(e, data)}
+									placeholder="Asset name"
+									selectOnNavigation={false}
+									minCharacters={0}
+									noResultsMessage={searchText ? 'No results are found' : null}
+								/>
+							}
 						</div>
 					</li>
 					<li className="param">
@@ -79,6 +102,11 @@ class ContractBar extends React.Component {
 						</div>
 					</li>
 				</ul>
+				<Button
+					type="button"
+					className="main-btn"
+					content="CREATE SMART CONTRACT"
+				/>
 			</div>
 		);
 	}

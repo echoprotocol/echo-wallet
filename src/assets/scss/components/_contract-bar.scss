@@ -3,6 +3,8 @@
 	background-color: #FCFCFC;
 	min-height: calc(100vh - 120px);
 	padding: 32px 30px 52px;
+	display: flex;
+    flex-direction: column;
 }
 
 .contract-bar-title {
@@ -25,6 +27,7 @@
 
 
 .params-list {
+	margin: 0 0 auto;
 	.param-key {
 		display: flex;
 		align-items: center;
@@ -44,8 +47,13 @@
 	.radio:not(:last-child) {
 		margin-bottom: 29px;
 	}
-	.radio-list + .field {
+
+	.radio-list + .selection {
 		margin: 16px 0 0;
 	}
+}
+
+.params-list + .main-btn {
+	margin: 40px 0 0;
 
 }

@@ -1,66 +1,26 @@
-/*!
- * # Semantic UI 2.3.1 - Form
- * http://github.com/semantic-org/semantic-ui/
- *
- *
- * Released under the MIT license
- * http://opensource.org/licenses/MIT
- *
- */
-
-
-/*******************************
-            Elements
-*******************************/
-
-
-/*--------------------
-        Form
----------------------*/
-
 .form {
   position: relative;
   max-width: 100%;
 }
 
-/*--------------------
-        Field
----------------------*/
-
 .form .field {
   clear: both;
-  margin: 0em 0em 20px;
+  margin: 0 0 20px;
 }
 
-.form .field:last-child,
-.form .fields:last-child .field {
-  margin-bottom: 0em;
+.form .field:last-child {
+  margin-bottom: 0;
 }
 
-.form .fields .field {
-  clear: both;
-  margin: 0em;
-}
 
-/*--------------------
-        Labels
----------------------*/
 
 .field > label {
-  display: flex;
-  justify-content: space-between;
-  min-height: 16px;
-  color: $gray;
-  font-size: 12px;
-  font-family: proximanovaSemibold;
-  text-transform: uppercase;
-  padding-top: 1px;
+	@include label();
+	display: flex;
+	justify-content: space-between;
+	min-height: 16px;
+	padding-top: 1px;
 }
-
-/*--------------------
-    Standard Inputs
----------------------*/
-
 
 /* Set max height on unusual input */
 .form ::-webkit-datetime-edit,
@@ -69,22 +29,8 @@
 }
 
 
-
-/* Text Area */
-
-
-
-.form textarea,
-.form input[type="checkbox"] {
+.form textarea {
   vertical-align: top;
-}
-
-/*--------------------------
-  Input w/ attached Button
----------------------------*/
-
-.form input.attached {
-  width: auto;
 }
 
 /*--------------------
@@ -98,142 +44,53 @@
   background: #FFFFFF;
   border: 1px solid $inut-color;
   border-radius: 4px;
-  -webkit-box-shadow: 0em 0em 0em 0em transparent inset;
-  box-shadow: 0em 0em 0em 0em transparent inset;
+  -webkit-box-shadow: 0 0 0 0 transparent inset;
+  box-shadow: 0 0 0 0 transparent inset;
   padding: 0.62em 1em;
   color: rgba(0, 0, 0, 0.87);
   -webkit-transition: color $speed ease, border-color $speed ease;
   transition: color $speed ease, border-color $speed ease;
 }
 
-/*--------------------
-       Dropdown
----------------------*/
-
-
 /* Block */
 .form .field>.selection.dropdown {
   width: 100%;
 }
 
-.form .field>.selection.dropdown>.dropdown.icon {
-  float: right;
+.form .field > .selection.dropdown > .dropdown.icon {
+	float: right;
 }
-
-/* Inline */
-.form .inline.fields .field>.selection.dropdown,
-.form .inline.field>.selection.dropdown {
-  width: auto;
-}
-
-.form .inline.fields .field>.selection.dropdown>.dropdown.icon,
-.form .inline.field>.selection.dropdown>.dropdown.icon {
-  float: none;
-}
-
-/*--------------------
-       UI Input
----------------------*/
 
 
 /* Block */
 .form .field .input,
-.form .fields .field .input,
 .form .wide.field .input {
   width: 100%;
 }
 
-/* Inline  */
-.form .inline.fields .field:not(.wide) .input,
-.form .inline.field:not(.wide) .input {
-  width: auto;
-  vertical-align: middle;
-}
 
 /* Auto Input */
-.form .fields .field .input input,
 .form .field .input input {
   width: auto;
   max-width: 100%;
 }
 
-/* Full Width Input */
-.form .ten.fields .input input,
-.form .nine.fields .input input,
-.form .eight.fields .input input,
-.form .seven.fields .input input,
-.form .six.fields .input input,
-.form .five.fields .input input,
-.form .four.fields .input input,
-.form .three.fields .input input,
-.form .two.fields .input input,
-.form .wide.field .input input {
-  -webkit-box-flex: 1;
-  -ms-flex: 1 0 auto;
-  flex: 1 0 auto;
-  width: 0px;
-}
-
-/*--------------------
-   Types of Messages
----------------------*/
-
-.form .success.message,
-.form .warning.message,
-.form .error.message {
-  display: none;
-}
 
 /* Assumptions */
 .form .message:first-child {
   margin-top: 0px;
 }
 
-/*--------------------
-   Validation Prompt
----------------------*/
-
-.form .field .prompt.label {
-  white-space: normal;
-  background: #FFFFFF !important;
-  border: 1px solid #E0B4B4 !important;
-  color: #9F3A38 !important;
-}
-
-.form .inline.fields .field .prompt,
-.form .inline.field .prompt {
-  vertical-align: top;
-  margin: -0.25em 0em -0.5em 0.5em;
-}
-
-.form .inline.fields .field .prompt:before,
-.form .inline.field .prompt:before {
-  border-width: 0px 0px 1px 1px;
-  bottom: auto;
-  right: auto;
-  top: 50%;
-  left: 0em;
-}
 
 
-/*******************************
-            States
-*******************************/
-
-
-/*--------------------
-      Autofilled
----------------------*/
 
 .form .field.field input:-webkit-autofill {
-  -webkit-box-shadow: 0px 0px 0px 100px #FFFFF0 inset !important;
   box-shadow: 0px 0px 0px 100px #FFFFF0 inset !important;
   border-color: #E5DFA1 !important;
 }
 
 /* Focus */
 .form .field.field input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0px 0px 0px 100px #FFFFF0 inset !important;
   box-shadow: 0px 0px 0px 100px #FFFFF0 inset !important;
   border-color: #D5C315 !important;
 }
@@ -336,52 +193,6 @@
 
 
 
-/*--------------------
-        Success
----------------------*/
-
-
-/* On Form */
-.form.success .success.message:not(:empty) {
-  display: block;
-}
-
-.form.success .compact.success.message:not(:empty) {
-  display: inline-block;
-}
-
-.form.success .icon.success.message:not(:empty) {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-/*--------------------
-        Warning
----------------------*/
-
-
-/* On Form */
-.form.warning .warning.message:not(:empty) {
-  display: block;
-}
-
-.form.warning .compact.warning.message:not(:empty) {
-  display: inline-block;
-}
-
-.form.warning .icon.warning.message:not(:empty) {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-/*--------------------
-        Error
----------------------*/
-
-
-/* On Form */
 .form.error .error.message:not(:empty) {
   display: block;
 }
@@ -396,43 +207,12 @@
   display: flex;
 }
 
-.form .fields.error .field .corner.label,
-.form .field.error .corner.label {
-  border-color: #9F3A38;
-  color: #FFFFFF;
-}
 
 /* Preserve Native Select Stylings */
 .form .field.error select {
   -webkit-appearance: menulist-button;
 }
 
-
-/*--------------------
-    Checkbox Error
----------------------*/
-
-.form .fields.error .field .checkbox:not(.toggle):not(.slider) label,
-.form .field.error .checkbox:not(.toggle):not(.slider) label,
-.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box,
-.form .field.error .checkbox:not(.toggle):not(.slider) .box {
-  color: #9F3A38;
-}
-
-.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before,
-.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
-.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before,
-.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
-  background: #FFF6F6;
-  border-color: #E0B4B4;
-}
-
-.form .fields.error .field .checkbox label:after,
-.form .field.error .checkbox label:after,
-.form .fields.error .field .checkbox .box:after,
-.form .field.error .checkbox .box:after {
-  color: #9F3A38;
-}
 
 /*--------------------
        Disabled
@@ -448,409 +228,6 @@
   opacity: 1;
 }
 
-/*--------------
-    Loading
----------------*/
-
-.loading.form {
-  position: relative;
-  cursor: default;
-  pointer-events: none;
-}
-
-.loading.form:before {
-  position: absolute;
-  content: '';
-  top: 0%;
-  left: 0%;
-  background: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-}
-
-.loading.form:after {
-  position: absolute;
-  content: '';
-  top: 50%;
-  left: 50%;
-  margin: -1.5em 0em 0em -1.5em;
-  width: 3em;
-  height: 3em;
-  -webkit-animation: form-spin 0.6s linear;
-  animation: form-spin 0.6s linear;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  border-radius: 500rem;
-  border-color: #767676 rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1);
-  border-style: solid;
-  border-width: 0.2em;
-  -webkit-box-shadow: 0px 0px 0px 1px transparent;
-  box-shadow: 0px 0px 0px 1px transparent;
-  visibility: visible;
-  z-index: 101;
-}
-
-@-webkit-keyframes form-spin {
-  from {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  to {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes form-spin {
-  from {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  to {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-
-/*******************************
-         Element Types
-*******************************/
-
-
-/*--------------------
-     Required Field
----------------------*/
-
-.form .required.fields:not(.grouped)>.field>label:after,
-.form .required.fields.grouped>label:after,
-.form .required.field>label:after,
-.form .required.fields:not(.grouped)>.field>.checkbox:after,
-.form .required.field>.checkbox:after {
-  margin: -0.2em 0em 0em 0.2em;
-  content: '*';
-  color: #DB2828;
-}
-
-.form .required.fields:not(.grouped)>.field>label:after,
-.form .required.fields.grouped>label:after,
-.form .required.field>label:after {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.form .required.fields:not(.grouped)>.field>.checkbox:after,
-.form .required.field>.checkbox:after {
-  position: absolute;
-  top: 0%;
-  left: 100%;
-}
-
-
-/*******************************
-           Variations
-*******************************/
-
-
-/*--------------------
-    Inverted Colors
----------------------*/
-
-.inverted.form label,
-.form .inverted.segment label,
-.form .inverted.segment .checkbox label,
-.form .inverted.segment .checkbox .box,
-.inverted.form .checkbox label,
-.inverted.form .checkbox .box,
-.inverted.form .inline.fields>label,
-.inverted.form .inline.fields .field>label,
-.inverted.form .inline.fields .field>p,
-.inverted.form .inline.field>label,
-.inverted.form .inline.field>p {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* Inverted Field */
-.inverted.form input:not([type]),
-.inverted.form input[type="date"],
-.inverted.form input[type="datetime-local"],
-.inverted.form input[type="email"],
-.inverted.form input[type="number"],
-.inverted.form input[type="password"],
-.inverted.form input[type="search"],
-.inverted.form input[type="tel"],
-.inverted.form input[type="time"],
-.inverted.form input[type="text"],
-.inverted.form input[type="file"],
-.inverted.form input[type="url"] {
-  background: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.1);
-  color: rgba(0, 0, 0, 0.87);
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-/*--------------------
-     Field Groups
----------------------*/
-
-
-/* Grouped Vertically */
-.form .grouped.fields {
-  display: block;
-  margin: 0em 0em 1em;
-}
-
-.form .grouped.fields:last-child {
-  margin-bottom: 0em;
-}
-
-.form .grouped.fields>label {
-  margin: 0em 0em 4px 0em;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 0.92857143em;
-  font-weight: bold;
-  text-transform: none;
-}
-
-.form .grouped.fields .field,
-.form .grouped.inline.fields .field {
-  display: block;
-  margin: 0.5em 0em;
-  padding: 0em;
-}
-
-/*--------------------
-        Fields
----------------------*/
-
-
-/* Split fields */
-.form .fields {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin: 0em -0.5em 1em;
-}
-
-.form .fields>.field {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
-.form .fields>.field:first-child {
-  border-left: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-/* Swap to full width on mobile */
-@media only screen and (max-width: 767px) {
-  .form .fields {
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-
-  [class*="equal width"].form:not(.unstackable) .fields>.field,
-  .form:not(.unstackable) [class*="equal width"].fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .two.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .two.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .three.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .three.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .four.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .four.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .five.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .five.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .six.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .six.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .seven.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .seven.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .eight.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .eight.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .nine.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .nine.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .ten.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .ten.fields:not(.unstackable)>.field {
-    width: 100% !important;
-    margin: 0em 0em 1em;
-  }
-}
-/* Swap to full width on mobile */
-@media only screen and (max-width: 767px) {
-
-  .form:not(.unstackable) .two.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .two.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .three.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .three.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .four.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .four.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .five.fields:not(.unstackable)>.fields,
-  .form:not(.unstackable) .five.fields:not(.unstackable)>.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.two.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.three.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.four.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.five.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.six.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.seven.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.eight.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.nine.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.ten.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.eleven.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.twelve.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.thirteen.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.fourteen.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.fifteen.wide.field,
-  .form:not(.unstackable) .fields:not(.unstackable)>.sixteen.wide.field {
-    width: 100% !important;
-  }
-
-  .form .fields {
-    margin-bottom: 0em;
-  }
-}
-
-/*--------------------
-     Equal Width
----------------------*/
-
-[class*="equal width"].form .fields>.field,
-.form [class*="equal width"].fields>.field {
-  width: 100%;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-
-/*--------------------
-    Inline Fields
----------------------*/
-
-.form .inline.fields {
-  margin: 0em 0em 1em;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.form .inline.fields .field {
-  margin: 0em;
-  padding: 0em 1em 0em 0em;
-}
-
-/* Inline Label */
-.form .inline.fields>label,
-.form .inline.fields .field>label,
-.form .inline.fields .field>p,
-.form .inline.field>label,
-.form .inline.field>p {
-  display: inline-block;
-  width: auto;
-  margin-top: 0em;
-  margin-bottom: 0em;
-  vertical-align: baseline;
-  font-size: 0.92857143em;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.87);
-  text-transform: none;
-}
-
-/* Grouped Inline Label */
-.form .inline.fields>label {
-  margin: 0.035714em 1em 0em 0em;
-}
-
-/* Inline Input */
-.form .inline.fields .field>input,
-.form .inline.fields .field>select,
-.form .inline.field>input,
-.form .inline.field>select {
-  display: inline-block;
-  width: auto;
-  margin-top: 0em;
-  margin-bottom: 0em;
-  vertical-align: middle;
-  font-size: 1em;
-}
-
-/* Label */
-.form .inline.fields .field> :first-child,
-.form .inline.field> :first-child {
-  margin: 0em 0.85714286em 0em 0em;
-}
-
-.form .inline.fields .field> :only-child,
-.form .inline.field> :only-child {
-  margin: 0em;
-}
-
-/* Wide */
-.form .inline.fields .wide.field {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.form .inline.fields .wide.field>input,
-.form .inline.fields .wide.field>select {
-  width: 100%;
-}
-
-/*--------------------
-        Sizes
----------------------*/
-
-.mini.form {
-  font-size: 0.78571429rem;
-}
-
-.tiny.form {
-  font-size: 0.85714286rem;
-}
-
-.small.form {
-  font-size: 0.92857143rem;
-}
-
 .form {
   font-size: 1rem;
 }
-
-.large.form {
-  font-size: 1.14285714rem;
-}
-
-.big.form {
-  font-size: 1.28571429rem;
-}
-
-.huge.form {
-  font-size: 1.42857143rem;
-}
-
-.massive.form {
-  font-size: 1.71428571rem;
-}
-
-
-/*******************************
-         Theme Overrides
-*******************************/
-
-
-
-/*******************************
-         Site Overrides
-*******************************/

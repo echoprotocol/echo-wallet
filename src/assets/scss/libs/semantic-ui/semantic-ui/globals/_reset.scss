@@ -257,16 +257,7 @@ svg:not(:root) {
  * 1. Change the font styles in all browsers (opinionated).
  * 2. Remove the margin in Firefox and Safari.
  */
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: sans-serif;
 
-  font-size: 100%;
-  margin: 0;
-}
 /**
  * Show the overflow in IE.
  * 1. Show the overflow in Edge.

@@ -135,64 +135,45 @@
 }
 
 .radio {
-    .label {
-        display: flex;
-        align-items: center;
-        position: relative;
-        cursor: pointer;
+	display: flex;
+	align-items: center;
+	position: relative;
+	cursor: pointer;
+	color: rgba($black, .7);
+	font-size: 15px;
+	transition: color $speed;
 
-        &:before {
-            text-align: center;
-            display: block;
-            color: #fff;
-            min-width: 18px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid $gray;
-            margin-right: 14px;
-            content: "";
-            transition: border $speed;
-            font-weight: 300;
-            font-size: 12px;
-        }
-	}
-
-	.label-text {
+	&:before {
+		text-align: center;
 		display: block;
-		color: rgba($black, .7);
-		font-size: 15px;
-		transition: color $speed;
-		pointer-events: none;
+		color: #fff;
+		min-width: 18px;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		border: 2px solid $gray;
+		margin-right: 14px;
+		content: "";
+		transition: border $speed;
+		font-weight: 300;
+		font-size: 12px;
 	}
 
-    input[type="radio"] {
-        position: absolute;
-        opacity: 0;
+	&:disabled {
+		opacity: .6;
+	}
 
-        &:disabled ~ .label {
-            opacity: .6;
-        }
+	&.checked {
+		color: $black;
 
-        &:checked ~ .label {
-            &:before {
-                border: 5px solid $gray;
-            }
-        }
+		&:before {
+			border: 5px solid $gray;
+		}
+	}
 
-        &:focus {
-            & ~ .label {
-                &:before {
-                    @include on-focus(4px);
-                }
-
-            }
-        }
-
-        &:checked ~ .label {
-            .label-text {
-                color: $black;
-            }
-        }
-    }
+	&:focus {
+		&:before {
+			@include on-focus(4px);
+		}
+	}
 }

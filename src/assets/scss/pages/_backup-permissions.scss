@@ -253,11 +253,8 @@
 		margin-right: 6px;
 	}
 	.threshold {
-		font-size: 12px;
-		font-family: proximaNovaSemibold;
-		color: rgb(174, 180, 192);
+		@include label();
 		line-height: 26.4px;
-		text-transform: uppercase;
 		margin-right: 9px;
 	}
 

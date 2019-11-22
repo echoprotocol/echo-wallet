@@ -25,7 +25,7 @@ class Toggle extends React.Component {
 		return (
 
 			<div className="toggle-wrap">
-				<button onKeyPress={this.onToggle} onClick={this.onToggle} className="toggle">
+				<button onClick={this.onToggle} className="toggle">
 					<span className={`slider ${this.state.checked && 'checked'}`} />
 				</button>
 				{

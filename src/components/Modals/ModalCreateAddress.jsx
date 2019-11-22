@@ -62,7 +62,6 @@ class ModalGenerateAddress extends React.Component {
 					</Form.Field>
 					<div className="form-panel">
 						<Button
-							basic
 							type="submit"
 							className="main-btn countdown-wrap"
 							content="Generate address"

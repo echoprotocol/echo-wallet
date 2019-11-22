@@ -199,7 +199,7 @@
                 margin-left: 10px;
             }
 
-            &>.item {
+            & > .item {
                 padding: 0;
                 color: #6d7178;
                 font-size: 13px;
@@ -303,7 +303,7 @@
                     font-family: proximanovaSemibold;
                     font-size: .9rem;
                     color: rgb(211, 212, 214);
-                    transition: color $speed;
+                    transition: color $speed, background-color $speed;
 
                     &.selected {
                         color: $inut-hover;
@@ -327,7 +327,8 @@
                     }
 
                     &:hover {
-                        color: $inut-hover;
+						color: #fff;
+						background-color: $main-color;
                     }
 
                     &:focus {
@@ -366,11 +367,12 @@
                     color: $black;
                     transition: background-color $speed, color $speed;
                     padding: 7px 18px 7px 16px;
-
-                    &-wrap {
-                        display: flex;
-                    }
-                }
+				}
+				
+				.user-item-wrap {
+					display: flex;
+					width: 100%;
+				}
 
                 .logout-user-btn {
                     overflow: hidden;
@@ -418,7 +420,7 @@
             color: $link-gray;
         }
 
-        &>.text {
+        & > .text {
             color: $main-color;
             font-family: proximanovaSemibold;
             max-width: 296px;
