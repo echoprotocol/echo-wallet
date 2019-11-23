@@ -2,10 +2,6 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
-import { closeModal } from '../../actions/ModalActions';
-
-import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
 
 class ModalGenerateAddress extends React.Component {
 
@@ -17,7 +13,7 @@ class ModalGenerateAddress extends React.Component {
 
 	onClose(e) {
 		e.preventDefault();
-		this.props.closeModal();
+		this.props.close();
 	}
 
 
@@ -77,18 +73,14 @@ class ModalGenerateAddress extends React.Component {
 
 ModalGenerateAddress.propTypes = {
 	show: PropTypes.bool,
-	closeModal: PropTypes.func.isRequired,
+	error: PropTypes.string,
+	close: PropTypes.func.isRequired,
+	confirm: PropTypes.func.isRequired,
 };
 
 ModalGenerateAddress.defaultProps = {
 	show: false,
+	error: null
 };
 
-export default connect(
-	(state) => ({
-		show: state.modal.getIn([MODAL_GENERATE_ADDRESS, 'show']),
-	}),
-	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ADDRESS)),
-	}),
-)(ModalGenerateAddress);
+export default ModalGenerateAddress;

@@ -5,7 +5,7 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
-
+import GenerateSidechainAdressScenario from '../../containers/GenerateSidechainAdressScenario';
 
 class Receive extends React.Component {
 
@@ -18,6 +18,14 @@ class Receive extends React.Component {
 		this.props.clearForm();
 	}
 
+	renderGenerateScenario() {
+		return (
+			<GenerateSidechainAdressScenario
+				handleTrasaction={() => this.props} //new Action to write into redx
+				onUnlock={() => {}}
+			/>
+		);
+	}
 	render() {
 
 		const {
@@ -25,6 +33,7 @@ class Receive extends React.Component {
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
+		// this.renderGenerateScenario();
 		const internalTabs = [
 			{
 				menuItem: <Button
