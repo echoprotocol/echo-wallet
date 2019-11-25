@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { List } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
-import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
@@ -17,29 +17,35 @@ class EchoNetwork extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			currentAccountOrAddress: '',
+			addresses: new List([]),
+			receiver: '',
 		};
 	}
 
-	onDropdownChange(e, value) {
-		if (typeof e.target.value === 'undefined') {
-			this.setSender(e, value);
-		} else if (e.keyCode === 13) {
-			this.setSender(e, value);
-			setTimeout(() => { e.target.blur(); }, 0);
+	static getDerivedStateFromProps(nextProps, prevState) {
+		const isUpdate = nextProps.accountAddresses.find((value) => !prevState.addresses.find((v) => v.get('address') === value.get('address')));
+
+		if (!isUpdate) {
+			return {};
 		}
+
+		return { addresses: nextProps.accountAddresses };
 	}
 
-	setSender(e, accountOrAddressName) {
+	onClickItem(value) {
 		this.setState({
-			currentAccountOrAddress: accountOrAddressName,
+			receiver: value,
 		});
 	}
 
+	onChange(e, value) {
+		this.setState({ receiver: value });
+	}
+
+
 	renderAccontsList() {
-		console.log('renderAccontsList');
-		const { from: { name } } = this.props;
-		console.log(name);
+		const users = [{ name: this.props.accountName }];
+
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
 		const header = [{
@@ -50,36 +56,39 @@ class EchoNetwork extends React.Component {
 			disabled: true,
 		}];
 
-		const content = (
-			<React.Fragment>
-				<div className="avatar-wrap">
-					<Avatar accountName={name} />
-				</div>
-				<div className="name">{name}</div>
-			</React.Fragment>
-		);
+		const options = users.map(({
+			name,
+		}) => {
+			const content = (
+				<React.Fragment>
+					<div className="avatar-wrap">
+						<Avatar accountName={name} />
+					</div>
+					<div className="name">{name}</div>
+				</React.Fragment>
+			);
 
-		const options = {
-			className: 'user-item',
-			value: name,
-			key: name,
-			content,
-		};
+			return ({
+				className: 'user-item',
+				value: name,
+				key: name,
+				content,
+				onClick: () => this.onClickItem(name),
+			});
+		});
 
-		header.push(options);
-		console.log(header);
-		return header;
+		return header.concat(options);
 	}
 
 
 	renderAddressesList() {
-		const users = [
-			{ name: 'Valik1', address: 'f0d6if8k5d87g5hw2ej548d3r7h4kr7fn34kj123kl4444' },
-			{ name: 'Valik2', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
-			{ name: 'Valik3', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
-			{ name: 'Valik4', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
-			{ name: 'Valik5', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
-		];
+		const { addresses } = this.state;
+
+
+		const users = addresses.map((a) => ({
+			name: a.get('label'),
+			address: a.get('address'),
+		})).toArray();
 
 		const addressHeaderTitle = (
 			<div className="title">ADDRESSES</div>
@@ -105,7 +114,7 @@ class EchoNetwork extends React.Component {
 
 		const options = users.map(({
 			name, address,
-		}) => {
+		}, index) => {
 			const content = (
 				<React.Fragment key={name} >
 					<div className="address-item">
@@ -121,9 +130,10 @@ class EchoNetwork extends React.Component {
 			return ({
 				className: 'address-item-wrap',
 				value: name,
-				key: name,
+				key: index.toString(),
+				text: name,
 				content,
-				// onClick: () => console.log('prikol'),
+				onClick: () => this.onClickItem(address),
 			});
 		});
 
@@ -133,36 +143,14 @@ class EchoNetwork extends React.Component {
 	renderPayment() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-
-		const { currentAccountOrAddress } = this.state;
-
-		const field = {
-			checked: true,
-			error: null,
-			loading: false,
-			value: currentAccountOrAddress,
-		};
-
+		const { receiver } = this.state;
+		console.log('at renderPayment', receiver);
 		return (
 			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
-
-				<AccountField
-					disabled
-					field={field}
-					currency={currency}
-					subject="recipient account or address"
-					checkAccount={checkAccount}
-					setIn={setIn}
-					setFormValue={this.props.setFormValue}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					setValue={this.props.setValue}
-				/>
-
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
@@ -173,8 +161,8 @@ class EchoNetwork extends React.Component {
 						options={this.renderAccontsList().concat(this.renderAddressesList())}
 						search
 						text="Choose account or address"
-						closeOnChange
-						onChange={(e, { value }) => this.onDropdownChange(e, value)}
+						searchQuery={receiver}
+						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 					/>
 				</div>
 
@@ -259,9 +247,9 @@ EchoNetwork.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	from: PropTypes.object.isRequired,
-	setIn: PropTypes.func.isRequired,
-	checkAccount: PropTypes.func.isRequired,
+	// eslint-disable-next-line react/no-unused-prop-types
+	accountAddresses: PropTypes.object.isRequired,
+	accountName: PropTypes.string.isRequired,
 	address: PropTypes.bool,
 	openModal: PropTypes.func.isRequired,
 

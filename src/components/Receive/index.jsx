@@ -13,6 +13,7 @@ class Receive extends React.Component {
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
+		this.props.updateAccountAddresses();
 	}
 
 	componentWillUnmount() {
@@ -81,7 +82,8 @@ class Receive extends React.Component {
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
 						// for From field
-						from={from}
+						accountAddresses={accountAddresses}
+						accountName={accountName}
 						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
