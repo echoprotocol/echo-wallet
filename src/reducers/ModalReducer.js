@@ -88,7 +88,6 @@ export default createModule({
 		[PROPOSAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[PROPOSAL_ADD_WIF]),
 		[MODAL_GENERATE_ADDRESS]: _
 			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ADDRESS]),
-
 	}),
 	transformations: {
 		open: {

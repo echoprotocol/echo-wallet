@@ -5,6 +5,7 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
+import Etherium from './Etherium';
 
 
 class Receive extends React.Component {
@@ -22,7 +23,7 @@ class Receive extends React.Component {
 
 		const {
 			currency, from, setIn, checkAccount,
-			fee, assets, tokens, amount, isAvailableBalance, fees,
+			fee, assets, tokens, amount, isAvailableBalance, fees, generateEthAddress,
 		} = this.props;
 
 		const internalTabs = [
@@ -85,7 +86,8 @@ class Receive extends React.Component {
 						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
-					/>),
+					/>
+				),
 			},
 			{
 				menuItem: <Button
@@ -94,7 +96,30 @@ class Receive extends React.Component {
 					onClick={(e) => e.target.blur()}
 					content="Ethereum"
 				/>,
-				render: () => ('Ethereum'),
+				render: () => (
+					<Etherium
+						// for Amount field
+						fees={fees}
+						fee={fee}
+						assets={assets}
+						tokens={tokens}
+						amount={amount}
+						currency={currency}
+						isAvailableBalance={isAvailableBalance}
+						amountInput={this.props.amountInput}
+						setFormError={this.props.setFormError}
+						setFormValue={this.props.setFormValue}
+						setValue={this.props.setValue}
+						setDefaultAsset={this.props.setDefaultAsset}
+						getTransferFee={this.props.getTransferFee}
+						setContractFees={this.props.setContractFees}
+						// for From field
+						from={from}
+						setIn={setIn}
+						checkAccount={checkAccount}
+						generateEthAddress={generateEthAddress}
+					/>
+				),
 			},
 		];
 
@@ -141,6 +166,7 @@ Receive.propTypes = {
 	//
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
+	generateEthAddress: PropTypes.func.isRequired,
 };
 
 Receive.defaultProps = {

@@ -18,7 +18,6 @@ export default class ModalsComponent extends React.Component {
 				<ModalInfo />
 				<ModalAddProposalWIF />
 				<ModalCreateAddress />
-
 			</React.Fragment>
 		);
 	}
