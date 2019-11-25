@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { List } from 'immutable';
+import { validators } from 'echojs-lib';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
+import BN from 'bignumber.js';
 
 
 class EchoNetwork extends React.Component {
@@ -45,6 +47,26 @@ class EchoNetwork extends React.Component {
 
 	onChange(e, value) {
 		this.setState({ receiver: value });
+	}
+
+	formatCurrencyId() {
+		const { currency } = this.props;
+		if (!currency || !currency.id) {
+			return null;
+		}
+		const name = validators.isAssetId(currency.id) ? 'asset' : 'token';
+		const id = currency.id.split('.')[2];
+
+		return `${name}-${id}`;
+	}
+
+	formatAmount() {
+		const { amount, currency } = this.props;
+		if (!currency || !currency.precision || !amount || !amount.value) {
+			return null;
+		}
+
+		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
 	}
 
 	renderAccontsList() {
@@ -186,9 +208,17 @@ class EchoNetwork extends React.Component {
 					setDefaultAsset={this.props.setDefaultAsset}
 					getTransferFee={this.props.getTransferFee}
 					setContractFees={this.props.setContractFees}
-					assetDropdown={false}
+					assetDropdown
+					receive
 				/>
-				<QrCode />
+				{
+					receiver ?
+						<QrCode
+							accountName={receiver}
+							currencyId={this.formatCurrencyId()}
+							amount={this.formatAmount()}
+						/> : null
+				}
 			</div>
 		);
 	}

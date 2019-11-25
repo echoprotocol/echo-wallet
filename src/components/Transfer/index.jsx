@@ -25,8 +25,6 @@ class Transfer extends React.Component {
 			from, to, currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-		console.log(111111111)
-		console.log(from);
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
