@@ -6,6 +6,7 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
+import ModalCreateAddress from '../Modals/ModalCreateAddress';
 
 
 class Receive extends React.Component {
@@ -103,6 +104,7 @@ class Receive extends React.Component {
 		return (
 
 			<Form className="main-form">
+				<ModalCreateAddress />
 				<div className="field-wrap">
 					<Tab
 						defaultActiveIndex="0"

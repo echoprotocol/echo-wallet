@@ -539,6 +539,7 @@ export default {
 			amount: null,
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_btc_create_intermediate_deposit: {
 		value: OPERATIONS_IDS.SIDECHAIN_BTC_CREATE_INTERMEDIATE_DEPOSIT,
