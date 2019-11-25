@@ -129,7 +129,7 @@ class FeeComponent extends React.Component {
 					className={classnames({
 						'fee-default-dropdown': this.props.isSingle,
 						'fee-dropdown': !this.props.isSingle,
-						'no-choice': options.length < 2,
+						empty: options.length < 2,
 					})}
 					selection
 					fluid

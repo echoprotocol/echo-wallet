@@ -122,6 +122,10 @@ $stripe-width: 10px;
 		}
 	}
 
+	&.fluid {
+		min-width: 100%;
+	}
+
 }
 
 .blue-btn {

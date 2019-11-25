@@ -102,7 +102,6 @@ class ModalBackup extends React.Component {
 							</CopyToClipboard>
 						</React.Fragment>
 						<Button
-							basic
 							type="submit"
 							className="main-btn"
 							onClick={() => this.onSave(activeKeysString)}
