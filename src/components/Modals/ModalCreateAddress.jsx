@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../actions/ModalActions';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
+import { getBTCAdress } from '../../actions/TransactionActions';
 
 class ModalGenerateAddress extends React.Component {
 
@@ -14,7 +15,12 @@ class ModalGenerateAddress extends React.Component {
 		this.state = {};
 	}
 
-
+	onGenerateBTCAdress() {
+		this.props.getBTCAdress(this.state.adress);
+	}
+	onChange(e) {
+		this.setState({ adress: e.target.value });
+	}
 	onClose(e) {
 		e.preventDefault();
 		this.props.closeModal();
@@ -30,7 +36,7 @@ class ModalGenerateAddress extends React.Component {
 			<Modal className="create-address-modal" open={show} dimmer="inverted">
 				<span
 					className="icon-close"
-					onClick={(e) => this.onClose(e)}
+					onClick={() => this.onGenerateBTCAdress()}
 					onKeyDown={(e) => this.onClose(e)}
 					role="button"
 					tabIndex="0"
@@ -78,6 +84,7 @@ class ModalGenerateAddress extends React.Component {
 ModalGenerateAddress.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
+	getBTCAdress: PropTypes.func.isRequired,
 };
 
 ModalGenerateAddress.defaultProps = {
@@ -90,5 +97,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ADDRESS)),
+		getBTCAdress: (adress) => dispatch(getBTCAdress(adress)),
 	}),
 )(ModalGenerateAddress);

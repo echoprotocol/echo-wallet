@@ -997,3 +997,38 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 
 	return feeValue ? feeValue.value : null;
 };
+
+export const getBTCAdress = (adress) => async (dispatch, getState) => {
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	const feeAsset = {
+		id: '1.3.0',
+		precision: 8,
+		symbol: 'ECHO',
+	};
+
+	const options = {
+		fee: {
+			amount: 0,
+			asset_id: feeAsset.id,
+		},
+		account: activeUserId,
+		backup_address: adress,
+	};
+	const feeValue = await dispatch(getTransactionFee('', 'sidechain_btc_create_address', options));
+	console.log(feeValue);
+	options.fee.amount = feeValue.value;
+
+	const precision = new BN(10).pow(feeAsset.precision);
+	const showOptions = {
+		from: getState().global.getIn(['activeUser', 'name']),
+		account: getState().global.getIn(['activeUser', 'name']),
+		backup_address: adress,
+		fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+	};
+	dispatch(TransactionReducer.actions.setOperation({
+		operation: 'sidechain_btc_create_address',
+		options,
+		showOptions,
+	}));
+};
