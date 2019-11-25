@@ -46,6 +46,7 @@ class AuthorizationScenario extends React.Component {
 
 	unlock() {
 		const { password } = this.state;
+
 		this.props.unlock(password, this.props.authorize);
 	}
 

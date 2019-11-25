@@ -35,7 +35,6 @@ class TransactionScenario extends React.Component {
 
 	async submit() {
 		const isValid = await this.props.handleTransaction();
-		console.log('isValid', isValid)
 
 		if (!isValid) {
 			return;
@@ -54,7 +53,6 @@ class TransactionScenario extends React.Component {
 
 	unlock() {
 		const { password } = this.state;
-		console.log('unlockT')
 
 		this.props.unlock(password, () => {
 			this.props.onUnlock(password);
