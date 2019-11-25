@@ -82,9 +82,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		const precision = getState()
 			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
-
 		let amount = await getOperationFee(type, options);
-
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
@@ -630,6 +628,9 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
+	console.log(operation)
+	console.log(options)
+	console.log(operationId)
 	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
@@ -998,7 +999,7 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue ? feeValue.value : null;
 };
 
-export const getBTCAdress = (adress) => async (dispatch, getState) => {
+export const getBTCAdress = (address) => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 	const feeAsset = {
@@ -1009,26 +1010,32 @@ export const getBTCAdress = (adress) => async (dispatch, getState) => {
 
 	const options = {
 		fee: {
-			amount: 0,
 			asset_id: feeAsset.id,
 		},
 		account: activeUserId,
-		backup_address: adress,
+		backup_address: address,
 	};
-	const feeValue = await dispatch(getTransactionFee('', 'sidechain_btc_create_address', options));
-	console.log(feeValue);
-	options.fee.amount = feeValue.value;
+	let feeValue;
+	try {
+		console.log(1)
+		feeValue = await getOperationFee('sidechain_eth_create_address', options);
+	} catch (error) {
+		return null;
+	}
+	console.log('fee', feeValue);
+	options.fee.amount = 200;
 
 	const precision = new BN(10).pow(feeAsset.precision);
 	const showOptions = {
 		from: getState().global.getIn(['activeUser', 'name']),
 		account: getState().global.getIn(['activeUser', 'name']),
-		backup_address: adress,
+		backup_address: address,
 		fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 	};
 	dispatch(TransactionReducer.actions.setOperation({
-		operation: 'sidechain_btc_create_address',
+		operation: 'sidechain_eth_create_address',
 		options,
 		showOptions,
 	}));
+	return options.fee.amount ? true : null;
 };

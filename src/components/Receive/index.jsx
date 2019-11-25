@@ -6,7 +6,6 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
 
-
 class Receive extends React.Component {
 
 	componentDidMount() {
