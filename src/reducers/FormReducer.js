@@ -86,8 +86,17 @@ const DEFAULT_FORM_FIELDS = {
 		isAvailableBalance: false,
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
 		bytecode: {
 			value: '',
+			error: null,
+		},
+		fee: {
+			value: '',
+			asset: null,
 			error: null,
 		},
 		name: {
@@ -98,6 +107,7 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		isAvailableBalance: false,
 		addToWatchList: false,
 		accepted: false,
 	}),

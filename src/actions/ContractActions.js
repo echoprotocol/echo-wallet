@@ -495,3 +495,9 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	dispatch(ContractFeeReducer.actions.set({ value: fees.length ? fees : null }));
 	return fee;
 };
+
+export const getAssetsList = async (name) => {
+	const list = await echo.api.listAssets(name, 15);
+	return list;
+};
+

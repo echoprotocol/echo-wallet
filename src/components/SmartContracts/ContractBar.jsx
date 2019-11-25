@@ -1,9 +1,12 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import { Popup, Dropdown, Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import AmountField from '../Fields/AmountField';
 import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
 import Toggle from '../Toggle';
+import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 
 
 class ContractBar extends React.Component {
@@ -13,13 +16,22 @@ class ContractBar extends React.Component {
 		this.state = {
 			searchText: '',
 			supportedAssets: 'all',
+			options: [],
 		};
 	}
 
-	assetSearchHanler(e, data) {
+
+	async assetSearchHanler(e, data) {
 		this.setState({
 			searchText: data.searchQuery,
 		});
+		const assetList = (await this.props.getAssetsList(data.searchQuery.toUpperCase()))
+			.map((a, i) => ({
+				key: a.id,
+				text: a.symbol,
+				value: i,
+			}));
+		this.setState({ options: assetList });
 	}
 
 	renderAccuracyTrigger() {
@@ -39,12 +51,12 @@ class ContractBar extends React.Component {
 			</div>
 		);
 	}
+
 	render() {
-		const options = [
-			{ key: 1, text: 'Choice 1', value: 1 },
-			{ key: 2, text: 'Choice 2', value: 2 },
-			{ key: 3, text: 'Choice 3', value: 3 }];
-		const { searchText, supportedAssets } = this.state;
+		const { searchText, supportedAssets, options } = this.state;
+		const {
+			fee, tokens, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+		} = this.props;
 		return (
 			<div className="contract-bar">
 				<h3 className="contract-bar-title">Contract deploy parameters</h3>
@@ -61,7 +73,9 @@ class ContractBar extends React.Component {
 							/>
 							ETH Accuracy:
 						</div>
-						<Toggle />
+						<Toggle
+							onChange={() => this.props.setContractValue('ETHAccuracy', !this.props.ETHAccuracy)}
+						/>
 					</li>
 					<li className="param">
 						<div className="param-key">
@@ -118,6 +132,23 @@ class ContractBar extends React.Component {
 							/>
 							Deploying amount:
 						</div>
+						<AmountField
+							fees={fees}
+							form={FORM_CREATE_CONTRACT}
+							fee={fee}
+							assets={assets}
+							tokens={tokens}
+							amount={amount}
+							currency={currency}
+							isAvailableBalance={isAvailableBalance}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setFormValue={this.props.setFormValue}
+							setValue={this.props.setValue}
+							setDefaultAsset={this.props.setDefaultAsset}
+							getTransferFee={this.props.getTransferFee}
+							setContractFees={this.props.setContractFees}
+						/>
 					</li>
 				</ul>
 				<Button
@@ -131,9 +162,30 @@ class ContractBar extends React.Component {
 
 }
 
-ContractBar.propTypes = {};
+ContractBar.propTypes = {
+	fee: PropTypes.object,
+	fees: PropTypes.array.isRequired,
+	assets: PropTypes.object.isRequired,
+	tokens: PropTypes.object.isRequired,
+	amount: PropTypes.object.isRequired,
+	currency: PropTypes.object,
+	isAvailableBalance: PropTypes.bool.isRequired,
+	ETHAccuracy: PropTypes.bool.isRequired,
+	setContractValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
+	amountInput: PropTypes.func.isRequired,
+	getTransferFee: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
+	getAssetsList: PropTypes.func.isRequired,
+};
 
-ContractBar.defaultProps = {};
+ContractBar.defaultProps = {
+	currency: null,
+	fee: null,
+};
 
 
 export default ContractBar;
