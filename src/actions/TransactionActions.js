@@ -628,9 +628,6 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
-	console.log(operation)
-	console.log(options)
-	console.log(operationId)
 	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
@@ -1010,6 +1007,7 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 
 	const options = {
 		fee: {
+			amount: 200,
 			asset_id: feeAsset.id,
 		},
 		account: activeUserId,
@@ -1017,8 +1015,7 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 	};
 	let feeValue;
 	try {
-		console.log(1)
-		feeValue = await getOperationFee('sidechain_eth_create_address', options);
+		feeValue = await getOperationFee('sidechain_btc_create_address', options);
 	} catch (error) {
 		return null;
 	}
@@ -1033,7 +1030,7 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 		fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 	};
 	dispatch(TransactionReducer.actions.setOperation({
-		operation: 'sidechain_eth_create_address',
+		operation: 'sidechain_btc_create_address',
 		options,
 		showOptions,
 	}));
