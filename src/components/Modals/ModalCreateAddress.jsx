@@ -76,7 +76,8 @@ class ModalGenerateAddress extends React.Component {
 										false && <span className="error-message">some error</span>
 									}
 									<span className="warning-message">
-										Warning: Please note, address names are visible for blockchain network participants.
+										Warning: Please note, address names are
+										visible for blockchain network participants.
 									</span>
 								</Form.Field>
 								<div className="form-panel">

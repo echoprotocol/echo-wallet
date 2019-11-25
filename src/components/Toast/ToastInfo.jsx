@@ -5,7 +5,6 @@ const ToastInfo = (text, onUndo) => (
 	<React.Fragment>
 		<span className="toast-text">{ text }</span>
 		<Button
-			type="button"
 			compact
 			className="black-btn"
 			content="Undo"

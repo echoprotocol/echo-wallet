@@ -33,3 +33,11 @@
     0 0 0 $shadow-size rgba($inut-color, .2),
     0 0 0 $shadow-size rgba($inut-color, .2);
 }
+
+@mixin label {
+	font-size: 12px;
+	text-transform: uppercase;
+	font-family: proximaNovaSemibold;
+	color: #AEB4C0;
+}
+  
