@@ -1,20 +1,8 @@
-/*!
- * # Semantic UI 2.3.1 - Table
- * http://github.com/semantic-org/semantic-ui/
- *
- *
- * Released under the MIT license
- * http://opensource.org/licenses/MIT
- *
- */
-
-
 /*******************************
              Table
 *******************************/
 
 
-/* Prototype */
 .table {
   width: 100%;
   background: #FFFFFF;
@@ -31,11 +19,6 @@
 .table:last-child {
   margin-bottom: 0em;
 }
-
-
-/*******************************
-             Parts
-*******************************/
 
 
 /* Table Content */
@@ -189,12 +172,6 @@
   }
 }
 
-
-/*******************************
-            Coupling
-*******************************/
-
-
 /* UI Image */
 .table th .image,
 .table th .image img,
@@ -202,16 +179,6 @@
 .table td .image img {
   max-width: none;
 }
-
-
-/*******************************
-             Types
-*******************************/
-
-
-/*--------------
-    Complex
----------------*/
 
 .structured.table {
   border-collapse: collapse;
@@ -233,64 +200,6 @@
   border-left: 1px solid rgba(34, 36, 38, 0.1);
   border-right: 1px solid rgba(34, 36, 38, 0.1);
 }
-
-/*--------------
-   Definition
----------------*/
-
-.definition.table thead:not(.full-width) th:first-child {
-  pointer-events: none;
-  background: transparent;
-  font-weight: normal;
-  color: rgba(0, 0, 0, 0.4);
-  -webkit-box-shadow: -1px -1px 0px 1px #FFFFFF;
-          box-shadow: -1px -1px 0px 1px #FFFFFF;
-}
-.definition.table tfoot:not(.full-width) th:first-child {
-  pointer-events: none;
-  background: transparent;
-  font-weight: rgba(0, 0, 0, 0.4);
-  color: normal;
-  -webkit-box-shadow: 1px 1px 0px 1px #FFFFFF;
-          box-shadow: 1px 1px 0px 1px #FFFFFF;
-}
-
-/* Remove Border */
-.celled.definition.table thead:not(.full-width) th:first-child {
-  -webkit-box-shadow: 0px -1px 0px 1px #FFFFFF;
-          box-shadow: 0px -1px 0px 1px #FFFFFF;
-}
-.celled.definition.table tfoot:not(.full-width) th:first-child {
-  -webkit-box-shadow: 0px 1px 0px 1px #FFFFFF;
-          box-shadow: 0px 1px 0px 1px #FFFFFF;
-}
-
-/* Highlight Defining Column */
-.definition.table tr td:first-child:not(.ignored),
-.definition.table tr td.definition {
-  background: rgba(0, 0, 0, 0.03);
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.95);
-  text-transform: '';
-  -webkit-box-shadow: '';
-          box-shadow: '';
-  text-align: '';
-  font-size: 1em;
-  padding-left: '';
-  padding-right: '';
-}
-
-/* Fix 2nd Column */
-.definition.table thead:not(.full-width) th:nth-child(2) {
-  border-left: 1px solid $bd-gray;
-}
-.definition.table tfoot:not(.full-width) th:nth-child(2) {
-  border-left: 1px solid $bd-gray;
-}
-.definition.table td:nth-child(2) {
-  border-left: 1px solid $bd-gray;
-}
-
 
 /*******************************
              States
@@ -342,10 +251,6 @@
   color: #9F3A38 !important;
 }
 
-/*--------------
-     Warning
----------------*/
-
 .table tr.warning,
 .table td.warning {
   -webkit-box-shadow: 0px 0px 0px #C9BA9B inset;
@@ -356,10 +261,6 @@
   background: #FFFAF3 !important;
   color: #573A08 !important;
 }
-
-/*--------------
-     Active
----------------*/
 
 .table tr.active,
 .table td.active {
@@ -372,10 +273,6 @@
   color: rgba(0, 0, 0, 0.87) !important;
 }
 
-/*--------------
-     Disabled
----------------*/
-
 .table tr.disabled td,
 .table tr td.disabled,
 .table tr.disabled:hover,
@@ -384,15 +281,6 @@
   color: rgba(40, 40, 40, 0.3);
 }
 
-
-/*******************************
-          Variations
-*******************************/
-
-
-/*--------------
-    Stackable
----------------*/
 
 @media only screen and (max-width: 991px) {
   [class*="tablet stackable"].table,
@@ -427,16 +315,12 @@
             box-shadow: none !important;
   }
   
-/* Definition Table */
   .definition[class*="tablet stackable"].table thead th:first-child {
     -webkit-box-shadow: none !important;
             box-shadow: none !important;
   }
 }
 
-/*--------------
- Text Alignment
----------------*/
 
 .table[class*="left aligned"],
 .table [class*="left aligned"] {
@@ -477,10 +361,6 @@
   width: 1px;
   white-space: nowrap;
 }
-
-/*--------------
-     Fixed
----------------*/
 
 .fixed.table {
   table-layout: fixed;
@@ -629,249 +509,6 @@
 .table[class*="single line"],
 .table [class*="single line"] {
   white-space: nowrap;
-}
-
-/*-------------------
-       Colors
---------------------*/
-
-
-/* Red */
-.red.table {
-  border-top: 0.2em solid #DB2828;
-}
-.inverted.red.table {
-  background-color: #DB2828 !important;
-  color: #FFFFFF !important;
-}
-
-/* Orange */
-.orange.table {
-  border-top: 0.2em solid $main-color;
-}
-.inverted.orange.table {
-  background-color: $main-color !important;
-  color: #FFFFFF !important;
-}
-
-/* Yellow */
-.yellow.table {
-  border-top: 0.2em solid #FBBD08;
-}
-.inverted.yellow.table {
-  background-color: #FBBD08 !important;
-  color: #FFFFFF !important;
-}
-
-/* Olive */
-.olive.table {
-  border-top: 0.2em solid #B5CC18;
-}
-.inverted.olive.table {
-  background-color: #B5CC18 !important;
-  color: #FFFFFF !important;
-}
-
-/* Green */
-.green.table {
-  border-top: 0.2em solid #21BA45;
-}
-.inverted.green.table {
-  background-color: #21BA45 !important;
-  color: #FFFFFF !important;
-}
-
-/* Teal */
-.teal.table {
-  border-top: 0.2em solid #00B5AD;
-}
-.inverted.teal.table {
-  background-color: #00B5AD !important;
-  color: #FFFFFF !important;
-}
-
-/* Blue */
-.blue.table {
-  border-top: 0.2em solid $blue-light;
-}
-.inverted.blue.table {
-  background-color: $blue-light !important;
-  color: #FFFFFF !important;
-}
-
-/* Violet */
-.violet.table {
-  border-top: 0.2em solid #6435C9;
-}
-.inverted.violet.table {
-  background-color: #6435C9 !important;
-  color: #FFFFFF !important;
-}
-
-/* Purple */
-.purple.table {
-  border-top: 0.2em solid #A333C8;
-}
-.inverted.purple.table {
-  background-color: #A333C8 !important;
-  color: #FFFFFF !important;
-}
-
-/* Pink */
-.pink.table {
-  border-top: 0.2em solid #E03997;
-}
-.inverted.pink.table {
-  background-color: #E03997 !important;
-  color: #FFFFFF !important;
-}
-
-/* Brown */
-.brown.table {
-  border-top: 0.2em solid #A5673F;
-}
-.inverted.brown.table {
-  background-color: #A5673F !important;
-  color: #FFFFFF !important;
-}
-
-/* Grey */
-.grey.table {
-  border-top: 0.2em solid #767676;
-}
-.inverted.grey.table {
-  background-color: #767676 !important;
-  color: #FFFFFF !important;
-}
-
-/* Black */
-.black.table {
-  border-top: 0.2em solid #1B1C1D;
-}
-.inverted.black.table {
-  background-color: #1B1C1D !important;
-  color: #FFFFFF !important;
-}
-
-/*--------------
-  Column Count
----------------*/
-
-
-/* Grid Based */
-.one.column.table td {
-  width: 100%;
-}
-.two.column.table td {
-  width: 50%;
-}
-.three.column.table td {
-  width: 33.33333333%;
-}
-.four.column.table td {
-  width: 25%;
-}
-.five.column.table td {
-  width: 20%;
-}
-.six.column.table td {
-  width: 16.66666667%;
-}
-.seven.column.table td {
-  width: 14.28571429%;
-}
-.eight.column.table td {
-  width: 12.5%;
-}
-.nine.column.table td {
-  width: 11.11111111%;
-}
-.ten.column.table td {
-  width: 10%;
-}
-.eleven.column.table td {
-  width: 9.09090909%;
-}
-.twelve.column.table td {
-  width: 8.33333333%;
-}
-.thirteen.column.table td {
-  width: 7.69230769%;
-}
-.fourteen.column.table td {
-  width: 7.14285714%;
-}
-.fifteen.column.table td {
-  width: 6.66666667%;
-}
-.sixteen.column.table td {
-  width: 6.25%;
-}
-
-/* Column Width */
-.table th.one.wide,
-.table td.one.wide {
-  width: 6.25%;
-}
-.table th.two.wide,
-.table td.two.wide {
-  width: 12.5%;
-}
-.table th.three.wide,
-.table td.three.wide {
-  width: 18.75%;
-}
-.table th.four.wide,
-.table td.four.wide {
-  width: 25%;
-}
-.table th.five.wide,
-.table td.five.wide {
-  width: 31.25%;
-}
-.table th.six.wide,
-.table td.six.wide {
-  width: 37.5%;
-}
-.table th.seven.wide,
-.table td.seven.wide {
-  width: 43.75%;
-}
-.table th.eight.wide,
-.table td.eight.wide {
-  width: 50%;
-}
-.table th.nine.wide,
-.table td.nine.wide {
-  width: 56.25%;
-}
-.table th.ten.wide,
-.table td.ten.wide {
-  width: 62.5%;
-}
-.table th.eleven.wide,
-.table td.eleven.wide {
-  width: 68.75%;
-}
-.table th.twelve.wide,
-.table td.twelve.wide {
-  width: 75%;
-}
-.table th.thirteen.wide,
-.table td.thirteen.wide {
-  width: 81.25%;
-}
-.table th.fourteen.wide,
-.table td.fourteen.wide {
-  width: 87.5%;
-}
-.table th.fifteen.wide,
-.table td.fifteen.wide {
-  width: 93.75%;
-}
-.table th.sixteen.wide,
-.table td.sixteen.wide {
-  width: 100%;
 }
 
 /*--------------
@@ -1097,7 +734,6 @@
   padding: 0.5em 0.7em;
 }
 
-/* Very */
 [class*="very compact"].table th {
   padding-left: 0.6em;
   padding-right: 0.6em;
@@ -1106,28 +742,10 @@
   padding: 0.4em 0.6em;
 }
 
-/*--------------
-      Sizes
----------------*/
-
-
-/* Small */
-.small.table {
-  font-size: 0.9em;
-}
-
-/* Standard */
 .table {
   font-size: 1em;
 }
 
-/* Large */
 .large.table {
   font-size: 1.1em;
 }
-
-
-/*******************************
-         Site Overrides
-*******************************/
-
