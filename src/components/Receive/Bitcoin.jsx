@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BN from 'bignumber.js';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { List } from 'immutable';
@@ -10,11 +11,10 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
-import BN from 'bignumber.js';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
 
-class EchoNetwork extends React.Component {
+class Bitcoin extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -22,6 +22,11 @@ class EchoNetwork extends React.Component {
 			addresses: new List([]),
 			receiver: '',
 		};
+	}
+
+	componentDidMount() {
+		console.log('danniy prikol nahoditsa v componentDidMount');
+		this.props.getBtcAddress();
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -43,6 +48,20 @@ class EchoNetwork extends React.Component {
 	onChange(e, value) {
 		this.setState({ receiver: value });
 	}
+
+	getReceiver() {
+		const { accountName } = this.props;
+		const { addresses, receiver } = this.state;
+
+		if (accountName === receiver) {
+			return accountName;
+		}
+
+		const address = addresses.find((a) => a.get('address') === receiver);
+
+		return address ? address.get('address') : null;
+	}
+
 
 	formatCurrencyId() {
 		const { currency } = this.props;
@@ -168,6 +187,7 @@ class EchoNetwork extends React.Component {
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 		const { receiver } = this.state;
+		const receiverValue = this.getReceiver();
 		console.log('at renderPayment', receiver);
 		return (
 			<React.Fragment>
@@ -206,9 +226,9 @@ class EchoNetwork extends React.Component {
 					assetDropdown
 				/>
 				{
-					receiver ?
+					receiverValue ?
 						<QrCode
-							accountName={receiver}
+							receiverValue={receiverValue}
 							currencyId={this.formatCurrencyId()}
 							amount={this.formatAmount()}
 						/> : null
@@ -247,20 +267,19 @@ class EchoNetwork extends React.Component {
 	}
 
 	render() {
-
-
+		const { btcAddress } = this.props;
+		console.log('prikol iz rendera LULZZ');
+		console.log(btcAddress);
 		return (
 			<div className="payment-wrap" >
-				{/* {this.renderGenerateAdressProcess()} */}
-
-				{this.renderPayment()}
+				{btcAddress ? this.renderPayment() : this.renderGenerateAdressProcess()}
 			</div>
 		);
 	}
 
 }
 
-EchoNetwork.propTypes = {
+Bitcoin.propTypes = {
 	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
@@ -280,13 +299,15 @@ EchoNetwork.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	address: PropTypes.bool,
 	openModal: PropTypes.func.isRequired,
-
+	getBtcAddress: PropTypes.func.isRequired,
+	btcAddress: PropTypes.object,
 };
 
-EchoNetwork.defaultProps = {
+Bitcoin.defaultProps = {
 	currency: null,
 	address: true,
+	btcAddress: null,
 };
 
 
-export default EchoNetwork;
+export default Bitcoin;

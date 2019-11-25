@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 
@@ -24,8 +23,9 @@ class Receive extends React.Component {
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
+			btcAddress,
 		} = this.props;
 
 		const internalTabs = [
@@ -88,6 +88,8 @@ class Receive extends React.Component {
 						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
+						getBtcAddress={this.props.getBtcAddress}
+						btcAddress={btcAddress}
 					/>),
 			},
 			{
@@ -137,23 +139,19 @@ Receive.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	getBtcAddress: PropTypes.func.isRequired,
+	btcAddress: PropTypes.object,
 };
 
 Receive.defaultProps = {
 	currency: null,
+	btcAddress: null,
 };
 
-export default connect(
-	(state) => ({
-		from: state.global.getIn(['activeUser']).toJS(),
-	}),
-	() => ({
-	}),
-)(Receive);
+export default Receive;

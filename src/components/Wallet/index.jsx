@@ -14,7 +14,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, accountAddresses,
+			fee, isAvailableBalance, fees, accountAddresses, btcAddress,
 		} = this.props;
 
 		const externalTabs = [
@@ -80,6 +80,8 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							updateAccountAddresses={this.props.updateAccountAddresses}
+							getBtcAddress={this.props.getBtcAddress}
+							btcAddress={btcAddress}
 							// for To field
 							accountName={accountName}
 							setIn={this.props.setIn}
@@ -149,6 +151,7 @@ Wallet.propTypes = {
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
 	currency: PropTypes.object,
+	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
@@ -172,12 +175,14 @@ Wallet.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	getBtcAddress: PropTypes.func.isRequired,
 };
 
 Wallet.defaultProps = {
 	tokens: null,
 	assets: null,
 	currency: null,
+	btcAddress: null,
 };
 
 export default Wallet;

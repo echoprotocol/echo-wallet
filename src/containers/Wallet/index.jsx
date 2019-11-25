@@ -17,6 +17,7 @@ import {
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
 import { updateAccountAddresses } from '../../actions/AccountActions';
+import { getBtcAddress } from '../../actions/SidechainActions';
 
 import Wallet from '../../components/Wallet';
 
@@ -34,6 +35,7 @@ export default connect(
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
 		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
+		btcAddress: state.sidechain.getIn(['btcAddresses', state.global.getIn(['activeUser', 'id'])]),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -54,6 +56,7 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
 		updateAccountAddresses: () => dispatch(updateAccountAddresses()),
+		getBtcAddress: () => dispatch(getBtcAddress()),
 	}),
 )(Wallet);
 
