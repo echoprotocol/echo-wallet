@@ -73,7 +73,7 @@ class ViewTransaction extends React.Component {
 					</div>
 				</div>
 				<Tab
-					menu={{ tabular: true }}
+					menu={{ tabular: false }}
 					className={classnames('tab-full', { 'hide-menu': (isLogData < 1) })}
 					panes={panes}
 				/>

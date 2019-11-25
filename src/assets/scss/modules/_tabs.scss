@@ -9,111 +9,108 @@
             max-height: calc(100vh - 166px);
         }
 
-        &>.menu {
+        & > .menu {
             display: none;
         }
     }
+	.control-wrap {
+		background-color: rgb(247, 247, 247);
+		width: 100%;
+		border-top: 1px solid $bd-gray;
+	}
+    .control-panel {
+		max-width: 900px;
+		margin: auto;
 
-    .control {
-        &-wrap {
-            background-color: rgb(247, 247, 247);
-            width: 100%;
-            border-top: 1px solid $bd-gray;
-        }
+		@media (max-width: 1200px) {
+			margin: 0;
+			max-width: 100%;
+		}
 
-        &-panel {
-            max-width: 900px;
-            margin: auto;
+		display: flex;
+		align-items: center;
+		padding: 10px 20px;
+		height: 45px;
 
-            @media (max-width: 1200px) {
-                margin: 0;
-                max-width: 100%;
-            }
+		.error-wrap {
+			margin-bottom: 0;
+		}
 
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            height: 45px;
+		li {
+			.transparent {
+				i {
+					&:before {
+						font-size: 1.05em;
+						vertical-align: middle;
+					}
+				}
+			}
 
-            .error-wrap {
-                margin-bottom: 0;
-            }
+			&:not(:last-child) {
+				margin-right: 40px;
+			}
 
-            li {
-                .transparent {
-                    i {
-                        &:before {
-                            font-size: 1.05em;
-                            vertical-align: middle;
-                        }
-                    }
-                }
+			&.id {
+				display: flex;
+				align-items: center;
+			}
 
-                &:not(:last-child) {
-                    margin-right: 40px;
-                }
+			&.name {
+				display: flex;
+				align-items: center;
+				margin: -1px auto 0 0;
+			}
+		}
 
-                &.id {
-                    display: flex;
-                    align-items: center;
-                }
+		.label {
+			color: $gray;
+			margin-right: 8px;
+		}
 
-                &.name {
-                    display: flex;
-                    align-items: center;
-                    margin: -1px auto 0 0;
-                }
-            }
+		.value {
+			&.ui.button {
+				text-transform: none;
 
-            .label {
-                color: $gray;
-                margin-right: 8px;
-            }
+				&:hover {
+					i {
+						color: rgb(137, 140, 145);
+					}
+				}
 
-            .value {
-                &.ui.button {
-                    text-transform: none;
+				i {
+					margin: -5px 0 0 5px !important;
+					color: rgb(178, 180, 183);
+					transition: color .3s;
+					display: block;
+					font-size: 14px;
+					transition: color $speed;
+				}
+			}
 
-                    &:hover {
-                        i {
-                            color: rgb(137, 140, 145);
-                        }
-                    }
+			background-color: transparent;
+			color: $link-gray;
+			padding: 3px 5px;
+			border-radius: 3px;
+			display: flex;
+			height: 26px;
+			align-items: center;
+			flex-direction: row-reverse;
 
-                    i {
-                        margin: -5px 0 0 5px !important;
-                        color: rgb(178, 180, 183);
-                        transition: color .3s;
-                        display: block;
-                        font-size: 14px;
-                        transition: color $speed;
-                    }
-                }
+			&:focus {
+				@include on-focus(4px);
+			}
 
-                background-color: transparent;
-                color: $link-gray;
-                padding: 3px 5px;
-                border-radius: 3px;
-                display: flex;
-                height: 26px;
-                align-items: center;
-                flex-direction: row-reverse;
-
-                &:focus {
-                    @include on-focus(4px);
-                }
-
-                &:hover {
-                    i {
-                        color: $link-gray;
-                    }
-                }
-
-            }
-        }
+			&:hover {
+				i {
+					color: $link-gray;
+				}
+			}
+		}
     }
 
-    .ui.tabular.menu {
+    .menu {
+		min-height: 40px;
+		display: flex;
         border: 0;
         max-width: 900px;
         padding: 0 20px;
@@ -146,69 +143,10 @@
             right: 100%;
         }
 
-        .item,
-        .tab-btn {
-            border: 0;
-            font-size: .8em;
-            font-weight: 600;
-            line-height: 0px;
-            margin: 0 0 -3px;
-            color: rgb(168, 168, 168);
-            border-bottom: 2px solid rgb(247, 247, 247);
-            border-radius: 0;
-            margin: 0 0 -2px 0;
-            transition: border $speed ease, color $speed ease;
-            padding: 0;
-            z-index: 2;
-            background-color: transparent;
-
-            &:not(:last-child) {
-                margin-right: 35px;
-            }
-
-            &:hover {
-                color: $gray;
-                border-bottom: 2px solid rgb(211, 214, 220);
-            }
-
-            &.active {
-                color: $main-сolor;
-                line-height: 0px;
-                border-top-right-radius: 8px;
-                border-top-left-radius: 8px;
-                border-bottom: 2px solid;
-            }
-        }
-
-        .tab-btn {
-            position: relative;
-
-            &:focus {
-                box-shadow: none;
-
-                &:before {
-                    content: '';
-                    position: absolute;
-                    right: -4px;
-                    left: -4px;
-                    top: 8px;
-                    bottom: 10px;
-                    border-radius: 3px;
-                    @include on-focus(2px);
-                }
-            }
-
-            &:active {
-                &:before {
-                    box-shadow: none;
-                }
-            }
-
-        }
-
+        
     }
 
-    .ui.tab {
+    .tab {
         background-color: #fff;
         border: 0;
     }
@@ -217,7 +155,6 @@
         max-width: 860px;
         margin: auto;
         padding: 20px 45px 60px;
-        // overflow: initial;
         overflow: -webkit-paged-x;
 
         @media (max-width: 1200px) {
@@ -235,4 +172,57 @@
     .watchlist {
         margin: 0
     }
+}
+
+.tab-btn {
+	border: 0;
+	font-size: 12px;
+	font-weight: 600;
+	color: rgb(168, 168, 168);
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	transition: border $speed ease, color $speed ease;
+	padding: 0;
+	z-index: 2;
+	margin: 5px 0 -2px;
+	background-color: transparent;
+	position: relative;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-family: proximaNovaSemibold;
+	&:not(:last-child) {
+		margin-right: 36px;
+	}
+
+	&:hover {
+		color: $gray;
+		border-bottom: 2px solid rgb(211, 214, 220);
+	}
+
+	&.active {
+		color: $main-color;
+		border-top-right-radius: 8px;
+		border-top-left-radius: 8px;
+		border-bottom: 2px solid;
+	}
+
+	&:focus {
+		box-shadow: none;
+		&:before {
+			content: '';
+			position: absolute;
+			right: -4px;
+			left: -4px;
+			top: 8px;
+			bottom: 10px;
+			border-radius: 3px;
+			@include on-focus(2px);
+		}
+	}
+
+	&:active {
+		&:before {
+			box-shadow: none;
+		}
+	}
 }

@@ -41,7 +41,7 @@ class Transfer extends React.Component {
 	render() {
 		const {
 			from, to, currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, subjectTransferType,
+			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 		return (
@@ -51,9 +51,6 @@ class Transfer extends React.Component {
 				{
 					(submit) => (
 						<Form className="main-form">
-							<div className="form-info">
-								<h3>Create Payment</h3>
-							</div>
 							<div className="field-wrap">
 								<AccountField
 									currency={currency}
@@ -130,7 +127,6 @@ Transfer.propTypes = {
 	to: PropTypes.object.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
-	subjectTransferType: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,

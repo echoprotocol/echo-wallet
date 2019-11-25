@@ -42,7 +42,7 @@
             width: 24px;
             height: 24px;
             border-radius: 4px;
-            border: 2px solid $main-сolor;
+            border: 2px solid $main-color;
             margin-right: 10px;
             content: "\e924";
             transition: border $speed, background-color $speed, color $speed;
@@ -60,8 +60,8 @@
 
         &:checked~.label {
             &:before {
-                background-color: $main-сolor;
-                border: 2px solid $main-сolor;
+                background-color: $main-color;
+                border: 2px solid $main-color;
             }
         }
 

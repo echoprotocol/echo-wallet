@@ -32,7 +32,6 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
-		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
