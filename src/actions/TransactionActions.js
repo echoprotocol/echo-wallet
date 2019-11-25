@@ -1007,7 +1007,6 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 
 	const options = {
 		fee: {
-			amount: 200,
 			asset_id: feeAsset.id,
 		},
 		account: activeUserId,
@@ -1019,8 +1018,7 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 	} catch (error) {
 		return null;
 	}
-	console.log('fee', feeValue);
-	options.fee.amount = 200;
+	options.fee.amount = feeValue;
 
 	const precision = new BN(10).pow(feeAsset.precision);
 	const showOptions = {
@@ -1034,5 +1032,5 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 		options,
 		showOptions,
 	}));
-	return options.fee.amount ? true : null;
+	return options.fee.amount !== null && options.fee.amount !== undefined;
 };

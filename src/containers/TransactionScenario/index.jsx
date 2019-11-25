@@ -35,7 +35,6 @@ class TransactionScenario extends React.Component {
 
 	async submit() {
 		const isValid = await this.props.handleTransaction();
-
 		if (!isValid) {
 			return;
 		}
