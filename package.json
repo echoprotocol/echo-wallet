@@ -37,7 +37,7 @@
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
     "crypto-random-string": "^3.0.1",
-    "echojs-lib": "1.9.3",
+    "echojs-lib": "1.9.5",
     "echojs-ping": "^0.1.5",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
@@ -72,6 +72,7 @@
     "rlp": "^2.1.0",
     "scrypt-js": "^2.0.4",
     "semantic-ui-react": "^0.78.3",
+    "solc": "^0.5.12",
     "terser-webpack-plugin": "^1.3.0",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "utf8": "^3.0.0"

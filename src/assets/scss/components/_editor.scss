@@ -10,6 +10,9 @@
 	&:hover {
 		border-color: $border-hover !important;
 	}
+	.ace_content {
+		padding-bottom: 20px;
+	}
 	&.ace_focus {
 		@include on-focus(4px);
 	}

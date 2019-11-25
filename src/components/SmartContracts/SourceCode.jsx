@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -11,15 +11,52 @@ class SourceCode extends React.Component {
 		super(props);
 		this.state = {
 			searchText: '',
+			timeout: null,
 		};
 	}
+
+	componentWillUnmount() {
+		this.props.clearForm();
+	}
+
+
 	onEditorLoad(editor) {
 		editor.setOptions({
 			fontSize: '15px',
 		});
 	}
 
-	versionSearchHanler(e, data) {
+	onChange(value) {
+		const { timeout } = this.state;
+		this.props.setFormValue('code', value);
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+
+		this.setState({
+			timeout: setTimeout(async () => {
+				await this.props.contractCodeCompile(value);
+			}, 600),
+		});
+	}
+
+	onChangeItem(e, value) {
+		const { form } = this.props;
+
+		this.props.setFormValue('name', value);
+		this.props.setFormValue('abi', form.getIn(['contracts', value, 'abi']));
+		this.props.setFormValue('bytecode', form.getIn(['contracts', value, 'bytecode']));
+	}
+
+	getContracts() {
+		const { form } = this.props;
+
+		const [...contractNames] = form.get('contracts').keys();
+
+		return contractNames.map((c, index) => ({ key: index, text: c, value: c }));
+	}
+
+	versionSearchHandler(e, data) {
 		this.setState({
 			searchText: data.searchQuery,
 		});
@@ -32,6 +69,7 @@ class SourceCode extends React.Component {
 			{ key: 2, text: 'Choice 2', value: 2 },
 			{ key: 3, text: 'Choice 3', value: 3 },
 		];
+		const { form } = this.props;
 		const { searchText } = this.state;
 		return (
 			<React.Fragment>
@@ -50,6 +88,8 @@ class SourceCode extends React.Component {
 							borderRadius: '4px',
 							borderColor: '#DDDDDD',
 						}}
+						onChange={(value) => this.onChange(value)}
+						value={form.get('code').value}
 					/>
 				</div>
 				<div className="fields">
@@ -62,7 +102,7 @@ class SourceCode extends React.Component {
 							selection
 							fluid
 							text={searchText || 'Compiler version'}
-							onSearchChange={(e, data) => this.versionSearchHanler(e, data)}
+							onSearchChange={(e, data) => this.versionSearchHandler(e, data)}
 							placeholder="Compiler version"
 							selectOnNavigation={false}
 							minCharacters={0}
@@ -72,11 +112,14 @@ class SourceCode extends React.Component {
 					<div className="field">
 						<div className="field-label">Contract to complete</div>
 						<Dropdown
-							options={options}
+							options={this.getContracts()}
+							value={form.get('name').value}
 							selection
 							fluid
 							placeholder="Select contract"
 							selectOnNavigation={false}
+							onChange={(e, { value }) => this.onChangeItem(e, value)}
+							disabled={!form.get('contracts').size}
 						/>
 					</div>
 				</div>
@@ -86,7 +129,12 @@ class SourceCode extends React.Component {
 
 }
 
-SourceCode.propTypes = {};
+SourceCode.propTypes = {
+	form: PropTypes.object.isRequired,
+	contractCodeCompile: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+};
 
 SourceCode.defaultProps = {};
 
