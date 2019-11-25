@@ -59,7 +59,6 @@ class AmountField extends React.Component {
 			return;
 		}
 
-		console.log(1);
 		if ((currency && currency.type === 'tokens') || form !== FORM_TRANSFER) this.props.setContractFees();
 
 		this.setState({
@@ -85,7 +84,6 @@ class AmountField extends React.Component {
 			if (target) {
 				this.setCurrency(target, 'tokens');
 				if (!receive) {
-					console.log(2);
 					this.props.setContractFees();
 				}
 				return;
