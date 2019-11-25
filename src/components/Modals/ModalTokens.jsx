@@ -65,7 +65,6 @@ class ModalTokens extends React.Component {
 								</Form.Field>
 							</div>
 							<Button
-								basic
 								type="submit"
 								className="main-btn"
 								onClick={(e) => this.onClick(e)}

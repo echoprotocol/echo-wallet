@@ -4,13 +4,13 @@ import { Dropdown } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
+import BN from 'bignumber.js';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
-import BN from 'bignumber.js';
 
 
 class EchoNetwork extends React.Component {
@@ -47,6 +47,19 @@ class EchoNetwork extends React.Component {
 
 	onChange(e, value) {
 		this.setState({ receiver: value });
+	}
+
+	getReceiver() {
+		const { accountName } = this.props;
+		const { addresses, receiver } = this.state;
+
+		if (accountName === receiver) {
+			return accountName;
+		}
+
+		const address = addresses.find((a) => a.get('address') === receiver);
+
+		return address ? address.get('address') : null;
 	}
 
 	formatCurrencyId() {
@@ -173,6 +186,7 @@ class EchoNetwork extends React.Component {
 			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 		const { receiver } = this.state;
+		const receiverValue = this.getReceiver();
 
 		return (
 			<div className="payment-wrap">
@@ -212,9 +226,9 @@ class EchoNetwork extends React.Component {
 					receive
 				/>
 				{
-					receiver ?
+					receiverValue ?
 						<QrCode
-							accountName={receiver}
+							receiverValue={receiverValue}
 							currencyId={this.formatCurrencyId()}
 							amount={this.formatAmount()}
 						/> : null

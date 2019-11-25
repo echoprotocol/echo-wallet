@@ -115,7 +115,6 @@ class ModalEditPermissions extends React.Component {
 							Forgot password?
 						</a>
 						<Button
-							basic
 							type="submit"
 							className="main-btn countdown-wrap"
 							onClick={(e) => this.onSuccess(e)}
