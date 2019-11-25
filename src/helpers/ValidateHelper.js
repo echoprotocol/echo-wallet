@@ -1,5 +1,6 @@
 import { validators, PublicKey } from 'echojs-lib';
 import BN from 'bignumber.js';
+import base58check from 'base58check';
 
 import {
 	ADDRESS_PREFIX,
@@ -536,3 +537,17 @@ export const checkErc20Contract = (scriptHex) => {
 
 	return false;
 };
+
+/**
+ * @method isBackupAddress
+ * @param {String} hex
+ * @returns {boolean}
+ */
+export const isBackupAddress = (hex) => {
+	try {
+		return !!base58check.decode(hex);
+	} catch (e) {
+		return false;
+	}
+};
+

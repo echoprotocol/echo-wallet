@@ -5,11 +5,11 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { closeModal } from '../../actions/ModalActions';
-
+import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
 import { getBTCAdress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
+import { isBackupAddress } from '../../helpers/ValidateHelper';
 
 class ModalGenerateAddress extends React.Component {
 
@@ -23,10 +23,16 @@ class ModalGenerateAddress extends React.Component {
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
 	}
 
-	onGenerateBTCAdress() {
-		this.props.getBTCAdress(this.state.adress);
+	onGenerateBTCAdress(submit) {
+		if (!isBackupAddress(this.state.adress)) {
+			this.props.setError('Incorrect backup adress');
+			return;
+		}
+		this.props.closeModal();
+		submit();
 	}
 	onChange(e) {
+		this.props.setError(null);
 		this.setState({ adress: e.target.value });
 	}
 	onClose(e) {
@@ -37,7 +43,7 @@ class ModalGenerateAddress extends React.Component {
 
 	render() {
 		const {
-			show,
+			show, error,
 		} = this.props;
 
 		return (
@@ -63,7 +69,7 @@ class ModalGenerateAddress extends React.Component {
 									Please create address name for a new one.
 								</div>
 
-								<Form.Field className={classnames('error-wrap', { error: false })}>
+								<Form.Field className={classnames('error-wrap', { error: !!error })}>
 									<label htmlFor="address">Address name</label>
 									<input
 										type="text"
@@ -73,7 +79,7 @@ class ModalGenerateAddress extends React.Component {
 										autoFocus
 									/>
 									{
-										false && <span className="error-message">some error</span>
+										<span className="error-message">{error}</span>
 									}
 									<span className="warning-message">
 										Warning: Please note, address names are
@@ -86,8 +92,7 @@ class ModalGenerateAddress extends React.Component {
 										className="main-btn countdown-wrap"
 										content="Generate address"
 										onClick={() => {
-											this.props.closeModal();
-											submit();
+											this.onGenerateBTCAdress(submit);
 										}}
 									/>
 								</div>
@@ -102,20 +107,25 @@ class ModalGenerateAddress extends React.Component {
 
 ModalGenerateAddress.propTypes = {
 	show: PropTypes.bool,
+	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
 	getBTCAdress: PropTypes.func.isRequired,
+	setError: PropTypes.func.isRequired,
 };
 
 ModalGenerateAddress.defaultProps = {
 	show: false,
+	error: null,
 };
 
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_GENERATE_ADDRESS, 'show']),
+		error: state.modal.getIn([MODAL_GENERATE_ADDRESS, 'error']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ADDRESS)),
 		getBTCAdress: (adress) => dispatch(getBTCAdress(adress)),
+		setError: (value) => dispatch(setError(MODAL_GENERATE_ADDRESS, value)),
 	}),
 )(ModalGenerateAddress);

@@ -32,6 +32,7 @@
     "ace-builds": "^1.4.7",
     "autoprefixer": "^8.1.0",
     "babel-polyfill": "^6.26.0",
+    "base58check": "^2.0.0",
     "bignumber.js": "^7.2.1",
     "bn.js": "^4.11.8",
     "bs58": "^4.0.1",
