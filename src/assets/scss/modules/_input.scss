@@ -27,7 +27,7 @@
 	transition: box-shadow $speed ease, border-color $speed ease;
 	transition: box-shadow $speed ease, border-color $speed ease, -webkit-box-shadow $speed ease;
 	&:hover {
-		border-color: $inut-hover;
+		border-color: $border-hover;
 	}
 }
 

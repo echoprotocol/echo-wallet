@@ -49,6 +49,7 @@
 		margin-left: auto;
 
 		.icon-info {
+			cursor: pointer;
 			color: #AEB4C0;
 			font-size: 12px;
 			margin-right: 6px;
@@ -252,11 +253,8 @@
 		margin-right: 6px;
 	}
 	.threshold {
-		font-size: 12px;
-		font-family: proximaNovaSemibold;
-		color: rgb(174, 180, 192);
+		@include label();
 		line-height: 26.4px;
-		text-transform: uppercase;
 		margin-right: 9px;
 	}
 
@@ -290,10 +288,6 @@
 	}
 	.field > label {
 		text-transform: none;
-		font-size: 12px;
-		font-family: proximaNovaSemibold;
-		color:rgba( #5C637D, .5);
-		min-height: auto;
 	}
 
 	input {

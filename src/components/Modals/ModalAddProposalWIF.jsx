@@ -33,15 +33,12 @@ class ModalWIF extends React.Component {
 						</div>
 						<div className="form-panel">
 							<Button
-								basic
 								type="button"
-
 								className="main-btn"
 								onClick={(e) => this.onClose(e)}
 								content="Do it later"
 							/>
 							<Button
-								basic
 								type="button"
 								className="main-btn"
 								onClick={(e) => this.onAgree(e)}

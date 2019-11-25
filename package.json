@@ -29,6 +29,7 @@
     "package-deb-debug": "npm run build-electron-debug && build -p never --linux deb"
   },
   "dependencies": {
+    "ace-builds": "^1.4.7",
     "autoprefixer": "^8.1.0",
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^7.2.1",
@@ -53,6 +54,7 @@
     "qrcode.react": "^1.0.0",
     "query-string": "^6.1.0",
     "react": "^16.5.2",
+    "react-ace": "^8.0.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-countdown-now": "^2.1.1",
     "react-dom": "^16.5.2",
