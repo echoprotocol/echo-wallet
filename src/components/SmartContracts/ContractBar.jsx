@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { Popup, Dropdown, Button } from 'semantic-ui-react';
 import classnames from 'classnames';
-
+import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
 import Toggle from '../Toggle';
 
 
@@ -29,7 +29,7 @@ class ContractBar extends React.Component {
 				The amount will be automatically recalculated to the 1e18 precision.
 
 				<a
-					href="https://docs.echo.org/"
+					href={ECHO_DOCS_LINK}
 					className="link"
 					target="_blank"
 					rel="noopener noreferrer"
