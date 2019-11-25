@@ -130,7 +130,7 @@ class EchoNetwork extends React.Component {
 	renderPayment() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 

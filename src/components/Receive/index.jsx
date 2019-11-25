@@ -150,6 +150,6 @@ export default connect(
 	(state) => ({
 		from: state.global.getIn(['activeUser']).toJS(),
 	}),
-	(dispatch) => ({
+	() => ({
 	}),
 )(Receive);
