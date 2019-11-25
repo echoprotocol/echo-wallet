@@ -37,9 +37,7 @@ class EchoNetwork extends React.Component {
 	}
 
 	renderAccontsList() {
-		console.log('renderAccontsList');
 		const { from: { name } } = this.props;
-		console.log(name);
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
 		const header = [{
@@ -67,7 +65,6 @@ class EchoNetwork extends React.Component {
 		};
 
 		header.push(options);
-		console.log(header);
 		return header;
 	}
 

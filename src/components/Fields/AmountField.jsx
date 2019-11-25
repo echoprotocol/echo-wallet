@@ -26,13 +26,19 @@ class AmountField extends React.Component {
 
 	componentDidMount() {
 		this.props.setDefaultAsset();
-		this.props.getTransferFee().then((fee) => fee && this.onFee(fee));
+		if (!this.props.receive) {
+			this.props.getTransferFee()
+				.then((fee) => fee && this.onFee(fee));
+		}
 	}
 
 	componentDidUpdate(prevProps) {
 		if (!prevProps.currency && prevProps.currency !== this.props.currency) {
 			this.props.setDefaultAsset();
-			this.props.getTransferFee().then((fee) => fee && this.onFee(fee));
+			if (!this.props.receive) {
+				this.props.getTransferFee()
+					.then((fee) => fee && this.onFee(fee));
+			}
 		}
 	}
 
@@ -41,7 +47,7 @@ class AmountField extends React.Component {
 	}
 
 	onChangeAmount(e) {
-		const { currency, form } = this.props;
+		const { currency, form, receive } = this.props;
 		const value = e.target.value.trim();
 		const { name } = e.target;
 		if (this.state.timeout) {
@@ -49,6 +55,11 @@ class AmountField extends React.Component {
 		}
 		this.props.amountInput(value, currency, name);
 
+		if (receive) {
+			return;
+		}
+
+		console.log(1);
 		if ((currency && currency.type === 'tokens') || form !== FORM_TRANSFER) this.props.setContractFees();
 
 		this.setState({
@@ -62,7 +73,9 @@ class AmountField extends React.Component {
 	}
 
 	onChangeCurrency(e, value) {
-		const { tokens, assets, form } = this.props;
+		const {
+			tokens, assets, form, receive,
+		} = this.props;
 
 		let target = null;
 
@@ -71,7 +84,10 @@ class AmountField extends React.Component {
 
 			if (target) {
 				this.setCurrency(target, 'tokens');
-				this.props.setContractFees();
+				if (!receive) {
+					console.log(2);
+					this.props.setContractFees();
+				}
 				return;
 			}
 		}
@@ -79,6 +95,9 @@ class AmountField extends React.Component {
 		target = assets.find((el) => el.id === value);
 		if (!target) return;
 		this.setCurrency(target, 'assets');
+		if (receive) {
+			return;
+		}
 		this.props.getTransferFee()
 			.then((fee) => fee && this.onFee(fee));
 	}
@@ -339,6 +358,7 @@ AmountField.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	assetDropdown: PropTypes.bool,
 	labelText: PropTypes.string,
+	receive: PropTypes.bool,
 };
 
 
@@ -348,6 +368,7 @@ AmountField.defaultProps = {
 	assets: null,
 	assetDropdown: true,
 	labelText: 'Amount',
+	receive: false,
 };
 
 export default AmountField;
