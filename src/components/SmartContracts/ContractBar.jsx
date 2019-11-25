@@ -22,6 +22,23 @@ class ContractBar extends React.Component {
 		});
 	}
 
+	renderAccuracyTrigger() {
+		return (
+			<div className="tooltip">
+				The option allows to interpret ECHO assets as ETH.
+				The amount will be automatically recalculated to the 1e18 precision.
+
+				<a
+					href="https://docs.echo.org/"
+					className="link"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Read more
+				</a>
+			</div>
+		);
+	}
 	render() {
 		const options = [
 			{ key: 1, text: 'Choice 1', value: 1 },
@@ -36,10 +53,11 @@ class ContractBar extends React.Component {
 						<div className="param-key">
 							<Popup
 								trigger={<span className="icon-info" />}
-								content="ETH Accuracy:"
-								className="inner-tooltip"
-								position="bottom right"
-								style={{ width: 100 }}
+								content={this.renderAccuracyTrigger()}
+								className="tooltip-wrap"
+								position="bottom center"
+								hoverable
+								style={{ width: 200 }}
 							/>
 							ETH Accuracy:
 						</div>
@@ -49,10 +67,10 @@ class ContractBar extends React.Component {
 						<div className="param-key">
 							<Popup
 								trigger={<span className="icon-info" />}
-								content="ETH Accuracy:"
+								content="You can specify assets to be supported by your contract."
 								className="inner-tooltip"
-								position="bottom right"
-								style={{ width: 100 }}
+								position="bottom center"
+								style={{ width: 200 }}
 							/>
 							Supported assets:
 						</div>
@@ -93,10 +111,10 @@ class ContractBar extends React.Component {
 						<div className="param-key">
 							<Popup
 								trigger={<span className="icon-info" />}
-								content="ETH Accuracy:"
+								content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
 								className="inner-tooltip"
-								position="bottom right"
-								style={{ width: 100 }}
+								position="bottom center"
+								style={{ width: 200 }}
 							/>
 							Deploying amount:
 						</div>

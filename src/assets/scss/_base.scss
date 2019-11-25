@@ -146,7 +146,8 @@ textarea {
 .link {
     color: $main-color;
     transition: color $speed;
-
+	white-space: nowrap;
+	
     &:hover {
         color: $main-color;
     }

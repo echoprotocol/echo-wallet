@@ -306,7 +306,7 @@
                     transition: color $speed, background-color $speed;
 
                     &.selected {
-                        color: $inut-hover;
+                        color: $border-hover;
                         background-color: transparent;
 
                         .text {
@@ -332,7 +332,7 @@
                     }
 
                     &:focus {
-                        color: $inut-hover;
+                        color: $border-hover;
                     }
 
                     &:before {

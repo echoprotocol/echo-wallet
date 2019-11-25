@@ -7,6 +7,7 @@ import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConsta
 
 import ContractBar from './ContractBar';
 import SourceCode from './SourceCode';
+import Bytecode from './Bytecode';
 
 
 class SmartContracts extends React.Component {
@@ -41,7 +42,8 @@ class SmartContracts extends React.Component {
 							content="Bytecode"
 						/>
 					</div>
-					{createType === SOURCE_CODE_MODE ? <SourceCode /> : null}
+					{createType === SOURCE_CODE_MODE && <SourceCode />}
+					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
 				<ContractBar />
 			</Form>

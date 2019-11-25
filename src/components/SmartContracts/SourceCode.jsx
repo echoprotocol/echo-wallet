@@ -4,7 +4,6 @@ import AceEditor from 'react-ace';
 import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
-import classnames from 'classnames';
 
 class SourceCode extends React.Component {
 
@@ -49,7 +48,7 @@ class SourceCode extends React.Component {
 						onLoad={(editor) => { this.onEditorLoad(editor); }}
 						style={{
 							borderRadius: '4px',
-							border: '1px solid #BABCCB',
+							borderColor: '#DDDDDD',
 						}}
 					/>
 				</div>

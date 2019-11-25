@@ -5,9 +5,16 @@
 }
 
 .editor {
+	border: 1px solid #DDDDDD;
+	transition: border-color $speed;
+	&:hover {
+		border-color: $border-hover !important;
+	}
+	&.ace_focus {
+		@include on-focus(4px);
+	}
 	.ace_editor {
 		font-family: source;
-		
 	}
 	.ace_gutter {
 		background-color: rgba(#DDDDDD, 0.1);

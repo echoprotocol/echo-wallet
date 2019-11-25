@@ -3,7 +3,6 @@
 *******************************/
 
 
-/* Prototype */
 .table {
   width: 100%;
   background: #FFFFFF;
@@ -20,11 +19,6 @@
 .table:last-child {
   margin-bottom: 0em;
 }
-
-
-/*******************************
-             Parts
-*******************************/
 
 
 /* Table Content */
@@ -178,12 +172,6 @@
   }
 }
 
-
-/*******************************
-            Coupling
-*******************************/
-
-
 /* UI Image */
 .table th .image,
 .table th .image img,
@@ -191,16 +179,6 @@
 .table td .image img {
   max-width: none;
 }
-
-
-/*******************************
-             Types
-*******************************/
-
-
-/*--------------
-    Complex
----------------*/
 
 .structured.table {
   border-collapse: collapse;
@@ -273,10 +251,6 @@
   color: #9F3A38 !important;
 }
 
-/*--------------
-     Warning
----------------*/
-
 .table tr.warning,
 .table td.warning {
   -webkit-box-shadow: 0px 0px 0px #C9BA9B inset;
@@ -287,10 +261,6 @@
   background: #FFFAF3 !important;
   color: #573A08 !important;
 }
-
-/*--------------
-     Active
----------------*/
 
 .table tr.active,
 .table td.active {
@@ -303,10 +273,6 @@
   color: rgba(0, 0, 0, 0.87) !important;
 }
 
-/*--------------
-     Disabled
----------------*/
-
 .table tr.disabled td,
 .table tr td.disabled,
 .table tr.disabled:hover,
@@ -315,15 +281,6 @@
   color: rgba(40, 40, 40, 0.3);
 }
 
-
-/*******************************
-          Variations
-*******************************/
-
-
-/*--------------
-    Stackable
----------------*/
 
 @media only screen and (max-width: 991px) {
   [class*="tablet stackable"].table,
@@ -358,16 +315,12 @@
             box-shadow: none !important;
   }
   
-/* Definition Table */
   .definition[class*="tablet stackable"].table thead th:first-child {
     -webkit-box-shadow: none !important;
             box-shadow: none !important;
   }
 }
 
-/*--------------
- Text Alignment
----------------*/
 
 .table[class*="left aligned"],
 .table [class*="left aligned"] {
@@ -408,10 +361,6 @@
   width: 1px;
   white-space: nowrap;
 }
-
-/*--------------
-     Fixed
----------------*/
 
 .fixed.table {
   table-layout: fixed;
@@ -785,7 +734,6 @@
   padding: 0.5em 0.7em;
 }
 
-/* Very */
 [class*="very compact"].table th {
   padding-left: 0.6em;
   padding-right: 0.6em;
@@ -794,28 +742,10 @@
   padding: 0.4em 0.6em;
 }
 
-/*--------------
-      Sizes
----------------*/
-
-
-/* Small */
-.small.table {
-  font-size: 0.9em;
-}
-
-/* Standard */
 .table {
   font-size: 1em;
 }
 
-/* Large */
 .large.table {
   font-size: 1.1em;
 }
-
-
-/*******************************
-         Site Overrides
-*******************************/
-
