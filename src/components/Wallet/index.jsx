@@ -16,6 +16,8 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency,
 			fee, isAvailableBalance, fees, accountAddresses, btcAddress,
 		} = this.props;
+		console.log('at Wallet, render');
+		console.log(btcAddress);
 
 		const externalTabs = [
 			{

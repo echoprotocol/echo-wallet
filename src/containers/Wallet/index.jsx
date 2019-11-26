@@ -35,7 +35,7 @@ export default connect(
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
 		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
-		btcAddress: state.sidechain.getIn(['btcAddresses', state.global.getIn(['activeUser', 'id'])]),
+		btcAddress: state.sidechain.getIn(['btcAddress']),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

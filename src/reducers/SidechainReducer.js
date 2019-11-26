@@ -2,21 +2,18 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	btcAddresses: Map({}),
-	ethAddresses: Map({}),
+	btcAddress: new Map(),
+	ethAddress: new Map(),
 });
 
 export default createModule({
 	name: 'sidechain',
 	initialState: DEFAULT_FIELDS,
 	transformations: {
-		setAddress: {
+		set: {
 			reducer: (state, { payload }) => {
-				const prikol = state.get(payload.field).set(payload.key, payload.value);
-				state.update(payload.field, prikol);
-				console.log('VISOKOAKTIVNIY PRIKOL!');
-				console.log(state);
-				console.log(prikol);
+				state = state.set(payload.field, payload.value);
+
 				return state;
 			},
 		},
