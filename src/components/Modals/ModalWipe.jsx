@@ -64,7 +64,6 @@ class ModalWipeWallet extends React.Component {
 							</div>
 							<div className="form-panel">
 								<Button
-									basic
 									type="submit"
 									className="main-btn"
 									content="Clear data"

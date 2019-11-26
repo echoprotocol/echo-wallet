@@ -185,15 +185,11 @@ class ModalChooseAccount extends React.Component {
 							</section>
 							<div className="form-panel">
 								<Button
-									basic
-									type="button"
 									className="main-btn"
 									onClick={() => this.onClose()}
 									content="Cancel"
 								/>
 								<Button
-									basic
-									type="button"
 									className="main-btn"
 									onClick={() => this.onConfirm(accounts)}
 									content="Continue"
