@@ -14,7 +14,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, bytecode, avatarName, generateEthAddress,
+			fee, isAvailableBalance, fees, bytecode, avatarName, generateEthAddress, subjectTransferType,
 		} = this.props;
 
 		const externalTabs = [
@@ -40,6 +40,7 @@ class Wallet extends React.Component {
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
+							subjectTransferType={subjectTransferType}
 							transfer={this.props.transfer}
 							resetTransaction={this.props.resetTransaction}
 							setIn={this.props.setIn}
@@ -158,6 +159,7 @@ Wallet.propTypes = {
 	bytecode: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,

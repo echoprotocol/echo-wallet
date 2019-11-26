@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
+import { List } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -8,6 +9,7 @@ import TransactionScenario from '../../containers/TransactionScenario';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 import BytecodeField from '../Fields/BytecodeField';
+import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
 
 class Transfer extends React.Component {
 
@@ -42,6 +44,7 @@ class Transfer extends React.Component {
 		const {
 			from, to, currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
+			subjectTransferType,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 		return (
@@ -90,7 +93,7 @@ class Transfer extends React.Component {
 									form={FORM_TRANSFER}
 									fee={fee}
 									assets={assets}
-									tokens={tokens}
+									tokens={subjectTransferType === CONTRACT_ID_SUBJECT_TYPE ? new List([]) : tokens}
 									amount={amount}
 									currency={currency}
 									isAvailableBalance={isAvailableBalance}
@@ -127,6 +130,7 @@ Transfer.propTypes = {
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
 	avatarName: PropTypes.string.isRequired,
+	subjectTransferType: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,

@@ -616,6 +616,10 @@ export const transferSwitch = () => async (dispatch, getState) => {
 		to,
 		currency,
 	} = form;
+	if (form.subjectTransferType === ADDRESS_SUBJECT_TYPE && validators.isContractId(currency.id)) {
+		form.to.value = await echo.api.getAccountByAddress(to.value.slice(2).toLowerCase());
+		return dispatch(transfer(form));
+	}
 
 	let { fee } = form;
 	const amount = new BN(form.amount.value).toString(10);
@@ -629,65 +633,69 @@ export const transferSwitch = () => async (dispatch, getState) => {
 		return false;
 	}
 
+	if (!to.value) {
+		dispatch(setFormError(
+			FORM_TRANSFER,
+			'to',
+			`${form.subjectTransferType === ADDRESS_SUBJECT_TYPE ? 'Address' : 'Contract id'} should not be empty`,
+		));
+		return false;
+	}
+
+	const amountError = validateAmount(amount, currency);
+
+	if (amountError) {
+		dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
+		return false;
+	}
+
+	if (!fee.value || !fee.asset) {
+		fee = await dispatch(setTransferFee());
+	}
+
+	const echoAsset = getState()
+		.echojs
+		.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0'])
+		.toJS();
+	const feeAsset = getState()
+		.echojs
+		.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id])
+		.toJS();
+
+	if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_TRANSFER,
+			'fee',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return false;
+	}
+
+	if (currency.id === fee.asset.id) {
+		const total = new BN(amount).times(10 ** currency.precision)
+			.plus(fee.value);
+
+		if (total.gt(currency.balance)) {
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	} else {
+		const asset = getState()
+			.balance
+			.get('assets')
+			.toArray()
+			.find((i) => i.id === fee.asset.id);
+		if (new BN(fee.value).gt(asset.balance)) {
+			dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	}
+
+	dispatch(toggleLoading(FORM_TRANSFER, true));
+	const fromAccount = await echo.api.getAccountByName(from.value);
+
 	switch (form.subjectTransferType) {
 		case ADDRESS_SUBJECT_TYPE: {
-			if (!to.value) {
-				dispatch(setFormError(FORM_TRANSFER, 'to', 'Contract id should not be empty'));
-				return false;
-			}
-
-			const amountError = validateAmount(amount, currency);
-
-			if (amountError) {
-				dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
-				return false;
-			}
-
-			if (!fee.value || !fee.asset) {
-				fee = await dispatch(setTransferFee());
-			}
-
-			const echoAsset = getState()
-				.echojs
-				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0'])
-				.toJS();
-			const feeAsset = getState()
-				.echojs
-				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id])
-				.toJS();
-
-			if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
-				dispatch(setFormError(
-					FORM_TRANSFER,
-					'fee',
-					`${fee.asset.symbol} fee pool balance is less than fee amount`,
-				));
-				return false;
-			}
-
-			if (currency.id === fee.asset.id) {
-				const total = new BN(amount).times(10 ** currency.precision)
-					.plus(fee.value);
-
-				if (total.gt(currency.balance)) {
-					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
-					return false;
-				}
-			} else {
-				const asset = getState()
-					.balance
-					.get('assets')
-					.toArray()
-					.find((i) => i.id === fee.asset.id);
-				if (new BN(fee.value).gt(asset.balance)) {
-					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
-					return false;
-				}
-			}
-
-			dispatch(toggleLoading(FORM_TRANSFER, true));
-			const fromAccount = await echo.api.getAccountByName(from.value);
-
 			const options = {
 				fee: {
 					asset_id: form.fee.asset ? form.fee.asset.id : ECHO_ASSET_ID,
@@ -721,70 +729,15 @@ export const transferSwitch = () => async (dispatch, getState) => {
 			return true;
 		}
 		case CONTRACT_ID_SUBJECT_TYPE: {
+			let bytecodeValue = '';
+			if (form.bytecode.value) {
+				bytecodeValue = trim0xFomCode(form.bytecode.value);
+				const bytecodeError = validateCode(form.bytecode.value, true);
 
-			if (!to.value) {
-				dispatch(setFormError(FORM_TRANSFER, 'to', 'Contract id should not be empty'));
-				return false;
-			}
-
-			const amountError = validateAmount(amount, currency);
-
-			if (amountError) {
-				dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
-				return false;
-			}
-
-			if (!fee.value || !fee.asset) {
-				fee = await dispatch(setTransferFee());
-			}
-
-			const echoAsset = getState()
-				.echojs
-				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, '1.3.0'])
-				.toJS();
-			const feeAsset = getState()
-				.echojs
-				.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id])
-				.toJS();
-
-			if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
-				dispatch(setFormError(
-					FORM_TRANSFER,
-					'fee',
-					`${fee.asset.symbol} fee pool balance is less than fee amount`,
-				));
-				return false;
-			}
-
-			if (currency.id === fee.asset.id) {
-				const total = new BN(amount).times(10 ** currency.precision)
-					.plus(fee.value);
-
-				if (total.gt(currency.balance)) {
-					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
+				if (bytecodeError) {
+					dispatch(setFormError(FORM_TRANSFER, 'bytecode', bytecodeError));
 					return false;
 				}
-			} else {
-				const asset = getState()
-					.balance
-					.get('assets')
-					.toArray()
-					.find((i) => i.id === fee.asset.id);
-				if (new BN(fee.value).gt(asset.balance)) {
-					dispatch(setFormError(FORM_TRANSFER, 'fee', 'Insufficient funds for fee'));
-					return false;
-				}
-			}
-
-			dispatch(toggleLoading(FORM_TRANSFER, true));
-			const fromAccount = await echo.api.getAccountByName(from.value);
-
-			const bytecodeValue = trim0xFomCode(form.bytecode.value);
-			const bytecodeError = validateCode(form.bytecode.value, true);
-
-			if (bytecodeError) {
-				dispatch(setFormError(FORM_TRANSFER, 'bytecode', bytecodeError));
-				return false;
 			}
 
 			const options = {
