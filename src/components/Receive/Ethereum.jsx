@@ -106,8 +106,6 @@ class Ethereum extends React.Component {
 		return (
 			<div className="payment-wrap" >
 				{this.renderGenerateAddressProcess()}
-
-				{/* {this.renderPayment()} */}
 			</div>
 		);
 	}
