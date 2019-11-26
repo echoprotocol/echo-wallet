@@ -180,6 +180,16 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 	const echoAsset = await echo.api.getObject(ECHO_ASSET_ID);
 	switch (form.get('subjectTransferType')) {
 		case CONTRACT_ID_SUBJECT_TYPE: {
+			let bytecodeValue = '';
+			if (bytecode) {
+				bytecodeValue = trim0xFomCode(bytecode);
+				const bytecodeError = validateCode(bytecode, true);
+
+				if (bytecodeError) {
+					dispatch(setFormError(FORM_TRANSFER, 'bytecode', bytecodeError));
+					return false;
+				}
+			}
 			try {
 				const options = {
 					fee: {
@@ -191,7 +201,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 						amount: amountValue || 0,
 						asset_id: currency.id || ECHO_ASSET_ID,
 					},
-					code: bytecode,
+					code: bytecodeValue,
 					callee: to,
 				};
 
@@ -769,6 +779,14 @@ export const transferSwitch = () => async (dispatch, getState) => {
 			dispatch(toggleLoading(FORM_TRANSFER, true));
 			const fromAccount = await echo.api.getAccountByName(from.value);
 
+			const bytecodeValue = trim0xFomCode(form.bytecode.value);
+			const bytecodeError = validateCode(form.bytecode.value, true);
+
+			if (bytecodeError) {
+				dispatch(setFormError(FORM_TRANSFER, 'bytecode', bytecodeError));
+				return false;
+			}
+
 			const options = {
 				fee: {
 					asset_id: form.fee.asset ? form.fee.asset.id : ECHO_ASSET_ID,
@@ -779,7 +797,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 					amount: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
 					asset_id: currency.id || ECHO_ASSET_ID,
 				},
-				code: form.bytecode.value,
+				code: bytecodeValue,
 				callee: to.value,
 			};
 
