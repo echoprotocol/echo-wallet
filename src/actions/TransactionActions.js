@@ -18,7 +18,7 @@ import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, APPLY_CHANGES_TIMEOUT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -48,6 +48,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 /**
  * @method resetTransaction
@@ -635,6 +636,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		return;
 	}
 
+	let permissionTableLoaderTimer;
+	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
+		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
+	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -646,7 +651,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 
 	const tr = echo.createTransaction();
 	tr.addOperation(operationId, options);
-
 	try {
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
@@ -663,10 +667,14 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			}
 
+			clearTimeout(permissionTableLoaderTimer);
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
+			clearTimeout(permissionTableLoaderTimer);
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setError(PERMISSION_TABLE, message));

@@ -11,6 +11,7 @@ import PrivateKeysScenario from '../PrivateKeysScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
+import Loading from '../../components/Loader/LoadingData';
 
 import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
@@ -477,7 +478,10 @@ class Permissions extends React.Component {
 	}
 
 	render() {
+		const { showLoader } = this.props;
 		return (
+			showLoader ?
+			<Loading text="Apllying changes..." /> :
 			<div className="permissions-wrap">
 				<div className="sub-header">
 					{
@@ -511,6 +515,7 @@ Permissions.propTypes = {
 	setError: PropTypes.func.isRequired,
 	form: PropTypes.object.isRequired,
 	firstFetch: PropTypes.bool.isRequired,
+	showLoader: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	editWifs: PropTypes.func.isRequired,
@@ -535,6 +540,7 @@ export default connect(
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
+			showLoader: state.global.get('permissionLoading'),
 		};
 	},
 	(dispatch) => ({
