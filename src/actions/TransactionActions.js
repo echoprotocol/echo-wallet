@@ -48,7 +48,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
-import TableReducer from '../reducers/TableReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 /**
  * @method resetTransaction
@@ -638,7 +638,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 
 	let permissionTableLoaderTimer;
 	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
-		permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false })), APPLY_CHANGES_TIMEOUT);
+		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
@@ -668,13 +668,13 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 			}
 
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setError(PERMISSION_TABLE, message));
