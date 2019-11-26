@@ -20,8 +20,7 @@ import { sendTransaction, resetTransaction } from '../../actions/TransactionActi
 
 import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR, REPEATING_KEYS_ERROR } from '../../constants/FormConstants';
 import { setInFormError, setValue } from '../../actions/FormActions';
-import { setValue as setTableValue } from '../../actions/TableActions';
-import { PERMISSION_TABLE } from '../../constants/TableConstants';
+import GlobalReducer from '../../reducers/GlobalReducer';
 
 
 class WarningConfirmThresholdScenario extends React.Component {
@@ -183,7 +182,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		} else {
 			this.props.sendTransaction(password, () => onUnlock(password));
 		}
-		this.props.setTableValue('loading', true);
+		this.props.setPermissionLoading(true);
 		this.clear();
 	}
 
@@ -259,7 +258,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	setInFormError: PropTypes.func.isRequired,
 	setKeyError: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
-	setTableValue: PropTypes.func.isRequired,
+	setPermissionLoading: PropTypes.func.isRequired,
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
@@ -290,7 +289,7 @@ export default connect(
 		setInFormError: () => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], FORM_PERMISSION_TRESHOLD_SUM_ERROR)),
 		setKeyError: (item) => dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', item.type, item.index, 'key'], REPEATING_KEYS_ERROR)),
 		setValue: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
-		setTableValue: (field, value) => dispatch(setTableValue(PERMISSION_TABLE, field, value)),
+		setPermissionLoading: (value) => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value })),
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),

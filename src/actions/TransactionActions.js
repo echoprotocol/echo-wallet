@@ -18,7 +18,7 @@ import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, APPLY_CHANGES_TIMEOUT } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, APPLY_CHANGES_TIMEOUT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -48,7 +48,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
-import TableReducer from '../reducers/TableReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 /**
  * @method resetTransaction
@@ -624,7 +624,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @param {*} password
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const sendTransaction = (password, onSuccess = () => {}) => async (dispatch, getState) => {
+export const sendTransaction = (password, onSuccess = () => { }) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
@@ -636,7 +636,7 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 
 	let permissionTableLoaderTimer;
 	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
-		permissionTableLoaderTimer = setTimeout(() => dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false })), APPLY_CHANGES_TIMEOUT);
+		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
@@ -666,13 +666,13 @@ export const sendTransaction = (password, onSuccess = () => {}) => async (dispat
 			}
 
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
 			clearTimeout(permissionTableLoaderTimer);
-			dispatch(TableReducer.actions.set({ table: PERMISSION_TABLE, field: 'loading', value: false }));
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setError(PERMISSION_TABLE, message));
@@ -997,7 +997,9 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 };
 
 export const getBTCAdress = (address) => async (dispatch, getState) => {
-	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const activeUserId = getState()
+		.global
+		.getIn(['activeUser', 'id']);
 
 	const feeAsset = {
 		id: '1.3.0',
@@ -1022,10 +1024,15 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 
 	const precision = new BN(10).pow(feeAsset.precision);
 	const showOptions = {
-		from: getState().global.getIn(['activeUser', 'name']),
-		account: getState().global.getIn(['activeUser', 'name']),
+		from: getState()
+			.global
+			.getIn(['activeUser', 'name']),
+		account: getState()
+			.global
+			.getIn(['activeUser', 'name']),
 		backup_address: address,
-		fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		fee: `${new BN(options.fee.amount).div(precision)
+			.toString(10)} ${feeAsset.symbol}`,
 	};
 	dispatch(TransactionReducer.actions.setOperation({
 		operation: 'sidechain_btc_create_address',
@@ -1033,4 +1040,41 @@ export const getBTCAdress = (address) => async (dispatch, getState) => {
 		showOptions,
 	}));
 	return options.fee.amount !== null && options.fee.amount !== undefined;
+};
+
+export const generateEthAddress = () => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+		};
+
+		const operation = 'sidechain_eth_create_address';
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
 };

@@ -480,7 +480,7 @@ class Permissions extends React.Component {
 	render() {
 		const { showLoader } = this.props;
 		return (
-			showLoader ? 
+			showLoader ?
 			<Loading text="Apllying changes..." /> :
 			<div className="permissions-wrap">
 				<div className="sub-header">
@@ -540,7 +540,7 @@ export default connect(
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
-			showLoader: state.table.getIn([PERMISSION_TABLE, 'loading']),
+			showLoader: state.global.get('permissionLoading'),
 		};
 	},
 	(dispatch) => ({

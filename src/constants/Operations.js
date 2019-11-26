@@ -409,6 +409,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_eth_approve_address: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_APPROVE_ADDRESS,
