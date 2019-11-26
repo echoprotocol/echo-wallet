@@ -266,7 +266,8 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 	}
 
 	try {
-		const toAccountId = (await echo.api.getAccountByName(formOptions.get('to').value)).id;
+		const to = formOptions.get('to').value;
+		const toAccountId = validators.isAccountId(to) ? to : (await echo.api.getAccountByName(to)).id;
 		const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 		let amountValue = 0;
 		const amount = formOptions.get('amount').value;
@@ -540,7 +541,9 @@ export const transfer = (form) => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 	const fromAccount = await echo.api.getAccountByName(from.value);
-	const toAccount = await echo.api.getAccountByName(to.value);
+	const toAccount = validators.isAccountId(to.value)
+		? await echo.api.getObject(to.value)
+		: await echo.api.getAccountByName(to.value);
 
 	let options = {};
 
@@ -676,7 +679,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 
 			const options = {
 				fee: {
-					asset_id: form.fee.asset.id || ECHO_ASSET_ID,
+					asset_id: form.fee.asset ? form.fee.asset.id : ECHO_ASSET_ID,
 					amount: fee.value || 0,
 				},
 				from: fromAccount.id,
@@ -767,7 +770,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 
 			const options = {
 				fee: {
-					asset_id: form.fee.asset.id || ECHO_ASSET_ID,
+					asset_id: form.fee.asset ? form.fee.asset.id : ECHO_ASSET_ID,
 					amount: fee.value || 0,
 				},
 				registrar: fromAccount.id,

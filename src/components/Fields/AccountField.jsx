@@ -117,7 +117,7 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	avatarName: PropTypes.string.isRequired,
+	avatarName: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,
@@ -137,6 +137,7 @@ AccountField.defaultProps = {
 	subjectToSendSwitch: null,
 	setTransferFee: null,
 	setVisibility: null,
+	avatarName: '',
 };
 
 export default AccountField;
