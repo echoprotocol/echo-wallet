@@ -13,7 +13,6 @@ class Receive extends React.Component {
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
-		this.props.updateAccountAddresses();
 	}
 
 	componentWillUnmount() {
@@ -25,7 +24,7 @@ class Receive extends React.Component {
 		const {
 			currency, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
-			btcAddress,
+			btcAddress, accountId,
 		} = this.props;
 
 		const internalTabs = [
@@ -85,6 +84,7 @@ class Receive extends React.Component {
 						// for From field
 						accountAddresses={accountAddresses}
 						accountName={accountName}
+						accountId={accountId}
 						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
@@ -142,6 +142,7 @@ Receive.propTypes = {
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
+	accountId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,

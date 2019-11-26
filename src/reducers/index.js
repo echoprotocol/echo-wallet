@@ -8,7 +8,6 @@ import contractReducer from './ContractReducer';
 import converterReducer from './ConverterReducer';
 import sortReducer from './SortReducer';
 import contractFeeReducer from './ContractFeeReducer';
-import sidechainReducer from './SidechainReducer';
 
 
 export default {
@@ -22,5 +21,4 @@ export default {
 	converter: converterReducer.reducer,
 	sort: sortReducer.reducer,
 	fee: contractFeeReducer.reducer,
-	sidechain: sidechainReducer.reducer,
 };

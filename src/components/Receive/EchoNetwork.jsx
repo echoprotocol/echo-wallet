@@ -6,6 +6,7 @@ import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
 
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import Avatar from '../Avatar';
@@ -228,9 +229,7 @@ class EchoNetwork extends React.Component {
 				{
 					receiverValue ?
 						<QrCode
-							receiverValue={receiverValue}
-							currencyId={this.formatCurrencyId()}
-							amount={this.formatAmount()}
+							link={`${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/widget`}
 						/> : null
 				}
 			</div>

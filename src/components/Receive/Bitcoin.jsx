@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BN from 'bignumber.js';
 import { Button } from 'semantic-ui-react';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
 import AddressField from '../Fields/AddressField';
-import QrCode from '../QrCode/btc';
+import QrCode from '../QrCode';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
 
@@ -17,13 +16,21 @@ class Bitcoin extends React.Component {
 		this.props.getBtcAddress();
 	}
 
-	formatAmount() {
-		const { amount, currency } = this.props;
-		if (!currency || !currency.precision || !amount || !amount.value) {
+	getBtcAddressData() {
+		const { btcAddress } = this.props;
+
+		if (!btcAddress) {
 			return null;
 		}
 
-		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
+		const address = btcAddress.getIn(['deposit_address', 'address']);
+		const account = btcAddress.get('account');
+
+		if (!address || !account) {
+			return null;
+		}
+
+		return { address, account };
 	}
 
 	renderPayment() {
@@ -33,12 +40,14 @@ class Bitcoin extends React.Component {
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountName, btcAddress,
 		} = this.props;
 
+		const address = btcAddress.getIn(['deposit_address', 'address']);
+
 		return (
 			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
 				<AddressField
-					address={btcAddress.address}
+					address={address}
 				/>
 
 				<AmountField
@@ -62,8 +71,7 @@ class Bitcoin extends React.Component {
 				{
 					accountName ?
 						<QrCode
-							address={btcAddress.address}
-							amount={this.formatAmount()}
+							link={`bitcoin:${address}?amount=${amount.value}`}
 						/> : null
 				}
 			</React.Fragment>
@@ -73,7 +81,7 @@ class Bitcoin extends React.Component {
 	renderGenerateAdressProcess() {
 		const { btcAddress } = this.props;
 
-		return btcAddress && btcAddress.address ? (
+		return !btcAddress || !btcAddress.getIn(['deposit_address', 'address']) ? (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
@@ -101,12 +109,14 @@ class Bitcoin extends React.Component {
 	}
 
 	render() {
-		const { btcAddress } = this.props;
+		const { accountId } = this.props;
+
+		const btcAddressData = this.getBtcAddressData();
 
 		return (
 			<div className="payment-wrap" >
 				{
-					btcAddress && btcAddress.address ?
+					btcAddressData && btcAddressData.address && btcAddressData.account === accountId ?
 						this.renderPayment() : this.renderGenerateAdressProcess()
 				}
 			</div>
@@ -133,6 +143,7 @@ Bitcoin.propTypes = {
 	// eslint-disable-next-line react/no-unused-prop-types
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	accountId: PropTypes.string.isRequired,
 	openModal: PropTypes.func.isRequired,
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -16,8 +16,7 @@ import {
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
-import { updateAccountAddresses } from '../../actions/AccountActions';
-import { getBtcAddress } from '../../actions/SidechainActions';
+import { updateAccountAddresses, getBtcAddress } from '../../actions/AccountActions';
 
 import Wallet from '../../components/Wallet';
 
@@ -27,6 +26,7 @@ export default connect(
 		tokens: state.balance.get('tokens'),
 		assets: state.form.getIn([FORM_TRANSFER, 'balance']).assets,
 		accountName: state.global.getIn(['activeUser', 'name']),
+		accountId: state.global.getIn(['activeUser', 'id']),
 		from: state.form.getIn([FORM_TRANSFER, 'from']),
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
@@ -35,7 +35,7 @@ export default connect(
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
 		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
-		btcAddress: state.sidechain.getIn(['btcAddress']).toJS(),
+		btcAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_BTC_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

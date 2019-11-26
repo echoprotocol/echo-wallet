@@ -11,3 +11,15 @@ export const updateAccountAddresses = () => async (dispatch, getState) => {
 
 	return true;
 };
+
+export const getBtcAddress = () => async (dispatch, getState) => {
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	if (!activeUserId) {
+		return false;
+	}
+
+	await echo.api.getBtcAddress(activeUserId);
+
+	return true;
+};
