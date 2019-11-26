@@ -12,6 +12,7 @@ import {
 	setAssetActiveAccount, setTransferFee,
 	subjectToSendSwitch,
 	transferSwitch,
+	generateEthAddress,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
@@ -54,6 +55,7 @@ export default connect(
 		setContractFees: () => dispatch(setContractFees(FORM_TRANSFER)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
+		generateEthAddress: () => dispatch(generateEthAddress()),
 	}),
 )(Wallet);
 

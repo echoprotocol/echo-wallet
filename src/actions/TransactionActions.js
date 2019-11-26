@@ -25,7 +25,8 @@ import {
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
-	ACCOUNT_NAME_SUBJECT_TYPE, ADDRESS_SUBJECT_TYPE,
+	ACCOUNT_NAME_SUBJECT_TYPE,
+	ADDRESS_SUBJECT_TYPE,
 	CONTRACT_ID_SUBJECT_TYPE,
 } from '../constants/TransferConstants';
 
@@ -988,7 +989,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @param {*} password
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const sendTransaction = (password, onSuccess = () => {}) => async (dispatch, getState) => {
+export const sendTransaction = (password, onSuccess = () => { }) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
@@ -1350,4 +1351,41 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	}
 
 	return feeValue ? feeValue.value : null;
+};
+
+export const generateEthAddress = () => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+		};
+
+		const operation = 'sidechain_eth_create_address';
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
 };

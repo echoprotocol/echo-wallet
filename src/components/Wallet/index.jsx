@@ -14,7 +14,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, bytecode, avatarName,
+			fee, isAvailableBalance, fees, bytecode, avatarName, generateEthAddress,
 		} = this.props;
 
 		const externalTabs = [
@@ -90,6 +90,7 @@ class Wallet extends React.Component {
 							//
 							clearForm={this.props.clearForm}
 							openModal={(value) => this.props.openModal(value)}
+							generateEthAddress={generateEthAddress}
 						/>
 					</div>),
 			},
@@ -176,6 +177,7 @@ Wallet.propTypes = {
 	setAssetActiveAccount: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	generateEthAddress: PropTypes.func.isRequired,
 };
 
 Wallet.defaultProps = {
