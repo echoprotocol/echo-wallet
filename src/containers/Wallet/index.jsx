@@ -17,6 +17,7 @@ import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
 import Wallet from '../../components/Wallet';
 import { setContractFees } from '../../actions/ContractActions';
+import { getEthAddress } from '../../actions/SidechainActions';
 
 export default connect(
 	(state) => ({
@@ -31,6 +32,7 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
+		ethAddress: state.sidechain.get('ethAddress'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -51,6 +53,7 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
 		generateEthAddress: () => dispatch(generateEthAddress()),
+		getEthAddress: () => dispatch(getEthAddress()),
 	}),
 )(Wallet);
 

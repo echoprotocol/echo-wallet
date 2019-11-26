@@ -12,10 +12,20 @@ import TransactionScenario from '../../containers/TransactionScenario';
 
 class Ethereum extends React.Component {
 
+	componentDidMount() {
+		this.props.getEthAddress();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.accountName !== prevProps.accountName) {
+			this.props.getEthAddress();
+		}
+	}
+
 	renderPayment() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, from, setIn, checkAccount, ethAddress,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
 
@@ -24,6 +34,17 @@ class Ethereum extends React.Component {
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
 				<AccountField
+					disabled
+					field={{ value: ethAddress.get('address') }}
+					checkAccount={() => {}}
+					setIn={() => {}}
+					setFormValue={() => {}}
+					getTransferFee={() => {}}
+					setContractFees={() => {}}
+					setValue={() => {}}
+				/>
+
+				{/* <AccountField
 					disabled
 					field={from}
 					currency={currency}
@@ -34,13 +55,31 @@ class Ethereum extends React.Component {
 					getTransferFee={this.props.getTransferFee}
 					setContractFees={this.props.setContractFees}
 					setValue={this.props.setValue}
-				/>
+				/> */}
 
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
 
 				<AmountField
+					fees={[]}
+					form={FORM_TRANSFER}
+					tokens={{ size: 0 }}
+					amount={amount}
+					isAvailableBalance={false}
+					amountInput={this.props.amountInput}
+					setFormError={() => {}}
+					setFormValue={() => {}}
+					setValue={() => {}}
+					currency={{ precision: 18, id: '', symbol: 'ETH', balance: 0 }}
+					setDefaultAsset={() => {}}
+					getTransferFee={() => Promise.resolve()}
+					setContractFees={() => {}}
+					assetDropdown={false}
+					showAvailable={false}
+					labelText=""
+				/>
+				{/* <AmountField
 					fees={fees}
 					form={FORM_TRANSFER}
 					fee={fee}
@@ -57,15 +96,16 @@ class Ethereum extends React.Component {
 					getTransferFee={this.props.getTransferFee}
 					setContractFees={this.props.setContractFees}
 					assetDropdown={false}
-				/>
+				/> */}
 				<QrCode />
 			</React.Fragment>
 		);
 	}
-	renderGenerateAddressProcess() {
-		const { address, generateEthAddress } = this.props;
 
-		return address ? (
+	renderGenerateAddressProcess() {
+		const { generateEthAddress } = this.props;
+
+		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
@@ -88,7 +128,11 @@ class Ethereum extends React.Component {
 					}
 				</TransactionScenario>
 			</React.Fragment>
-		) :
+		);
+	}
+
+	renderWaitMessage() {
+		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
 					Wait please, <br /> address is not ready yet
@@ -97,11 +141,18 @@ class Ethereum extends React.Component {
 					Please, allow some time for address generation as it may take up to one hour.
 					It will appear on this page when generated.
 				</p>
-			</React.Fragment>;
+			</React.Fragment>
+		);
 	}
 
 	render() {
-
+		const { ethAddress } = this.props;
+		console.log('render ', ethAddress);
+		if (ethAddress.get('address') && ethAddress.get('isApproved') && ethAddress.get('isAddressGenerated')) {
+			return this.renderPayment();
+		} else if (ethAddress.get('isAddressGenerated')) {
+			return this.renderWaitMessage();
+		}
 
 		return (
 			<div className="payment-wrap" >
@@ -130,13 +181,14 @@ Ethereum.propTypes = {
 	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
-	address: PropTypes.bool,
 	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
+	accountName: PropTypes.string.isRequired,
 };
 
 Ethereum.defaultProps = {
 	currency: null,
-	address: true,
 };
 
 

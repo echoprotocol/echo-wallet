@@ -13,8 +13,8 @@ class Wallet extends React.Component {
 
 	render() {
 		const {
-			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, generateEthAddress,
+			assets, tokens, accountName, from, to, amount, currency, ethAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
 		} = this.props;
 
 		const externalTabs = [
@@ -87,6 +87,8 @@ class Wallet extends React.Component {
 							clearForm={this.props.clearForm}
 							openModal={(value) => this.props.openModal(value)}
 							generateEthAddress={generateEthAddress}
+							getEthAddress={getEthAddress}
+							ethAddress={ethAddress}
 						/>
 					</div>),
 			},
@@ -128,7 +130,7 @@ class Wallet extends React.Component {
 					</div>
 				</div>
 				<Tab
-					defaultActiveIndex="1"
+					defaultActiveIndex="0"
 					menu={{
 						tabular: false,
 						className: 'wallet-tab-menu',
@@ -170,6 +172,8 @@ Wallet.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
 };
 
 Wallet.defaultProps = {

@@ -22,7 +22,7 @@ class Receive extends React.Component {
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, from, setIn, checkAccount, getEthAddress, ethAddress, accountName,
 			fee, assets, tokens, amount, isAvailableBalance, fees, generateEthAddress,
 		} = this.props;
 
@@ -118,6 +118,9 @@ class Receive extends React.Component {
 						setIn={setIn}
 						checkAccount={checkAccount}
 						generateEthAddress={generateEthAddress}
+						getEthAddress={getEthAddress}
+						ethAddress={ethAddress}
+						accountName={accountName}
 					/>
 				),
 			},
@@ -167,6 +170,8 @@ Receive.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
 };
 
 Receive.defaultProps = {
