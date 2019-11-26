@@ -18,7 +18,7 @@ import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
-import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, APPLY_CHANGES_TIMEOUT } from '../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, FREEZE_BALANCE_PARAMS, APPLY_CHANGES_TIMEOUT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -626,7 +626,7 @@ export const createContract = () => async (dispatch, getState) => {
  * @param {*} password
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const sendTransaction = (password, onSuccess = () => {}) => async (dispatch, getState) => {
+export const sendTransaction = (password, onSuccess = () => { }) => async (dispatch, getState) => {
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
@@ -996,4 +996,41 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	}
 
 	return feeValue ? feeValue.value : null;
+};
+
+export const generateEthAddress = () => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+		};
+
+		const operation = 'sidechain_eth_create_address';
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
 };

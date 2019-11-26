@@ -75,7 +75,6 @@ class ModalViewWIF extends React.Component {
 
 					<div className="form-panel">
 						<Button
-							basic
 							type="submit"
 							className="main-btn"
 							onClick={() => this.onSave()}
