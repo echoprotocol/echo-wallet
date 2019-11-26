@@ -109,6 +109,19 @@ class FeeComponent extends React.Component {
 		return options[0] ? options[0].text : '';
 	}
 
+	getDropdownIcon(options, isFeeAssetEqualsAddressPrefix, isFeeExist, fee) {
+		if (options.length < 2) {
+			return null;
+		}
+		return isFeeAssetEqualsAddressPrefix || !isFeeExist ? ''
+			: <Popup
+				trigger={<span className="inner-tooltip-trigger icon-coin" />}
+				content={fee.asset.symbol}
+				className="asset-tooltip"
+				inverted
+			/>;
+	}
+
 
 	render() {
 		const { options } = this.state;
@@ -136,13 +149,7 @@ class FeeComponent extends React.Component {
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={(options.length < 2) ? [] : options}
 					text={isFeeAssetEqualsAddressPrefix ? `${text}\u00a0${fee.asset.symbol}` : text}
-					icon={isFeeAssetEqualsAddressPrefix || !isFeeExist ? ''
-						: <Popup
-							trigger={<span className="inner-tooltip-trigger icon-coin" />}
-							content={fee.asset.symbol}
-							className="asset-tooltip"
-							inverted
-						/>}
+					icon={this.getDropdownIcon(options, isFeeAssetEqualsAddressPrefix, isFeeExist, fee)}
 					selectOnBlur={false}
 					noResultsMessage={options.length < 2 ? 'No results are found' : null}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
