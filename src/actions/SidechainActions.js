@@ -11,11 +11,16 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 
 	const btcAddress = await echo.api.getBtcAddress(activeUserId);
 
+	if (!btcAddress) {
+		return false;
+	}
+	console.log('at GET BTC ADDRESS', btcAddress)
 	dispatch(SidechainReducer.actions.set({
 		field: 'btcAddress',
 		value: new Map({
-			accountId: activeUserId,
+			id: btcAddress.id,
 			address: btcAddress.deposit_address.address,
+			isAvailable: btcAddress.is_relevant,
 		}),
 	}));
 

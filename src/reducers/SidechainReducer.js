@@ -2,8 +2,12 @@ import { createModule } from 'redux-modules';
 import { Map } from 'immutable';
 
 const DEFAULT_FIELDS = Map({
-	btcAddress: new Map(),
-	ethAddress: new Map(),
+	btcAddress: new Map({
+		id: '',
+		address: '',
+		isAvailable: false,
+	}),
+	ethAddress: new Map({}),
 });
 
 export default createModule({
@@ -12,6 +16,7 @@ export default createModule({
 	transformations: {
 		set: {
 			reducer: (state, { payload }) => {
+				console.log('AT REDUCER', state);
 				state = state.set(payload.field, payload.value);
 
 				return state;

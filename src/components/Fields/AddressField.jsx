@@ -21,24 +21,17 @@ class AddressField extends React.Component {
 					placeholder="Address"
 					tabIndex="0"
 					action
-					className={classnames('amount-wrap action-wrap')}
+					className={classnames('action-wrap')}
 				>
-					<div
-						className={classnames(
-							'amount-wrap',
-							'action-wrap',
-						)}
-					>
-						<input
-							className="address"
-							placeholder="Address"
-							value={address ? address.address : ''}
-							name="address"
-							onChange={() => {}}
-							onFocus={() => {}}
-							onBlur={() => {}}
-						/>
-					</div>
+					<input
+						placeholder="Address"
+						value={address}
+						name="address"
+						onChange={() => {}}
+						onFocus={() => {}}
+						onBlur={() => {}}
+						readOnly
+					/>
 				</Input>
 
 			</Form.Field>
@@ -49,13 +42,13 @@ class AddressField extends React.Component {
 
 AddressField.propTypes = {
 	labelText: PropTypes.string,
-	address: PropTypes.object,
+	address: PropTypes.string,
 };
 
 
 AddressField.defaultProps = {
 	labelText: 'Address',
-	address: null,
+	address: '',
 };
 
 export default AddressField;
