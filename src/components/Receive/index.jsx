@@ -5,7 +5,7 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
-import Etherium from './Etherium';
+import Ethereum from './Ethereum';
 
 
 class Receive extends React.Component {
@@ -97,7 +97,7 @@ class Receive extends React.Component {
 					content="Ethereum"
 				/>,
 				render: () => (
-					<Etherium
+					<Ethereum
 						// for Amount field
 						fees={fees}
 						fee={fee}

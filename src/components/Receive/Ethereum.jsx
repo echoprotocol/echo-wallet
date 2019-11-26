@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
-import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
@@ -84,10 +82,7 @@ class Ethereum extends React.Component {
 							<Button
 								className="main-btn"
 								content="Generate address"
-								onClick={() => {
-									console.log('submit')
-									submit();
-								}}
+								onClick={submit}
 							/>
 						)
 					}
