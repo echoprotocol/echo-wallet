@@ -14,7 +14,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, bytecode,
+			fee, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 
 		const externalTabs = [
@@ -34,6 +34,7 @@ class Wallet extends React.Component {
 							accountName={accountName}
 							from={from}
 							to={to}
+							avatarName={avatarName}
 							bytecode={bytecode}
 							amount={amount}
 							fee={fee}
@@ -152,6 +153,7 @@ Wallet.propTypes = {
 	currency: PropTypes.object,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
+	avatarName: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,

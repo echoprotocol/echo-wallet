@@ -51,6 +51,7 @@ import {
 	validateByType,
 	validateAmount,
 	validateFee,
+	validateAccountAddress,
 } from '../helpers/ValidateHelper';
 import { formatError } from '../helpers/FormatHelper';
 
@@ -175,7 +176,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 
 	if (!currency || !currency.precision) return null;
 
-	const echoAsset = await echo.api.getObject('1.3.0');
+	const echoAsset = await echo.api.getObject(ECHO_ASSET_ID);
 	switch (form.get('subjectTransferType')) {
 		case CONTRACT_ID_SUBJECT_TYPE: {
 			try {
@@ -433,16 +434,16 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 
 export const subjectToSendSwitch = (value) => async (dispatch) => {
 	if (value.startsWith('0x')) {
-		if (!value.match(/^0x[a-fA-F0-9]{40}$/)) {
+		if (!validateAccountAddress(value)) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid address'));
 			return false;
 		}
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
-
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
 			error: null,
 		}));
+		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
 		return ADDRESS_SUBJECT_TYPE;
 
@@ -454,11 +455,11 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			return false;
 		}
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', CONTRACT_ID_SUBJECT_TYPE));
-
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
 			error: null,
 		}));
+		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
 		return CONTRACT_ID_SUBJECT_TYPE;
 
@@ -471,10 +472,11 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 		}
 		value = account.name;
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
-
+	} else {
+		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
 	}
 
-	dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
+	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
 	return dispatch(checkAccount(value, 'to'));
 };
 

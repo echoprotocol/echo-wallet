@@ -35,7 +35,7 @@ class AccountField extends React.Component {
 			timeout: setTimeout(async () => {
 				if (this.props.subject === 'to') {
 					const validValue =
-						await this.props.subjectToSendSwitch(this.props.field.value, this.props.subject);
+						await this.props.subjectToSendSwitch(this.props.field.value);
 					if (!validValue) return;
 
 					if (validValue === CONTRACT_ID_SUBJECT_TYPE) {
@@ -61,9 +61,23 @@ class AccountField extends React.Component {
 		});
 	}
 
+	isAvatar() {
+		const { field, subject, avatarName } = this.props;
+
+		if (subject === 'to') {
+			if (field.checked && !field.error && avatarName) {
+				return true;
+			}
+		} else if (field.checked && !field.error) {
+			return true;
+		}
+
+		return false;
+	}
+
 	render() {
 		const {
-			field, autoFocus, subject,	disabled,
+			field, autoFocus, subject,	disabled, avatarName,
 		} = this.props;
 
 		return (
@@ -73,15 +87,15 @@ class AccountField extends React.Component {
 				<Input
 					type="text"
 					placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
-					icon={field.checked && !field.error}
+					icon={this.isAvatar()}
 					className={classnames('action-wrap', { loading: field.loading && !field.error })}
 					autoFocus={autoFocus}
 					disabled={disabled}
 				>
 					{
-						field.checked && !field.error &&
+						this.isAvatar() &&
 						<div className="avatar-wrap">
-							<Avatar accountName={field.value} />
+							<Avatar accountName={avatarName || field.value} />
 						</div>
 					}
 					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
@@ -103,6 +117,7 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
+	avatarName: PropTypes.string.isRequired,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,

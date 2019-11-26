@@ -41,7 +41,7 @@ class Transfer extends React.Component {
 	render() {
 		const {
 			from, to, currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode,
+			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 		return (
@@ -67,6 +67,7 @@ class Transfer extends React.Component {
 									currency={currency}
 									subject="to"
 									field={to}
+									avatarName={avatarName}
 									autoFocus
 									subjectToSendSwitch={this.props.subjectToSendSwitch}
 									setTransferFee={this.props.setTransferFee}
@@ -125,6 +126,7 @@ Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
+	avatarName: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,

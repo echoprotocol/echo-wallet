@@ -89,6 +89,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 		subjectTransferType: '',
+		avatarName: '',
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
 		bytecode: {

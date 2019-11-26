@@ -26,6 +26,7 @@ export default connect(
 		accountName: state.global.getIn(['activeUser', 'name']),
 		from: state.form.getIn([FORM_TRANSFER, 'from']),
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
+		avatarName: state.form.getIn([FORM_TRANSFER, 'avatarName']),
 		bytecode: state.form.getIn([FORM_TRANSFER, 'bytecode']),
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
 		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
