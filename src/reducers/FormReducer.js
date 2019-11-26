@@ -94,11 +94,6 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
-		fee: {
-			value: '',
-			asset: null,
-			error: null,
-		},
 		name: {
 			value: '',
 			error: null,
@@ -110,6 +105,8 @@ const DEFAULT_FORM_FIELDS = {
 		isAvailableBalance: false,
 		addToWatchList: false,
 		accepted: false,
+		ETHAccuracy: false,
+		supportedAsset: '',
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),

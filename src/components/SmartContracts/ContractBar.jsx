@@ -17,21 +17,46 @@ class ContractBar extends React.Component {
 			searchText: '',
 			supportedAssets: 'all',
 			options: [],
+			timeout: null,
+			loading: false,
 		};
 	}
 
+	onChangeAsset(assetSymbol) {
+		this.props.setValue('supportedAsset', assetSymbol);
+		this.setState({ searchText: assetSymbol });
+	}
 
-	async assetSearchHanler(e, data) {
+	onResetSupportedAsset() {
+		this.setState({
+			supportedAssets: 'all',
+			searchText: '',
+		});
+		this.props.setValue('supportedAsset', '');
+	}
+
+	async assetSearchHandler(e, data) {
 		this.setState({
 			searchText: data.searchQuery,
+			loading: true,
 		});
-		const assetList = (await this.props.getAssetsList(data.searchQuery.toUpperCase()))
-			.map((a, i) => ({
-				key: a.id,
-				text: a.symbol,
-				value: i,
-			}));
-		this.setState({ options: assetList });
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+		this.setState({
+			timeout: setTimeout(async () => {
+				const assetList = (await this.props.getAssetsList(data.searchQuery.toUpperCase()))
+					.map((a) => ({
+						key: a.id,
+						text: a.symbol,
+						value: a.symbol,
+					}));
+				this.setState({
+					options: assetList,
+					loading: false,
+				});
+			}, 300),
+		});
 	}
 
 	renderAccuracyTrigger() {
@@ -53,9 +78,11 @@ class ContractBar extends React.Component {
 	}
 
 	render() {
-		const { searchText, supportedAssets, options } = this.state;
 		const {
-			fee, tokens, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+			searchText, supportedAssets, options, loading,
+		} = this.state;
+		const {
+			amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
 		} = this.props;
 		return (
 			<div className="contract-bar">
@@ -74,7 +101,7 @@ class ContractBar extends React.Component {
 							ETH Accuracy:
 						</div>
 						<Toggle
-							onChange={() => this.props.setContractValue('ETHAccuracy', !this.props.ETHAccuracy)}
+							onChange={() => this.props.setValue('ETHAccuracy', !ETHAccuracy)}
 						/>
 					</li>
 					<li className="param">
@@ -92,7 +119,7 @@ class ContractBar extends React.Component {
 							<div className="radio-list">
 								<Button
 									className={classnames('radio', { checked: supportedAssets === 'all' })}
-									onClick={() => { this.setState({ supportedAssets: 'all' }); }}
+									onClick={() => this.onResetSupportedAsset()}
 									content="All"
 								/>
 								<Button
@@ -105,18 +132,19 @@ class ContractBar extends React.Component {
 								supportedAssets === 'custom' &&
 								<Dropdown
 									icon={false}
-									className={classnames({ empty: !searchText })}
-									options={searchText ? options : []}
+									className={classnames({ empty: !searchText || loading })}
+									options={(searchText && !loading) ? options : []}
 									searchQuery={searchText}
 									search
 									selection
 									fluid
 									text={searchText || 'Asset name'}
-									onSearchChange={(e, data) => this.assetSearchHanler(e, data)}
+									onSearchChange={(e, data) => this.assetSearchHandler(e, data)}
 									placeholder="Asset name"
 									selectOnNavigation={false}
 									minCharacters={0}
 									noResultsMessage={searchText ? 'No results are found' : null}
+									onChange={(e, { value }) => this.onChangeAsset(value)}
 								/>
 							}
 						</div>
@@ -135,9 +163,7 @@ class ContractBar extends React.Component {
 						<AmountField
 							fees={fees}
 							form={FORM_CREATE_CONTRACT}
-							fee={fee}
 							assets={assets}
-							tokens={tokens}
 							amount={amount}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
@@ -146,8 +172,6 @@ class ContractBar extends React.Component {
 							setFormValue={this.props.setFormValue}
 							setValue={this.props.setValue}
 							setDefaultAsset={this.props.setDefaultAsset}
-							getTransferFee={this.props.getTransferFee}
-							setContractFees={this.props.setContractFees}
 						/>
 					</li>
 				</ul>
@@ -163,28 +187,22 @@ class ContractBar extends React.Component {
 }
 
 ContractBar.propTypes = {
-	fee: PropTypes.object,
 	fees: PropTypes.array.isRequired,
 	assets: PropTypes.object.isRequired,
-	tokens: PropTypes.object.isRequired,
 	amount: PropTypes.object.isRequired,
 	currency: PropTypes.object,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	ETHAccuracy: PropTypes.bool.isRequired,
-	setContractValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
 };
 
 ContractBar.defaultProps = {
 	currency: null,
-	fee: null,
 };
 
 

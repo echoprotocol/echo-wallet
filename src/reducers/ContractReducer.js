@@ -6,7 +6,6 @@ const DEFAULT_FIELDS = Map({
 	constants: List([]),
 	id: '',
 	intervalId: null,
-	ETHAccuracy: false,
 });
 
 export default createModule({

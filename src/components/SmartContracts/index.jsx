@@ -28,7 +28,7 @@ class SmartContracts extends React.Component {
 	render() {
 		const { createType } = this.state;
 		const {
-			fee, tokens, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+			amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
 		} = this.props;
 		return (
 			<Form className="page-wrap">
@@ -50,9 +50,7 @@ class SmartContracts extends React.Component {
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
 				<ContractBar
-					fee={fee}
 					fees={fees}
-					tokens={tokens}
 					amount={amount}
 					ETHAccuracy={ETHAccuracy}
 					currency={currency}
@@ -62,10 +60,7 @@ class SmartContracts extends React.Component {
 					setFormError={this.props.setFormError}
 					setFormValue={this.props.setFormValue}
 					setValue={this.props.setValue}
-					setContractValue={this.props.setContractValue}
-					getTransferFee={this.props.getTransferFee}
 					setDefaultAsset={this.props.setDefaultAsset}
-					setContractFees={this.props.setContractFees}
 					getAssetsList={this.props.getAssetsList}
 				/>
 			</Form>
@@ -75,28 +70,22 @@ class SmartContracts extends React.Component {
 }
 
 SmartContracts.propTypes = {
-	fee: PropTypes.object,
 	fees: PropTypes.array.isRequired,
 	assets: PropTypes.object.isRequired,
-	tokens: PropTypes.object.isRequired,
 	amount: PropTypes.object.isRequired,
 	currency: PropTypes.object,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	ETHAccuracy: PropTypes.bool.isRequired,
-	setContractValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {
 	currency: null,
-	fee: null,
 };
 
 
