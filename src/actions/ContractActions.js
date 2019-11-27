@@ -1,5 +1,6 @@
 import { Map, List } from 'immutable';
 import echo, { validators } from 'echojs-lib';
+import * as wrapper from 'solc/wrapper';
 
 import {
 	setFormError,
@@ -7,6 +8,7 @@ import {
 	setInFormValue,
 	clearForm,
 	setInFormErrorConstant,
+	setFormValue,
 } from './FormActions';
 import { push, remove, update } from './GlobalActions';
 import { convert } from './ConverterActions';
@@ -25,13 +27,19 @@ import {
 	validateByType,
 } from '../helpers/ValidateHelper';
 
-import { FORM_ADD_CONTRACT, FORM_CALL_CONTRACT, FORM_VIEW_CONTRACT } from '../constants/FormConstants';
+import {
+	FORM_ADD_CONTRACT,
+	FORM_CALL_CONTRACT,
+	FORM_CREATE_CONTRACT,
+	FORM_VIEW_CONTRACT,
+} from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
 import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
+import { loadScript } from '../api/ContractApi';
 
 /**
  * @method set
@@ -501,3 +509,46 @@ export const getAssetsList = async (name) => {
 	return list;
 };
 
+export const contractCompilerInit = async () => {
+	await loadScript('https://echoprotocol.github.io/solc-bin/bin/soljson-v0.5.7.js');
+};
+
+export const contractCodeCompile = () => async (dispatch, getState) => {
+	const filename = 'test.sol';
+	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
+	try {
+		const input = {
+			language: 'Solidity',
+			sources: {
+				[filename]: {
+					content: code.value,
+				},
+			},
+			settings: {
+				outputSelection: {
+					'*': {
+						'*': ['*'],
+					},
+				},
+			},
+		};
+
+		const solc = wrapper(window.Module);
+		const output = JSON.parse(solc.compile(JSON.stringify(input)));
+		let contracts = new Map({});
+		contracts = contracts.withMutations((contractsMap) => {
+			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
+				contractsMap.setIn([name, 'abi'], contract.abi);
+				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
+			});
+		});
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', Object.values(output.contracts[filename])[0].abi));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', Object.keys(output.contracts[filename])[0]));
+		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', contracts));
+	} catch (err) {
+		dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', 'Invalid contract code'));
+		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
+	}
+};

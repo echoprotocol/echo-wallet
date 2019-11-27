@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { CACHE_MAPS } from 'echojs-lib';
+import { Map } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -9,14 +11,16 @@ import {
 	checkAccount,
 	getTransferFee,
 	resetTransaction,
-	setAssetActiveAccount,
-	transfer,
+	setAssetActiveAccount, setTransferFee,
+	subjectToSendSwitch,
+	transferSwitch,
 	generateEthAddress,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 
 import Wallet from '../../components/Wallet';
 import { setContractFees } from '../../actions/ContractActions';
+import { getEthAddress } from '../../actions/SidechainActions';
 
 export default connect(
 	(state) => ({
@@ -26,21 +30,28 @@ export default connect(
 		accountName: state.global.getIn(['activeUser', 'name']),
 		from: state.form.getIn([FORM_TRANSFER, 'from']),
 		to: state.form.getIn([FORM_TRANSFER, 'to']),
+		avatarName: state.form.getIn([FORM_TRANSFER, 'avatarName']),
+		bytecode: state.form.getIn([FORM_TRANSFER, 'bytecode']),
 		amount: state.form.getIn([FORM_TRANSFER, 'amount']),
 		fee: state.form.getIn([FORM_TRANSFER, 'fee']),
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
+		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
+		fullCurrentAccount: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
+		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		removeToken: (name, id) => dispatch(disableToken(name, id)),
 		setAsset: (asset, type) => dispatch(setAsset(asset, type)),
-		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
-		transfer: () => dispatch(transfer()),
+		clearForm: (from) => dispatch(clearForm(from)),
+		transfer: () => dispatch(transferSwitch()),
 		resetTransaction: () => dispatch(resetTransaction()),
 		setIn: (field, param) => dispatch(setIn(FORM_TRANSFER, field, param)),
 		checkAccount: (value, subject) => dispatch(checkAccount(value, subject)),
+		subjectToSendSwitch: (value) => dispatch(subjectToSendSwitch(value)),
+		setTransferFee: () => dispatch(setTransferFee()),
 		setValue: (field, value) => dispatch(setValue(FORM_TRANSFER, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_TRANSFER, field, value)),
 		setFormError: (field, error) => dispatch(setFormError(FORM_TRANSFER, field, error)),
@@ -51,6 +62,7 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
 		generateEthAddress: () => dispatch(generateEthAddress()),
+		getEthAddress: () => dispatch(getEthAddress()),
 	}),
 )(Wallet);
 

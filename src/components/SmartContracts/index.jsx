@@ -1,14 +1,15 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
 
 import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConstants';
 
 import ContractBar from './ContractBar';
 import SourceCode from './SourceCode';
 import Bytecode from './Bytecode';
+
+import { contractCompilerInit } from '../../actions/ContractActions';
 
 
 class SmartContracts extends React.Component {
@@ -19,6 +20,12 @@ class SmartContracts extends React.Component {
 			createType: SOURCE_CODE_MODE,
 		};
 	}
+
+	async componentDidMount() {
+		await contractCompilerInit();
+	}
+
+
 	onEditorLoad(editor) {
 		editor.setOptions({
 			fontSize: '15px',
@@ -26,10 +33,11 @@ class SmartContracts extends React.Component {
 	}
 
 	render() {
-		const { createType } = this.state;
 		const {
-			amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+			form, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
 		} = this.props;
+		const { createType } = this.state;
+
 		return (
 			<Form className="page-wrap">
 				<div className="create-contract">
@@ -46,7 +54,13 @@ class SmartContracts extends React.Component {
 							content="Bytecode"
 						/>
 					</div>
-					{createType === SOURCE_CODE_MODE && <SourceCode />}
+					{createType === SOURCE_CODE_MODE &&
+					<SourceCode
+						form={form}
+						setFormValue={this.props.setFormValue}
+						contractCodeCompile={this.props.contractCodeCompile}
+						clearForm={this.props.clearForm}
+					/>}
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
 				<ContractBar
@@ -82,6 +96,9 @@ SmartContracts.propTypes = {
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
+	form: PropTypes.object.isRequired,
+	contractCodeCompile: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {

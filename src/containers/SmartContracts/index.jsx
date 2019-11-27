@@ -1,13 +1,16 @@
 import { connect } from 'react-redux';
+
 import SmartContracts from '../../components/SmartContracts';
-import { setContractFees, getAssetsList } from '../../actions/ContractActions';
+
+import { setContractFees, getAssetsList, contractCodeCompile } from '../../actions/ContractActions';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
-import { setValue, setFormError, setFormValue } from '../../actions/FormActions';
+import { setValue, setFormError, setFormValue, clearForm } from '../../actions/FormActions';
 import { getTransferFee } from '../../actions/TransactionActions';
 
 export default connect(
 	(state) => ({
+		form: state.form.get(FORM_CREATE_CONTRACT),
 		fees: state.fee.toArray() || [],
 		assets: state.balance.get('assets'),
 		amount: state.form.getIn([FORM_CREATE_CONTRACT, 'amount']),
@@ -25,6 +28,8 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_CREATE_CONTRACT, value, currency, name)),
 		getAssetsList: (name) => getAssetsList(name),
+		contractCodeCompile: (code) => dispatch(contractCodeCompile(code)),
+		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 	}),
 )(SmartContracts);
 

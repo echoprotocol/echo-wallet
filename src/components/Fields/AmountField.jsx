@@ -218,7 +218,7 @@ class AmountField extends React.Component {
 	}
 	render() {
 		const {
-			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText,
+			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText, showAvailable,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -247,20 +247,24 @@ class AmountField extends React.Component {
 								/>
 							</li>
 						}
-						<li>
-							Available:
-							<span
-								className={classnames({ disabled: !isAvailableBalance || !fee.value })}
-								role="button"
-								onClick={(e) => this.setAvailableAmount(currency, e)}
-								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
-								tabIndex="0"
-							>
-								{
-									this.getAvailableBalance(currency)
-								}
-							</span>
-						</li>
+						{
+							showAvailable && (
+								<li>
+									Available:
+									<span
+										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
+										role="button"
+										onClick={(e) => this.setAvailableAmount(currency, e)}
+										onKeyPress={(e) => this.setAvailableAmount(currency, e)}
+										tabIndex="0"
+									>
+										{
+											this.getAvailableBalance(currency)
+										}
+									</span>
+								</li>
+							)
+						}
 					</ul>
 				</label>
 				<Input
@@ -340,6 +344,7 @@ AmountField.propTypes = {
 	getTransferFee: PropTypes.func,
 	assetDropdown: PropTypes.bool,
 	labelText: PropTypes.string,
+	showAvailable: PropTypes.bool,
 };
 
 
@@ -352,6 +357,7 @@ AmountField.defaultProps = {
 	labelText: 'Amount',
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),
+	showAvailable: true,
 };
 
 export default AmountField;

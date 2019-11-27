@@ -17,6 +17,7 @@ import {
 	FORM_COMMITTEE,
 	FORM_PASSWORD_CREATE,
 	FORM_FREEZE,
+	FORM_ETH_RECEIVE,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -70,6 +71,10 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 			checked: false,
 		},
+		bytecode: {
+			value: '',
+			error: null,
+		},
 		amount: {
 			value: '',
 			error: null,
@@ -80,6 +85,19 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
+		balance: {
+			assets: new List([]),
+		},
+		isAvailableBalance: false,
+		subjectTransferType: '',
+		avatarName: '',
+	}),
+	[FORM_ETH_RECEIVE]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
 		balance: {
 			assets: new List([]),
 		},
@@ -103,6 +121,11 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		isAvailableBalance: false,
+		code: {
+			value: '',
+			error: null,
+		},
+		contracts: new Map({}),
 		addToWatchList: false,
 		accepted: false,
 		ETHAccuracy: false,
@@ -259,6 +282,7 @@ export default createModule({
 		[FORM_PASSWORD_CREATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_PASSWORD_CREATE]),
 		[FORM_FREEZE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_FREEZE]),
+		[FORM_ETH_RECEIVE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ETH_RECEIVE]),
 	}),
 	transformations: {
 		set: {
