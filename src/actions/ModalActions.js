@@ -8,7 +8,6 @@ import ModalReducer from '../reducers/ModalReducer';
  * @returns {function(dispatch): undefined}
  */
 export const openModal = (type, params) => (dispatch) => {
-	console.log('at openModal', type, params);
 	dispatch(ModalReducer.actions.open({ type, params }));
 };
 
