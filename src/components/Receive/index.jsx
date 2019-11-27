@@ -55,6 +55,7 @@ class Receive extends React.Component {
 						from={from}
 						setIn={setIn}
 						checkAccount={checkAccount}
+						openModal={(value) => this.props.openModal(value)}
 					/>),
 			},
 			{

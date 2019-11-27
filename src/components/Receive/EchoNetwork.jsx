@@ -4,6 +4,7 @@ import { Dropdown } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
@@ -79,7 +80,7 @@ class EchoNetwork extends React.Component {
 			value: 'generate-address',
 			key: 'generate-address',
 			content: 'Generate new address',
-			onClick: () => {},
+			onClick: () => this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS),
 			selected: false,
 		}];
 
@@ -191,6 +192,7 @@ EchoNetwork.propTypes = {
 	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 };
 
 EchoNetwork.defaultProps = {
