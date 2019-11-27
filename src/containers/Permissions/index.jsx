@@ -50,14 +50,6 @@ class Permissions extends React.Component {
 				active: {},
 				echoRand: {},
 			},
-			deletedKeys: {
-				active: {},
-				echoRand: {},
-			},
-			addedKeys: {
-				active: {},
-				echoRand: {},
-			},
 		}
 	}
 
@@ -114,60 +106,43 @@ class Permissions extends React.Component {
 		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
 		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
 
-		console.log(activePrivateKeysEntries);
-		console.log(activeBasePrivateKeysEntries);
-
         const newActiveWifs = activePrivateKeysEntries
             .map(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
 
 				if (wif && wif.error) {
-					console.log('wif && wif.error')
 					return null;
 				}
 
 				if (publicKey && publicKey.value) {
-					console.log('publicKey && publicKey.value', publicKey.value)
 					if (!wif || !wif.value) {
-						console.log('	!wif || !wif.value')
 						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
-							console.log('		ebanina 1')
 							if (
 								echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
 								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
 							) {
-								console.log('			ebanina 2')
 								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.filter(([indexA]) => indexA !== publicKey.value);
 							}
 						} else {
-							console.log('			ebanina 1 else')
 							const echoRandPrivateKeyData = echoRandPrivateKeysEntries.find(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
-							console.log(echoRandPrivateKeyData);
-							console.log(echoRandBasePrivateKeysEntries);
 							if (echoRandPrivateKeyData) {
-								console.log('			ebanina 2')
 								const [, echoRandPrivateKeyWif] = echoRandPrivateKeyData;
 								return { publicKey: publicKey.value, wif: echoRandPrivateKeyWif.value, type: 'active' };
 							}
 						}
 					} else {
-						console.log('	!wif || !wif.value else')
 						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
-							console.log('		ebanina 1')
 							if (
 								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
 								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
 							) {
-								console.log('			ebanina 2');
 								return null;
 							}
 						} else {
-							console.log('		ebanina 1 else')
 							if (
 								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
 								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
 							) {
-								console.log('			ebanina 2')
 								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((privateKeyEntryItem) => {
 									const [indexA] = privateKeyEntryItem;
 
@@ -200,7 +175,6 @@ class Permissions extends React.Component {
             })
 
         const wifs = [...newActiveWifs, ...newEchoRandWifs];
-		console.log('at saveWifs', wifs);
 		await this.props.editWifs(wifs, account, password);
 		this.clear();
     }
@@ -220,13 +194,11 @@ class Permissions extends React.Component {
 	}
 
 	setWif(keyRole, type, e) {
-		console.log('at setWif, keyRole', keyRole);
 		const { form } = this.props;
 		const { privateKeys } = this.state;
 
 		const field = e.target.name;
 		const wif = e.target.value;
-		console.log('at setWif, wif', wif);
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
