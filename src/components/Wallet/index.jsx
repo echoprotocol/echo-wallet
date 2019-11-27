@@ -14,7 +14,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, generateEthAddress,
+			fee, isAvailableBalance, fees, bytecode, avatarName, generateEthAddress, subjectTransferType,
 		} = this.props;
 
 		const externalTabs = [
@@ -34,14 +34,19 @@ class Wallet extends React.Component {
 							accountName={accountName}
 							from={from}
 							to={to}
+							avatarName={avatarName}
+							bytecode={bytecode}
 							amount={amount}
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
+							subjectTransferType={subjectTransferType}
 							transfer={this.props.transfer}
 							resetTransaction={this.props.resetTransaction}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
+							subjectToSendSwitch={this.props.subjectToSendSwitch}
+							setTransferFee={this.props.setTransferFee}
 							clearForm={this.props.clearForm}
 							amountInput={this.props.amountInput}
 							setFormError={this.props.setFormError}
@@ -150,8 +155,11 @@ Wallet.propTypes = {
 	currency: PropTypes.object,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
+	avatarName: PropTypes.string.isRequired,
+	bytecode: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
@@ -161,6 +169,8 @@ Wallet.propTypes = {
 	resetTransaction: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
+	subjectToSendSwitch: PropTypes.func.isRequired,
+	setTransferFee: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
