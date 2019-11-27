@@ -22,6 +22,7 @@ import {
 	CONTRACT_ID_PREFIX,
 	ECHO_ASSET_ID,
 	FREEZE_BALANCE_PARAMS,
+	APPLY_CHANGES_TIMEOUT,
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
@@ -59,6 +60,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 /**
  * @method resetTransaction
@@ -970,6 +972,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		return;
 	}
 
+	let permissionTableLoaderTimer;
+	if (operationId === constants.OPERATIONS_IDS.ACCOUNT_UPDATE) {
+		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
+	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
@@ -997,10 +1003,14 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 				dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			}
 
+			clearTimeout(permissionTableLoaderTimer);
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
+			clearTimeout(permissionTableLoaderTimer);
+			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
 			dispatch(setError(PERMISSION_TABLE, message));
