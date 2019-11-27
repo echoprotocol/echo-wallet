@@ -24,23 +24,40 @@ class SmartContracts extends React.Component {
 		});
 	}
 
+	onToggle() {
+	}
+
+
 	render() {
 		const { createType } = this.state;
 		return (
 			<Form className="page-wrap">
 				<div className="create-contract">
 					<h2 className="create-contract-title">Create Smart Contract</h2>
-					<div className="radio-list">
-						<Button
-							className={classnames('radio', { checked: createType === SOURCE_CODE_MODE })}
-							onClick={() => { this.setState({ createType: SOURCE_CODE_MODE }); }}
-							content="Source code"
-						/>
-						<Button
-							className={classnames('radio', { checked: createType === BYTECODE_MODE })}
-							onClick={() => { this.setState({ createType: BYTECODE_MODE }); }}
-							content="Bytecode"
-						/>
+					<div className="create-contract-panel">
+						<div className="radio-list">
+							<Button
+								className={classnames('radio', { checked: createType === SOURCE_CODE_MODE })}
+								onClick={() => { this.setState({ createType: SOURCE_CODE_MODE }); }}
+								content="Source code"
+							/>
+							<Button
+								className={classnames('radio', { checked: createType === BYTECODE_MODE })}
+								onClick={() => { this.setState({ createType: BYTECODE_MODE }); }}
+								content="Bytecode"
+							/>
+						</div>
+						<div className="check">
+							<input
+								type="checkbox"
+								id="addToWatchList"
+								onChange={() => this.onToggle()}
+								checked
+							/>
+							<label className="label" htmlFor="addToWatchList">
+								<span className="label-text">Add to watch list</span>
+							</label>
+						</div>
 					</div>
 					{createType === SOURCE_CODE_MODE && <SourceCode />}
 					{createType === BYTECODE_MODE && <Bytecode />}

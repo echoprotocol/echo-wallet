@@ -36,9 +36,9 @@
 	
 	.radio-list {
 		display: flex;
-		margin: 0 0 25px;
+		
 		.radio:not(:last-child) {
-			margin: 0 37px 0 0;
+			margin: 0 41px 0 0;
 		}
 	}
 	.editor-wrap + .fields {
@@ -68,5 +68,12 @@
 	font-size: 20px;
 	color: #5C637D;
 	font-weight: 600;
-	margin: 34px 0 22px;
+	margin: 34px 0 20px;
+}
+
+.create-contract-panel {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 0 20px;
 }
