@@ -5,7 +5,7 @@ import { Button } from 'semantic-ui-react';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
-import AddressField from '../Fields/AddressField';
+import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
@@ -36,8 +36,7 @@ class Bitcoin extends React.Component {
 	renderPayment() {
 
 		const {
-			currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees, accountName, btcAddress,
+			amount, accountName, btcAddress,
 		} = this.props;
 
 		const address = btcAddress.getIn(['deposit_address', 'address']);
@@ -46,27 +45,36 @@ class Bitcoin extends React.Component {
 			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
-				<AddressField
-					address={address}
+				<AccountField
+					disabled
+					field={{ value: address }}
+					checkAccount={() => {}}
+					setIn={() => {}}
+					setFormValue={() => {}}
+					getTransferFee={() => {}}
+					setContractFees={() => {}}
+					setValue={() => {}}
 				/>
 
 				<AmountField
-					fees={fees}
+					fees={[]}
 					form={FORM_TRANSFER}
-					fee={fee}
-					assets={assets}
-					tokens={tokens}
+					tokens={{ size: 0 }}
 					amount={amount}
-					currency={currency}
-					isAvailableBalance={isAvailableBalance}
+					isAvailableBalance={false}
 					amountInput={this.props.amountInput}
-					setFormError={this.props.setFormError}
-					setFormValue={this.props.setFormValue}
-					setValue={this.props.setValue}
-					setDefaultAsset={this.props.setDefaultAsset}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					assetDropdown
+					setFormError={() => {}}
+					setFormValue={() => {}}
+					setValue={() => {}}
+					currency={{
+						precision: 18, id: '', symbol: 'ETH', balance: 0,
+					}}
+					setDefaultAsset={() => {}}
+					getTransferFee={() => Promise.resolve()}
+					setContractFees={() => {}}
+					assetDropdown={false}
+					showAvailable={false}
+					labelText=""
 				/>
 				{
 					accountName ?
@@ -126,20 +134,8 @@ class Bitcoin extends React.Component {
 }
 
 Bitcoin.propTypes = {
-	fees: PropTypes.array.isRequired,
-	currency: PropTypes.object,
-	assets: PropTypes.object.isRequired,
-	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
-	fee: PropTypes.object.isRequired,
-	isAvailableBalance: PropTypes.bool.isRequired,
-	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	setFormError: PropTypes.func.isRequired,
-	setDefaultAsset: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	// eslint-disable-next-line react/no-unused-prop-types
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
@@ -150,7 +146,6 @@ Bitcoin.propTypes = {
 };
 
 Bitcoin.defaultProps = {
-	currency: null,
 	btcAddress: null,
 };
 
