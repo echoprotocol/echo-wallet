@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
-import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
 import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
@@ -45,16 +45,21 @@ class Bitcoin extends React.Component {
 			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
-				<AccountField
-					disabled
-					field={{ value: address }}
-					checkAccount={() => {}}
-					setIn={() => {}}
-					setFormValue={() => {}}
-					getTransferFee={() => {}}
-					setContractFees={() => {}}
-					setValue={() => {}}
-				/>
+				<Form.Field>
+					<label htmlFor="public-key">address</label>
+					<div className="ui action input">
+						<input
+							type="text"
+							placeholder="Public Key"
+							disabled
+							name="public-key"
+							value={address}
+						/>
+						<CopyToClipboard text={address}>
+							<Button icon="copy" className="input-copy-btn" />
+						</CopyToClipboard>
+					</div>
+				</Form.Field>
 
 				<AmountField
 					fees={[]}
@@ -67,7 +72,7 @@ class Bitcoin extends React.Component {
 					setFormValue={() => {}}
 					setValue={() => {}}
 					currency={{
-						precision: 18, id: '', symbol: 'ETH', balance: 0,
+						precision: 1, id: '', symbol: 'BTC', balance: 0,
 					}}
 					setDefaultAsset={() => {}}
 					getTransferFee={() => Promise.resolve()}
@@ -77,7 +82,7 @@ class Bitcoin extends React.Component {
 					labelText=""
 				/>
 				{
-					accountName ?
+					accountName && address && amount ?
 						<QrCode
 							link={`bitcoin:${address}?amount=${amount.value}`}
 						/> : null

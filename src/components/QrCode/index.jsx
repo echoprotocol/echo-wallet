@@ -13,7 +13,7 @@ class QrCode extends React.PureComponent {
 				<div className="qr-wrap">
 					<QRCode
 						bgColor="#fff"
-						value={`${link}/qr-code.png`}
+						value={`${link}`}
 						size={134}
 					/>
 				</div>
