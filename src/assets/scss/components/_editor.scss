@@ -7,6 +7,7 @@
 .editor {
 	border: 1px solid #DDDDDD;
 	transition: border-color $speed;
+	
 	&:hover {
 		border-color: $border-hover !important;
 	}
@@ -37,6 +38,12 @@
 	.ace_layer {
 		padding: 0 0 0 16px;
 	}
+	.ace_scrollbar-v {
+		bottom: 0 !important;
+	}
+	.ace_scrollbar-h  {
+		display: none;
+	}
 	.ace_gutter-cell {
 		padding: 0 9px;
 		text-align: center;
@@ -56,5 +63,12 @@
 	}
 	.ace_scroller.ace_scroll-left {
 		box-shadow: none;
+	}
+}
+
+
+.error {
+	.editor {
+		border-color: #ff4848 !important;
 	}
 }

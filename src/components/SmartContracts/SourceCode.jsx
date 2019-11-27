@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
+import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
@@ -73,7 +74,7 @@ class SourceCode extends React.Component {
 		const { searchText } = this.state;
 		return (
 			<React.Fragment>
-				<div className="editor-wrap">
+				<div className={classnames(['editor-wrap error-wrap', { error: false }])} >
 					<div className="editor-label">CODE EDITOR</div>
 					<AceEditor
 						className="editor"
@@ -91,6 +92,7 @@ class SourceCode extends React.Component {
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
 					/>
+					{ false && <span className="error-message">some error</span>}
 				</div>
 				<div className="fields">
 					<div className="field">

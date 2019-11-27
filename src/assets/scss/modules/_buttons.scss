@@ -49,6 +49,8 @@ $stripe-width: 10px;
 	}
 }
 
+
+
 .main-btn {
 	@include btn();
 	color: $main-color;
@@ -397,7 +399,7 @@ $stripe-width: 10px;
 }
 
 .remove-btn {
-	height: 22px;
+	min-height: 22px;
 	min-width: 22px;
 	color: rgba(#5C637D, .7);
 	padding: 0;
@@ -419,14 +421,40 @@ $stripe-width: 10px;
 			@include on-focus(2px);
 		}
 	}
+
 }
 
-.icon-remove {
-	box-shadow: none;
+
+
+.remove-text-btn {
+	font-size: 14px;
 	background-color: transparent;
-	border: 0;
-	color: #bcbcbc;
-	transition: color $speed, background-color $speed;
+	color: rgba(#5C637D, .7);
+	transition: background-color $speed, color $speed,border-color $speed;
+	padding: 6px 10px;
+	text-transform: capitalize;
+	border-radius: 4px;
+
+	.icon-remove {
+		color: inherit;
+		margin-right: 5px;
+	}
+
+	&:hover {
+		background-color: rgba(#D7D9DB, .5);
+		color: #5C637D;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		background-color: #D7D9DB;
+		color: rgba(#5C637D, .5);
+	}
 }
 
 
