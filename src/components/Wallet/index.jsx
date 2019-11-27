@@ -8,13 +8,14 @@ import Tokens from './TokensComponents';
 import Transfer from '../Transfer';
 import Receive from '../Receive';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
+import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class Wallet extends React.Component {
 
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
-			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress, fullCurrentAccount,
 		} = this.props;
 
 		const externalTabs = [
@@ -42,7 +43,7 @@ class Wallet extends React.Component {
 							resetTransaction={this.props.resetTransaction}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
-							clearForm={this.props.clearForm}
+							clearForm={() => this.props.clearForm(FORM_TRANSFER)}
 							amountInput={this.props.amountInput}
 							setFormError={this.props.setFormError}
 							setDefaultAsset={this.props.setDefaultAsset}
@@ -89,6 +90,7 @@ class Wallet extends React.Component {
 							generateEthAddress={generateEthAddress}
 							getEthAddress={getEthAddress}
 							ethAddress={ethAddress}
+							fullCurrentAccount={fullCurrentAccount}
 						/>
 					</div>),
 			},
@@ -174,6 +176,7 @@ Wallet.propTypes = {
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
 
 Wallet.defaultProps = {

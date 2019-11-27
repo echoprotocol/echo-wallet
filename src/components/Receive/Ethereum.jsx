@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import BN from 'bignumber.js';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
-import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 import TransactionScenario from '../../containers/TransactionScenario';
 
@@ -16,54 +17,47 @@ class Ethereum extends React.Component {
 		this.props.getEthAddress();
 	}
 
-	componentDidUpdate(prevProps) {
-		if (this.props.accountName !== prevProps.accountName) {
-			this.props.getEthAddress();
-		}
+	componentWillUnmount() {
+		this.props.clearForm();
 	}
 
 	renderPayment() {
 
-		const {
-			currency, from, setIn, checkAccount, ethAddress,
-			fee, assets, tokens, amount, isAvailableBalance, fees,
-		} = this.props;
+		const { ethAddress, amount } = this.props;
+
+		const ethCurrency = {
+			precision: 18, id: '', symbol: 'ETH', balance: 0,
+		};
+		const address = ethAddress.get('eth_addr');
+
+		const tmpValue = new BN(amount.value || 0);
+
+		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
+			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
+
+		const qrText = `ethereum:0x${address}?value=${value}`;
 
 		return (
 			<React.Fragment>
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
-
-				<AccountField
-					disabled
-					field={{ value: ethAddress.get('address') }}
-					checkAccount={() => {}}
-					setIn={() => {}}
-					setFormValue={() => {}}
-					getTransferFee={() => {}}
-					setContractFees={() => {}}
-					setValue={() => {}}
-				/>
-
-				{/* <AccountField
-					disabled
-					field={from}
-					currency={currency}
-					subject="from"
-					checkAccount={checkAccount}
-					setIn={setIn}
-					setFormValue={this.props.setFormValue}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					setValue={this.props.setValue}
-				/> */}
-
-				<p className="payment-description">
-					You can use several addresses referring to one account for different targets.
-				</p>
-
+				<Form.Field>
+					<label htmlFor="public-key">address</label>
+					<div className="ui action input">
+						<input
+							type="text"
+							placeholder="Public Key"
+							readOnly
+							name="public-key"
+							value={address}
+						/>
+						<CopyToClipboard text={address}>
+							<Button icon="copy" className="input-copy-btn" />
+						</CopyToClipboard>
+					</div>
+				</Form.Field>
 				<AmountField
 					fees={[]}
-					form={FORM_TRANSFER}
+					form={FORM_ETH_RECEIVE}
 					tokens={{ size: 0 }}
 					amount={amount}
 					isAvailableBalance={false}
@@ -71,33 +65,15 @@ class Ethereum extends React.Component {
 					setFormError={() => {}}
 					setFormValue={() => {}}
 					setValue={() => {}}
-					currency={{ precision: 18, id: '', symbol: 'ETH', balance: 0 }}
+					currency={ethCurrency}
 					setDefaultAsset={() => {}}
 					getTransferFee={() => Promise.resolve()}
 					setContractFees={() => {}}
 					assetDropdown={false}
 					showAvailable={false}
-					labelText=""
+					labelText="amount"
 				/>
-				{/* <AmountField
-					fees={fees}
-					form={FORM_TRANSFER}
-					fee={fee}
-					assets={assets}
-					tokens={tokens}
-					amount={amount}
-					currency={currency}
-					isAvailableBalance={isAvailableBalance}
-					amountInput={this.props.amountInput}
-					setFormError={this.props.setFormError}
-					setFormValue={this.props.setFormValue}
-					setValue={this.props.setValue}
-					setDefaultAsset={this.props.setDefaultAsset}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					assetDropdown={false}
-				/> */}
-				<QrCode />
+				<QrCode text={qrText} />
 			</React.Fragment>
 		);
 	}
@@ -146,17 +122,27 @@ class Ethereum extends React.Component {
 	}
 
 	render() {
-		const { ethAddress } = this.props;
-		console.log('render ', ethAddress);
-		if (ethAddress.get('address') && ethAddress.get('isApproved') && ethAddress.get('isAddressGenerated')) {
-			return this.renderPayment();
-		} else if (ethAddress.get('isAddressGenerated')) {
-			return this.renderWaitMessage();
+		const { ethAddress, fullCurrentAccount } = this.props;
+
+		if (!fullCurrentAccount.getIn(['statistics', 'generated_eth_address'])) {
+			return (
+				<div className="payment-wrap" >
+					{this.renderGenerateAddressProcess()}
+				</div>
+			);
+		}
+
+		if (ethAddress.get('eth_addr') && ethAddress.get('is_approved')) {
+			return (
+				<div className="payment-wrap" >
+					{this.renderPayment()}
+				</div>
+			);
 		}
 
 		return (
 			<div className="payment-wrap" >
-				{this.renderGenerateAddressProcess()}
+				{this.renderWaitMessage()}
 			</div>
 		);
 	}
@@ -164,32 +150,13 @@ class Ethereum extends React.Component {
 }
 
 Ethereum.propTypes = {
-	fees: PropTypes.array.isRequired,
-	currency: PropTypes.object,
-	assets: PropTypes.object.isRequired,
-	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
-	fee: PropTypes.object.isRequired,
-	isAvailableBalance: PropTypes.bool.isRequired,
-	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
-	setFormError: PropTypes.func.isRequired,
-	setDefaultAsset: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
-	from: PropTypes.object.isRequired,
-	setIn: PropTypes.func.isRequired,
-	checkAccount: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
-	accountName: PropTypes.string.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
-
-Ethereum.defaultProps = {
-	currency: null,
-};
-
 
 export default Ethereum;

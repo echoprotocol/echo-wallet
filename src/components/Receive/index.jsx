@@ -7,6 +7,8 @@ import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
 
+import { FORM_TRANSFER, FORM_ETH_RECEIVE } from '../../constants/FormConstants';
+
 
 class Receive extends React.Component {
 
@@ -16,14 +18,14 @@ class Receive extends React.Component {
 	}
 
 	componentWillUnmount() {
-		this.props.clearForm();
+		this.props.clearForm(FORM_TRANSFER);
 	}
 
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount, getEthAddress, ethAddress, accountName,
-			fee, assets, tokens, amount, isAvailableBalance, fees, generateEthAddress,
+			currency, from, setIn, checkAccount, getEthAddress, ethAddress, clearForm,
+			fee, assets, tokens, amount, isAvailableBalance, fees, generateEthAddress, fullCurrentAccount,
 		} = this.props;
 
 		const internalTabs = [
@@ -99,28 +101,14 @@ class Receive extends React.Component {
 				render: () => (
 					<Ethereum
 						// for Amount field
-						fees={fees}
-						fee={fee}
-						assets={assets}
-						tokens={tokens}
 						amount={amount}
-						currency={currency}
-						isAvailableBalance={isAvailableBalance}
 						amountInput={this.props.amountInput}
-						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
 						setValue={this.props.setValue}
-						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
-						// for From field
-						from={from}
-						setIn={setIn}
-						checkAccount={checkAccount}
 						generateEthAddress={generateEthAddress}
 						getEthAddress={getEthAddress}
 						ethAddress={ethAddress}
-						accountName={accountName}
+						fullCurrentAccount={fullCurrentAccount}
+						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
 					/>
 				),
 			},
@@ -146,7 +134,6 @@ class Receive extends React.Component {
 }
 
 Receive.propTypes = {
-	// for Amount
 	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
@@ -161,17 +148,16 @@ Receive.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	// for From field
 	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
-	//
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
 
 Receive.defaultProps = {

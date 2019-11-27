@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { CACHE_MAPS } from 'echojs-lib';
+import { Map } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -32,13 +34,14 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
-		ethAddress: state.sidechain.get('ethAddress'),
+		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
+		fullCurrentAccount: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
 		removeToken: (name, id) => dispatch(disableToken(name, id)),
 		setAsset: (asset, type) => dispatch(setAsset(asset, type)),
-		clearForm: () => dispatch(clearForm(FORM_TRANSFER)),
+		clearForm: (from) => dispatch(clearForm(from)),
 		transfer: () => dispatch(transfer()),
 		resetTransaction: () => dispatch(resetTransaction()),
 		setIn: (field, param) => dispatch(setIn(FORM_TRANSFER, field, param)),
