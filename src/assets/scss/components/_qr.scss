@@ -1,0 +1,35 @@
+.qr-section {
+	display: flex;
+}
+.qr-wrap {
+	width: 160px;
+	height: 160px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	margin: 0 12px 0 0;
+	padding: 13px;
+}
+.qr-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+.qr-link a {
+	font-family: proximanovaSemibold;
+	font-size: 14px;
+	color: $main-color;
+	max-width: 202px;
+	line-height: 17px;
+	display: block;
+	@include cut-text;
+}
+
+.qr-description {
+	color: rgba(#3B3B3B, .8);
+	font-size: 14px;
+	line-height: 20px;
+	margin: 8px 0 0;
+}

@@ -26,6 +26,22 @@
 		}
 	}
 
+	.form-panel {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.button[type=submit],
+		.button[type=button] {
+			margin: 0;
+		}
+
+		.action-link + .main-btn {
+			margin: 0 0 0 auto;
+		}
+
+	}
+
     .form.main-form {
         padding: 0;
 
@@ -34,22 +50,6 @@
             margin: 30px 0 0;
         }
 
-
-        .form-panel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .button[type=submit],
-            .button[type=button] {
-                margin: 0;
-            }
-
-            .action-link+.main-btn {
-                margin: 0 0 0 auto;
-            }
-
-        }
     }
 
     &.choose-account {
@@ -131,19 +131,16 @@
                 }
 
                 .check {
-                    .label {
+                    .label:before {
+						width: 24px;
+						height: 24px;
+					}
 
-                        &-text {
-                            font-weight: 600;
-                            color: rgba(92, 99, 125, 0.5);
-                            font-size: 12px;
-                        }
-
-                        &:before {
-                            width: 24px;
-                            height: 24px;
-                        }
-                    }
+					.label-text {
+						font-weight: 600;
+						color: rgba(92, 99, 125, 0.5);
+						font-size: 12px;
+					}
                 }
 
                 .sort-icon {
@@ -185,16 +182,13 @@
                     margin-bottom: 20px;
                 }
 
-                .label {
-                    &:before {
-                        margin-right: 11px;
-                    }
-
-                    &-text {
-                        font-size: 15px;
-                        // color: #3b3b3b;
-                    }
-                }
+                .label:before {
+					margin-right: 11px;
+				}
+				
+				.label-text {
+					font-size: 15px;
+				}
 
                 .value {
                     font-size: 15px;
@@ -232,7 +226,7 @@
             background-color: #fff;
             border: 1px solid #dddddd;
             color: rgba(0, 0, 0, 0.87);
-            border-radius: 0.28571429rem;
+            border-radius: 4px;
             background-color: rgba(233, 233, 237, 0.5);
             transition: background-color 0.3s;
 

@@ -153,7 +153,6 @@ class Voting extends React.Component {
 										<h3>Proxy</h3>
 										<div className="top-btn-container">
 											<Button
-												basic
 												content="Save"
 												disabled={!this.isSaveable()}
 												onClick={submit}

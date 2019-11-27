@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
 
 class ModalBackup extends React.Component {
@@ -90,8 +91,17 @@ class ModalBackup extends React.Component {
 					</Form.Field>
 
 					<div className="form-panel">
+						<React.Fragment>
+							<CopyToClipboard text={activeKeysString}>
+								<div>
+									<i aria-hidden="true" style={{ color: 'blue' }} className="copy icon" />&nbsp;
+									<a className="action-link" role="button" tabIndex="0">
+										Copy Backup Data
+									</a>
+								</div>
+							</CopyToClipboard>
+						</React.Fragment>
 						<Button
-							basic
 							type="submit"
 							className="main-btn"
 							onClick={() => this.onSave(activeKeysString)}

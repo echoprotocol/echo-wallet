@@ -70,7 +70,6 @@ class ModalUnlockWallet extends React.Component {
 									Forgot password?
 								</a>
 								<Button
-									basic
 									type="submit"
 									className="main-btn"
 									onClick={(e) => this.onSuccess(e)}

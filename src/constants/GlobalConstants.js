@@ -68,6 +68,7 @@ export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
 export const ACCOUNT_ID_PREFIX = '1.2.';
 export const GLOBAL_ERROR_TIMEOUT = 10 * 1000;
+export const APPLY_CHANGES_TIMEOUT = 20 * 1000;
 
 export const SCRYPT_ALGORITHM_PARAMS = {
 	N: 2 ** 14,
@@ -151,3 +152,4 @@ export const FREEZE_BALANCE_PARAMS = [
 
 export const GIT_REF = 'https://github.com/echoprotocol/echo-wallet/commit/';
 export const ECHO_REF = 'https://echo.org/';
+export const ECHO_DOCS_LINK = 'https://docs.echo.org/';

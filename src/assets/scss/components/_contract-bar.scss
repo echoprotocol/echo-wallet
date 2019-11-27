@@ -1,0 +1,60 @@
+.contract-bar {
+	min-width: 380px;
+	background-color: #FCFCFC;
+	min-height: calc(100vh - 120px);
+	padding: 32px 30px 52px;
+	display: flex;
+    flex-direction: column;
+}
+
+.contract-bar-title {
+	font-size: 20px;
+	line-height: 26px;
+	color: #5C637D;
+	font-weight: 400;
+	margin: 0 0 22px;
+}
+
+.param-line {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.param-subline {
+	margin: 23px 0 0 16px;
+}
+
+
+.params-list {
+	margin: 0 0 auto;
+	.param-key {
+		display: flex;
+		align-items: center;
+		color: rgba(#5C637D, 0.6);
+		font-size: 15px;
+		font-family: proximaNovaSemibold;
+	}
+	.icon-info {
+		cursor: pointer;
+		font-size: 12px;
+		margin-right: 5px;
+	}
+
+	li:not(:last-child) {
+		margin-bottom: 30px;
+	}
+
+	.radio:not(:last-child) {
+		margin-bottom: 29px;
+	}
+
+	.radio-list + .selection {
+		margin: 16px 0 0;
+	}
+}
+
+.params-list + .main-btn {
+	margin: 40px 0 0;
+
+}
