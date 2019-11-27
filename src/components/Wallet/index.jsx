@@ -8,13 +8,15 @@ import Tokens from './TokensComponents';
 import Transfer from '../Transfer';
 import Receive from '../Receive';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
+import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class Wallet extends React.Component {
 
 	render() {
 		const {
-			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees, bytecode, avatarName, generateEthAddress, subjectTransferType,
+			assets, tokens, accountName, from, to, amount, currency, ethAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
+			bytecode, avatarName, subjectTransferType, fullCurrentAccount,
 		} = this.props;
 
 		const externalTabs = [
@@ -45,9 +47,9 @@ class Wallet extends React.Component {
 							resetTransaction={this.props.resetTransaction}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
+							clearForm={() => this.props.clearForm(FORM_TRANSFER)}
 							subjectToSendSwitch={this.props.subjectToSendSwitch}
 							setTransferFee={this.props.setTransferFee}
-							clearForm={this.props.clearForm}
 							amountInput={this.props.amountInput}
 							setFormError={this.props.setFormError}
 							setDefaultAsset={this.props.setDefaultAsset}
@@ -92,6 +94,9 @@ class Wallet extends React.Component {
 							clearForm={this.props.clearForm}
 							openModal={(value) => this.props.openModal(value)}
 							generateEthAddress={generateEthAddress}
+							getEthAddress={getEthAddress}
+							ethAddress={ethAddress}
+							fullCurrentAccount={fullCurrentAccount}
 						/>
 					</div>),
 			},
@@ -133,7 +138,7 @@ class Wallet extends React.Component {
 					</div>
 				</div>
 				<Tab
-					defaultActiveIndex="1"
+					defaultActiveIndex="0"
 					menu={{
 						tabular: false,
 						className: 'wallet-tab-menu',
@@ -180,6 +185,9 @@ Wallet.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
 
 Wallet.defaultProps = {
