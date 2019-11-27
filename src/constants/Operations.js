@@ -73,6 +73,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		signer: 'owner',
 	},
 	asset_create: {
 		value: OPERATIONS_IDS.ASSET_CREATE,

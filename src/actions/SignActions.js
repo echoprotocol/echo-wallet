@@ -65,7 +65,10 @@ const getSigners = async (account, keys, viewed = []) => {
  * @returns {Promise<>undefined}
  */
 export const signTransaction = async (accountId, tr, password) => {
+	console.log(accountId);
+	console.log('111.111')
 	const signer = await echo.api.getObject(accountId);
+	console.log('111.222')
 
 	const transaction = {
 		ref_block_num: 0,

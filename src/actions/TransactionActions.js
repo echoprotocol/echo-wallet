@@ -654,6 +654,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	try {
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
+
 		tr.broadcast().then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
@@ -1049,26 +1050,29 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 			label,
 		};
 
-		const operation = 'account_address_create_operation';
-
+		const operation = 'account_address_create';
 		options.fee.amount = await getOperationFee(operation, options);
-
+		console.log(1111)
 		const precision = new BN(10).pow(feeAsset.precision);
 
 		const showOptions = {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+			label,
 		};
+		console.log(2222)
 
 		dispatch(TransactionReducer.actions.setOperation({
 			operation,
 			options,
 			showOptions,
 		}));
+		console.log(3333)
 
 		return true;
 	} catch (error) {
+		console.log(error);
 		return null;
 	}
 };
