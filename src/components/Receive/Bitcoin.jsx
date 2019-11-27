@@ -94,7 +94,21 @@ class Bitcoin extends React.Component {
 	renderGenerateAdressProcess() {
 		const { btcAddress } = this.props;
 
-		return !btcAddress || !btcAddress.getIn(['deposit_address', 'address']) ? (
+		if (btcAddress && !btcAddress.getIn(['is_relevant'])) {
+			return (
+				<React.Fragment>
+					<h2 className="payment-header t-center">
+						Wait please, <br /> address is not ready yet
+					</h2>
+					<p className="payment-description t-center">
+						Please, allow some time for address generation as it may take up to one hour.
+						It will appear on this page when generated.
+					</p>
+				</React.Fragment>
+			);
+		}
+
+		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
@@ -109,16 +123,7 @@ class Bitcoin extends React.Component {
 					onClick={() => this.props.openModal(MODAL_GENERATE_ADDRESS)}
 				/>
 			</React.Fragment>
-		) :
-			<React.Fragment>
-				<h2 className="payment-header t-center">
-					Wait please, <br /> address is not ready yet
-				</h2>
-				<p className="payment-description t-center">
-					Please, allow some time for address generation as it may take up to one hour.
-					It will appear on this page when generated.
-				</p>
-			</React.Fragment>;
+		);
 	}
 
 	render() {
