@@ -34,6 +34,10 @@ class SourceCode extends React.Component {
 			clearTimeout(timeout);
 		}
 
+		if (!value) {
+			return;
+		}
+
 		this.setState({
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
@@ -74,7 +78,7 @@ class SourceCode extends React.Component {
 		const { searchText } = this.state;
 		return (
 			<React.Fragment>
-				<div className={classnames(['editor-wrap error-wrap', { error: false }])} >
+				<div className={classnames(['editor-wrap error-wrap', { error: !!form.get('code').error }])} >
 					<div className="editor-label">CODE EDITOR</div>
 					<AceEditor
 						className="editor"
@@ -92,7 +96,7 @@ class SourceCode extends React.Component {
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
 					/>
-					{ false && <span className="error-message">some error</span>}
+					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
 				</div>
 				<div className="fields">
 					<div className="field">
