@@ -51,26 +51,20 @@
 
 // CUSTOM
 .Toastify {
-    .toast {
-        &-icon {
-            margin-top: 2px;
-        }
-        &-icon + .toast-text {
+
+	.toast-icon {
+		margin-top: 2px;
+		& + .toast-text {
             margin-left: 10px;
         }
+	}
+	.toast-text {
+		max-width: 320px;
+		display: block;
+		margin-right: auto;
+	}
+	.toast-text + .black-btn {
+		margin-left: 20px;
+	}
 
-        &-text {
-            max-width: 320px;
-            display: block;
-            margin-right: auto;
-        }
-    }
-   .ui {
-       &.button.black {
-            margin: -3px 0 -20px 15px;
-            padding: 13px 8px 11px;
-            line-height: 0;
-       }
-   }
-    
 }

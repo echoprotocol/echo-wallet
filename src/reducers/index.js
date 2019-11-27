@@ -9,6 +9,7 @@ import converterReducer from './ConverterReducer';
 import sortReducer from './SortReducer';
 import contractFeeReducer from './ContractFeeReducer';
 
+
 export default {
 	modal: modalReducer.reducer,
 	global: globalReducer.reducer,

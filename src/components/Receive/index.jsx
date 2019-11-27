@@ -7,7 +7,7 @@ import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
 
-import { FORM_TRANSFER, FORM_ETH_RECEIVE } from '../../constants/FormConstants';
+import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 
 
 class Receive extends React.Component {
@@ -15,10 +15,6 @@ class Receive extends React.Component {
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
-	}
-
-	componentWillUnmount() {
-		this.props.clearForm(FORM_TRANSFER);
 	}
 
 	render() {
@@ -100,7 +96,6 @@ class Receive extends React.Component {
 				/>,
 				render: () => (
 					<Ethereum
-						// for Amount field
 						amount={amount}
 						amountInput={this.props.amountInput}
 						setValue={this.props.setValue}

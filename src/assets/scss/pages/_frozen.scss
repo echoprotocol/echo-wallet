@@ -16,35 +16,7 @@
         height: calc(100vh - 285px);
     }
 
-    button {
-        flex-wrap: wrap;
-        font-size: 13px;
-        font-weight: 400;
-		color: rgb(92, 99, 125);
 
-        &:hover {
-            cursor: default;
-			color: #fff;
-			
-            .frozen-value {
-                color: $yellow;
-            }
-        }
-
-        div {
-            width: 50%;
-            height: 16px;
-            display: block;
-
-            &.frozen-coefficient {
-                width: 40%;
-            }
-
-            &.frozen-interval {
-                width: 60%;
-            }
-        }
-    }
 
     &-value {
         align-self: flex-end;
