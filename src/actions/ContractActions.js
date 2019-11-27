@@ -504,6 +504,11 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	return fee;
 };
 
+export const getAssetsList = async (name) => {
+	const list = await echo.api.listAssets(name, 15);
+	return list;
+};
+
 export const contractCompilerInit = async () => {
 	await loadScript('https://echoprotocol.github.io/solc-bin/bin/soljson-v0.5.7.js');
 };

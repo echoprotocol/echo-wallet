@@ -17,6 +17,7 @@ class Toggle extends React.Component {
 		this.setState({
 			checked: !this.state.checked,
 		});
+		this.props.onChange();
 	}
 
 	render() {
@@ -42,10 +43,12 @@ class Toggle extends React.Component {
 
 Toggle.propTypes = {
 	label: PropTypes.bool,
+	onChange: PropTypes.func,
 };
 
 Toggle.defaultProps = {
 	label: true,
+	onChange: () => { },
 };
 
 

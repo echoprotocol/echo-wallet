@@ -1,8 +1,7 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
 
 import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConstants';
 
@@ -34,8 +33,11 @@ class SmartContracts extends React.Component {
 	}
 
 	render() {
-		const { form } = this.props;
+		const {
+			form, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+		} = this.props;
 		const { createType } = this.state;
+
 		return (
 			<Form className="page-wrap">
 				<div className="create-contract">
@@ -61,7 +63,20 @@ class SmartContracts extends React.Component {
 					/>}
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
-				<ContractBar />
+				<ContractBar
+					fees={fees}
+					amount={amount}
+					ETHAccuracy={ETHAccuracy}
+					currency={currency}
+					assets={assets}
+					isAvailableBalance={isAvailableBalance}
+					amountInput={this.props.amountInput}
+					setFormError={this.props.setFormError}
+					setFormValue={this.props.setFormValue}
+					setValue={this.props.setValue}
+					setDefaultAsset={this.props.setDefaultAsset}
+					getAssetsList={this.props.getAssetsList}
+				/>
 			</Form>
 		);
 	}
@@ -69,13 +84,26 @@ class SmartContracts extends React.Component {
 }
 
 SmartContracts.propTypes = {
+	fees: PropTypes.array.isRequired,
+	assets: PropTypes.object.isRequired,
+	amount: PropTypes.object.isRequired,
+	currency: PropTypes.object,
+	isAvailableBalance: PropTypes.bool.isRequired,
+	ETHAccuracy: PropTypes.bool.isRequired,
+	setValue: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
+	amountInput: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
+	getAssetsList: PropTypes.func.isRequired,
 	form: PropTypes.object.isRequired,
 	contractCodeCompile: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };
 
-SmartContracts.defaultProps = {};
+SmartContracts.defaultProps = {
+	currency: null,
+};
 
 
 export default SmartContracts;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Dropdown, Popup } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
+import { List } from 'immutable';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
@@ -330,7 +331,7 @@ AmountField.propTypes = {
 	form: PropTypes.string.isRequired,
 	fee: PropTypes.object,
 	assets: PropTypes.object,
-	tokens: PropTypes.object.isRequired,
+	tokens: PropTypes.object,
 	amount: PropTypes.object.isRequired,
 	currency: PropTypes.object,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -339,8 +340,8 @@ AmountField.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
+	setContractFees: PropTypes.func,
+	getTransferFee: PropTypes.func,
 	assetDropdown: PropTypes.bool,
 	labelText: PropTypes.string,
 	showAvailable: PropTypes.bool,
@@ -351,8 +352,11 @@ AmountField.defaultProps = {
 	currency: null,
 	fee: {},
 	assets: null,
+	tokens: new List([]),
 	assetDropdown: true,
 	labelText: 'Amount',
+	setContractFees: () => Promise.resolve(),
+	getTransferFee: () => Promise.resolve(),
 	showAvailable: true,
 };
 

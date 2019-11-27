@@ -104,6 +104,10 @@ const DEFAULT_FORM_FIELDS = {
 		isAvailableBalance: false,
 	}),
 	[FORM_CREATE_CONTRACT]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
 		bytecode: {
 			value: '',
 			error: null,
@@ -116,6 +120,7 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		isAvailableBalance: false,
 		code: {
 			value: '',
 			error: null,
@@ -123,6 +128,8 @@ const DEFAULT_FORM_FIELDS = {
 		contracts: new Map({}),
 		addToWatchList: false,
 		accepted: false,
+		ETHAccuracy: false,
+		supportedAsset: '',
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),
