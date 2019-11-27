@@ -15,10 +15,6 @@ class Receive extends React.Component {
 		this.props.setIn('from', { value: accountName, checked: true });
 	}
 
-	componentWillUnmount() {
-		this.props.clearForm();
-	}
-
 	render() {
 
 		const {
@@ -163,8 +159,6 @@ Receive.propTypes = {
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
-	//
-	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 };
