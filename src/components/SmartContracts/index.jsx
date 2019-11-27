@@ -2,12 +2,15 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConstants';
 
 import ContractBar from './ContractBar';
 import SourceCode from './SourceCode';
 import Bytecode from './Bytecode';
+
+import { contractCompilerInit } from '../../actions/ContractActions';
 
 
 class SmartContracts extends React.Component {
@@ -18,6 +21,12 @@ class SmartContracts extends React.Component {
 			createType: SOURCE_CODE_MODE,
 		};
 	}
+
+	async componentDidMount() {
+		await contractCompilerInit();
+	}
+
+
 	onEditorLoad(editor) {
 		editor.setOptions({
 			fontSize: '15px',
@@ -25,6 +34,7 @@ class SmartContracts extends React.Component {
 	}
 
 	render() {
+		const { form } = this.props;
 		const { createType } = this.state;
 		return (
 			<Form className="page-wrap">
@@ -42,7 +52,13 @@ class SmartContracts extends React.Component {
 							content="Bytecode"
 						/>
 					</div>
-					{createType === SOURCE_CODE_MODE && <SourceCode />}
+					{createType === SOURCE_CODE_MODE &&
+					<SourceCode
+						form={form}
+						setFormValue={this.props.setFormValue}
+						contractCodeCompile={this.props.contractCodeCompile}
+						clearForm={this.props.clearForm}
+					/>}
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
 				<ContractBar />
@@ -52,7 +68,12 @@ class SmartContracts extends React.Component {
 
 }
 
-SmartContracts.propTypes = {};
+SmartContracts.propTypes = {
+	form: PropTypes.object.isRequired,
+	contractCodeCompile: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+};
 
 SmartContracts.defaultProps = {};
 

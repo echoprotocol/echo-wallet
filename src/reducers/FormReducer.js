@@ -116,6 +116,11 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		code: {
+			value: '',
+			error: null,
+		},
+		contracts: new Map({}),
 		addToWatchList: false,
 		accepted: false,
 	}),
