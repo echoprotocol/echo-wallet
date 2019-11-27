@@ -37,7 +37,7 @@
     "bs58": "^4.0.1",
     "classnames": "^2.2.6",
     "crypto-random-string": "^3.0.1",
-    "echojs-lib": "1.9.5",
+    "echojs-lib": "1.9.6",
     "echojs-ping": "^0.1.5",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
