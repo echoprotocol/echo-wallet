@@ -22,7 +22,7 @@ class Receive extends React.Component {
 	render() {
 
 		const {
-			currency, setIn, checkAccount,
+			currency, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 			btcAddress, accountId,
 		} = this.props;
@@ -67,25 +67,12 @@ class Receive extends React.Component {
 				render: () => (
 					<Bitcoin
 						// for Amount field
-						fees={fees}
-						fee={fee}
-						assets={assets}
-						tokens={tokens}
 						amount={amount}
-						currency={currency}
-						isAvailableBalance={isAvailableBalance}
 						amountInput={this.props.amountInput}
-						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
-						setValue={this.props.setValue}
-						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
 						// for From field
 						accountAddresses={accountAddresses}
 						accountName={accountName}
 						accountId={accountId}
-						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
 						getBtcAddress={this.props.getBtcAddress}
