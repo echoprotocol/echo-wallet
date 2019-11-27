@@ -234,7 +234,7 @@ class AmountField extends React.Component {
 	}
 	render() {
 		const {
-			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText,
+			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText, showAvailable,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -263,20 +263,23 @@ class AmountField extends React.Component {
 								/>
 							</li>
 						}
-						<li>
-							Available:
-							<span
-								className={classnames({ disabled: !isAvailableBalance || !fee.value })}
-								role="button"
-								onClick={(e) => this.setAvailableAmount(currency, e)}
-								onKeyPress={(e) => this.setAvailableAmount(currency, e)}
-								tabIndex="0"
-							>
-								{
-									this.getAvailableBalance(currency)
-								}
-							</span>
-						</li>
+						{
+							showAvailable &&
+								<li>
+									Available:
+									<span
+										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
+										role="button"
+										onClick={(e) => this.setAvailableAmount(currency, e)}
+										onKeyPress={(e) => this.setAvailableAmount(currency, e)}
+										tabIndex="0"
+									>
+										{
+											this.getAvailableBalance(currency)
+										}
+									</span>
+								</li>
+						}
 					</ul>
 				</label>
 				<Input
@@ -357,6 +360,7 @@ AmountField.propTypes = {
 	assetDropdown: PropTypes.bool,
 	labelText: PropTypes.string,
 	receive: PropTypes.bool,
+	showAvailable: PropTypes.bool,
 };
 
 
@@ -367,6 +371,7 @@ AmountField.defaultProps = {
 	assetDropdown: true,
 	labelText: 'Amount',
 	receive: false,
+	showAvailable: true,
 };
 
 export default AmountField;

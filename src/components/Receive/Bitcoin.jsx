@@ -51,7 +51,7 @@ class Bitcoin extends React.Component {
 						<input
 							type="text"
 							placeholder="Public Key"
-							disabled
+							readOnly
 							name="public-key"
 							value={address}
 						/>
@@ -72,14 +72,14 @@ class Bitcoin extends React.Component {
 					setFormValue={() => {}}
 					setValue={() => {}}
 					currency={{
-						precision: 1, id: '', symbol: 'BTC', balance: 0,
+						precision: 8, id: '', symbol: 'BTC', balance: 0,
 					}}
 					setDefaultAsset={() => {}}
 					getTransferFee={() => Promise.resolve()}
 					setContractFees={() => {}}
 					assetDropdown={false}
 					showAvailable={false}
-					labelText=""
+					labelText="amount"
 				/>
 				{
 					accountName && address && amount ?
