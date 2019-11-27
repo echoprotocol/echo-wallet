@@ -242,17 +242,6 @@ color: rgba(115, 115, 115, 0.87);
             width: 100%;
         }
 
-        .dropdown {
-            &.assets-tokens-dropdown {
-                max-width: 150px;
-                min-width: 150px;
-            }
-
-            &.icon {
-                color: $bd-gray;
-            }
-        }
-
         .visible.transition {
             display: block !important;
         }

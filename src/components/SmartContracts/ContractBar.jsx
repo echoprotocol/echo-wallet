@@ -160,19 +160,21 @@ class ContractBar extends React.Component {
 							/>
 							Deploying amount:
 						</div>
-						<AmountField
-							fees={fees}
-							form={FORM_CREATE_CONTRACT}
-							assets={assets}
-							amount={amount}
-							currency={currency}
-							isAvailableBalance={isAvailableBalance}
-							amountInput={this.props.amountInput}
-							setFormError={this.props.setFormError}
-							setFormValue={this.props.setFormValue}
-							setValue={this.props.setValue}
-							setDefaultAsset={this.props.setDefaultAsset}
-						/>
+						<div className="field-wrap">
+							<AmountField
+								fees={fees}
+								form={FORM_CREATE_CONTRACT}
+								assets={assets}
+								amount={amount}
+								currency={currency}
+								isAvailableBalance={isAvailableBalance}
+								amountInput={this.props.amountInput}
+								setFormError={this.props.setFormError}
+								setFormValue={this.props.setFormValue}
+								setValue={this.props.setValue}
+								setDefaultAsset={this.props.setDefaultAsset}
+							/>
+						</div>
 					</li>
 				</ul>
 				<Button

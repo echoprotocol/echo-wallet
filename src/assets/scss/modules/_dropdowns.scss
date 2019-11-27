@@ -29,7 +29,7 @@
             }
         }
     }
-	
+
     &.assets-tokens-dropdown {
         display: flex;
         align-items: center;
@@ -39,6 +39,8 @@
         transition: border .3s;
         align-self: flex-start;
         min-height: 38px;
+		max-width: 150px;
+		min-width: 150px;
 
         &.active {
 
@@ -53,7 +55,8 @@
         }
 
         .dropdown.icon {
-            padding-left: 1em;
+			padding-left: 1em;
+			color: $bd-gray;
         }
 
         &>input.search {
