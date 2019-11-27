@@ -131,16 +131,6 @@ textarea {
 
 .content {
 	flex: 1;
-	&.center-mode {
-		display: flex;
-        justify-content: center;
-        max-height: calc(100vh - 120px);
-        overflow: auto;
-        overflow-y: overlay;
-		div {
-			width: 100%;
-		}
-	}
 }
 
 .link {
