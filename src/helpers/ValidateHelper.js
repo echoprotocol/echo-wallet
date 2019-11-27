@@ -1,6 +1,6 @@
 import { validators, PublicKey } from 'echojs-lib';
 import BN from 'bignumber.js';
-import base58check from 'base58check';
+import validate from 'bitcoin-address-validation';
 
 import {
 	ADDRESS_PREFIX,
@@ -545,7 +545,13 @@ export const checkErc20Contract = (scriptHex) => {
  */
 export const isBackupAddress = (hex) => {
 	try {
-		return !!base58check.decode(hex);
+		const validationData = validate(hex);
+		console.log('isBackupAddress', validationData);
+		return validationData &&
+			!validationData.bech32 &&
+			!validationData.testnet &&
+			validationData.address &&
+			(validationData.type === 'p2pkh' || validationData.type === 'p2sh');
 	} catch (e) {
 		return false;
 	}

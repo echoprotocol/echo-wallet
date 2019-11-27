@@ -996,50 +996,43 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue ? feeValue.value : null;
 };
 
-export const getBTCAdress = (address) => async (dispatch, getState) => {
-	const activeUserId = getState()
-		.global
-		.getIn(['activeUser', 'id']);
-
-	const feeAsset = {
-		id: '1.3.0',
-		precision: 8,
-		symbol: 'ECHO',
-	};
-
-	const options = {
-		fee: {
-			asset_id: feeAsset.id,
-		},
-		account: activeUserId,
-		backup_address: address,
-	};
-	let feeValue;
+export const generateBtcAddress = (address) => async (dispatch, getState) => {
 	try {
-		feeValue = await getOperationFee('sidechain_btc_create_address', options);
+
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const operation = 'sidechain_btc_create_address';
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			backup_address: address,
+		};
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			backup_address: address,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
 	} catch (error) {
 		return null;
 	}
-	options.fee.amount = feeValue;
-
-	const precision = new BN(10).pow(feeAsset.precision);
-	const showOptions = {
-		from: getState()
-			.global
-			.getIn(['activeUser', 'name']),
-		account: getState()
-			.global
-			.getIn(['activeUser', 'name']),
-		backup_address: address,
-		fee: `${new BN(options.fee.amount).div(precision)
-			.toString(10)} ${feeAsset.symbol}`,
-	};
-	dispatch(TransactionReducer.actions.setOperation({
-		operation: 'sidechain_btc_create_address',
-		options,
-		showOptions,
-	}));
-	return options.fee.amount !== null && options.fee.amount !== undefined;
 };
 
 export const generateEthAddress = () => async (dispatch, getState) => {

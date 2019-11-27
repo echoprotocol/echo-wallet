@@ -10,7 +10,7 @@ import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
-import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
+import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 
 class EchoNetwork extends React.Component {
 
@@ -186,7 +186,7 @@ class EchoNetwork extends React.Component {
 				<Button
 					className="main-btn"
 					content="Generate address"
-					onClick={() => this.props.openModal(MODAL_GENERATE_ADDRESS)}
+					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
 		) :
