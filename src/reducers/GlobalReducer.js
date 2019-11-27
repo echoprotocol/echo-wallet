@@ -20,6 +20,7 @@ const DEFAULT_FIELDS = Map({
 	networks: new List([]),
 	inited: false,
 	isConnected: false,
+	permissionLoading: false,
 });
 
 export default createModule({
