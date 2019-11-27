@@ -17,6 +17,7 @@ import {
 	FORM_COMMITTEE,
 	FORM_PASSWORD_CREATE,
 	FORM_FREEZE,
+	FORM_BTC_RECEIVE,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -80,6 +81,17 @@ const DEFAULT_FORM_FIELDS = {
 			asset: null,
 			error: null,
 		},
+		balance: {
+			assets: new List([]),
+		},
+		isAvailableBalance: false,
+	}),
+	[FORM_BTC_RECEIVE]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
 		balance: {
 			assets: new List([]),
 		},

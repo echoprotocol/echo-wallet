@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
@@ -63,7 +63,7 @@ class Bitcoin extends React.Component {
 
 				<AmountField
 					fees={[]}
-					form={FORM_TRANSFER}
+					form={FORM_BTC_RECEIVE}
 					tokens={{ size: 0 }}
 					amount={amount}
 					isAvailableBalance={false}
