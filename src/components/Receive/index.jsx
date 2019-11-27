@@ -6,6 +6,9 @@ import { Form, Tab, Button } from 'semantic-ui-react';
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
+import Ethereum from './Ethereum';
+
+import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 
 
 class Receive extends React.Component {
@@ -15,14 +18,11 @@ class Receive extends React.Component {
 		this.props.setIn('from', { value: accountName, checked: true });
 	}
 
-	componentWillUnmount() {
-		this.props.clearForm();
-	}
-
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, from, setIn, checkAccount, generateEthAddress, fullCurrentAccount,
+			getEthAddress, ethAddress, clearForm,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 		} = this.props;
 
@@ -36,7 +36,6 @@ class Receive extends React.Component {
 				/>,
 				render: () => (
 					<EchoNetwork
-						// for Amount field
 						fees={fees}
 						fee={fee}
 						assets={assets}
@@ -85,7 +84,8 @@ class Receive extends React.Component {
 						setIn={setIn}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
-					/>),
+					/>
+				),
 			},
 			{
 				menuItem: <Button
@@ -94,7 +94,18 @@ class Receive extends React.Component {
 					onClick={(e) => e.target.blur()}
 					content="Ethereum"
 				/>,
-				render: () => ('Ethereum'),
+				render: () => (
+					<Ethereum
+						amount={amount}
+						amountInput={this.props.amountInput}
+						setValue={this.props.setValue}
+						generateEthAddress={generateEthAddress}
+						getEthAddress={getEthAddress}
+						ethAddress={ethAddress}
+						fullCurrentAccount={fullCurrentAccount}
+						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
+					/>
+				),
 			},
 		];
 
@@ -140,6 +151,10 @@ Receive.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
 
 Receive.defaultProps = {

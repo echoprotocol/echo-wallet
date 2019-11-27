@@ -281,7 +281,7 @@ $thead-height: 46px;
         border-radius: 0;
 
         @media (min-width: 1060px) {
-            margin: $thead-height 0 0 0;
+            margin: 43px 0 0 0;
             height: calc(100vh - 244px)
         }
 
@@ -292,7 +292,7 @@ $thead-height: 46px;
             @media (min-width: 1060px) {
                 position: fixed;
                 overflow-x: hidden;
-                margin-top: -($thead-height);
+                margin-top: -43px;
 
             }
 

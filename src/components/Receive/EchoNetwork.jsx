@@ -7,6 +7,7 @@ import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
@@ -62,6 +63,20 @@ class EchoNetwork extends React.Component {
 		return address ? address.get('address') : null;
 	}
 
+	getQrData() {
+		const receiverValue = this.getReceiver();
+
+		if (!receiverValue) {
+			return { text: '', link: '' };
+		}
+
+		const text = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/qr-code.png`;
+
+		const link = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/widget`;
+
+		return { text, link };
+	}
+
 	formatCurrencyId() {
 		const { currency } = this.props;
 		if (!currency || !currency.id) {
@@ -82,7 +97,7 @@ class EchoNetwork extends React.Component {
 		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
 	}
 
-	renderAccontsList() {
+	renderAccountsList() {
 
 		const users = [{ name: this.props.accountName }];
 
@@ -188,6 +203,8 @@ class EchoNetwork extends React.Component {
 		const { receiver } = this.state;
 		const receiverValue = this.getReceiver();
 
+		const { text, link } = this.getQrData();
+
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
@@ -198,7 +215,7 @@ class EchoNetwork extends React.Component {
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
 						placeholder="Choose account or address"
-						options={this.renderAccontsList().concat(this.renderAddressesList())}
+						options={this.renderAccountsList().concat(this.renderAddressesList())}
 						search
 						text="Choose account or address"
 						searchQuery={receiver}
@@ -226,12 +243,7 @@ class EchoNetwork extends React.Component {
 					receive
 				/>
 				{
-					receiverValue ?
-						<QrCode
-							receiverValue={receiverValue}
-							currencyId={this.formatCurrencyId()}
-							amount={this.formatAmount()}
-						/> : null
+					receiverValue ? <QrCode text={text} link={link} /> : null
 				}
 			</div>
 		);
