@@ -92,6 +92,7 @@ class Wallet extends React.Component {
 							from={from}
 							clearForm={this.props.clearForm}
 							openModal={(value) => this.props.openModal(value)}
+							getAssetsBalances={this.props.getAssetsBalances}
 							generateEthAddress={generateEthAddress}
 							getEthAddress={getEthAddress}
 							ethAddress={ethAddress}
@@ -187,6 +188,7 @@ Wallet.propTypes = {
 	updateAccountAddresses: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 };

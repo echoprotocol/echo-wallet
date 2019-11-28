@@ -16,6 +16,7 @@ class Receive extends React.Component {
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
+		this.props.getAssetsBalances();
 	}
 
 	render() {
@@ -153,6 +154,7 @@ Receive.propTypes = {
 	updateAccountAddresses: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 };

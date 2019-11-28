@@ -4,7 +4,7 @@ import { List, Map } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
-import { disableToken, setAsset } from '../../actions/BalanceActions';
+import { disableToken, getAssetsBalances, setAsset } from '../../actions/BalanceActions';
 import { openModal } from '../../actions/ModalActions';
 import { clearForm, setFormError, setFormValue, setIn, setValue } from '../../actions/FormActions';
 import {
@@ -66,6 +66,7 @@ export default connect(
 		updateAccountAddresses: () => dispatch(updateAccountAddresses()),
 		generateEthAddress: () => dispatch(generateEthAddress()),
 		getEthAddress: () => dispatch(getEthAddress()),
+		getAssetsBalances: () => dispatch(getAssetsBalances()),
 	}),
 )(Wallet);
 
