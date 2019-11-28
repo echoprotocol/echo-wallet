@@ -66,6 +66,7 @@ class SmartContracts extends React.Component {
 							clearForm={this.props.clearForm}
 							changeContractCompiler={this.props.changeContractCompiler}
 							setValue={this.props.setValue}
+							resetCompiler={this.props.resetCompiler}
 						/>}
 					{createType === BYTECODE_MODE &&
 						<Bytecode
@@ -114,6 +115,7 @@ SmartContracts.propTypes = {
 	createContract: PropTypes.func.isRequired,
 	contractCompilerInit: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
+	resetCompiler: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {

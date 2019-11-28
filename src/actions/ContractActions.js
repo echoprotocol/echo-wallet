@@ -512,11 +512,20 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	return fee;
 };
 
+/**
+ *
+ * @param name
+ * @returns {Promise<Array<Asset>>}
+ */
 export const getAssetsList = async (name) => {
 	const list = await echo.api.listAssets(name, 15);
 	return list;
 };
 
+/**
+ *
+ * @returns {Function}
+ */
 export const contractCompilerInit = () => async (dispatch) => {
 	const list = await getSolcList();
 	list.builds = list.builds.filter(({ version }) =>
@@ -534,6 +543,21 @@ export const contractCompilerInit = () => async (dispatch) => {
 	await loadScript(`${SOLC_BIN_URL}${solcLatestRelease}`); // eslint-disable-line no-undef
 };
 
+/**
+ *
+ * @returns {Function}
+ */
+export const resetCompiler = () => (dispatch) => {
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
+	dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
+};
+
+/**
+ *
+ * @returns {Function}
+ */
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
@@ -561,22 +585,26 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 		let contracts = new Map({});
 		contracts = contracts.withMutations((contractsMap) => {
 			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
-				contractsMap.setIn([name, 'abi'], contract.abi);
+				contractsMap.setIn([name, 'abi'], JSON.stringify(contract.abi));
 				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
 			});
 		});
 
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', Object.values(output.contracts[filename])[0].abi));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', Object.keys(output.contracts[filename])[0]));
 		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', contracts));
 	} catch (err) {
+		dispatch(resetCompiler());
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', 'Invalid contract code'));
-		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
 	}
 };
 
+/**
+ *
+ * @param version
+ * @returns {Function}
+ */
 export const changeContractCompiler = (version) => async (dispatch, getState) => {
 	const buildsList = getState().form.getIn([FORM_CREATE_CONTRACT, 'compilersList', 'builds']);
 	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', version));

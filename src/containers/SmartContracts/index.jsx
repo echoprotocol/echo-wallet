@@ -8,6 +8,7 @@ import {
 	contractCodeCompile,
 	contractCompilerInit,
 	changeContractCompiler,
+	resetCompiler,
 } from '../../actions/ContractActions';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
@@ -39,6 +40,7 @@ export default connect(
 		createContract: () => dispatch(createContract()),
 		contractCompilerInit: () => dispatch(contractCompilerInit()),
 		changeContractCompiler: (version) => dispatch(changeContractCompiler(version)),
+		resetCompiler: () => dispatch(resetCompiler()),
 	}),
 )(SmartContracts);
 

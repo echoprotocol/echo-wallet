@@ -889,7 +889,9 @@ export const freezeBalance = () => async (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const createContract = () => async (dispatch, getState) => {
-	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
+	const {
+		bytecode, name, abi, supportedAsset, ETHAccuracy,
+	} = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -906,7 +908,7 @@ export const createContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value) {
 		const nameError = validateContractName(name.value);
 		const abiError = validateAbi(abi.value);
 
@@ -921,15 +923,22 @@ export const createContract = () => async (dispatch, getState) => {
 		}
 	}
 
+	let supportedAssetId = '';
+	if (supportedAsset) {
+		const assets = await echo.api.lookupAssetSymbols([supportedAsset]);
+		const asset = assets.find((a) => a.symbol === supportedAsset);
+		supportedAssetId = asset.id;
+	}
+
 	dispatch(resetTransaction());
 
 	const options = {
 		registrar: activeUserId,
-		value: { amount: 0, asset_id: '1.3.0' },
-		fee: { amount: 0, asset_id: '1.3.0' },
+		value: { amount: 0, asset_id: ECHO_ASSET_ID },
+		fee: { amount: 0, asset_id: ECHO_ASSET_ID },
 		code: bytecodeValue,
-		eth_accuracy: true,
-		supported_asset_id: '1.3.0',
+		eth_accuracy: ETHAccuracy,
+		supported_asset_id: supportedAssetId || ECHO_ASSET_ID,
 	};
 
 	try {

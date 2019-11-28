@@ -30,11 +30,15 @@ class SourceCode extends React.Component {
 		const { timeout } = this.state;
 		const { form } = this.props;
 
-		if (!value || form.get('code').value === value) {
+		this.props.setFormValue('code', value);
+
+		if (!value) {
+			this.props.resetCompiler();
 			return;
 		}
-
-		this.props.setFormValue('code', value);
+		if (form.get('code').value === value) {
+			return;
+		}
 
 		if (value) {
 			setTimeout(() => {
@@ -174,6 +178,7 @@ SourceCode.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	resetCompiler: PropTypes.func.isRequired,
 };
 
 SourceCode.defaultProps = {};
