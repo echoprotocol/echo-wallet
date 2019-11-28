@@ -16,6 +16,7 @@ import {
 	PERMISSIONS_PATH,
 	CREATE_PASSWORD_PATH,
 	FROZEN_FUNDS_PATH,
+	SMART_CONTRACTS_PATH,
 } from './constants/RouterConstants';
 
 import App from './containers/App';
@@ -33,13 +34,15 @@ import Networks from './containers/Networks';
 import Permissions from './containers/Permissions';
 import Password from './containers/Password';
 import FrozenFunds from './containers/FrozenFunds';
+import SmartContracts from './containers/SmartContracts';
+
 
 export default class Routes extends React.Component {
 
 	render() {
 		return (
 			<App>
-				<div>
+				<React.Fragment>
 					<Route exact path={INDEX_PATH} component={Wallet} />
 					<Route exact path={SIGN_UP_PATH} component={SignUp} />
 					<Route exact path={SIGN_IN_PATH} component={SignIn} />
@@ -47,6 +50,7 @@ export default class Routes extends React.Component {
 					<Route exact path={ADD_CONTRACT_PATH} component={AddContract} />
 					<Route exact path={CREATE_CONTRACT_PATH} component={CreateContract} />
 					<Route exact path={CONTRACT_LIST_PATH} component={ContractList} />
+					<Route exact path={SMART_CONTRACTS_PATH} component={SmartContracts} />
 					<Route exact path={VIEW_CONTRACT_PATH} component={ViewContract} />
 					<Route exact path={VIEW_TRANSACTION_PATH} component={ViewTransaction} />
 					<Route exact path={CALL_CONTRACT_PATH} component={CallContract} />
@@ -54,7 +58,7 @@ export default class Routes extends React.Component {
 					<Route exact path={PERMISSIONS_PATH} component={Permissions} />
 					<Route exact path={CREATE_PASSWORD_PATH} component={Password} />
 					<Route exact path={FROZEN_FUNDS_PATH} component={FrozenFunds} />
-				</div>
+				</React.Fragment>
 			</App>
 		);
 	}

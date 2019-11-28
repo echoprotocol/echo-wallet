@@ -20,6 +20,8 @@ import {
 	MODAL_BACKUP,
 	MODAL_CONFIRM_EDITING_OF_PERMISSIONS,
 	PROPOSAL_ADD_WIF,
+	MODAL_GENERATE_ECHO_ADDRESS,
+	MODAL_GENERATE_BTC_ADDRESS,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -54,6 +56,9 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_BACKUP]: Map({}),
 	[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: Map({}),
 	[PROPOSAL_ADD_WIF]: Map({}),
+	[MODAL_GENERATE_ECHO_ADDRESS]: Map({}),
+	[MODAL_GENERATE_BTC_ADDRESS]: Map({}),
+
 };
 
 export default createModule({
@@ -83,18 +88,21 @@ export default createModule({
 		[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: _
 			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]),
 		[PROPOSAL_ADD_WIF]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[PROPOSAL_ADD_WIF]),
+		[MODAL_GENERATE_ECHO_ADDRESS]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ECHO_ADDRESS]),
+		[MODAL_GENERATE_BTC_ADDRESS]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_BTC_ADDRESS]),
 	}),
 	transformations: {
 		open: {
+
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-
 				if (payload.params) {
 					Object.entries(payload.params).forEach(([field, value]) => {
 						state = state.setIn([payload.type, field], value);
 					});
 				}
-
 				return state;
 			},
 		},

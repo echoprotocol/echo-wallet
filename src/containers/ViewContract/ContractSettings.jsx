@@ -97,9 +97,12 @@ class ContractSettings extends React.Component {
 			<Button
 				className="value"
 				onFocus={() => this.onOpen()}
-				content={contractName}
-				icon="edit"
-			/>
+			>
+				<React.Fragment>
+					{contractName}
+					<span className="icon-edit" />
+				</React.Fragment>
+			</Button >
 
 		);
 	}
@@ -160,15 +163,15 @@ class ContractSettings extends React.Component {
 						<li className="name">
 							<span className="label">Name:</span>
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
-							{/* {this.renderChangeName()} */}
 						</li>
 						<li className="act">
 							<Button
-								icon="trash"
-								className="transparent"
-								content="remove"
+								className="remove-text-btn"
 								onClick={() => this.removeContract(contractName)}
-							/>
+							>
+								<span className="icon-remove" />
+								Remove
+							</Button>
 						</li>
 					</ul>
 

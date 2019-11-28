@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: $main-сolor;
+        background-color: $main-color;
         color: #fff;
         height: 30px;
         padding: 0 18px;
@@ -35,7 +35,7 @@
         cursor: pointer;
 
         &:focus {
-            border-radius: 0.28571429rem;
+            border-radius: 4px;
             @include on-focus(4px);
         }
 
@@ -199,7 +199,7 @@
                 margin-left: 10px;
             }
 
-            &>.item {
+            & > .item {
                 padding: 0;
                 color: #6d7178;
                 font-size: 13px;
@@ -208,7 +208,7 @@
                     transition: background-color $speed;
 
                     &:hover {
-                        background-color: $main-сolor;
+                        background-color: $main-color;
 
                         .name {
                             color: #fff;
@@ -242,7 +242,7 @@
 
                 .name {
                     @include cut-text;
-                    color: $main-сolor;
+                    color: $main-color;
                     max-width: 180px;
                     color: #3B3B3B;
                     transition: color $speed;
@@ -303,10 +303,10 @@
                     font-family: proximanovaSemibold;
                     font-size: .9rem;
                     color: rgb(211, 212, 214);
-                    transition: color $speed;
+                    transition: color $speed, background-color $speed;
 
                     &.selected {
-                        color: $inut-hover;
+                        color: $border-hover;
                         background-color: transparent;
 
                         .text {
@@ -327,11 +327,12 @@
                     }
 
                     &:hover {
-                        color: $inut-hover;
+						color: #fff;
+						background-color: $main-color;
                     }
 
                     &:focus {
-                        color: $inut-hover;
+                        color: $border-hover;
                     }
 
                     &:before {
@@ -366,11 +367,12 @@
                     color: $black;
                     transition: background-color $speed, color $speed;
                     padding: 7px 18px 7px 16px;
-
-                    &-wrap {
-                        display: flex;
-                    }
-                }
+				}
+				
+				.user-item-wrap {
+					display: flex;
+					width: 100%;
+				}
 
                 .logout-user-btn {
                     overflow: hidden;
@@ -418,8 +420,8 @@
             color: $link-gray;
         }
 
-        &>.text {
-            color: $main-сolor;
+        & > .text {
+            color: $main-color;
             font-family: proximanovaSemibold;
             max-width: 296px;
 			@include cut-text;

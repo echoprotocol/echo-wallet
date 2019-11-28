@@ -1,0 +1,74 @@
+.editor-label {
+	@include label();
+	margin-bottom: 4px;
+
+}
+
+.editor {
+	border: 1px solid #DDDDDD;
+	transition: border-color $speed;
+	
+	&:hover {
+		border-color: $border-hover !important;
+	}
+	.ace_content {
+		padding-bottom: 20px;
+	}
+	&.ace_focus {
+		@include on-focus(4px);
+	}
+	.ace_editor {
+		font-family: source;
+	}
+	.ace_gutter {
+		background-color: rgba(#DDDDDD, 0.1);
+		border-right: 1px solid #DDDDDD;
+	}
+	.ace_scroller {
+		padding: 8px 0 0;
+	}
+	.ace_gutter {
+		padding: 8px 0 0;
+	}
+	.ace_marker-layer .ace_selection,
+	.ace_selected-word {
+		margin-left: 16px;
+	}
+	.ace_line,
+	.ace_layer {
+		padding: 0 0 0 16px;
+	}
+	.ace_scrollbar-v {
+		bottom: 0 !important;
+	}
+	.ace_scrollbar-h  {
+		display: none;
+	}
+	.ace_gutter-cell {
+		padding: 0 9px;
+		text-align: center;
+		line-height: 22px;
+		color: rgba(#3B3B3B, 0.5);
+		font-family: proxima;
+	}
+	.ace_gutter-active-line,
+	.ace_marker-layer .ace_active-line{
+		background-color: rgba(#DDDDDD, 0.1);
+	}
+	.ace_bracket {
+		display: none;
+	}
+	.ace_fold-widget {
+		display: none !important;
+	}
+	.ace_scroller.ace_scroll-left {
+		box-shadow: none;
+	}
+}
+
+
+.error {
+	.editor {
+		border-color: #ff4848 !important;
+	}
+}
