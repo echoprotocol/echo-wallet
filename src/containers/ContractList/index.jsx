@@ -7,10 +7,10 @@ import classnames from 'classnames';
 import history from '../../history';
 
 import {
-	CREATE_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
 	VIEW_CONTRACT_PATH,
 	CALL_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 } from '../../constants/RouterConstants';
 import { CONTRACT_ID_PREFIX, SORT_CONTRACTS } from '../../constants/GlobalConstants';
 
@@ -124,7 +124,7 @@ class ContractList extends React.Component {
 					<Button
 						content="create new contract"
 						className="main-btn"
-						onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)}
+						onClick={(e) => this.onLink(SMART_CONTRACTS_PATH, e)}
 					/>
 					<Button
 						content="call contract"
@@ -152,7 +152,7 @@ class ContractList extends React.Component {
 							content="create new contract"
 							className="main-btn"
 							basic
-							onClick={(e) => this.onLink(CREATE_CONTRACT_PATH, e)}
+							onClick={(e) => this.onLink(SMART_CONTRACTS_PATH, e)}
 						/>
 						<Button
 							content="call contract"

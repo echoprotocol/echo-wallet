@@ -7,8 +7,9 @@ import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
+import ModalCreateBtcAddress from '../Modals/ModalCreateBtcAddress';
 
-import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
+import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 
 class Bitcoin extends React.Component {
 
@@ -94,7 +95,7 @@ class Bitcoin extends React.Component {
 	renderGenerateAdressProcess() {
 		const { btcAddress } = this.props;
 
-		if (btcAddress && !btcAddress.getIn(['is_relevant'])) {
+		if (btcAddress && btcAddress.size && !btcAddress.getIn(['is_relevant'])) {
 			return (
 				<React.Fragment>
 					<h2 className="payment-header t-center">
@@ -110,6 +111,7 @@ class Bitcoin extends React.Component {
 
 		return (
 			<React.Fragment>
+				<ModalCreateBtcAddress />
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
 				</h2>
@@ -120,7 +122,7 @@ class Bitcoin extends React.Component {
 				<Button
 					className="main-btn"
 					content="Generate address"
-					onClick={() => this.props.openModal(MODAL_GENERATE_ADDRESS)}
+					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
 		);

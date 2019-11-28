@@ -95,7 +95,7 @@
 		transition: color $speed;
 	}
 
-	&>.menu {
+	& > .menu {
 		padding-top: 6px;
 		border-radius: 0;
 		width: 100%;
@@ -282,5 +282,13 @@
 			}
 		}
 
+	}
+
+	.icon-remove {
+		box-shadow: none;
+		background-color: transparent;
+		border: 0;
+		color: #bcbcbc;
+		transition: color $speed, background-color $speed;
 	}
 }

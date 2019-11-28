@@ -5,44 +5,46 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { closeModal } from '../../actions/ModalActions';
+import { closeModal, setError } from '../../actions/ModalActions';
 
-import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
-import { getBTCAdress } from '../../actions/TransactionActions';
+import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
+import { generateEchoAddress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 
-class ModalGenerateAddress extends React.Component {
+class ModalCreateEchoAddress extends React.Component {
 
 	constructor(props) {
 		super(props);
-
 		this.DEFAULT_STATE = {
-			adress: '',
+			label: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
 	}
 
-	onGenerateBTCAdress() {
-		this.props.getBTCAdress(this.state.adress);
+	onGenerateEchoAdress(submit) {
+		this.props.closeModal();
+		submit();
 	}
+
 	onChange(e) {
-		this.setState({ adress: e.target.value });
+		this.props.setError(null);
+		this.setState({ label: e.target.value });
 	}
+
 	onClose(e) {
 		e.preventDefault();
 		this.props.closeModal();
 	}
 
-
 	render() {
 		const {
-			show,
+			show, error,
 		} = this.props;
 
 		return (
 			<TransactionScenario
-				handleTransaction={() => this.props.getBTCAdress(this.state.adress)}
+				handleTransaction={() => this.props.generateEchoAddress(this.state.label)}
 			>
 				{
 					(submit) => (
@@ -57,13 +59,13 @@ class ModalGenerateAddress extends React.Component {
 							<div className="modal-header">
 								<h3 className="modal-header-title">Create address name</h3>
 							</div>
-							<div className="modal-body">
+							<form className="modal-body">
 								<div className="info-text">
 									You can use several addresses referring to one account for different targets.
 									Please create address name for a new one.
 								</div>
 
-								<Form.Field className={classnames('error-wrap', { error: false })}>
+								<Form.Field className={classnames('error-wrap', { error: !!error })}>
 									<label htmlFor="address">Address name</label>
 									<input
 										type="text"
@@ -76,23 +78,21 @@ class ModalGenerateAddress extends React.Component {
 										false && <span className="error-message">some error</span>
 									}
 									<span className="warning-message">
-										Warning: Please note, address names are
-										visible for blockchain network participants.
+										Warning: Please note, address names are visible
+										for blockchain network participants.
 									</span>
 								</Form.Field>
 								<div className="form-panel">
 									<Button
-										basic
+										type="submit"
 										className="main-btn countdown-wrap"
 										content="Generate address"
-										onClick={() => {
-											this.props.closeModal();
-											submit();
-										}}
+										onClick={() => this.onGenerateEchoAdress(submit)}
 									/>
 								</div>
-							</div>
-						</Modal>)
+							</form>
+						</Modal>
+					)
 				}
 			</TransactionScenario>
 		);
@@ -100,22 +100,27 @@ class ModalGenerateAddress extends React.Component {
 
 }
 
-ModalGenerateAddress.propTypes = {
+ModalCreateEchoAddress.propTypes = {
 	show: PropTypes.bool,
+	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
-	getBTCAdress: PropTypes.func.isRequired,
+	generateEchoAddress: PropTypes.func.isRequired,
+	setError: PropTypes.func.isRequired,
 };
 
-ModalGenerateAddress.defaultProps = {
+ModalCreateEchoAddress.defaultProps = {
 	show: false,
+	error: null,
 };
 
 export default connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_GENERATE_ADDRESS, 'show']),
+		show: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'show']),
+		error: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'error']),
 	}),
 	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ADDRESS)),
-		getBTCAdress: (adress) => dispatch(getBTCAdress(adress)),
+		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ECHO_ADDRESS)),
+		generateEchoAddress: (label) => dispatch(generateEchoAddress(label)),
+		setError: (value) => dispatch(setError(MODAL_GENERATE_ECHO_ADDRESS, value)),
 	}),
-)(ModalGenerateAddress);
+)(ModalCreateEchoAddress);

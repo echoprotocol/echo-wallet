@@ -6,21 +6,23 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 class QrCode extends React.PureComponent {
 
 	render() {
-		const { link } = this.props;
-
+		const { text, link } = this.props;
+		console.log('at QrCode');
+		console.log(text);
+		console.log(link);
 		return (
 			<div className="qr-section">
 				<div className="qr-wrap">
 					<QRCode
 						bgColor="#fff"
-						value={`${link}`}
+						value={link || text}
 						size={134}
 					/>
 				</div>
 				<div className="qr-info-wrap">
 					<div className="qr-link">
-						<a href="" target="_blank">{link}</a>
-						<CopyToClipboard text={link}>
+						<a href="" target="_blank">{link || text}</a>
+						<CopyToClipboard text={link || text}>
 							<button className="link-copy-btn icon-icopy-tiny" />
 						</CopyToClipboard>
 					</div>
@@ -36,11 +38,13 @@ class QrCode extends React.PureComponent {
 }
 
 QrCode.propTypes = {
+	text: PropTypes.string,
 	link: PropTypes.string,
 };
 
 QrCode.defaultProps = {
-	link: ' - ',
+	text: '',
+	link: '',
 };
 
 export default QrCode;

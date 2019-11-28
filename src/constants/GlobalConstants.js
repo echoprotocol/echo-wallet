@@ -111,7 +111,7 @@ export const EXPLORER_URL = {
 	testnet: 'https://explorer.echo.org',
 };
 
-export const BRIDGE_RECEIVE_URL = 'https://649-bridge-landing.pixelplex-test.by/receive/';
+export const BRIDGE_RECEIVE_URL = 'https://echo-bridge.io/receive/';
 
 export const TIME_TOAST_ANIMATION = 5000;
 export const DELAY_REMOVE_CONTRACT = 1000;

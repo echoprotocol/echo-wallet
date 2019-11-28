@@ -53,7 +53,7 @@ class Permissions extends React.Component {
 				active: {},
 				echoRand: {},
 			},
-		};
+		}
 	}
 
 	componentWillMount() {
@@ -105,25 +105,81 @@ class Permissions extends React.Component {
 
 	async saveWifs(password) {
         const { form } = this.props;
-        const { privateKeys } = this.state;
+        const { privateKeys, basePrivateKeys } = this.state;
         const account = this.props.account.toJS();
-        const newActiveWifs = Object.entries(privateKeys.active)
-            .filter(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']);
-				return publicKey && publicKey.value && wif && wif.value && !wif.error
-			})
+
+		let activePrivateKeysEntries = Object.entries(privateKeys.active);
+		let echoRandPrivateKeysEntries = Object.entries(privateKeys.echoRand);
+
+		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
+		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
+
+        const newActiveWifs = activePrivateKeysEntries
             .map(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
-            })
-        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+				const publicKey = form.getIn(['active', 'keys', index, 'key']);
+
+				if (wif && wif.error) {
+					return null;
+				}
+
+				if (publicKey && publicKey.value) {
+					if (!wif || !wif.value) {
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							if (
+								echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.filter(([indexA]) => indexA !== publicKey.value);
+							}
+						} else {
+							const echoRandPrivateKeyData = echoRandPrivateKeysEntries.find(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							if (echoRandPrivateKeyData) {
+								const [, echoRandPrivateKeyWif] = echoRandPrivateKeyData;
+								return { publicKey: publicKey.value, wif: echoRandPrivateKeyWif.value, type: 'active' };
+							}
+						}
+					} else {
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								return null;
+							}
+						} else {
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((privateKeyEntryItem) => {
+									const [indexA] = privateKeyEntryItem;
+
+									if (indexA === publicKey.value) {
+										return [indexA, { value: wif.value }];
+									}
+
+									return privateKeyEntryItem;
+								});
+							}
+						}
+
+						return { publicKey: publicKey.value, wif: wif.value, type: 'active' };
+					}
+				}
+
+				return null;
+			})
+            .filter((activeKeyItem) => activeKeyItem);
+
+        const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
+				
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
+                return { publicKey, wif: wif.value, type: 'echoRand' };
             })
 
         const wifs = [...newActiveWifs, ...newEchoRandWifs];
@@ -480,7 +536,7 @@ class Permissions extends React.Component {
 	render() {
 		const { showLoader } = this.props;
 		return (
-			showLoader ? 
+			showLoader ?
 			<Loading text="Apllying changes..." /> :
 			<div className="permissions-wrap">
 				<div className="sub-header">
@@ -540,7 +596,7 @@ export default connect(
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
-			showLoader: state.table.getIn([PERMISSION_TABLE, 'loading']),
+			showLoader: state.global.get('permissionLoading'),
 		};
 	},
 	(dispatch) => ({
