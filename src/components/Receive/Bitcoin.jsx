@@ -233,9 +233,9 @@ class EchoNetwork extends React.Component {
 
 		return (
 			<div className="payment-wrap" >
-				{/* {this.renderGenerateAdressProcess()} */}
+				{this.renderGenerateAdressProcess()}
 
-				{this.renderPayment()}
+				{/* {this.renderPayment()} */}
 			</div>
 		);
 	}

@@ -6,40 +6,36 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { closeModal, setError } from '../../actions/ModalActions';
-import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
-import { generateBtcAddress } from '../../actions/TransactionActions';
-import TransactionScenario from '../../containers/TransactionScenario';
-import { isBackupAddress } from '../../helpers/ValidateHelper';
 
-class ModalCreateBtcAddress extends React.Component {
+import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
+import { generateEchoAddress } from '../../actions/TransactionActions';
+import TransactionScenario from '../../containers/TransactionScenario';
+
+class ModalCreateEchoAddress extends React.Component {
 
 	constructor(props) {
 		super(props);
-
 		this.DEFAULT_STATE = {
-			address: '',
+			label: '',
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
 	}
 
-	onGenerateBtcAddress(submit) {
-		if (!isBackupAddress(this.state.address)) {
-			this.props.setError('Wrong backup address');
-			return;
-		}
+	onGenerateEchoAdress(submit) {
 		this.props.closeModal();
 		submit();
 	}
+
 	onChange(e) {
 		this.props.setError(null);
-		this.setState({ address: e.target.value });
+		this.setState({ label: e.target.value });
 	}
+
 	onClose(e) {
 		e.preventDefault();
 		this.props.closeModal();
 	}
-
 
 	render() {
 		const {
@@ -48,7 +44,7 @@ class ModalCreateBtcAddress extends React.Component {
 
 		return (
 			<TransactionScenario
-				handleTransaction={() => this.props.generateBtcAddress(this.state.address)}
+				handleTransaction={() => this.props.generateEchoAddress(this.state.label)}
 			>
 				{
 					(submit) => (
@@ -61,44 +57,42 @@ class ModalCreateBtcAddress extends React.Component {
 								tabIndex="0"
 							/>
 							<div className="modal-header">
-								<h3 className="modal-header-title">Create BTC address</h3>
+								<h3 className="modal-header-title">Create address name</h3>
 							</div>
-							<div className="modal-body">
+							<form className="modal-body">
 								<div className="info-text">
-									Create your BTC address where funds will be sent.
-									Please set your backup BTC address to be able to withhold
-									an operation during the first 24 hours after the transaction.
+									You can use several addresses referring to one account for different targets.
+									Please create address name for a new one.
 								</div>
 
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="address">Backup address</label>
+									<label htmlFor="address">Address name</label>
 									<input
 										type="text"
-										placeholder="Backup address"
+										placeholder="Address name"
 										name="address"
 										onChange={(e) => this.onChange(e)}
 										autoFocus
 									/>
 									{
-										<span className="error-message">{error}</span>
+										false && <span className="error-message">some error</span>
 									}
 									<span className="warning-message">
-										Warning: Please note, address is
-										visible for blockchain network participants.
+										Warning: Please note, address names are visible
+										for blockchain network participants.
 									</span>
 								</Form.Field>
 								<div className="form-panel">
 									<Button
-										basic
+										type="submit"
 										className="main-btn countdown-wrap"
 										content="Generate address"
-										onClick={() => {
-											this.onGenerateBtcAddress(submit);
-										}}
+										onClick={() => this.onGenerateEchoAdress(submit)}
 									/>
 								</div>
-							</div>
-						</Modal>)
+							</form>
+						</Modal>
+					)
 				}
 			</TransactionScenario>
 		);
@@ -106,27 +100,27 @@ class ModalCreateBtcAddress extends React.Component {
 
 }
 
-ModalCreateBtcAddress.propTypes = {
+ModalCreateEchoAddress.propTypes = {
 	show: PropTypes.bool,
 	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
-	generateBtcAddress: PropTypes.func.isRequired,
+	generateEchoAddress: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
 };
 
-ModalCreateBtcAddress.defaultProps = {
+ModalCreateEchoAddress.defaultProps = {
 	show: false,
 	error: null,
 };
 
 export default connect(
 	(state) => ({
-		show: state.modal.getIn([MODAL_GENERATE_BTC_ADDRESS, 'show']),
-		error: state.modal.getIn([MODAL_GENERATE_BTC_ADDRESS, 'error']),
+		show: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'show']),
+		error: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'error']),
 	}),
 	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_GENERATE_BTC_ADDRESS)),
-		generateBtcAddress: (address) => dispatch(generateBtcAddress(address)),
-		setError: (value) => dispatch(setError(MODAL_GENERATE_BTC_ADDRESS, value)),
+		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ECHO_ADDRESS)),
+		generateEchoAddress: (label) => dispatch(generateEchoAddress(label)),
+		setError: (value) => dispatch(setError(MODAL_GENERATE_ECHO_ADDRESS, value)),
 	}),
-)(ModalCreateBtcAddress);
+)(ModalCreateEchoAddress);

@@ -53,6 +53,7 @@ class Receive extends React.Component {
 						setDefaultAsset={this.props.setDefaultAsset}
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
+						openModal={(value) => this.props.openModal(value)}
 						updateAccountAddresses={this.props.updateAccountAddresses}
 					/>),
 			},

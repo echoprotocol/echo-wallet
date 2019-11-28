@@ -7,11 +7,13 @@ import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
+import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
 
 
 class EchoNetwork extends React.Component {
@@ -163,7 +165,7 @@ class EchoNetwork extends React.Component {
 			value: 'generate-address',
 			key: 'generate-address',
 			content: 'Generate new address',
-			onClick: () => {},
+			onClick: () => this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS),
 			selected: false,
 		}];
 
@@ -208,6 +210,8 @@ class EchoNetwork extends React.Component {
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+				<ModalCreateEchoAddress />
+
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
@@ -269,6 +273,7 @@ EchoNetwork.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
 };
 
