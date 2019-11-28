@@ -7,9 +7,7 @@ class QrCode extends React.PureComponent {
 
 	render() {
 		const { text, link } = this.props;
-		console.log('at QrCode');
-		console.log(text);
-		console.log(link);
+
 		return (
 			<div className="qr-section">
 				<div className="qr-wrap">
