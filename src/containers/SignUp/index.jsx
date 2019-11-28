@@ -11,6 +11,7 @@ import AuthorizationScenario from '../AuthorizationScenario';
 import FormComponent from './FormComponent';
 import CheckComponent from './CheckComponent';
 import ButtonComponent from './ButtonComponent';
+import AdditionalOptions from './AdditionalOptions';
 
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
@@ -72,7 +73,12 @@ class SignUp extends React.Component {
 								{
 									isAddAccount ?
 										<div className="form-info">
-											<button type="button" className="back-link" onClick={(e) => this.onCancel(e)} disabled={loading}>
+											<button
+												type="button"
+												className="back-link"
+												onClick={(e) => this.onCancel(e)}
+												disabled={loading}
+											>
 												<span className="icon-back" />
 												back
 											</button>
@@ -90,6 +96,9 @@ class SignUp extends React.Component {
 									setFormValue={this.props.setFormValue}
 									clearForm={this.props.clearForm}
 								/>
+
+								<AdditionalOptions loading={loading} />
+
 								<CheckComponent
 									loading={loading}
 									setValue={this.props.setValue}

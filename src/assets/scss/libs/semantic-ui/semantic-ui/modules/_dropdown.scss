@@ -507,10 +507,7 @@ select.dropdown {
 }
 
 /* Active Upward */
-.simple.upward.active.dropdown,
-.simple.upward.dropdown:hover {
-  border-radius: 4px 4px 0 0;
-}
+
 .upward.dropdown.button:not(.pointing):not(.floating).active {
   border-radius: 4px 4px 0 0;
 }
@@ -548,10 +545,6 @@ select.dropdown {
   -webkit-box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.08);
           box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.08);
 }
-
-/*--------------
-     Simple
----------------*/
 
 
 /*  Selection Menu */
@@ -627,61 +620,6 @@ select.dropdown {
 }
 
 /*--------------
-     Simple
----------------*/
-
-
-/* Displays without javascript */
-.simple.dropdown .menu:before,
-.simple.dropdown .menu:after {
-  display: none;
-}
-.simple.dropdown .menu {
-  position: absolute;
-  display: block;
-  overflow: hidden;
-  top: -9999px;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  -webkit-transition: opacity $speed ease;
-  transition: opacity $speed ease;
-}
-.simple.active.dropdown,
-.simple.dropdown:hover {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.simple.active.dropdown > .menu,
-.simple.dropdown:hover > .menu {
-  overflow: visible;
-  width: auto;
-  height: auto;
-  top: 100%;
-  opacity: 1;
-}
-.simple.dropdown > .menu > .item:active > .menu,
-.simple.dropdown:hover > .menu > .item:hover > .menu {
-  overflow: visible;
-  width: auto;
-  height: auto;
-  top: 0%;
-  left: 100%;
-  opacity: 1;
-}
-.simple.disabled.dropdown:hover .menu {
-  display: none;
-  height: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-/* Visible */
-.simple.visible.dropdown > .menu {
-  display: block;
-}
-
-/*--------------
       Fluid
 ---------------*/
 
@@ -710,10 +648,6 @@ select.dropdown {
   border-radius: 4px;
 }
 
-/*******************************
-         Theme Overrides
-*******************************/
-
 
 /* Dropdown Carets */
 @font-face {
@@ -736,7 +670,8 @@ select.dropdown {
 .dropdown > .dropdown.icon {
   width: auto;
 }
-.dropdown > .dropdown.icon:before {
+
+.dropdown.icon:before {
     font-family: 'icomoon' !important;
     speak: none;
     font-style: normal;
