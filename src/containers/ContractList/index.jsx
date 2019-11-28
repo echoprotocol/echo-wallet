@@ -31,7 +31,7 @@ class ContractList extends React.Component {
 		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return Object.entries(contracts)
-			.sort(([name1, { id: id1 }], [name2, { id: id2 }]) => {
+			.sort(([id1, { name: name1 }], [id2, { name: name2 }]) => {
 
 				const t1 = (sortType === 'id' ? id1.split(`${CONTRACT_ID_PREFIX}.`)[1] : name1) || '';
 				const t2 = (sortType === 'id' ? id2.split(`${CONTRACT_ID_PREFIX}.`)[1] : name2) || '';
@@ -39,17 +39,17 @@ class ContractList extends React.Component {
 			});
 	}
 
-	renderRow([name, { id, disabled }]) {
+	renderRow([id, { name, disabled }]) {
 		if (disabled) {
 			return null;
 		}
-
+		console.log(id, name);
 		return (
 			<Table.Row
 				className="pointer"
 				key={id}
 				role="button"
-				onClick={(e) => this.onLink(VIEW_CONTRACT_PATH.replace(/:name/, name), e)}
+				onClick={(e) => this.onLink(VIEW_CONTRACT_PATH.replace(/:id/, id), e)}
 			>
 				<Table.Cell>
 					<span className="ellips">

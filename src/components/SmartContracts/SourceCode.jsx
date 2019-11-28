@@ -15,6 +15,10 @@ class SourceCode extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		this.props.setDefaultAsset();
+	}
+
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
@@ -179,6 +183,7 @@ SourceCode.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
 };
 
 SourceCode.defaultProps = {};

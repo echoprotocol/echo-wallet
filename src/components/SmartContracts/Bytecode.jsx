@@ -10,6 +10,10 @@ class Bytecode extends React.Component {
 		this.state = {};
 	}
 
+	componentDidMount() {
+		this.props.setDefaultAsset();
+	}
+
 	onChange(e) {
 		const field = e.target.name;
 		const { value } = e.target;
@@ -77,6 +81,7 @@ class Bytecode extends React.Component {
 Bytecode.propTypes = {
 	form: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setDefaultAsset: PropTypes.func.isRequired,
 };
 
 Bytecode.defaultProps = {};

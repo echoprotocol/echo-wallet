@@ -67,11 +67,13 @@ class SmartContracts extends React.Component {
 							changeContractCompiler={this.props.changeContractCompiler}
 							setValue={this.props.setValue}
 							resetCompiler={this.props.resetCompiler}
+							setDefaultAsset={this.props.setDefaultAsset}
 						/>}
 					{createType === BYTECODE_MODE &&
 						<Bytecode
 							form={form}
 							setFormValue={this.props.setFormValue}
+							setDefaultAsset={this.props.setDefaultAsset}
 						/>}
 				</div>
 				<ContractBar

@@ -45,7 +45,7 @@ const secondaryContractPaths = [
 	ADD_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
 	CALL_CONTRACT_PATH,
-	VIEW_CONTRACT_PATH.replace('/:name', ''),
+	VIEW_CONTRACT_PATH.replace('/:id', ''),
 	FROZEN_FUNDS_PATH,
 ];
 
