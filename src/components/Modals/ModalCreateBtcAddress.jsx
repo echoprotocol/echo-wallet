@@ -71,10 +71,10 @@ class ModalCreateBtcAddress extends React.Component {
 								</div>
 
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="address">Address name</label>
+									<label htmlFor="address">Backup address</label>
 									<input
 										type="text"
-										placeholder="Address name"
+										placeholder="Backup address"
 										name="address"
 										onChange={(e) => this.onChange(e)}
 										autoFocus
