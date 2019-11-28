@@ -45,11 +45,13 @@ class SmartContracts extends React.Component {
 							className={classnames('radio', { checked: createType === SOURCE_CODE_MODE })}
 							onClick={() => { this.setState({ createType: SOURCE_CODE_MODE }); }}
 							content="Source code"
+							disabled={form.get('compileLoading')}
 						/>
 						<Button
 							className={classnames('radio', { checked: createType === BYTECODE_MODE })}
 							onClick={() => { this.setState({ createType: BYTECODE_MODE }); }}
 							content="Bytecode"
+							disabled={form.get('compileLoading')}
 						/>
 					</div>
 					{createType === SOURCE_CODE_MODE &&
@@ -59,10 +61,12 @@ class SmartContracts extends React.Component {
 						contractCodeCompile={this.props.contractCodeCompile}
 						clearForm={this.props.clearForm}
 						changeContractCompiler={this.props.changeContractCompiler}
+						setValue={this.props.setValue}
 					/>}
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
 				<ContractBar
+					form={form}
 					fees={fees}
 					amount={amount}
 					ETHAccuracy={ETHAccuracy}

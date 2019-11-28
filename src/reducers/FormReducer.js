@@ -135,6 +135,7 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		compileLoading: false,
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),

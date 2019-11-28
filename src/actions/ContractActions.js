@@ -518,9 +518,9 @@ export const getAssetsList = async (name) => {
 };
 
 export const contractCompilerInit = () => async (dispatch) => {
-	// await loadScript('https://echoprotocol.github.io/solc-bin/bin/soljson-v0.5.7.js');
 	const list = await getSolcList();
-	list.builds = list.builds.filter(({ version }) => checkAccessVersion(version, MIN_ACCESS_VERSION_BUILD));
+	list.builds = list.builds.filter(({ version }) =>
+		checkAccessVersion(version, MIN_ACCESS_VERSION_BUILD));
 
 	dispatch(setValue(FORM_CREATE_CONTRACT, 'compilersList', new Map(list)));
 
@@ -537,7 +537,7 @@ export const contractCompilerInit = () => async (dispatch) => {
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'code', code));
+	dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', ''));
 
 	try {
 		const input = {

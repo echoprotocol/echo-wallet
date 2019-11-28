@@ -11,7 +11,6 @@ class SourceCode extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loader: false,
 			timeout: null,
 		};
 	}
@@ -31,7 +30,7 @@ class SourceCode extends React.Component {
 		const { timeout } = this.state;
 		const { form } = this.props;
 
-		if (!value/* || form.get('code').value === value */) {
+		if (!value || form.get('code').value === value) {
 			return;
 		}
 
@@ -39,7 +38,7 @@ class SourceCode extends React.Component {
 
 		if (value) {
 			setTimeout(() => {
-				this.setState({ loader: true });
+				this.props.setValue('compileLoading', true);
 			}, 0);
 		}
 
@@ -47,12 +46,12 @@ class SourceCode extends React.Component {
 			clearTimeout(timeout);
 		}
 
+		this.props.setValue('compileLoading', true);
 		this.setState({
-			loader: true,
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
 				setTimeout(() => {
-					this.setState({ loader: false });
+					this.props.setValue('compileLoading', false);
 				}, 0);
 			}, 600),
 		});
@@ -70,9 +69,9 @@ class SourceCode extends React.Component {
 		if (!e.target.textContent) {
 			return;
 		}
-		this.setState({ loader: true });
+		this.props.setValue('compileLoading', true);
 		await this.props.changeContractCompiler(e.target.textContent);
-		this.setState({ loader: false });
+		this.props.setValue('compileLoading', false);
 	}
 
 	getCompilersOptions() {
@@ -99,12 +98,11 @@ class SourceCode extends React.Component {
 
 	isDisabled() {
 		const { form } = this.props;
-		const { loader } = this.state;
 
 		return form.get('currentCompiler').error
 			|| !form.get('code')
 			|| form.get('loading')
-			|| loader;
+			|| form.get('compileLoading');
 	}
 
 	render() {
@@ -114,7 +112,7 @@ class SourceCode extends React.Component {
 			<React.Fragment>
 				<div className={classnames(['editor-wrap error-wrap',
 					{ error: !!form.get('code').error },
-					{ loading: true }])}
+					{ loading: form.get('compileLoading') }])}
 				>
 					<div className="editor-label">CODE EDITOR</div>
 					<AceEditor
@@ -138,20 +136,6 @@ class SourceCode extends React.Component {
 				<div className="fields">
 					<div className="field">
 						<div className="field-label">Compiler version</div>
-						{/* <Dropdown
-							options={this.getCompilersOptions()}
-							searchQuery={searchText}
-							value={form.get('currentCompiler').value}
-							search
-							selection
-							fluid
-							text={searchText || 'Compiler version'}
-							onSearchChange={(e, data) => this.versionSearchHandler(e, data)}
-							placeholder="Compiler version"
-							selectOnNavigation={false}
-							minCharacters={0}
-							noResultsMessage="No results are found"
-						/> */}
 						<Dropdown
 							options={this.getCompilersOptions()}
 							value={form.get('currentCompiler').value}
@@ -160,7 +144,7 @@ class SourceCode extends React.Component {
 							placeholder="Compiler version"
 							onChange={(e) => this.onChangeCompiler(e)}
 							noResultsMessage="No results are found"
-							disabled={form.get('loading')}
+							disabled={form.get('loading') || form.get('compileLoading')}
 						/>
 					</div>
 					<div className="field">
@@ -173,7 +157,7 @@ class SourceCode extends React.Component {
 							placeholder="Select contract"
 							selectOnNavigation={false}
 							onChange={(e, { value }) => this.onChangeItem(e, value)}
-							disabled={!form.get('contracts').size}
+							disabled={!form.get('contracts').size || form.get('compileLoading')}
 						/>
 					</div>
 				</div>
@@ -189,6 +173,7 @@ SourceCode.propTypes = {
 	changeContractCompiler: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 };
 
 SourceCode.defaultProps = {};

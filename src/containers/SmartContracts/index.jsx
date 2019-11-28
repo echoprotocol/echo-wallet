@@ -23,7 +23,6 @@ export default connect(
 		currency: state.form.getIn([FORM_CREATE_CONTRACT, 'currency']),
 		isAvailableBalance: state.form.getIn([FORM_CREATE_CONTRACT, 'isAvailableBalance']),
 		ETHAccuracy: state.form.getIn([FORM_CREATE_CONTRACT, 'ETHAccuracy']),
-		// compilersList: state.form.getIn([FORM_CREATE_CONTRACT, 'compilersList']),
 	}),
 	(dispatch) => ({
 		setValue: (field, value) => dispatch(setValue(FORM_CREATE_CONTRACT, field, value)),
