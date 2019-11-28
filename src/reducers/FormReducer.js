@@ -142,6 +142,12 @@ const DEFAULT_FORM_FIELDS = {
 		accepted: false,
 		ETHAccuracy: false,
 		supportedAsset: '',
+		compilersList: new Map({}),
+		currentCompiler: {
+			value: '',
+			error: null,
+		},
+		compileLoading: false,
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),
