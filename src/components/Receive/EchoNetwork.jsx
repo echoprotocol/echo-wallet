@@ -10,6 +10,7 @@ import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
+import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
 
 
 class EchoNetwork extends React.Component {
@@ -121,7 +122,7 @@ class EchoNetwork extends React.Component {
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
-
+				<ModalCreateEchoAddress />
 				<AccountField
 					disabled
 					field={from}
