@@ -984,7 +984,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
@@ -999,7 +998,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		await signTransaction(signer, tr, password);
 
 		tr.broadcast().then((res) => {
-			if (addToWatchList) {
+			if (abi) {
 				dispatch(addContractByName(
 					res[0].trx.operation_results[0][1],
 					accountId,
