@@ -23,7 +23,7 @@ import {
 	PERMISSIONS_PATH,
 	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 	CALL_CONTRACT_PATH,
 	COMMITTEE_VOTE_PATH,
 	FROZEN_FUNDS_PATH,
@@ -43,9 +43,9 @@ const primaryPaths = [
 
 const secondaryContractPaths = [
 	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 	CALL_CONTRACT_PATH,
-	VIEW_CONTRACT_PATH.replace('/:name', ''),
+	VIEW_CONTRACT_PATH.replace('/:id', ''),
 	FROZEN_FUNDS_PATH,
 ];
 
@@ -133,7 +133,6 @@ class Header extends React.Component {
 
 	renderList() {
 		const { preview, accountName } = this.props;
-
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },

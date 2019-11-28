@@ -34,15 +34,6 @@
 }
 
 .send-wrap {
-    width: 100%;
-    max-height: calc(100vh - 120px);
-    overflow: overlay;
-    background-color: #FCFCFC;
-
-    @include max-vw(1000) {
-        padding: 0 20px;
-	}
-	
     .form-info {
         h3 {
             color: #5c637d;
@@ -53,14 +44,12 @@
             line-height: 26.4px;
         }
 
-        &+.field-wrap {
+        & + .field-wrap {
             margin-top: 15px;
             margin-left: 2px;
         }
     }
-
 }
-
 
 
 .balance-wrap {
@@ -100,7 +89,7 @@
 
 .currency-list {
 
-    &+.currency-title {
+    & + .currency-title {
         margin-top: 35px;
     }
 
@@ -134,7 +123,7 @@
         }
 
         .currency-symbol {
-            color: $main-сolor;
+            color: $main-color;
             transition: color .2s;
             font-size: 18px;
             text-align: left;
@@ -158,35 +147,82 @@
             border: 0;
             background-color: transparent;
             cursor: pointer;
-        }
-
-        button:first-child {
-            width: 100%;
-            padding: 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-family: proximanovaSemibold;
-        }
-
-        button:nth-child(2) {
-            width: 0px;
-            padding: 0;
-            border: 0;
-            transition: width .2s, color .2s;
-            overflow: hidden;
-            font-size: 14px;
-            color: #fff;
-            font-size: 11px;
-
-            &:focus {
-                color: $yellow;
-            }
-
+            flex-wrap: wrap;
+            font-size: 13px;
+            font-weight: 400;
+			color: rgb(92, 99, 125);
+			
             &:hover {
-                color: $yellow;
-            }
+				cursor: default;
+				color: #fff;
+			
+				.frozen-value {
+					color: $yellow;
+				}
+			}
+			
+
+
+			&:first-child {
+				width: 100%;
+				padding: 0 12px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-family: proximanovaSemibold;
+			}
+
+			&:nth-child(2) {
+				width: 0px;
+				padding: 0;
+				border: 0;
+				transition: width .2s, color .2s;
+				overflow: hidden;
+				font-size: 14px;
+				color: #fff;
+				font-size: 11px;
+	
+				&:focus {
+					color: $yellow;
+				}
+	
+				&:hover {
+					color: $yellow;
+				}
+			}
+
+			div {
+				width: 50%;
+				height: 16px;
+				display: block;
+	
+				&.frozen-coefficient {
+					width: 40%;
+				}
+	
+				&.frozen-interval {
+					width: 60%;
+				}
+			}
         }
+
+
 
     }
+}
+
+.balance-wrap + div {
+    width: 100%;
+	max-height: calc(100vh - 122px);
+    overflow: overlay;
+    background-color: #FCFCFC;
+	
+
+    @include max-vw(1000) {
+		padding: 0 20px;
+	}
+
+	.send-wrap {
+		border-top: 2px solid rgba(#DEDEDE, 0.2);
+	}
 }

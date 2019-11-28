@@ -1,19 +1,110 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
+import { Button, Tab } from 'semantic-ui-react';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
+
 import Transfer from '../Transfer';
+import Receive from '../Receive';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
+import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class Wallet extends React.Component {
 
 	render() {
 		const {
-			assets, tokens, accountName, from, to, amount, currency,
-			fee, isAvailableBalance, fees,
+			assets, tokens, accountName, from, to, amount, currency, ethAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
+			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
+			btcAddress, accountId,
 		} = this.props;
+
+		const externalTabs = [
+			{
+				menuItem: <Button
+					className="tab-btn"
+					key="0"
+					onClick={(e) => e.target.blur()}
+					content="CREATE PAYMENT"
+				/>,
+				render: () => (
+					<div className="send-wrap">
+						<Transfer
+							fees={fees}
+							tokens={tokens}
+							assets={assets}
+							accountName={accountName}
+							from={from}
+							to={to}
+							avatarName={avatarName}
+							bytecode={bytecode}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							isAvailableBalance={isAvailableBalance}
+							subjectTransferType={subjectTransferType}
+							transfer={this.props.transfer}
+							resetTransaction={this.props.resetTransaction}
+							setIn={this.props.setIn}
+							checkAccount={this.props.checkAccount}
+							clearForm={() => this.props.clearForm(FORM_TRANSFER)}
+							subjectToSendSwitch={this.props.subjectToSendSwitch}
+							setTransferFee={this.props.setTransferFee}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							setFormValue={this.props.setFormValue}
+							getTransferFee={this.props.getTransferFee}
+							setContractFees={this.props.setContractFees}
+						/>
+					</div>),
+			},
+			{
+				menuItem: <Button
+					className="tab-btn"
+					key="1"
+					onClick={(e) => e.target.blur()}
+					content="RECEIVE PAYMENT"
+				/>,
+				render: () => (
+					<div className="send-wrap">
+						<Receive
+							fees={fees}
+							tokens={tokens}
+							assets={assets}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							isAvailableBalance={isAvailableBalance}
+							accountAddresses={accountAddresses}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							setFormValue={this.props.setFormValue}
+							getTransferFee={this.props.getTransferFee}
+							setContractFees={this.props.setContractFees}
+							updateAccountAddresses={this.props.updateAccountAddresses}
+							getBtcAddress={this.props.getBtcAddress}
+							btcAddress={btcAddress}
+							accountName={accountName}
+							accountId={accountId}
+							setIn={this.props.setIn}
+							checkAccount={this.props.checkAccount}
+							from={from}
+							clearForm={this.props.clearForm}
+							openModal={(value) => this.props.openModal(value)}
+							getAssetsBalances={this.props.getAssetsBalances}
+							generateEthAddress={generateEthAddress}
+							getEthAddress={getEthAddress}
+							ethAddress={ethAddress}
+							fullCurrentAccount={fullCurrentAccount}
+						/>
+					</div>),
+			},
+		];
 
 		return (
 			<div className="page-wrap">
@@ -35,6 +126,9 @@ class Wallet extends React.Component {
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
 								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
 									this.props.setFormValue('fee', res.value);
 								});
 							}}
@@ -47,36 +141,18 @@ class Wallet extends React.Component {
 								this.props.setContractFees();
 							}}
 							removeToken={this.props.removeToken}
-							openModal={this.props.openModal}
 						/>
 					</div>
 				</div>
-				<div className="send-wrap">
-					<Transfer
-						fees={fees}
-						tokens={tokens}
-						assets={assets}
-						accountName={accountName}
-						from={from}
-						to={to}
-						amount={amount}
-						fee={fee}
-						currency={currency}
-						isAvailableBalance={isAvailableBalance}
-						transfer={this.props.transfer}
-						resetTransaction={this.props.resetTransaction}
-						setIn={this.props.setIn}
-						checkAccount={this.props.checkAccount}
-						clearForm={this.props.clearForm}
-						amountInput={this.props.amountInput}
-						setFormError={this.props.setFormError}
-						setDefaultAsset={this.props.setDefaultAsset}
-						setValue={this.props.setValue}
-						setFormValue={this.props.setFormValue}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
-					/>
-				</div>
+				<Tab
+					defaultActiveIndex="0"
+					menu={{
+						tabular: false,
+						className: 'wallet-tab-menu',
+					}}
+					panes={externalTabs}
+				/>
+
 			</div>
 		);
 	}
@@ -85,15 +161,20 @@ class Wallet extends React.Component {
 
 Wallet.propTypes = {
 	fees: PropTypes.array.isRequired,
-
 	amount: PropTypes.object.isRequired,
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
 	currency: PropTypes.object,
+	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
+	avatarName: PropTypes.string.isRequired,
+	bytecode: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
+	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	accountId: PropTypes.string.isRequired,
+	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
@@ -103,6 +184,8 @@ Wallet.propTypes = {
 	resetTransaction: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
+	subjectToSendSwitch: PropTypes.func.isRequired,
+	setTransferFee: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -111,12 +194,20 @@ Wallet.propTypes = {
 	setAssetActiveAccount: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	updateAccountAddresses: PropTypes.func.isRequired,
+	getBtcAddress: PropTypes.func.isRequired,
+	generateEthAddress: PropTypes.func.isRequired,
+	getEthAddress: PropTypes.func.isRequired,
+	getAssetsBalances: PropTypes.func.isRequired,
+	ethAddress: PropTypes.object.isRequired,
+	fullCurrentAccount: PropTypes.object.isRequired,
 };
 
 Wallet.defaultProps = {
 	tokens: null,
 	assets: null,
 	currency: null,
+	btcAddress: null,
 };
 
 export default Wallet;

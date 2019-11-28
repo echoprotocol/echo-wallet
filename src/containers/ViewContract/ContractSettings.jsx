@@ -23,9 +23,9 @@ class ContractSettings extends React.Component {
 		this.onFocusInput = this.onFocusInput.bind(this);
 	}
 
-	onBlurBlock(contractName) {
+	onBlurBlock(contractId) {
 		this.setState({
-			timeout: setTimeout(() => this.changeName(contractName), 100),
+			timeout: setTimeout(() => this.changeName(contractId), 100),
 		});
 	}
 
@@ -60,13 +60,13 @@ class ContractSettings extends React.Component {
 		this.props.setValue('newName', { error: null, value: '' });
 	}
 
-	onPushEnter(e, contractName) {
+	onPushEnter(e, contractId) {
 		if (e.which === 13 || e.keyCode === 13) {
-			this.changeName(contractName);
+			this.changeName(contractId);
 		}
 	}
 
-	changeName(oldName) {
+	changeName(id) {
 		const newName = this.props.newName.value;
 
 		if (newName) {
@@ -77,7 +77,7 @@ class ContractSettings extends React.Component {
 				return;
 			}
 
-			this.props.updateContractName(oldName, newName.trim());
+			this.props.updateContractName(id, newName.trim());
 		}
 
 		this.setState({ isEditName: false });
@@ -85,35 +85,36 @@ class ContractSettings extends React.Component {
 		this.props.setValue('newName', { error: null, value: '' });
 	}
 
-	removeContract(name) {
-		this.props.disableContract(name);
+	removeContract(id) {
+		this.props.disableContract(id);
 	}
 
 	renderName() {
-		const { location } = this.props;
-		const contractName = location.pathname.split('/')[2];
+		const { contractName } = this.props;
+
 		return (
 
 			<Button
 				className="value"
 				onFocus={() => this.onOpen()}
-				content={contractName}
-				icon="edit"
-			/>
+			>
+				<React.Fragment>
+					{contractName}
+					<span className="icon-edit" />
+				</React.Fragment>
+			</Button >
 
 		);
 	}
 
 	renderChangeName() {
-		const { location, newName } = this.props;
-
-		const contractName = location.pathname.split('/')[2];
+		const { newName, contractId, contractName } = this.props;
 
 		return (
 
 			<div
 				className={classnames('error-wrap', { error: newName.error })}
-				onBlur={() => this.onBlurBlock(contractName)}
+				onBlur={() => this.onBlurBlock(contractId)}
 				onFocus={() => this.onFocusBlock()}
 			>
 				<Input
@@ -123,13 +124,13 @@ class ContractSettings extends React.Component {
 					ref={this.onFocusInput}
 					className="label-in-left"
 					onChange={(e) => this.onChange(e)}
-					onKeyPress={(e) => this.onPushEnter(e, contractName)}
+					onKeyPress={(e) => this.onPushEnter(e, contractId)}
 				>
 
 					<input />
 					<button
 						className="edit-option icon-edit-checked"
-						onClick={() => this.changeName(contractName)}
+						onClick={() => this.changeName(contractId)}
 					/>
 					<button
 						className="edit-option icon-edit-close"
@@ -143,9 +144,7 @@ class ContractSettings extends React.Component {
 	}
 
 	render() {
-		const { location, contractId } = this.props;
-
-		const contractName = location.pathname.split('/')[2];
+		const { contractId } = this.props;
 
 		return (
 			<div className="tab-full">
@@ -160,15 +159,15 @@ class ContractSettings extends React.Component {
 						<li className="name">
 							<span className="label">Name:</span>
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
-							{/* {this.renderChangeName()} */}
 						</li>
 						<li className="act">
 							<Button
-								icon="trash"
-								className="transparent"
-								content="remove"
-								onClick={() => this.removeContract(contractName)}
-							/>
+								className="remove-text-btn"
+								onClick={() => this.removeContract(contractId)}
+							>
+								<span className="icon-remove" />
+								Remove
+							</Button>
 						</li>
 					</ul>
 
@@ -181,8 +180,8 @@ class ContractSettings extends React.Component {
 
 ContractSettings.propTypes = {
 	newName: PropTypes.object.isRequired,
-	location: PropTypes.object.isRequired,
 	contractId: PropTypes.string.isRequired,
+	contractName: PropTypes.string.isRequired,
 	updateContractName: PropTypes.func.isRequired,
 	disableContract: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -194,9 +193,10 @@ export default withRouter(connect(
 	(state) => ({
 		newName: state.form.getIn([FORM_VIEW_CONTRACT, 'newName']),
 		contractId: state.contract.get('id'),
+		contractName: state.contract.get('name'),
 	}),
 	(dispatch) => ({
-		updateContractName: (oldName, newName) => dispatch(updateContractName(oldName, newName)),
+		updateContractName: (id, newName) => dispatch(updateContractName(id, newName)),
 		disableContract: (name) => dispatch(disableContract(name)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_VIEW_CONTRACT, field, value)),
 		setValue: (field, value) => dispatch(setValue(FORM_VIEW_CONTRACT, field, value)),

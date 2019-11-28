@@ -16,35 +16,7 @@
         height: calc(100vh - 285px);
     }
 
-    button {
-        flex-wrap: wrap;
-        font-size: 13px;
-        font-weight: 400;
-		color: rgb(92, 99, 125);
 
-        &:hover {
-            cursor: default;
-			color: #fff;
-			
-            .frozen-value {
-                color: $yellow;
-            }
-        }
-
-        div {
-            width: 50%;
-            height: 16px;
-            display: block;
-
-            &.frozen-coefficient {
-                width: 40%;
-            }
-
-            &.frozen-interval {
-                width: 60%;
-            }
-        }
-    }
 
     &-value {
         align-self: flex-end;
@@ -109,6 +81,15 @@
     }
 
     .send-wrap {
+        width: 100%;
+        max-height: calc(100vh - 120px);
+        overflow: overlay;
+		background-color: #FCFCFC;
+
+		@include max-vw(1000) {
+			padding: 0 20px;
+		}
+		
         .field {
 
             .input-value::placeholder,
@@ -167,19 +148,3 @@
         }
     }
 }
-
-// .inner-tooltip {
-//     margin-left: 35px;
-//     margin-bottom: -65px;
-//     width: 320px;
-//     height: auto;
-//     padding: 5px 10px;
-//     color: #3b3b3b;
-//     font-family: proxima;
-//     font-size: 14px;
-//     font-weight: 400;
-//     line-height: 18px;
-//     border-radius: 4px;
-//     border: 1px solid rgba(59, 59, 59, 0.4);
-//     background: #fff6d2;
-// }

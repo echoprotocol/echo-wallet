@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Segment, Sidebar } from 'semantic-ui-react';
-import classnames from 'classnames';
 import { withRouter, matchPath } from 'react-router';
 
 import { connection, toggleBar } from '../actions/GlobalActions';
@@ -18,7 +17,6 @@ import Toast from '../components/Toast';
 
 import {
 	PUBLIC_ROUTES,
-	CENTER_MODE_ROUTES,
 	VIEW_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 } from '../constants/RouterConstants';
@@ -58,13 +56,13 @@ class App extends React.Component {
 	renderWrapper() {
 		const { children, location } = this.props;
 		return (
-			<Segment basic className="wrapper">
-				{ !PUBLIC_ROUTES.includes(location.pathname) ? <Header /> : null }
-				<div className={classnames('content', { 'center-mode': CENTER_MODE_ROUTES.includes(location.pathname) })}>
+			<div className="wrapper">
+				{ !PUBLIC_ROUTES.includes(location.pathname) && <Header /> }
+				<div className="content">
 					{children}
 				</div>
 				<Footer />
-			</Segment>
+			</div>
 		);
 	}
 

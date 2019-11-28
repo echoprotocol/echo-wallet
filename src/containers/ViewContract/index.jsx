@@ -20,7 +20,7 @@ import TabContractProps from './Constants/TabContractProps';
 class ViewContract extends React.Component {
 
 	componentWillMount() {
-		this.props.formatAbi(this.props.match.params.name);
+		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	componentDidMount() {
@@ -56,7 +56,11 @@ class ViewContract extends React.Component {
 		return (
 			<div>
 				<ContractSettings />
-				<Tab className="tab-full" panes={panes} />
+				<Tab
+					menu={{ tabular: false }}
+					className="tab-full"
+					panes={panes}
+				/>
 			</div>
 		);
 	}

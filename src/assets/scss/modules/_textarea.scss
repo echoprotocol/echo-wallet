@@ -1,20 +1,31 @@
 textarea {
 	width: 100%;
-	vertical-align: top;
-	margin: 0em;
-	-webkit-appearance: none;
-	tap-highlight-color: rgba(255, 255, 255, 0);
+	margin: 0;
 	padding: 0.78571429em 1em;
 	background: #FFFFFF;
-	border: 1px solid $inut-color;
+	border: 1px solid #DDDDDD;
 	outline: none;
 	color: rgba(0, 0, 0, 0.87);
-	border-radius: 0.28571429rem;
-	box-shadow: 0em 0em 0em 0em transparent inset;
-	transition: color $speed ease, border-color $speed ease;
-	line-height: 1.2857;
+	border-radius: 4px;
 	resize: none;
-	height: 10em;
-	min-height: 8em;
-	max-height: 24em;
+	min-height: 175px;
+	max-height: 200px;
+	font-size: 15px;
+	font-weight: 400;
+	vertical-align: top;
+	-webkit-appearance: none;
+	tap-highlight-color: rgba(255, 255, 255, 0);
+	transition: color $speed ease, border-color $speed ease;
+
+	&:hover {
+		border-color: $border-hover;
+	}
+
+	&:focus {
+		@include on-focus(4px);
+		color: $black;
+		border-color: $border-hover;
+		border-radius: 4px;
+		background: #FFFFFF;
+	}
 }
