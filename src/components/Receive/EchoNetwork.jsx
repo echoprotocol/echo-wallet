@@ -6,9 +6,9 @@ import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
 
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
-import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
