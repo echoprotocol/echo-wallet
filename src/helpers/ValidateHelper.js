@@ -11,11 +11,12 @@ import {
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
-const reg = /^(([\da-fA-F]){2})*$/;
+const reg = /^(0x|0X)?[a-fA-F0-9]+$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
+const accountAddressRegex = /^0x[a-fA-F0-9]{40}$/;
 
 /**
  * @method isAccountNameError
@@ -215,6 +216,13 @@ export const validateAbi = (str) => {
 		return 'Invalid ABI';
 	}
 };
+
+/**
+ * @method validateBytes
+ * @param {String} value
+ * @returns {boolean}
+ */
+export const validateAccountAddress = (value) => typeof value === 'string' && accountAddressRegex.test(value);
 
 /**
  * @method validateInt
