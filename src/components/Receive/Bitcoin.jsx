@@ -121,7 +121,6 @@ class EchoNetwork extends React.Component {
 
 		return (
 			<React.Fragment>
-				<ModalCreateBtcAddress />
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
 				<AccountField
@@ -178,6 +177,7 @@ class EchoNetwork extends React.Component {
 
 		return address ? (
 			<React.Fragment>
+				<ModalCreateBtcAddress />
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
 				</h2>

@@ -546,12 +546,12 @@ export const checkErc20Contract = (scriptHex) => {
 export const isBackupAddress = (hex) => {
 	try {
 		const validationData = validate(hex);
-
+		console.log(validationData)
 		return validationData &&
 			!validationData.bech32 &&
 			!validationData.testnet &&
 			validationData.address &&
-			(validationData.type === 'p2pkh' || validationData.type === 'p2sh');
+			validationData.type === 'p2pkh';
 	} catch (e) {
 		return false;
 	}
