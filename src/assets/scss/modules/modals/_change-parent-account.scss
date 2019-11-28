@@ -1,0 +1,20 @@
+.change-parent-account-modal {
+	max-width: 600px;
+	flex-direction: column;
+	padding: 31px 0 47px;
+	.modal-header {
+		align-items: center;
+		max-width: 500px;
+		margin: 0 auto;
+	}
+	.modal-header-title {
+		color: #3B3B3B;
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+	}
+}
+
+.dimmed.dimmable > .ui.visible.dimmer, .ui.active.dimmer {
+	display: block !important;
+}

@@ -212,8 +212,11 @@
 
                         .name {
                             color: #fff;
-                            max-width: 150px;
-                        }
+						}
+						
+						.parent-label {
+							color: rgba(#fff, .5);
+						}
 
                         .balance {
                             color: #fff;
@@ -223,7 +226,10 @@
                             color: transparent;
                             width: auto;
                             padding: 0 20px 0 0;
-                        }
+						}
+						.parent-link {
+							color: #FFF9B5;
+						}
                     }
                 }
 
@@ -238,18 +244,34 @@
                     margin: 0 auto 0 9px;
                     text-align: left;
                     font-family: $font-family;
-                }
+				}
+				.parent-link {
+					color: #4D66CD;
+					transition: color $speed;
+					font-family: proximaNovaSemibold;
+					font-size: 13px;
+				}
+				.name-wrap {
+					display: flex;
+					align-items: center;
+				}
 
+				.parent-label {
+					color: rgba(#5C637D, .5);
+					transition: color $speed;
+					font-size: 13px;
+					font-weight: 400;
+					margin: -3px 5px 0 5px;
+				}
                 .name {
                     @include cut-text;
                     color: $main-color;
-                    max-width: 180px;
+                    max-width: 130px;
                     color: #3B3B3B;
                     transition: color $speed;
                     line-height: 16px;
                     font-family: proximaNovaSemibold;
                     font-size: 13px;
-                    font-weight: 400;
                 }
 
                 .id {

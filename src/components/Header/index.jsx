@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
-import { MODAL_LOGOUT } from '../../constants/ModalConstants';
+import { MODAL_LOGOUT, MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
@@ -58,7 +58,7 @@ class Header extends React.Component {
 	}
 
 
-	onChangeAccount(e, name) {
+	onChangeAccount(name) {
 		const { accountName, networkName } = this.props;
 
 		if (accountName === name) {
@@ -69,7 +69,15 @@ class Header extends React.Component {
 	}
 
 	onRemoveAccount(name) {
-		this.props.openModal({ accountName: name });
+		this.props.openModal(MODAL_LOGOUT, { accountName: name });
+	}
+
+	onChangeParentAccount(e, name) {
+		e.preventDefault();
+		e.stopPropagation();
+		this.props.openModal(MODAL_CHANGE_PARENT_ACCOUNT);
+		console.log(name);
+
 	}
 
 	onDropdownChange(e, value) {
@@ -137,25 +145,41 @@ class Header extends React.Component {
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },
-		}) => {
+		}, index) => {
 			const content = (
 				<div key={name} className="user-item-wrap">
 					<button
 						className="user-item"
-						onClick={(e) => this.onChangeAccount(e, name)}
+						onClick={() => this.onChangeAccount(name)}
 					>
 						<div className="avatar-wrap">
 							<Avatar accountName={name} />
 						</div>
 						<div className="user-base-info">
-							<div className="name">{name}</div>
+							{
+								index ?
+									<div className="name">{name}</div> :
+									<div className="name-wrap">
+										<div className="name">{name}</div>
+										<div className="parent-label">(parent account)</div>
+									</div>}
 							<div className="id">{accountId}</div>
 						</div>
+						{
+							index ?
+								<div className="balance">
+									<span>{formatAmount(amount, precision) || '0'}</span>
+									<span>{symbol || 'ECHO'}</span>
+								</div> :
+								<a
+									href=""
+									className="parent-link"
+									onClick={(e) => this.onChangeParentAccount(e, name)}
+								>Change
+								</a>
+						}
 
-						<div className="balance">
-							<span>{formatAmount(amount, precision) || '0'}</span>
-							<span>{symbol || 'ECHO'}</span>
-						</div>
+
 					</button>
 					<button
 						className="logout-user-btn"
@@ -294,7 +318,7 @@ export default withRouter(connect(
 		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
-		openModal: (accountName) => dispatch(openModal(MODAL_LOGOUT, accountName)),
+		openModal: (type, accountName) => dispatch(openModal(type, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 	}),
