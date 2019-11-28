@@ -419,11 +419,11 @@ const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 			return acc;
 		}, {});
 
-	const addedPubWithoutWif = Object.keys(newPrivateKeys)
-		.filter((k) => !oldPrivateKeys[k] && !newPrivateKeys[k].value);
-	for (let i = 0; i < addedPubWithoutWif.length; i += 1) {
-		delete newPrivateKeys[addedPubWithoutWif[i]];
-	}
+	// const addedPubWithoutWif = Object.keys(newPrivateKeys)
+	// 	.filter((k) => !oldPrivateKeys[k] && !newPrivateKeys[k].value);
+	// for (let i = 0; i < addedPubWithoutWif.length; i += 1) {
+	// 	delete newPrivateKeys[addedPubWithoutWif[i]];
+	// }
 	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
 		!Object.entries(oldPrivateKeys).every(([key, wif]) =>
 			(newPrivateKeys[key] && !!newPrivateKeys[key].value === !!wif.value));
@@ -656,7 +656,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				transaction.echorand_key = permissionData.echoRand.key;
 			}
 
-			if (dataChanged.active.wif || dataChanged.echoRand.wif) {
+			if ((dataChanged.active.wif || dataChanged.echoRand.wif) && isWifChangingOnly) {
 				showOptions.wif = [];
 				if (dataChanged.active.wif) {
 					showOptions.wif.push('Changed active wif');
