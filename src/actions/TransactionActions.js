@@ -890,7 +890,7 @@ export const freezeBalance = () => async (dispatch, getState) => {
  */
 export const createContract = () => async (dispatch, getState) => {
 	const {
-		bytecode, name, abi, supportedAsset, ETHAccuracy,
+		bytecode, name, abi, supportedAsset, ETHAccuracy, code, currency, amount,
 	} = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -934,18 +934,34 @@ export const createContract = () => async (dispatch, getState) => {
 
 	const options = {
 		registrar: activeUserId,
-		value: { amount: 0, asset_id: ECHO_ASSET_ID },
-		fee: { amount: 0, asset_id: ECHO_ASSET_ID },
+		value: { amount: amount.value || 0, asset_id: currency.id || ECHO_ASSET_ID },
+		fee: { amount: 0, asset_id: supportedAssetId || ECHO_ASSET_ID },
 		code: bytecodeValue,
 		eth_accuracy: ETHAccuracy,
-		supported_asset_id: supportedAssetId || ECHO_ASSET_ID,
 	};
+
+	if (supportedAssetId) {
+		options.supported_asset_id = supportedAssetId;
+		if (new BN(options.value.amount).eq(0)) {
+			options.value.asset_id = supportedAssetId;
+		} else if (options.value.asset_id !== supportedAssetId) {
+			dispatch(setFormError(
+				FORM_CREATE_CONTRACT,
+				'amount',
+				'Amount asset should be equal to supported asset',
+			));
+			return null;
+		}
+	}
 
 	try {
 		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
 
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
+		} else {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'amount', 'Can\'t calculate fee'));
+			return null;
 		}
 		options.fee.amount = fee.value;
 		const showOptions = {
@@ -958,7 +974,7 @@ export const createContract = () => async (dispatch, getState) => {
 
 		return true;
 	} catch (err) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', 'Incorrect bytecode'));
+		dispatch(setFormError(FORM_CREATE_CONTRACT, code.value ? 'code' : 'bytecode', 'Transaction params is invalid'));
 		return false;
 	}
 };
