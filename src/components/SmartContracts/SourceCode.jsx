@@ -31,7 +31,7 @@ class SourceCode extends React.Component {
 		const { timeout } = this.state;
 		const { form } = this.props;
 
-		if (!value/* || form.get('code').value === value*/) {
+		if (!value/* || form.get('code').value === value */) {
 			return;
 		}
 
@@ -112,7 +112,10 @@ class SourceCode extends React.Component {
 		const { form } = this.props;
 		return (
 			<React.Fragment>
-				<div className={classnames(['editor-wrap error-wrap', { error: !!form.get('code').error }])} >
+				<div className={classnames(['editor-wrap error-wrap',
+					{ error: !!form.get('code').error },
+					{ loading: true }])}
+				>
 					<div className="editor-label">CODE EDITOR</div>
 					<AceEditor
 						className="editor"
