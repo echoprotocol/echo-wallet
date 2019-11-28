@@ -16,7 +16,7 @@ class Wallet extends React.Component {
 		const {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
-			bytecode, avatarName, subjectTransferType, fullCurrentAccount,
+			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
 		} = this.props;
 
 		const externalTabs = [
@@ -70,7 +70,6 @@ class Wallet extends React.Component {
 				render: () => (
 					<div className="send-wrap">
 						<Receive
-							// for Amount
 							fees={fees}
 							tokens={tokens}
 							assets={assets}
@@ -78,6 +77,7 @@ class Wallet extends React.Component {
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
+							accountAddresses={accountAddresses}
 							amountInput={this.props.amountInput}
 							setFormError={this.props.setFormError}
 							setDefaultAsset={this.props.setDefaultAsset}
@@ -85,14 +85,14 @@ class Wallet extends React.Component {
 							setFormValue={this.props.setFormValue}
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
-							// for To field
+							updateAccountAddresses={this.props.updateAccountAddresses}
 							accountName={accountName}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
 							from={from}
-							//
 							clearForm={this.props.clearForm}
 							openModal={(value) => this.props.openModal(value)}
+							getAssetsBalances={this.props.getAssetsBalances}
 							generateEthAddress={generateEthAddress}
 							getEthAddress={getEthAddress}
 							ethAddress={ethAddress}
@@ -163,6 +163,7 @@ Wallet.propTypes = {
 	avatarName: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
+	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -184,8 +185,10 @@ Wallet.propTypes = {
 	setAssetActiveAccount: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	updateAccountAddresses: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 
@@ -15,13 +16,15 @@ class Receive extends React.Component {
 	componentDidMount() {
 		const { accountName } = this.props;
 		this.props.setIn('from', { value: accountName, checked: true });
+		this.props.getAssetsBalances();
 	}
 
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount, getEthAddress, ethAddress, clearForm,
-			fee, assets, tokens, amount, isAvailableBalance, fees, generateEthAddress, fullCurrentAccount,
+			currency, from, setIn, checkAccount, generateEthAddress, fullCurrentAccount,
+			getEthAddress, ethAddress, clearForm,
+			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 		} = this.props;
 
 		const internalTabs = [
@@ -34,7 +37,6 @@ class Receive extends React.Component {
 				/>,
 				render: () => (
 					<EchoNetwork
-						// for Amount field
 						fees={fees}
 						fee={fee}
 						assets={assets}
@@ -42,6 +44,8 @@ class Receive extends React.Component {
 						amount={amount}
 						currency={currency}
 						isAvailableBalance={isAvailableBalance}
+						accountAddresses={accountAddresses}
+						accountName={accountName}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
 						setFormValue={this.props.setFormValue}
@@ -49,10 +53,7 @@ class Receive extends React.Component {
 						setDefaultAsset={this.props.setDefaultAsset}
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
-						// for From field
-						from={from}
-						setIn={setIn}
-						checkAccount={checkAccount}
+						updateAccountAddresses={this.props.updateAccountAddresses}
 					/>),
 			},
 			{
@@ -135,6 +136,7 @@ Receive.propTypes = {
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
+	accountAddresses: PropTypes.object.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -149,8 +151,10 @@ Receive.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
+	updateAccountAddresses: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 };
@@ -159,5 +163,10 @@ Receive.defaultProps = {
 	currency: null,
 };
 
-
-export default Receive;
+export default connect(
+	(state) => ({
+		from: state.global.getIn(['activeUser']).toJS(),
+	}),
+	() => ({
+	}),
+)(Receive);
