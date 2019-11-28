@@ -9,8 +9,6 @@ import ContractBar from './ContractBar';
 import SourceCode from './SourceCode';
 import Bytecode from './Bytecode';
 
-import { contractCompilerInit } from '../../actions/ContractActions';
-
 
 class SmartContracts extends React.Component {
 
@@ -22,7 +20,7 @@ class SmartContracts extends React.Component {
 	}
 
 	async componentDidMount() {
-		await contractCompilerInit();
+		this.props.contractCompilerInit();
 	}
 
 
@@ -60,6 +58,7 @@ class SmartContracts extends React.Component {
 						setFormValue={this.props.setFormValue}
 						contractCodeCompile={this.props.contractCodeCompile}
 						clearForm={this.props.clearForm}
+						changeContractCompiler={this.props.changeContractCompiler}
 					/>}
 					{createType === BYTECODE_MODE && <Bytecode />}
 				</div>
@@ -99,6 +98,8 @@ SmartContracts.propTypes = {
 	form: PropTypes.object.isRequired,
 	contractCodeCompile: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	contractCompilerInit: PropTypes.func.isRequired,
+	changeContractCompiler: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {

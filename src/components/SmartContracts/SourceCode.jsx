@@ -11,7 +11,7 @@ class SourceCode extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			searchText: '',
+			loader: false,
 			timeout: null,
 		};
 	}
@@ -29,18 +29,31 @@ class SourceCode extends React.Component {
 
 	onChange(value) {
 		const { timeout } = this.state;
+		const { form } = this.props;
+
+		if (!value/* || form.get('code').value === value*/) {
+			return;
+		}
+
 		this.props.setFormValue('code', value);
+
+		if (value) {
+			setTimeout(() => {
+				this.setState({ loader: true });
+			}, 0);
+		}
+
 		if (timeout) {
 			clearTimeout(timeout);
 		}
 
-		if (!value) {
-			return;
-		}
-
 		this.setState({
+			loader: true,
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
+				setTimeout(() => {
+					this.setState({ loader: false });
+				}, 0);
 			}, 600),
 		});
 	}
@@ -53,6 +66,29 @@ class SourceCode extends React.Component {
 		this.props.setFormValue('bytecode', form.getIn(['contracts', value, 'bytecode']));
 	}
 
+	async onChangeCompiler(e) {
+		if (!e.target.textContent) {
+			return;
+		}
+		this.setState({ loader: true });
+		await this.props.changeContractCompiler(e.target.textContent);
+		this.setState({ loader: false });
+	}
+
+	getCompilersOptions() {
+		const compilersList = this.props.form.get('compilersList');
+
+		if (!compilersList.size || !compilersList.get('builds')) {
+			return [];
+		}
+
+		return compilersList.get('builds').map((build) => ({
+			key: build.longVersion,
+			value: build.longVersion,
+			text: build.longVersion,
+		}));
+	}
+
 	getContracts() {
 		const { form } = this.props;
 
@@ -61,21 +97,19 @@ class SourceCode extends React.Component {
 		return contractNames.map((c, index) => ({ key: index, text: c, value: c }));
 	}
 
-	versionSearchHandler(e, data) {
-		this.setState({
-			searchText: data.searchQuery,
-		});
+	isDisabled() {
+		const { form } = this.props;
+		const { loader } = this.state;
+
+		return form.get('currentCompiler').error
+			|| !form.get('code')
+			|| form.get('loading')
+			|| loader;
 	}
 
-
 	render() {
-		const options = [
-			{ key: 1, text: 'Choice 1', value: 1 },
-			{ key: 2, text: 'Choice 2', value: 2 },
-			{ key: 3, text: 'Choice 3', value: 3 },
-		];
+
 		const { form } = this.props;
-		const { searchText } = this.state;
 		return (
 			<React.Fragment>
 				<div className={classnames(['editor-wrap error-wrap', { error: !!form.get('code').error }])} >
@@ -101,9 +135,10 @@ class SourceCode extends React.Component {
 				<div className="fields">
 					<div className="field">
 						<div className="field-label">Compiler version</div>
-						<Dropdown
-							options={options}
+						{/* <Dropdown
+							options={this.getCompilersOptions()}
 							searchQuery={searchText}
+							value={form.get('currentCompiler').value}
 							search
 							selection
 							fluid
@@ -113,6 +148,16 @@ class SourceCode extends React.Component {
 							selectOnNavigation={false}
 							minCharacters={0}
 							noResultsMessage="No results are found"
+						/> */}
+						<Dropdown
+							options={this.getCompilersOptions()}
+							value={form.get('currentCompiler').value}
+							search
+							selection
+							placeholder="Compiler version"
+							onChange={(e) => this.onChangeCompiler(e)}
+							noResultsMessage="No results are found"
+							disabled={form.get('loading')}
 						/>
 					</div>
 					<div className="field">
@@ -138,6 +183,7 @@ class SourceCode extends React.Component {
 SourceCode.propTypes = {
 	form: PropTypes.object.isRequired,
 	contractCodeCompile: PropTypes.func.isRequired,
+	changeContractCompiler: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };

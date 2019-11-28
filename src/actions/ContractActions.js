@@ -21,10 +21,13 @@ import { formatError } from '../helpers/FormatHelper';
 import { getMethod, getContractId, getMethodId } from '../helpers/ContractHelper';
 import { toastInfo } from '../helpers/ToastHelper';
 
+import { getSolcList } from '../services/ApiService';
+
 import {
 	validateAbi,
 	validateContractName,
 	validateByType,
+	checkAccessVersion,
 } from '../helpers/ValidateHelper';
 
 import {
@@ -34,7 +37,12 @@ import {
 	FORM_VIEW_CONTRACT,
 } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX, TIME_REMOVE_CONTRACT, ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import {
+	CONTRACT_ID_PREFIX,
+	TIME_REMOVE_CONTRACT,
+	ECHO_ASSET_ID,
+	MIN_ACCESS_VERSION_BUILD,
+} from '../constants/GlobalConstants';
 
 import history from '../history';
 
@@ -509,13 +517,28 @@ export const getAssetsList = async (name) => {
 	return list;
 };
 
-export const contractCompilerInit = async () => {
-	await loadScript('https://echoprotocol.github.io/solc-bin/bin/soljson-v0.5.7.js');
+export const contractCompilerInit = () => async (dispatch) => {
+	// await loadScript('https://echoprotocol.github.io/solc-bin/bin/soljson-v0.5.7.js');
+	const list = await getSolcList();
+	list.builds = list.builds.filter(({ version }) => checkAccessVersion(version, MIN_ACCESS_VERSION_BUILD));
+
+	dispatch(setValue(FORM_CREATE_CONTRACT, 'compilersList', new Map(list)));
+
+	const solcLatestRelease = list.latestRelease ?
+		list.releases[list.latestRelease] : list.builds[list.builds.length - 1].path;
+
+	const lastVersion = list.builds.find((b) => b.path === solcLatestRelease);
+
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', lastVersion && lastVersion.longVersion));
+
+	await loadScript(`${SOLC_BIN_URL}${solcLatestRelease}`); // eslint-disable-line no-undef
 };
 
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'code', code));
+
 	try {
 		const input = {
 			language: 'Solidity',
@@ -542,6 +565,7 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
 			});
 		});
+
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', Object.values(output.contracts[filename])[0].abi));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', Object.keys(output.contracts[filename])[0]));
@@ -551,4 +575,16 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
 	}
+};
+
+export const changeContractCompiler = (version) => async (dispatch, getState) => {
+	const buildsList = getState().form.getIn([FORM_CREATE_CONTRACT, 'compilersList', 'builds']);
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', version));
+	const compilerBuild = buildsList.find((build) => build.longVersion === version);
+	await loadScript(`${SOLC_BIN_URL}${compilerBuild.path}`); // eslint-disable-line no-undef
+	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
+	if (!code || !code.value) {
+		return;
+	}
+	await dispatch(contractCodeCompile());
 };

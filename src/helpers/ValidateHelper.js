@@ -544,3 +544,15 @@ export const checkErc20Contract = (scriptHex) => {
 
 	return false;
 };
+
+/**
+ *
+ * @param version
+ * @param minAccessVersion
+ * @returns {boolean}
+ */
+export const checkAccessVersion = (version, minAccessVersion) => {
+	const [major, minor, patch] = [...version.split('.')].map((part) => parseInt(part, 10));
+	const [minMajor, minMinor, minPatch] = [...minAccessVersion.split('.')].map((part) => parseInt(part, 10));
+	return !(minMajor > major || minMinor > minor || minPatch > patch);
+};
