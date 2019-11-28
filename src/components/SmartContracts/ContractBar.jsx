@@ -7,6 +7,7 @@ import AmountField from '../Fields/AmountField';
 import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
 import Toggle from '../Toggle';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
+import TransactionScenario from '../../containers/TransactionScenario';
 
 
 class ContractBar extends React.Component {
@@ -160,27 +161,36 @@ class ContractBar extends React.Component {
 							/>
 							Deploying amount:
 						</div>
-						<AmountField
-							fees={fees}
-							form={FORM_CREATE_CONTRACT}
-							assets={assets}
-							amount={amount}
-							currency={currency}
-							isAvailableBalance={isAvailableBalance}
-							amountInput={this.props.amountInput}
-							setFormError={this.props.setFormError}
-							setFormValue={this.props.setFormValue}
-							setValue={this.props.setValue}
-							setDefaultAsset={this.props.setDefaultAsset}
-						/>
+						<div className="field-wrap">
+							<AmountField
+								fees={fees}
+								form={FORM_CREATE_CONTRACT}
+								assets={assets}
+								amount={amount}
+								currency={currency}
+								isAvailableBalance={isAvailableBalance}
+								amountInput={this.props.amountInput}
+								setFormError={this.props.setFormError}
+								setFormValue={this.props.setFormValue}
+								setValue={this.props.setValue}
+								setDefaultAsset={this.props.setDefaultAsset}
+							/>
+						</div>
 					</li>
 				</ul>
-				<Button
-					type="button"
-					className="main-btn"
-					content="CREATE SMART CONTRACT"
-					disabled={form.get('compileLoading')}
-				/>
+				<TransactionScenario handleTransaction={() => this.props.createContract()}>
+					{
+						(submit) => (
+							<Button
+								type="button"
+								className="main-btn"
+								content="CREATE SMART CONTRACT"
+								onClick={submit}
+								disabled={form.get('compileLoading')}
+							/>
+						)
+					}
+				</TransactionScenario>
 			</div>
 		);
 	}
@@ -201,6 +211,7 @@ ContractBar.propTypes = {
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
+	createContract: PropTypes.func.isRequired,
 };
 
 ContractBar.defaultProps = {

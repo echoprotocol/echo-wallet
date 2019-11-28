@@ -55,15 +55,22 @@ class SmartContracts extends React.Component {
 						/>
 					</div>
 					{createType === SOURCE_CODE_MODE &&
-					<SourceCode
-						form={form}
-						setFormValue={this.props.setFormValue}
-						contractCodeCompile={this.props.contractCodeCompile}
-						clearForm={this.props.clearForm}
-						changeContractCompiler={this.props.changeContractCompiler}
-						setValue={this.props.setValue}
-					/>}
-					{createType === BYTECODE_MODE && <Bytecode />}
+						<SourceCode
+							form={form}
+							setFormValue={this.props.setFormValue}
+							contractCodeCompile={this.props.contractCodeCompile}
+							clearForm={this.props.clearForm}
+							changeContractCompiler={this.props.changeContractCompiler}
+							setValue={this.props.setValue}
+							resetCompiler={this.props.resetCompiler}
+							setDefaultAsset={this.props.setDefaultAsset}
+						/>}
+					{createType === BYTECODE_MODE &&
+						<Bytecode
+							form={form}
+							setFormValue={this.props.setFormValue}
+							setDefaultAsset={this.props.setDefaultAsset}
+						/>}
 				</div>
 				<ContractBar
 					form={form}
@@ -79,6 +86,7 @@ class SmartContracts extends React.Component {
 					setValue={this.props.setValue}
 					setDefaultAsset={this.props.setDefaultAsset}
 					getAssetsList={this.props.getAssetsList}
+					createContract={this.props.createContract}
 				/>
 			</Form>
 		);
@@ -102,8 +110,10 @@ SmartContracts.propTypes = {
 	form: PropTypes.object.isRequired,
 	contractCodeCompile: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	createContract: PropTypes.func.isRequired,
 	contractCompilerInit: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
+	resetCompiler: PropTypes.func.isRequired,
 };
 
 SmartContracts.defaultProps = {

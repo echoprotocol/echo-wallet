@@ -3,7 +3,7 @@ import { constants } from 'echojs-lib';
 import {
 	INDEX_PATH,
 	ACTIVITY_PATH,
-	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 	CONTRACT_LIST_PATH,
 	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
@@ -23,7 +23,7 @@ export const HEADER_TITLE = [
 		title: 'Recent Activity',
 	},
 	{
-		path: CREATE_CONTRACT_PATH,
+		path: SMART_CONTRACTS_PATH,
 		title: 'Smart Contracts',
 	},
 	{
@@ -155,3 +155,8 @@ export const GIT_REF = 'https://github.com/echoprotocol/echo-wallet/commit/';
 export const ECHO_REF = 'https://echo.org/';
 export const ECHO_DOCS_LINK = 'https://docs.echo.org/';
 export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
+
+export const REGISTRATION = {
+	BATCH: 1e3,
+	TIMEOUT: 0,
+};
