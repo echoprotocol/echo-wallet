@@ -122,6 +122,9 @@ class Wallet extends React.Component {
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
 								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
 									this.props.setFormValue('fee', res.value);
 								});
 							}}
