@@ -7,6 +7,7 @@ import AmountField from '../Fields/AmountField';
 import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
 import Toggle from '../Toggle';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
+import TransactionScenario from '../../containers/TransactionScenario';
 
 
 class ContractBar extends React.Component {
@@ -58,6 +59,12 @@ class ContractBar extends React.Component {
 			}, 300),
 		});
 	}
+
+	// isDisabledSubmit() {
+	// 	const { bytecode } = this.props;
+
+	// 	return (!bytecode.value || bytecode.error);
+	// }
 
 	renderAccuracyTrigger() {
 		return (
@@ -177,11 +184,18 @@ class ContractBar extends React.Component {
 						</div>
 					</li>
 				</ul>
-				<Button
-					type="button"
-					className="main-btn"
-					content="CREATE SMART CONTRACT"
-				/>
+				<TransactionScenario handleTransaction={() => this.props.createContract()}>
+					{
+						(submit) => (
+							<Button
+								type="button"
+								className="main-btn"
+								content="CREATE SMART CONTRACT"
+								onClick={submit}
+							/>
+						)
+					}
+				</TransactionScenario>
 			</div>
 		);
 	}
@@ -201,6 +215,7 @@ ContractBar.propTypes = {
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
+	createContract: PropTypes.func.isRequired,
 };
 
 ContractBar.defaultProps = {

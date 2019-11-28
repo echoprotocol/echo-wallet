@@ -36,7 +36,7 @@
 	
 	.radio-list {
 		display: flex;
-		
+		margin: 0 0 20px;
 		.radio:not(:last-child) {
 			margin: 0 41px 0 0;
 		}
@@ -69,11 +69,4 @@
 	color: #5C637D;
 	font-weight: 600;
 	margin: 34px 0 20px;
-}
-
-.create-contract-panel {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin: 0 0 20px;
 }

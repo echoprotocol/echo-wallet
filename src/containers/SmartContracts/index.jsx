@@ -6,7 +6,7 @@ import { setContractFees, getAssetsList, contractCodeCompile } from '../../actio
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setValue, setFormError, setFormValue, clearForm } from '../../actions/FormActions';
-import { getTransferFee } from '../../actions/TransactionActions';
+import { getTransferFee, createContract } from '../../actions/TransactionActions';
 
 export default connect(
 	(state) => ({
@@ -30,6 +30,7 @@ export default connect(
 		getAssetsList: (name) => getAssetsList(name),
 		contractCodeCompile: (code) => dispatch(contractCodeCompile(code)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
+		createContract: () => dispatch(createContract()),
 	}),
 )(SmartContracts);
 
