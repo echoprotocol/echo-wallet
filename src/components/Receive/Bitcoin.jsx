@@ -15,10 +15,30 @@ import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 
 class EchoNetwork extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			currentAccountOrAddress: '',
+		};
+	}
+
+	onDropdownChange(e, value) {
+		if (typeof e.target.value === 'undefined') {
+			this.setSender(e, value);
+		} else if (e.keyCode === 13) {
+			this.setSender(e, value);
+			setTimeout(() => { e.target.blur(); }, 0);
+		}
+	}
+
+	setSender(e, accountOrAddressName) {
+		this.setState({
+			currentAccountOrAddress: accountOrAddressName,
+		});
+	}
+
 	renderAccontsList() {
-
-		const users = [{ name: 'valik_pruss456' }];
-
+		const { from: { name } } = this.props;
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
 		const header = [{
@@ -29,28 +49,24 @@ class EchoNetwork extends React.Component {
 			disabled: true,
 		}];
 
-		const options = users.map(({
-			name,
-		}) => {
-			const content = (
-				<React.Fragment>
-					<div className="avatar-wrap">
-						<Avatar accountName={name} />
-					</div>
-					<div className="name">{name}</div>
-				</React.Fragment>
-			);
+		const content = (
+			<React.Fragment>
+				<div className="avatar-wrap">
+					<Avatar accountName={name} />
+				</div>
+				<div className="name">{name}</div>
+			</React.Fragment>
+		);
 
-			return ({
-				className: 'user-item',
-				value: name,
-				key: name,
-				content,
+		const options = {
+			className: 'user-item',
+			value: name,
+			key: name,
+			content,
+		};
 
-			});
-		});
-
-		return header.concat(options);
+		header.push(options);
+		return header;
 	}
 
 
@@ -105,7 +121,6 @@ class EchoNetwork extends React.Component {
 				value: name,
 				key: name,
 				content,
-				onClick: () => {},
 			});
 		});
 
@@ -115,9 +130,18 @@ class EchoNetwork extends React.Component {
 	renderPayment() {
 
 		const {
-			currency, from, setIn, checkAccount,
+			currency, setIn, checkAccount,
 			fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
+
+		const { currentAccountOrAddress } = this.state;
+
+		const field = {
+			checked: true,
+			error: null,
+			loading: false,
+			value: currentAccountOrAddress,
+		};
 
 		return (
 			<React.Fragment>
@@ -125,9 +149,9 @@ class EchoNetwork extends React.Component {
 
 				<AccountField
 					disabled
-					field={from}
+					field={field}
 					currency={currency}
-					subject="from"
+					subject="recipient account or address"
 					checkAccount={checkAccount}
 					setIn={setIn}
 					setFormValue={this.props.setFormValue}
@@ -147,6 +171,7 @@ class EchoNetwork extends React.Component {
 						search
 						text="Choose account or address"
 						closeOnChange
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 					/>
 				</div>
 
@@ -208,9 +233,9 @@ class EchoNetwork extends React.Component {
 
 		return (
 			<div className="payment-wrap" >
-				{this.renderGenerateAdressProcess()}
+				{/* {this.renderGenerateAdressProcess()} */}
 
-				{/* {this.renderPayment()} */}
+				{this.renderPayment()}
 			</div>
 		);
 	}
