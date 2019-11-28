@@ -251,7 +251,7 @@ export const addContractByName = (
 		abi,
 		name,
 	};
-	console.log(contracts);
+
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
 	dispatch(push('contracts', id, { disabled: false, abi, name }));

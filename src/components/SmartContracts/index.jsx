@@ -30,10 +30,6 @@ class SmartContracts extends React.Component {
 		});
 	}
 
-	onToggle() {
-	}
-
-
 	render() {
 		const {
 			form, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,

@@ -60,12 +60,6 @@ class ContractBar extends React.Component {
 		});
 	}
 
-	// isDisabledSubmit() {
-	// 	const { bytecode } = this.props;
-
-	// 	return (!bytecode.value || bytecode.error);
-	// }
-
 	renderAccuracyTrigger() {
 		return (
 			<div className="tooltip">

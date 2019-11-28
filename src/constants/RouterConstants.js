@@ -2,7 +2,6 @@ export const SIGN_UP_PATH = '/sign-up';
 export const SIGN_IN_PATH = '/sign-in';
 export const ACTIVITY_PATH = '/activity';
 export const ADD_CONTRACT_PATH = '/add-contract';
-export const CREATE_CONTRACT_PATH = '/create-contract';
 export const CONTRACT_LIST_PATH = '/contracts';
 export const SMART_CONTRACTS_PATH = '/smart-contracts';
 export const VIEW_CONTRACT_PATH = '/view-contract/:id';

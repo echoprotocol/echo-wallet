@@ -43,7 +43,7 @@ class ContractList extends React.Component {
 		if (disabled) {
 			return null;
 		}
-		console.log(id, name);
+
 		return (
 			<Table.Row
 				className="pointer"
