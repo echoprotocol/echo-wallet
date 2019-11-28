@@ -6,9 +6,9 @@ import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
 
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
-import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
@@ -129,6 +129,7 @@ class EchoNetwork extends React.Component {
 				className: 'user-item',
 				value: name,
 				key: name,
+				text: name,
 				content,
 				onClick: () => this.onClickItem(name),
 			});
@@ -177,7 +178,7 @@ class EchoNetwork extends React.Component {
 					<div className="address-item">
 						<div className="address">{address}</div>
 						<CopyToClipboard text={address}>
-							<button className="dropdown-copy-btn icon-icopy-tiny" />
+							<button className="dropdown-copy-btn icon-icopy-tiny" onClick={(e) => e.stopPropagation()} />
 						</CopyToClipboard>
 					</div>
 					<div className="name">{name}</div>
@@ -188,13 +189,15 @@ class EchoNetwork extends React.Component {
 				className: 'address-item-wrap',
 				value: name,
 				key: index.toString(),
-				text: name,
+				text: address,
 				content,
 				onClick: () => this.onClickItem(address),
 			});
 		});
 
-		return header.concat(options).concat(generateAddressItem);
+		return !options.length ?
+			generateAddressItem :
+			header.concat(options).concat(generateAddressItem);
 	}
 
 	render() {
