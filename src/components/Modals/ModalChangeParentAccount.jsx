@@ -78,9 +78,7 @@ class ModalLogout extends React.Component {
 				<div className="modal-body">
 					<div className="field-wrap">
 						<Form.Field>
-							<label htmlFor="current-account">
-							Current Account
-							</label>
+							<label htmlFor="current-account">Current Account</label>
 							<div className="image-input">
 								<Avatar accountName="account-name" />
 								<input
@@ -93,20 +91,25 @@ class ModalLogout extends React.Component {
 							</div>
 						</Form.Field>
 						<div className="field">
-							<div className="field-label">Parent account</div>
-							<Dropdown
-								options={this.renderList()}
-								searchQuery={searchText}
-								search
-								selection
-								fluid
-								text={searchText || 'Parent account'}
-								onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
-								placeholder="Parent account"
-								selectOnNavigation={false}
-								minCharacters={0}
-								noResultsMessage="No results are found"
-							/>
+
+							<label htmlFor="parentAccount" className="field-label">Parent account</label>
+							<div className="account-dropdown-wrap">
+								<Avatar accountName="account-name" />
+								<Dropdown
+									options={this.renderList()}
+									searchQuery={searchText}
+									search
+									selection
+									fluid
+									name="parentAccount"
+									text={searchText || 'Parent account'}
+									onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
+									placeholder="Parent account"
+									selectOnNavigation={false}
+									minCharacters={0}
+									noResultsMessage="No results are found"
+								/>
+							</div>
 						</div>
 					</div>
 					<div className="form-panel">

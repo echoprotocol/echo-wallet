@@ -22,6 +22,8 @@ import {
 	PROPOSAL_ADD_WIF,
 	MODAL_GENERATE_ADDRESS,
 	MODAL_CHANGE_PARENT_ACCOUNT,
+	MODAL_GENERATE_ECHO_ADDRESS,
+	MODAL_GENERATE_BTC_ADDRESS,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -59,6 +61,8 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_GENERATE_ADDRESS]: Map({}),
 	[MODAL_CHANGE_PARENT_ACCOUNT]: Map({}),
 
+	[MODAL_GENERATE_ECHO_ADDRESS]: Map({}),
+	[MODAL_GENERATE_BTC_ADDRESS]: Map({}),
 
 };
 
@@ -93,19 +97,21 @@ export default createModule({
 			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ADDRESS]),
 		[MODAL_CHANGE_PARENT_ACCOUNT]: _
 			.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_CHANGE_PARENT_ACCOUNT]),
+		[MODAL_GENERATE_ECHO_ADDRESS]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ECHO_ADDRESS]),
+		[MODAL_GENERATE_BTC_ADDRESS]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_BTC_ADDRESS]),
 	}),
 	transformations: {
 		open: {
 
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-
 				if (payload.params) {
 					Object.entries(payload.params).forEach(([field, value]) => {
 						state = state.setIn([payload.type, field], value);
 					});
 				}
-
 				return state;
 			},
 		},

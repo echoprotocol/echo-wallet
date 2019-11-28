@@ -141,7 +141,6 @@ class Header extends React.Component {
 
 	renderList() {
 		const { preview, accountName } = this.props;
-
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },
