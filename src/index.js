@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
 import { Provider } from 'react-redux';
-import 'babel-polyfill';
 
 import echo, { echoReducer } from 'echojs-lib';
 
