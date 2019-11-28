@@ -1,5 +1,6 @@
 import { validators, PublicKey } from 'echojs-lib';
 import BN from 'bignumber.js';
+import validate from 'bitcoin-address-validation';
 
 import {
 	ADDRESS_PREFIX,
@@ -544,3 +545,23 @@ export const checkErc20Contract = (scriptHex) => {
 
 	return false;
 };
+
+/**
+ * @method isBackupAddress
+ * @param {String} hex
+ * @returns {boolean}
+ */
+export const isBackupAddress = (hex) => {
+	try {
+		const validationData = validate(hex);
+
+		return validationData &&
+			!validationData.bech32 &&
+			!validationData.testnet &&
+			validationData.address &&
+			validationData.type === 'p2pkh';
+	} catch (e) {
+		return false;
+	}
+};
+

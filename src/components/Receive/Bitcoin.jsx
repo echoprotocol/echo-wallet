@@ -9,8 +9,9 @@ import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
+import ModalCreateBtcAddress from '../Modals/ModalCreateBtcAddress';
 
-import { MODAL_GENERATE_ADDRESS } from '../../constants/ModalConstants';
+import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 
 class EchoNetwork extends React.Component {
 
@@ -201,6 +202,7 @@ class EchoNetwork extends React.Component {
 
 		return address ? (
 			<React.Fragment>
+				<ModalCreateBtcAddress />
 				<h2 className="payment-header t-center">
 					You should generate address<br /> to receive payment.
 				</h2>
@@ -211,7 +213,7 @@ class EchoNetwork extends React.Component {
 				<Button
 					className="main-btn"
 					content="Generate address"
-					onClick={() => this.props.openModal(MODAL_GENERATE_ADDRESS)}
+					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
 		) :
