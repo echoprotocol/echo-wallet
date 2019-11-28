@@ -94,9 +94,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		const precision = getState()
 			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
-
 		let amount = await getOperationFee(type, options);
-
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
@@ -990,6 +988,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
+
 		tr.broadcast().then((res) => {
 			if (addToWatchList) {
 				dispatch(addContractByName(
@@ -1334,6 +1333,45 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue ? feeValue.value : null;
 };
 
+export const generateBtcAddress = (address) => async (dispatch, getState) => {
+	try {
+
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const operation = 'sidechain_btc_create_address';
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			backup_address: address,
+		};
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			backup_address: address,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
+
 export const generateEthAddress = () => async (dispatch, getState) => {
 	try {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -1357,6 +1395,44 @@ export const generateEthAddress = () => async (dispatch, getState) => {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
+
+export const generateEchoAddress = (label) => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			owner: activeUserId,
+			label,
+		};
+
+		const operation = 'account_address_create';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+			label,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({
