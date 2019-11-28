@@ -2,20 +2,104 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { List } from 'immutable';
+import { validators } from 'echojs-lib';
+import BN from 'bignumber.js';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
-import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
 
 
 class EchoNetwork extends React.Component {
 
-	renderAccontsList() {
+	constructor(props) {
+		super(props);
 
-		const users = [{ name: 'valik_pruss456' }];
+		this.state = {
+			addresses: new List([]),
+			receiver: '',
+		};
+	}
+
+
+	componentDidMount() {
+		this.props.updateAccountAddresses();
+	}
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		const isUpdate = nextProps.accountAddresses.find((value) => !prevState.addresses.find((v) => v.get('address') === value.get('address')));
+
+		if (!isUpdate) {
+			return {};
+		}
+
+		return { addresses: nextProps.accountAddresses };
+	}
+
+	onClickItem(value) {
+		this.setState({
+			receiver: value,
+		});
+	}
+
+	onChange(e, value) {
+		this.setState({ receiver: value });
+	}
+
+	getReceiver() {
+		const { accountName } = this.props;
+		const { addresses, receiver } = this.state;
+
+		if (accountName === receiver) {
+			return accountName;
+		}
+
+		const address = addresses.find((a) => a.get('address') === receiver);
+
+		return address ? address.get('address') : null;
+	}
+
+	getQrData() {
+		const receiverValue = this.getReceiver();
+
+		if (!receiverValue) {
+			return { text: '', link: '' };
+		}
+
+		const text = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/qr-code.png`;
+
+		const link = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/widget`;
+
+		return { text, link };
+	}
+
+	formatCurrencyId() {
+		const { currency } = this.props;
+		if (!currency || !currency.id) {
+			return null;
+		}
+		const name = validators.isAssetId(currency.id) ? 'asset' : 'token';
+		const id = currency.id.split('.')[2];
+
+		return `${name}-${id}`;
+	}
+
+	formatAmount() {
+		const { amount, currency } = this.props;
+		if (!currency || !currency.precision || !amount || !amount.value) {
+			return null;
+		}
+
+		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
+	}
+
+	renderAccountsList() {
+
+		const users = [{ name: this.props.accountName }];
 
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
@@ -44,7 +128,7 @@ class EchoNetwork extends React.Component {
 				value: name,
 				key: name,
 				content,
-
+				onClick: () => this.onClickItem(name),
 			});
 		});
 
@@ -53,13 +137,13 @@ class EchoNetwork extends React.Component {
 
 
 	renderAddressesList() {
-		const users = [
-			{ name: 'Valik1', address: 'f0d6if8k5d87g5hw2ej548d3r7h4kr7fn34kj123kl4444' },
-			{ name: 'Valik2', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
-			{ name: 'Valik3', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
-			{ name: 'Valik4', address: 'j548d3r7h4kr7ff0d6if8k5d87g5hw2en34kj123kl9999' },
-			{ name: 'Valik5', address: '5hw2en34kj12j548d3r7h4kr7ff0d6if8k5d87g3kl090909' },
-		];
+		const { addresses } = this.state;
+
+
+		const users = addresses.map((a) => ({
+			name: a.get('label'),
+			address: a.get('address'),
+		})).toArray();
 
 		const addressHeaderTitle = (
 			<div className="title">ADDRESSES</div>
@@ -85,7 +169,7 @@ class EchoNetwork extends React.Component {
 
 		const options = users.map(({
 			name, address,
-		}) => {
+		}, index) => {
 			const content = (
 				<React.Fragment key={name} >
 					<div className="address-item">
@@ -101,9 +185,10 @@ class EchoNetwork extends React.Component {
 			return ({
 				className: 'address-item-wrap',
 				value: name,
-				key: name,
+				key: index.toString(),
+				text: name,
 				content,
-				onClick: () => {},
+				onClick: () => this.onClickItem(address),
 			});
 		});
 
@@ -113,27 +198,16 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount,
-			fee, assets, tokens, amount, isAvailableBalance, fees,
+			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
+		const { receiver } = this.state;
+		const receiverValue = this.getReceiver();
+
+		const { text, link } = this.getQrData();
 
 		return (
 			<div className="payment-wrap">
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
-
-				<AccountField
-					disabled
-					field={from}
-					currency={currency}
-					subject="from"
-					checkAccount={checkAccount}
-					setIn={setIn}
-					setFormValue={this.props.setFormValue}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					setValue={this.props.setValue}
-				/>
-
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
@@ -141,10 +215,11 @@ class EchoNetwork extends React.Component {
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
 						placeholder="Choose account or address"
-						options={this.renderAccontsList().concat(this.renderAddressesList())}
+						options={this.renderAccountsList().concat(this.renderAddressesList())}
 						search
 						text="Choose account or address"
-						closeOnChange
+						searchQuery={receiver}
+						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 					/>
 				</div>
 
@@ -164,9 +239,12 @@ class EchoNetwork extends React.Component {
 					setDefaultAsset={this.props.setDefaultAsset}
 					getTransferFee={this.props.getTransferFee}
 					setContractFees={this.props.setContractFees}
-					assetDropdown={false}
+					assetDropdown
+					receive
 				/>
-				<QrCode />
+				{
+					receiverValue ? <QrCode text={text} link={link} /> : null
+				}
 			</div>
 		);
 	}
@@ -180,6 +258,9 @@ EchoNetwork.propTypes = {
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
+	// eslint-disable-next-line react/no-unused-prop-types
+	accountAddresses: PropTypes.object.isRequired,
+	accountName: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
@@ -188,9 +269,7 @@ EchoNetwork.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	from: PropTypes.object.isRequired,
-	setIn: PropTypes.func.isRequired,
-	checkAccount: PropTypes.func.isRequired,
+	updateAccountAddresses: PropTypes.func.isRequired,
 };
 
 EchoNetwork.defaultProps = {

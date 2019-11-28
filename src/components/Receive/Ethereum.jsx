@@ -58,7 +58,6 @@ class Ethereum extends React.Component {
 				<AmountField
 					fees={[]}
 					form={FORM_ETH_RECEIVE}
-					tokens={{ size: 0 }}
 					amount={amount}
 					isAvailableBalance={false}
 					amountInput={this.props.amountInput}
@@ -67,10 +66,9 @@ class Ethereum extends React.Component {
 					setValue={() => {}}
 					currency={ethCurrency}
 					setDefaultAsset={() => {}}
-					getTransferFee={() => Promise.resolve()}
-					setContractFees={() => {}}
 					assetDropdown={false}
 					showAvailable={false}
+					receive
 					labelText="amount"
 				/>
 				<QrCode text={qrText} />

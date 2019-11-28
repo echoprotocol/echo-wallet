@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
-import { disableToken, setAsset } from '../../actions/BalanceActions';
+import { disableToken, getAssetsBalances, setAsset } from '../../actions/BalanceActions';
 import { openModal } from '../../actions/ModalActions';
 import { clearForm, setFormError, setFormValue, setIn, setValue } from '../../actions/FormActions';
 import {
@@ -17,9 +17,10 @@ import {
 	generateEthAddress,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
+import { setContractFees } from '../../actions/ContractActions';
+import { updateAccountAddresses } from '../../actions/AccountActions';
 
 import Wallet from '../../components/Wallet';
-import { setContractFees } from '../../actions/ContractActions';
 import { getEthAddress } from '../../actions/SidechainActions';
 
 export default connect(
@@ -37,6 +38,7 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
+		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
 		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		fullCurrentAccount: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
@@ -61,8 +63,10 @@ export default connect(
 		setContractFees: () => dispatch(setContractFees(FORM_TRANSFER)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
+		updateAccountAddresses: () => dispatch(updateAccountAddresses()),
 		generateEthAddress: () => dispatch(generateEthAddress()),
 		getEthAddress: () => dispatch(getEthAddress()),
+		getAssetsBalances: () => dispatch(getAssetsBalances()),
 	}),
 )(Wallet);
 
