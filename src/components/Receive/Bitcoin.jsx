@@ -9,6 +9,7 @@ import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import AccountField from '../Fields/AccountField';
 import QrCode from '../QrCode';
+import ModalCreateBtcAddress from '../Modals/ModalCreateBtcAddress';
 
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 
@@ -120,6 +121,7 @@ class EchoNetwork extends React.Component {
 
 		return (
 			<React.Fragment>
+				<ModalCreateBtcAddress />
 				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
 
 				<AccountField

@@ -94,13 +94,11 @@ export default createModule({
 
 			reducer: (state, { payload }) => {
 				state = state.setIn([payload.type, 'show'], true);
-				console.log('before: ', state.toJS());
 				if (payload.params) {
 					Object.entries(payload.params).forEach(([field, value]) => {
 						state = state.setIn([payload.type, field], value);
 					});
 				}
-				console.log('after: ', state.toJS());
 				return state;
 			},
 		},

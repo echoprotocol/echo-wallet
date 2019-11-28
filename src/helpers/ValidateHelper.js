@@ -546,7 +546,7 @@ export const checkErc20Contract = (scriptHex) => {
 export const isBackupAddress = (hex) => {
 	try {
 		const validationData = validate(hex);
-		console.log('isBackupAddress', validationData);
+
 		return validationData &&
 			!validationData.bech32 &&
 			!validationData.testnet &&

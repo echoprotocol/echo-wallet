@@ -25,7 +25,6 @@ class ModalCreateBtcAddress extends React.Component {
 
 	onGenerateBtcAddress(submit) {
 		if (!isBackupAddress(this.state.address)) {
-			this.props.setError('Incorrect backup address');
 			return;
 		}
 		this.props.closeModal();
@@ -47,7 +46,6 @@ class ModalCreateBtcAddress extends React.Component {
 		} = this.props;
 
 		return (
-			show &&
 			<TransactionScenario
 				handleTransaction={() => this.props.generateBtcAddress(this.state.address)}
 			>

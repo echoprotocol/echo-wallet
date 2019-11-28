@@ -88,7 +88,7 @@ class TransactionScenario extends React.Component {
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
-					show={false}
+					show={modalUnlock.get('show')}
 					disabled={modalUnlock.get('loading')}
 					error={modalUnlock.get('error')}
 					password={this.state.password}
