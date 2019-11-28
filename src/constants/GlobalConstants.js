@@ -155,3 +155,8 @@ export const GIT_REF = 'https://github.com/echoprotocol/echo-wallet/commit/';
 export const ECHO_REF = 'https://echo.org/';
 export const ECHO_DOCS_LINK = 'https://docs.echo.org/';
 export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
+
+export const REGISTRATION = {
+	BATCH: 1e3,
+	TIMEOUT: 0,
+};
