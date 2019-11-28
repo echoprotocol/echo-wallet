@@ -419,11 +419,6 @@ const isActiveWifChanged = (privateKey, basePrivateKeys, permissionForm) => {
 			return acc;
 		}, {});
 
-	// const addedPubWithoutWif = Object.keys(newPrivateKeys)
-	// 	.filter((k) => !oldPrivateKeys[k] && !newPrivateKeys[k].value);
-	// for (let i = 0; i < addedPubWithoutWif.length; i += 1) {
-	// 	delete newPrivateKeys[addedPubWithoutWif[i]];
-	// }
 	return Object.keys(newPrivateKeys).length !== Object.keys(oldPrivateKeys).length ||
 		!Object.entries(oldPrivateKeys).every(([key, wif]) =>
 			(newPrivateKeys[key] && !!newPrivateKeys[key].value === !!wif.value));
