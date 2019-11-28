@@ -120,7 +120,6 @@ class EchoNetwork extends React.Component {
 				value: name,
 				key: name,
 				content,
-				// onClick: () => console.log('prikol'),
 			});
 		});
 
