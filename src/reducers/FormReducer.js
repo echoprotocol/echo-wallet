@@ -17,6 +17,7 @@ import {
 	FORM_COMMITTEE,
 	FORM_PASSWORD_CREATE,
 	FORM_FREEZE,
+	FORM_BTC_RECEIVE,
 	FORM_ETH_RECEIVE,
 } from '../constants/FormConstants';
 
@@ -103,6 +104,17 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
+	[FORM_BTC_RECEIVE]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		balance: {
+			assets: new List([]),
+		},
+		isAvailableBalance: false,
+	}),
 	[FORM_CREATE_CONTRACT]: Map({
 		amount: {
 			value: '',
@@ -130,6 +142,12 @@ const DEFAULT_FORM_FIELDS = {
 		accepted: false,
 		ETHAccuracy: false,
 		supportedAsset: '',
+		compilersList: new Map({}),
+		currentCompiler: {
+			value: '',
+			error: null,
+		},
+		compileLoading: false,
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),

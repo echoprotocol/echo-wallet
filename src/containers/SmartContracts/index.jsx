@@ -2,7 +2,13 @@ import { connect } from 'react-redux';
 
 import SmartContracts from '../../components/SmartContracts';
 
-import { setContractFees, getAssetsList, contractCodeCompile } from '../../actions/ContractActions';
+import {
+	setContractFees,
+	getAssetsList,
+	contractCodeCompile,
+	contractCompilerInit,
+	changeContractCompiler,
+} from '../../actions/ContractActions';
 import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setValue, setFormError, setFormValue, clearForm } from '../../actions/FormActions';
@@ -31,6 +37,8 @@ export default connect(
 		contractCodeCompile: (code) => dispatch(contractCodeCompile(code)),
 		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
 		createContract: () => dispatch(createContract()),
+		contractCompilerInit: () => dispatch(contractCompilerInit()),
+		changeContractCompiler: (version) => dispatch(changeContractCompiler(version)),
 	}),
 )(SmartContracts);
 

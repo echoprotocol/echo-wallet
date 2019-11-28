@@ -1,3 +1,4 @@
 {
-
+	"SOLC_LIST_URL": "https://echoprotocol.github.io/solc-bin/bin/list.json",
+	"SOLC_BIN_URL": "https://echoprotocol.github.io/solc-bin/bin/"
 }

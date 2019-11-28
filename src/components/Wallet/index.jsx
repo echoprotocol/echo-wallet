@@ -17,6 +17,7 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
+			btcAddress, accountId,
 		} = this.props;
 
 		const externalTabs = [
@@ -86,7 +87,10 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							updateAccountAddresses={this.props.updateAccountAddresses}
+							getBtcAddress={this.props.getBtcAddress}
+							btcAddress={btcAddress}
 							accountName={accountName}
+							accountId={accountId}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
 							from={from}
@@ -122,6 +126,9 @@ class Wallet extends React.Component {
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
 								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
 									this.props.setFormValue('fee', res.value);
 								});
 							}}
@@ -158,6 +165,7 @@ Wallet.propTypes = {
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
 	currency: PropTypes.object,
+	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
 	avatarName: PropTypes.string.isRequired,
@@ -165,6 +173,7 @@ Wallet.propTypes = {
 	fee: PropTypes.object.isRequired,
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
@@ -186,6 +195,7 @@ Wallet.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	getBtcAddress: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
 	getAssetsBalances: PropTypes.func.isRequired,
@@ -197,6 +207,7 @@ Wallet.defaultProps = {
 	tokens: null,
 	assets: null,
 	currency: null,
+	btcAddress: null,
 };
 
 export default Wallet;

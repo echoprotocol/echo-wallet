@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 
@@ -22,9 +21,10 @@ class Receive extends React.Component {
 	render() {
 
 		const {
-			currency, from, setIn, checkAccount, generateEthAddress, fullCurrentAccount,
+			currency, checkAccount, generateEthAddress, fullCurrentAccount,
 			getEthAddress, ethAddress, clearForm,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
+			btcAddress, accountId,
 		} = this.props;
 
 		const internalTabs = [
@@ -53,6 +53,7 @@ class Receive extends React.Component {
 						setDefaultAsset={this.props.setDefaultAsset}
 						getTransferFee={this.props.getTransferFee}
 						setContractFees={this.props.setContractFees}
+						openModal={(value) => this.props.openModal(value)}
 						updateAccountAddresses={this.props.updateAccountAddresses}
 					/>),
 			},
@@ -66,27 +67,17 @@ class Receive extends React.Component {
 				render: () => (
 					<Bitcoin
 						// for Amount field
-						fees={fees}
-						fee={fee}
-						assets={assets}
-						tokens={tokens}
 						amount={amount}
-						currency={currency}
-						isAvailableBalance={isAvailableBalance}
 						amountInput={this.props.amountInput}
-						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
-						setValue={this.props.setValue}
-						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
 						// for From field
-						from={from}
-						setIn={setIn}
+						accountAddresses={accountAddresses}
+						accountName={accountName}
+						accountId={accountId}
 						checkAccount={checkAccount}
 						openModal={(value) => this.props.openModal(value)}
-					/>
-				),
+						getBtcAddress={this.props.getBtcAddress}
+						btcAddress={btcAddress}
+					/>),
 			},
 			{
 				menuItem: <Button
@@ -145,7 +136,6 @@ Receive.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
-	from: PropTypes.object.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,
@@ -157,16 +147,14 @@ Receive.propTypes = {
 	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	getBtcAddress: PropTypes.func.isRequired,
+	btcAddress: PropTypes.object,
+	accountId: PropTypes.string.isRequired,
 };
 
 Receive.defaultProps = {
 	currency: null,
+	btcAddress: null,
 };
 
-export default connect(
-	(state) => ({
-		from: state.global.getIn(['activeUser']).toJS(),
-	}),
-	() => ({
-	}),
-)(Receive);
+export default Receive;
