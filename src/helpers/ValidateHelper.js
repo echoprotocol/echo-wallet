@@ -11,7 +11,7 @@ import {
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
-const reg = /^(0x|0X)?[a-fA-F0-9]+$/;
+const reg = /^(([\da-fA-F]){2})*$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
