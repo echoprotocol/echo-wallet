@@ -29,6 +29,12 @@
             }
         }
     }
+    
+    &.upward {
+        .menu {
+            max-height: 300px
+        }
+    }
 
     &.assets-tokens-dropdown {
         display: flex;

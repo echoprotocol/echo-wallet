@@ -12,11 +12,18 @@ class SourceCode extends React.Component {
 		super(props);
 		this.state = {
 			timeout: null,
+			isDropdownUpdward: false,
 		};
 	}
 
 	componentDidMount() {
 		this.props.setDefaultAsset();
+
+		this.setDropdownUpwardState();
+
+		window.onresize = () => {
+			this.setDropdownUpwardState();
+		};
 	}
 
 	componentWillUnmount() {
@@ -104,6 +111,14 @@ class SourceCode extends React.Component {
 		return contractNames.map((c, index) => ({ key: index, text: c, value: c }));
 	}
 
+	setDropdownUpwardState() {
+		const isDropdownUpdward = window.innerHeight < 900;
+
+		this.setState({
+			isDropdownUpdward,
+		});
+	}
+
 	isDisabled() {
 		const { form } = this.props;
 
@@ -116,6 +131,7 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form } = this.props;
+		const { isDropdownUpdward } = this.state;
 		return (
 			<React.Fragment>
 				<div className={classnames(['editor-wrap error-wrap',
@@ -153,6 +169,7 @@ class SourceCode extends React.Component {
 							onChange={(e) => this.onChangeCompiler(e)}
 							noResultsMessage="No results are found"
 							disabled={form.get('loading') || form.get('compileLoading')}
+							upward={isDropdownUpdward}
 						/>
 					</div>
 					<div className="field">
@@ -166,6 +183,7 @@ class SourceCode extends React.Component {
 							selectOnNavigation={false}
 							onChange={(e, { value }) => this.onChangeItem(e, value)}
 							disabled={!form.get('contracts').size || form.get('compileLoading')}
+							upward={isDropdownUpdward}
 						/>
 					</div>
 				</div>
