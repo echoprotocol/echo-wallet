@@ -28,6 +28,7 @@ import {
 	validateContractName,
 	validateByType,
 	checkAccessVersion,
+	checkErc20Contract,
 } from '../helpers/ValidateHelper';
 
 import {
@@ -44,9 +45,14 @@ import {
 	MIN_ACCESS_VERSION_BUILD,
 } from '../constants/GlobalConstants';
 
+import { MODAL_WATCH_CONTRACT_AS_TOKEN } from '../constants/ModalConstants';
+
 import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
+
+import { openModal } from './ModalActions';
+
 import { loadScript } from '../api/ContractApi';
 
 /**
@@ -147,6 +153,14 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
 		dispatch(push('contracts', id, { disabled: false, abi, name }));
+
+		const [, { code }] = contract;
+
+		const isErc20Token = checkErc20Contract(code);
+
+		if (isErc20Token) {
+			dispatch(openModal(MODAL_WATCH_CONTRACT_AS_TOKEN, { accountId, contractId: id }));
+		}
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {

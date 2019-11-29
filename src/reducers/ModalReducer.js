@@ -24,6 +24,7 @@ import {
 	MODAL_CHANGE_PARENT_ACCOUNT,
 	MODAL_GENERATE_ECHO_ADDRESS,
 	MODAL_GENERATE_BTC_ADDRESS,
+	MODAL_WATCH_CONTRACT_AS_TOKEN,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -63,7 +64,9 @@ const DEFAULT_MODAL_FIELDS = {
 
 	[MODAL_GENERATE_ECHO_ADDRESS]: Map({}),
 	[MODAL_GENERATE_BTC_ADDRESS]: Map({}),
-
+	[MODAL_WATCH_CONTRACT_AS_TOKEN]: Map({
+		contractId: '',
+	}),
 };
 
 export default createModule({
@@ -101,6 +104,8 @@ export default createModule({
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_ECHO_ADDRESS]),
 		[MODAL_GENERATE_BTC_ADDRESS]:
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_GENERATE_BTC_ADDRESS]),
+		[MODAL_WATCH_CONTRACT_AS_TOKEN]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_WATCH_CONTRACT_AS_TOKEN]),
 	}),
 	transformations: {
 		open: {
