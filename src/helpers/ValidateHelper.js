@@ -16,7 +16,7 @@ const reg = /^(0x|0X)?[a-fA-F0-9]+$/;
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
-const accountAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+const accountAddressRegex = /^[a-fA-F0-9]{40}$/;
 
 /**
  * @method isAccountNameError

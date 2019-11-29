@@ -24,7 +24,7 @@ import {
 	CONTRACT_ID_PREFIX,
 	ECHO_ASSET_ID,
 	FREEZE_BALANCE_PARAMS,
-	APPLY_CHANGES_TIMEOUT, ECHO_ASSET_PRECISION,
+	APPLY_CHANGES_TIMEOUT, ECHO_ASSET_PRECISION, ADDRESS_PREFIX,
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
@@ -228,7 +228,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 						amount: 0,
 					},
 					from: fromAccount.id,
-					to: to.slice(2),
+					to,
 					amount: {
 						amount: amountValue || 0,
 						asset_id: currency.id || ECHO_ASSET_ID,
@@ -448,11 +448,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 };
 
 export const subjectToSendSwitch = (value) => async (dispatch) => {
-	if (value.startsWith('0x')) {
-		if (!validateAccountAddress(value)) {
-			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid address'));
-			return false;
-		}
+	if (validateAccountAddress(value)) {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
@@ -620,7 +616,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 		currency,
 	} = form;
 	if (form.subjectTransferType === ADDRESS_SUBJECT_TYPE && validators.isContractId(currency.id)) {
-		form.to.value = await echo.api.getAccountByAddress(to.value.slice(2).toLowerCase());
+		form.to.value = await echo.api.getAccountByAddress(to.value.toLowerCase());
 		return dispatch(transfer(form));
 	}
 
@@ -705,7 +701,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 					amount: fee.value || 0,
 				},
 				from: fromAccount.id,
-				to: to.value.slice(2).toLowerCase(),
+				to: to.value.toLowerCase(),
 				amount: {
 					amount: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
 					asset_id: currency.id || ECHO_ASSET_ID,
@@ -717,7 +713,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 				fee: `${new BN(fee.value).div(precision)
 					.toString(10)} ${fee.asset.symbol}`,
 				from: fromAccount.name,
-				to_address: to.value.slice(2),
+				to_address: to.value,
 				amount: `${amount} ${currency.symbol}`,
 			};
 
@@ -992,7 +988,13 @@ export const createContract = () => async (dispatch, getState) => {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 			code: bytecodeValue,
+			eth_accuracy: ETHAccuracy ? 'On' : 'Off',
+			supported_asset: supportedAsset.value || 'All',
 		};
+
+		if (amount.value && amount.value !== '0') {
+			showOptions.amount = `${amount.value} ${(currency && currency.symbol) ? currency.symbol : ADDRESS_PREFIX}`;
+		}
 
 		dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_create', options, showOptions }));
 
