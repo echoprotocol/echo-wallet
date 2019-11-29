@@ -173,7 +173,6 @@
 }
 
 
-/* Displays like a select box */
 .selection.dropdown {
 	cursor: pointer;
 	word-wrap: break-word;
@@ -194,6 +193,12 @@
 		box-shadow $speed ease,
 		width $speed ease,
 		border $speed ease;
+}
+.error {
+  .selection.dropdown,
+  .selection.dropdown:hover {
+    border: 1px solid #ff4848;
+  }
 }
 
 .selection.dropdown.visible,
