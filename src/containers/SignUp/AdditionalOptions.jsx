@@ -47,9 +47,9 @@ class AdditionalOptions extends React.Component {
 			case REGISTER_DEFAULT_SETTINGS:
 				return <DefaultSettingsPanel />;
 			case REGISTER_PARTNER_ACCOUNT:
-				return <PartnerAccountPanel loading />;
+				return <PartnerAccountPanel loading={loading} />;
 			case REGISTER_IP_URL:
-				return <IpUrlPanel loading />;
+				return <IpUrlPanel loading={loading} />;
 			default:
 				return <DefaultSettingsPanel />;
 		}

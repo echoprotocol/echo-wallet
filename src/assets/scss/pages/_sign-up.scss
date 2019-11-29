@@ -3,4 +3,14 @@
 		font-size: 14px;
 		margin: -6px 0 0;
 	}
+	.dropdown {
+		.menu {
+			.user-item {
+				display: flex;
+				.name {
+					margin-left: 6px;
+				}
+			}
+		}
+	}
 }

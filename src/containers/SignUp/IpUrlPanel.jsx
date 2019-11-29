@@ -18,6 +18,7 @@ class IpUrlPanel extends React.Component {
 						<label htmlFor="accountName">IP or URL</label>
 						<input
 							name="IpUrl"
+							disabled={loading}
 							placeholder="Enter IP or URL"
 						/>
 						{ false && <span className="error-message">some error</span> }
@@ -29,9 +30,9 @@ class IpUrlPanel extends React.Component {
 
 }
 
+
 IpUrlPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
-
 };
 
 export default IpUrlPanel;

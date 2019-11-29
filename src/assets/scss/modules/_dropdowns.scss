@@ -48,18 +48,10 @@
                 display: none;
             }
 
-            .dropdown.icon {
-                margin-top: -7px;
-                margin-right: -10px;
-            }
+
         }
 
-        .dropdown.icon {
-			padding-left: 1em;
-			color: $bd-gray;
-        }
-
-        &>input.search {
+        & > input.search {
             padding-right: 28px;
             transition: color .3s;
             cursor: pointer;
@@ -291,6 +283,16 @@
             display: none !important;
         }
 	}
+
+	.dropdown.icon {
+		position: absolute;
+		right: 12px;
+		top: 0px;
+		bottom: 4px;
+		margin: auto;
+		color: $bd-gray;
+		z-index: 2;
+	}
 }
 
 
@@ -350,6 +352,8 @@
 	background: rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, 0.95);
 }
+
+
 
 .dropdown-wrap {
 
@@ -427,14 +431,6 @@
 		&.visible {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
-		}
-
-		& > .dropdown.icon {
-			position: absolute;
-			right: 12px;
-			top: 0px;
-			bottom: 4px;
-			margin: auto;
 		}
 
 		&.active {
