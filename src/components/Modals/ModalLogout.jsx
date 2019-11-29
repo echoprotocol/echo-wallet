@@ -72,7 +72,6 @@ class ModalLogout extends React.Component {
 						role="button"
 						tabIndex="0"
 					/>
-					<div className="modal-header" />
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="form-info">
@@ -144,7 +143,6 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_LOGOUT, 'show']),
 		error: state.modal.getIn([MODAL_LOGOUT, 'error']),
-		loading: state.modal.getIn([MODAL_LOGOUT, 'loading']),
 		accountName: state.modal.getIn([MODAL_LOGOUT, 'accountName']),
 	}),
 	(dispatch) => ({

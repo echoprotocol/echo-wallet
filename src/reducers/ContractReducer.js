@@ -5,6 +5,7 @@ const DEFAULT_FIELDS = Map({
 	functions: List([]),
 	constants: List([]),
 	id: '',
+	name: '',
 	intervalId: null,
 });
 

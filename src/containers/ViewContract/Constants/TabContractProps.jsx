@@ -13,7 +13,7 @@ import ConstantLine from './LineComponent';
 class TabContractProps extends React.Component {
 
 	componentWillMount() {
-		this.props.formatAbi(this.props.match.params.name);
+		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	componentWillUnmount() {
@@ -131,7 +131,7 @@ export default withRouter(connect(
 		constants: state.contract.get('constants'),
 	}),
 	(dispatch) => ({
-		formatAbi: (name) => dispatch(formatAbi(name)),
+		formatAbi: (id) => dispatch(formatAbi(id)),
 		clearForm: (value) => dispatch(clearForm(value)),
 	}),
 )(TabContractProps));

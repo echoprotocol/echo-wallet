@@ -94,9 +94,7 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		const precision = getState()
 			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await echo.api.getObject(fee.asset_id);
-
 		let amount = await getOperationFee(type, options);
-
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
 				.div(feeAsset.options.core_exchange_rate.quote.amount)
@@ -891,7 +889,9 @@ export const freezeBalance = () => async (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const createContract = () => async (dispatch, getState) => {
-	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
+	const {
+		bytecode, name, abi, supportedAsset, ETHAccuracy, code, currency, amount,
+	} = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -908,7 +908,7 @@ export const createContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value) {
 		const nameError = validateContractName(name.value);
 		const abiError = validateAbi(abi.value);
 
@@ -923,22 +923,45 @@ export const createContract = () => async (dispatch, getState) => {
 		}
 	}
 
+	let supportedAssetId = '';
+	if (supportedAsset) {
+		const assets = await echo.api.lookupAssetSymbols([supportedAsset]);
+		const asset = assets.find((a) => a.symbol === supportedAsset);
+		supportedAssetId = asset.id;
+	}
+
 	dispatch(resetTransaction());
 
 	const options = {
 		registrar: activeUserId,
-		value: { amount: 0, asset_id: '1.3.0' },
-		fee: { amount: 0, asset_id: '1.3.0' },
+		value: { amount: amount.value || 0, asset_id: currency.id || ECHO_ASSET_ID },
+		fee: { amount: 0, asset_id: supportedAssetId || ECHO_ASSET_ID },
 		code: bytecodeValue,
-		eth_accuracy: true,
-		supported_asset_id: '1.3.0',
+		eth_accuracy: ETHAccuracy,
 	};
+
+	if (supportedAssetId) {
+		options.supported_asset_id = supportedAssetId;
+		if (new BN(options.value.amount).eq(0)) {
+			options.value.asset_id = supportedAssetId;
+		} else if (options.value.asset_id !== supportedAssetId) {
+			dispatch(setFormError(
+				FORM_CREATE_CONTRACT,
+				'amount',
+				'Amount asset should be equal to supported asset',
+			));
+			return null;
+		}
+	}
 
 	try {
 		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
 
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
+		} else {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'amount', 'Can\'t calculate fee'));
+			return null;
 		}
 		options.fee.amount = fee.value;
 		const showOptions = {
@@ -951,7 +974,7 @@ export const createContract = () => async (dispatch, getState) => {
 
 		return true;
 	} catch (err) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', 'Incorrect bytecode'));
+		dispatch(setFormError(FORM_CREATE_CONTRACT, code.value ? 'code' : 'bytecode', 'Transaction params is invalid'));
 		return false;
 	}
 };
@@ -977,7 +1000,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
@@ -990,8 +1012,9 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
+
 		tr.broadcast().then((res) => {
-			if (addToWatchList) {
+			if (abi) {
 				dispatch(addContractByName(
 					res[0].trx.operation_results[0][1],
 					accountId,
@@ -1334,6 +1357,45 @@ export const estimateFormFee = (asset, form) => async (dispatch, getState) => {
 	return feeValue ? feeValue.value : null;
 };
 
+export const generateBtcAddress = (address) => async (dispatch, getState) => {
+	try {
+
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const operation = 'sidechain_btc_create_address';
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			backup_address: address,
+		};
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			backup_address: address,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
+
 export const generateEthAddress = () => async (dispatch, getState) => {
 	try {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -1357,6 +1419,44 @@ export const generateEthAddress = () => async (dispatch, getState) => {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
+
+export const generateEchoAddress = (label) => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			owner: activeUserId,
+			label,
+		};
+
+		const operation = 'account_address_create';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			account: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+			label,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({

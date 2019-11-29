@@ -97,7 +97,13 @@ export const getBalanceFromAssets = (assets) => async () => {
  * @param {Boolean} update
  * @returns {function(dispatch): Promise<undefined>}
  */
-export const getAssetsBalances = (assets, update = false) => async (dispatch) => {
+export const getAssetsBalances = (assets, update = false) => async (dispatch, getState) => {
+	if (!assets) {
+		const accountId = getState().global.getIn(['activeUser', 'id']);
+		const [account] = await echo.api.getFullAccounts([accountId]);
+
+		assets = account.balances;
+	}
 
 	let balances = [];
 
