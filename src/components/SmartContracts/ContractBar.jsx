@@ -36,6 +36,13 @@ class ContractBar extends React.Component {
 		this.props.setValue('supportedAsset', '');
 	}
 
+	goToExternalLink(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
+	}
+
 	async assetSearchHandler(e, data) {
 		this.setState({
 			searchText: data.searchQuery,
@@ -71,6 +78,7 @@ class ContractBar extends React.Component {
 					className="link"
 					target="_blank"
 					rel="noopener noreferrer"
+					onClick={(e) => this.goToExternalLink(e, ECHO_DOCS_LINK)}
 				>
 					Read more
 				</a>
