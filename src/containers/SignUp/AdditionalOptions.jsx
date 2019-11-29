@@ -23,7 +23,7 @@ class AdditionalOptions extends React.Component {
 
 		this.state = {
 			active: true,
-			checked: REGISTER_DEFAULT_SETTINGS,
+			checked: null,
 		};
 	}
 
@@ -106,7 +106,6 @@ class AdditionalOptions extends React.Component {
 
 					</div>
 				</CSSTransition>
-
 			</div>
 		);
 	}

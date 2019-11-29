@@ -3,6 +3,17 @@
 		font-size: 14px;
 		margin: -6px 0 0;
 	}
+	.field-wrap + .accordion {
+		margin: 21px 0 0;
+	}
+	.register-info + .field-wrap {
+		margin: 15px 0 0;
+	}
+
+	.check-list {
+		margin-top: 23px;
+	}
+
 	.dropdown {
 		.menu {
 			.user-item {

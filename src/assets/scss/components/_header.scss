@@ -180,13 +180,15 @@
 
     .dropdown {
 		display: flex;
-
-        &.active {
-            .dropdown.icon {
-                line-height: 11px;
-            }
-        }
-
+		padding: 0 14px 0 0;
+		&.visible {
+			.dropdown.icon {
+				right: 0;
+			}
+		}
+		.dropdown.icon {
+			right: -6px;
+		}
         .menu {
             right: -12px;
             margin-top: 2px;
@@ -374,7 +376,8 @@
                         -moz-osx-font-smoothing: grayscale;
                         font-size: 1.3em;
                         content: "\e900";
-                        margin-right: 7px;
+						margin-right: 7px;
+						display: block;
                     }
                 }
 
@@ -452,17 +455,11 @@
             }
         }
 
-        .dropdown.icon {
-			color: $link-gray;
-			display: flex;
-			align-items: center;
-        }
-
         & > .text {
+			@include cut-text;
             color: $main-color;
             font-family: proximanovaSemibold;
             max-width: 296px;
-			@include cut-text;
 			user-select: none;
         }
 

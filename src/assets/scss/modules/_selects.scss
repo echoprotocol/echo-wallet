@@ -6,6 +6,9 @@
 		&:not(:last-child) {
 			margin-bottom: 20px;
 		}
+		&.small {
+			margin-bottom: 16px;
+		}
 	}
 }
 

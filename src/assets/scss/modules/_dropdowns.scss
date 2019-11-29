@@ -2,13 +2,8 @@
     &.active:not(.empty) {
         i.icon,
         .dropdown.icon {
-            transform: rotate(180deg);
-        }
-
-        &.compact {
-            .dropdown.icon {
-                line-height: 17px;
-            }
+			transform: rotate(180deg);
+			height: 4px;
         }
     }
 
@@ -241,22 +236,13 @@
 	&.contract-type-dropdown {
 		display: flex;
 		align-items: center;
-		padding: 5px 1em;
-		transition: border .3s;
+		padding: 5px 14px;
+		transition: border-color .3s;
 		align-self: flex-start;
-		min-height: 15px;
+		height: 30px;
 		min-width: 100px;
 		max-width: 100px;
-	
-		.dropdown.icon {
-			font-size: 12px;
-			padding: 4px;
-		}
-	
-		.text {
-			margin-top: 1px;
-		}
-	
+
 		.menu {
 	
 			.item {
@@ -292,6 +278,11 @@
 		margin: auto;
 		color: $bd-gray;
 		z-index: 2;
+		height: 0;
+		line-height: 0;
+		will-change: transform;
+		border: 0;
+		max-width: 8px;
 	}
 }
 
@@ -431,12 +422,6 @@
 		&.visible {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
-		}
-
-		&.active {
-			& > .dropdown.icon {
-				bottom: 0;
-			}
 		}
 
 		.menu {

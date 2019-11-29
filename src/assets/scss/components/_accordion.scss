@@ -4,10 +4,6 @@
 	}
 }
 
-.field-wrap + .accordion {
-	margin: 21px 0 0;
-}
-
 .accordion-trigger {
 	color: $main-color;
 	border-bottom: 1px dashed;
@@ -24,7 +20,7 @@
 .accordion-body {
 	background-color: rgba(#DDDDDD, .2);
 	padding: 15px 20px 22px;
-	margin: 12px 0 0;
+	margin: 12px 0 -8px;
 	.radio-list {
 		display: flex;
 		margin: 7px 0 0;
@@ -52,7 +48,7 @@
 	overflow: hidden;
 	max-height: 200px;
 	opacity: 1;
-	margin: 12px 0 0;
+	margin: 12px 0 -8px;
 	padding: 15px 20px 22px;
 	transition:
 		padding $speed,
@@ -64,7 +60,7 @@
 .accordion-transition-exit {
 	overflow: hidden;
 	max-height: 200px;
-	margin: 12px 0 0;
+	margin: 12px 0 -8px;
 	padding: 15px 20px 22px;
 	opacity: 1;
 }
