@@ -139,14 +139,37 @@ class Header extends React.Component {
 		);
 	}
 
-	renderList() {
-		const { preview, accountName } = this.props;
-		return preview.map(({
-			accountId,
-			name, balance: { amount, precision, symbol },
-		}, index) => {
-			const content = (
-				<div key={name} className="user-item-wrap">
+	renderUser(name, accountId, amount, precision, symbol) {
+		return (
+			<div key={name} className="user-item-wrap">
+				<button
+					className="user-item"
+					onClick={() => this.onChangeAccount(name)}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName={name} />
+					</div>
+					<div className="user-base-info">
+						<div className="name">{name}</div>
+						<div className="id">{accountId}</div>
+					</div>
+					<div className="balance">
+						<span>{formatAmount(amount, precision) || '0'}</span>
+						<span>{symbol || 'ECHO'}</span>
+					</div>
+				</button>
+				<button
+					className="logout-user-btn"
+					onClick={() => this.onRemoveAccount(name)}
+				/>
+			</div>
+		);
+	}
+
+	renderUserWithParent(name, accountId, amount, precision, symbol) {
+		return (
+			<div key={name} className="parent-user-wrap">
+				<div className="user-item-wrap">
 					<button
 						className="user-item"
 						onClick={() => this.onChangeAccount(name)}
@@ -155,36 +178,55 @@ class Header extends React.Component {
 							<Avatar accountName={name} />
 						</div>
 						<div className="user-base-info">
-							{
-								index ?
-									<div className="name">{name}</div> :
-									<div className="name-wrap">
-										<div className="name">{name}</div>
-										<div className="parent-label">(parent account)</div>
-									</div>}
+							<div className="name">{name}</div>
 							<div className="id">{accountId}</div>
 						</div>
-						{
-							index ?
-								<div className="balance">
-									<span>{formatAmount(amount, precision) || '0'}</span>
-									<span>{symbol || 'ECHO'}</span>
-								</div> :
-								<a
-									href=""
-									className="parent-link"
-									onClick={(e) => this.onChangeParentAccount(e, name)}
-								>Change
-								</a>
-						}
-
-
+						<div className="balance">
+							<span>{formatAmount(amount, precision) || '0'}</span>
+							<span>{symbol || 'ECHO'}</span>
+						</div>
 					</button>
 					<button
 						className="logout-user-btn"
 						onClick={() => this.onRemoveAccount(name)}
 					/>
 				</div>
+				<div className="divider" />
+				<button
+					className="user-item"
+					onClick={() => this.onChangeAccount(name)}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName="parent-acc" />
+					</div>
+					<div className="user-base-info">
+						<div className="name-wrap">
+							<div className="name">parent-acc</div>
+							<div className="parent-label">(parent account)</div>
+						</div>
+						<div className="id">{accountId}</div>
+					</div>
+					<a
+						href=""
+						className="parent-link"
+						onClick={(e) => this.onChangeParentAccount(e, name)}
+					> Change
+					</a>
+				</button>
+
+			</div>
+		);
+	}
+
+	renderList() {
+		const { preview, accountName } = this.props;
+		return preview.map(({
+			accountId,
+			name, balance: { amount, precision, symbol },
+		}, index) => {
+			const content = (index ?
+				this.renderUser(name, accountId, amount, precision, symbol) :
+				this.renderUserWithParent(name, accountId, amount, precision, symbol)
 			);
 
 			return ({
