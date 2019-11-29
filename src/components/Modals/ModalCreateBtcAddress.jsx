@@ -65,9 +65,9 @@ class ModalCreateBtcAddress extends React.Component {
 							</div>
 							<div className="modal-body">
 								<div className="info-text">
-									Create your BTC address where funds will be sent.
-									Please set your backup BTC address to be able to withhold
-									an operation during the first 24 hours after the transaction.
+									To create your new BTC Address, please, provide your external backup BTC address.
+									Backup BTC address is needed to be able to withhold a sent transaction to
+									ECHO network during the first 24 hours after the transaction being made.
 								</div>
 
 								<Form.Field className={classnames('error-wrap', { error: !!error })}>
@@ -83,8 +83,7 @@ class ModalCreateBtcAddress extends React.Component {
 										<span className="error-message">{error}</span>
 									}
 									<span className="warning-message">
-										Warning: Please note, address is
-										visible for blockchain network participants.
+										Submit your backup BTC address above.
 									</span>
 								</Form.Field>
 								<div className="form-panel">
