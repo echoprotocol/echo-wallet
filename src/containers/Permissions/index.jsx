@@ -11,6 +11,7 @@ import PrivateKeysScenario from '../PrivateKeysScenario';
 import BackupKeysScenario from '../BackupKeysScenario';
 import ViewModeTable from './ViewModeTable';
 import EditModeTable from './EditModeTable';
+import Loading from '../../components/Loader/LoadingData';
 
 import { isPublicKey } from '../../helpers/ValidateHelper';
 import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
@@ -36,6 +37,8 @@ import {
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
 import WarningConfirmThresholdScenario from '../WarningConfirmThresholdScenario';
+import { checkKeyWeightWarning } from '../../actions/BalanceActions';
+import GlobalReducer from '../../reducers/GlobalReducer';
 
 class Permissions extends React.Component {
 
@@ -50,7 +53,7 @@ class Permissions extends React.Component {
 				active: {},
 				echoRand: {},
 			},
-		};
+		}
 	}
 
 	componentWillMount() {
@@ -58,13 +61,13 @@ class Permissions extends React.Component {
 		this.setState({ privateKeys: { active: {}, echoRand: {} } });
 	}
 
-	componentDidUpdate(prevProps) {
+	async componentDidUpdate(prevProps) {
 		if (_.isEqual(prevProps, this.props)) {
 			return;
 		}
 
-		const { accountName: prevAccountName, form: prevForm } = prevProps;
-		const { accountName, form } = this.props;
+		const { accountName: prevAccountName, form: prevForm, permissionsKeys: prevPermissionsKeys } = prevProps;
+		const { accountName, form, permissionsKeys, networkName, accountId } = this.props;
 		const prevAccount = prevProps.account.toJS();
 		const account = this.props.account.toJS();
 
@@ -93,29 +96,90 @@ class Permissions extends React.Component {
 		if (form.get('isEditMode') !== prevForm.get('isEditMode')) {
 			this.props.formPermissionKeys();
 		}
+
+		if (permissionsKeys !== prevPermissionsKeys) {
+			const keyWeight = await this.props.checkKeyWeightWarning(networkName, accountId);
+			this.props.setWeightWarning(keyWeight);
+		}
 	}
 
 	async saveWifs(password) {
         const { form } = this.props;
-        const { privateKeys } = this.state;
+        const { privateKeys, basePrivateKeys } = this.state;
         const account = this.props.account.toJS();
-        const newActiveWifs = Object.entries(privateKeys.active)
-            .filter(([index, wif]) => {
-				const publicKey = form.getIn(['active', 'keys', index, 'key']);
-				return publicKey && publicKey.value && wif && wif.value && !wif.error
-			})
+
+		let activePrivateKeysEntries = Object.entries(privateKeys.active);
+		let echoRandPrivateKeysEntries = Object.entries(privateKeys.echoRand);
+
+		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
+		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
+
+        const newActiveWifs = activePrivateKeysEntries
             .map(([index, wif]) => {
-                const publicKey = form.getIn(['active', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
-            })
-        const newEchoRandWifs = Object.entries(privateKeys.echoRand)
+				const publicKey = form.getIn(['active', 'keys', index, 'key']);
+
+				if (wif && wif.error) {
+					return null;
+				}
+
+				if (publicKey && publicKey.value) {
+					if (!wif || !wif.value) {
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							if (
+								echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.filter(([indexA]) => indexA !== publicKey.value);
+							}
+						} else {
+							const echoRandPrivateKeyData = echoRandPrivateKeysEntries.find(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							if (echoRandPrivateKeyData) {
+								const [, echoRandPrivateKeyWif] = echoRandPrivateKeyData;
+								return { publicKey: publicKey.value, wif: echoRandPrivateKeyWif.value, type: 'active' };
+							}
+						}
+					} else {
+						if (activeBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)) {
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								return null;
+							}
+						} else {
+							if (
+								!echoRandPrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value) &&
+								!echoRandBasePrivateKeysEntries.some(([indexA, wifA]) => indexA === publicKey.value && wifA && wifA.value)
+							) {
+								echoRandPrivateKeysEntries = echoRandPrivateKeysEntries.map((privateKeyEntryItem) => {
+									const [indexA] = privateKeyEntryItem;
+
+									if (indexA === publicKey.value) {
+										return [indexA, { value: wif.value }];
+									}
+
+									return privateKeyEntryItem;
+								});
+							}
+						}
+
+						return { publicKey: publicKey.value, wif: wif.value, type: 'active' };
+					}
+				}
+
+				return null;
+			})
+            .filter((activeKeyItem) => activeKeyItem);
+
+        const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
+				
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
             .map(([index, wif]) => {
                 const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: wif.type };
+                return { publicKey, wif: wif.value, type: 'echoRand' };
             })
 
         const wifs = [...newActiveWifs, ...newEchoRandWifs];
@@ -230,7 +294,7 @@ class Permissions extends React.Component {
 				acc[key] = privateKey && { value: privateKey.wif, error: '', type: privateKey.type };
 				return acc;
 			}, {})
-		
+
 		const privateKeysByRole = {
 			active: activePrivetKeys,
 			echoRand: echoRandPrivetKeys,
@@ -470,7 +534,10 @@ class Permissions extends React.Component {
 	}
 
 	render() {
+		const { showLoader } = this.props;
 		return (
+			showLoader ?
+			<Loading text="Apllying changes..." /> :
 			<div className="permissions-wrap">
 				<div className="sub-header">
 					{
@@ -492,6 +559,7 @@ class Permissions extends React.Component {
 Permissions.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	accountId: PropTypes.string.isRequired,
+	networkName: PropTypes.string.isRequired,
 	isChanged: PropTypes.func.isRequired,
 	permissionsKeys: PropTypes.object.isRequired,
 	account: PropTypes.object,
@@ -503,9 +571,12 @@ Permissions.propTypes = {
 	setError: PropTypes.func.isRequired,
 	form: PropTypes.object.isRequired,
 	firstFetch: PropTypes.bool.isRequired,
+	showLoader: PropTypes.bool.isRequired,
 	set: PropTypes.func.isRequired,
 	removeKey: PropTypes.func.isRequired,
 	editWifs: PropTypes.func.isRequired,
+	checkKeyWeightWarning: PropTypes.func.isRequired,
+	setWeightWarning: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -519,11 +590,13 @@ export default connect(
 			form: state.form.get(FORM_PERMISSION_KEY),
 			accountName: state.global.getIn(['activeUser', 'name']),
 			accountId: state.global.getIn(['activeUser', 'id']),
+			networkName: state.global.getIn(['network', 'name']),
 			account: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]),
 			permissionsKeys: state.table.get(PERMISSION_TABLE),
 			firstFetch: state.form.getIn([FORM_PERMISSION_KEY, 'firstFetch']),
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
+			showLoader: state.global.get('permissionLoading'),
 		};
 	},
 	(dispatch) => ({
@@ -538,5 +611,8 @@ export default connect(
 		set: (field, value) => dispatch(setValue(FORM_PERMISSION_KEY, field, value)),
 		isChanged: () => dispatch(isChanged()),
 		editWifs: (keys, account, password) => dispatch(editWifs(keys, account, password)),
+		checkKeyWeightWarning: (networkName, accountId) =>
+			dispatch(checkKeyWeightWarning(networkName, accountId)),
+		setWeightWarning: (keyWeightWarn) => dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn })),
 	}),
 )(Permissions);

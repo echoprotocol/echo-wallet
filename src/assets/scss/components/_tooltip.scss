@@ -50,3 +50,22 @@
 		padding: 5px 10px;
 	}
 }
+
+.tooltip-wrap {
+	font-family: proxima;
+	&.bottom {
+		padding: 15px 0 0;
+	}
+	.tooltip {
+		padding: 5px 10px;
+
+		background-color: #fff6d2;
+		border: 1px solid rgba(59, 59, 59, 0.4);
+		border-radius: 4px;
+		font-weight: 500;
+	}
+	.link {
+		display: block;
+		margin-top: 4px;
+	}
+}

@@ -409,7 +409,7 @@ export const editWifs = (keysData, account, password) => async (dispatch, getSta
 		return Key.create(publicKey, wif, id, type);
 	});
 
-	await userStorage.updateKeys(keys, { password });
+	await userStorage.updateKeys(keys, { password, accountId: id });
 	dispatch(updateStorage(name, networkName, keys));
 };
 

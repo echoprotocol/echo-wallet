@@ -13,7 +13,7 @@ import {
 } from '../constants/RouterConstants';
 import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT, REGISTRATION } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
 
 
@@ -30,6 +30,7 @@ import {
 	handleSubscriber,
 	resetBalance,
 	getPreviewBalances,
+	checkKeyWeightWarning,
 } from './BalanceActions';
 import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
@@ -77,6 +78,9 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		dispatch(initSorts(networkName));
 		dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
+
+		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
+		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
@@ -132,7 +136,13 @@ export const connection = () => async (dispatch) => {
 		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
 		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
 
-		await echo.connect(network.url, { apis: constants.WS_CONSTANTS.CHAIN_APIS });
+		await echo.connect(
+			network.url,
+			{
+				apis: constants.WS_CONSTANTS.CHAIN_APIS,
+				registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
+			},
+		);
 		await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
@@ -251,8 +261,10 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 	}
 
 	const account = await echo.api.getAccountByName(accountName);
-
-	await userStorage.removeKeys(account.active.key_auths.map(([k]) => k), { password });
+	await userStorage.removeKeys(
+		account.active.key_auths.map(([k]) => k),
+		{ password, accountId: account.id },
+	);
 
 	const activeAccountName = getState().global.getIn(['activeUser', 'name']);
 	const networkName = getState().global.getIn(['network', 'name']);

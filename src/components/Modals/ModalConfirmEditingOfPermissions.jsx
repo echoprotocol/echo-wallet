@@ -32,16 +32,11 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 						</div>
 						<div className="form-panel">
 							<Button
-								basic
-								type="button"
-
 								className="main-btn"
 								onClick={(e) => this.onClose(e)}
 								content="No"
 							/>
 							<Button
-								basic
-								type="button"
 								className="main-btn"
 								onClick={(e) => this.onConfirm(e)}
 								content="Proceed"

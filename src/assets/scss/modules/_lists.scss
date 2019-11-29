@@ -1,38 +1,35 @@
-.list {
-    &-amount {
-        display: flex;
-        align-items: center;
-        color: $black;
-        text-transform: none;
-        font-size: 12px;
-        font-family: proxima;
-        font-weight: 400;
+.list-amount {
+	display: flex;
+	align-items: center;
+	color: $black;
+	text-transform: none;
+	font-size: 12px;
+	font-family: proxima;
+	font-weight: 400;
 
-        li {
-            height: 10px;
-            display: flex;
-            align-items: center;
+	li {
+		height: 10px;
+		display: flex;
+		align-items: center;
+		&:last-child {
+			margin-left: 20px;
 
-            &:last-child {
-                margin-left: 20px;
+			.icon-coin {
+				top: 1px;
+				position: relative;
+			}
 
-                .icon-coin {
-                    top: 2px;
-                    position: relative;
-                }
+			span {
+				margin-left: 4px;
+				color: $main-color;
+				cursor: pointer;
 
-                span {
-                    margin-left: 4px;
-                    color: $main-сolor;
-                    cursor: pointer;
-
-                    &.disabled {
-                        color: $gray;
-                    }
-                }
-            }
-        }
-    }
+				&.disabled {
+					color: $gray;
+				}
+			}
+		}
+	}
 }
 
 .addition {
@@ -63,7 +60,14 @@
     &-row {
         display: flex;
         align-items: center;
-
+        &:not(:first-child) {
+            &:not(:last-child) {
+                margin: 0 0 12px 0;
+            }
+        }
+        &.inner {
+            margin-left: 29px;
+        }
         &--h {
             display: flex;
         }

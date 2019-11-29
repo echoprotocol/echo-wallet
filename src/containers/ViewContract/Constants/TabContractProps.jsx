@@ -13,23 +13,38 @@ import ConstantLine from './LineComponent';
 class TabContractProps extends React.Component {
 
 	componentWillMount() {
-		this.props.formatAbi(this.props.match.params.name);
+		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	componentWillUnmount() {
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 	}
 
+	getDefaultType(type) {
+
+		if (type === 'bool') {
+			return 'bool';
+		} else if (type === 'string') {
+			return 'string';
+		} else if (type === 'address') {
+			return 'id';
+		} else if (type.includes('int')) {
+			return 'number';
+		}
+
+		return 'hex';
+	}
+
 	getOptions(type) {
 		switch (type) {
 			case 'bool': return [
 				{
-					text: 'hex',
-					value: 'hex',
-				},
-				{
 					text: 'bool',
 					value: 'bool',
+				},
+				{
+					text: 'hex',
+					value: 'hex',
 				},
 				{
 					text: 'number',
@@ -39,24 +54,39 @@ class TabContractProps extends React.Component {
 			case 'string':
 			case 'address': return [
 				{
-					text: 'hex',
-					value: 'hex',
-				},
-				{
 					text: type === 'address' ? 'id' : type,
 					value: type === 'address' ? 'id' : type,
 				},
-			];
-			default: return [
 				{
 					text: 'hex',
 					value: 'hex',
 				},
-				{
-					text: 'number',
-					value: 'number',
-				},
 			];
+			default: {
+				if (type.includes('int')) {
+					return [
+						{
+							text: 'number',
+							value: 'number',
+						},
+						{
+							text: 'hex',
+							value: 'hex',
+						},
+					];
+				}
+
+				return [
+					{
+						text: 'hex',
+						value: 'hex',
+					},
+					{
+						text: 'number',
+						value: 'number',
+					},
+				];
+			}
 		}
 	}
 
@@ -71,6 +101,7 @@ class TabContractProps extends React.Component {
 
 						return (
 							<ConstantLine
+								defaultType={this.getDefaultType(constant.outputs[0].type)}
 								key={id}
 								typeOptions={this.getOptions(constant.outputs[0].type)}
 								constant={constant}
@@ -100,7 +131,7 @@ export default withRouter(connect(
 		constants: state.contract.get('constants'),
 	}),
 	(dispatch) => ({
-		formatAbi: (name) => dispatch(formatAbi(name)),
+		formatAbi: (id) => dispatch(formatAbi(id)),
 		clearForm: (value) => dispatch(clearForm(value)),
 	}),
 )(TabContractProps));
