@@ -33,7 +33,7 @@ import {
 import {
 	FORM_ADD_CONTRACT,
 	FORM_CALL_CONTRACT,
-	FORM_CREATE_CONTRACT,
+	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_VIEW_CONTRACT,
 } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
@@ -541,14 +541,14 @@ export const contractCompilerInit = () => async (dispatch) => {
 	list.builds = list.builds.filter(({ version }) =>
 		checkAccessVersion(version, MIN_ACCESS_VERSION_BUILD));
 
-	dispatch(setValue(FORM_CREATE_CONTRACT, 'compilersList', new Map(list)));
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compilersList', new Map(list)));
 
 	const solcLatestRelease = list.latestRelease ?
 		list.releases[list.latestRelease] : list.builds[list.builds.length - 1].path;
 
 	const lastVersion = list.builds.find((b) => b.path === solcLatestRelease);
 
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', lastVersion && lastVersion.longVersion));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'currentCompiler', lastVersion && lastVersion.longVersion));
 
 	await loadScript(`${SOLC_BIN_URL}${solcLatestRelease}`); // eslint-disable-line no-undef
 };
@@ -558,10 +558,10 @@ export const contractCompilerInit = () => async (dispatch) => {
  * @returns {Function}
  */
 export const resetCompiler = () => (dispatch) => {
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', ''));
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', ''));
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
-	dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', ''));
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', new Map({})));
 };
 
 /**
@@ -570,8 +570,8 @@ export const resetCompiler = () => (dispatch) => {
  */
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
-	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
-	dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', ''));
+	const code = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'code']);
+	dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', ''));
 
 	try {
 		const input = {
@@ -600,13 +600,13 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 			});
 		});
 
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', Object.keys(output.contracts[filename])[0]));
-		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', contracts));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', Object.keys(output.contracts[filename])[0]));
+		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', contracts));
 	} catch (err) {
 		dispatch(resetCompiler());
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', 'Invalid contract code'));
+		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'Invalid contract code'));
 	}
 };
 
@@ -616,11 +616,11 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
  * @returns {Function}
  */
 export const changeContractCompiler = (version) => async (dispatch, getState) => {
-	const buildsList = getState().form.getIn([FORM_CREATE_CONTRACT, 'compilersList', 'builds']);
-	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', version));
+	const buildsList = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'compilersList', 'builds']);
+	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'currentCompiler', version));
 	const compilerBuild = buildsList.find((build) => build.longVersion === version);
 	await loadScript(`${SOLC_BIN_URL}${compilerBuild.path}`); // eslint-disable-line no-undef
-	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
+	const code = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'code']);
 	if (!code || !code.value) {
 		return;
 	}
