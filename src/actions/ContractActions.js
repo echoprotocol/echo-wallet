@@ -45,7 +45,7 @@ import {
 	MIN_ACCESS_VERSION_BUILD,
 } from '../constants/GlobalConstants';
 
-import { MODAL_WATCH_CONTRACT_AS_TOKEN } from '../constants/ModalConstants';
+import { MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
 
 import history from '../history';
 
@@ -159,7 +159,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		const isErc20Token = checkErc20Contract(code);
 
 		if (isErc20Token) {
-			dispatch(openModal(MODAL_WATCH_CONTRACT_AS_TOKEN, { accountId, contractId: id }));
+			dispatch(openModal(MODAL_ERC20_TO_WATCH_LIST, { accountId, contractId: id }));
 		}
 
 		history.push(CONTRACT_LIST_PATH);

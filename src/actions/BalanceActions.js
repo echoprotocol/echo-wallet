@@ -21,7 +21,7 @@ import { formatError } from '../helpers/FormatHelper';
 import { toastSuccess, toastInfo, toastError } from '../helpers/ToastHelper';
 import { checkErc20Contract } from '../helpers/ValidateHelper';
 
-import { MODAL_TOKENS, MODAL_WATCH_CONTRACT_AS_TOKEN } from '../constants/ModalConstants';
+import { MODAL_TOKENS, MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
 import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
@@ -378,7 +378,7 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
-			dispatch(closeModal(MODAL_WATCH_CONTRACT_AS_TOKEN));
+			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
 			toastError('Invalid ERC20 token');
 			return;
 		}
@@ -391,7 +391,7 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 		}
 
 		if (tokens[accountId].includes(contractId)) {
-			dispatch(closeModal(MODAL_WATCH_CONTRACT_AS_TOKEN));
+			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
 			toastError('Token already exists');
 			return;
 		}
@@ -408,10 +408,10 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 			},
 		}));
 
-		dispatch(closeModal(MODAL_WATCH_CONTRACT_AS_TOKEN));
+		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
 		toastSuccess('Token was successfully added');
 	} catch (err) {
-		dispatch(closeModal(MODAL_WATCH_CONTRACT_AS_TOKEN));
+		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
 		toastError(formatError(err));
 	}
 };
