@@ -35,6 +35,13 @@ class ContractBar extends React.Component {
 		this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAssetRadio', SUPPORTED_ASSET_ALL);
 	}
 
+	goToExternalLink(e, link) {
+		if (ELECTRON && window.shell) {
+			e.preventDefault();
+			window.shell.openExternal(link);
+		}
+	}
+
 	async assetSearchHandler(e, data) {
 		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', data.searchQuery);
 		this.setState({
@@ -71,6 +78,7 @@ class ContractBar extends React.Component {
 					className="link"
 					target="_blank"
 					rel="noopener noreferrer"
+					onClick={(e) => this.goToExternalLink(e, ECHO_DOCS_LINK)}
 				>
 					Read more
 				</a>
