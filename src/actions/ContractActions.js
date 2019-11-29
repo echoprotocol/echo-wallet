@@ -133,7 +133,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 			contracts[accountId] = {};
 		}
 
-		if (contracts[accountId][name]) {
+		if (contracts[accountId][id]) {
 			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', `Contract "${name}" already exists`));
 			return;
 		}
@@ -143,10 +143,10 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 			return;
 		}
 
-		contracts[accountId][name] = { abi, id };
+		contracts[accountId][id] = { abi, name };
 		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-		dispatch(push('contracts', name, { disabled: false, abi, id }));
+		dispatch(push('contracts', id, { disabled: false, abi, name }));
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
@@ -160,12 +160,12 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
  * @param {String} name
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const removeContract = (name) => (dispatch, getState) => {
-	if (!getState().global.getIn(['contracts', name]).disabled) {
+export const removeContract = (id) => (dispatch, getState) => {
+	if (!getState().global.getIn(['contracts', id]).disabled) {
 		return;
 	}
 
-	dispatch(remove('contracts', name));
+	dispatch(remove('contracts', id));
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
@@ -178,96 +178,44 @@ export const removeContract = (name) => (dispatch, getState) => {
 		contracts[accountId] = {};
 	}
 
-	delete contracts[accountId][name];
+	delete contracts[accountId][id];
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 };
 
 /**
  * @method enableContract
  *
- * @param {String} name
+ * @param {String} id
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const enableContract = (name) => (dispatch, getState) => {
+export const enableContract = (id) => (dispatch, getState) => {
 	const intervalId = getState().contract.get('intervalId');
 	clearTimeout(intervalId);
-	dispatch(update('contracts', name, { disabled: false }));
+	dispatch(update('contracts', id, { disabled: false }));
 };
 
 /**
  * @method disableContract
  *
- * @param {String} name
+ * @param {String} id
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const disableContract = (name) => (dispatch) => {
-	dispatch(update('contracts', name, { disabled: true }));
+export const disableContract = (id) => (dispatch) => {
+	dispatch(update('contracts', id, { disabled: true }));
 
 	history.push(CONTRACT_LIST_PATH);
 
 	toastInfo(
-		`You have removed ${name} from watch list`,
-		() => dispatch(enableContract(name)),
+		`You have removed ${id} from watch list`,
+		() => dispatch(enableContract(id)),
 		() => {
-			const intervalId = setTimeout(() => dispatch(removeContract(name)), TIME_REMOVE_CONTRACT);
+			const intervalId = setTimeout(() => dispatch(removeContract(id)), TIME_REMOVE_CONTRACT);
 			dispatch(ContractReducer.actions.set({
 				field: 'intervalId',
 				value: intervalId,
 			}));
 		},
 	);
-};
-
-/**
- * @method updateContractName
- *
- * @param {String} oldName
- * @param {String} newName
- * @returns {function(dispatch, getState): Promise<undefined>}
- */
-export const updateContractName = (oldName, newName) => (dispatch, getState) => {
-	const nameError = validateContractName(newName);
-
-	if (nameError) {
-		dispatch(setFormError(FORM_VIEW_CONTRACT, 'newName', nameError));
-		return;
-	}
-
-	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const networkName = getState().global.getIn(['network', 'name']);
-
-	let contracts = localStorage.getItem(`contracts_${networkName}`);
-
-	contracts = contracts ? JSON.parse(contracts) : {};
-
-	if (!contracts[accountId]) {
-		contracts[accountId] = {};
-	}
-
-	const newContracts = {};
-	Object.entries(contracts).forEach((account) => {
-		newContracts[account[0]] = {};
-		Object.entries(account[1])
-			.forEach((contract) => {
-				if (contract[0] === oldName && accountId === account[0]) {
-					[, newContracts[account[0]][newName]] = contract;
-				} else {
-					[, newContracts[account[0]][contract[0]]] = contract;
-				}
-			});
-	});
-
-	contracts[accountId][newName] = contracts[accountId][oldName];
-	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
-
-	dispatch(remove('contracts', oldName));
-	dispatch(push('contracts', newName, {
-		disabled: false,
-		abi: contracts[accountId][newName].abi,
-		id: contracts[accountId][newName].id,
-	}));
-
-	history.replace(VIEW_CONTRACT_PATH.replace(/:name/, newName));
 };
 
 /**
@@ -299,13 +247,14 @@ export const addContractByName = (
 		contracts[accountId] = {};
 	}
 
-	contracts[accountId][name] = {
+	contracts[accountId][id] = {
 		abi,
-		id,
+		name,
 	};
+
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-	dispatch(push('contracts', name, { disabled: false, abi, id }));
+	dispatch(push('contracts', id, { disabled: false, abi, name }));
 };
 
 /**
@@ -385,14 +334,14 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
  * @param {String} contractName
  * @@returns {function(dispatch, getState): Promise<Object>}
  */
-export const formatAbi = (contractName) => async (dispatch, getState) => {
+export const formatAbi = (id) => async (dispatch, getState) => {
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	const contracts = JSON.parse(localStorage.getItem(`contracts_${networkName}`));
-	const abi = JSON.parse(contracts[accountId][contractName].abi);
-	const contractId = contracts[accountId][contractName].id;
+	const abi = JSON.parse(contracts[accountId][id].abi);
+	const { name } = contracts[accountId][id];
 
 	let constants = abi.filter((value) =>
 		value.constant && value.name);
@@ -410,7 +359,7 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 		const method = getMethodId(constant);
 
 		const constantValue = await echo.api.callContractNoChangingState(
-			contractId,
+			id,
 			accountId,
 			{ amount: 0, asset_id: ECHO_ASSET_ID },
 			method,
@@ -436,10 +385,71 @@ export const formatAbi = (contractName) => async (dispatch, getState) => {
 
 	dispatch(ContractReducer.actions.set({
 		field: 'id',
-		value: contractId,
+		value: id,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'name',
+		value: name,
 	}));
 
 };
+
+/**
+ * @method updateContractName
+ *
+ * @param {String} oldName
+ * @param {String} newName
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const updateContractName = (id, newName) => (dispatch, getState) => {
+	const nameError = validateContractName(newName);
+
+	if (nameError) {
+		dispatch(setFormError(FORM_VIEW_CONTRACT, 'newName', nameError));
+		return;
+	}
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
+
+	let contracts = localStorage.getItem(`contracts_${networkName}`);
+
+	contracts = contracts ? JSON.parse(contracts) : {};
+
+	if (!contracts[accountId]) {
+		contracts[accountId] = {};
+	}
+
+	const newContracts = {};
+	Object.entries(contracts).forEach((account) => {
+		newContracts[account[0]] = {};
+		Object.entries(account[1])
+			.forEach((contract) => {
+				if (contract[0] === id && accountId === account[0]) {
+					newContracts[account[0]][id] = { ...contract[1], name: newName };
+				} else {
+					[, newContracts[account[0]][contract[0]]] = contract;
+				}
+			});
+	});
+
+	// contracts[accountId][id] = contracts[accountId][id];
+	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
+
+	dispatch(remove('contracts', id));
+	dispatch(push('contracts', id, {
+		disabled: false,
+		abi: contracts[accountId][id].abi,
+		id: contracts[accountId][id].id,
+		name: newName,
+	}));
+
+	dispatch(formatAbi(id));
+
+	history.replace(VIEW_CONTRACT_PATH.replace(/:id/, id));
+};
+
 
 /**
  * @method setFunction
@@ -512,11 +522,20 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 	return fee;
 };
 
+/**
+ *
+ * @param name
+ * @returns {Promise<Array<Asset>>}
+ */
 export const getAssetsList = async (name) => {
 	const list = await echo.api.listAssets(name, 15);
 	return list;
 };
 
+/**
+ *
+ * @returns {Function}
+ */
 export const contractCompilerInit = () => async (dispatch) => {
 	const list = await getSolcList();
 	list.builds = list.builds.filter(({ version }) =>
@@ -534,6 +553,21 @@ export const contractCompilerInit = () => async (dispatch) => {
 	await loadScript(`${SOLC_BIN_URL}${solcLatestRelease}`); // eslint-disable-line no-undef
 };
 
+/**
+ *
+ * @returns {Function}
+ */
+export const resetCompiler = () => (dispatch) => {
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', ''));
+	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
+	dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
+};
+
+/**
+ *
+ * @returns {Function}
+ */
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT, 'code']);
@@ -561,22 +595,26 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 		let contracts = new Map({});
 		contracts = contracts.withMutations((contractsMap) => {
 			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
-				contractsMap.setIn([name, 'abi'], contract.abi);
+				contractsMap.setIn([name, 'abi'], JSON.stringify(contract.abi));
 				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
 			});
 		});
 
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', Object.values(output.contracts[filename])[0].abi));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
 		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', Object.keys(output.contracts[filename])[0]));
 		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', contracts));
 	} catch (err) {
+		dispatch(resetCompiler());
 		dispatch(setFormError(FORM_CREATE_CONTRACT, 'code', 'Invalid contract code'));
-		dispatch(setValue(FORM_CREATE_CONTRACT, 'contracts', new Map({})));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT, 'name', ''));
 	}
 };
 
+/**
+ *
+ * @param version
+ * @returns {Function}
+ */
 export const changeContractCompiler = (version) => async (dispatch, getState) => {
 	const buildsList = getState().form.getIn([FORM_CREATE_CONTRACT, 'compilersList', 'builds']);
 	dispatch(setFormValue(FORM_CREATE_CONTRACT, 'currentCompiler', version));

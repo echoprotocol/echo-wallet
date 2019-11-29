@@ -24,6 +24,7 @@ class EchoNetwork extends React.Component {
 		this.state = {
 			addresses: new List([]),
 			receiver: '',
+			open: false,
 		};
 	}
 
@@ -45,6 +46,7 @@ class EchoNetwork extends React.Component {
 	onClickItem(value) {
 		this.setState({
 			receiver: value,
+			open: !this.state.open,
 		});
 	}
 
@@ -157,7 +159,7 @@ class EchoNetwork extends React.Component {
 			value: 'address-header',
 			key: 'address-header',
 			content: addressHeaderTitle,
-			onClick: () => {},
+			onClick: (e) => e.stopPropagation(),
 			disabled: true,
 		}];
 
@@ -205,7 +207,7 @@ class EchoNetwork extends React.Component {
 		const {
 			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-		const { receiver } = this.state;
+		const { receiver, open } = this.state;
 		const receiverValue = this.getReceiver();
 
 		const { text, link } = this.getQrData();
@@ -227,6 +229,9 @@ class EchoNetwork extends React.Component {
 						text="Choose account or address"
 						searchQuery={receiver}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
+						onClick={() => { if (!open) { this.setState({ open: true }); } }}
+						onBlur={() => this.setState({ open: false })}
+						open={open}
 					/>
 				</div>
 

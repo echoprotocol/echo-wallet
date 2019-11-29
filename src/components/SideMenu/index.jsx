@@ -10,7 +10,7 @@ import { toggleBar } from '../../actions/GlobalActions';
 import {
 	CONTRACT_LIST_PATH,
 	ADD_CONTRACT_PATH,
-	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 	CALL_CONTRACT_PATH,
 	ACTIVITY_PATH,
 	PERMISSIONS_PATH,
@@ -63,7 +63,7 @@ class SidebarMenu extends React.Component {
 						active: [
 							CONTRACT_LIST_PATH,
 							ADD_CONTRACT_PATH,
-							CREATE_CONTRACT_PATH,
+							SMART_CONTRACTS_PATH,
 							CALL_CONTRACT_PATH].includes(parsedLocation),
 					})}
 					onClick={() => this.props.hideBar()}

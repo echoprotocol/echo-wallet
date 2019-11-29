@@ -1,5 +1,6 @@
 .contract-bar {
-	min-width: 380px;
+	max-width: 380px;
+	width: 380px;
 	background-color: #FCFCFC;
 	min-height: calc(100vh - 120px);
 	padding: 32px 30px 52px;
@@ -51,6 +52,10 @@
 
 	.radio-list + .selection {
 		margin: 16px 0 0;
+	}
+	.field-wrap {
+		margin: 20px 0 0 0;
+		padding: 0 0 0 16px;
 	}
 }
 
