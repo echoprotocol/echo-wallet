@@ -63,6 +63,7 @@ export const PUBLIC_KEY_LENGTH = 44;
 export const PUBLIC_KEY_LENGTH_43 = 43;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
+export const ECHO_ASSET_PRECISION = '1.3.0';
 export const CONTRACT_ID_PREFIX = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT}`;
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
@@ -111,7 +112,7 @@ export const EXPLORER_URL = {
 	testnet: 'https://explorer.echo.org',
 };
 
-export const BRIDGE_RECEIVE_URL = 'https://echo-bridge.io/receive/';
+export const BRIDGE_RECEIVE_URL = 'https://bridge.echo.org/receive/';
 
 export const TIME_TOAST_ANIMATION = 5000;
 export const DELAY_REMOVE_CONTRACT = 1000;

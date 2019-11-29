@@ -6,8 +6,10 @@ import classnames from 'classnames';
 import AmountField from '../Fields/AmountField';
 import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
 import Toggle from '../Toggle';
-import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
+
+import { FORM_CREATE_CONTRACT_OPTIONS } from '../../constants/FormConstants';
 import TransactionScenario from '../../containers/TransactionScenario';
+import { SUPPORTED_ASSET_ALL, SUPPORTED_ASSET_CUSTOM } from '../../constants/ContractsConstants';
 
 
 class ContractBar extends React.Component {
@@ -16,7 +18,6 @@ class ContractBar extends React.Component {
 		super(props);
 		this.state = {
 			searchText: '',
-			supportedAssets: 'all',
 			options: [],
 			timeout: null,
 			loading: false,
@@ -24,19 +25,18 @@ class ContractBar extends React.Component {
 	}
 
 	onChangeAsset(assetSymbol) {
-		this.props.setValue('supportedAsset', assetSymbol);
+		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', assetSymbol);
 		this.setState({ searchText: assetSymbol });
 	}
 
 	onResetSupportedAsset() {
-		this.setState({
-			supportedAssets: 'all',
-			searchText: '',
-		});
-		this.props.setValue('supportedAsset', '');
+		this.setState({ searchText: '' });
+		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', '');
+		this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAssetRadio', SUPPORTED_ASSET_ALL);
 	}
 
 	async assetSearchHandler(e, data) {
+		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', data.searchQuery);
 		this.setState({
 			searchText: data.searchQuery,
 			loading: true,
@@ -80,10 +80,10 @@ class ContractBar extends React.Component {
 
 	render() {
 		const {
-			searchText, supportedAssets, options, loading,
+			searchText, options, loading,
 		} = this.state;
 		const {
-			amount, currency, assets, isAvailableBalance, fees, ETHAccuracy, form,
+			assets, fees, form,
 		} = this.props;
 		return (
 			<div className="contract-bar">
@@ -102,7 +102,7 @@ class ContractBar extends React.Component {
 							ETH Accuracy:
 						</div>
 						<Toggle
-							onChange={() => this.props.setValue('ETHAccuracy', !ETHAccuracy)}
+							onChange={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'ETHAccuracy', !form.get('ETHAccuracy'))}
 						/>
 					</li>
 					<li className="param">
@@ -119,34 +119,37 @@ class ContractBar extends React.Component {
 						<div className="param-subline">
 							<div className="radio-list">
 								<Button
-									className={classnames('radio', { checked: supportedAssets === 'all' })}
+									className={classnames('radio', { checked: form.get('supportedAssetRadio') === SUPPORTED_ASSET_ALL })}
 									onClick={() => this.onResetSupportedAsset()}
 									content="All"
 								/>
 								<Button
-									className={classnames('radio', { checked: supportedAssets === 'custom' })}
-									onClick={() => { this.setState({ supportedAssets: 'custom' }); }}
+									className={classnames('radio', { checked: form.get('supportedAssetRadio') === SUPPORTED_ASSET_CUSTOM })}
+									onClick={() => { this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAssetRadio', SUPPORTED_ASSET_CUSTOM); }}
 									content="Choose asset"
 								/>
 							</div>
 							{
-								supportedAssets === 'custom' &&
-								<Dropdown
-									icon={false}
-									className={classnames({ empty: !searchText || loading })}
-									options={(searchText && !loading) ? options : []}
-									searchQuery={searchText}
-									search
-									selection
-									fluid
-									text={searchText || 'Asset name'}
-									onSearchChange={(e, data) => this.assetSearchHandler(e, data)}
-									placeholder="Asset name"
-									selectOnNavigation={false}
-									minCharacters={0}
-									noResultsMessage={searchText ? 'No results are found' : null}
-									onChange={(e, { value }) => this.onChangeAsset(value)}
-								/>
+								form.get('supportedAssetRadio') === SUPPORTED_ASSET_CUSTOM &&
+									<div className={classnames('error-wrap ', { error: form.get('supportedAsset').error })}>
+										<Dropdown
+											icon={false}
+											className={classnames({ empty: !searchText || loading })}
+											options={(searchText && !loading) ? options : []}
+											searchQuery={searchText}
+											search
+											selection
+											fluid
+											text={searchText || 'Asset name'}
+											onSearchChange={(e, data) => this.assetSearchHandler(e, data)}
+											placeholder="Asset name"
+											selectOnNavigation={false}
+											minCharacters={0}
+											noResultsMessage={searchText ? 'No results are found' : null}
+											onChange={(e, { value }) => this.onChangeAsset(value)}
+										/>
+										{form.get('supportedAsset').error && <span className="error-message">{form.get('supportedAsset').error}</span>}
+									</div>
 							}
 						</div>
 					</li>
@@ -164,16 +167,26 @@ class ContractBar extends React.Component {
 						<div className="field-wrap">
 							<AmountField
 								fees={fees}
-								form={FORM_CREATE_CONTRACT}
+								form={FORM_CREATE_CONTRACT_OPTIONS}
 								assets={assets}
-								amount={amount}
-								currency={currency}
-								isAvailableBalance={isAvailableBalance}
-								amountInput={this.props.amountInput}
-								setFormError={this.props.setFormError}
-								setFormValue={this.props.setFormValue}
-								setValue={this.props.setValue}
-								setDefaultAsset={this.props.setDefaultAsset}
+								amount={form.get('amount')}
+								currency={form.get('currency')}
+								isAvailableBalance={form.get('isAvailableBalance')}
+								amountInput={(value, currency, name) => {
+									this.props.amountInput(FORM_CREATE_CONTRACT_OPTIONS, value, currency, name);
+								}}
+								setFormError={(field, value) => {
+									this.props.setFormError(FORM_CREATE_CONTRACT_OPTIONS, field, value);
+								}}
+								setFormValue={(field, value) => {
+									this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, field, value);
+								}}
+								setValue={(field, value) => {
+									this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, field, value);
+								}}
+								setDefaultAsset={() => {
+									this.props.setDefaultAsset(FORM_CREATE_CONTRACT_OPTIONS);
+								}}
 							/>
 						</div>
 					</li>
@@ -201,10 +214,6 @@ ContractBar.propTypes = {
 	fees: PropTypes.array.isRequired,
 	form: PropTypes.object.isRequired,
 	assets: PropTypes.object.isRequired,
-	amount: PropTypes.object.isRequired,
-	currency: PropTypes.object,
-	isAvailableBalance: PropTypes.bool.isRequired,
-	ETHAccuracy: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
@@ -212,10 +221,6 @@ ContractBar.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
 	createContract: PropTypes.func.isRequired,
-};
-
-ContractBar.defaultProps = {
-	currency: null,
 };
 
 
