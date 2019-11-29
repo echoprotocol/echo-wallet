@@ -21,6 +21,7 @@ export default {
 			value: 'amount',
 			asset: null,
 		},
+		signer: 'from',
 	},
 	override_transfer: {
 		value: OPERATIONS_IDS.OVERRIDE_TRANSFER,
@@ -73,6 +74,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		signer: 'owner',
 	},
 	asset_create: {
 		value: OPERATIONS_IDS.ASSET_CREATE,
@@ -430,6 +432,7 @@ export default {
 			value: 'value',
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_eth_withdraw: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_WITHDRAW,
@@ -540,6 +543,7 @@ export default {
 			amount: null,
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_btc_create_intermediate_deposit: {
 		value: OPERATIONS_IDS.SIDECHAIN_BTC_CREATE_INTERMEDIATE_DEPOSIT,

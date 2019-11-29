@@ -651,7 +651,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				transaction.echorand_key = permissionData.echoRand.key;
 			}
 
-			if (dataChanged.active.wif || dataChanged.echoRand.wif) {
+			if ((dataChanged.active.wif || dataChanged.echoRand.wif) && isWifChangingOnly) {
 				showOptions.wif = [];
 				if (dataChanged.active.wif) {
 					showOptions.wif.push('Changed active wif');

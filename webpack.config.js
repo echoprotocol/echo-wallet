@@ -8,6 +8,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const {
+	SOLC_LIST_URL,
+	SOLC_BIN_URL,
+} = require('config');
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
@@ -121,6 +125,8 @@ module.exports = {
 		gitRevisionPlugin,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
 		new webpack.DefinePlugin({
+			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
+			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
 			COMMITHASH: fs.existsSync('./.git') ? JSON.stringify(gitRevisionPlugin.commithash()) : '',
 		}),
@@ -129,5 +135,6 @@ module.exports = {
 		fs: 'empty',
 		net: 'empty',
 		tls: 'empty',
+		module: 'empty',
 	},
 };

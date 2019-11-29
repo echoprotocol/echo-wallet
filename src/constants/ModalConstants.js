@@ -16,3 +16,6 @@ export const MODAL_BACKUP = 'modal_backup';
 export const MODAL_CONFIRM_EDITING_OF_PERMISSIONS = 'modal_confirm_editing_of_permissions';
 export const PROPOSAL_ADD_WIF = 'modal_proposal_WIF';
 export const MODAL_GENERATE_ADDRESS = 'modal_generate_address';
+export const MODAL_CHANGE_PARENT_ACCOUNT = 'modal_change_parent_account';
+export const MODAL_GENERATE_ECHO_ADDRESS = 'modal_generate_echo_address';
+export const MODAL_GENERATE_BTC_ADDRESS = 'modal_generate_btc_address';
