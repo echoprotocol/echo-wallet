@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
-import { MODAL_LOGOUT } from '../../constants/ModalConstants';
+import { MODAL_LOGOUT, MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
@@ -58,7 +58,7 @@ class Header extends React.Component {
 	}
 
 
-	onChangeAccount(e, name) {
+	onChangeAccount(name) {
 		const { accountName, networkName } = this.props;
 
 		if (accountName === name) {
@@ -69,7 +69,15 @@ class Header extends React.Component {
 	}
 
 	onRemoveAccount(name) {
-		this.props.openModal({ accountName: name });
+		this.props.openModal(MODAL_LOGOUT, { accountName: name });
+	}
+
+	onChangeParentAccount(e, name) {
+		e.preventDefault();
+		e.stopPropagation();
+		this.props.openModal(MODAL_CHANGE_PARENT_ACCOUNT);
+		console.log(name);
+
 	}
 
 	onDropdownChange(e, value) {
@@ -131,36 +139,73 @@ class Header extends React.Component {
 		);
 	}
 
+	renderUser(name, accountId, amount, precision, symbol) {
+		return (
+			<div key={name} className="user-item-wrap">
+				<button
+					className="user-item"
+					onClick={() => this.onChangeAccount(name)}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName={name} />
+					</div>
+					<div className="user-base-info">
+						<div className="name">{name}</div>
+						<div className="id">{accountId}</div>
+					</div>
+					<div className="balance">
+						<span>{formatAmount(amount, precision) || '0'}</span>
+						<span>{symbol || 'ECHO'}</span>
+					</div>
+				</button>
+				<button
+					className="logout-user-btn"
+					onClick={() => this.onRemoveAccount(name)}
+				/>
+			</div>
+		);
+	}
+
+	renderUserWithParent(name, accountId, amount, precision, symbol) {
+		return (
+			<div key={name} className="parent-user-wrap">
+				{this.renderUser(name, accountId, amount, precision, symbol)}
+				<div className="divider" />
+				<button
+					className="user-item"
+					onClick={() => {}}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName="parent-acc" />
+					</div>
+					<div className="user-base-info">
+						<div className="name-wrap">
+							<div className="name">parent-acc</div>
+							<div className="parent-label">(parent account)</div>
+						</div>
+						<div className="id">{accountId}</div>
+					</div>
+					<a
+						href=""
+						className="parent-link"
+						onClick={(e) => this.onChangeParentAccount(e, name)}
+					> Change
+					</a>
+				</button>
+
+			</div>
+		);
+	}
+
 	renderList() {
 		const { preview, accountName } = this.props;
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },
-		}) => {
-			const content = (
-				<div key={name} className="user-item-wrap">
-					<button
-						className="user-item"
-						onClick={(e) => this.onChangeAccount(e, name)}
-					>
-						<div className="avatar-wrap">
-							<Avatar accountName={name} />
-						</div>
-						<div className="user-base-info">
-							<div className="name">{name}</div>
-							<div className="id">{accountId}</div>
-						</div>
-
-						<div className="balance">
-							<span>{formatAmount(amount, precision) || '0'}</span>
-							<span>{symbol || 'ECHO'}</span>
-						</div>
-					</button>
-					<button
-						className="logout-user-btn"
-						onClick={() => this.onRemoveAccount(name)}
-					/>
-				</div>
+		}, index) => {
+			const content = (index ?
+				this.renderUser(name, accountId, amount, precision, symbol) :
+				this.renderUserWithParent(name, accountId, amount, precision, symbol)
 			);
 
 			return ({
@@ -293,7 +338,7 @@ export default withRouter(connect(
 		transactionData: state.transaction.get('details'),
 	}),
 	(dispatch) => ({
-		openModal: (accountName) => dispatch(openModal(MODAL_LOGOUT, accountName)),
+		openModal: (type, accountName) => dispatch(openModal(type, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 	}),

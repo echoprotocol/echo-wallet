@@ -270,9 +270,15 @@ select.dropdown {
 
 /* Menu Item */
 .selection.dropdown .menu > .item {
-  padding: 0.78571429rem 1.14285714rem;
-  white-space: normal;
-  word-wrap: normal;
+	padding: 0.78571429rem 1.14285714rem;
+	white-space: normal;
+	word-wrap: normal;
+	transition: background-color $speed;
+	&:not(.selected) {
+		&:hover {
+			background-color: rgba(#e2e2e2, .1);
+		}
+	}
 }
 
 /* User Item */

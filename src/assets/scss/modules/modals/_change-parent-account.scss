@@ -1,0 +1,61 @@
+.change-parent-account-modal {
+	max-width: 600px;
+	flex-direction: column;
+	padding: 38px 0 47px;
+	.modal-header {
+		max-width: 500px;
+		margin: 0 auto;
+	}
+	.modal-body {
+		max-width: 500px;
+		margin: 15px auto 0;
+		width: 100%;
+	}
+	.modal-header-title {
+		color: #3B3B3B;
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+	}
+
+	.user-item {
+		display: flex;
+	}
+	.field {
+		&:not(:last-child) {
+			margin-bottom: 25px;
+		}
+	}
+	.form-panel {
+		justify-content: flex-end;
+		margin: 30px 0 0;
+	}
+
+	.account-dropdown-wrap {
+		position: relative;
+		& > .avatar-image {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+			left: 10px;
+		}
+		.avatar-wrap + .name {
+			margin-left: 6px;
+		}
+		.selection.dropdown,
+		input {
+			background-color: transparent;
+		}
+		.search.selection.dropdown > input.search  {
+			padding: 0 33px 0 40px;
+		}
+		.selection.dropdown {
+			padding-left: 40px;
+		}
+	}
+
+	.main-btn {
+		min-width: 160px;
+	}
+}
