@@ -4,8 +4,7 @@
 }
 
 .form .field {
-	clear: both;
-	margin: 0 0 20px;
+	margin: 0 0 24px;
 }
 
 .form .field:last-child {
@@ -30,11 +29,6 @@
 .form .field > .selection.dropdown {
 	width: 100%;
 }
-
-.form .field > .selection.dropdown > .dropdown.icon {
-	float: right;
-}
-
 
 .form .field .input {
 	width: 100%;
@@ -136,6 +130,7 @@ color: rgba(115, 115, 115, 0.87);
                 text-indent: 30px;
             }
 		}
+
 		.input.icon {
 			.avatar-wrap {
 				position: absolute;
@@ -170,7 +165,7 @@ color: rgba(115, 115, 115, 0.87);
         color: rgb(156, 160, 176);
         display: flex;
         align-items: center;
-        line-height: 25px;
+        line-height: 20px;
         text-transform: uppercase;
         font-family: proximanovaSemibold;
         cursor: pointer;
@@ -524,13 +519,14 @@ color: rgba(115, 115, 115, 0.87);
 
 .form-info {
     & + .field-wrap {
-        margin-top: 15px;
+        margin-top: 21px;
     }
 
     &+.form-info-description {
         margin: 11px auto 26px;
     }
 }
+
 
 .input.label-in-left {
     display: flex;
@@ -699,6 +695,22 @@ color: rgba(115, 115, 115, 0.87);
     }
 }
 
+.label-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.field {
+	.field-title {
+		font-size: 14px;
+		font-family: proximanovaSemibold;
+		color: #3B3B3B;
+		margin: 0 0 14px;
+	}
+}
+
+.label-wrap > label,
 .field > label {
 	@include label();
 	display: flex;

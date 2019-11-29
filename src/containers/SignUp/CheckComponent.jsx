@@ -48,7 +48,7 @@ class CheckComponent extends React.Component {
 			<div className="check-list">
 				{
 					checkList.map(({ id, text, checked }, index) => (
-						<div className="check" key={id}>
+						<div className="check small" key={id}>
 							<input type="checkbox" id={id} checked={checked} onChange={(e) => this.onChange(e, index)} disabled={loading} />
 							<label className="label" htmlFor={id}>
 								<span className="label-text">{text}</span>
@@ -68,3 +68,4 @@ CheckComponent.propTypes = {
 };
 
 export default CheckComponent;
+

@@ -25,7 +25,31 @@ $stripe-width: 10px;
 	cursor: pointer;
 	white-space: nowrap;
 }
+.link-btn {
+	font-size: 12px;
+	font-family: proximanovaSemibold;
+	transition: color $speed;
+	color: $main-color;
+	position: relative;
+	&:before {
+		content: "";
+		display: block;
+		position: absolute;
+		right: -4px;
+		left: -4px;
+		bottom: 0px;
+		top: -2px;
+		border-radius: 4px;
+		z-index: 3;
+	}
 
+	&:active {
+		color: rgba($main-color, .7);
+	}
+	&:focus:not(:active):before {
+		@include on-focus(4px);
+	}
+}
 .load {
 	position: relative;
 
