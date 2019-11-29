@@ -3,7 +3,7 @@ import { constants } from 'echojs-lib';
 import {
 	INDEX_PATH,
 	ACTIVITY_PATH,
-	CREATE_CONTRACT_PATH,
+	SMART_CONTRACTS_PATH,
 	CONTRACT_LIST_PATH,
 	VIEW_CONTRACT_PATH,
 	ADD_CONTRACT_PATH,
@@ -23,7 +23,7 @@ export const HEADER_TITLE = [
 		title: 'Recent Activity',
 	},
 	{
-		path: CREATE_CONTRACT_PATH,
+		path: SMART_CONTRACTS_PATH,
 		title: 'Smart Contracts',
 	},
 	{
@@ -162,3 +162,7 @@ export const REGISTER_IP_URL = 'ip-url';
 
 export const CSS_TRANSITION_SPEED = 300;
 
+export const REGISTRATION = {
+	BATCH: 1e3,
+	TIMEOUT: 0,
+};

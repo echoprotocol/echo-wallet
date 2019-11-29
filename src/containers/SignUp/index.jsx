@@ -68,8 +68,8 @@ class SignUp extends React.Component {
 			<AuthorizationScenario authorize={(password) => this.onCreate(password)}>
 				{
 					(submit) => (
-						<div className="sign-scroll-fix">
-							<Form className="main-form">
+						<div className="sign-scroll">
+							<Form className="main-form sign-up">
 								{
 									isAddAccount ?
 										<div className="form-info">

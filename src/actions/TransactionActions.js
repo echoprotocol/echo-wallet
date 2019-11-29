@@ -889,7 +889,9 @@ export const freezeBalance = () => async (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const createContract = () => async (dispatch, getState) => {
-	const { bytecode, name, abi } = getState().form.get(FORM_CREATE_CONTRACT).toJS();
+	const {
+		bytecode, name, abi, supportedAsset, ETHAccuracy, code, currency, amount,
+	} = getState().form.get(FORM_CREATE_CONTRACT).toJS();
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -906,7 +908,7 @@ export const createContract = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList'])) {
+	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value) {
 		const nameError = validateContractName(name.value);
 		const abiError = validateAbi(abi.value);
 
@@ -921,22 +923,45 @@ export const createContract = () => async (dispatch, getState) => {
 		}
 	}
 
+	let supportedAssetId = '';
+	if (supportedAsset) {
+		const assets = await echo.api.lookupAssetSymbols([supportedAsset]);
+		const asset = assets.find((a) => a.symbol === supportedAsset);
+		supportedAssetId = asset.id;
+	}
+
 	dispatch(resetTransaction());
 
 	const options = {
 		registrar: activeUserId,
-		value: { amount: 0, asset_id: '1.3.0' },
-		fee: { amount: 0, asset_id: '1.3.0' },
+		value: { amount: amount.value || 0, asset_id: currency.id || ECHO_ASSET_ID },
+		fee: { amount: 0, asset_id: supportedAssetId || ECHO_ASSET_ID },
 		code: bytecodeValue,
-		eth_accuracy: true,
-		supported_asset_id: '1.3.0',
+		eth_accuracy: ETHAccuracy,
 	};
+
+	if (supportedAssetId) {
+		options.supported_asset_id = supportedAssetId;
+		if (new BN(options.value.amount).eq(0)) {
+			options.value.asset_id = supportedAssetId;
+		} else if (options.value.asset_id !== supportedAssetId) {
+			dispatch(setFormError(
+				FORM_CREATE_CONTRACT,
+				'amount',
+				'Amount asset should be equal to supported asset',
+			));
+			return null;
+		}
+	}
 
 	try {
 		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
 
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
+		} else {
+			dispatch(setFormError(FORM_CREATE_CONTRACT, 'amount', 'Can\'t calculate fee'));
+			return null;
 		}
 		options.fee.amount = fee.value;
 		const showOptions = {
@@ -949,7 +974,7 @@ export const createContract = () => async (dispatch, getState) => {
 
 		return true;
 	} catch (err) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', 'Incorrect bytecode'));
+		dispatch(setFormError(FORM_CREATE_CONTRACT, code.value ? 'code' : 'bytecode', 'Transaction params is invalid'));
 		return false;
 	}
 };
@@ -975,7 +1000,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
-	const addToWatchList = getState().form.getIn([FORM_CREATE_CONTRACT, 'addToWatchList']);
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
 	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
@@ -990,7 +1014,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		await signTransaction(signer, tr, password);
 
 		tr.broadcast().then((res) => {
-			if (addToWatchList) {
+			if (abi) {
 				dispatch(addContractByName(
 					res[0].trx.operation_results[0][1],
 					accountId,

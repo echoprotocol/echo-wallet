@@ -150,7 +150,7 @@ class SignIn extends React.Component {
 			<AuthorizationScenario authorize={(password) => this.onClick(password)}>
 				{
 					(submit) => (
-						<div className="sign-scroll-fix">
+						<div className="sign-scroll">
 							{ this.renderSignIn(submit) }
 						</div>
 					)
