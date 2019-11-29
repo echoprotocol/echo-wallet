@@ -20,7 +20,9 @@ class ModalERC20ToWatchList extends React.Component {
 		this.props.closeModal();
 	}
 
-	onConfirm() {
+	onConfirm(e) {
+		e.preventDefault();
+
 		const { contractId } = this.props;
 
 		this.props.watchContractAsToken(contractId);
@@ -50,6 +52,7 @@ class ModalERC20ToWatchList extends React.Component {
 					<Button
 						className="main-btn"
 						content="Yes"
+						onClick={(e) => this.onConfirm(e)}
 					/>
 				</div>
 			</Modal>
