@@ -3,7 +3,6 @@ import { Table, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Avatar from '../../components/Avatar';
 
 import history from '../../history';
 
@@ -56,10 +55,7 @@ class ContractList extends React.Component {
 					{id}
 				</Table.Cell>
 				<Table.Cell >
-					<div className="avatar-wrap">
-						<Avatar accountName={name} />
-						<div className="name">{name}</div>
-					</div>
+					<div className="name">{name}</div>
 				</Table.Cell>
 				<Table.Cell>
 					<div className="balance-wrap">
