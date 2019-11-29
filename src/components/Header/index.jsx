@@ -169,32 +169,11 @@ class Header extends React.Component {
 	renderUserWithParent(name, accountId, amount, precision, symbol) {
 		return (
 			<div key={name} className="parent-user-wrap">
-				<div className="user-item-wrap">
-					<button
-						className="user-item"
-						onClick={() => this.onChangeAccount(name)}
-					>
-						<div className="avatar-wrap">
-							<Avatar accountName={name} />
-						</div>
-						<div className="user-base-info">
-							<div className="name">{name}</div>
-							<div className="id">{accountId}</div>
-						</div>
-						<div className="balance">
-							<span>{formatAmount(amount, precision) || '0'}</span>
-							<span>{symbol || 'ECHO'}</span>
-						</div>
-					</button>
-					<button
-						className="logout-user-btn"
-						onClick={() => this.onRemoveAccount(name)}
-					/>
-				</div>
+				{this.renderUser(name, accountId, amount, precision, symbol)}
 				<div className="divider" />
 				<button
 					className="user-item"
-					onClick={() => this.onChangeAccount(name)}
+					onClick={() => {}}
 				>
 					<div className="avatar-wrap">
 						<Avatar accountName="parent-acc" />
