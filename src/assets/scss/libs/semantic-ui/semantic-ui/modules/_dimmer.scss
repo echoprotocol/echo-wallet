@@ -185,33 +185,3 @@ body.dimmable > .dimmer {
 .ui.inverted.dimmer > .content > * {
   color: #33353F;
 }
-
-/*--------------
-     Simple
----------------*/
-
-
-/* Displays without javascript */
-.ui.simple.dimmer {
-  display: block;
-  overflow: hidden;
-  opacity: 1;
-  width: 0%;
-  height: 0%;
-  z-index: -100;
-  background-color: rgba(0, 0, 0, 0);
-}
-.dimmed.dimmable > .ui.simple.dimmer {
-  overflow: visible;
-  opacity: 1;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  z-index: 1;
-}
-.ui.simple.inverted.dimmer {
-  background-color: rgba(255, 255, 255, 0);
-}
-.dimmed.dimmable > .ui.simple.inverted.dimmer {
-  background-color: rgba(255, 255, 255, 0.85);
-}

@@ -1,0 +1,79 @@
+.accordion {
+	&.fluid {
+		width: 100%;
+	}
+}
+
+.accordion-trigger {
+	color: $main-color;
+	border-bottom: 1px dashed;
+	position: relative;
+	font-size: 15px;
+	.icon {
+		position: absolute;
+		right: -14px;
+		top: 0;
+		bottom: 0;
+	}
+}
+
+.accordion-body {
+	background-color: rgba(#DDDDDD, .2);
+	padding: 15px 20px 22px;
+	margin: 12px 0 -8px;
+	.radio-list {
+		display: flex;
+		margin: 7px 0 0;
+	}
+	.radio:before {
+		margin-right: 8px;
+	}
+	.radio:not(:last-child) {
+		margin-right: 30px;
+	}
+}
+
+.accordion-transition-enter,
+.accordion-transition-appear {
+	overflow: hidden;
+	max-height: 0;
+	margin: 0;
+	padding: 0 20px;
+	color: transparent;
+	opacity: 0;
+}
+
+.accordion-transition-enter-active,
+.accordion-transition-appear-active {
+	overflow: hidden;
+	max-height: 200px;
+	opacity: 1;
+	margin: 12px 0 -8px;
+	padding: 15px 20px 22px;
+	transition:
+		padding $speed,
+		margin $speed,
+		max-height $speed,
+		opacity $speed ease-in;
+}
+
+.accordion-transition-exit {
+	overflow: hidden;
+	max-height: 200px;
+	margin: 12px 0 -8px;
+	padding: 15px 20px 22px;
+	opacity: 1;
+}
+
+.accordion-transition-exit-active {
+	overflow: hidden;
+	max-height: 0;
+	opacity: 0;
+	margin: 0;
+	padding: 0 20px;
+	transition:
+		padding $speed,
+		margin $speed,
+		max-height $speed ease-out,
+		opacity $speed;
+}

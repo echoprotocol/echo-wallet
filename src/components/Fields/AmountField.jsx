@@ -303,6 +303,7 @@ class AmountField extends React.Component {
 							placeholder="0.00"
 							value={amount.value}
 							name="amount"
+							autoComplete="off"
 							onChange={(e) => this.onChangeAmount(e)}
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}

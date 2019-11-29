@@ -98,7 +98,12 @@ class AccountField extends React.Component {
 							<Avatar accountName={avatarName || field.value} />
 						</div>
 					}
-					<input name={`account${subject}`} value={field.value} onInput={(e) => this.onInput(e)} />
+					<input
+						name={`account${subject}`}
+						value={field.value}
+						autoComplete="off"
+						onInput={(e) => this.onInput(e)}
+					/>
 					{ field.checked && !field.error && !disabled &&
 						<span className={classnames('icon-checked value-status', { success: field.checked })} />
 					}
