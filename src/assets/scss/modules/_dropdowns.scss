@@ -29,6 +29,12 @@
             }
         }
     }
+    
+    &.upward {
+        .menu {
+            max-height: 300px
+        }
+    }
 
     &.assets-tokens-dropdown {
         display: flex;
@@ -291,6 +297,9 @@
             display: none !important;
         }
 	}
+	.dropdown.icon {
+		z-index: 3;
+	}
 }
 
 
@@ -358,7 +367,7 @@
 		line-height: 20px;
 	}
 
-	.dropdown {
+	& > .dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
