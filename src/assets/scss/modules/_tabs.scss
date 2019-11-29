@@ -1,6 +1,7 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 206px);
+		max-height: calc(100vh - 206px);
+		height: 100vh;
         overflow: overlay;
     }
 
@@ -154,7 +155,6 @@
         max-width: 860px;
         margin: auto;
         padding: 20px 45px 60px;
-        overflow: -webkit-paged-x;
 
         @media (max-width: 1200px) {
             margin: 0;

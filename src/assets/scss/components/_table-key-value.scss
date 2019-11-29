@@ -1,0 +1,21 @@
+.table-key-value {
+
+	.key {
+		font-family: proximaNovaSemibold;
+		color: rgba(#3B3B3B,.5);
+		font-size: 14px;
+		padding: 0 40px 0 0;
+	}
+
+	.balance-wrap {
+		display: flex;
+		color: #3B3B3B;
+		font-size: 14px;
+
+		.balance {
+			font-family: proximaNovaSemibold;
+			margin-right: 5px;
+		}
+	}
+                    
+}
