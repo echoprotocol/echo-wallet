@@ -181,7 +181,7 @@ class Header extends React.Component {
 					<div className="user-base-info">
 						<div className="name-wrap">
 							<div className="name">parent-acc</div>
-							<div className="parent-label">(parent account)</div>
+							<div className="parent-label">(delegated to)</div>
 						</div>
 						<div className="id">{accountId}</div>
 					</div>

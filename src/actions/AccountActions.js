@@ -23,3 +23,13 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 
 	return true;
 };
+
+/**
+ *
+ * @param name
+ * @returns {Promise<Array<string>>}
+ */
+export const getAccountsList = async (name, limit = 15) => {
+	const list = await echo.api.lookupAccounts(name, limit);
+	return list;
+};
