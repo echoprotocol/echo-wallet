@@ -35,7 +35,7 @@ class QrCode extends React.PureComponent {
 							{link}
 						</a>
 						<CopyToClipboard text={link}>
-							<button className="link-copy-btn icon-icopy-tiny" />
+							<button className="copy-btn icon-icopy-tiny" />
 						</CopyToClipboard>
 					</div>
 					<div className="qr-description">

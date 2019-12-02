@@ -6,6 +6,8 @@ import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
 
+import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
+
 class SourceCode extends React.Component {
 
 	constructor(props) {
@@ -17,7 +19,7 @@ class SourceCode extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.setDefaultAsset();
+		this.props.setDefaultAsset(FORM_CREATE_CONTRACT_SOURCE_CODE);
 
 		this.setDropdownUpwardState();
 
@@ -25,11 +27,6 @@ class SourceCode extends React.Component {
 			this.setDropdownUpwardState();
 		};
 	}
-
-	componentWillUnmount() {
-		this.props.clearForm();
-	}
-
 
 	onEditorLoad(editor) {
 		editor.setOptions({
@@ -41,7 +38,7 @@ class SourceCode extends React.Component {
 		const { timeout } = this.state;
 		const { form } = this.props;
 
-		this.props.setFormValue('code', value);
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', value);
 
 		if (!value) {
 			this.props.resetCompiler();
@@ -53,7 +50,7 @@ class SourceCode extends React.Component {
 
 		if (value) {
 			setTimeout(() => {
-				this.props.setValue('compileLoading', true);
+				this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 			}, 0);
 		}
 
@@ -61,12 +58,12 @@ class SourceCode extends React.Component {
 			clearTimeout(timeout);
 		}
 
-		this.props.setValue('compileLoading', true);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		this.setState({
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
 				setTimeout(() => {
-					this.props.setValue('compileLoading', false);
+					this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', false);
 				}, 0);
 			}, 600),
 		});
@@ -75,18 +72,18 @@ class SourceCode extends React.Component {
 	onChangeItem(e, value) {
 		const { form } = this.props;
 
-		this.props.setFormValue('name', value);
-		this.props.setFormValue('abi', form.getIn(['contracts', value, 'abi']));
-		this.props.setFormValue('bytecode', form.getIn(['contracts', value, 'bytecode']));
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', value);
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', form.getIn(['contracts', value, 'abi']));
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', form.getIn(['contracts', value, 'bytecode']));
 	}
 
 	async onChangeCompiler(e) {
 		if (!e.target.textContent) {
 			return;
 		}
-		this.props.setValue('compileLoading', true);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		await this.props.changeContractCompiler(e.target.textContent);
-		this.props.setValue('compileLoading', false);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', false);
 	}
 
 	getCompilersOptions() {
@@ -198,7 +195,6 @@ SourceCode.propTypes = {
 	contractCodeCompile: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
