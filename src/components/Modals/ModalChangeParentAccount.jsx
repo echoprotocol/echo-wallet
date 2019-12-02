@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
 import { getAccountsList } from '../../actions/AccountActions';
@@ -20,7 +21,7 @@ class ModalLogout extends React.Component {
 		this.state = {
 			searchText: '',
 			loading: false,
-			accounts: [],
+			options: [],
 		};
 	}
 
@@ -28,9 +29,10 @@ class ModalLogout extends React.Component {
 		this.props.closeModal(MODAL_CHANGE_PARENT_ACCOUNT);
 	}
 
-	onChangeAccount(account) {
+	onChangeAccount(accountId) {
+		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		// this.props.setValue('supportedAsset', assetSymbol);
-		this.setState({ searchText: account });
+		this.setState({ searchText: accountName.text });
 	}
 
 	onResetAccount() {
@@ -50,14 +52,14 @@ class ModalLogout extends React.Component {
 		}
 		this.setState({
 			timeout: setTimeout(async () => {
-				const accounts = (await getAccountsList(data.searchQuery))
+				const options = (await getAccountsList(data.searchQuery))
 					.map(([name, id]) => ({
 						key: name,
 						text: name,
 						value: id,
 					}));
 				this.setState({
-					accounts,
+					options,
 					loading: false,
 				});
 			}, 300),
@@ -65,8 +67,8 @@ class ModalLogout extends React.Component {
 	}
 
 	renderList() {
-		const { accounts } = this.state;
-		return accounts.map(({ key, text, value }) => {
+		const { options } = this.state;
+		return options.map(({ key, text, value }) => {
 			const content = (
 				<button
 					key={key}
@@ -126,8 +128,9 @@ class ModalLogout extends React.Component {
 
 							<label htmlFor="parentAccount" className="field-label">Delegated to</label>
 							<div className="account-dropdown-wrap">
-								<Avatar accountName="account-name" />
+								<Avatar accountName={currentAccountName} />
 								<Dropdown
+									className={classnames({ empty: !searchText || loading })}
 									options={(searchText && !loading) ? this.renderList() : []}
 									searchQuery={searchText}
 									search
@@ -140,6 +143,7 @@ class ModalLogout extends React.Component {
 									selectOnNavigation={false}
 									minCharacters={0}
 									noResultsMessage="No results are found"
+									onChange={(e, { value }) => this.onChangeAccount(value)}
 								/>
 							</div>
 						</div>
