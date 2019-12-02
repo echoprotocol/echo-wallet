@@ -183,9 +183,9 @@ class WarningConfirmThresholdScenario extends React.Component {
 			this.props.resetTransaction();
 		} else {
 			this.props.sendTransaction(password, () => onUnlock(password));
+			this.props.setPermissionLoading(true);
 		}
 		this.props.setTableValue('loading', true);
-		this.props.setPermissionLoading(true);
 		this.clear();
 	}
 
