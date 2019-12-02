@@ -10,6 +10,7 @@ import { setFormValue, setValue, setFormError } from '../../actions/FormActions'
 
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 import { validateContractName } from '../../helpers/ValidateHelper';
+import ActionBtn from '../../components/ActionBtn';
 
 class ContractSettings extends React.Component {
 
@@ -161,13 +162,11 @@ class ContractSettings extends React.Component {
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
 						</li>
 						<li className="act">
-							<Button
-								className="remove-text-btn"
-								onClick={() => this.removeContract(contractId)}
-							>
-								<span className="icon-remove" />
-								Remove
-							</Button>
+							<ActionBtn
+								action={() => this.removeContract(contractId)}
+								icon="remove"
+								text="Remove"
+							/>
 						</li>
 					</ul>
 

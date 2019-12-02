@@ -2,7 +2,8 @@
     .scroll-fix {
 		max-height: calc(100vh - 206px);
 		height: 100vh;
-        overflow: overlay;
+		overflow: auto;
+		position: relative;
     }
 
     &.hide-menu {
@@ -14,12 +15,14 @@
             display: none;
         }
     }
+	
 	.control-wrap {
 		background-color: rgb(247, 247, 247);
 		width: 100%;
 		border-top: 1px solid $bd-gray;
 	}
-    .control-panel {
+	
+	.control-panel {
 		max-width: 900px;
 		margin: auto;
 
@@ -148,7 +151,8 @@
 
     .tab {
         background-color: #fff;
-        border: 0;
+		border: 0;
+		
     }
 
     .tab-content {
@@ -160,7 +164,7 @@
             margin: 0;
             max-width: 100%;
         }
-    }
+	}
 }
 
 .tab-content {
@@ -170,8 +174,15 @@
 
     .watchlist {
         margin: 0
-    }
+	}
+	
+	.table-key-value {
+		width: 100%;
+		max-width: 612px;
+	}
 }
+
+
 
 .tab-btn {
 	border: 0;

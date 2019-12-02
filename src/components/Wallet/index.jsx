@@ -114,7 +114,7 @@ class Wallet extends React.Component {
 						<Button
 							basic
 							onClick={() => this.props.openModal(MODAL_TOKENS)}
-							compact
+							size="tiny"
 							content="Watch Tokens"
 							className="main-btn"
 						/>
