@@ -96,7 +96,7 @@ class EchoNetwork extends React.Component {
 			return null;
 		}
 
-		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
+		return new BN(amount.value).toString(10);
 	}
 
 	renderAccountsList() {
