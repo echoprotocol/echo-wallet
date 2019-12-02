@@ -11,10 +11,6 @@
         }
     }
 
-    .ui.form .field:nth-child(2) {
-        margin-bottom: 18px;
-    }
-
     @media only screen and (max-width: 1150px) {
         .send-wrap {
             padding: 0 90px;
@@ -87,6 +83,89 @@
     font-size: 15px;
 }
 
+.currency-symbol {
+	color: $main-color;
+	transition: color .2s;
+	font-size: 18px;
+	text-align: left;
+}
+
+.currency-symbol,
+.currency-amount {
+	@include cut-text;
+	margin-right: 8px;
+}
+
+.currency-value {
+	display: flex;
+	flex-direction: column;
+	margin: 0 8px 0 0;
+
+	.currency-amount {
+		font-size: 14px;
+		margin: 4px 0;
+	}
+}
+
+.currency-amount {
+	color: $text-dark;
+	transition: color .2s;
+	font-size: 18px;
+	text-align: right;
+	min-width: 35%;
+}
+
+.balance-item {
+	border: 0;
+	background-color: transparent;
+	flex-wrap: wrap;
+	font-size: 13px;
+	font-weight: 400;
+	color: rgb(92, 99, 125);
+	width: 100%;
+	padding: 0 12px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-family: proximanovaSemibold;
+
+	.frozen-value,
+	.frozen-term,
+	.frozen-coefficient,
+	.frozen-interval {
+		width: 50%;
+		height: 16px;
+		display: block;
+	}
+
+	.frozen-coefficient {
+		width: 40%;
+	}
+
+	.frozen-interval {
+		width: 60%;
+	}
+}
+
+.remove-token {
+	width: 0px;
+	padding: 0;
+	border: 0;
+	transition: width .2s, color .2s;
+	overflow: hidden;
+	font-size: 14px;
+	color: #fff;
+	font-size: 11px;
+
+	&:focus {
+		color: $yellow;
+	}
+
+	&:hover {
+		color: $yellow;
+	}
+}
+
 .currency-list {
 
     & + .currency-title {
@@ -95,7 +174,6 @@
 
     li {
         background-color: #F5F5F6;
-        cursor: pointer;
         height: 50px;
         display: flex;
         flex-wrap: nowrap;
@@ -108,107 +186,33 @@
         &.focused,
         &:hover {
             background-color: #5267C6;
+			color: #fff;
 
-            button:nth-child(2) {
+            .remove-token {
                 width: 44px;
             }
 
+			.frozen-value,
             .currency-symbol {
                 color: $yellow;
-            }
-
+			}
+			
+			.balance-item,
             .currency-amount {
                 color: #fff;
-            }
-        }
-
-        .currency-symbol {
-            color: $main-color;
-            transition: color .2s;
-            font-size: 18px;
-            text-align: left;
-        }
-
-        .currency-amount {
-            color: $text-dark;
-            transition: color .2s;
-            font-size: 18px;
-            text-align: right;
-            min-width: 35%;
-        }
-
-        .currency-symbol,
-        .currency-amount {
-            @include cut-text;
-            margin-right: 8px;
-        }
-
-        button {
-            border: 0;
-            background-color: transparent;
-            cursor: pointer;
-            flex-wrap: wrap;
-            font-size: 13px;
-            font-weight: 400;
-			color: rgb(92, 99, 125);
-			
-            &:hover {
-				cursor: default;
-				color: #fff;
-			
-				.frozen-value {
-					color: $yellow;
-				}
-			}
-			
-
-
-			&:first-child {
-				width: 100%;
-				padding: 0 12px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				font-family: proximanovaSemibold;
 			}
 
-			&:nth-child(2) {
-				width: 0px;
-				padding: 0;
-				border: 0;
-				transition: width .2s, color .2s;
-				overflow: hidden;
-				font-size: 14px;
-				color: #fff;
-				font-size: 11px;
-	
-				&:focus {
-					color: $yellow;
-				}
-	
-				&:hover {
-					color: $yellow;
-				}
-			}
-
-			div {
-				width: 50%;
-				height: 16px;
-				display: block;
-	
-				&.frozen-coefficient {
-					width: 40%;
-				}
-	
-				&.frozen-interval {
-					width: 60%;
-				}
+			.tag {
+				border-color: rgba(#fff, .6);
+				color: $yellow;
 			}
         }
-
-
-
-    }
+	}
+	&.stable-coins {
+		li {
+			height: 56px;	
+		}
+	}
 }
 
 .balance-wrap + div {

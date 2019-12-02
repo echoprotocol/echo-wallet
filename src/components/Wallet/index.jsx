@@ -4,6 +4,7 @@ import { Button, Tab } from 'semantic-ui-react';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
+import StableCoins from './StableCoinsComponents';
 
 import Transfer from '../Transfer';
 import Receive from '../Receive';
@@ -134,6 +135,7 @@ class Wallet extends React.Component {
 							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
 						/>
+						<StableCoins />
 						<Tokens
 							tokens={tokens}
 							setAsset={(symbol) => {

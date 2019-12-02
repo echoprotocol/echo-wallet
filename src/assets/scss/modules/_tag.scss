@@ -1,0 +1,20 @@
+.tag {
+	position: relative;
+	font-size: 10px;
+	font-family: proximanovaSemibold;
+	text-transform: uppercase;
+	border-radius: 2px;
+	color: #4D66CD;
+	height: 16px;
+	border: 1px solid rgba(#4D66CD, .2);
+	padding: 0 4px;
+	transition: color $speed, border-color $speed;
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+	&:not(:last-child) {
+		margin: 0 6px 0 0;
+	}
+}

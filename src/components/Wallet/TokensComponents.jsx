@@ -40,6 +40,7 @@ class Tokens extends React.Component {
 				key={id}
 			>
 				<button
+					className="balance-item"
 					key={id}
 					onFocus={() => this.onFocus(id)}
 					onBlur={() => this.onBlur()}
@@ -51,6 +52,7 @@ class Tokens extends React.Component {
 					<span className="currency-amount">{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
+					className="remove-token"
 					onFocus={() => this.onFocus(id)}
 					onBlur={() => this.onBlur()}
 					onClick={(e) => this.onRemoveToken(symbol, id, e)}
