@@ -37,8 +37,8 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
-	if (!(/[.\-/0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
-		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
+	if (!(/[.\-0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
+		return `${suffix} contain digit, number, dash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
 		suffix = 'Each account segment should';
