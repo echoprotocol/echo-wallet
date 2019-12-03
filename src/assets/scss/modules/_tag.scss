@@ -29,4 +29,10 @@
 		border-color: $main-color;
 		background-color: $main-color;
 	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .2);
+		color: rgba($main-color, .7);
+		background-color: transparent;
+	}
 }

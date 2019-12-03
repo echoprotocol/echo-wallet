@@ -1,4 +1,4 @@
-.backup-modal {
+.replenish {
 	max-width: 600px;
 	flex-direction: column;
 	padding: 38px 0 47px;
@@ -7,6 +7,7 @@
 		align-items: center;
 		max-width: 500px;
 		margin: 0 auto;
+		text-align: center;
 	}
 
 	.modal-header-title {
@@ -19,31 +20,20 @@
 	.modal-body {
 		width: 100%;
 		max-width: 500px;
-		margin: 13px auto 0;
+		margin: 21px auto 0;
 	}
 
 	.field {
-		margin-bottom: 21px;
 		& > label {
 			min-height: 18px;
 		}
 	}
-	textarea {
-		min-height: 140px;
-	}
-	.copy-btn {
-		i {
-			font-size: 16px;
-		}
-	}
+
 	.form-panel {
-		margin: 12px 0 0;
-		justify-content: space-between;
-		
+		margin: 30px 0 0;
 		.main-btn {
-			margin-left: auto;
-			min-width: 160px;
+			min-width: 120px;
+			width: 120px;
 		}
 	}
 }
-

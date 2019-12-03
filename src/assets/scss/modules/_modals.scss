@@ -31,25 +31,14 @@
 		align-items: center;
 		justify-content: center;
 
-		.button[type=submit],
-		.button[type=button] {
+		.button {
 			margin: 0;
-		}
-
-		.action-link + .main-btn {
-			margin: 0 0 0 auto;
 		}
 
 	}
 
     .form.main-form {
         padding: 0;
-
-        .button[type=submit],
-        .button[type=button] {
-            margin: 30px 0 0;
-        }
-
     }
 
     &.choose-account {

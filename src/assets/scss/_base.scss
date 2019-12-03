@@ -30,7 +30,10 @@ button {
 	padding: 0;
 	border: 0;
 	background-color: transparent;
-	cursor: pointer;
+
+	&:not(:disabled) {
+		cursor: pointer;
+	}
 }
 
 li {
@@ -55,7 +58,6 @@ optgroup,
 select,
 textarea {
   font-family: sans-serif;
-
   font-size: 100%;
   margin: 0;
 }
@@ -169,7 +171,7 @@ textarea {
 .external-link {
     color: #5267C6;
     font-size: 13px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     height: 14px;
 

@@ -64,13 +64,15 @@ class ModalTokens extends React.Component {
 									<span className="error-message">{contractId.error}</span>
 								</Form.Field>
 							</div>
-							<Button
-								type="submit"
-								className="main-btn"
-								onClick={(e) => this.onClick(e)}
-								disabled={disabled}
-								content="Watch Token"
-							/>
+							<div className="form-panel">
+								<Button
+									type="submit"
+									className="main-btn"
+									onClick={(e) => this.onClick(e)}
+									disabled={disabled}
+									content="Watch Token"
+								/>
+							</div>
 						</Form>
 					</div>
 				</div>

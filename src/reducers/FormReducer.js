@@ -7,7 +7,9 @@ import {
 	FORM_SIGN_IN,
 	FORM_UNLOCK_MODAL,
 	FORM_TRANSFER,
-	FORM_CREATE_CONTRACT,
+	FORM_CREATE_CONTRACT_SOURCE_CODE,
+	FORM_CREATE_CONTRACT_BYTECODE,
+	FORM_CREATE_CONTRACT_OPTIONS,
 	FORM_CALL_CONTRACT,
 	FORM_ADD_CONTRACT,
 	FORM_VIEW_CONTRACT,
@@ -22,6 +24,7 @@ import {
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+import { SOURCE_CODE_MODE, SUPPORTED_ASSET_ALL } from '../constants/ContractsConstants';
 
 const DEFAULT_FIELDS = Map({
 	error: null,
@@ -115,11 +118,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
-	[FORM_CREATE_CONTRACT]: Map({
-		amount: {
-			value: '',
-			error: null,
-		},
+	[FORM_CREATE_CONTRACT_SOURCE_CODE]: Map({
 		bytecode: {
 			value: '',
 			error: null,
@@ -132,22 +131,45 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
-		isAvailableBalance: false,
 		code: {
 			value: '',
 			error: null,
 		},
 		contracts: new Map({}),
-		addToWatchList: false,
-		accepted: false,
-		ETHAccuracy: false,
-		supportedAsset: '',
 		compilersList: new Map({}),
 		currentCompiler: {
 			value: '',
 			error: null,
 		},
 		compileLoading: false,
+	}),
+	[FORM_CREATE_CONTRACT_BYTECODE]: Map({
+		bytecode: {
+			value: '',
+			error: null,
+		},
+		name: {
+			value: '',
+			error: null,
+		},
+		abi: {
+			value: '',
+			error: null,
+		},
+	}),
+	[FORM_CREATE_CONTRACT_OPTIONS]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		isAvailableBalance: false,
+		ETHAccuracy: false,
+		supportedAsset: {
+			value: '',
+			error: null,
+		},
+		supportedAssetRadio: SUPPORTED_ASSET_ALL,
+		contractMode: SOURCE_CODE_MODE,
 	}),
 	[FORM_CALL_CONTRACT]: Map({
 		inputs: new Map({}),
@@ -282,8 +304,12 @@ export default createModule({
 		[FORM_SIGN_IN]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_SIGN_IN]),
 		[FORM_UNLOCK_MODAL]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_UNLOCK_MODAL]),
 		[FORM_TRANSFER]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_TRANSFER]),
-		[FORM_CREATE_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
-			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT]),
+		[FORM_CREATE_CONTRACT_SOURCE_CODE]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT_SOURCE_CODE]),
+		[FORM_CREATE_CONTRACT_BYTECODE]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT_BYTECODE]),
+		[FORM_CREATE_CONTRACT_OPTIONS]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CREATE_CONTRACT_OPTIONS]),
 		[FORM_CALL_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CALL_CONTRACT]),
 		[FORM_ADD_CONTRACT]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ADD_CONTRACT]),

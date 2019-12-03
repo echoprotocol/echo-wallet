@@ -11,12 +11,12 @@ import {
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
 
-const reg = /^(0x|0X)?[a-fA-F0-9]+$/;
+const reg = /^(([\da-fA-F]){2})*$/;
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
-const accountAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+const accountAddressRegex = /^[a-fA-F0-9]{40}$/;
 
 /**
  * @method isAccountNameError
@@ -37,8 +37,8 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
-	if (!(/[.\-/0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
-		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
+	if (!(/[.\-0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
+		return `${suffix} contain digit, number, dash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
 		suffix = 'Each account segment should';
