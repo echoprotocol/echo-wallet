@@ -11,6 +11,7 @@
 @import "links";
 @import "input";
 @import "textarea";
+@import "tag";
 
 @import "modals/edit-permissions";
 @import "modals/add-wif";
@@ -20,9 +21,5 @@
 @import "modals/create-address.scss";
 @import "modals/erc20-to-watch-list.scss";
 @import "modals/change-parent-account.scss";
-@import "modals/whitelist-blacklist.scss";
-@import "modals/replenish.scss";
-
-
 @import "nav-popup";
 

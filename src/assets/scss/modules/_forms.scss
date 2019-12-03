@@ -165,11 +165,11 @@ color: rgba(115, 115, 115, 0.87);
         align-items: center;
         line-height: 20px;
         text-transform: uppercase;
-        font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
         cursor: pointer;
         padding: 0;
         font-size: 12px;
-        font-weight: 400;
 
         &:focus {
             &:not(:active) {
@@ -361,27 +361,28 @@ color: rgba(115, 115, 115, 0.87);
                 padding-right: 30px;
             }
         }
-
-        .value-status {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            margin: auto;
-            display: flex;
-            align-items: center;
-            width: 25px;
-        }
     }
 
     .form-panel {
-        display: flex;
+		display: flex;
+		flex-wrap: wrap;
         align-items: center;
         margin: 30px 0 0;
 
         .total-sum {
-            span {
-                margin-left: 5px;
+			display: flex;
+			align-items: center;
+			font-size: 14px;
+			font-weight: 400;
+			margin-right: 12px;
+
+			.label {
+				color: #3B3B3B;
+				margin: 0 5px 0 0;
+			}
+
+            .balance {
+				
                 color: $main-color;
             }
         }
@@ -528,18 +529,16 @@ color: rgba(115, 115, 115, 0.87);
 }
 
 
-.input.label-in-left {
+.label-in-left {
     display: flex;
     position: relative;
-    max-width: 350px;
 
     width: 100%;
 
     input {
-        min-width: 360px;
+        min-width: 314px;
         padding-right: 55px;
         height: 34px;
-        padding: 0 1em;
     }
 
     .label {
@@ -573,15 +572,15 @@ color: rgba(115, 115, 115, 0.87);
         &:focus {
             color: #aeb4c0;
         }
+	}
 
-        &.icon-edit-checked {
-            right: 20px;
-        }
+	.icon-edit-checked {
+		right: 30px;
+	}
 
-        &.icon-edit-close {
-            right: 0;
-        }
-    }
+	.icon-edit-close {
+		right: 8px;
+	}
 }
 
 
@@ -617,13 +616,32 @@ color: rgba(115, 115, 115, 0.87);
     z-index: 5;
 }
 
+.value-status {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	display: flex;
+	align-items: center;
+	width: 25px;
+}
+textarea + .value-status {
+	bottom: auto;
+	height: 39px;
+}
+
 .warning-message {
     display: block;
     margin-top: 4px;
     font-size: 12px;
     line-height: 16px;
-    font-weight: 500;
-    color: #EE851C;
+    font-weight: 400;
+	color: #EE851C;
+	.special {
+		font-weight: 600;
+		font-style: italic;
+	}
 }
 
 .amount-wrap {
@@ -661,17 +679,6 @@ color: rgba(115, 115, 115, 0.87);
             }
         }
 
-        .value-status {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            margin: auto;
-            display: flex;
-            align-items: center;
-            width: 25px;
-        }
-
         input {
             padding: 4px 10px;
             font-size: 15px;
@@ -704,7 +711,8 @@ color: rgba(115, 115, 115, 0.87);
 .field {
 	.field-title {
 		font-size: 14px;
-		font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
 		color: #3B3B3B;
 		margin: 0 0 14px;
 	}
@@ -721,8 +729,18 @@ color: rgba(115, 115, 115, 0.87);
 	.label-info {
 		text-transform: none;
 		margin-left: 5px;
-		& + .label-info {
+		&.right {
 			margin-left: auto;
 		}
+	}
+
+	.account-id {
+		color: #3B3B3B;
+		font-weight: 400;
+	}
+	.account-name {
+		color: #3B3B3B;
+		font-weight: 400;
+		text-transform: none;
 	}
 }

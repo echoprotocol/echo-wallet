@@ -49,6 +49,7 @@ class Assets extends React.Component {
 						className={classnames({ focused: id === this.state.focusedId })}
 					>
 						<button
+							className="balance-item"
 							onFocus={() => this.onFocus(id)}
 							onBlur={() => this.onBlur()}
 							onClick={() => this.setAsset(asset)}
@@ -67,15 +68,12 @@ class Assets extends React.Component {
 
 	render() {
 		return (
-			<React.Fragment>
-				<div className="currency-title">Assets</div>
-				<ul className="currency-list">
-					{
-						!this.props.assets || !this.props.assets.size ?
-							this.renderEmpty() : this.renderList()
-					}
-				</ul>
-			</React.Fragment>
+			<ul className="currency-list">
+				{
+					!this.props.assets || !this.props.assets.size ?
+						this.renderEmpty() : this.renderList()
+				}
+			</ul>
 		);
 	}
 

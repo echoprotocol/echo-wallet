@@ -47,6 +47,7 @@ class Transfer extends React.Component {
 			subjectTransferType,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
+
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
@@ -66,7 +67,9 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
 								/>
+
 								<AccountField
+									showAccountName // or showAccountId
 									currency={currency}
 									subject="to"
 									field={to}
@@ -84,6 +87,7 @@ class Transfer extends React.Component {
 								{
 									bytecodeVisible &&
 									<BytecodeField
+										optional
 										field={bytecode}
 										setIn={this.props.setIn}
 									/>

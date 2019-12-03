@@ -11,10 +11,11 @@ $stripe-width: 10px;
 	}
 }
 
-@mixin btn() {
+@mixin btn($fz: 12px) {
 	position: relative;
-	font-size: 12px;
-	font-family: proximanovaSemibold;
+	font-size: $fz;
+	font-family: proxima;
+	font-weight: 600;
 	text-transform: uppercase;
 	border-radius: 4px;
 	height: 38px;
@@ -22,13 +23,13 @@ $stripe-width: 10px;
 	transition: background-color $speed, color $speed, border-color $speed;
 	min-width: 120px;
 	padding: 0 15px;
-	cursor: pointer;
 	white-space: nowrap;
 }
 
 .link-btn {
 	font-size: 12px;
-	font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	transition: color $speed;
 	color: $main-color;
 	position: relative;
@@ -464,7 +465,8 @@ $stripe-width: 10px;
 	}
 
 	.text {
-		font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
 		font-size: 14px;
 		margin-left: 6px;
 	}
