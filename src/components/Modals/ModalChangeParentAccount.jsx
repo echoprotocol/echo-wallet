@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import { closeModal } from '../../actions/ModalActions';
-import { getAccountsList } from '../../actions/AccountActions';
+import { lookupAccountsList } from '../../actions/AccountActions';
+import { changeDelegate } from '../../actions/TransactionActions';
 
 import { MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
@@ -22,6 +23,7 @@ class ModalLogout extends React.Component {
 			searchText: '',
 			loading: false,
 			options: [],
+			timeout: null,
 		};
 	}
 
@@ -31,20 +33,13 @@ class ModalLogout extends React.Component {
 
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
-		// this.props.setValue('supportedAsset', assetSymbol);
 		this.setState({ searchText: accountName.text });
 	}
 
-	onResetAccount() {
-		this.setState({
-			searchText: '',
-		});
-		// this.props.setValue('supportedAsset', '');
-	}
-
 	async accountSearchHandler(e, data) {
+		const searchText = data.searchQuery;
 		this.setState({
-			searchText: data.searchQuery,
+			searchText,
 			loading: true,
 		});
 		if (this.state.timeout) {
@@ -52,12 +47,12 @@ class ModalLogout extends React.Component {
 		}
 		this.setState({
 			timeout: setTimeout(async () => {
-				const options = (await getAccountsList(data.searchQuery))
+				const options = searchText ? (await lookupAccountsList(searchText, 2))
 					.map(([name, id]) => ({
-						key: name,
+						key: id,
 						text: name,
 						value: id,
-					}));
+					})) : [];
 				this.setState({
 					options,
 					loading: false,
@@ -66,33 +61,34 @@ class ModalLogout extends React.Component {
 		});
 	}
 
-	renderList() {
-		const { options } = this.state;
+	async submit(delegate) {
+		await this.props.changeDelegate(delegate && delegate.value);
+		this.onClose();
+	}
+
+	renderList(options) {
 		return options.map(({ key, text, value }) => {
 			const content = (
 				<button
-					key={key}
 					className="user-item"
-					onClick={() => this.onChangeAccount(text)}
+					onClick={() => this.onChangeAccount(value)}
 				>
 					<div className="avatar-wrap">
 						<Avatar accountName={text} />
 					</div>
-
 					<div className="name">{text}</div>
-
 				</button>
-
 			);
-
 			return ({ value, key, content });
 		});
 	}
 
 	render() {
 		const { show, currentAccountName } = this.props;
-		const { searchText, loading } = this.state;
-		console.log('render list', this.renderList());
+		const { searchText, loading, options } = this.state;
+
+		const delegate = options.find(({ text }) => text === searchText);
+
 		return (
 			<Modal
 				className="change-parent-account-modal"
@@ -128,10 +124,12 @@ class ModalLogout extends React.Component {
 
 							<label htmlFor="parentAccount" className="field-label">Delegated to</label>
 							<div className="account-dropdown-wrap">
-								<Avatar accountName={currentAccountName} />
+								{
+									delegate ? <Avatar accountName={searchText} /> : <Avatar />
+								}
 								<Dropdown
 									className={classnames({ empty: !searchText || loading })}
-									options={(searchText && !loading) ? this.renderList() : []}
+									options={(searchText && !loading) ? this.renderList(options) : []}
 									searchQuery={searchText}
 									search
 									selection
@@ -142,14 +140,16 @@ class ModalLogout extends React.Component {
 									placeholder="Delegated to"
 									selectOnNavigation={false}
 									minCharacters={0}
-									noResultsMessage="No results are found"
+									noResultsMessage={searchText ? 'No results are found' : null}
 									onChange={(e, { value }) => this.onChangeAccount(value)}
 								/>
 							</div>
 						</div>
 					</div>
 					<div className="form-panel">
-						<TransactionScenario handleTransaction={() => {}}>
+						<TransactionScenario
+							handleTransaction={() => this.submit(delegate)}
+						>
 							{
 								(submit) => (
 									<Button
@@ -157,7 +157,7 @@ class ModalLogout extends React.Component {
 										className="main-btn"
 										content="Confirm"
 										onClick={submit}
-										disabled={loading}
+										disabled={loading || !delegate}
 									/>
 								)
 							}
@@ -173,6 +173,7 @@ class ModalLogout extends React.Component {
 ModalLogout.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
+	changeDelegate: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
 };
 
@@ -187,5 +188,6 @@ export default connect(
 	}),
 	(dispatch) => ({
 		closeModal: (modal) => dispatch(closeModal(modal)),
+		changeDelegate: (delegateId) => dispatch(changeDelegate(delegateId)),
 	}),
 )(ModalLogout);

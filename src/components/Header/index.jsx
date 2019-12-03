@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
+import { Map } from 'immutable';
 
 import { NavLink } from 'react-router-dom';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
@@ -72,12 +74,10 @@ class Header extends React.Component {
 		this.props.openModal(MODAL_LOGOUT, { accountName: name });
 	}
 
-	onChangeParentAccount(e, name) {
+	onChangeParentAccount(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		this.props.openModal(MODAL_CHANGE_PARENT_ACCOUNT);
-		console.log(name);
-
 	}
 
 	onDropdownChange(e, value) {
@@ -167,6 +167,7 @@ class Header extends React.Component {
 	}
 
 	renderUserWithParent(name, accountId, amount, precision, symbol) {
+		const { delegate } = this.props;
 		return (
 			<div key={name} className="parent-user-wrap">
 				{this.renderUser(name, accountId, amount, precision, symbol)}
@@ -176,19 +177,19 @@ class Header extends React.Component {
 					onClick={() => {}}
 				>
 					<div className="avatar-wrap">
-						<Avatar accountName="parent-acc" />
+						<Avatar accountName={delegate.get('name')} />
 					</div>
 					<div className="user-base-info">
 						<div className="name-wrap">
-							<div className="name">parent-acc</div>
+							<div className="name">{delegate.get('name')}</div>
 							<div className="parent-label">(delegated to)</div>
 						</div>
-						<div className="id">{accountId}</div>
+						<div className="id">{delegate.get('id')}</div>
 					</div>
 					<a
 						href=""
 						className="parent-link"
-						onClick={(e) => this.onChangeParentAccount(e, name)}
+						onClick={(e) => this.onChangeParentAccount(e)}
 					> Change
 					</a>
 				</button>
@@ -202,10 +203,10 @@ class Header extends React.Component {
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },
-		}, index) => {
-			const content = (index ?
-				this.renderUser(name, accountId, amount, precision, symbol) :
-				this.renderUserWithParent(name, accountId, amount, precision, symbol)
+		}) => {
+			const content = (accountName === name ?
+				this.renderUserWithParent(name, accountId, amount, precision, symbol) :
+				this.renderUser(name, accountId, amount, precision, symbol)
 			);
 
 			return ({
@@ -321,6 +322,7 @@ Header.propTypes = {
 	transactionData: PropTypes.object,
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	delegate: PropTypes.object.isRequired,
 };
 
 Header.defaultProps = {
@@ -328,15 +330,22 @@ Header.defaultProps = {
 };
 
 export default withRouter(connect(
-	(state) => ({
-		accountName: state.global.getIn(['activeUser', 'name']),
-		networkName: state.global.getIn(['network', 'name']),
-		assets: state.balance.get('assets').toJS(),
-		preview: state.balance.get('preview').toJS(),
-		totalFrozenFunds: state.balance.get('totalFrozenFunds'),
-		showBackButton: state.global.get('showBackButton'),
-		transactionData: state.transaction.get('details'),
-	}),
+	(state) => {
+		const currentAccountId = state.global.getIn(['activeUser', 'id']);
+		const currentAccount = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccountId]);
+		const delegateId = currentAccount.getIn(['options', 'delegating_account']);
+
+		return {
+			accountName: state.global.getIn(['activeUser', 'name']),
+			networkName: state.global.getIn(['network', 'name']),
+			assets: state.balance.get('assets').toJS(),
+			preview: state.balance.get('preview').toJS(),
+			totalFrozenFunds: state.balance.get('totalFrozenFunds'),
+			showBackButton: state.global.get('showBackButton'),
+			transactionData: state.transaction.get('details'),
+			delegate: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, delegateId]) || Map({}),
+		};
+	},
 	(dispatch) => ({
 		openModal: (type, accountName) => dispatch(openModal(type, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),

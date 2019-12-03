@@ -1470,3 +1470,52 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 		return null;
 	}
 };
+
+
+export const changeDelegate = (delegateId) => async (dispatch, getState) => {
+	try {
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+		const delegate = await echo.api.getObject(delegateId);
+		const activeUser = await echo.api.getObject(activeUserId);
+
+		if (!delegate) {
+			return null;
+		}
+
+		const { delegate_share: delegateShare } = activeUser.options;
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			new_options: {
+				delegating_account: delegateId,
+				delegate_share: delegateShare,
+			},
+		};
+
+		const operation = 'account_update';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			delegate: delegate.name,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};

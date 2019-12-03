@@ -27,9 +27,9 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 /**
  *
  * @param name
- * @returns {Promise<Array<string>>}
+ * @returns {Promise<Array<[string, string]>>}
  */
-export const getAccountsList = async (name, limit = 15) => {
+export const lookupAccountsList = async (name, limit = 15) => {
 	const list = await echo.api.lookupAccounts(name, limit);
 	return list;
 };
