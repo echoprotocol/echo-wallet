@@ -24,6 +24,12 @@
             }
         }
     }
+    
+    &.upward {
+        .menu {
+            max-height: 300px
+        }
+    }
 
     &.assets-tokens-dropdown {
         display: flex;
@@ -277,7 +283,7 @@
 		bottom: 4px;
 		margin: auto;
 		color: $bd-gray;
-		z-index: 2;
+		z-index: 3;
 		height: 0;
 		line-height: 0;
 		will-change: transform;
@@ -353,7 +359,7 @@
 		line-height: 20px;
 	}
 
-	.dropdown {
+	& > .dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
