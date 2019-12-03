@@ -1,9 +1,10 @@
 .input.action {
-	.input-copy-btn {
+	.input-action-btn {
 		min-width: 38px;
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
 		font-size: 15px;
+		position: relative;
 	}
 }
 
@@ -20,4 +21,16 @@
 .action.input > .assets-tokens-dropdown {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+}
+
+.input-action-btn {
+	border: 1px solid $main-color;
+	background-color: $main-color;
+	color: #fff;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
 }

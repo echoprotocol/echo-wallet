@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import InputActionBtn from '../../components/InputActionBtn';
 
 class FormComponent extends React.Component {
 
@@ -49,9 +49,7 @@ class FormComponent extends React.Component {
 							value={generatedWIF.value}
 							readOnly
 						/>
-						<CopyToClipboard text={generatedWIF.value}>
-							<Button icon="copy" className="input-copy-btn" />
-						</CopyToClipboard>
+						<InputActionBtn copy={generatedWIF.value} />
 					</div>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>

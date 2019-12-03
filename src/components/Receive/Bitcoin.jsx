@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
@@ -10,6 +9,7 @@ import QrCode from '../QrCode';
 import ModalCreateBtcAddress from '../Modals/ModalCreateBtcAddress';
 
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
+import InputActionBtn from '../InputActionBtn';
 
 class Bitcoin extends React.Component {
 
@@ -56,9 +56,7 @@ class Bitcoin extends React.Component {
 							name="public-key"
 							value={address}
 						/>
-						<CopyToClipboard text={address}>
-							<Button icon="copy" className="input-copy-btn" />
-						</CopyToClipboard>
+						<InputActionBtn copy={address} />
 					</div>
 				</Form.Field>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from 'qrcode.react';
 import PropTypes from 'prop-types';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import ActionBtn from '../ActionBtn';
 
 class QrCode extends React.PureComponent {
 
@@ -34,9 +34,10 @@ class QrCode extends React.PureComponent {
 						>
 							{link}
 						</a>
-						<CopyToClipboard text={link}>
-							<button className="copy-btn icon-icopy-tiny" />
-						</CopyToClipboard>
+						<ActionBtn
+							copy={link}
+							icon="icon-icopy-tiny"
+						/>
 					</div>
 					<div className="qr-description">
 					QR code and link are generated automatically.

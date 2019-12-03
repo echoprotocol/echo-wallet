@@ -390,13 +390,19 @@
 						color: rgba(#fff, .8);
 					}
 				}
+
 				&.user-item {
 					.name {
 						color: #fff;
 					}
 				}
-				.dropdown-copy-btn {
+
+				.action-btn {
 					color: #fff;
+					&:active,
+					&:hover {
+						background-color: transparent;
+					}
 				}
 			}
 		}

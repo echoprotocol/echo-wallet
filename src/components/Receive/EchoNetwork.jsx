@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
@@ -14,6 +13,8 @@ import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
 import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
+import ActionBtn from '../ActionBtn';
+import DropdownActionBtn from '../DropdownActionBtn';
 
 
 class EchoNetwork extends React.Component {
@@ -177,9 +178,16 @@ class EchoNetwork extends React.Component {
 				<React.Fragment key={name} >
 					<div className="address-item">
 						<div className="address">{address}</div>
-						<CopyToClipboard text={address}>
-							<button className="dropdown-copy-btn icon-icopy-tiny" onClick={(e) => e.stopPropagation()} />
-						</CopyToClipboard>
+						<DropdownActionBtn
+							icon="icon-icopy-tiny"
+							action={(e) => {
+								console.log('here', e);
+
+								e.stopPropagation();
+							}}
+							size="mini"
+							copy={address}
+						/>
 					</div>
 					<div className="name">{name}</div>
 				</React.Fragment>
