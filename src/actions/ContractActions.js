@@ -35,6 +35,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CREATE_CONTRACT,
 	FORM_VIEW_CONTRACT,
+	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 import {
@@ -483,10 +484,6 @@ export const setFunction = (functionName) => (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Object>}
  */
 export const setContractFees = (form) => async (dispatch, getState) => {
-	const formData = getState().form.getIn([form]).toJS();
-	if (!formData.id.value || !formData.amount.value) {
-		return;
-	}
 	const assets = getState().balance.get('assets').toArray();
 	let fees = assets.reduce((arr, asset) => {
 		const value = dispatch(estimateFormFee(asset, form));
@@ -496,10 +493,15 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	fees = await Promise.all(fees);
 
-
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
 			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+		} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
+
+			const formData = getState().form.getIn([form]).toJS();
+			if (formData.amount.value && formData.id.value) {
+				dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+			}
 		} else {
 			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
 		}
