@@ -87,6 +87,7 @@ class Transfer extends React.Component {
 								{
 									bytecodeVisible &&
 									<BytecodeField
+										optional
 										field={bytecode}
 										setIn={this.props.setIn}
 									/>

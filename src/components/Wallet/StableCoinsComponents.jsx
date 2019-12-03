@@ -37,12 +37,12 @@ class StableCoins extends React.Component {
 								</span>
 								<div className="balance-tags">
 									<Button
-										disabled={true} // if balance 0
+										disabled // if balance 0
 										className="tag"
 										content="Deposit"
 									/>
 									<Button
-										className="tag"
+										className="tag active"
 										content="Withdrawal"
 									/>
 								</div>

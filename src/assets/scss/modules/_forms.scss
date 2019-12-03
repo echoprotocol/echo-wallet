@@ -729,7 +729,7 @@ textarea + .value-status {
 	.label-info {
 		text-transform: none;
 		margin-left: 5px;
-		& + .label-info {
+		&.right {
 			margin-left: auto;
 		}
 	}
