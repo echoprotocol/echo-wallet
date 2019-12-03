@@ -8,21 +8,24 @@ import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConsta
 import ContractBar from './ContractBar';
 import SourceCode from './SourceCode';
 import Bytecode from './Bytecode';
+import {
+	FORM_CREATE_CONTRACT_BYTECODE,
+	FORM_CREATE_CONTRACT_OPTIONS,
+	FORM_CREATE_CONTRACT_SOURCE_CODE,
+} from '../../constants/FormConstants';
 
 
 class SmartContracts extends React.Component {
-
-	constructor(props) {
-		super(props);
-		this.state = {
-			createType: SOURCE_CODE_MODE,
-		};
-	}
 
 	async componentDidMount() {
 		this.props.contractCompilerInit();
 	}
 
+	componentWillUnmount() {
+		this.props.clearForm(FORM_CREATE_CONTRACT_SOURCE_CODE);
+		this.props.clearForm(FORM_CREATE_CONTRACT_BYTECODE);
+		this.props.clearForm(FORM_CREATE_CONTRACT_OPTIONS);
+	}
 
 	onEditorLoad(editor) {
 		editor.setOptions({
@@ -32,9 +35,8 @@ class SmartContracts extends React.Component {
 
 	render() {
 		const {
-			form, amount, currency, assets, isAvailableBalance, fees, ETHAccuracy,
+			formSourceCode, formBytecode, formOptions, assets, fees,
 		} = this.props;
-		const { createType } = this.state;
 
 		return (
 			<Form className="page-wrap">
@@ -42,44 +44,39 @@ class SmartContracts extends React.Component {
 					<h2 className="create-contract-title">Create Smart Contract</h2>
 					<div className="radio-list">
 						<Button
-							className={classnames('radio', { checked: createType === SOURCE_CODE_MODE })}
-							onClick={() => { this.setState({ createType: SOURCE_CODE_MODE }); }}
+							className={classnames('radio', { checked: formOptions.get('contractMode') === SOURCE_CODE_MODE })}
+							onClick={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'contractMode', SOURCE_CODE_MODE)}
 							content="Source code"
-							disabled={form.get('compileLoading')}
+							disabled={formSourceCode.get('compileLoading')}
 						/>
 						<Button
-							className={classnames('radio', { checked: createType === BYTECODE_MODE })}
-							onClick={() => { this.setState({ createType: BYTECODE_MODE }); }}
+							className={classnames('radio', { checked: formOptions.get('contractMode') === BYTECODE_MODE })}
+							onClick={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'contractMode', BYTECODE_MODE)}
 							content="Bytecode"
-							disabled={form.get('compileLoading')}
+							disabled={formSourceCode.get('compileLoading')}
 						/>
 					</div>
-					{createType === SOURCE_CODE_MODE &&
+					{formOptions.get('contractMode') === SOURCE_CODE_MODE &&
 						<SourceCode
-							form={form}
+							form={formSourceCode}
 							setFormValue={this.props.setFormValue}
 							contractCodeCompile={this.props.contractCodeCompile}
-							clearForm={this.props.clearForm}
 							changeContractCompiler={this.props.changeContractCompiler}
 							setValue={this.props.setValue}
 							resetCompiler={this.props.resetCompiler}
 							setDefaultAsset={this.props.setDefaultAsset}
 						/>}
-					{createType === BYTECODE_MODE &&
+					{formOptions.get('contractMode') === BYTECODE_MODE &&
 						<Bytecode
-							form={form}
+							form={formBytecode}
 							setFormValue={this.props.setFormValue}
 							setDefaultAsset={this.props.setDefaultAsset}
 						/>}
 				</div>
 				<ContractBar
-					form={form}
+					form={formOptions}
 					fees={fees}
-					amount={amount}
-					ETHAccuracy={ETHAccuracy}
-					currency={currency}
 					assets={assets}
-					isAvailableBalance={isAvailableBalance}
 					amountInput={this.props.amountInput}
 					setFormError={this.props.setFormError}
 					setFormValue={this.props.setFormValue}
@@ -97,27 +94,21 @@ class SmartContracts extends React.Component {
 SmartContracts.propTypes = {
 	fees: PropTypes.array.isRequired,
 	assets: PropTypes.object.isRequired,
-	amount: PropTypes.object.isRequired,
-	currency: PropTypes.object,
-	isAvailableBalance: PropTypes.bool.isRequired,
-	ETHAccuracy: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
-	form: PropTypes.object.isRequired,
+	formSourceCode: PropTypes.object.isRequired,
+	formBytecode: PropTypes.object.isRequired,
+	formOptions: PropTypes.object.isRequired,
 	contractCodeCompile: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	createContract: PropTypes.func.isRequired,
 	contractCompilerInit: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
-};
-
-SmartContracts.defaultProps = {
-	currency: null,
 };
 
 

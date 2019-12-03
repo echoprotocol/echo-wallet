@@ -10,33 +10,35 @@ import {
 	changeContractCompiler,
 	resetCompiler,
 } from '../../actions/ContractActions';
-import { FORM_CREATE_CONTRACT } from '../../constants/FormConstants';
+import {
+	FORM_CREATE_CONTRACT_BYTECODE,
+	FORM_CREATE_CONTRACT_SOURCE_CODE,
+	FORM_CREATE_CONTRACT_OPTIONS,
+} from '../../constants/FormConstants';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setValue, setFormError, setFormValue, clearForm } from '../../actions/FormActions';
 import { getTransferFee, createContract } from '../../actions/TransactionActions';
 
 export default connect(
 	(state) => ({
-		form: state.form.get(FORM_CREATE_CONTRACT),
+		formSourceCode: state.form.get(FORM_CREATE_CONTRACT_SOURCE_CODE),
+		formBytecode: state.form.get(FORM_CREATE_CONTRACT_BYTECODE),
+		formOptions: state.form.get(FORM_CREATE_CONTRACT_OPTIONS),
 		fees: state.fee.toArray() || [],
 		assets: state.balance.get('assets'),
-		amount: state.form.getIn([FORM_CREATE_CONTRACT, 'amount']),
-		currency: state.form.getIn([FORM_CREATE_CONTRACT, 'currency']),
-		isAvailableBalance: state.form.getIn([FORM_CREATE_CONTRACT, 'isAvailableBalance']),
-		ETHAccuracy: state.form.getIn([FORM_CREATE_CONTRACT, 'ETHAccuracy']),
 	}),
 	(dispatch) => ({
-		setValue: (field, value) => dispatch(setValue(FORM_CREATE_CONTRACT, field, value)),
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_CREATE_CONTRACT, field, value)),
-		setFormError: (field, error) => dispatch(setFormError(FORM_CREATE_CONTRACT, field, error)),
-		setContractFees: () => dispatch(setContractFees(FORM_CREATE_CONTRACT)),
-		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CREATE_CONTRACT)),
-		getTransferFee: (asset) => dispatch(getTransferFee(FORM_CREATE_CONTRACT, asset)),
-		amountInput: (value, currency, name) =>
-			dispatch(amountInput(FORM_CREATE_CONTRACT, value, currency, name)),
+		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
+		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
+		setFormError: (form, field, error) => dispatch(setFormError(form, field, error)),
+		setContractFees: (form) => dispatch(setContractFees(form)),
+		setDefaultAsset: (form) => dispatch(setDefaultAsset(form)),
+		getTransferFee: (form, asset) => dispatch(getTransferFee(form, asset)),
+		amountInput: (form, value, currency, name) =>
+			dispatch(amountInput(form, value, currency, name)),
 		getAssetsList: (name) => getAssetsList(name),
 		contractCodeCompile: (code) => dispatch(contractCodeCompile(code)),
-		clearForm: () => dispatch(clearForm(FORM_CREATE_CONTRACT)),
+		clearForm: (form) => dispatch(clearForm(form)),
 		createContract: () => dispatch(createContract()),
 		contractCompilerInit: () => dispatch(contractCompilerInit()),
 		changeContractCompiler: (version) => dispatch(changeContractCompiler(version)),
