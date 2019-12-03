@@ -48,21 +48,22 @@ export const generateWIF = () => (dispatch) => {
  */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
-}, isAddAccount) => async (dispatch, getState) => {
+}, isAddAccount, isCustomSettings) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
-	let confirmWIFError = validateWIF(confirmWIF);
 
-	if (generatedWIF !== confirmWIF) {
-		confirmWIFError = 'WIFs do not match';
+	if (!isCustomSettings) {
+		let confirmWIFError = validateWIF(confirmWIF);
+		if (generatedWIF !== confirmWIF) {
+			confirmWIFError = 'WIFs do not match';
+		}
+		if (confirmWIFError) {
+			dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));
+			return;
+		}
 	}
 
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-		return;
-	}
-
-	if (confirmWIFError) {
-		dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));
 		return;
 	}
 
@@ -80,19 +81,28 @@ export const createAccount = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
-		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
 
+		let pubKey;
+		const isWithoutWIFRegistr = isCustomSettings && !getState().form.getIn([FORM_SIGN_UP, 'userWIF']).value;
 		const userStorage = Services.getUserStorage();
+		if (isWithoutWIFRegistr) {
+			pubKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']).value;
+			await AuthApi.registerAccountViaPublicKey(accountName, pubKey);
+		} else {
+			pubKey = (await AuthApi.registerAccount(accountName, generatedWIF)).publicKey;
+		}
 		const account = await echo.api.getAccountByName(accountName);
-		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
-		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
+
+		if (!isWithoutWIFRegistr) {
+			await userStorage.addKey(Key.create(pubKey, generatedWIF, account.id, 'active'), { password });
+			await userStorage.addKey(Key.create(pubKey, generatedWIF, account.id, 'echoRand'), { password });
+		}
 
 		dispatch(addAccount(
 			accountName,
 			network.name,
-			[[publicKey, { active: true, echoRand: true }]],
+			[[pubKey, { active: true, echoRand: true }]],
 		));
-
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
 	} finally {
@@ -348,7 +358,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 
 			callback(password);
 		} catch (err) {
-			dispatch(setError(modal, err));
+			dispatch(setError(modal, err.message));
 		} finally {
 			dispatch(toggleModalLoading(modal, false));
 		}

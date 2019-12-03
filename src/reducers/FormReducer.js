@@ -42,6 +42,15 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		userWIF: {
+			value: '',
+			error: null,
+		},
+		userPublicKey: {
+			value: '',
+			error: null,
+		},
+		isCustomWIF: false,
 		accepted: false,
 	}),
 	[FORM_SIGN_IN]: Map({

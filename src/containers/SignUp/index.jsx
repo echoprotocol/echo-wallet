@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
+import { PrivateKey } from 'echojs-lib';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 
@@ -17,7 +18,8 @@ import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 import { generateWIF, createAccount } from '../../actions/AuthActions';
-import { setFormValue, setValue, clearForm } from '../../actions/FormActions';
+import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
+import { isPublicKey } from '../../helpers/ValidateHelper';
 
 class SignUp extends React.Component {
 
@@ -31,15 +33,44 @@ class SignUp extends React.Component {
 
 	onCreate(password) {
 		const {
-			accountName, generatedWIF, confirmWIF, isAddAccount,
+			accountName, generatedWIF, confirmWIF, isAddAccount, isCustomWIF, userWIF, userPublicKey,
 		} = this.props;
 
-		this.props.createAccount({
-			accountName: accountName.value.trim(),
-			generatedWIF: generatedWIF.value.trim(),
-			confirmWIF: confirmWIF.value.trim(),
-			password,
-		}, isAddAccount);
+		if (isCustomWIF) {
+			let isValidPub = true;
+			let isValidWif = true;
+			if (userPublicKey.value) {
+				isValidPub = isPublicKey(userPublicKey.value);
+			}
+			if (userWIF.value) {
+				try {
+					PrivateKey.fromWif(userWIF.value).toPublicKey().toString();
+				} catch (e) {
+					isValidWif = false;
+					this.props.setFormError('userWIF', 'Invalid WIF');
+				}
+			}
+			if (!isValidPub) {
+				this.props.setFormError('userPublicKey', 'Invalid public key');
+				return;
+			}
+			if (!isValidPub || !isValidWif) {
+				return;
+			}
+			this.props.createAccount({
+				accountName: accountName.value.trim(),
+				generatedWIF: userWIF.value.trim(),
+				confirmWIF: userWIF.value.trim(),
+				password,
+			}, isAddAccount, isCustomWIF);
+		} else {
+			this.props.createAccount({
+				accountName: accountName.value.trim(),
+				generatedWIF: generatedWIF.value.trim(),
+				confirmWIF: confirmWIF.value.trim(),
+				password,
+			}, isAddAccount, isCustomWIF);
+		}
 	}
 
 	isDisabledSubmit() {
@@ -48,8 +79,19 @@ class SignUp extends React.Component {
 			accountName,
 			generatedWIF,
 			confirmWIF,
+			userPublicKey,
+			userWIF,
+			isCustomWIF,
 		} = this.props;
 
+		if (isCustomWIF) {
+			if ((!accountName.value || accountName.error) ||
+				userPublicKey.error || userWIF.error ||
+				!(userPublicKey.value || userWIF.value) || !accepted) {
+				return true;
+			}
+			return false;
+		}
 		if ((!accountName.value || accountName.error) ||
 			(!generatedWIF.value || generatedWIF.error) ||
 			(!confirmWIF.value || confirmWIF.error) || !accepted) {
@@ -93,8 +135,13 @@ class SignUp extends React.Component {
 									accountName={this.props.accountName}
 									generatedWIF={this.props.generatedWIF}
 									confirmWIF={this.props.confirmWIF}
+									setValue={this.props.setValue}
 									setFormValue={this.props.setFormValue}
+									setFormError={this.props.setFormError}
 									clearForm={this.props.clearForm}
+									isCustomWIF={this.props.isCustomWIF}
+									userPublicKey={this.props.userPublicKey}
+									userWIF={this.props.userWIF}
 								/>
 
 								<AdditionalOptions loading={loading} />
@@ -131,6 +178,7 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
 	loading: PropTypes.bool,
+	isCustomWIF: PropTypes.bool,
 	accepted: PropTypes.bool,
 	isAddAccount: PropTypes.any,
 	history: PropTypes.object.isRequired,
@@ -138,9 +186,12 @@ SignUp.propTypes = {
 	accountName: PropTypes.object.isRequired,
 	generatedWIF: PropTypes.object.isRequired,
 	confirmWIF: PropTypes.object.isRequired,
+	userPublicKey: PropTypes.object.isRequired,
+	userWIF: PropTypes.object.isRequired,
 	generateWIF: PropTypes.func.isRequired,
 	createAccount: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 };
@@ -149,20 +200,25 @@ SignUp.defaultProps = {
 	loading: false,
 	accepted: false,
 	isAddAccount: false,
+	isCustomWIF: false,
 };
 
 export default connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+		isCustomWIF: state.form.getIn([FORM_SIGN_UP, 'isCustomWIF']),
 		accepted: state.form.getIn([FORM_SIGN_UP, 'accepted']),
 		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),
 		generatedWIF: state.form.getIn([FORM_SIGN_UP, 'generatedWIF']),
 		confirmWIF: state.form.getIn([FORM_SIGN_UP, 'confirmWIF']),
+		userPublicKey: state.form.getIn([FORM_SIGN_UP, 'userPublicKey']),
+		userWIF: state.form.getIn([FORM_SIGN_UP, 'userWIF']),
 	}),
 	(dispatch) => ({
 		generateWIF: () => dispatch(generateWIF()),
-		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
+		createAccount: (value, isAdd, isCustom) => dispatch(createAccount(value, isAdd, isCustom)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_UP, field, value)),
+		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
 		setValue: (field, value) => dispatch(setValue(FORM_SIGN_UP, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_UP)),
 	}),
