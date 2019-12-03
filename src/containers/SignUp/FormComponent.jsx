@@ -12,6 +12,9 @@ class FormComponent extends React.Component {
 	}
 	onToogleWifType() {
 		this.props.setValue('isCustomWIF', !this.props.isCustomWIF);
+		const wif = this.props.isCustomWIF ? this.props.userWIF.value : this.props.generatedWIF.value;
+		const field = this.props.isCustomWIF ? 'generatedWIF' : 'userWIF';
+		this.props.setFormValue(field, wif);
 	}
 
 	onChange(e, lowerCase) {
