@@ -14,7 +14,8 @@ $stripe-width: 10px;
 @mixin btn($fz: 12px) {
 	position: relative;
 	font-size: $fz;
-	font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	text-transform: uppercase;
 	border-radius: 4px;
 	height: 38px;
@@ -30,7 +31,8 @@ $stripe-width: 10px;
 
 .link-btn {
 	font-size: 12px;
-	font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	transition: color $speed;
 	color: $main-color;
 	position: relative;

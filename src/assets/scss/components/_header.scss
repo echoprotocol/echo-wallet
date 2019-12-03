@@ -56,7 +56,8 @@
     .page-title {
         color: $text-dark;
         font-size: 20px;
-        font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
         line-height: 26.4px;
         margin-right: auto;
     }
@@ -140,8 +141,8 @@
                     text-transform: uppercase;
 
                     &:first-child {
-                        font-family: proximaNovaSemibold;
-                        font-weight: 400;
+                        font-family: proxima;
+                        font-weight: 600;
                         padding-right: 3px;
                     }
                 }
@@ -254,7 +255,8 @@
 				.parent-link {
 					color: #4D66CD;
 					transition: color $speed;
-					font-family: proximaNovaSemibold;
+					font-family: proxima;
+					font-weight: 600;
 					font-size: 13px;
 				}
 				.name-wrap {
@@ -276,7 +278,8 @@
                     color: #3B3B3B;
                     transition: color $speed;
                     line-height: 16px;
-                    font-family: proximaNovaSemibold;
+					font-family: proxima;
+					font-weight: 600;
                     font-size: 13px;
                 }
 
@@ -284,7 +287,8 @@
                     color: rgba(#3B3B3B, .6);
                     transition: color $speed;
                     line-height: 13px;
-                    font-family: proximaNovaSemibold;
+					font-family: proxima;
+					font-weight: 600;
                     font-size: 13px;
                     font-weight: 400;
                 }
@@ -309,7 +313,8 @@
 
                         .balance {
                             color: #fff;
-                            font-family: proximaNovaSemibold;
+							font-family: proxima;
+							font-weight: 600;
 
                         }
 
@@ -328,7 +333,8 @@
                     border-top: 1px solid $bd-gray;
                     height: 39px;
                     z-index: 2;
-                    font-family: proximanovaSemibold;
+					font-family: proxima;
+					font-weight: 600;
                     font-size: .9rem;
                     color: rgb(211, 212, 214);
                     transition: color $speed, background-color $speed;
@@ -458,7 +464,8 @@
         & > .text {
 			@include cut-text;
             color: $main-color;
-            font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
             max-width: 296px;
 			user-select: none;
         }
@@ -468,11 +475,13 @@
     .balance {
         transition: color $speed;
         color: #5D637B;
-        position: relative;
+		position: relative;
+		font-weight: 300;
 
         span {
             &:nth-child(1) {
-                font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
                 margin-right: 3px;
             }
         }

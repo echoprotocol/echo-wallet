@@ -176,7 +176,6 @@
 .tab-btn {
 	border: 0;
 	font-size: 12px;
-	font-weight: 600;
 	color: rgb(168, 168, 168);
 	border-bottom: 2px solid transparent;
 	border-radius: 0;
@@ -188,7 +187,8 @@
 	position: relative;
 	cursor: pointer;
 	text-transform: uppercase;
-	font-family: proximaNovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	&:not(:last-child) {
 		margin-right: 36px;
 	}

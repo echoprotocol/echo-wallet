@@ -1,7 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { Button } from 'semantic-ui-react';
+import { Button, Popup } from 'semantic-ui-react';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -9,17 +8,7 @@ class StableCoins extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-			focusedId: null,
-		};
-	}
-
-	onFocus(id) {
-		this.setState({ focusedId: id });
-	}
-
-	onBlur() {
-		this.setState({ focusedId: null });
+		this.state = {};
 	}
 
 	renderList() {
@@ -39,10 +28,7 @@ class StableCoins extends React.Component {
 			stableCoins.map((asset, i) => {
 				const id = i;
 				return (
-					<li
-						className={classnames({ focused: id === this.state.focusedId })}
-						key={id}
-					>
+					<li key={id}>
 						<div className="balance-item">
 							<span className="currency-symbol">{asset.symbol}</span>
 							<div className="currency-value">
@@ -51,14 +37,10 @@ class StableCoins extends React.Component {
 								</span>
 								<div className="balance-tags">
 									<Button
-										onFocus={() => this.onFocus(id)}
-										onBlur={() => this.onBlur()}
 										className="tag"
 										content="Deposit"
 									/>
 									<Button
-										onFocus={() => this.onFocus(id)}
-										onBlur={() => this.onBlur()}
 										className="tag"
 										content="Withdrawal"
 									/>
@@ -75,7 +57,16 @@ class StableCoins extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				<div className="currency-title">Stable Coins</div>
+				<h3 className="currency-title">
+					Stable Coins
+					<Popup
+						trigger={<span className="inner-tooltip-trigger icon-info" />}
+						content="Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain."
+						className="inner-tooltip"
+						style={{ width: 373 }}
+						inverted
+					/>
+				</h3>
 				<ul className="currency-list stable-coins">
 					{ this.renderList() }
 				</ul>

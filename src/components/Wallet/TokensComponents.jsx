@@ -67,7 +67,7 @@ class Tokens extends React.Component {
 	renderList() {
 		return (
 			<React.Fragment>
-				<div className="currency-title">Tokens</div>
+				<h3 className="currency-title">Tokens</h3>
 				<ul className="currency-list">
 					{
 						this.props.tokens.map((t) => this.renderRow(t))

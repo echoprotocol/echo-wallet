@@ -34,9 +34,9 @@
         h3 {
             color: #5c637d;
             margin: 0;
-            font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
             font-size: 20px;
-            font-weight: 400;
             line-height: 26.4px;
         }
 
@@ -72,15 +72,28 @@
         font-size: 20px;
         color: rgb(92, 99, 125);
         line-height: 1.32;
-    }
+	}
+	
+	.main-btn {
+		min-width: 110px;
+		width: 110px;
+		padding: 0;
+	}
 }
 
 .currency-title {
     color: $gray;
-    font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
     line-height: 18px;
     padding-bottom: 2px;
-    font-size: 15px;
+	font-size: 15px;
+	display: flex;
+	align-items: center;
+
+	.inner-tooltip-trigger {
+		margin: 0 0 0 6px;
+	}
 }
 
 .currency-symbol {
@@ -120,14 +133,14 @@
 	background-color: transparent;
 	flex-wrap: wrap;
 	font-size: 13px;
-	font-weight: 400;
 	color: rgb(92, 99, 125);
 	width: 100%;
 	padding: 0 12px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 
 	.frozen-value,
 	.frozen-term,
@@ -169,9 +182,9 @@
 .currency-list {
 
     & + .currency-title {
-        margin-top: 35px;
-    }
-
+        margin: 25px 0 0 0;
+	}
+	
     li {
         background-color: #F5F5F6;
         height: 50px;
@@ -182,35 +195,35 @@
         transition: background-color .2s;
         border-radius: 6px;
         margin-bottom: 6px;
-
-        &.focused,
-        &:hover {
-            background-color: #5267C6;
-			color: #fff;
-
-            .remove-token {
-                width: 44px;
-            }
-
-			.frozen-value,
-            .currency-symbol {
-                color: $yellow;
-			}
-			
-			.balance-item,
-            .currency-amount {
-                color: #fff;
-			}
-
-			.tag {
-				border-color: rgba(#fff, .6);
-				color: $yellow;
-			}
-        }
 	}
+
 	&.stable-coins {
 		li {
 			height: 56px;	
+		}
+	}
+
+	&:not(.stable-coins) {
+		li {
+			&.focused,
+			&:hover {
+				background-color: #5267C6;
+				color: #fff;
+
+				.remove-token {
+					width: 44px;
+				}
+
+				.frozen-value,
+				.currency-symbol {
+					color: $yellow;
+				}
+				
+				.balance-item,
+				.currency-amount {
+					color: #fff;
+				}
+			}
 		}
 	}
 }

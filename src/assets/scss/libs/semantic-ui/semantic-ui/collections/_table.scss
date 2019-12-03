@@ -1,19 +1,14 @@
-/*******************************
-             Table
-*******************************/
-
-
 .table {
-  width: 100%;
-  background: #FFFFFF;
-  margin: 1em 0em;
-  border: 1px solid $bd-gray;
-  box-shadow: none;
-  border-radius: 4px;
-  text-align: left;
-  color: rgba(0, 0, 0, 0.87);
-  border-collapse: separate;
-  border-spacing: 0px;
+	width: 100%;
+	background: #FFFFFF;
+	margin: 1em 0em;
+	border: 1px solid $bd-gray;
+	box-shadow: none;
+	border-radius: 4px;
+	text-align: left;
+	color: rgba(0, 0, 0, 0.87);
+	border-collapse: separate;
+	border-spacing: 0px;
 }
 
 .table:last-child {
@@ -24,28 +19,27 @@
 /* Table Content */
 .table th,
 .table td {
-  -webkit-transition: background 0.1s ease, color 0.1s ease;
-  transition: background 0.1s ease, color 0.1s ease;
+	transition: background 0.1s ease, color 0.1s ease;
 }
 
 /* Headers */
 .table thead {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+	box-shadow: none;
 }
 .table thead th {
-  cursor: auto;
-  color: rgba(0, 0, 0, 0.87);
-  padding: 0.92857143em 0.78571429em;
-  vertical-align: inherit;
-  font-style: none;
-  font-family: proximanovaSemibold;
-  text-transform: none;
-  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
-  border-left: none;
+	cursor: auto;
+	color: rgba(0, 0, 0, 0.87);
+	padding: 0.92857143em 0.78571429em;
+	vertical-align: inherit;
+	font-style: none;
+	font-family: proxima;
+	font-weight: 600;
+	text-transform: none;
+	border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+	border-left: none;
 }
 .table thead tr > th:first-child {
-  border-left: none;
+	border-left: none;
 }
 .table thead tr:first-child > th:first-child {
   border-radius: 4px 0em 0em 0em;
@@ -204,38 +198,6 @@
 /*******************************
              States
 *******************************/
-
-
-/*--------------
-    Positive
----------------*/
-
-.table tr.positive,
-.table td.positive {
-  -webkit-box-shadow: 0px 0px 0px #A3C293 inset;
-          box-shadow: 0px 0px 0px #A3C293 inset;
-}
-.table tr.positive,
-.table td.positive {
-  background: #FCFFF5 !important;
-  color: #2C662D !important;
-}
-
-/*--------------
-     Negative
----------------*/
-
-.table tr.negative,
-.table td.negative {
-  -webkit-box-shadow: 0px 0px 0px #E0B4B4 inset;
-          box-shadow: 0px 0px 0px #E0B4B4 inset;
-}
-.table tr.negative,
-.table td.negative {
-  background: #FFF6F6 !important;
-  color: #9F3A38 !important;
-}
-
 /*--------------
       Error
 ---------------*/
@@ -738,14 +700,11 @@
   padding-left: 0.6em;
   padding-right: 0.6em;
 }
+
 [class*="very compact"].table td {
   padding: 0.4em 0.6em;
 }
 
 .table {
-  font-size: 1em;
-}
-
-.large.table {
-  font-size: 1.1em;
+	font-size: 14px;
 }

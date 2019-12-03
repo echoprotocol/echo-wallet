@@ -138,11 +138,11 @@ class Wallet extends React.Component {
 						<StableCoins />
 						<Tokens
 							tokens={tokens}
+							removeToken={this.props.removeToken}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'tokens');
 								this.props.setContractFees();
 							}}
-							removeToken={this.props.removeToken}
 						/>
 					</div>
 				</div>
