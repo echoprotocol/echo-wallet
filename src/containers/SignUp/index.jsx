@@ -60,7 +60,7 @@ class SignUp extends React.Component {
 	}
 
 	render() {
-		const {	location, loading } = this.props;
+		const {	location, loading, form } = this.props;
 
 		const { isAddAccount } = qs.parse(location.search);
 
@@ -97,7 +97,12 @@ class SignUp extends React.Component {
 									clearForm={this.props.clearForm}
 								/>
 
-								<AdditionalOptions loading={loading} />
+								<AdditionalOptions
+									form={form}
+									loading={loading}
+									setValue={this.props.setValue}
+									setFormValue={this.props.setFormValue}
+								/>
 
 								<CheckComponent
 									loading={loading}
@@ -130,6 +135,7 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
+	form: PropTypes.object.isRequired,
 	loading: PropTypes.bool,
 	accepted: PropTypes.bool,
 	isAddAccount: PropTypes.any,
@@ -153,6 +159,7 @@ SignUp.defaultProps = {
 
 export default connect(
 	(state) => ({
+		form: state.form.get(FORM_SIGN_UP),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 		accepted: state.form.getIn([FORM_SIGN_UP, 'accepted']),
 		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),

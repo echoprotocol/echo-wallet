@@ -21,7 +21,7 @@ import {
 	FORM_ETH_RECEIVE,
 } from '../constants/FormConstants';
 
-import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
+import { FREEZE_BALANCE_PARAMS, REGISTER_DEFAULT_SETTINGS } from '../constants/GlobalConstants';
 
 const DEFAULT_FIELDS = Map({
 	error: null,
@@ -42,7 +42,12 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		ipOrUrl: {
+			value: '',
+			error: null,
+		},
 		accepted: false,
+		registrationType: REGISTER_DEFAULT_SETTINGS,
 	}),
 	[FORM_SIGN_IN]: Map({
 		accountName: {

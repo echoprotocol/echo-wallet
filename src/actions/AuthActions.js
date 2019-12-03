@@ -13,7 +13,12 @@ import {
 
 import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
-import { ECHO_ASSET_ID, RANDOM_SIZE, USER_STORAGE_SCHEMES } from '../constants/GlobalConstants';
+import {
+	ECHO_ASSET_ID,
+	RANDOM_SIZE,
+	REGISTER_DEFAULT_SETTINGS, REGISTER_IP_URL, REGISTER_PARTNER_ACCOUNT,
+	USER_STORAGE_SCHEMES,
+} from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
 import { validateAccountName, validateWIF } from '../helpers/ValidateHelper';
@@ -51,6 +56,7 @@ export const createAccount = ({
 }, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	let confirmWIFError = validateWIF(confirmWIF);
+	const form = getState().form.get(FORM_SIGN_UP);
 
 	if (generatedWIF !== confirmWIF) {
 		confirmWIFError = 'WIFs do not match';
@@ -80,7 +86,20 @@ export const createAccount = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
-		const { publicKey } = await AuthApi.registerAccount(accountName, generatedWIF);
+
+		let publicKey = null;
+		switch (form.get('registrationType')) {
+			case REGISTER_DEFAULT_SETTINGS:
+				({ publicKey } = await AuthApi.registerAccount(accountName, generatedWIF));
+				break;
+			case REGISTER_PARTNER_ACCOUNT:
+				break;
+			case REGISTER_IP_URL:
+				break;
+			default:
+				dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
+				return;
+		}
 
 		const userStorage = Services.getUserStorage();
 		const account = await echo.api.getAccountByName(accountName);
