@@ -14,27 +14,25 @@
     overflow: overlay;
     display: flex;
 
-    .form {
-        &.main-form {
-            padding: 0;
+	.main-form {
+		padding: 0;
 
-            @media only screen and (min-height: 620px) {
-                height: 500px;
-            }
+		@media only screen and (min-height: 620px) {
+			height: 500px;
+		}
 
-            @media only screen and (min-height: 900px) {
-                margin-top: calc(14.8vh - 1px);
-                padding: 0px;
+		@media only screen and (min-height: 900px) {
+			margin-top: calc(14.8vh - 1px);
+			padding: 0px;
 
-            }
+		}
 
-            .form-panel {
-                margin: 30px 0 auto;
+		.form-panel {
+			margin: 30px 0 auto;
 
-                .fix-width {
-                    width: 160px;
-                }
-            }
-        }
-    }
+			.fix-width {
+				width: 160px;
+			}
+		}
+	}
 }

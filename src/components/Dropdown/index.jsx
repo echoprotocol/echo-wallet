@@ -46,7 +46,6 @@ class DropdownComponent extends React.Component {
 		return (
 			<Dropdown
 				placeholder={activeType || defaultType}
-				compact
 				selection
 				className="contract-type-dropdown air"
 				options={variativeOptions || options}

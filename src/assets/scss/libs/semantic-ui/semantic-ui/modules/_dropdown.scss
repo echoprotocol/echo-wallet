@@ -36,21 +36,6 @@
   display: none;
 }
 
-.dropdown > .dropdown.icon {
-  position: relative;
-  width: auto;
-  font-size: 0.85714286em;
-  margin: 0 0 0 6px;
-}
-.dropdown .menu > .item .dropdown.icon {
-  width: auto;
-  float: right;
-  margin: 0 0 0 1em;
-}
-.dropdown .menu > .item .dropdown.icon + .text {
-  margin-right: 1em;
-}
-
 
 .dropdown > .text {
   display: inline-block;
@@ -162,30 +147,21 @@
   min-width: 100%;
 }
 
-
-/* No Margin On Icon Button */
-.dropdown.icon.button > .dropdown.icon {
-  margin: 0;
-}
-
 .button.dropdown .menu {
   min-width: 100%;
 }
 
 
-/* Displays like a select box */
 .selection.dropdown {
 	cursor: pointer;
 	word-wrap: break-word;
-	line-height: 1em;
 	white-space: normal;
 	outline: 0;
 	transform: rotateZ(0deg);
 	min-width: 14em;
-	min-height: 2.71428571em;
 	background: #FFFFFF;
 	display: inline-block;
-	padding: 0.78571429em 2.1em 0.78571429em 1em;
+	padding: 10px 14px;
 	color: rgba(0, 0, 0, 0.87);
 	box-shadow: none;
 	border: 1px solid $inut-color;
@@ -194,6 +170,12 @@
 		box-shadow $speed ease,
 		width $speed ease,
 		border $speed ease;
+}
+.error {
+  .selection.dropdown,
+  .selection.dropdown:hover {
+    border: 1px solid #ff4848;
+  }
 }
 
 .selection.dropdown.visible,
@@ -208,21 +190,7 @@ select.dropdown {
   visibility: visible;
 }
 
-.selection.dropdown > .dropdown.icon {
-	cursor: pointer;
-	position: absolute;
-	width: auto;
-	height: auto;
-	line-height: 1.21428571em;
-	top: 0.78571429em;
-	right: 1em;
-	z-index: 3;
-	margin: -0.78571429em;
-	padding: 0.91666667em;
-	opacity: 0.8;
-	-webkit-transition: opacity $speed ease;
-	transition: opacity $speed ease;
-}
+
 
 /*  Selection Menu */
 .selection.dropdown .menu {
@@ -329,12 +297,6 @@ select.dropdown {
     &:hover .menu {
         border-color: $inut-color;
     }
-}
-
-/* Dropdown Icon */
-.active.selection.dropdown > .dropdown.icon {
-  opacity: 1;
-  z-index: 3;
 }
 
 /* Connecting Border */
@@ -474,23 +436,6 @@ select.dropdown {
   margin: 0 -0.5em 0 0;
   border-radius: 4px;
 }
-.dropdown .item .left.dropdown.icon,
-.dropdown .left.menu .item .dropdown.icon {
-  width: auto;
-  float: left;
-  margin: 0;
-}
-.dropdown .item .left.dropdown.icon,
-.dropdown .left.menu .item .dropdown.icon {
-  width: auto;
-  float: left;
-  margin: 0;
-}
-.dropdown .item .left.dropdown.icon + .text,
-.dropdown .left.menu .item .dropdown.icon + .text {
-  margin-left: 1em;
-  margin-right: 0;
-}
 
 /*--------------
      Upward
@@ -513,10 +458,7 @@ select.dropdown {
 }
 
 /* Active Upward */
-.simple.upward.active.dropdown,
-.simple.upward.dropdown:hover {
-  border-radius: 4px 4px 0 0;
-}
+
 .upward.dropdown.button:not(.pointing):not(.floating).active {
   border-radius: 4px 4px 0 0;
 }
@@ -554,10 +496,6 @@ select.dropdown {
   -webkit-box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.08);
           box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.08);
 }
-
-/*--------------
-     Simple
----------------*/
 
 
 /*  Selection Menu */
@@ -633,61 +571,6 @@ select.dropdown {
 }
 
 /*--------------
-     Simple
----------------*/
-
-
-/* Displays without javascript */
-.simple.dropdown .menu:before,
-.simple.dropdown .menu:after {
-  display: none;
-}
-.simple.dropdown .menu {
-  position: absolute;
-  display: block;
-  overflow: hidden;
-  top: -9999px;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  -webkit-transition: opacity $speed ease;
-  transition: opacity $speed ease;
-}
-.simple.active.dropdown,
-.simple.dropdown:hover {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.simple.active.dropdown > .menu,
-.simple.dropdown:hover > .menu {
-  overflow: visible;
-  width: auto;
-  height: auto;
-  top: 100%;
-  opacity: 1;
-}
-.simple.dropdown > .menu > .item:active > .menu,
-.simple.dropdown:hover > .menu > .item:hover > .menu {
-  overflow: visible;
-  width: auto;
-  height: auto;
-  top: 0%;
-  left: 100%;
-  opacity: 1;
-}
-.simple.disabled.dropdown:hover .menu {
-  display: none;
-  height: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-/* Visible */
-.simple.visible.dropdown > .menu {
-  display: block;
-}
-
-/*--------------
       Fluid
 ---------------*/
 
@@ -695,9 +578,6 @@ select.dropdown {
   display: block;
   width: 100%;
   min-width: 0;
-}
-.fluid.dropdown > .dropdown.icon {
-  float: right;
 }
 
 /*--------------
@@ -716,10 +596,6 @@ select.dropdown {
   border-radius: 4px;
 }
 
-/*******************************
-         Theme Overrides
-*******************************/
-
 
 /* Dropdown Carets */
 @font-face {
@@ -729,20 +605,14 @@ select.dropdown {
   font-style: normal;
 }
 .dropdown > .dropdown.icon {
-  font-family: 'Dropdown';
-  line-height: 1;
-  height: 1em;
-  width: 1.23em;
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-  font-weight: normal;
-  font-style: normal;
-  text-align: center;
+	font-family: 'Dropdown';
+	backface-visibility: hidden;
+	font-weight: normal;
+	font-style: normal;
 }
-.dropdown > .dropdown.icon {
-  width: auto;
-}
-.dropdown > .dropdown.icon:before {
+
+
+.dropdown.icon:before {
     font-family: 'icomoon' !important;
     speak: none;
     font-style: normal;

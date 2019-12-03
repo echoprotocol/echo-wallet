@@ -4,37 +4,41 @@ $thead-height: 46px;
     display: flex;
     flex-direction: column;
     max-width: 10px;
-    margin: -2px 0 0 5px;
+    margin: 0 0 0 6px;
     border: 0;
     background: none;
 
     i {
-        margin: 0;
-        width: 10px;
-        line-height: 8px;
-        font-size: 4px;
-        opacity: .4;
-        transition: opacity $speed;
-
+		margin: 0;
+		width: 10px;
+		line-height: 5px;
+		font-size: 3.3px;
+		color: rgba(#6D7178, .3);
+		transition: color $speed;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
         &.active {
-            color: $link-gray;
-            opacity: 1;
+            color: rgba(#6D7178, .7);
         }
     }
+}
 
-    &-wrap {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
+.sort-wrap {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	line-height: 0;
+	user-select: none;
 
-        &:hover {
-            .sort {
-                i {
-                    opacity: 1;
-                }
-            }
-        }
-    }
+	&:hover {
+		.sort {
+			i:not(.active) {
+				color: rgba(#6D7178, .4);
+			}
+		}
+	}
 }
 
 .table {
@@ -77,9 +81,9 @@ $thead-height: 46px;
                 padding: 0.92857143em 5px;
                 opacity: 0.5;
                 color: #5c637d;
-                font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
                 font-size: 12px;
-                font-weight: 400;
 
                 @media (min-width: 840px) and (max-width: 1200px) {
                     &:last-child {
@@ -268,93 +272,7 @@ $thead-height: 46px;
                 }
             }
         }
-    }
-
-    &.table-smart-contract {
-
-        display: flex;
-        flex-direction: column;
-        margin: 0;
-        height: calc(100vh - 190px);
-        overflow-x: hidden;
-        border: 0;
-        border-radius: 0;
-
-        @media (min-width: 1060px) {
-            margin: 43px 0 0 0;
-            height: calc(100vh - 244px)
-        }
-
-        thead {
-            width: 100%;
-            background-color: #fff;
-
-            @media (min-width: 1060px) {
-                position: fixed;
-                overflow-x: hidden;
-                margin-top: -43px;
-
-            }
-
-            th {
-                background: 0;
-                color: $gray;
-                padding: 0.92857143em 5px;
-            }
-        }
-
-        // WIDTH OF CELLS
-        tr {
-
-            th,
-            td {
-                &:first-child {
-                    min-width: 25vw;
-                    padding-left: 20px;
-                }
-
-                &:last-child {
-                    min-width: calc(75vw - 1px);
-                    padding-right: 20px;
-                }
-            }
-        }
-
-
-        tbody {
-            tr {
-                transition: background-color .3s;
-                max-height: 52px;
-
-                &:nth-child(2n) {
-                    &:hover {
-                        background-color: $main-color;
-                    }
-                }
-
-                &:hover {
-                    background-color: $main-color;
-
-                    td {
-                        color: #fff;
-                    }
-                }
-
-                td {
-                    border-top: 0;
-                    transition: color .3s;
-                    padding: 0.82857143em 5px;
-                    color: $black;
-
-                    &:last-child {
-                        span {
-                            display: block;
-                        }
-                    }
-                }
-            }
-        }
-    }
+	}
 
     &.main-table {
 
@@ -362,7 +280,8 @@ $thead-height: 46px;
             th {
                 padding: 0 18px;
                 height: 30px;
-                font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
                 color: rgba(173, 177, 190, 1);
                 font-size: .88em;
 
@@ -471,7 +390,8 @@ $thead-height: 46px;
             padding: 5px 18px;
             min-height: 30px;
             font-size: 1em;
-            font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
             color: rgba(92, 99, 125, 1);
             transition: color $speed;
 
@@ -533,14 +453,141 @@ $thead-height: 46px;
 
 }
 
+.table-smart-contract {
+
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	height: calc(100vh - 190px);
+	overflow-x: hidden;
+	border: 0;
+	border-radius: 0;
+
+	@media (min-width: 1060px) {
+		margin: 31px 0 0 0;
+		height: calc(100vh - 244px)
+	}
+
+	thead {
+		width: 100%;
+		background-color: #fff;
+		font-size: 12px;
+		@media (min-width: 1060px) {
+			position: fixed;
+			overflow-x: hidden;
+			margin-top: -31px;
+
+		}
+
+		th {
+			background: 0;
+			color: $gray;
+			padding-top: 11px;
+			padding-bottom: 9px;
+		}
+	}
+	.avatar-wrap {
+		display: flex;
+		align-items: center;
+		svg {
+			border-radius: 2px;
+		}
+	}
+	.balance-wrap {
+		display: flex;
+		align-items: center;
+		color: rgba(#5C637D, .9);
+		font-size: 13px;
+		transition: color $speed;
+	}
+
+	.balance {
+		font-family: proxima;
+		font-weight: 600;
+		margin: 0 3px 0 0;
+	}
+
+	.name {
+		@include cut-text;
+		display: block;
+		color: #4D66CD;
+		font-family: proxima;
+		font-weight: 600;
+		font-size: 13px;
+		transition: color $speed;
+	}
+
+	// WIDTH OF CELLS
+	tr {
+
+		th,
+		td {
+			&:first-child {
+				min-width: 25vw;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			
+			&:nth-child(2) {
+				min-width: 25vw;
+				padding-left:  10px;
+				padding-right: 10px;
+			}
+
+			&:last-child {
+				min-width: calc(50vw - 1px);
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+		}
+	}
+
+
+	tbody {
+		tr {
+			transition: background-color .3s;
+			max-height: 52px;
+
+			&:nth-child(2n) {
+				&:hover {
+					background-color: $main-color;
+				}
+			}
+
+			&:hover {
+				background-color: $main-color;
+
+				td,
+				.balance-wrap {
+					color: #fff;
+				}
+				
+				.name {
+					color: #FFF9B5;
+				}
+			}
+
+			td {
+				border-top: 0;
+				transition: color .3s;
+				padding-top: 16px;
+				padding-bottom: 16px;
+				color: $black;
+
+			}
+		}
+	}
+}
+
 .ellips {
     @include cut-text;
     display: block;
 
     .text-bold {
-        font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
 
-        &+span {
+        & + span {
             margin-left: 4px;
         }
     }
@@ -548,8 +595,6 @@ $thead-height: 46px;
 
 
 .ui {
-
-
     .table-assets,
     .table-tokens {
 
@@ -616,7 +661,8 @@ $thead-height: 46px;
                 justify-content: space-between;
                 color: $gray;
                 font-size: .9em;
-                font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
                 margin-top: auto;
 
                 &:last-child {
@@ -658,13 +704,15 @@ $thead-height: 46px;
                     &:first-child {
                         color: $main-color;
                         line-height: 30px;
-                        font-family: proximanovaSemibold;
+						font-family: proxima;
+						font-weight: 600;
                     }
 
                     &:last-child {
                         justify-content: flex-end;
                         color: $text-dark;
-                        font-family: proximanovaSemibold;
+						font-family: proxima;
+						font-weight: 600;
                         font-size: .95em;
                     }
                 }

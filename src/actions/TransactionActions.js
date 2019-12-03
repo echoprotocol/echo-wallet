@@ -7,22 +7,24 @@ import history from '../history';
 
 import operations from '../constants/Operations';
 import {
-	FORM_CREATE_CONTRACT,
 	FORM_TRANSFER,
 	FORM_CALL_CONTRACT,
 	FORM_CALL_CONTRACT_VIA_ID,
 	FORM_FREEZE,
 	FORM_PERMISSION_KEY,
+	FORM_CREATE_CONTRACT_OPTIONS,
+	FORM_CREATE_CONTRACT_SOURCE_CODE,
+	FORM_CREATE_CONTRACT_BYTECODE,
 } from '../constants/FormConstants';
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
-import { MODAL_DETAILS } from '../constants/ModalConstants';
+import { MODAL_DETAILS, MODAL_CHANGE_PARENT_ACCOUNT } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
 	CONTRACT_ID_PREFIX,
 	ECHO_ASSET_ID,
 	FREEZE_BALANCE_PARAMS,
-	APPLY_CHANGES_TIMEOUT,
+	APPLY_CHANGES_TIMEOUT, ECHO_ASSET_PRECISION, ADDRESS_PREFIX,
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
@@ -30,6 +32,7 @@ import {
 	ADDRESS_SUBJECT_TYPE,
 	CONTRACT_ID_SUBJECT_TYPE,
 } from '../constants/TransferConstants';
+import { SOURCE_CODE_MODE, SUPPORTED_ASSET_CUSTOM } from '../constants/ContractsConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
@@ -225,7 +228,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 						amount: 0,
 					},
 					from: fromAccount.id,
-					to: to.slice(2),
+					to,
 					amount: {
 						amount: amountValue || 0,
 						asset_id: currency.id || ECHO_ASSET_ID,
@@ -445,11 +448,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 };
 
 export const subjectToSendSwitch = (value) => async (dispatch) => {
-	if (value.startsWith('0x')) {
-		if (!validateAccountAddress(value)) {
-			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid address'));
-			return false;
-		}
+	if (validateAccountAddress(value)) {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
@@ -617,7 +616,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 		currency,
 	} = form;
 	if (form.subjectTransferType === ADDRESS_SUBJECT_TYPE && validators.isContractId(currency.id)) {
-		form.to.value = await echo.api.getAccountByAddress(to.value.slice(2).toLowerCase());
+		form.to.value = await echo.api.getAccountByAddress(to.value.toLowerCase());
 		return dispatch(transfer(form));
 	}
 
@@ -702,7 +701,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 					amount: fee.value || 0,
 				},
 				from: fromAccount.id,
-				to: to.value.slice(2).toLowerCase(),
+				to: to.value.toLowerCase(),
 				amount: {
 					amount: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
 					asset_id: currency.id || ECHO_ASSET_ID,
@@ -714,7 +713,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 				fee: `${new BN(fee.value).div(precision)
 					.toString(10)} ${fee.asset.symbol}`,
 				from: fromAccount.name,
-				to_address: to.value.slice(2),
+				to_address: to.value,
 				amount: `${amount} ${currency.symbol}`,
 			};
 
@@ -889,9 +888,18 @@ export const freezeBalance = () => async (dispatch, getState) => {
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
 export const createContract = () => async (dispatch, getState) => {
+	const mode = getState().form.getIn([FORM_CREATE_CONTRACT_OPTIONS, 'contractMode']);
+	const formName = mode === SOURCE_CODE_MODE
+		? FORM_CREATE_CONTRACT_SOURCE_CODE
+		: FORM_CREATE_CONTRACT_BYTECODE;
+	const form = getState().form.get(formName);
+
 	const {
-		bytecode, name, abi, supportedAsset, ETHAccuracy, code, currency, amount,
-	} = getState().form.get(FORM_CREATE_CONTRACT).toJS();
+		bytecode, name, abi, code,
+	} = form.toJS();
+	const {
+		supportedAsset, ETHAccuracy, currency, amount, supportedAssetRadio,
+	} = getState().form.get(FORM_CREATE_CONTRACT_OPTIONS).toJS();
 
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 	const activeUserName = getState().global.getIn(['activeUser', 'name']);
@@ -904,63 +912,75 @@ export const createContract = () => async (dispatch, getState) => {
 	const error = validateCode(bytecodeValue);
 
 	if (error) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, 'bytecode', error));
+		dispatch(setFormError(formName, code ? 'code' : 'bytecode', error));
 		return false;
 	}
 
-	if (getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value) {
+	if (getState().form.getIn([formName, code ? 'code' : 'abi']).value) {
 		const nameError = validateContractName(name.value);
 		const abiError = validateAbi(abi.value);
 
 		if (nameError) {
-			dispatch(setFormError(FORM_CREATE_CONTRACT, 'name', nameError));
+			dispatch(setFormError(formName, 'name', nameError));
 			return false;
 		}
 
 		if (abiError) {
-			dispatch(setFormError(FORM_CREATE_CONTRACT, 'abi', abiError));
+			dispatch(setFormError(formName, code ? 'code' : 'abi', abiError));
 			return false;
 		}
 	}
 
-	let supportedAssetId = '';
-	if (supportedAsset) {
-		const assets = await echo.api.lookupAssetSymbols([supportedAsset]);
-		const asset = assets.find((a) => a.symbol === supportedAsset);
-		supportedAssetId = asset.id;
-	}
-
-	dispatch(resetTransaction());
-
-	const options = {
-		registrar: activeUserId,
-		value: { amount: amount.value || 0, asset_id: currency.id || ECHO_ASSET_ID },
-		fee: { amount: 0, asset_id: supportedAssetId || ECHO_ASSET_ID },
-		code: bytecodeValue,
-		eth_accuracy: ETHAccuracy,
-	};
-
-	if (supportedAssetId) {
-		options.supported_asset_id = supportedAssetId;
-		if (new BN(options.value.amount).eq(0)) {
-			options.value.asset_id = supportedAssetId;
-		} else if (options.value.asset_id !== supportedAssetId) {
-			dispatch(setFormError(
-				FORM_CREATE_CONTRACT,
-				'amount',
-				'Amount asset should be equal to supported asset',
-			));
-			return null;
-		}
-	}
-
 	try {
-		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT, 'contract_create', options));
+		if (supportedAssetRadio === SUPPORTED_ASSET_CUSTOM && !supportedAsset.value) {
+			dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', 'Asset is not selected'));
+			return false;
+		}
+
+		let supportedAssetId = '';
+		if (supportedAsset.value) {
+			const assets = await echo.api.lookupAssetSymbols([supportedAsset.value]);
+			const asset = assets.find((a) => a.symbol === supportedAsset.value);
+			supportedAssetId = asset.id;
+		}
+
+		dispatch(resetTransaction());
+
+		const precision = new BN(10).pow((currency && currency.precision)
+			? currency.precision
+			: ECHO_ASSET_PRECISION);
+
+		const options = {
+			registrar: activeUserId,
+			value: {
+				amount: amount.value ? new BN(amount.value).times(precision).toString(10) : 0,
+				asset_id: currency.id || ECHO_ASSET_ID,
+			},
+			fee: { amount: 0, asset_id: supportedAssetId || ECHO_ASSET_ID },
+			code: bytecodeValue,
+			eth_accuracy: ETHAccuracy,
+		};
+
+		if (supportedAssetId) {
+			options.supported_asset_id = supportedAssetId;
+			if (new BN(options.value.amount).eq(0)) {
+				options.value.asset_id = supportedAssetId;
+			} else if (options.value.asset_id !== supportedAssetId) {
+				dispatch(setFormError(
+					FORM_CREATE_CONTRACT_OPTIONS,
+					'amount',
+					'Amount asset should be equal to supported asset',
+				));
+				return null;
+			}
+		}
+
+		const fee = await dispatch(getTransactionFee(FORM_CREATE_CONTRACT_OPTIONS, 'contract_create', options));
 
 		if (fee) {
-			dispatch(setValue(FORM_CREATE_CONTRACT, 'fee', fee));
+			dispatch(setValue(FORM_CREATE_CONTRACT_OPTIONS, 'fee', fee));
 		} else {
-			dispatch(setFormError(FORM_CREATE_CONTRACT, 'amount', 'Can\'t calculate fee'));
+			dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', 'Can\'t calculate fee'));
 			return null;
 		}
 		options.fee.amount = fee.value;
@@ -968,13 +988,19 @@ export const createContract = () => async (dispatch, getState) => {
 			from: activeUserName,
 			fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
 			code: bytecodeValue,
+			eth_accuracy: ETHAccuracy ? 'On' : 'Off',
+			supported_asset: supportedAsset.value || 'All',
 		};
+
+		if (amount.value && amount.value !== '0') {
+			showOptions.amount = `${amount.value} ${(currency && currency.symbol) ? currency.symbol : ADDRESS_PREFIX}`;
+		}
 
 		dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_create', options, showOptions }));
 
 		return true;
 	} catch (err) {
-		dispatch(setFormError(FORM_CREATE_CONTRACT, code.value ? 'code' : 'bytecode', 'Transaction params is invalid'));
+		dispatch(setFormError(formName, code ? 'code' : 'bytecode', 'Transaction params is invalid'));
 		return false;
 	}
 };
@@ -1001,10 +1027,14 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	const name = getState().form.getIn([FORM_CREATE_CONTRACT, 'name']).value;
-	const abi = getState().form.getIn([FORM_CREATE_CONTRACT, 'abi']).value;
+	const contractMode = getState().form.getIn([FORM_CREATE_CONTRACT_OPTIONS, 'contractMode']);
+	const formName = contractMode === SOURCE_CODE_MODE
+		? FORM_CREATE_CONTRACT_SOURCE_CODE
+		: FORM_CREATE_CONTRACT_BYTECODE;
+	const name = getState().form.getIn([formName, 'name']).value;
+	const abi = getState().form.getIn([formName, 'abi']).value;
 	const bytecode =
-		getState().form.getIn([FORM_CREATE_CONTRACT, 'bytecode']).value ||
+		getState().form.getIn([formName, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
 	try {
@@ -1053,6 +1083,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	}
 
 	dispatch(closeModal(MODAL_DETAILS));
+	dispatch(closeModal(MODAL_CHANGE_PARENT_ACCOUNT));
 	dispatch(resetTransaction());
 };
 
@@ -1476,9 +1507,12 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 	try {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
-		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
-		const delegate = await echo.api.getObject(delegateId);
-		const activeUser = await echo.api.getObject(activeUserId);
+		const [delegate] = await echo.api.getFullAccounts([delegateId]);
+
+		const [
+			feeAsset,
+			activeUser,
+		] = await echo.api.getObjects([ECHO_ASSET_ID, activeUserId]);
 
 		if (!delegate) {
 			return null;
@@ -1513,6 +1547,8 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 			options,
 			showOptions,
 		}));
+
+		// dispatch(closeModal(MODAL_CHANGE_PARENT_ACCOUNT));
 
 		return true;
 	} catch (error) {

@@ -32,7 +32,7 @@ class Assets extends React.Component {
 
 			return (
 				<li key={id}>
-					<button>
+					<div className="balance-item">
 						<div className="frozen-value">
 							<span>{echoBalance}</span>
 							<span>ECHO</span>
@@ -56,7 +56,7 @@ class Assets extends React.Component {
 							<span>Frozen until</span>
 							<span>{momentDate}</span>
 						</div>
-					</button>
+					</div>
 				</li>
 			);
 		});

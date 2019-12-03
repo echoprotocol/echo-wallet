@@ -63,6 +63,7 @@ export const PUBLIC_KEY_LENGTH = 44;
 export const PUBLIC_KEY_LENGTH_43 = 43;
 export const SORT_ACCOUNTS = 'accounts';
 export const ECHO_ASSET_ID = '1.3.0';
+export const ECHO_ASSET_PRECISION = 8;
 export const CONTRACT_ID_PREFIX = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT}`;
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
 export const PREFIX_ASSET = '1.3.';
@@ -111,7 +112,7 @@ export const EXPLORER_URL = {
 	testnet: 'https://explorer.echo.org',
 };
 
-export const BRIDGE_RECEIVE_URL = 'https://echo-bridge.io/receive/';
+export const BRIDGE_RECEIVE_URL = 'https://bridge.echo.org/receive/';
 
 export const TIME_TOAST_ANIMATION = 5000;
 export const DELAY_REMOVE_CONTRACT = 1000;
@@ -155,6 +156,12 @@ export const GIT_REF = 'https://github.com/echoprotocol/echo-wallet/commit/';
 export const ECHO_REF = 'https://echo.org/';
 export const ECHO_DOCS_LINK = 'https://docs.echo.org/';
 export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
+
+export const REGISTER_DEFAULT_SETTINGS = 'default-settings';
+export const REGISTER_PARTNER_ACCOUNT = 'parent-account';
+export const REGISTER_IP_URL = 'ip-url';
+
+export const CSS_TRANSITION_SPEED = 300;
 
 export const REGISTRATION = {
 	BATCH: 1e3,

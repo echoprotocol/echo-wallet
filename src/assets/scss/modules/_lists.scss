@@ -143,7 +143,6 @@
 
                 &.value {
                     line-height: 25px;
-                    margin-bottom: -1px;
                 }
 
                 margin-top: 10px;
@@ -278,7 +277,8 @@
         &-method {
             margin-bottom: 10px;
             font-size: 13px;
-            font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
         }
 
         &-item {

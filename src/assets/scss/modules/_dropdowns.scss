@@ -2,13 +2,8 @@
     &.active:not(.empty) {
         i.icon,
         .dropdown.icon {
-            transform: rotate(180deg);
-        }
-
-        &.compact {
-            .dropdown.icon {
-                line-height: 17px;
-            }
+			transform: rotate(180deg);
+			height: 4px;
         }
     }
 
@@ -27,6 +22,12 @@
             &>.text {
                 margin-right: 0;
             }
+        }
+    }
+    
+    &.upward {
+        .menu {
+            max-height: 300px
         }
     }
 
@@ -48,18 +49,10 @@
                 display: none;
             }
 
-            .dropdown.icon {
-                margin-top: -7px;
-                margin-right: -10px;
-            }
+
         }
 
-        .dropdown.icon {
-			padding-left: 1em;
-			color: $bd-gray;
-        }
-
-        &>input.search {
+        & > input.search {
             padding-right: 28px;
             transition: color .3s;
             cursor: pointer;
@@ -249,22 +242,13 @@
 	&.contract-type-dropdown {
 		display: flex;
 		align-items: center;
-		padding: 5px 1em;
-		transition: border .3s;
+		padding: 5px 14px;
+		transition: border-color .3s;
 		align-self: flex-start;
-		min-height: 15px;
+		height: 30px;
 		min-width: 100px;
 		max-width: 100px;
-	
-		.dropdown.icon {
-			font-size: 12px;
-			padding: 4px;
-		}
-	
-		.text {
-			margin-top: 1px;
-		}
-	
+
 		.menu {
 	
 			.item {
@@ -290,6 +274,21 @@
         .menu {
             display: none !important;
         }
+	}
+
+	.dropdown.icon {
+		position: absolute;
+		right: 12px;
+		top: 0px;
+		bottom: 4px;
+		margin: auto;
+		color: $bd-gray;
+		z-index: 3;
+		height: 0;
+		line-height: 0;
+		will-change: transform;
+		border: 0;
+		max-width: 8px;
 	}
 }
 
@@ -351,6 +350,8 @@
 	color: rgba(0, 0, 0, 0.95);
 }
 
+
+
 .dropdown-wrap {
 
 	.dropdown-label {
@@ -358,7 +359,7 @@
 		line-height: 20px;
 	}
 
-	.dropdown {
+	& > .dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
@@ -411,7 +412,8 @@
 			align-items: center;
 			justify-content: center;
 			text-transform: uppercase;
-			font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
 			font-size: 12px;
 			transition: color $speed;
 			z-index: 44;
@@ -427,20 +429,6 @@
 		&.visible {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
-		}
-
-		& > .dropdown.icon {
-			position: absolute;
-			right: 12px;
-			top: 0px;
-			bottom: 4px;
-			margin: auto;
-		}
-
-		&.active {
-			& > .dropdown.icon {
-				bottom: 0;
-			}
 		}
 
 		.menu {
@@ -474,7 +462,8 @@
 			min-height: 26px;
 			.title {
 				margin: 10px 0 0;
-				font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
 				font-size: 12px;
 				color: rgba(#3B3B3B, 0.3);
 				text-transform: uppercase;

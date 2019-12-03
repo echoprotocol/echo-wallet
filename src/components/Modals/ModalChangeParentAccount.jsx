@@ -3,6 +3,7 @@ import { Modal, Form, Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import _ from 'lodash';
 
 import { closeModal } from '../../actions/ModalActions';
 import { lookupAccountsList } from '../../actions/AccountActions';
@@ -14,26 +15,41 @@ import Avatar from '../Avatar';
 import TransactionScenario from '../../containers/TransactionScenario';
 
 
-class ModalLogout extends React.Component {
+class ModalChangeDelegate extends React.Component {
 
 	constructor(props) {
 		super(props);
 
-		this.state = {
+		this.DEFAULT_STATE = {
 			searchText: '',
 			loading: false,
 			options: [],
 			timeout: null,
 		};
+
+		this.state = _.cloneDeep(this.DEFAULT_STATE);
+	}
+
+	componentDidMount() {
+		this.clear();
+	}
+
+	componentWillUnmount() {
+		this.clear();
 	}
 
 	onClose() {
 		this.props.closeModal(MODAL_CHANGE_PARENT_ACCOUNT);
+		this.clear();
 	}
 
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		this.setState({ searchText: accountName.text });
+	}
+
+	clear() {
+		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
 	async accountSearchHandler(e, data) {
@@ -60,11 +76,6 @@ class ModalLogout extends React.Component {
 				});
 			}, 300),
 		});
-	}
-
-	async submit(delegate) {
-		await this.props.changeDelegate(delegate && delegate.value);
-		this.onClose();
 	}
 
 	renderList(options) {
@@ -152,7 +163,7 @@ class ModalLogout extends React.Component {
 					</div>
 					<div className="form-panel">
 						<TransactionScenario
-							handleTransaction={() => this.submit(delegate)}
+							handleTransaction={() => this.props.changeDelegate(delegate && delegate.value)}
 						>
 							{
 								(submit) => (
@@ -174,14 +185,14 @@ class ModalLogout extends React.Component {
 
 }
 
-ModalLogout.propTypes = {
+ModalChangeDelegate.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
 	changeDelegate: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
 };
 
-ModalLogout.defaultProps = {
+ModalChangeDelegate.defaultProps = {
 	show: false,
 };
 
@@ -194,4 +205,4 @@ export default connect(
 		closeModal: (modal) => dispatch(closeModal(modal)),
 		changeDelegate: (delegateId) => dispatch(changeDelegate(delegateId)),
 	}),
-)(ModalLogout);
+)(ModalChangeDelegate);
