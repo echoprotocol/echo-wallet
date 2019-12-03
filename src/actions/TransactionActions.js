@@ -1411,8 +1411,8 @@ export const generateBtcAddress = (address) => async (dispatch, getState) => {
 		const showOptions = {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
-			backup_address: address,
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+			label: address,
 		};
 		dispatch(TransactionReducer.actions.setOperation({
 			operation,

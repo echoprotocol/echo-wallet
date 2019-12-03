@@ -536,7 +536,7 @@ export default {
 	},
 	sidechain_btc_create_address: {
 		value: OPERATIONS_IDS.SIDECHAIN_BTC_CREATE_ADDRESS,
-		name: 'Create BTC address',
+		name: 'Account address create',
 		options: {
 			from: 'account',
 			subject: null,
