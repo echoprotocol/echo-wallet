@@ -442,10 +442,15 @@ $stripe-width: 10px;
 	}
 }
 
-.link-copy-btn {
+.copy-btn {
 	color: $main-color;
-	padding: 2px;
-	margin: -2px;
+	padding: 4px;
+	margin: -4px;
+	transition: color $speed;
+	display: flex;
+	align-items: center;
+	user-select: none;
+	border-radius: 4px;
 	transition: color $speed;
 
 	&:not(:active) {
@@ -453,7 +458,18 @@ $stripe-width: 10px;
 			@include on-focus(2px);
 		}
 	}
+
+	&:active {
+		color: rgba($main-color, .7);
+	}
+
+	.text {
+		font-family: proximanovaSemibold;
+		font-size: 14px;
+		margin-left: 6px;
+	}
 }
+
 .version-btn {
 	font-family: proxima;
 	background-color: transparent;

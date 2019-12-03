@@ -28,9 +28,18 @@
 			min-height: 18px;
 		}
 	}
-
+	textarea {
+		min-height: 140px;
+	}
+	.copy-btn {
+		i {
+			font-size: 16px;
+		}
+	}
 	.form-panel {
 		margin: 12px 0 0;
+		justify-content: space-between;
+		
 		.main-btn {
 			margin-left: auto;
 			min-width: 160px;
