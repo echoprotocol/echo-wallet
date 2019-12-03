@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Icon } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -52,16 +52,27 @@ class ContractList extends React.Component {
 				onClick={(e) => this.onLink(VIEW_CONTRACT_PATH.replace(/:id/, id), e)}
 			>
 				<Table.Cell>
-					<span className="ellips">
-						{id}
-					</span>
+					{id}
+				</Table.Cell>
+				<Table.Cell >
+					<div className="name">{name}</div>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						{name}
-					</span>
+					<div className="balance-wrap">
+						<span className="balance">35</span>
+						<span className="coin">ECHO</span>
+					</div>
 				</Table.Cell>
 			</Table.Row>
+		);
+	}
+
+	renderSort(sortType, sortInc, type) {
+		return (
+			<div className="sort">
+				<i className={classnames('icon-sort-up', { active: sortType === type && sortInc })} />
+				<i className={classnames('icon-sort-down', { active: sortType === type && !sortInc })} />
+			</div>
 		);
 	}
 
@@ -73,38 +84,22 @@ class ContractList extends React.Component {
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
-								<span className="sort-wrap">
-                                    Contract ID
-									<div className="sort">
-										<Icon
-											name="dropdown"
-											flipped="vertically"
-											className={classnames({ active: sortType === 'id' && sortInc })}
-										/>
-										<Icon
-											name="dropdown"
-											flipped="horizontally"
-											className={classnames({ active: sortType === 'id' && !sortInc })}
-										/>
-									</div>
-								</span>
+								<div className="sort-wrap">
+									Contract ID
+									{ this.renderSort(sortType, sortInc, 'id') }
+								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
-								<span className="sort-wrap">
-                                    Watched Contract Name
-									<div className="sort">
-										<Icon
-											name="dropdown"
-											flipped="vertically"
-											className={classnames({ active: sortType === 'name' && sortInc })}
-										/>
-										<Icon
-											name="dropdown"
-											flipped="horizontally"
-											className={classnames({ active: sortType === 'name' && !sortInc })}
-										/>
-									</div>
-								</span>
+								<div className="sort-wrap" >
+									Watched Contract Name
+									{ this.renderSort(sortType, sortInc, 'name') }
+								</div>
+							</Table.HeaderCell>
+							<Table.HeaderCell onClick={() => this.onSort('balance')}>
+								<div className="sort-wrap">
+									Contract Balance
+									{ this.renderSort(sortType, sortInc, 'balance') }
+								</div>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>

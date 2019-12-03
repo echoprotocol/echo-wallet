@@ -11,7 +11,7 @@
         }
     }
 
-    .ui.form .field:nth-child(2) {
+    .form .field:nth-child(2) {
         margin-bottom: 18px;
     }
 
@@ -29,7 +29,12 @@
         .form.main-form {
             min-width: 175px;
         }
-    }
+	}
+
+	.balance-wrap {
+		max-width: 357px;
+		width: 100%;
+	}
 
 }
 
@@ -52,10 +57,7 @@
 }
 
 
-.balance-wrap {
-    max-width: 357px;
-    width: 100%;
-}
+
 
 .balance-scroll {
     position: relative;

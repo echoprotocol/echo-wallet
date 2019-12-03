@@ -63,9 +63,9 @@ class ViewTransaction extends React.Component {
 				<div className="tab-full">
 					<div className="control-wrap">
 						<ul className="control-panel">
-							<li className="name">
+							<li className="name-panel">
 								<span className="label">Transaction:</span>
-								<span className="value pointer">
+								<span className="value">
 									{data.id}
 								</span>
 							</li>
