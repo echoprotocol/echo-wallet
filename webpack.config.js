@@ -27,7 +27,7 @@ const miniExtractSass = new MiniCssExtractPlugin({
 
 const { version } = require('./package.json');
 
-module.exports = {
+const config = {
 	entry: {
 		app: path.resolve('src/index.js'),
 	},
@@ -122,7 +122,6 @@ module.exports = {
 		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
-		gitRevisionPlugin,
 		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
 		new webpack.DefinePlugin({
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
@@ -138,3 +137,9 @@ module.exports = {
 		module: 'empty',
 	},
 };
+
+if (fs.existsSync('./.git')) {
+	config.plugins.push(gitRevisionPlugin);
+}
+
+module.exports = config;
