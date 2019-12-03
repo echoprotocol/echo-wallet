@@ -157,10 +157,6 @@ export const ECHO_REF = 'https://echo.org/';
 export const ECHO_DOCS_LINK = 'https://docs.echo.org/';
 export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
 
-export const REGISTER_DEFAULT_SETTINGS = 'default-settings';
-export const REGISTER_PARTNER_ACCOUNT = 'parent-account';
-export const REGISTER_IP_URL = 'ip-url';
-
 export const CSS_TRANSITION_SPEED = 300;
 
 export const REGISTRATION = {

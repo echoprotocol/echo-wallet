@@ -5,11 +5,9 @@ import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
 
 import {
-	REGISTER_DEFAULT_SETTINGS,
-	REGISTER_PARTNER_ACCOUNT,
-	REGISTER_IP_URL,
+	SIGN_UP_OPTIONS_TYPES,
 	CSS_TRANSITION_SPEED,
-} from '../../constants/GlobalConstants';
+} from '../../constants/FormConstants';
 
 import DefaultSettingsPanel from './DefaultSettingsPanel';
 import PartnerAccountPanel from './PartnerAccountPanel';
@@ -44,11 +42,11 @@ class AdditionalOptions extends React.Component {
 		const { checked } = this.state;
 
 		switch (checked) {
-			case REGISTER_DEFAULT_SETTINGS:
+			case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 				return <DefaultSettingsPanel />;
-			case REGISTER_PARTNER_ACCOUNT:
+			case SIGN_UP_OPTIONS_TYPES.PARENT:
 				return <PartnerAccountPanel loading={loading} />;
-			case REGISTER_IP_URL:
+			case SIGN_UP_OPTIONS_TYPES.IP_URL:
 				return <IpUrlPanel loading={loading} />;
 			default:
 				return <DefaultSettingsPanel />;
@@ -57,7 +55,9 @@ class AdditionalOptions extends React.Component {
 
 	render() {
 		const { active, checked } = this.state;
-		const { loading } = this.props;
+		const { loading, options } = this.props;
+
+		const checked = options.get('optionType');
 
 		return (
 			<div className="accordion fluid">
@@ -80,22 +80,22 @@ class AdditionalOptions extends React.Component {
 							<label htmlFor="register">Register using:</label>
 							<div name="register" className="radio-list">
 								<Button
-									name={REGISTER_DEFAULT_SETTINGS}
-									className={classnames('radio', { checked: checked === REGISTER_DEFAULT_SETTINGS })}
+									name={SIGN_UP_OPTIONS_TYPES.DEFAULT}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.DEFAULT })}
 									onClick={(e) => this.setActive(e)}
 									content="Default settings"
 									disabled={false}
 								/>
 								<Button
-									name={REGISTER_PARTNER_ACCOUNT}
-									className={classnames('radio', { checked: checked === REGISTER_PARTNER_ACCOUNT })}
+									name={SIGN_UP_OPTIONS_TYPES.PARENT}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.PARENT })}
 									onClick={(e) => this.setActive(e)}
 									content="Parent account"
 									disabled={false}
 								/>
 								<Button
-									name={REGISTER_IP_URL}
-									className={classnames('radio', { checked: checked === REGISTER_IP_URL })}
+									name={SIGN_UP_OPTIONS_TYPES.IP_URL}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.IP_URL })}
 									onClick={(e) => this.setActive(e)}
 									content="IP/URL"
 									disabled={false}
@@ -114,6 +114,7 @@ class AdditionalOptions extends React.Component {
 
 AdditionalOptions.propTypes = {
 	loading: PropTypes.bool.isRequired,
+	options: PropTypes.object.isRequired,
 };
 
 export default AdditionalOptions;
