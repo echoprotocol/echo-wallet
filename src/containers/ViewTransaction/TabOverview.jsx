@@ -1,7 +1,5 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
 
 import { ACCOUNT_ID_PREFIX } from '../../constants/GlobalConstants';
@@ -13,25 +11,12 @@ import Dropdown from '../../components/Dropdown';
 import Avatar from '../../components/Avatar';
 
 import externalLink from '../../assets/images/ic-external-link.svg';
+import ActionBtn from '../../components/ActionBtn';
 
 class TabOverview extends React.Component {
 
 	format(value) {
 		return formatAmount(value.amount, value.precision, value.symbol);
-	}
-
-	copyBytecode() {
-		const { bytecode } = this.props.data;
-		return (
-			<CopyToClipboard text={bytecode}>
-				<Button
-					basic
-					compact
-					icon="copy"
-					content="Copy"
-				/>
-			</CopyToClipboard>
-		);
 	}
 
 	goToTransaction(e, link) {
@@ -115,7 +100,11 @@ class TabOverview extends React.Component {
 								<div className="bytecode-wrap">
 									{this.renderBytecode()}
 								</div>
-								{this.copyBytecode()}
+								<ActionBtn
+									copy={bytecode}
+									icon="copy"
+									text="Copy"
+								/>
 							</div>
 						</li>
 						: null
@@ -193,7 +182,13 @@ class TabOverview extends React.Component {
 				</ul>
 				{
 					linkToTransaction &&
-					<a target="_blank" rel="noreferrer noopener" href={linkToTransaction} onClick={(e) => this.goToTransaction(e, linkToTransaction)} className="external-link">
+					<a
+						target="_blank"
+						rel="noreferrer noopener"
+						href={linkToTransaction}
+						onClick={(e) => this.goToTransaction(e, linkToTransaction)}
+						className="external-link"
+					>
 						<img src={externalLink} alt="" />
 						<span>Open in explorer</span>
 					</a>

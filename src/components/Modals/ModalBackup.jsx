@@ -91,16 +91,15 @@ class ModalBackup extends React.Component {
 					</Form.Field>
 
 					<div className="form-panel">
-						<React.Fragment>
-							<CopyToClipboard text={activeKeysString}>
-								<div>
-									<i aria-hidden="true" style={{ color: 'blue' }} className="copy icon" />&nbsp;
-									<a className="action-link" role="button" tabIndex="0">
-										Copy Backup Data
-									</a>
-								</div>
-							</CopyToClipboard>
-						</React.Fragment>
+						<CopyToClipboard text={activeKeysString}>
+							<Button
+								icon="copy"
+								className="copy-btn"
+								content={
+									<span className="text">Copy Backup Data</span>
+								}
+							/>
+						</CopyToClipboard>
 						<Button
 							type="submit"
 							className="main-btn"

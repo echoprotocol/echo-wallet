@@ -109,7 +109,8 @@
 			padding: 7px 0 7px 19px;
 			text-transform: uppercase;
 			display: block;
-			font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
 			font-size: 14px;
 			color: rgba(#5D637B, .5);
 
@@ -169,7 +170,8 @@
 			&-link {
 				height: 42px;
 				color: $main-color;
-				font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
 
 				&:hover {
 					background-color: $main-color;

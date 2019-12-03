@@ -74,19 +74,4 @@ input {
   }
  .input > input:-ms-input-placeholder {
 	color: rgba(191, 191, 191, 0.87);
-  }
-  
-  
-  /*--------------------
-		  Size
-  ---------------------*/
-  
-  .ui.mini.input {
-	font-size: 0.78571429em;
-  }
-  .ui.small.input {
-	font-size: 0.92857143em;
-  }
-  .ui.input {
-	font-size: 1em;
-  }
+}

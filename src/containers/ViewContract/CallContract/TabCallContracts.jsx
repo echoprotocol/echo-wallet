@@ -93,12 +93,8 @@ class TabCallContracts extends React.Component {
 
 					<div className="field-wrap">
 						<SelectMethod />
-						{
-							this.renderFields(functionForm, functions)
-						}
-						{
-							this.renderAmount(functionForm)
-						}
+						{ this.renderFields(functionForm, functions) }
+						{ this.renderAmount(functionForm) }
 						<ButtonComponent />
 					</div>
 				</Form>

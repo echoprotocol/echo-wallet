@@ -15,7 +15,10 @@ textarea {
 	vertical-align: top;
 	-webkit-appearance: none;
 	tap-highlight-color: rgba(255, 255, 255, 0);
-	transition: color $speed ease, border-color $speed ease;
+	transition:
+		color $speed ease,
+		background-color $speed,
+		border-color $speed ease;
 
 	&:hover {
 		border-color: $border-hover;
@@ -27,5 +30,17 @@ textarea {
 		border-color: $border-hover;
 		border-radius: 4px;
 		background: #FFFFFF;
+	}
+
+	&:read-only {
+		background-color: #F9F9F9;
+	}
+
+	&.code {
+		font-family: source;
+		font-size: 12px;
+		color: #080808;
+		line-height: 18px;
+		padding: 6px 8px 0;
 	}
 }
