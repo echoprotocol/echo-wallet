@@ -21,7 +21,6 @@ import {
 	FORM_FREEZE,
 	FORM_BTC_RECEIVE,
 	FORM_ETH_RECEIVE,
-	FORM_CHANGE_DELEGATE,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -293,19 +292,6 @@ const DEFAULT_FORM_FIELDS = {
 			value: FREEZE_BALANCE_PARAMS[0].duration,
 			text: FREEZE_BALANCE_PARAMS[0].durationText,
 			isSelected: false,
-		},
-		isAvailableBalance: false,
-	}),
-	[FORM_CHANGE_DELEGATE]: Map({
-		currency: null,
-		fee: {
-			value: '',
-			asset: null,
-			error: null,
-		},
-		delegate: {
-			value: '',
-			error: null,
 		},
 		isAvailableBalance: false,
 	}),

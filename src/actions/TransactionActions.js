@@ -1548,8 +1548,6 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 			showOptions,
 		}));
 
-		// dispatch(closeModal(MODAL_CHANGE_PARENT_ACCOUNT));
-
 		return true;
 	} catch (error) {
 		return null;
