@@ -18,15 +18,19 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
-			btcAddress, accountId,
+			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab,
 		} = this.props;
 
+		console.log(activePaymentTypeTab, activeCoinTypeTab)
 		const externalTabs = [
 			{
 				menuItem: <Button
 					className="tab-btn"
 					key="0"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activePaymentTypeTab', 0);
+						e.target.blur();
+					}}
 					content="CREATE PAYMENT"
 				/>,
 				render: () => (
@@ -66,7 +70,10 @@ class Wallet extends React.Component {
 				menuItem: <Button
 					className="tab-btn"
 					key="1"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activePaymentTypeTab', 1);
+						e.target.blur();
+					}}
 					content="RECEIVE PAYMENT"
 				/>,
 				render: () => (
@@ -78,6 +85,7 @@ class Wallet extends React.Component {
 							amount={amount}
 							fee={fee}
 							currency={currency}
+							activeCoinTypeTab={activeCoinTypeTab}
 							isAvailableBalance={isAvailableBalance}
 							accountAddresses={accountAddresses}
 							amountInput={this.props.amountInput}
@@ -88,6 +96,7 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							updateAccountAddresses={this.props.updateAccountAddresses}
+							setGlobalValue={this.props.setGlobalValue}
 							getBtcAddress={this.props.getBtcAddress}
 							btcAddress={btcAddress}
 							accountName={accountName}
@@ -135,7 +144,9 @@ class Wallet extends React.Component {
 							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
 						/>
-						<StableCoins />
+						<StableCoins
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)} 
+						/>
 						<Tokens
 							tokens={tokens}
 							removeToken={this.props.removeToken}
@@ -147,7 +158,7 @@ class Wallet extends React.Component {
 					</div>
 				</div>
 				<Tab
-					defaultActiveIndex="0"
+					activeIndex={activePaymentTypeTab}
 					menu={{
 						tabular: false,
 						className: 'wallet-tab-menu',
@@ -175,6 +186,8 @@ Wallet.propTypes = {
 	fee: PropTypes.object.isRequired,
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	activePaymentTypeTab: PropTypes.number.isRequired,
+	activeCoinTypeTab: PropTypes.number.isRequired,
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -200,6 +213,7 @@ Wallet.propTypes = {
 	getBtcAddress: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
 	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,

@@ -21,6 +21,7 @@ import { setContractFees } from '../../actions/ContractActions';
 import { updateAccountAddresses, getBtcAddress } from '../../actions/AccountActions';
 import Wallet from '../../components/Wallet';
 import { getEthAddress } from '../../actions/SidechainActions';
+import GlobalReducer from '../../reducers/GlobalReducer';
 
 export default connect(
 	(state) => ({
@@ -43,6 +44,8 @@ export default connect(
 		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		fullCurrentAccount: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
+		activePaymentTypeTab: state.global.get('activePaymentTypeTab'),
+		activeCoinTypeTab: state.global.get('activeCoinTypeTab'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -69,6 +72,7 @@ export default connect(
 		generateEthAddress: () => dispatch(generateEthAddress()),
 		getEthAddress: () => dispatch(getEthAddress()),
 		getAssetsBalances: () => dispatch(getAssetsBalances()),
+		setGlobalValue: (field, value) => dispatch(GlobalReducer.actions.set({ field, value })),
 	}),
 )(Wallet);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Button, Popup } from 'semantic-ui-react';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -11,6 +11,10 @@ class StableCoins extends React.Component {
 		this.state = {};
 	}
 
+	onStableClick(p, c) {
+		this.props.setGlobalValue('activePaymentTypeTab', p);
+		this.props.setGlobalValue('activeCoinTypeTab', c);
+	}
 	renderList() {
 		const stableCoins = [
 			{
@@ -37,13 +41,14 @@ class StableCoins extends React.Component {
 								</span>
 								<div className="balance-tags">
 									<Button
-										disabled // if balance 0
 										className="tag"
 										content="Deposit"
+										onClick={() => this.onStableClick(0, i + 1)}
 									/>
 									<Button
 										className="tag active"
 										content="Withdrawal"
+										onClick={() => this.onStableClick(1, i + 1)}
 									/>
 								</div>
 							</div>
@@ -77,6 +82,8 @@ class StableCoins extends React.Component {
 
 }
 
-StableCoins.propTypes = {};
+StableCoins.propTypes = {
+	setGlobalValue: PropTypes.func.isRequired,
+};
 
 export default StableCoins;

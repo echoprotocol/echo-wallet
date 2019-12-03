@@ -24,7 +24,7 @@ class Receive extends React.Component {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
 			getEthAddress, ethAddress, clearForm,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
-			btcAddress, accountId,
+			btcAddress, accountId, activeCoinTypeTab,
 		} = this.props;
 
 		const internalTabs = [
@@ -32,7 +32,10 @@ class Receive extends React.Component {
 				menuItem: <Button
 					className="tab-btn"
 					key="0"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activeCoinTypeTab', 0);
+						e.target.blur();
+					}}
 					content="ECHO NETWORK"
 				/>,
 				render: () => (
@@ -61,7 +64,10 @@ class Receive extends React.Component {
 				menuItem: <Button
 					className="tab-btn"
 					key="1"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activeCoinTypeTab', 1);
+						e.target.blur();
+					}}
 					content="Bitcoin"
 				/>,
 				render: () => (
@@ -83,7 +89,10 @@ class Receive extends React.Component {
 				menuItem: <Button
 					className="tab-btn"
 					key="2"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activeCoinTypeTab', 2);
+						e.target.blur();
+					}}
 					content="Ethereum"
 				/>,
 				render: () => (
@@ -106,7 +115,7 @@ class Receive extends React.Component {
 			<Form className="main-form">
 				<div className="field-wrap">
 					<Tab
-						defaultActiveIndex="0"
+						activeIndex={activeCoinTypeTab}
 						menu={{
 							tabular: false,
 							className: 'receive-tab-menu',
@@ -150,6 +159,8 @@ Receive.propTypes = {
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
 	accountId: PropTypes.string.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
+	activeCoinTypeTab: PropTypes.number.isRequired,
 };
 
 Receive.defaultProps = {
