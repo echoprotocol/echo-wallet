@@ -151,17 +151,26 @@ class ContractSettings extends React.Component {
 			<div className="tab-full">
 				<div className="control-wrap">
 					<ul className="control-panel">
-						<li className="id">
+						<li className="id-panel">
 							<span className="label">Contract ID:</span>
 							<span className="value">
 								{contractId}
 							</span>
 						</li>
-						<li className="name">
+						<li className="balance-panel">
+							<span className="label">Balance:</span>
+							<span className="value">
+								<div className="balance-wrap">
+									<div className="balance">0.0038</div>
+									<div className="coin">ECHO</div>
+								</div>
+							</span>
+						</li>
+						<li className="name-panel">
 							<span className="label">Name:</span>
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
 						</li>
-						<li className="act">
+						<li className="action-panel">
 							<ActionBtn
 								action={() => this.removeContract(contractId)}
 								icon="remove"
