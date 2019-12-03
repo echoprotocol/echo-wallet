@@ -37,6 +37,7 @@ class ModalLogout extends React.Component {
 	}
 
 	async accountSearchHandler(e, data) {
+
 		const searchText = data.searchQuery;
 		this.setState({
 			searchText,
@@ -47,7 +48,7 @@ class ModalLogout extends React.Component {
 		}
 		this.setState({
 			timeout: setTimeout(async () => {
-				const options = searchText ? (await lookupAccountsList(searchText, 2))
+				const options = searchText ? (await lookupAccountsList(searchText))
 					.map(([name, id]) => ({
 						key: id,
 						text: name,
@@ -70,6 +71,7 @@ class ModalLogout extends React.Component {
 		return options.map(({ key, text, value }) => {
 			const content = (
 				<button
+					key={key}
 					className="user-item"
 					onClick={() => this.onChangeAccount(value)}
 				>
@@ -79,7 +81,9 @@ class ModalLogout extends React.Component {
 					<div className="name">{text}</div>
 				</button>
 			);
-			return ({ value, key, content });
+			return ({
+				value, key, text, content,
+			});
 		});
 	}
 
