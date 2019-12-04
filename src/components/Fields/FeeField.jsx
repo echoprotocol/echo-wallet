@@ -1,12 +1,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Form, Popup } from 'semantic-ui-react';
+import { Dropdown, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
-import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 class FeeComponent extends React.Component {
@@ -111,27 +110,10 @@ class FeeComponent extends React.Component {
 		return options[0] ? options[0].text : '';
 	}
 
-	getDropdownIcon(options, isFeeAssetEqualsAddressPrefix, isFeeExist, fee) {
-		if (options.length < 2) {
-			return null;
-		}
-		return isFeeAssetEqualsAddressPrefix || !isFeeExist ? ''
-			: <Popup
-				trigger={<span className="inner-tooltip-trigger icon-coin" />}
-				content={fee.asset.symbol}
-				className="asset-tooltip"
-				inverted
-			/>;
-	}
-
-
 	render() {
 		const { options } = this.state;
 		const { fee } = this.props;
 		const text = this.getText(options);
-
-		const isFeeExist = !!(fee && fee.asset && fee.asset.symbol);
-		const isFeeAssetEqualsAddressPrefix = isFeeExist && (ADDRESS_PREFIX === fee.asset.symbol);
 
 		return (
 			<Form.Field className={classnames({
@@ -150,8 +132,7 @@ class FeeComponent extends React.Component {
 					placeholder="FEE"
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={(options.length < 2) ? [] : options}
-					text={isFeeAssetEqualsAddressPrefix ? `${text}\u00a0${fee.asset.symbol}` : text}
-					icon={this.getDropdownIcon(options, isFeeAssetEqualsAddressPrefix, isFeeExist, fee)}
+					text={`${text}\u00a0${fee.asset.symbol}`}
 					selectOnBlur={false}
 					noResultsMessage={options.length < 2 ? 'No results are found' : null}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
