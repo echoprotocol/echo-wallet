@@ -16,6 +16,7 @@ class FeeComponent extends React.Component {
 
 		this.state = {
 			options: [],
+			fee: this.props.fee,
 		};
 	}
 
@@ -24,11 +25,10 @@ class FeeComponent extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('1', this.props)
-		console.log('2', nextProps)
-		console.log(_.isEqual(this.props, nextProps))
-		if (_.isEqual(this.props, nextProps)) { return; }
-		this.setOptions();
+		if (!_.isEqual(this.state.fee, nextProps.fee) ||
+		(nextProps.fee && !this.state.options.length)) {
+			this.setOptions();
+		}
 	}
 
 	onFee(fee) {
@@ -45,7 +45,6 @@ class FeeComponent extends React.Component {
 			const symbol = options.find((opt) => opt.value === fee.toString());
 			const asset = assets.find((opt) => opt.symbol === symbol.key);
 			this.props.setValue('fee', { value: fee, asset });
-
 		}
 	}
 
@@ -134,7 +133,6 @@ class FeeComponent extends React.Component {
 		const isFeeExist = !!(fee && fee.asset && fee.asset.symbol);
 		const isFeeAssetEqualsAddressPrefix = isFeeExist && (ADDRESS_PREFIX === fee.asset.symbol);
 
-		console.log(this.props.isSingle)
 		return (
 			<Form.Field className={classnames({
 				'fee-dropdown-wrap': !this.props.isSingle,

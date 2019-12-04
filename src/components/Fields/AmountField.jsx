@@ -250,7 +250,7 @@ class AmountField extends React.Component {
 				<label htmlFor="amount">
 					{labelText}
 					<ul className="list-amount">
-						{fee && fee.value &&
+						{fee && fee.value && amount.value &&
 							<li>
 								{fee && fee.value && 'Fee:'}
 								<FeeField

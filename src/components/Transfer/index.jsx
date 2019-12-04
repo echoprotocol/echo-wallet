@@ -45,8 +45,19 @@ class Transfer extends React.Component {
 		const isValid = await this.props.subjectToSendSwitch(subject);
 		if (isValid && amount.value && !fee.amount) {
 			this.props.getTransferFee().then((resFee) => resFee && this.props.setValue('fee', resFee));
+		} else if (!isValid || !amount.value) {
+			this.switchFeeToDefaultValue();
 		}
 	}
+
+	switchFeeToDefaultValue() {
+		this.props.setValue('fee', {
+			value: '',
+			asset: null,
+			error: null,
+		});
+	}
+
 	render() {
 		const {
 			from, to, currency,
