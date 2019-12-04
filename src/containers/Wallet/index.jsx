@@ -28,6 +28,8 @@ export default connect(
 		fees: state.fee.toArray() || [],
 		tokens: state.balance.get('tokens'),
 		assets: state.form.getIn([FORM_TRANSFER, 'balance']).assets,
+		echoAssets: state.balance.get('echoAssets'),
+		sidechainAssets: state.balance.get('sidechainAssets'),
 		accountName: state.global.getIn(['activeUser', 'name']),
 		accountId: state.global.getIn(['activeUser', 'id']),
 		from: state.form.getIn([FORM_TRANSFER, 'from']),

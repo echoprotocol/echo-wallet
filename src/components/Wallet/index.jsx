@@ -18,10 +18,9 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
-			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab,
+			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
 		} = this.props;
 
-		console.log(activePaymentTypeTab, activeCoinTypeTab)
 		const externalTabs = [
 			{
 				menuItem: <Button
@@ -132,7 +131,7 @@ class Wallet extends React.Component {
 
 					<div className="balance-scroll">
 						<Assets
-							assets={assets}
+							assets={echoAssets}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
 								this.props.getTransferFee().then((res) => {
@@ -143,9 +142,22 @@ class Wallet extends React.Component {
 								});
 							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 						<StableCoins
-							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)} 
+							assets={sidechainAssets}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+							activeCoinTypeTab={activeCoinTypeTab}
+							activePaymentTypeTab={activePaymentTypeTab}
 						/>
 						<Tokens
 							tokens={tokens}
@@ -177,6 +189,8 @@ Wallet.propTypes = {
 	amount: PropTypes.object.isRequired,
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
+	echoAssets: PropTypes.object,
+	sidechainAssets: PropTypes.object,
 	currency: PropTypes.object,
 	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
@@ -222,6 +236,8 @@ Wallet.propTypes = {
 Wallet.defaultProps = {
 	tokens: null,
 	assets: null,
+	echoAssets: null,
+	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
 };

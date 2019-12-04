@@ -167,3 +167,8 @@ export const REGISTRATION = {
 	BATCH: 1e3,
 	TIMEOUT: 0,
 };
+
+export const SIDECHAIN_ASSETS_SYMBOLS = {
+	1: 'eBTC',
+	2: 'eETH',
+};
