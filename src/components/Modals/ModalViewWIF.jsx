@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
 import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
-import inputActionBtn from '../../components/InputActionBtn';
+import ActionBtn from '../../components/ActionBtn';
 
 class ModalViewWIF extends React.Component {
 
@@ -47,7 +47,10 @@ class ModalViewWIF extends React.Component {
 								name="public-key"
 								value={keys.publicKey}
 							/>
-							<inputActionBtn copy={keys.publicKey} />
+							<ActionBtn
+								icon="icon-copy"
+								copy={keys.publicKey}
+							/>
 						</div>
 					</Form.Field>
 
@@ -61,7 +64,10 @@ class ModalViewWIF extends React.Component {
 								name="wif"
 								value={keys.wif}
 							/>
-							<inputActionBtn copy={keys.wif} />
+							<ActionBtn
+								icon="icon-copy"
+								copy={keys.wif}
+							/>
 						</div>
 						<span className="warning-message">
 							* Warning: Anyone who has this key can steal all your Echo

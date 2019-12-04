@@ -9,7 +9,7 @@ import QrCode from '../QrCode';
 import ModalCreateBtcAddress from '../Modals/ModalCreateBtcAddress';
 
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
-import InputActionBtn from '../InputActionBtn';
+import ActionBtn from '../ActionBtn';
 
 class Bitcoin extends React.Component {
 
@@ -56,7 +56,10 @@ class Bitcoin extends React.Component {
 							name="public-key"
 							value={address}
 						/>
-						<InputActionBtn copy={address} />
+						<ActionBtn
+							icon="icon-copy"
+							copy={address}
+						/>
 					</div>
 				</Form.Field>
 

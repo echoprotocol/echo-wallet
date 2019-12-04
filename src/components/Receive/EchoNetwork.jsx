@@ -13,7 +13,6 @@ import Avatar from '../Avatar';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
 import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
-import ActionBtn from '../ActionBtn';
 import DropdownActionBtn from '../DropdownActionBtn';
 
 
@@ -180,13 +179,10 @@ class EchoNetwork extends React.Component {
 						<div className="address">{address}</div>
 						<DropdownActionBtn
 							icon="icon-icopy-tiny"
-							action={(e) => {
-								console.log('here', e);
-
-								e.stopPropagation();
-							}}
+							show={this.state.open}
 							size="mini"
 							copy={address}
+							action={(e) => e.stopPropagation()}
 						/>
 					</div>
 					<div className="name">{name}</div>

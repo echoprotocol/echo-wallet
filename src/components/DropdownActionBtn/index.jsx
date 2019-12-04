@@ -1,7 +1,11 @@
 import React from 'react';
-import { Popup, Button } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CSSTransition } from 'react-transition-group';
+import classnames from 'classnames';
+
+import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
 class DropdownActionBtn extends React.Component {
 
@@ -9,42 +13,63 @@ class DropdownActionBtn extends React.Component {
 		super(props);
 		this.state = {
 			copied: false,
+			copiedAnimation: false,
 		};
 	}
 
 	onCopy() {
-		this.setState({ copied: true });
+		this.setState({ copied: true, copiedAnimation: true });
 
 		setTimeout(() => {
-			this.setState({ copied: false });
-		}, 400000);
+			this.setState({ copiedAnimation: false });
+		}, CSS_TRANSITION_SPEED);
 	}
 
-	action(e) {
 
+	action(e) {
 		this.onCopy();
 		this.props.action(e);
 	}
 
 	render() {
-		const { copy } = this.props;
-		const { copied } = this.state;
+		const {
+			copy, show, size,
+			icon, text,
+		} = this.props;
+		const { copied, copiedAnimation } = this.state;
 
 		return (
 			<Popup
-				open={copied}
+				open={copied && show}
 				className="copied-tooltip"
 				trigger={
 					<CopyToClipboard onCopy={() => this.onCopy()} text={copy}>
-						<Button
-							size="mini"
+						<button
 							onClick={(e) => this.action(e)}
-							className="action-btn flat"
-							icon="icon-copy"
-						/>
+							className={classnames(
+								'action-btn',
+								{ flat: !text },
+								size,
+							)}
+						>
+							{icon && <span className={classnames('icon', icon)} />}
+						</button>
 					</CopyToClipboard>
 				}
-				content={<span className="copy-label">koko</span>}
+				content={
+					<CSSTransition
+						in={copiedAnimation}
+						timeout={CSS_TRANSITION_SPEED}
+						classNames="animate-copy-label"
+						onExited={() => this.setState({ copied: false })}
+						unmountOnExit
+						appear
+					>
+						<span className="copy-label-wrap">
+							<span className="copy-label-content">Сopied</span>
+						</span>
+					</CSSTransition>
+				}
 			/>
 
 		);
@@ -53,13 +78,20 @@ class DropdownActionBtn extends React.Component {
 }
 
 DropdownActionBtn.propTypes = {
+	show: PropTypes.bool.isRequired,
 	action: PropTypes.func,
 	copy: PropTypes.string,
+	icon: PropTypes.string,
+	text: PropTypes.string,
+	size: PropTypes.string,
 };
 
 DropdownActionBtn.defaultProps = {
 	action: () => {},
 	copy: '',
+	icon: '',
+	text: '',
+	size: '',
 };
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
-import InputActionBtn from '../../components/InputActionBtn';
+import ActionBtn from '../../components/ActionBtn';
 
 class FormComponent extends React.Component {
 
@@ -41,7 +41,7 @@ class FormComponent extends React.Component {
 						<label htmlFor="generatedWIF">Generated WIF</label>
 						<button onClick={() => this.onToogleWifType()} className="link-btn">Or use your own WIF or Public Key</button>
 					</div>
-					<div className="ui action input">
+					<div className="action input">
 						<input
 							name="generatedWIF"
 							className="ui input"
@@ -49,7 +49,10 @@ class FormComponent extends React.Component {
 							value={generatedWIF.value}
 							readOnly
 						/>
-						<InputActionBtn copy={generatedWIF.value} />
+						<ActionBtn
+							icon="icon-copy"
+							copy={generatedWIF.value}
+						/>
 					</div>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>

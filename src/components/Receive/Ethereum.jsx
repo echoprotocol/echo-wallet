@@ -8,7 +8,7 @@ import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
 import TransactionScenario from '../../containers/TransactionScenario';
-import InputActionBtn from '../InputActionBtn';
+import ActionBtn from '../ActionBtn';
 
 
 class Ethereum extends React.Component {
@@ -50,7 +50,10 @@ class Ethereum extends React.Component {
 							name="public-key"
 							value={address}
 						/>
-						<InputActionBtn copy={address} />
+						<ActionBtn
+							icon="icon-copy"
+							copy={address}
+						/>
 					</div>
 				</Form.Field>
 				<AmountField

@@ -1,6 +1,6 @@
 .dropdown {
     &.active:not(.empty) {
-        i.icon,
+        // i.icon,
         .dropdown.icon {
 			transform: rotate(180deg);
 			height: 4px;

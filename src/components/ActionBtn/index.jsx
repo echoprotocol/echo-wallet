@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
@@ -21,7 +20,7 @@ class actionBtn extends React.Component {
 
 		setTimeout(() => {
 			this.setState({ copied: false });
-		}, 4000);
+		}, CSS_TRANSITION_SPEED);
 	}
 
 	renderBtn() {
@@ -32,27 +31,32 @@ class actionBtn extends React.Component {
 		} = this.props;
 
 		return (
-			<Button
+			<button
 				onClick={(e) => action(e)}
 				className={classnames(
 					'action-btn',
-					{ flat: icon },
+					{ flat: !text },
 					color,
 					size,
 				)}
 			>
 				{icon && <span className={classnames('icon', icon)} />}
 				{text && <span className="text">{text}</span>}
+
 				<CSSTransition
 					in={copied}
 					timeout={CSS_TRANSITION_SPEED}
-					classNames="copy-label"
+					classNames="animate-copy-label"
 					unmountOnExit
 					appear
 				>
-					<span>copied</span>
+					<span className="copy-label-wrap">
+						<span className="copy-label-content">
+							copied
+						</span>
+					</span>
 				</CSSTransition>
-			</Button>
+			</button>
 		);
 	}
 
@@ -60,7 +64,10 @@ class actionBtn extends React.Component {
 		const { copy } = this.props;
 		return (
 			copy ?
-				<CopyToClipboard onCopy={() => this.onCopy()} text={copy}>
+				<CopyToClipboard
+					onCopy={() => this.onCopy()}
+					text={copy}
+				>
 					{this.renderBtn()}
 				</CopyToClipboard>
 				: this.renderBtn()
