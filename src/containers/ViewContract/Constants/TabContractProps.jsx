@@ -108,6 +108,7 @@ class TabContractProps extends React.Component {
 							/>
 						);
 					}) : ''}
+
 				</div>
 			</div>
 		);

@@ -4,6 +4,7 @@ import { Button, Tab } from 'semantic-ui-react';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
+import StableCoins from './StableCoinsComponents';
 
 import Transfer from '../Transfer';
 import Receive from '../Receive';
@@ -114,7 +115,7 @@ class Wallet extends React.Component {
 						<Button
 							basic
 							onClick={() => this.props.openModal(MODAL_TOKENS)}
-							compact
+							size="tiny"
 							content="Watch Tokens"
 							className="main-btn"
 						/>
@@ -134,13 +135,14 @@ class Wallet extends React.Component {
 							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
 						/>
+						<StableCoins />
 						<Tokens
 							tokens={tokens}
+							removeToken={this.props.removeToken}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'tokens');
 								this.props.setContractFees();
 							}}
-							removeToken={this.props.removeToken}
 						/>
 					</div>
 				</div>

@@ -7,49 +7,61 @@
 * {
 	box-sizing: border-box;
 }
+
 html {
 	font-size: 14px;
 }
+
 body {
-	font-family: $font-name;
+	font-family: $font-family;
 	background-color: #fff;
 }
+
 body,ul,li {
     margin:0;
     padding:0;
 }
+
 a {
     text-decoration:none;
 }
+
 button {
 	padding: 0;
 	border: 0;
 	background-color: transparent;
-	cursor: pointer;
+
+	&:not(:disabled) {
+		cursor: pointer;
+	}
 }
+
 li {
     list-style-type:none;
 }
+
 div,span {
     &:focus {
         outline: none;
     }
 }
+
 [type="checkbox"],
 [type="radio"] {
 	box-sizing: border-box;
-  padding: 0;
+  	padding: 0;
 }
+
 button,
 input,
 optgroup,
 select,
 textarea {
   font-family: sans-serif;
-
   font-size: 100%;
   margin: 0;
 }
+
 .app-nav {
     position: absolute;
     z-index: 9999999;
@@ -98,19 +110,23 @@ textarea {
         }
     }
 }
+
 .mobile body{
 	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
+
 .tablet body{
 	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
+
 .ios input,
 .ios textarea{
 	-webkit-appearance: none;
 	border-radius: 0;
 }
+
 .hidden {
     display: none;
 }
@@ -155,7 +171,7 @@ textarea {
 .external-link {
     color: #5267C6;
     font-size: 13px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     height: 14px;
 
@@ -170,23 +186,13 @@ textarea {
         line-height: 0;
     }
 }
+
 .t-center {
 	text-align: center;
 }
+
 // ANIMATIONS
 
-@-webkit-keyframes rotating /* Safari and Chrome */ {
-    from {
-      -webkit-transform: rotate(0deg);
-      -o-transform: rotate(0deg);
-      transform: rotate(0deg);
-    }
-    to {
-      -webkit-transform: rotate(360deg);
-      -o-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
-}
 @keyframes rotating {
     from {
         -ms-transform: rotate(0deg);

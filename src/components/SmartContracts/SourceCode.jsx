@@ -5,6 +5,9 @@ import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/webpack-resolver';
+
+import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
 
 class SourceCode extends React.Component {
 
@@ -12,17 +15,19 @@ class SourceCode extends React.Component {
 		super(props);
 		this.state = {
 			timeout: null,
+			isDropdownUpdward: false,
 		};
 	}
 
 	componentDidMount() {
-		this.props.setDefaultAsset();
-	}
+		this.props.setDefaultAsset(FORM_CREATE_CONTRACT_SOURCE_CODE);
 
-	componentWillUnmount() {
-		this.props.clearForm();
-	}
+		this.setDropdownUpwardState();
 
+		window.onresize = () => {
+			this.setDropdownUpwardState();
+		};
+	}
 
 	onEditorLoad(editor) {
 		editor.setOptions({
@@ -34,7 +39,7 @@ class SourceCode extends React.Component {
 		const { timeout } = this.state;
 		const { form } = this.props;
 
-		this.props.setFormValue('code', value);
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', value);
 
 		if (!value) {
 			this.props.resetCompiler();
@@ -46,7 +51,7 @@ class SourceCode extends React.Component {
 
 		if (value) {
 			setTimeout(() => {
-				this.props.setValue('compileLoading', true);
+				this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 			}, 0);
 		}
 
@@ -54,12 +59,12 @@ class SourceCode extends React.Component {
 			clearTimeout(timeout);
 		}
 
-		this.props.setValue('compileLoading', true);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		this.setState({
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
 				setTimeout(() => {
-					this.props.setValue('compileLoading', false);
+					this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', false);
 				}, 0);
 			}, 600),
 		});
@@ -68,18 +73,18 @@ class SourceCode extends React.Component {
 	onChangeItem(e, value) {
 		const { form } = this.props;
 
-		this.props.setFormValue('name', value);
-		this.props.setFormValue('abi', form.getIn(['contracts', value, 'abi']));
-		this.props.setFormValue('bytecode', form.getIn(['contracts', value, 'bytecode']));
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', value);
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', form.getIn(['contracts', value, 'abi']));
+		this.props.setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', form.getIn(['contracts', value, 'bytecode']));
 	}
 
 	async onChangeCompiler(e) {
 		if (!e.target.textContent) {
 			return;
 		}
-		this.props.setValue('compileLoading', true);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		await this.props.changeContractCompiler(e.target.textContent);
-		this.props.setValue('compileLoading', false);
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', false);
 	}
 
 	getCompilersOptions() {
@@ -104,6 +109,14 @@ class SourceCode extends React.Component {
 		return contractNames.map((c, index) => ({ key: index, text: c, value: c }));
 	}
 
+	setDropdownUpwardState() {
+		const isDropdownUpdward = window.innerHeight < 900;
+
+		this.setState({
+			isDropdownUpdward,
+		});
+	}
+
 	isDisabled() {
 		const { form } = this.props;
 
@@ -116,6 +129,7 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form } = this.props;
+		const { isDropdownUpdward } = this.state;
 		return (
 			<React.Fragment>
 				<div className={classnames(['editor-wrap error-wrap',
@@ -129,6 +143,7 @@ class SourceCode extends React.Component {
 						height="384px"
 						mode="javascript"
 						name="editor"
+						theme="textmate"
 						enableLiveAutocompletion
 						editorProps={{ $blockScrolling: true }}
 						onLoad={(editor) => { this.onEditorLoad(editor); }}
@@ -138,6 +153,9 @@ class SourceCode extends React.Component {
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
+						setOptions={{
+							useWorker: false,
+						}}
 					/>
 					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
 				</div>
@@ -153,6 +171,7 @@ class SourceCode extends React.Component {
 							onChange={(e) => this.onChangeCompiler(e)}
 							noResultsMessage="No results are found"
 							disabled={form.get('loading') || form.get('compileLoading')}
+							upward={isDropdownUpdward}
 						/>
 					</div>
 					<div className="field">
@@ -166,6 +185,7 @@ class SourceCode extends React.Component {
 							selectOnNavigation={false}
 							onChange={(e, { value }) => this.onChangeItem(e, value)}
 							disabled={!form.get('contracts').size || form.get('compileLoading')}
+							upward={isDropdownUpdward}
 						/>
 					</div>
 				</div>
@@ -180,7 +200,6 @@ SourceCode.propTypes = {
 	contractCodeCompile: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	clearForm: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,

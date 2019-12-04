@@ -71,14 +71,12 @@ class EchoNetwork extends React.Component {
 		const receiverValue = this.getReceiver();
 
 		if (!receiverValue) {
-			return { text: '', link: '' };
+			return '';
 		}
-
-		const text = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/qr-code.png`;
 
 		const link = `${BRIDGE_RECEIVE_URL}${receiverValue}/${this.formatCurrencyId()}/${this.formatAmount()}/widget`;
 
-		return { text, link };
+		return link;
 	}
 
 	formatCurrencyId() {
@@ -98,7 +96,7 @@ class EchoNetwork extends React.Component {
 			return null;
 		}
 
-		return new BN(amount.value).times(new BN(10).pow(currency.precision)).toString(10);
+		return new BN(amount.value).toString(10);
 	}
 
 	renderAccountsList() {
@@ -210,7 +208,7 @@ class EchoNetwork extends React.Component {
 		const { receiver, open } = this.state;
 		const receiverValue = this.getReceiver();
 
-		const { text, link } = this.getQrData();
+		const link = this.getQrData();
 
 		return (
 			<div className="payment-wrap">
@@ -255,7 +253,7 @@ class EchoNetwork extends React.Component {
 					receive
 				/>
 				{
-					receiverValue ? <QrCode text={text} link={link} /> : null
+					receiverValue ? <QrCode link={link} /> : null
 				}
 			</div>
 		);
