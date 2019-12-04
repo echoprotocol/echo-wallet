@@ -61,6 +61,11 @@ export const unlockWallet = (account, wif) => {
 	return null;
 };
 
+/**
+ *
+ * @param echoInstance
+ * @returns {Promise<null|*>}
+ */
 const isRegistrar = async (echoInstance) => {
 	try {
 		return await echoInstance.api.getRegistrar();
@@ -69,6 +74,11 @@ const isRegistrar = async (echoInstance) => {
 	}
 };
 
+/**
+ *
+ * @param echoInstance
+ * @returns {Promise<string|null>}
+ */
 export const nodeRegisterValidate = async (echoInstance) => {
 	if (!echoInstance.isConnected) {
 		return 'Node is not connected';
