@@ -21,6 +21,9 @@ class Wallet extends React.Component {
 			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
 		} = this.props;
 
+		const isDisplaySidechainNotification = !!((fee.asset && !!sidechainAssets
+			.find((sa) => sa.symbol === fee.asset.symbol))
+			|| (currency && sidechainAssets.find((sa) => sa.symbol === currency.symbol))) || false;
 		const externalTabs = [
 			{
 				menuItem: <Button
@@ -62,6 +65,7 @@ class Wallet extends React.Component {
 							setFormValue={this.props.setFormValue}
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
+							isDisplaySidechainNotification={isDisplaySidechainNotification}
 						/>
 					</div>),
 			},

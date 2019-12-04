@@ -40,6 +40,13 @@ class Transfer extends React.Component {
 		}
 	}
 
+	async subjectToSendSwitch(subject) {
+		const { amount, fee } = this.props;
+		const isValid = await this.props.subjectToSendSwitch(subject);
+		if (isValid && amount.value && !fee.amount) {
+			this.props.getTransferFee().then((resFee) => resFee && this.props.setValue('fee', resFee));
+		}
+	}
 	render() {
 		const {
 			from, to, currency,
@@ -61,8 +68,8 @@ class Transfer extends React.Component {
 									subject="from"
 									field={from}
 									checkAccount={this.props.checkAccount}
-									setIn={this.props.setIn}
 									setFormValue={this.props.setFormValue}
+									setIn={this.props.setIn}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
@@ -75,10 +82,10 @@ class Transfer extends React.Component {
 									field={to}
 									avatarName={avatarName}
 									autoFocus
-									subjectToSendSwitch={this.props.subjectToSendSwitch}
+									subjectToSendSwitch={(value) => this.subjectToSendSwitch(value)}
 									setTransferFee={this.props.setTransferFee}
-									setIn={this.props.setIn}
 									setFormValue={this.props.setFormValue}
+									setIn={this.props.setIn}
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
@@ -109,6 +116,7 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setTransferFee={this.props.setTransferFee}
+									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
 								/>
 								<div className="form-panel">
 									<Button
@@ -131,6 +139,7 @@ class Transfer extends React.Component {
 
 Transfer.propTypes = {
 	fees: PropTypes.array.isRequired,
+	isDisplaySidechainNotification: PropTypes.bool,
 	from: PropTypes.object.isRequired,
 	to: PropTypes.object.isRequired,
 	avatarName: PropTypes.string.isRequired,
@@ -161,6 +170,7 @@ Transfer.propTypes = {
 
 Transfer.defaultProps = {
 	currency: null,
+	isDisplaySidechainNotification: false,
 };
 
 
