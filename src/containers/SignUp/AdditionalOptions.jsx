@@ -21,14 +21,11 @@ class AdditionalOptions extends React.Component {
 
 		this.state = {
 			active: true,
-			checked: null,
 		};
 	}
 
 	setActive(e) {
-		this.setState({
-			checked: e.target.name,
-		});
+		this.props.setValue('optionType', e.target.name);
 	}
 
 	toggleAcordion() {
@@ -38,14 +35,20 @@ class AdditionalOptions extends React.Component {
 	}
 
 	renderPanel() {
-		const { loading } = this.props;
-		const { checked } = this.state;
+		const { loading, options, setFormValue } = this.props;
+		const checked = options.get('optionType');
 
 		switch (checked) {
 			case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 				return <DefaultSettingsPanel />;
 			case SIGN_UP_OPTIONS_TYPES.PARENT:
-				return <PartnerAccountPanel loading={loading} />;
+				return (
+					<PartnerAccountPanel
+						loading={loading}
+						setFormValue={setFormValue}
+						options={options}
+					/>
+				);
 			case SIGN_UP_OPTIONS_TYPES.IP_URL:
 				return <IpUrlPanel loading={loading} />;
 			default:
@@ -54,7 +57,7 @@ class AdditionalOptions extends React.Component {
 	}
 
 	render() {
-		const { active, checked } = this.state;
+		const { active } = this.state;
 		const { loading, options } = this.props;
 
 		const checked = options.get('optionType');
@@ -115,6 +118,8 @@ class AdditionalOptions extends React.Component {
 AdditionalOptions.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	options: PropTypes.object.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 };
 
 export default AdditionalOptions;

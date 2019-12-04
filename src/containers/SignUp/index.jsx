@@ -93,18 +93,20 @@ class SignUp extends React.Component {
 									accountName={this.props.accountName}
 									generatedWIF={this.props.generatedWIF}
 									confirmWIF={this.props.confirmWIF}
-									setFormValue={this.props.setFormValue}
+									setFormValue={this.props.setFormValue(FORM_SIGN_UP)}
 									clearForm={this.props.clearForm}
 								/>
 
 								<AdditionalOptions
 									loading={loading}
 									options={options}
+									setFormValue={this.props.setFormValue(FORM_SIGN_UP_OPTIONS)}
+									setValue={this.props.setValue(FORM_SIGN_UP_OPTIONS)}
 								/>
 
 								<CheckComponent
 									loading={loading}
-									setValue={this.props.setValue}
+									setValue={this.props.setValue(FORM_SIGN_UP)}
 								/>
 								<div className="form-panel">
 									<span className="sign-nav">
@@ -167,9 +169,8 @@ export default connect(
 	(dispatch) => ({
 		generateWIF: () => dispatch(generateWIF()),
 		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
-		// TODO set form
-		setFormValue: (form, field, value) => dispatch(setFormValue(form, field, value)),
-		setValue: (form, field, value) => dispatch(setValue(form, field, value)),
+		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
+		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_UP)),
 	}),
 )(SignUp);
