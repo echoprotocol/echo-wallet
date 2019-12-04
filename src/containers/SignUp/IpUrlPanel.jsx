@@ -23,7 +23,7 @@ class IpUrlPanel extends React.Component {
 							value={ipOrUrl.value}
 							onChange={(e) => this.props.setFormValue('ipOrUrl', e.target.value)}
 						/>
-						{ ipOrUrl.error && <span className="error-message">ipOrUrl.error</span> }
+						{ ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span> }
 					</Form.Field>
 				</div>
 			</React.Fragment>

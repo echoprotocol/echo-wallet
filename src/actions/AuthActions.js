@@ -1,9 +1,17 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import echo, { PrivateKey, Echo } from 'echojs-lib';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
 
 import { openModal, toggleLoading as toggleModalLoading, setError, closeModal } from './ModalActions';
-import { addAccount, isAccountAdded, initAccount, setGlobalError, saveWifToStorage, updateStorage } from './GlobalActions';
+import {
+	addAccount,
+	isAccountAdded,
+	initAccount,
+	setGlobalError,
+	saveWifToStorage,
+	updateStorage,
+	customNodeConnect,
+} from './GlobalActions';
 
 import {
 	setFormValue,
@@ -11,12 +19,16 @@ import {
 	toggleLoading,
 } from './FormActions';
 
-import { FORM_SIGN_UP, FORM_SIGN_IN } from '../constants/FormConstants';
+import {
+	FORM_SIGN_UP,
+	FORM_SIGN_IN,
+	SIGN_UP_OPTIONS_TYPES,
+	FORM_SIGN_UP_OPTIONS,
+} from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
 import {
 	ECHO_ASSET_ID,
 	RANDOM_SIZE,
-	REGISTER_DEFAULT_SETTINGS, REGISTER_IP_URL, REGISTER_PARTNER_ACCOUNT,
 	USER_STORAGE_SCHEMES,
 } from '../constants/GlobalConstants';
 
@@ -27,6 +39,7 @@ import {
 	validateAccountExist,
 	unlockWallet,
 	getKeyFromWif,
+	nodeRegisterValidate,
 } from '../api/WalletApi';
 import AuthApi from '../api/AuthApi';
 
@@ -45,6 +58,28 @@ export const generateWIF = () => (dispatch) => {
 	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
 };
 
+const customNodeRegisterAccount = (accountName, generatedWIF) => async (dispatch, getState) => {
+	const ipOrUrl = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'urlOrIp']);
+
+	if (ipOrUrl.value) {
+		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Input shouldn\'t be empty'));
+		return null;
+	}
+
+	const tmpEcho = await customNodeConnect(ipOrUrl, ['database', 'registration']);
+
+	const error = await nodeRegisterValidate(tmpEcho);
+
+	if (error) {
+		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', error));
+		return null;
+	}
+
+	const { publicKey } = await AuthApi.registerAccount(tmpEcho.api, accountName, generatedWIF);
+
+	return publicKey;
+};
+
 /**
  * @method createAccount
  * @param {Object} param0
@@ -56,7 +91,7 @@ export const createAccount = ({
 }, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	let confirmWIFError = validateWIF(confirmWIF);
-	const form = getState().form.get(FORM_SIGN_UP);
+	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 
 	if (generatedWIF !== confirmWIF) {
 		confirmWIFError = 'WIFs do not match';
@@ -88,17 +123,23 @@ export const createAccount = ({
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
 		let publicKey = null;
-		switch (form.get('registrationType')) {
-			case REGISTER_DEFAULT_SETTINGS:
-				({ publicKey } = await AuthApi.registerAccount(accountName, generatedWIF));
+		switch (options.get('optionType')) {
+			case SIGN_UP_OPTIONS_TYPES.DEFAULT:
+				({ publicKey } = await AuthApi.registerAccount(echo.api, accountName, generatedWIF));
 				break;
-			case REGISTER_PARTNER_ACCOUNT:
+			case SIGN_UP_OPTIONS_TYPES.PARENT:
 				break;
-			case REGISTER_IP_URL:
+			case SIGN_UP_OPTIONS_TYPES.IP_URL: {
+				publicKey = await dispatch(customNodeRegisterAccount(echo.api, accountName, generatedWIF));
 				break;
+			}
 			default:
 				dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
 				return;
+		}
+
+		if (!publicKey) {
+			return;
 		}
 
 		const userStorage = Services.getUserStorage();

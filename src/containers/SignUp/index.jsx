@@ -14,7 +14,7 @@ import ButtonComponent from './ButtonComponent';
 import AdditionalOptions from './AdditionalOptions';
 
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
-import { FORM_SIGN_UP } from '../../constants/FormConstants';
+import { FORM_SIGN_UP, FORM_SIGN_UP_OPTIONS } from '../../constants/FormConstants';
 
 import { generateWIF, createAccount } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm } from '../../actions/FormActions';
@@ -60,7 +60,7 @@ class SignUp extends React.Component {
 	}
 
 	render() {
-		const {	location, loading, form } = this.props;
+		const {	location, loading, options } = this.props;
 
 		const { isAddAccount } = qs.parse(location.search);
 
@@ -93,20 +93,20 @@ class SignUp extends React.Component {
 									accountName={this.props.accountName}
 									generatedWIF={this.props.generatedWIF}
 									confirmWIF={this.props.confirmWIF}
-									setFormValue={this.props.setFormValue}
+									setFormValue={this.props.setFormValue(FORM_SIGN_UP)}
 									clearForm={this.props.clearForm}
 								/>
 
 								<AdditionalOptions
-									form={form}
 									loading={loading}
-									setValue={this.props.setValue}
-									setFormValue={this.props.setFormValue}
+									options={options}
+									setFormValue={this.props.setFormValue(FORM_SIGN_UP_OPTIONS)}
+									setValue={this.props.setValue(FORM_SIGN_UP_OPTIONS)}
 								/>
 
 								<CheckComponent
 									loading={loading}
-									setValue={this.props.setValue}
+									setValue={this.props.setValue(FORM_SIGN_UP)}
 								/>
 								<div className="form-panel">
 									<span className="sign-nav">
@@ -135,7 +135,6 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-	form: PropTypes.object.isRequired,
 	loading: PropTypes.bool,
 	accepted: PropTypes.bool,
 	isAddAccount: PropTypes.any,
@@ -149,6 +148,7 @@ SignUp.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	options: PropTypes.object.isRequired,
 };
 
 SignUp.defaultProps = {
@@ -159,18 +159,18 @@ SignUp.defaultProps = {
 
 export default connect(
 	(state) => ({
-		form: state.form.get(FORM_SIGN_UP),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 		accepted: state.form.getIn([FORM_SIGN_UP, 'accepted']),
 		accountName: state.form.getIn([FORM_SIGN_UP, 'accountName']),
 		generatedWIF: state.form.getIn([FORM_SIGN_UP, 'generatedWIF']),
 		confirmWIF: state.form.getIn([FORM_SIGN_UP, 'confirmWIF']),
+		options: state.form.get(FORM_SIGN_UP_OPTIONS),
 	}),
 	(dispatch) => ({
 		generateWIF: () => dispatch(generateWIF()),
 		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
-		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_UP, field, value)),
-		setValue: (field, value) => dispatch(setValue(FORM_SIGN_UP, field, value)),
+		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
+		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_UP)),
 	}),
 )(SignUp);
