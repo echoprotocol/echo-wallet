@@ -1,4 +1,4 @@
-import echo, { PrivateKey, Echo } from 'echojs-lib';
+import echo, { PrivateKey } from 'echojs-lib';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
 
@@ -59,14 +59,14 @@ export const generateWIF = () => (dispatch) => {
 };
 
 const customNodeRegisterAccount = (accountName, generatedWIF) => async (dispatch, getState) => {
-	const ipOrUrl = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'urlOrIp']);
+	const ipOrUrl = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'ipOrUrl']);
 
-	if (ipOrUrl.value) {
+	if (!ipOrUrl.value) {
 		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Input shouldn\'t be empty'));
 		return null;
 	}
 
-	const tmpEcho = await customNodeConnect(ipOrUrl, ['database', 'registration']);
+	const tmpEcho = await customNodeConnect(ipOrUrl.value, ['database', 'registration']);
 
 	const error = await nodeRegisterValidate(tmpEcho);
 
@@ -130,7 +130,7 @@ export const createAccount = ({
 			case SIGN_UP_OPTIONS_TYPES.PARENT:
 				break;
 			case SIGN_UP_OPTIONS_TYPES.IP_URL: {
-				publicKey = await dispatch(customNodeRegisterAccount(echo.api, accountName, generatedWIF));
+				publicKey = await dispatch(customNodeRegisterAccount(accountName, generatedWIF));
 				break;
 			}
 			default:

@@ -99,11 +99,5 @@ export const nodeRegisterValidate = async (echoInstance) => {
 		return 'Node does not have registrar';
 	}
 
-	const committee = await echoInstance.api.getCommitteeMemberByAccount(accountId);
-
-	if (!committee) {
-		return 'Registrar account is not a committee member';
-	}
-
 	return null;
 };
