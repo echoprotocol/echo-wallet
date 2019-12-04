@@ -419,7 +419,8 @@ export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
 				return resultKeys;
 			}
 
-			const filteredKeys = Object.keys(acc.addedKeys).filter((key) => !resultKeys.includes(key));
+			const filteredKeys = Object.keys(acc.addedKeys).filter((key) =>
+				!resultKeys.includes(key) && acc.addedKeys[key].active);
 			return resultKeys.concat(filteredKeys);
 		}, []);
 

@@ -101,7 +101,7 @@ export const createAccount = ({
 		dispatch(addAccount(
 			accountName,
 			network.name,
-			[[pubKey, { active: true, echoRand: true }]],
+			[[pubKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));

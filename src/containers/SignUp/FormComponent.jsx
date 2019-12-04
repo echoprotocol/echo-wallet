@@ -48,7 +48,7 @@ class FormComponent extends React.Component {
 	}
 	validatePubAfterChange(e) {
 		const { value } = e.target;
-		if (value) {
+		if (value && this.props.userWIF.value) {
 			try {
 				const publicKeyFromWif = PrivateKey.fromWif(this.props.userWIF.value)
 					.toPublicKey().toString();
