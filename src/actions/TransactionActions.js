@@ -16,6 +16,7 @@ import {
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
 } from '../constants/FormConstants';
+
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
@@ -1503,90 +1504,62 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 
 
 /**
- * @method callContractViaId
- * @returns {function(dispatch, getState): Promise<Boolean>}
+ * @method createAccount
+ * @param {Object} param0
+ * @param {Boolean} isAddAccount
+ * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const registreAccount = () => async (dispatch, getState) => {
-	const activeUserId = getState().global.getIn(['activeUser', 'id']);
-	const activeUserName = getState().global.getIn(['activeUser', 'name']);
-	if (!activeUserId || !activeUserName) {
-		return false;
-	}
+export const createAccount = (fromAccount, { name, publicKey }) => async (dispatch) => {
+	try {
 
-	const form = getState().form.get( ).toJS();
+		const sender = await echo.api.getAccountByName(fromAccount);
 
-	const { bytecode, id } = form;
-	const { fee } = form;
-
-	if (id.error || bytecode.error) {
-		return false;
-	}
-
-	const bytecodeValue = trim0xFomCode(bytecode.value);
-	const bytecodeError = validateCode(bytecode.value, true);
-
-	if (bytecodeError) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'bytecode', bytecodeError));
-		return false;
-	}
-
-	const isValidContractId = validators.isContractId(id.value);
-
-	if (!isValidContractId) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'id', 'Invalid contract ID'));
-		return false;
-	}
-	dispatch(resetTransaction());
-
-	const { amount, currency } = form;
-
-	// if method payable check amount and currency
-
-	if (!currency || !fee || !fee.value) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', 'Fee can\'t be calculated'));
-		return false;
-	}
-
-	if (!amount) {
-		amount.value = 0;
-	}
-
-	const assets = getState().balance.get('assets').toArray();
-
-	const feeError = validateFee(amount, currency, fee, assets);
-	if (feeError) {
-		dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', feeError));
-		return false;
-	}
-
-	let amountValue = 0;
-
-	if (amount.value) {
-		const amountError = validateAmount(amount.value, currency);
-		if (amountError) {
-			dispatch(setFormError(FORM_CALL_CONTRACT_VIA_ID, 'amount', amountError));
-			return false;
+		if (!sender) {
+			return null;
 		}
-		amountValue = amount.value * (10 ** currency.precision);
+
+		const { id: senderId } = sender;
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			registrar: senderId,
+			echorand_key: publicKey,
+			active: {
+				weight_threshold: 1,
+				account_auths: [],
+				key_auths: [publicKey],
+			},
+			name,
+			options: {
+				delegating_account: senderId,
+				delegate_share: 2000,
+			},
+		};
+
+		const operation = 'account_create';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: sender.name,
+			account: name,
+			key: publicKey,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
 	}
-
-	const options = {
-		fee: { asset_id: fee.asset.id, amount: fee.value },
-		registrar: activeUserId,
-		value: { amount: amountValue, asset_id: '1.3.0' },
-		code: bytecodeValue,
-		callee: id.value,
-	};
-
-	const showOptions = {
-		from: activeUserName,
-		fee: `${fee.value / (10 ** fee.asset.precision)} ${fee.asset.symbol}`,
-		code: bytecodeValue,
-	};
-
-	showOptions.value = `${amount.value} ${currency.symbol}`;
-
-	dispatch(TransactionReducer.actions.setOperation({ operation: 'contract_call', options, showOptions }));
-
-	return true;
 };

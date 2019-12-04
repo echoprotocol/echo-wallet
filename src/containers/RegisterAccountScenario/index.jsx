@@ -1,18 +1,30 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import BN from 'bignumber.js';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
+import ModalConfirmEditingOfPermissions from '../../components/Modals/ModalConfirmEditingOfPermissions';
 
-import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE } from '../../constants/ModalConstants';
+import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE, MODAL_CONFIRM_EDITING_OF_PERMISSIONS } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
+
 import { unlock } from '../../actions/AuthActions';
 import { sendTransaction, resetTransaction } from '../../actions/TransactionActions';
 
-class TransactionScenario extends React.Component {
+import { FORM_PERMISSION_KEY, FORM_PERMISSION_TRESHOLD_SUM_ERROR, REPEATING_KEYS_ERROR } from '../../constants/FormConstants';
+import { setInFormError, setValue } from '../../actions/FormActions';
+import { setValue as setTableValue } from '../../actions/TableActions';
+import { PERMISSION_TABLE } from '../../constants/TableConstants';
+import GlobalReducer from '../../reducers/GlobalReducer';
+
+
+class RegisterAccountScenario extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -51,7 +63,7 @@ class TransactionScenario extends React.Component {
 		}
 	}
 
-	unlock() {
+	async unlock() {
 		const { password } = this.state;
 
 		this.props.unlock(password, () => {
@@ -60,10 +72,17 @@ class TransactionScenario extends React.Component {
 		});
 	}
 
+	open(modal) {
+		this.props.openModal(modal);
+	}
+
 	send() {
+		const { onUnlock } = this.props;
 		const { password } = this.state;
 
-		this.props.sendTransaction(password, this.props.onSuccess);
+		this.props.sendTransaction(password, () => onUnlock(password));
+		// this.props.setPermissionLoading(true);
+		// this.props.setTableValue('loading', true);
 		this.clear();
 	}
 
@@ -82,11 +101,21 @@ class TransactionScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
+			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmEditingOfPermissions,
 		} = this.props;
-
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
+				<ModalConfirmEditingOfPermissions
+					show={modalConfirmEditingOfPermissions.get('show')}
+					confirm={() => {
+						this.open(MODAL_UNLOCK);
+						this.props.closeModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
+					}}
+					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
+					warningMessage={this.state.warningMessage}
+					echoRandMessage={this.state.echoRandMessage}
+				/>
 				<ModalUnlock
 					show={modalUnlock.get('show')}
 					disabled={modalUnlock.get('loading')}
@@ -111,10 +140,9 @@ class TransactionScenario extends React.Component {
 
 }
 
-TransactionScenario.propTypes = {
+RegisterAccountScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	onUnlock: PropTypes.func,
-	onSuccess: PropTypes.func,
 	children: PropTypes.func.isRequired,
 
 	operation: PropTypes.string,
@@ -127,21 +155,23 @@ TransactionScenario.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	sendTransaction: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	form: PropTypes.object.isRequired,
 };
 
-TransactionScenario.defaultProps = {
+RegisterAccountScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
 	onUnlock: () => {},
-	onSuccess: () => {},
 };
 
 export default connect(
 	(state) => ({
 		operation: state.transaction.get('operation'),
 		showOptions: state.transaction.get('showOptions'),
+		form: state.form.get(FORM_PERMISSION_KEY),
 		[MODAL_UNLOCK]: state.modal.get(MODAL_UNLOCK),
 		[MODAL_DETAILS]: state.modal.get(MODAL_DETAILS),
+		[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: state.modal.get(MODAL_CONFIRM_EDITING_OF_PERMISSIONS),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -151,4 +181,4 @@ export default connect(
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
-)(TransactionScenario);
+)(RegisterAccountScenario);
