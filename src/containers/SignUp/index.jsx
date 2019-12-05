@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
-import { PrivateKey } from 'echojs-lib';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 
