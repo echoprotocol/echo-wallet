@@ -271,15 +271,16 @@ export const saveWIFAfterCreateAccount = ({
  * @method createAccount
  * @param {Object} param0
  * @param {Boolean} isAddAccount
+ * @param isCustomWIF
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
-}, isAddAccount) => async (dispatch) => {
+}, isAddAccount, isCustomWIF) => async (dispatch) => {
 	try {
 		const result = await dispatch(validateCreateAccount(
 			{ accountName, generatedWIF, confirmWIF },
-			isAddAccount,
+			isAddAccount, isCustomWIF,
 		));
 
 		if (!result) {

@@ -310,7 +310,8 @@ export default connect(
 	}),
 	(dispatch) => ({
 		generateWIF: () => dispatch(generateWIF()),
-		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
+		createAccount: (value, isAdd, isCustomWIF) =>
+			dispatch(createAccount(value, isAdd, isCustomWIF)),
 		createAccountTransaction: (sender, value) => dispatch(createAccountTransaction(sender, value)),
 		validateCreateAccount: (value, isAdd) => dispatch(validateCreateAccount(value, isAdd)),
 		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
