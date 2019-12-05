@@ -23,7 +23,7 @@
 		z-index: 11;
 		will-change: transform, opacity;
 	}
-	
+
 	.menu > * {
 		white-space: nowrap;
 	}
@@ -346,6 +346,7 @@
 	left: auto;
 	right: 0;
 }
+
 .dropdown > .left.menu .menu,
 .dropdown .menu .left.menu {
 	left: auto;
@@ -358,17 +359,12 @@
 	top: auto;
 	bottom: 100%;
 	box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.08);
-	border-radius: 4px 4px 0 0;
 }
 
 /* Upward Sub Menu */
 .dropdown .upward.menu {
   top: auto;
   bottom: 0;
-}
-
-.upward.dropdown.button.active {
-  border-radius: 4px 4px 0 0;
 }
 
 .upward.selection .menu {
