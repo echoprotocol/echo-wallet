@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo, { constants } from 'echojs-lib';
+import echo, { constants, Echo } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -182,6 +182,16 @@ export const disconnection = () => async (dispatch) => {
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
+};
+
+export const customNodeConnect = async (url, apis) => {
+	try {
+		const tmpEcho = new Echo();
+		await tmpEcho.connect(url, { apis });
+		return tmpEcho;
+	} catch (e) {
+		return 'Node is not connected';
+	}
 };
 
 /**
