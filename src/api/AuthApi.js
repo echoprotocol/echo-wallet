@@ -40,6 +40,20 @@ class AuthApi {
 		return { privateKey, publicKey };
 	}
 
+	/**
+	 * @method registerAccountViaPublicKey
+	 *
+	 * @param {String} accountName
+	 * @param {String} publicKey
+	 */
+	static async registerAccountViaPublicKey(accountName, publicKey) {
+		try {
+			await echo.api.registerAccount(accountName, publicKey, publicKey);
+		} catch (error) {
+			throw new Error(error.message);
+		}
+	}
+
 }
 
 export default AuthApi;

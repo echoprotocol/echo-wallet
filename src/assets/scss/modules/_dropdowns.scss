@@ -1,6 +1,6 @@
 .dropdown {
     &.active:not(.empty) {
-        i.icon,
+        // i.icon,
         .dropdown.icon {
 			transform: rotate(180deg);
 			height: 4px;
@@ -390,13 +390,19 @@
 						color: rgba(#fff, .8);
 					}
 				}
+
 				&.user-item {
 					.name {
 						color: #fff;
 					}
 				}
-				.dropdown-copy-btn {
+
+				.action-btn {
 					color: #fff;
+					&:active,
+					&:hover {
+						background-color: transparent;
+					}
 				}
 			}
 		}

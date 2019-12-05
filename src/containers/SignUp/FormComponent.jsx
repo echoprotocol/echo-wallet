@@ -1,22 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { PrivateKey } from 'echojs-lib';
+import ActionBtn from '../../components/ActionBtn';
 
 class FormComponent extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			userWIF: false,
-		};
-	}
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
 	onToogleWifType() {
-		this.setState({ userWIF: !this.state.userWIF });
+		this.props.setValue('isCustomWIF', !this.props.isCustomWIF);
 	}
 
 	onChange(e, lowerCase) {
@@ -32,6 +27,44 @@ class FormComponent extends React.Component {
 		}
 	}
 
+	onCustomChange(e) {
+		const field = e.target.name;
+		const { value } = e.target;
+		this.props.setFormValue(field, value);
+	}
+	validateWIFAfterChange(e) {
+		const { value } = e.target;
+		if (value) {
+			try {
+				const publicKey = PrivateKey.fromWif(value).toPublicKey().toString();
+				this.props.setFormValue('userPublicKey', publicKey);
+				if (this.props.userWIF.error) {
+					this.props.setFormError(this.props.userWIF, null);
+				}
+			} catch (err) {
+				this.props.setFormError('userWIF', 'Invalid WIF');
+			}
+		}
+	}
+	validatePubAfterChange(e) {
+		const { value } = e.target;
+		if (value && this.props.userWIF.value) {
+			try {
+				const publicKeyFromWif = PrivateKey.fromWif(this.props.userWIF.value)
+					.toPublicKey().toString();
+				if (publicKeyFromWif === value) {
+					if (this.props.userPublicKey.error) {
+						this.props.setFormError(this.props.userPublicKey, null);
+					}
+				} else {
+					this.props.setFormError('userPublicKey', 'Invalide private key for current public key');
+				}
+			} catch (err) {
+				this.props.setFormError('userPublicKey', 'You have an invalid private key');
+			}
+		}
+	}
+
 	renderGeneratedWIF() {
 		const { generatedWIF, confirmWIF, loading } = this.props;
 		return (
@@ -41,7 +74,7 @@ class FormComponent extends React.Component {
 						<label htmlFor="generatedWIF">Generated WIF</label>
 						<button onClick={() => this.onToogleWifType()} className="link-btn">Or use your own WIF or Public Key</button>
 					</div>
-					<div className="ui action input">
+					<div className="action input">
 						<input
 							name="generatedWIF"
 							className="ui input"
@@ -49,9 +82,10 @@ class FormComponent extends React.Component {
 							value={generatedWIF.value}
 							readOnly
 						/>
-						<CopyToClipboard text={generatedWIF.value}>
-							<Button icon="copy" className="input-copy-btn" />
-						</CopyToClipboard>
+						<ActionBtn
+							icon="icon-copy"
+							copy={generatedWIF.value}
+						/>
 					</div>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>
@@ -70,10 +104,10 @@ class FormComponent extends React.Component {
 	}
 
 	renderUserWIF() {
-		const { loading } = this.props;
+		const { loading, userPublicKey, userWIF } = this.props;
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: false })}>
+				<Form.Field className={classnames('error-wrap', { error: userWIF.error })}>
 					<h3 className="field-title">You can use your own WIF or Public Key:</h3>
 					<div className="label-wrap">
 						<label htmlFor="userWIF">WIF (optional)</label>
@@ -83,25 +117,34 @@ class FormComponent extends React.Component {
 						name="userWIF"
 						placeholder="WIF"
 						disabled={loading}
+						value={userWIF.value}
+						onChange={(e) => {
+							this.onCustomChange(e);
+							this.validateWIFAfterChange(e);
+						}}
 					/>
-					{false && <span className="error-message">some error</span>}
+					<span className="error-message">{userWIF.error}</span>
 				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: false })}>
+				<Form.Field className={classnames('error-wrap', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">PUBLIC KEY</label>
 					<input
-						name="publicKey"
+						name="userPublicKey"
 						placeholder="Enter public key"
 						disabled={loading}
+						value={userPublicKey.value}
+						onChange={(e) => {
+							this.onCustomChange(e);
+							this.validatePubAfterChange(e);
+						}}
 					/>
-					{false && <span className="error-message">some error</span>}
+					<span className="error-message">{userPublicKey.error}</span>
 				</Form.Field>
 			</React.Fragment>
 		);
 	}
 
 	render() {
-		const { accountName, loading } = this.props;
-		const { userWIF } = this.state;
+		const { accountName, loading, isCustomWIF } = this.props;
 		return (
 			<div className="field-wrap">
 				<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
@@ -114,9 +157,9 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					{ accountName.error && <span className="error-message">{accountName.error}</span> }
+					<span className="error-message">{accountName.error}</span>
 				</Form.Field>
-				{ userWIF ? this.renderUserWIF() : this.renderGeneratedWIF() }
+				{ isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF() }
 
 			</div>
 		);
@@ -128,9 +171,18 @@ FormComponent.propTypes = {
 	accountName: PropTypes.object.isRequired,
 	generatedWIF: PropTypes.object.isRequired,
 	confirmWIF: PropTypes.object.isRequired,
+	isCustomWIF: PropTypes.bool,
+	userPublicKey: PropTypes.object.isRequired,
+	userWIF: PropTypes.object.isRequired,
+	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setFormError: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool.isRequired,
+};
+
+FormComponent.defaultProps = {
+	isCustomWIF: false,
 };
 
 export default FormComponent;
