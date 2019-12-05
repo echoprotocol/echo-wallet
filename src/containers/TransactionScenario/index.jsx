@@ -63,7 +63,7 @@ class TransactionScenario extends React.Component {
 	send() {
 		const { password } = this.state;
 
-		this.props.sendTransaction(password);
+		this.props.sendTransaction(password, this.props.onSuccess);
 		this.clear();
 	}
 
@@ -114,6 +114,7 @@ class TransactionScenario extends React.Component {
 TransactionScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	onUnlock: PropTypes.func,
+	onSuccess: PropTypes.func,
 	children: PropTypes.func.isRequired,
 
 	operation: PropTypes.string,
@@ -132,6 +133,7 @@ TransactionScenario.defaultProps = {
 	operation: null,
 	showOptions: {},
 	onUnlock: () => {},
+	onSuccess: () => {},
 };
 
 export default connect(
@@ -146,7 +148,7 @@ export default connect(
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
-		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
+		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(TransactionScenario);

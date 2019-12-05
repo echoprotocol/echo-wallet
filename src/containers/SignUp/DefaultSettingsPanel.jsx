@@ -1,17 +1,15 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import { Button } from 'semantic-ui-react';
 
 class DefaultSettingsPanel extends React.Component {
 
 	render() {
 
 		return (
-			<React.Fragment>
-				<p className="register-info">
+			<div className="register-info">
+				<p>
 					Your account will be registered by public default registrar.
 				</p>
-			</React.Fragment>
+			</div>
 		);
 	}
 
