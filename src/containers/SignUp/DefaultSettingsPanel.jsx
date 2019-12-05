@@ -9,7 +9,7 @@ class DefaultSettingsPanel extends React.Component {
 		return (
 			<React.Fragment>
 				<p className="register-info">
-					Registrate a new account on your own. Choose account below
+					Your account will be registered by public default registrar.
 				</p>
 			</React.Fragment>
 		);

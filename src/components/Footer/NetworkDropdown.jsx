@@ -111,7 +111,7 @@ class Network extends React.PureComponent {
 					warning,
 				})}
 				trigger={
-					<div className="network-dropdown-trigger">
+					<div className="dropdown-trigger">
 						<span className="description">
 							{ disconnected ? 'Disconnected:' : 'Network:' }
 						</span>
@@ -122,7 +122,7 @@ class Network extends React.PureComponent {
                             Block
 							<span>{this.props.lastBlock}</span>
 						</span>
-						<span className="icon-dropdown_arrow" />
+						<span className="icon dropdown" />
 					</div>
 				}
 			/>

@@ -273,7 +273,7 @@ class AmountField extends React.Component {
 										role="button"
 										onClick={(e) => this.setAvailableAmount(currency, e)}
 										onKeyPress={(e) => this.setAvailableAmount(currency, e)}
-										tabIndex="0"
+										tabIndex={!isAvailableBalance || !fee.value ? '-1' : '0'}
 									>
 										{
 											this.getAvailableBalance(currency)
@@ -335,8 +335,6 @@ class AmountField extends React.Component {
 							onClose={() => this.clearSearchText()}
 						/> : this.renderCurrencyLabel(currency)
 					}
-
-
 				</Input>
 				{
 					!amount.error || !fee.error ?

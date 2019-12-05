@@ -131,10 +131,6 @@
 						font-size: 12px;
 					}
                 }
-
-                .sort-icon {
-                    margin-left: 4px;
-                }
             }
         }
 
@@ -211,8 +207,8 @@
 
         &_edit {
             line-height: 1.21428571em;
-            padding: 0.67857143em 1em;
-            font-size: 1em;
+            padding: 0.67857143em 14px;
+            font-size: 14px;
             background-color: #fff;
             border: 1px solid #dddddd;
             color: rgba(0, 0, 0, 0.87);
@@ -256,10 +252,6 @@
 
         .form-info + .field-wrap {
             margin-top: 11px;
-        }
-
-        .main-form {
-            width: 95%;
         }
 
         .field>label {
