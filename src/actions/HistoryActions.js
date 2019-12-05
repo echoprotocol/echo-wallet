@@ -33,6 +33,27 @@ export const viewTransaction = (transaction) => async (dispatch) => {
 	history.push(VIEW_TRANSACTION_PATH);
 };
 
+const additionalFields = async (options, operation) => {
+	if (!(options.subject && options.subject[0] &&
+		!validators.isObjectId(_.get(operation, options.subject[0])))) {
+		return null;
+	}
+	if (!validators.isObject(_.get(operation, options.value))) {
+		return null;
+	}
+	const assetId = _.get(operation, options.value).asset_id;
+
+	if (!validators.isObjectId(assetId)) {
+		return null;
+	}
+	const { precision, symbol } = await echo.api.getObject(assetId);
+	return {
+		..._.get(operation, options.value),
+		precision,
+		symbol,
+	};
+};
+
 /**
  * @method formatOperation
  *
@@ -104,15 +125,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				...result.value,
 				amount: _.get(operation, options.value),
 			};
-			if (options.subject && options.subject[0] &&
-				!validators.isObjectId(_.get(operation, options.subject[0]))) {
-				const assetId = _.get(operation, options.value).asset_id;
-				const { precision, symbol } = await echo.api.getObject(assetId);
+			const addFields = await additionalFields(options, operation);
+			if (addFields) {
 				result.value = {
 					...result.value,
-					..._.get(operation, options.value),
-					precision,
-					symbol,
+					...addFields,
 				};
 			}
 		}
