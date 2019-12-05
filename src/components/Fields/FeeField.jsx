@@ -145,13 +145,12 @@ class FeeComponent extends React.Component {
 						empty: options.length < 2,
 					})}
 					selection
-					placeholder="FEE"
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={(options.length < 2) ? [] : options}
 					text={isFeeAssetEqualsAddressPrefix ? `${text}\u00a0${fee.asset.symbol}` : text}
 					icon={this.getDropdownIcon(options, isFeeAssetEqualsAddressPrefix, isFeeExist, fee)}
 					selectOnBlur={false}
-					noResultsMessage={options.length < 2 ? 'No results are found' : null}
+					noResultsMessage={null}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
 				<span className="error-message">{this.props.feeError}</span>
