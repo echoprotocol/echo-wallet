@@ -13,7 +13,7 @@ class PartnerAccountPanel extends React.Component {
 		};
 	}
 
-	onChangeAccount(accountId) {
+	onChangeAccount() {
 		// const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		// this.props.setFormValue('registrarAccount', accountName);
 		// this.setState({ searchText: accountName.text });
@@ -27,7 +27,7 @@ class PartnerAccountPanel extends React.Component {
 
 	renderList() {
 		const { accounts } = this.props;
-		return accounts.map(({ name, id }) => {
+		return accounts.map(({ name }) => {
 			const content = (
 				<button
 					key={name}
@@ -90,8 +90,6 @@ class PartnerAccountPanel extends React.Component {
 
 PartnerAccountPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
-	setFormValue: PropTypes.func.isRequired,
-	options: PropTypes.object.isRequired,
 	accounts: PropTypes.array,
 };
 

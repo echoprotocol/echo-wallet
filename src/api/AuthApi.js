@@ -1,4 +1,4 @@
-import { PrivateKey, ED25519 } from 'echojs-lib';
+import { ED25519 } from 'echojs-lib';
 import bs58 from 'bs58';
 
 
