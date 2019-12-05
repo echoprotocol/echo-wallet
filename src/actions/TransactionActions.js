@@ -26,7 +26,10 @@ import {
 	CONTRACT_ID_PREFIX,
 	ECHO_ASSET_ID,
 	FREEZE_BALANCE_PARAMS,
-	APPLY_CHANGES_TIMEOUT, ECHO_ASSET_PRECISION, ADDRESS_PREFIX,
+	APPLY_CHANGES_TIMEOUT,
+	ECHO_ASSET_PRECISION,
+	ADDRESS_PREFIX,
+	REGISTRATION,
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
@@ -1537,14 +1540,14 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 			registrar: senderId,
 			echorand_key: publicKey,
 			active: {
-				weight_threshold: 1,
+				weight_threshold: REGISTRATION.DEFAULT_THRESHOLD,
 				account_auths: [],
-				key_auths: [[publicKey, 1]],
+				key_auths: [[publicKey, REGISTRATION.DEFAULT_KEY_WEIGHT]],
 			},
 			name,
 			options: {
 				delegating_account: senderId,
-				delegate_share: 2000,
+				delegate_share: REGISTRATION.DEFAULT_DELEGATE_SHARE,
 			},
 		};
 
