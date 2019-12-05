@@ -2,15 +2,6 @@
     display: flex;
     justify-content: space-between;
 
-    .main-form {
-        padding: 70px 0 30px;
-        max-width: 400px;
-
-        .field-wrap {
-            min-width: 100%;
-        }
-    }
-
     .form .field:nth-child(2) {
         margin-bottom: 18px;
     }
@@ -69,7 +60,10 @@
             margin-top: 15px;
             margin-left: 2px;
         }
-    }
+	}
+	.main-form {
+		max-width: 400px;
+	}
 }
 
 
@@ -249,4 +243,5 @@
 		}
 	}
 }
+
 

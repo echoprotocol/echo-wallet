@@ -70,8 +70,7 @@
 .dimmed.dimmable > .animating.dimmer,
 .dimmed.dimmable > .visible.dimmer,
 .active.dimmer {
-  display: -webkit-box;
-  display: -ms-flexbox;
+//   display: -webkit-box;
   opacity: 1;
 }
 
