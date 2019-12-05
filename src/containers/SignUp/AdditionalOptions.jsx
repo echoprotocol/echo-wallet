@@ -43,7 +43,13 @@ class AdditionalOptions extends React.Component {
 					/>
 				);
 			case SIGN_UP_OPTIONS_TYPES.IP_URL:
-				return <IpUrlPanel loading={loading} />;
+				return (
+					<IpUrlPanel
+						ipOrUrl={signupOptionsForm.get('ipOrUrl')}
+						loading={loading}
+						setFormValue={setFormValue}
+					/>
+				);
 			default:
 				return <DefaultSettingsPanel />;
 		}

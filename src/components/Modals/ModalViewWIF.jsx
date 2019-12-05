@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
 import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
+import ActionBtn from '../../components/ActionBtn';
 
 class ModalViewWIF extends React.Component {
 
@@ -47,9 +47,10 @@ class ModalViewWIF extends React.Component {
 								name="public-key"
 								value={keys.publicKey}
 							/>
-							<CopyToClipboard text={keys.publicKey}>
-								<Button icon="copy" className="input-copy-btn" />
-							</CopyToClipboard>
+							<ActionBtn
+								icon="icon-copy"
+								copy={keys.publicKey}
+							/>
 						</div>
 					</Form.Field>
 
@@ -63,9 +64,10 @@ class ModalViewWIF extends React.Component {
 								name="wif"
 								value={keys.wif}
 							/>
-							<CopyToClipboard text={keys.wif}>
-								<Button icon="copy" className="input-copy-btn" />
-							</CopyToClipboard>
+							<ActionBtn
+								icon="icon-copy"
+								copy={keys.wif}
+							/>
 						</div>
 						<span className="warning-message">
 							* Warning: Anyone who has this key can steal all your Echo
