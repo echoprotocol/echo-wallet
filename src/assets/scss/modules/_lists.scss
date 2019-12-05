@@ -22,7 +22,10 @@
 			span {
 				margin-left: 4px;
 				color: $main-color;
-				cursor: pointer;
+
+				&:not(.disabled) {
+					cursor: pointer;
+				}
 
 				&.disabled {
 					color: $gray;

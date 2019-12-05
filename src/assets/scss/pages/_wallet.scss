@@ -36,6 +36,22 @@
 		width: 100%;
 	}
 
+	.balance-wrap + div {
+		width: 100%;
+		max-height: calc(100vh - 122px);
+		overflow: overlay;
+		background-color: #FCFCFC;
+		
+	
+		@include max-vw(1000) {
+			padding: 0 20px;
+		}
+	
+		.send-wrap {
+			border-top: 2px solid rgba(#DEDEDE, 0.2);
+		}
+	}
+
 }
 
 .send-wrap {
@@ -234,18 +250,3 @@
 	}
 }
 
-.balance-wrap + div {
-    width: 100%;
-	max-height: calc(100vh - 122px);
-    overflow: overlay;
-    background-color: #FCFCFC;
-	
-
-    @include max-vw(1000) {
-		padding: 0 20px;
-	}
-
-	.send-wrap {
-		border-top: 2px solid rgba(#DEDEDE, 0.2);
-	}
-}

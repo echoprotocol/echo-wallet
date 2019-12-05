@@ -18,8 +18,15 @@
 @import "accordion";
 @import "toggle";
 @import "editor";
-@import "network-dropdown";
 @import "table-key-value";
+
+@import "dropdowns/network-dropdown";
+@import "dropdowns/assets-tokens-dropdown";
+@import "dropdowns/contract-type-dropdown";
+@import "dropdowns/fee-dropdown";
+
+
+
 
 
 

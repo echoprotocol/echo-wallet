@@ -1,0 +1,30 @@
+.contract-type-dropdown {
+	display: flex;
+	align-items: center;
+	padding: 5px 14px;
+	transition: border-color .3s;
+	align-self: flex-start;
+	height: 30px;
+	min-width: 100px;
+	max-width: 100px;
+
+	.menu {
+
+		.item {
+			margin: auto;
+			padding-bottom: 7px;
+			padding-top: 7px;
+
+			&.disabled {
+				&.header {
+					opacity: 1;
+				}
+			}
+		}
+		& > .item:not(.disabled):hover {
+			background: rgba(0, 0, 0, 0.05);
+			color: rgba(0, 0, 0, 0.95);
+			z-index: 13;
+		}
+	}
+}
