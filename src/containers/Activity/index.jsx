@@ -78,6 +78,7 @@ class Activity extends React.Component {
 	renderTable() {
 		const { history } = this.props;
 
+		console.log(history)
 		return history ? (
 			<Table className="table-activity">
 				<Table.Header>
