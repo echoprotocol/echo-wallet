@@ -15,6 +15,7 @@ import {
 	FORM_CREATE_CONTRACT_OPTIONS,
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
+	FORM_SIGN_UP,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
@@ -1058,11 +1059,13 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			}
 
 			clearTimeout(permissionTableLoaderTimer);
+			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
+			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			clearTimeout(permissionTableLoaderTimer);
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
@@ -1072,6 +1075,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		});
 	} catch (error) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
@@ -1517,10 +1521,8 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
  */
 export const createAccountTransaction = (fromAccount, { name, publicKey }) => async (dispatch) => {
 	try {
-		console.log('createAccountTransactions', name)
-
 		const sender = await echo.api.getAccountByName(fromAccount);
-		console.log('sender obj', sender);
+
 		if (!sender) {
 			return null;
 		}
@@ -1528,7 +1530,6 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 		const { id: senderId } = sender;
 
 		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
-		console.log('1111111111111')
 		const options = {
 			fee: {
 				asset_id: feeAsset.id,
@@ -1546,14 +1547,11 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 				delegate_share: 2000,
 			},
 		};
-		console.log('222222222')
 
 		const operation = 'account_create';
 		options.fee.amount = await getOperationFee(operation, options);
-		console.log('33333333333')
 
 		const precision = new BN(10).pow(feeAsset.precision);
-		console.log('44444444444444')
 
 		const showOptions = {
 			from: sender.name,
@@ -1561,7 +1559,6 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 			key: publicKey,
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 		};
-		console.log('5555555555555555')
 
 		dispatch(TransactionReducer.actions.setOperation({
 			operation,
@@ -1571,8 +1568,7 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 
 		return true;
 	} catch (error) {
-		console.log(error)
-
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		return null;
 	}
 };

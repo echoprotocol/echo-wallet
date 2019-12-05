@@ -60,6 +60,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 	}),
 	[FORM_SIGN_UP_OPTIONS]: Map({
+		isMoreOptionsActive: false,
 		optionType: SIGN_UP_OPTIONS_TYPES.DEFAULT,
 		registrarAccount: {
 			value: '',

@@ -14,22 +14,14 @@ import IpUrlPanel from './IpUrlPanel';
 
 class AdditionalOptions extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			active: true,
-		};
-	}
-
 	setActive(e) {
 		this.props.setValue('optionType', e.target.name);
 	}
 
 	toggleAcordion() {
-		this.setState({
-			active: !this.state.active,
-		});
+		const isMoreOptionsActive = this.props.signupOptionsForm.get('isMoreOptionsActive');
+
+		this.props.setValue('isMoreOptionsActive', !isMoreOptionsActive);
 	}
 
 	renderPanel() {
@@ -58,10 +50,10 @@ class AdditionalOptions extends React.Component {
 	}
 
 	render() {
-		const { active } = this.state;
 		const { loading, signupOptionsForm } = this.props;
 
 		const checked = signupOptionsForm.get('optionType');
+		const isMoreOptionsActive = signupOptionsForm.get('isMoreOptionsActive');
 
 		return (
 			<div className="accordion fluid">
@@ -73,7 +65,7 @@ class AdditionalOptions extends React.Component {
 					content="More Options"
 				/>
 				<CSSTransition
-					in={active}
+					in={isMoreOptionsActive}
 					timeout={CSS_TRANSITION_SPEED}
 					classNames="accordion-transition"
 					unmountOnExit

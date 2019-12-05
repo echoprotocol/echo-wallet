@@ -7,11 +7,11 @@ class DefaultSettingsPanel extends React.Component {
 	render() {
 
 		return (
-			<React.Fragment>
-				<p className="register-info">
+			<div className="register-info">
+				<p>
 					Registrate a new account on your own. Choose account below
 				</p>
-			</React.Fragment>
+			</div>
 		);
 	}
 

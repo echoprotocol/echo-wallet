@@ -78,9 +78,11 @@ class PartnerAccountPanel extends React.Component {
 
 		return accounts.length ? (
 			<React.Fragment>
-				<p className="register-info">
-					Registrate a new account on your own. Choose account below
-				</p>
+				<div className="register-info">
+					<p>
+						Registrate a new account on your own. Choose account below
+					</p>
+				</div>
 				<div className={classnames('field-wrap error-wrap', { error: registrarAccount.error })}>
 					<div className="field ">
 						<label htmlFor="parentAccount" className="field-label">Parent account name</label>
@@ -106,15 +108,13 @@ class PartnerAccountPanel extends React.Component {
 				</div>
 			</React.Fragment>
 		) : (
-			<React.Fragment>
-				<p className="register-info">
-					You don&apos;t have an account.
+			<div className="register-info">
+				<p>You don&apos;t have an account.</p>
+				<p>
+				You can generate a new account on your own.
+				Log in your another wallet account beforehand to do so
 				</p>
-				<p className="register-info">
-					You can generate a new account on your own.
-					Log in your another wallet account beforehand to do so
-				</p>
-			</React.Fragment>
+			</div>
 		);
 	}
 

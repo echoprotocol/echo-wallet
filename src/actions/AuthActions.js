@@ -9,6 +9,7 @@ import {
 	setFormValue,
 	setFormError,
 	toggleLoading,
+	setValue,
 } from './FormActions';
 
 import { FORM_SIGN_UP, FORM_SIGN_IN, SIGN_UP_OPTIONS_TYPES, FORM_SIGN_UP_OPTIONS } from '../constants/FormConstants';
@@ -42,16 +43,13 @@ export const generateWIF = () => (dispatch) => {
 
 const customParentAccount = () => async (dispatch, getState) => {
 	try {
-		console.log('customParentAccount')
 		const networkName = getState().global.getIn(['network', 'name']);
 
 		const account = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'registrarAccount']);
-		console.log('1111111')
 		if (!account.value) {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Input shouldn\'t be empty'));
 			return null;
 		}
-		console.log('22222222')
 
 		const sender = await echo.api.getAccountByName(account.value);
 
@@ -59,7 +57,6 @@ const customParentAccount = () => async (dispatch, getState) => {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account not exist'));
 			return null;
 		}
-		console.log('3333333333')
 
 		let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -68,7 +65,6 @@ const customParentAccount = () => async (dispatch, getState) => {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account isn\'t login'));
 			return null;
 		}
-		console.log('44444444444')
 
 		return true;
 	} catch (_) {
@@ -119,12 +115,14 @@ export const validateCreateAccount = ({
 
 	let publicKey = null;
 	let valid = true;
+	let invalidForm = null;
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 			({ publicKey } = await AuthApi.registerAccount(accountName, generatedWIF));
 			break;
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			valid = await dispatch(customParentAccount());
+			invalidForm = valid ? null : SIGN_UP_OPTIONS_TYPES.PARENT;
 			({ publicKey } = AuthApi.getPublicKeyFromWif(generatedWIF));
 			break;
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
@@ -132,16 +130,20 @@ export const validateCreateAccount = ({
 		}
 		default:
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
-			return null;
+			valid = null;
 	}
 
-	console.log('publicKey || valid', publicKey, valid);
-	if (!publicKey || !valid) {
-		dispatch(toggleLoading(FORM_SIGN_UP, false));
-		return null;
+	if (publicKey && valid) {
+		return publicKey;
 	}
 
-	return publicKey;
+	dispatch(toggleLoading(FORM_SIGN_UP, false));
+
+	if (!valid && !!invalidForm) {
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'isMoreOptionsActive', true));
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'optionType', invalidForm));
+	}
+	return null;
 };
 
 /**
@@ -152,18 +154,22 @@ export const validateCreateAccount = ({
 export const saveWIFAfterCreateAccount = ({
 	accountName, generatedWIF, publicKey, password,
 }) => async (dispatch, getState) => {
-	const network = getState().global.getIn(['network']).toJS();
+	try {
+		const network = getState().global.getIn(['network']).toJS();
 
-	const userStorage = Services.getUserStorage();
-	const account = await echo.api.getAccountByName(accountName);
-	await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
-	await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
+		const userStorage = Services.getUserStorage();
+		const account = await echo.api.getAccountByName(accountName);
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
+		await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
 
-	dispatch(addAccount(
-		accountName,
-		network.name,
-		[[publicKey, { active: true, echoRand: true }]],
-	));
+		dispatch(addAccount(
+			accountName,
+			network.name,
+			[[publicKey, { active: true, echoRand: true }]],
+		));
+	} catch (_) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
+	}
 };
 
 /**
