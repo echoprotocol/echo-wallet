@@ -42,12 +42,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
 	const block = await echo.api.getBlock(data.block_num);
-	// console.log('block', block)
-	// console.log('op', Object.values(operations))
-	// console.log('type', type)
-	// console.log('opFind', Object.values(operations).find((i) => i.value === type))
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
-	// console.log('name')
 
 	const result = {
 		id: data.id,
@@ -96,9 +91,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.value) {
 		if (validators.isUInt64(operation.amount)) {
-
 			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
-
 			result.value = {
 				precision: coreAsset.precision,
 				asset_id: coreAsset.id,
@@ -136,6 +129,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		if (!echo.isConnected) {
 			return result;
 		}
+
 		const contractResult = await echo.api.getContractResult(resultId);
 
 		const [contractResultType, contractResultData] = contractResult;
