@@ -90,6 +90,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	if (options.value) {
+		console.log('opt1')
+		console.log(operation)
+		console.log(options)
+		console.log(options.value)
+		console.log(_.get(operation, options.value))
 		if (validators.isUInt64(operation.amount)) {
 			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
 			result.value = {
@@ -99,15 +104,24 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				amount: _.get(operation, options.value),
 			};
 		} else {
+			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
+			const assetInfo = {};
+			if (coreAsset && coreAsset.precision && coreAsset.symbol) {
+				assetInfo.precision = coreAsset.precision;
+				assetInfo.symbol = coreAsset.symbol;
+			}
+			console.log('core', coreAsset)
 			result.value = options.subject && options.subject[0] &&
 				!validators.isObjectId(_.get(operation, options.subject[0])) ? {
 					...result.value,
 					..._.get(operation, options.value),
+					...assetInfo,
 				} : {
 					...result.value,
 					amount: _.get(operation, options.value),
 				};
 		}
+		console.log(result);
 	}
 
 	if (options.asset) {
