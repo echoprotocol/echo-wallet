@@ -13,6 +13,12 @@ class PartnerAccountPanel extends React.Component {
 		};
 	}
 
+	onChangeAccount() {
+		// const accountName = this.state.options.find(({ value }) => value === accountId) || {};
+		// this.props.setFormValue('registrarAccount', accountName);
+		// this.setState({ searchText: accountName.text });
+	}
+
 	accountSearchHandler(data) {
 		this.setState({
 			searchText: data.searchQuery,
@@ -20,13 +26,13 @@ class PartnerAccountPanel extends React.Component {
 	}
 
 	renderList() {
-		const accounts = [{ name: 'ac1' }, { name: 'ac2' }, { name: 'ac3' }];
+		const { accounts } = this.props;
 		return accounts.map(({ name }) => {
 			const content = (
 				<button
 					key={name}
 					className="user-item"
-					onClick={() => this.onChangeAccount(name)}
+					// onClick={() => this.onChangeAccount(name)}
 				>
 					<div className="avatar-wrap">
 						<Avatar accountName={name} />
@@ -72,6 +78,7 @@ class PartnerAccountPanel extends React.Component {
 							placeholder="Parent account"
 							minCharacters={0}
 							noResultsMessage="No results are found"
+							onChange={(e, { value }) => this.onChangeAccount(value)}
 						/>
 					</div>
 				</div>
@@ -83,6 +90,11 @@ class PartnerAccountPanel extends React.Component {
 
 PartnerAccountPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
+	accounts: PropTypes.array,
+};
+
+PartnerAccountPanel.defaultProps = {
+	accounts: [{ name: 'ac1' }, { name: 'ac2' }, { name: 'ac3' }],
 };
 
 export default PartnerAccountPanel;

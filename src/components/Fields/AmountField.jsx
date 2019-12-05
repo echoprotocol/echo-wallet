@@ -273,7 +273,7 @@ class AmountField extends React.Component {
 										role="button"
 										onClick={(e) => this.setAvailableAmount(currency, e)}
 										onKeyPress={(e) => this.setAvailableAmount(currency, e)}
-										tabIndex="0"
+										tabIndex={!isAvailableBalance || !fee.value ? '-1' : '0'}
 									>
 										{
 											this.getAvailableBalance(currency)
@@ -316,6 +316,7 @@ class AmountField extends React.Component {
 						amount.error || fee.error ?
 							<span className="error-message">{amount.error || fee.error}</span> : null
 					}
+
 					{
 						assetDropdown ? <Dropdown
 							search
@@ -334,9 +335,14 @@ class AmountField extends React.Component {
 							onClose={() => this.clearSearchText()}
 						/> : this.renderCurrencyLabel(currency)
 					}
-
-
 				</Input>
+				{
+					!amount.error || !fee.error ?
+						<span className="warning-message">
+							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+						</span> : null
+				}
+
 
 			</Form.Field>
 		);

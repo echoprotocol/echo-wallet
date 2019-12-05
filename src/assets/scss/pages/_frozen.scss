@@ -21,7 +21,8 @@
     &-value {
         align-self: flex-end;
         color: #4d66cd;
-        font-family: proximaNovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
         font-size: 15px;
         text-transform: uppercase;
         text-align: left;
@@ -34,7 +35,8 @@
 
     &-term {
         align-self: flex-end;
-        font-family: proximaNovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
         font-size: 15px;
         text-align: right;
         padding-right: 8px;
@@ -123,7 +125,11 @@
                     &:hover {
                         opacity: 0.8;
                     }
-                }
+				}
+				
+				& + .main-btn {
+					margin: 0 0 0 auto;
+				}
             }
         }
     }

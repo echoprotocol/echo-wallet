@@ -1,4 +1,5 @@
 import echo, { PrivateKey } from 'echojs-lib';
+import { CUSTOM_NODE_BLOCKS_MAX_DIFF } from '../constants/GlobalConstants';
 
 /**
  * @method getKeyFromWif
@@ -55,6 +56,57 @@ export const unlockWallet = (account, wif) => {
 
 	if (account.active.key_auths.find(([key]) => key === publicKey)) {
 		return { privateKey, publicKey };
+	}
+
+	return null;
+};
+
+/**
+ *
+ * @param echoInstance
+ * @returns {Promise<null|*>}
+ */
+const isRegistrar = async (echoInstance) => {
+	try {
+		return await echoInstance.api.getRegistrar();
+	} catch (e) {
+		return null;
+	}
+};
+
+/**
+ *
+ * @param echoInstance
+ * @returns {Promise<string|null>}
+ */
+export const nodeRegisterValidate = async (echoInstance) => {
+	if (!echoInstance.isConnected) {
+		return 'Node is not connected';
+	}
+
+	if (!echoInstance.api) {
+		return 'Api is not available';
+	}
+
+	const customNodeChainId = await echoInstance.api.getChainId();
+	const baseNodeChainId = await echo.api.getChainId();
+
+	if (customNodeChainId !== baseNodeChainId) {
+		return 'Chain id is not correct. Check your network node';
+	}
+
+	const customNodeDynamic = await echoInstance.api.getDynamicGlobalProperties();
+	const baseNodeDynamic = await echo.api.getDynamicGlobalProperties();
+	const diff = baseNodeDynamic.head_block_number - customNodeDynamic.head_block_number;
+
+	if (diff > CUSTOM_NODE_BLOCKS_MAX_DIFF) {
+		return 'Node is not synchronized';
+	}
+
+	const accountId = await isRegistrar(echoInstance);
+
+	if (!accountId) {
+		return 'Node does not have registrar';
 	}
 
 	return null;

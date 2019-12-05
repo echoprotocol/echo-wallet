@@ -11,10 +11,11 @@ $stripe-width: 10px;
 	}
 }
 
-@mixin btn() {
+@mixin btn($fz: 12px) {
 	position: relative;
-	font-size: 12px;
-	font-family: proximanovaSemibold;
+	font-size: $fz;
+	font-family: proxima;
+	font-weight: 600;
 	text-transform: uppercase;
 	border-radius: 4px;
 	height: 38px;
@@ -22,15 +23,17 @@ $stripe-width: 10px;
 	transition: background-color $speed, color $speed, border-color $speed;
 	min-width: 120px;
 	padding: 0 15px;
-	cursor: pointer;
 	white-space: nowrap;
 }
+
 .link-btn {
 	font-size: 12px;
-	font-family: proximanovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	transition: color $speed;
 	color: $main-color;
 	position: relative;
+
 	&:before {
 		content: "";
 		display: block;
@@ -46,10 +49,12 @@ $stripe-width: 10px;
 	&:active {
 		color: rgba($main-color, .7);
 	}
+
 	&:focus:not(:active):before {
-		@include on-focus(4px);
+		@include on-focus(2px);
 	}
 }
+
 .load {
 	position: relative;
 
@@ -106,9 +111,15 @@ $stripe-width: 10px;
 
 	// SIZE
 
-	&.compact {
+	&.tiny {
 		line-height: 20px;
 		height: 20px;
+		min-width: auto;
+	}
+
+	&.small {
+		line-height: 25px;
+		height: 24px;
 		min-width: auto;
 	}
 
@@ -185,7 +196,7 @@ $stripe-width: 10px;
 
 	// SIZE
 
-	&.compact {
+	&.tiny {
 		line-height: 20px;
 		height: 20px;
 		min-width: auto;
@@ -236,7 +247,7 @@ $stripe-width: 10px;
 		color: rgba($main-color, .5);
 	}
 
-	&.compact {
+	&.tiny {
 		line-height: 20px;
 		height: 20px;
 		min-width: auto;
@@ -280,7 +291,7 @@ $stripe-width: 10px;
 	}
 
 	// SIZE
-	&.compact {
+	&.tiny {
 		line-height: 20px;
 		height: 20px;
 		min-width: auto;
@@ -350,7 +361,7 @@ $stripe-width: 10px;
 	}
 
 	// SIZE
-	&.compact {
+	&.tiny {
 		line-height: 20px;
 		height: 20px;
 		min-width: auto;
@@ -364,17 +375,10 @@ $stripe-width: 10px;
 }
 
 
-.input-copy-btn {
-	border: 1px solid $main-color;
-	background-color: $main-color;
-	color: #fff;
 
-	&:not(:active) {
-		&:focus {
-			@include on-focus(4px);
-		}
-	}
-}
+
+
+
 
 .dropdown-copy-btn {
 	color: $main-color;
@@ -410,7 +414,8 @@ $stripe-width: 10px;
 	}
 
 	.text {
-		font-family: proximanovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
 		font-size: 14px;
 		margin-left: 6px;
 	}
@@ -463,41 +468,6 @@ $stripe-width: 10px;
 	}
 
 }
-
-
-
-.remove-text-btn {
-	font-size: 14px;
-	background-color: transparent;
-	color: rgba(#5C637D, .7);
-	transition: background-color $speed, color $speed,border-color $speed;
-	padding: 6px 10px;
-	text-transform: capitalize;
-	border-radius: 4px;
-
-	.icon-remove {
-		color: inherit;
-		margin-right: 5px;
-	}
-
-	&:hover {
-		background-color: rgba(#D7D9DB, .5);
-		color: #5C637D;
-	}
-
-	&:not(:active) {
-		&:focus {
-			@include on-focus(4px);
-		}
-	}
-
-	&:active {
-		background-color: #D7D9DB;
-		color: rgba(#5C637D, .5);
-	}
-}
-
-
 
 .btn-list {
 	padding: 20px;
