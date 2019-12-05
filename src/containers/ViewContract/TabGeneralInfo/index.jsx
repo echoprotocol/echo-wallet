@@ -7,6 +7,13 @@ import ActionBtn from '../../../components/ActionBtn';
 
 class TabGeneralInfo extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			open: false,
+		};
+	}
+
 	renderList() {
 		const options = [
 			{
@@ -39,13 +46,12 @@ class TabGeneralInfo extends React.Component {
 			balance,
 			coin,
 		}) => {
-			const content =
-				(
-					<div className="balance-wrap">
-						<div className="balance">{balance}</div>
-						<div className="coin">{coin}</div>
-					</div>
-				);
+			const content = (
+				<div className="balance-wrap">
+					<div className="balance">{balance}</div>
+					<div className="coin">{coin}</div>
+				</div>
+			);
 
 			return ({
 				value: coin,
@@ -55,7 +61,17 @@ class TabGeneralInfo extends React.Component {
 		});
 	}
 
+	renderDropdownTrigger() {
+		return (
+			<div className="dropdown-trigger">
+				<div className="content">Other Assets Balance</div>
+				<span className="icon dropdown" />
+			</div>
+		);
+	}
+
 	render() {
+		const { open } = this.state;
 		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
 		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
 
@@ -74,11 +90,15 @@ class TabGeneralInfo extends React.Component {
 									</div>
 
 									<Dropdown
-										trigger={<div className="dropdown-trigger">Other Assets Balance</div>}
-										disabled={(this.renderList().length < 2) ? '-1' : '0'}
+										open={open}
+										onFocus={() => { this.setState({ open: true }); }}
+										onBlur={() => { this.setState({ open: false }); }}
+										icon={false}
+										disabled={this.renderList().length < 2}
 										className={classnames('assets-balance-dropdown', { empty: this.renderList().length < 2 })}
-										options={(this.renderList().length < 2) ? [] : this.renderList()}
+										options={this.renderList().length < 2 ? [] : this.renderList()}
 										selectOnBlur={false}
+										trigger={this.renderDropdownTrigger()}
 									/>
 								</div>
 							</td>

@@ -1,0 +1,33 @@
+.assets-balance-dropdown {
+	.dropdown-trigger {
+		color: #4D66CD;
+		padding: 0 12px;
+		font-weight: 600;
+		font-size: 14px;
+	}
+	.icon.dropdown {
+		right: 0;
+	}
+	.menu {
+		left: 0;
+		right: 0;
+		top: 100%;
+		max-height: 120px;
+		overflow: auto;
+
+		.item {
+			padding: 5px 14px;
+			transition: background-color $speed;
+			cursor: default;
+
+			&:nth-child(1) {
+				padding: 11px 14px 5px;
+			}
+
+			&.selected {
+				background-color: transparent;
+			}
+
+		}
+	}
+}

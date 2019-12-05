@@ -1,6 +1,5 @@
 .dropdown {
     &.active:not(.empty) {
-        // i.icon,
         .dropdown.icon {
 			transform: rotate(180deg);
 			height: 4px;
@@ -18,21 +17,24 @@
             display: none !important;
         }
 	}
+}
 
-	.dropdown.icon {
-		position: absolute;
-		right: 12px;
-		top: 0px;
-		bottom: 4px;
-		margin: auto;
-		color: $bd-gray;
-		z-index: 3;
-		height: 0;
-		line-height: 0;
-		will-change: transform;
-		border: 0;
-		max-width: 8px;
-	}
+.dropdown.icon {
+	position: absolute;
+	right: 12px;
+	top: 0px;
+	bottom: 0;
+	margin: auto;
+	color: $bd-gray;
+	z-index: 3;
+	height: 0;
+	font-size: 4px;
+	line-height: 0;
+	will-change: transform;
+	border: 0;
+	max-width: 8px;
+	display: flex;
+    align-items: center;
 }
 
 .visible.transition {
@@ -45,7 +47,7 @@
 }
 
 .dropdown > .selected.item {
-	background: rgba(0, 0, 0, 0.05);
+	background-color: rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, 0.95);
 }
 

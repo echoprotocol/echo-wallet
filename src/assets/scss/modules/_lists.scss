@@ -41,20 +41,16 @@
 
 
 
+.watchlist-line {
+	display: block;
 
-
-
+	&:not(:last-child) {
+		margin: 0 0 12px 0;
+	}
+}
 
 .watchlist {
     margin: 30px 0;
-
-    &-line {
-        display: block;
-
-        &:not(:last-child) {
-            margin: 0 0 12px 0;
-        }
-    }
 
     .error-wrap {
         margin-bottom: 0;
@@ -67,19 +63,20 @@
             &:not(:last-child) {
                 margin: 0 0 12px 0;
             }
-        }
+		}
+		
         &.inner {
             margin-left: 29px;
-        }
+		}
+		
         &--h {
             display: flex;
         }
 
         span {
             &:not(.error-message) {
-                font-size: 1em;
+                font-size: 14px;
                 color: $black;
-                letter-spacing: -.2px;
             }
 
             &:not(:last-child) {
@@ -105,7 +102,7 @@
             }
         }
 
-        .input.mini.ui {
+        .input.mini {
             input {
                 height: 26px;
                 font-size: 14px;
@@ -113,7 +110,7 @@
             }
         }
 
-        .button.mini.ui {
+        .button.mini {
             height: 26px;
             font-size: 12px;
             line-height: 10px;
@@ -137,28 +134,21 @@
         &:last-child {
             display: flex;
             flex-wrap: wrap;
-            align-items: flex-end;
-
-            .item {
+			align-items: flex-end;
+			
+			.contract-type-dropdown + .item {
                 &.air {
                     margin-right: 10px;
                 }
-
-                &.value {
-                    line-height: 25px;
-                }
-
-                margin-top: 10px;
-                min-height: 26px;
+                min-height: 21px;
             }
+            
         }
 
-        .ui.dropdown {
-            &.contract-type-dropdown {
-                align-self: auto;
-                margin-right: 10px;
-            }
-        }
+		.contract-type-dropdown {
+			align-self: auto;
+			margin-right: 10px;
+		}
 
     }
 
@@ -179,7 +169,7 @@
     }
 
     .row-title {
-        &+.input.mini.ui {
+        & + .input.mini {
             margin-left: 10px;
         }
     }
@@ -266,7 +256,7 @@
 
     .bytecode {
         &-wrap {
-            &+.ui.button {
+            & + .button {
                 margin: 15px 0 0 auto;
                 display: flex;
                 align-items: center;
@@ -294,7 +284,7 @@
 
     }
 
-    .ui.button {
+    .button {
         margin-top: -6px;
         padding: 5px 8px 4px;
     }

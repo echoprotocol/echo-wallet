@@ -22,7 +22,7 @@
 			}
 		}
 		& > .item:not(.disabled):hover {
-			background: rgba(0, 0, 0, 0.05);
+			background-color: rgba(0, 0, 0, 0.05);
 			color: rgba(0, 0, 0, 0.95);
 			z-index: 13;
 		}
