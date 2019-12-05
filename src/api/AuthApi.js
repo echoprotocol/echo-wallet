@@ -19,36 +19,16 @@ class AuthApi {
 	}
 
 	/**
-     *  @method registerAccount
-     *
-     * 	@param  {String} accountName
-     * 	@param  {String} wif
-     * 	@param  {Object} echoInstanceApi
-     *
-     *  @return {Object}
-     */
-	static async registerAccount(echoInstanceApi, accountName, wif) {
-		const privateKey = PrivateKey.fromWif(wif);
-		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
-
-		try {
-			await echoInstanceApi.registerAccount(accountName, publicKey, publicKey);
-		} catch (error) {
-			throw new Error(error.message);
-		}
-
-		return { privateKey, publicKey };
-	}
-
-	/**
-	 * @method registerAccountViaPublicKey
+	 * @method registerAccount
 	 *
+	 * @param {Object} echoInstanceApi
 	 * @param {String} accountName
 	 * @param {String} publicKey
 	 */
-	static async registerAccountViaPublicKey(accountName, publicKey) {
+	static async registerAccount(echoInstanceApi, accountName, publicKey) {
 		try {
-			await echo.api.registerAccount(accountName, publicKey, publicKey);
+			await echoInstanceApi.registerAccount(accountName, publicKey, publicKey);
+			return true;
 		} catch (error) {
 			throw new Error(error.message);
 		}

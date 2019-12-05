@@ -60,18 +60,17 @@ export const generateWIF = () => (dispatch) => {
 
 /**
  *
- * @param accountName
- * @param generatedWIF
- * @param isWif
+ * @param {String} accountName
+ * @param {String} pubKey
  * @returns {Function}
  */
-const customNodeRegisterAccount = (accountName, generatedWIF, isWif) =>
+const customNodeRegisterAccount = (accountName, pubKey) =>
 	async (dispatch, getState) => {
 		const ipOrUrl = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'ipOrUrl']);
 
 		if (!ipOrUrl.value) {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Input shouldn\'t be empty'));
-			return null;
+			return false;
 		}
 
 		const tmpEcho = await customNodeConnect(ipOrUrl.value, ['database', 'registration']);
@@ -80,18 +79,38 @@ const customNodeRegisterAccount = (accountName, generatedWIF, isWif) =>
 
 		if (error) {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', error));
-			return null;
+			return false;
 		}
 
-		if (isWif) {
-			return (await AuthApi.registerAccount(tmpEcho.api, accountName, generatedWIF)).publicKey;
-		}
-		// const publicKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']).value;
-		// await AuthApi.registerAccountViaPublicKey(accountName, pubKey);
-		// return publicKey;
+		await AuthApi.registerAccount(tmpEcho.api, accountName, pubKey);
+
 		await tmpEcho.disconnect();
-		return null;
+
+		return true;
 	};
+
+/**
+ *
+ * @param {String} accountName
+ * @param {String} pubKey
+ * @returns {Function}
+ */
+export const registerAccountByType = (accountName, pubKey) => async (dispatch, getState) => {
+	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
+	switch (options.get('optionType')) {
+		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
+			return AuthApi.registerAccount(echo.api, accountName, pubKey);
+		case SIGN_UP_OPTIONS_TYPES.PARENT:
+			break;
+		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
+			return dispatch(customNodeRegisterAccount(accountName, pubKey));
+		}
+		default:
+			dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
+			return false;
+	}
+	return true;
+};
 
 /**
  * @method createAccount
@@ -103,7 +122,6 @@ export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount, isCustomSettings) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
-	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
 		return;
@@ -159,35 +177,22 @@ export const createAccount = ({
 
 		dispatch(toggleLoading(FORM_SIGN_UP, true));
 
-		// let publicKey = null;
-		// switch (options.get('optionType')) {
-		// 	case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-		// 		({ publicKey } = await AuthApi.registerAccount(echo.api, accountName, generatedWIF));
-		// 		break;
-		// 	case SIGN_UP_OPTIONS_TYPES.PARENT:
-		// 		break;
-		// 	case SIGN_UP_OPTIONS_TYPES.IP_URL: {
-		// 		publicKey = await dispatch(customNodeRegisterAccount(accountName, generatedWIF, true));
-		// 		break;
-		// 	}
-		// 	default:
-		// 		dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
-		// 		return;
-		// }
-		//
-		// if (!publicKey) {
-		// 	return;
-		// }
-
 		let pubKey;
+		let isSuccess = false;
 		const isWithoutWIFRegistr = isCustomSettings && !getState().form.getIn([FORM_SIGN_UP, 'userWIF']).value;
 		const userStorage = Services.getUserStorage();
 		if (isWithoutWIFRegistr) {
 			pubKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']).value;
-			await AuthApi.registerAccountViaPublicKey(accountName, pubKey);
+			isSuccess = await dispatch(registerAccountByType(accountName, pubKey));
 		} else {
-			pubKey = (await AuthApi.registerAccount(accountName, generatedWIF)).publicKey;
+			pubKey = PrivateKey.fromWif(generatedWIF).toPublicKey().toString();
+			isSuccess = await dispatch(registerAccountByType(accountName, pubKey));
 		}
+
+		if (!pubKey || !isSuccess) {
+			return;
+		}
+
 		const account = await echo.api.getAccountByName(accountName);
 
 		if (!isWithoutWIFRegistr) {
