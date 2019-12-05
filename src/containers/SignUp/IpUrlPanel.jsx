@@ -6,7 +6,7 @@ import classnames from 'classnames';
 class IpUrlPanel extends React.Component {
 
 	render() {
-		const { loading } = this.props;
+		const { loading, ipOrUrl } = this.props;
 
 		return (
 			<React.Fragment>
@@ -14,14 +14,16 @@ class IpUrlPanel extends React.Component {
 					Registrate a new account on your own. Choose account below
 				</p>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: false })}>
+					<Form.Field className={classnames('error-wrap', { error: !!ipOrUrl.error })}>
 						<label htmlFor="accountName">IP or URL</label>
 						<input
 							name="IpUrl"
 							disabled={loading}
 							placeholder="Enter IP or URL"
+							value={ipOrUrl.value}
+							onChange={(e) => this.props.setFormValue('ipOrUrl', e.target.value)}
 						/>
-						{ false && <span className="error-message">some error</span> }
+						{ ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span> }
 					</Form.Field>
 				</div>
 			</React.Fragment>
@@ -33,6 +35,8 @@ class IpUrlPanel extends React.Component {
 
 IpUrlPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
+	ipOrUrl: PropTypes.object.isRequired,
+	setFormValue: PropTypes.func.isRequired,
 };
 
 export default IpUrlPanel;

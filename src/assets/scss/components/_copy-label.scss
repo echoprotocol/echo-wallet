@@ -1,0 +1,55 @@
+[class*="animate-copy-label"] {
+	left: 0;
+	right: 0;
+	margin: auto;
+	top: -30px;
+	position: absolute;
+}
+
+.copy-label-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 22px;
+}
+
+.mini {
+	padding: 3px 4px 4px;
+	.copy-label-content {
+		font-size: 12px;
+	}
+}
+.popup {
+	[class*="animate-copy-label"] {
+		margin: 0 0 0 9px;
+	}
+}
+.copy-label-content {
+	border-radius: 4px;
+	color: #5C637D;
+	font-size: 13px;
+	background-color: #F5F5F6;
+	padding: 3px 6px 4px;
+}
+
+.animate-copy-label-enter,
+.animate-copy-label-appear {
+	opacity: 0;
+}
+
+.animate-copy-label-enter-active,
+.animate-copy-label-appear-active {
+	opacity: 1;
+	transition: opacity $speed ease-in;
+}
+
+.animate-copy-label-exit {
+	opacity: 1;
+	top: -30px;
+}
+
+.animate-copy-label-exit-active {
+	top: -60px;
+	opacity: 0;
+	transition:	opacity $speed, top $speed;
+}

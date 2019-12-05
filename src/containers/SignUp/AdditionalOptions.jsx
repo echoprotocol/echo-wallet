@@ -4,16 +4,12 @@ import { Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
 
-import {
-	REGISTER_DEFAULT_SETTINGS,
-	REGISTER_PARTNER_ACCOUNT,
-	REGISTER_IP_URL,
-	CSS_TRANSITION_SPEED,
-} from '../../constants/GlobalConstants';
+import { SIGN_UP_OPTIONS_TYPES } from '../../constants/FormConstants';
 
 import DefaultSettingsPanel from './DefaultSettingsPanel';
 import PartnerAccountPanel from './PartnerAccountPanel';
 import IpUrlPanel from './IpUrlPanel';
+import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
 
 class AdditionalOptions extends React.Component {
@@ -23,14 +19,11 @@ class AdditionalOptions extends React.Component {
 
 		this.state = {
 			active: true,
-			checked: null,
 		};
 	}
 
 	setActive(e) {
-		this.setState({
-			checked: e.target.name,
-		});
+		this.props.setValue('optionType', e.target.name);
 	}
 
 	toggleAcordion() {
@@ -40,24 +33,38 @@ class AdditionalOptions extends React.Component {
 	}
 
 	renderPanel() {
-		const { loading } = this.props;
-		const { checked } = this.state;
+		const { loading, options, setFormValue } = this.props;
+		const checked = options.get('optionType');
 
 		switch (checked) {
-			case REGISTER_DEFAULT_SETTINGS:
+			case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 				return <DefaultSettingsPanel />;
-			case REGISTER_PARTNER_ACCOUNT:
-				return <PartnerAccountPanel loading={loading} />;
-			case REGISTER_IP_URL:
-				return <IpUrlPanel loading={loading} />;
+			case SIGN_UP_OPTIONS_TYPES.PARENT:
+				return (
+					<PartnerAccountPanel
+						loading={loading}
+						setFormValue={setFormValue}
+						options={options}
+					/>
+				);
+			case SIGN_UP_OPTIONS_TYPES.IP_URL:
+				return (
+					<IpUrlPanel
+						ipOrUrl={options.get('ipOrUrl')}
+						loading={loading}
+						setFormValue={setFormValue}
+					/>
+				);
 			default:
 				return <DefaultSettingsPanel />;
 		}
 	}
 
 	render() {
-		const { active, checked } = this.state;
-		const { loading } = this.props;
+		const { active } = this.state;
+		const { loading, options } = this.props;
+
+		const checked = options.get('optionType');
 
 		return (
 			<div className="accordion fluid">
@@ -80,22 +87,22 @@ class AdditionalOptions extends React.Component {
 							<label htmlFor="register">Register using:</label>
 							<div name="register" className="radio-list">
 								<Button
-									name={REGISTER_DEFAULT_SETTINGS}
-									className={classnames('radio', { checked: checked === REGISTER_DEFAULT_SETTINGS })}
+									name={SIGN_UP_OPTIONS_TYPES.DEFAULT}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.DEFAULT })}
 									onClick={(e) => this.setActive(e)}
 									content="Default settings"
 									disabled={false}
 								/>
 								<Button
-									name={REGISTER_PARTNER_ACCOUNT}
-									className={classnames('radio', { checked: checked === REGISTER_PARTNER_ACCOUNT })}
+									name={SIGN_UP_OPTIONS_TYPES.PARENT}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.PARENT })}
 									onClick={(e) => this.setActive(e)}
 									content="Parent account"
 									disabled={false}
 								/>
 								<Button
-									name={REGISTER_IP_URL}
-									className={classnames('radio', { checked: checked === REGISTER_IP_URL })}
+									name={SIGN_UP_OPTIONS_TYPES.IP_URL}
+									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.IP_URL })}
 									onClick={(e) => this.setActive(e)}
 									content="IP/URL"
 									disabled={false}
@@ -114,6 +121,9 @@ class AdditionalOptions extends React.Component {
 
 AdditionalOptions.propTypes = {
 	loading: PropTypes.bool.isRequired,
+	options: PropTypes.object.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 };
 
 export default AdditionalOptions;
