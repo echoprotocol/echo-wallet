@@ -31,31 +31,31 @@
 		margin: 30px 0 0;
 	}
 
-	.account-dropdown-wrap {
-		position: relative;
-		& > .avatar-image {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			margin: auto;
-			left: 10px;
-		}
-		.avatar-wrap + .name {
-			margin-left: 6px;
-		}
-		.selection.dropdown,
-		input {
-			background-color: transparent;
-		}
-		.search.selection.dropdown > input.search  {
-			padding: 0 33px 0 40px;
-		}
-		.selection.dropdown {
-			padding-left: 40px;
-		}
-	}
-
 	.main-btn {
 		min-width: 160px;
+	}
+}
+
+.account-dropdown-wrap {
+	position: relative;
+	& > .avatar-image {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		left: 10px;
+	}
+	.avatar-wrap + .name {
+		margin-left: 6px;
+	}
+	.selection.dropdown,
+	input {
+		background-color: transparent;
+	}
+	.search.selection.dropdown > input.search  {
+		padding: 0 33px 0 40px;
+	}
+	.selection.dropdown {
+		padding-left: 40px;
 	}
 }

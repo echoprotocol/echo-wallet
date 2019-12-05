@@ -5,36 +5,30 @@ import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
 
 import { SIGN_UP_OPTIONS_TYPES } from '../../constants/FormConstants';
+import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
 import DefaultSettingsPanel from './DefaultSettingsPanel';
 import PartnerAccountPanel from './PartnerAccountPanel';
 import IpUrlPanel from './IpUrlPanel';
-import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
 
 class AdditionalOptions extends React.Component {
-
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			active: true,
-		};
-	}
 
 	setActive(e) {
 		this.props.setValue('optionType', e.target.name);
 	}
 
 	toggleAcordion() {
-		this.setState({
-			active: !this.state.active,
-		});
+		const isMoreOptionsActive = this.props.signupOptionsForm.get('isMoreOptionsActive');
+
+		this.props.setValue('isMoreOptionsActive', !isMoreOptionsActive);
 	}
 
 	renderPanel() {
-		const { loading, options, setFormValue } = this.props;
-		const checked = options.get('optionType');
+		const {
+			loading, signupOptionsForm, setFormValue, accounts,
+		} = this.props;
+		const checked = signupOptionsForm.get('optionType');
 
 		switch (checked) {
 			case SIGN_UP_OPTIONS_TYPES.DEFAULT:
@@ -44,13 +38,14 @@ class AdditionalOptions extends React.Component {
 					<PartnerAccountPanel
 						loading={loading}
 						setFormValue={setFormValue}
-						options={options}
+						signupOptionsForm={signupOptionsForm}
+						accounts={accounts}
 					/>
 				);
 			case SIGN_UP_OPTIONS_TYPES.IP_URL:
 				return (
 					<IpUrlPanel
-						ipOrUrl={options.get('ipOrUrl')}
+						ipOrUrl={signupOptionsForm.get('ipOrUrl')}
 						loading={loading}
 						setFormValue={setFormValue}
 					/>
@@ -61,10 +56,10 @@ class AdditionalOptions extends React.Component {
 	}
 
 	render() {
-		const { active } = this.state;
-		const { loading, options } = this.props;
+		const { loading, signupOptionsForm } = this.props;
 
-		const checked = options.get('optionType');
+		const checked = signupOptionsForm.get('optionType');
+		const isMoreOptionsActive = signupOptionsForm.get('isMoreOptionsActive');
 
 		return (
 			<div className="accordion fluid">
@@ -76,7 +71,7 @@ class AdditionalOptions extends React.Component {
 					content="More Options"
 				/>
 				<CSSTransition
-					in={active}
+					in={isMoreOptionsActive}
 					timeout={CSS_TRANSITION_SPEED}
 					classNames="accordion-transition"
 					unmountOnExit
@@ -121,9 +116,10 @@ class AdditionalOptions extends React.Component {
 
 AdditionalOptions.propTypes = {
 	loading: PropTypes.bool.isRequired,
-	options: PropTypes.object.isRequired,
+	signupOptionsForm: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	accounts: PropTypes.array.isRequired,
 };
 
 export default AdditionalOptions;
