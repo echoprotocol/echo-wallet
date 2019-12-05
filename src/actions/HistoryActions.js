@@ -58,16 +58,17 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	};
 
 	try {
-
+		if (block.round === 1160) console.log('gh', options)
 		if (options.fee) {
-			if (block.round === 1160) console.log('fee1')
+			if (block.round === 1160 || block.round === 1927) console.log('fee1', options.fee)
 			const feeAsset = await echo.api.getObject(operation.fee.asset_id);
-			if (block.round === 1160) console.log('fee2')
+			if (block.round === 1160 || block.round === 1927) console.log('fee2', feeAsset)
 			result.fee = {
 				amount: operation.fee.amount,
 				precision: feeAsset.precision,
 				symbol: feeAsset.symbol,
 			};
+			if (block.round === 1160 || block.round === 1927) console.log('fee3');
 		}
 		if (options.from) {
 			const request = _.get(operation, options.from);
@@ -101,7 +102,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 					console.log('false', console.log(operation[options.subject[0]]))
 
 					result.subject = {
-						value: null,
+						value: operation[options.subject[0]] || '',
 						id: null,
 					};
 				}

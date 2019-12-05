@@ -29,6 +29,8 @@ class RowComponent extends React.Component {
 			timestamp,
 		} = this.props.data;
 
+		console.log('rowwwwwww', name, block, from.value, subject.value)
+		console.log('rowwwwwww2', fee, value)
 		const isFromAccount = from && from.id.toString().startsWith(ACCOUNT_ID_PREFIX);
 		const isSubjectAccount = subject && subject.id && subject.id.startsWith(ACCOUNT_ID_PREFIX);
 
