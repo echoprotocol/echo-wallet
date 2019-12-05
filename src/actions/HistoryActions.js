@@ -57,139 +57,114 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		value: {},
 	};
 
-	try {
-		if (block.round === 1160) console.log('gh', options)
-		if (options.fee) {
-			if (block.round === 1160 || block.round === 1927) console.log('fee1', options.fee)
-			const feeAsset = await echo.api.getObject(operation.fee.asset_id);
-			if (block.round === 1160 || block.round === 1927) console.log('fee2', feeAsset)
-			result.fee = {
-				amount: operation.fee.amount,
-				precision: feeAsset.precision,
-				symbol: feeAsset.symbol,
-			};
-			if (block.round === 1160 || block.round === 1927) console.log('fee3');
-		}
-		if (options.from) {
-			const request = _.get(operation, options.from);
-			if (block.round === 1160) console.log('form1')
-			const response = await echo.api.getObject(request);
-			if (block.round === 1160) console.log('form2')
-			result.from = { value: response.name, id: response.id };
-		}
+	if (options.fee) {
+		const feeAsset = await echo.api.getObject(operation.fee.asset_id);
+		result.fee = {
+			amount: operation.fee.amount,
+			precision: feeAsset.precision,
+			symbol: feeAsset.symbol,
+		};
+	}
+	if (options.from) {
+		const request = _.get(operation, options.from);
+		const response = await echo.api.getObject(request);
+		result.from = { value: response.name, id: response.id };
+	}
 
-		if (options.subject) {
-			if (options.subject[1]) {
-				const request = _.get(operation, options.subject[0]);
-				if (block.round === 1160) {
-					console.log(options)
-					console.log('reqqqq', request)
-					console.log('isreqqqq', validators.isObjectId(request))
-					console.log('res1')
-					console.log(operation)
-					console.log(options.subject[0])
-					console.log(options.subject)
-				}
-				if (validators.isObjectId(request)) {
-					console.log('true')
-					const response = await echo.api.getObject(request);
-					if (block.round === 1160) console.log('res2')
-					result.subject = {
-						value: response[options.subject[1]],
-						id: response.id,
-					};
-				} else {
-					console.log('false', console.log(operation[options.subject[0]]))
-
-					result.subject = {
-						value: operation[options.subject[0]] || '',
-						id: null,
-					};
-				}
+	if (options.subject) {
+		if (options.subject[1]) {
+			const request = _.get(operation, options.subject[0]);
+			if (validators.isObjectId(request)) {
+				const response = await echo.api.getObject(request);
+				result.subject = {
+					value: response[options.subject[1]],
+					id: response.id,
+				};
 			} else {
 				result.subject = {
-					value: operation[options.subject[0]],
-					id: options.subject[0] === 'name' ? '1.2.0' : null,
+					value: operation[options.subject[0]] || '',
+					id: null,
 				};
 			}
+		} else {
+			result.subject = {
+				value: operation[options.subject[0]],
+				id: options.subject[0] === 'name' ? '1.2.0' : null,
+			};
 		}
+	}
 
-		if (options.value) {
-			if (validators.isUInt64(operation.amount)) {
-				if (block.round === 1160) console.log('v1')
+	if (options.value) {
+		if (validators.isUInt64(operation.amount)) {
 
-				const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
-				if (block.round === 1160) console.log('vv2')
+			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
 
-				result.value = {
-					precision: coreAsset.precision,
-					asset_id: coreAsset.id,
-					symbol: coreAsset.symbol,
-					amount: _.get(operation, options.value),
-				};
-			} else {
-				result.value = {
+			result.value = {
+				precision: coreAsset.precision,
+				asset_id: coreAsset.id,
+				symbol: coreAsset.symbol,
+				amount: _.get(operation, options.value),
+			};
+		} else {
+			result.value = options.subject && options.subject[0] &&
+				!validators.isObjectId(_.get(operation, options.subject[0])) ? {
+					...result.value,
+					..._.get(operation, options.value),
+				} : {
 					...result.value,
 					amount: _.get(operation, options.value),
 				};
-			}
 		}
+	}
 
-		if (options.asset) {
-			const request = _.get(operation, options.asset);
-			if (block.round === 1160) console.log('req1')
-			const response = await echo.api.getObject(request);
-			if (block.round === 1160) console.log('req2')
-			result.value = {
-				...result.value,
-				precision: response.precision,
-				symbol: response.symbol,
+	if (options.asset) {
+		const request = _.get(operation, options.asset);
+		const response = await echo.api.getObject(request);
+		result.value = {
+			...result.value,
+			precision: response.precision,
+			symbol: response.symbol,
+		};
+	}
+
+	if (type === operations.contract_create.value) {
+
+		const [, resultId] = data.result;
+
+		result.subject = { value: resultId };
+
+		if (!echo.isConnected) {
+			return result;
+		}
+		const contractResult = await echo.api.getContractResult(resultId);
+
+		const [contractResultType, contractResultData] = contractResult;
+
+		if (contractResultType === 0) {
+			const { exec_res: { new_address: hexAddress } } = contractResultData;
+
+			const id = `${CONTRACT_ID_PREFIX}.${parseInt(hexAddress.slice(2), 16)}`;
+			result.subject = {
+				value: id,
+				id,
 			};
 		}
-
-		if (type === operations.contract_create.value) {
-
-			const [, resultId] = data.result;
-
-			result.subject = { value: resultId };
-
-			if (!echo.isConnected) {
-				return result;
-			}
-			if (block.round === 1160) console.log('contrREs1')
-			const contractResult = await echo.api.getContractResult(resultId);
-			if (block.round === 1160) console.log('contrREs2')
-
-			const [contractResultType, contractResultData] = contractResult;
-
-			if (contractResultType === 0) {
-				const { exec_res: { new_address: hexAddress } } = contractResultData;
-
-				const id = `${CONTRACT_ID_PREFIX}.${parseInt(hexAddress.slice(2), 16)}`;
-				result.subject = {
-					value: id,
-					id,
-				};
-			}
-		}
-
-		if ([operations.contract_create.value, operations.contract_call.value].includes(type)) {
-			[, result.result] = data.result;
-		}
-
-		if (type === 0 && operation.memo && operation.memo.message) {
-			result.memo = operation.memo;
-		}
-
-		result.color = result.from === accountName ? 'blue' : 'green';
-
-		if (operation.code) {
-			result.bytecode = operation.code;
-		}
-	} catch (e) {
-		console.log(e.message)
-		console.log('@$R#$#%@#$%#@%^@#%#$%@#%@#^#', block)
 	}
+
+	if ([operations.contract_create.value, operations.contract_call.value].includes(type)) {
+		[, result.result] = data.result;
+	}
+
+	if (type === 0 && operation.memo && operation.memo.message) {
+		result.memo = operation.memo;
+	}
+
+	result.color = result.from === accountName ? 'blue' : 'green';
+
+	if (operation.code) {
+		result.bytecode = operation.code;
+	}
+
 	return result;
 };
 
@@ -200,22 +175,13 @@ const formatOperation = (data) => async (dispatch, getState) => {
  * @returns {function(dispatch): Promise<undefined>}
  */
 export const formatHistory = (activity) => async (dispatch) => {
-	console.log(activity)
 	if (!activity.length) { return; }
 
 	try {
 		let rows = activity.map((h) => dispatch(formatOperation(h)));
-		// const ress = [];
-		// for (let i = 0; i < rows.length; i += 1) {
-		// 	const res = await rows[i];
-		// 	ress.push(res)
-		// }
-		// console.log(ress)
 		rows = await Promise.all(rows);
-		console.log(3)
 		dispatch(setValue(HISTORY_TABLE, 'data', rows));
 	} catch (err) {
-		console.log(err.message)
 		dispatch(setError(HISTORY_TABLE, formatError(err)));
 	} finally {
 		dispatch(toggleLoading(HISTORY_TABLE, false));
