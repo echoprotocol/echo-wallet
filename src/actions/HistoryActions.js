@@ -12,7 +12,7 @@ import { setField } from './TransactionActions';
 
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
-import { SIDECHAIN_TRANSFER_OPS, SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConsts';
+import { getSidechainTrxAsset } from '../helpers/ValidateHelper';
 
 /**
  * @method viewTransaction
@@ -100,30 +100,27 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				amount: _.get(operation, options.value),
 			};
 		} else {
-			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
-			const assetInfo = {};
-			if (coreAsset && coreAsset.precision && coreAsset.symbol) {
-				assetInfo.precision = coreAsset.precision;
-				assetInfo.symbol = coreAsset.symbol;
-			}
-			result.value = options.subject && options.subject[0] &&
-				!validators.isObjectId(_.get(operation, options.subject[0])) ? {
-					...result.value,
-					..._.get(operation, options.value),
-					...assetInfo,
-				} : {
-					...result.value,
-					amount: _.get(operation, options.value),
-				};
-		}
-		for (let i = 0; i < SIDECHAIN_TRANSFER_OPS.length; i += 1) {
-			if (SIDECHAIN_TRANSFER_OPS[i].some((op) => op === type)) {
+			result.value = {
+				...result.value,
+				amount: _.get(operation, options.value),
+			};
+			if (options.subject && options.subject[0] &&
+				!validators.isObjectId(_.get(operation, options.subject[0]))) {
+				const assetId = _.get(operation, options.value).asset_id;
+				const { precision, symbol } = await echo.api.getObject(assetId);
 				result.value = {
 					...result.value,
-					...SIDECHAIN_ASSETS_DATA[i],
+					..._.get(operation, options.value),
+					precision,
+					symbol,
 				};
 			}
 		}
+		const sidechainAsset = getSidechainTrxAsset(type);
+		result.value = {
+			...result.value,
+			...sidechainAsset,
+		};
 	}
 
 	if (options.asset) {
