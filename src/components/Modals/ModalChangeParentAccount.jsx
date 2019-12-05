@@ -8,8 +8,10 @@ import _ from 'lodash';
 import { closeModal } from '../../actions/ModalActions';
 import { lookupAccountsList } from '../../actions/AccountActions';
 import { changeDelegate } from '../../actions/TransactionActions';
+import { setFormValue } from '../../actions/FormActions';
 
 import { MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
+import { FORM_CHANGE_DELEGATE } from '../../constants/FormConstants';
 import Avatar from '../Avatar';
 
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -46,6 +48,7 @@ class ModalChangeDelegate extends React.Component {
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		this.setState({ searchText: accountName.text });
+		this.setFormValue('delegate', accountName.text);
 	}
 
 	clear() {
@@ -99,7 +102,7 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	render() {
-		const { show, currentAccountName } = this.props;
+		const { show, currentAccountName, delegateObject } = this.props;
 		const { searchText, loading, options } = this.state;
 
 		const delegate = options.find(({ text }) => text === searchText);
@@ -135,30 +138,33 @@ class ModalChangeDelegate extends React.Component {
 								/>
 							</div>
 						</Form.Field>
-						<div className="field">
+						<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
 
-							<label htmlFor="parentAccount" className="field-label">Delegated to</label>
-							<div className="account-dropdown-wrap">
-								{
-									delegate ? <Avatar accountName={searchText} /> : <Avatar />
-								}
-								<Dropdown
-									className={classnames({ empty: !searchText || loading })}
-									options={(searchText && !loading) ? this.renderList(options) : []}
-									searchQuery={searchText}
-									search
-									selection
-									fluid
-									name="parentAccount"
-									text={searchText || 'Delegated to'}
-									onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
-									placeholder="Delegated to"
-									selectOnNavigation={false}
-									minCharacters={0}
-									noResultsMessage={searchText ? 'No results are found' : null}
-									onChange={(e, { value }) => this.onChangeAccount(value)}
-								/>
+							<div className="field">
+								<label htmlFor="parentAccount" className="field-label">Delegated to</label>
+								<div className="account-dropdown-wrap">
+									{
+										delegate ? <Avatar accountName={searchText} /> : <Avatar />
+									}
+									<Dropdown
+										className={classnames({ empty: !searchText || loading })}
+										options={(searchText && !loading) ? this.renderList(options) : []}
+										searchQuery={searchText}
+										search
+										selection
+										fluid
+										name="parentAccount"
+										text={searchText || 'Delegated to'}
+										onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
+										placeholder="Delegated to"
+										selectOnNavigation={false}
+										minCharacters={0}
+										noResultsMessage={searchText ? 'No results are found' : null}
+										onChange={(e, { value }) => this.onChangeAccount(value)}
+									/>
+								</div>
 							</div>
+							{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
 						</div>
 					</div>
 					<div className="form-panel">
@@ -189,7 +195,9 @@ ModalChangeDelegate.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
 	changeDelegate: PropTypes.func.isRequired,
+	setFormValue: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
+	delegateObject: PropTypes.object.isRequired,
 };
 
 ModalChangeDelegate.defaultProps = {
@@ -200,9 +208,11 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_CHANGE_PARENT_ACCOUNT, 'show']),
 		currentAccountName: state.global.getIn(['activeUser', 'name']),
+		delegateObject: state.form.getIn([FORM_CHANGE_DELEGATE, 'delegate']),
 	}),
 	(dispatch) => ({
 		closeModal: (modal) => dispatch(closeModal(modal)),
 		changeDelegate: (delegateId) => dispatch(changeDelegate(delegateId)),
+		setFormValue: (field, value) => dispatch(setFormValue(FORM_CHANGE_DELEGATE, field, value)),
 	}),
 )(ModalChangeDelegate);

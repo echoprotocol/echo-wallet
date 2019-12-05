@@ -15,7 +15,9 @@ import {
 	FORM_CREATE_CONTRACT_OPTIONS,
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
+	FORM_SIGN_UP,
 } from '../constants/FormConstants';
+
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
 import { MODAL_DETAILS, MODAL_CHANGE_PARENT_ACCOUNT } from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
@@ -24,7 +26,10 @@ import {
 	CONTRACT_ID_PREFIX,
 	ECHO_ASSET_ID,
 	FREEZE_BALANCE_PARAMS,
-	APPLY_CHANGES_TIMEOUT, ECHO_ASSET_PRECISION, ADDRESS_PREFIX,
+	APPLY_CHANGES_TIMEOUT,
+	ECHO_ASSET_PRECISION,
+	ADDRESS_PREFIX,
+	REGISTRATION,
 } from '../constants/GlobalConstants';
 import {
 	ACCOUNT_ID_SUBJECT_TYPE,
@@ -1037,6 +1042,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		getState().form.getIn([formName, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
+
 	try {
 		const tr = echo.createTransaction();
 		tr.addOperation(operationId, options);
@@ -1057,11 +1063,13 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			}
 
 			clearTimeout(permissionTableLoaderTimer);
+			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
+			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			clearTimeout(permissionTableLoaderTimer);
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
@@ -1071,15 +1079,21 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 		});
 	} catch (error) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
 	toastSuccess(`${operations[operation].name} transaction was sent`);
-	if (operationId === operations.account_update.value) {
-		dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-		history.push(PERMISSIONS_PATH);
-	} else if (operationId !== operations.balance_freeze.value) {
-		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+
+	switch (operationId) {
+		case operations.account_update.value:
+			dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
+			break;
+		case operations.balance_freeze.value:
+		case operations.account_create.value:
+			break;
+		default:
+			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 	}
 
 	dispatch(closeModal(MODAL_DETAILS));
@@ -1502,7 +1516,11 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 	}
 };
 
-
+/**
+ * @method changeDelegate
+ * @param {String} delegateId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
 export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 	try {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -1550,6 +1568,66 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 
 		return true;
 	} catch (error) {
+		return null;
+	}
+};
+
+/**
+ * @method createAccount
+ * @param {String} fromAccount
+ * @param {Object} param1
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const createAccountTransaction = (fromAccount, { name, publicKey }) => async (dispatch) => {
+	try {
+		const sender = await echo.api.getAccountByName(fromAccount);
+
+		if (!sender) {
+			return null;
+		}
+
+		const { id: senderId } = sender;
+
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			registrar: senderId,
+			echorand_key: publicKey,
+			active: {
+				weight_threshold: REGISTRATION.DEFAULT_THRESHOLD,
+				account_auths: [],
+				key_auths: [[publicKey, REGISTRATION.DEFAULT_KEY_WEIGHT]],
+			},
+			name,
+			options: {
+				delegating_account: senderId,
+				delegate_share: REGISTRATION.DEFAULT_DELEGATE_SHARE,
+			},
+		};
+
+		const operation = 'account_create';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: sender.name,
+			account: name,
+			key: publicKey,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		return null;
 	}
 };

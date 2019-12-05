@@ -23,6 +23,7 @@ import {
 	FORM_ETH_RECEIVE,
 	FORM_SIGN_UP_OPTIONS,
 	SIGN_UP_OPTIONS_TYPES,
+	FORM_CHANGE_DELEGATE,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -69,12 +70,9 @@ const DEFAULT_FORM_FIELDS = {
 		},
 	}),
 	[FORM_SIGN_UP_OPTIONS]: Map({
+		isMoreOptionsActive: false,
 		optionType: SIGN_UP_OPTIONS_TYPES.DEFAULT,
 		registrarAccount: {
-			value: '',
-			error: null,
-		},
-		registrarNodeAddress: {
 			value: '',
 			error: null,
 		},
@@ -321,6 +319,12 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
+	[FORM_CHANGE_DELEGATE]: Map({
+		delegate: {
+			value: '',
+			error: null,
+		},
+	}),
 };
 
 export default createModule({
@@ -355,6 +359,8 @@ export default createModule({
 		[FORM_ETH_RECEIVE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ETH_RECEIVE]),
 		[FORM_SIGN_UP_OPTIONS]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
+		[FORM_CHANGE_DELEGATE]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CHANGE_DELEGATE]),
 	}),
 	transformations: {
 		set: {

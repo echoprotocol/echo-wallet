@@ -17,6 +17,7 @@ export const FORM_FREEZE = 'freeze_amount';
 export const FORM_BTC_RECEIVE = 'btc_receive';
 export const FORM_ETH_RECEIVE = 'eth_receive';
 export const FORM_SIGN_UP_OPTIONS = 'sign_up_options';
+export const FORM_CHANGE_DELEGATE = 'change_delegate';
 
 export const SIGN_UP_OPTIONS_TYPES = {
 	DEFAULT: 'default',
