@@ -374,62 +374,11 @@ $stripe-width: 10px;
 	}
 }
 
-.action-btn {
-	font-size: 14px;
-	background-color: transparent;
-	color: rgba(#5C637D, .7);
-	transition: background-color $speed, color $speed,border-color $speed;
-	padding: 6px 10px;
-	text-transform: capitalize;
-	border-radius: 4px;
-	display: inline-flex;
-	align-items: center;
-	user-select: none;
 
-	.icon {
-		color: inherit;
-	}
-	
-	.icon + .text {
-		margin-left: 5px;
-	}
 
-	&:hover {
-		background-color: rgba(#D7D9DB, .5);
-		color: #5C637D;
-	}
 
-	&:not(:active) {
-		&:focus {
-			@include on-focus(4px);
-		}
-	}
 
-	&:active {
-		background-color: #D7D9DB;
-		color: rgba(#5C637D, .5);
-	}
 
-	&.blue {
-		color: rgba($main-color, 1);
-		&:active {
-			color: rgba($main-color, .7);
-
-		}
-	}
-}
-
-.input-copy-btn {
-	border: 1px solid $main-color;
-	background-color: $main-color;
-	color: #fff;
-
-	&:not(:active) {
-		&:focus {
-			@include on-focus(4px);
-		}
-	}
-}
 
 .dropdown-copy-btn {
 	color: $main-color;
