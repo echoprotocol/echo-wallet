@@ -55,8 +55,7 @@ export const createAccount = ({
 		return;
 	}
 
-	if (!isCustomSettings) {
-
+	if (isCustomSettings) {
 		let isValidPub = true;
 		let isValidWif = true;
 		const userPublicKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']);
@@ -78,7 +77,8 @@ export const createAccount = ({
 		if (!isValidPub || !isValidWif) {
 			return;
 		}
-
+	}
+	if (!isCustomSettings) {
 		let confirmWIFError = validateWIF(confirmWIF);
 		if (generatedWIF !== confirmWIF) {
 			confirmWIFError = 'WIFs do not match';
