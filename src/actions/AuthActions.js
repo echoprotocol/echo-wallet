@@ -17,6 +17,7 @@ import {
 	setFormValue,
 	setFormError,
 	toggleLoading,
+	setValue,
 } from './FormActions';
 
 import {
@@ -56,6 +57,42 @@ export const generateWIF = () => (dispatch) => {
 	const privateKey = PrivateKey.fromSeed(random({ length: RANDOM_SIZE }));
 
 	dispatch(setFormValue(FORM_SIGN_UP, 'generatedWIF', privateKey.toWif()));
+};
+
+/**
+ * @method customParentAccount
+ * @returns {function(dispatch): Promise<undefined>}
+ */
+const customParentAccount = () => async (dispatch, getState) => {
+	try {
+		const networkName = getState().global.getIn(['network', 'name']);
+
+		const account = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'registrarAccount']);
+		if (!account.value) {
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Input shouldn\'t be empty'));
+			return null;
+		}
+
+		const sender = await echo.api.getAccountByName(account.value);
+
+		if (!sender) {
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account not exist'));
+			return null;
+		}
+
+		let accounts = localStorage.getItem(`accounts_${networkName}`);
+
+		accounts = accounts ? JSON.parse(accounts) : [];
+		if (!accounts.find(({ name }) => name === sender.name)) {
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account isn\'t login'));
+			return null;
+		}
+
+		return true;
+	} catch (_) {
+		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Invalid account'));
+		return null;
+	}
 };
 
 /**
@@ -101,7 +138,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 			return AuthApi.registerAccount(echo.api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
-			break;
+			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
 			return dispatch(customNodeRegisterAccount(accountName, pubKey));
 		}
@@ -109,7 +146,6 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 			dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
 			return false;
 	}
-	return true;
 };
 
 /**
@@ -118,13 +154,14 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
  * @param {Boolean} isAddAccount
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const createAccount = ({
-	accountName, generatedWIF, confirmWIF, password,
+export const validateCreateAccount = ({
+	accountName, generatedWIF, confirmWIF,
 }, isAddAccount, isCustomSettings) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
+
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-		return;
+		return null;
 	}
 
 	if (isCustomSettings) {
@@ -144,74 +181,128 @@ export const createAccount = ({
 		}
 		if (!isValidPub) {
 			dispatch(setFormError(FORM_SIGN_UP, 'userPublicKey', 'Invalid public key'));
-			return;
+			return null;
 		}
 		if (!isValidPub || !isValidWif) {
-			return;
+			return null;
 		}
-	}
-	if (!isCustomSettings) {
+	} else {
 		let confirmWIFError = validateWIF(confirmWIF);
 		if (generatedWIF !== confirmWIF) {
 			confirmWIFError = 'WIFs do not match';
 		}
 		if (confirmWIFError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));
-			return;
+			return null;
 		}
 	}
 
 
+	const network = getState().global.getIn(['network']).toJS();
+	accountNameError = await validateAccountExist(accountName, false);
+
+	if (isAddAccount && !accountNameError) {
+		accountNameError = isAccountAdded(accountName, network.name);
+	}
+
+	if (accountNameError) {
+		dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
+		return null;
+	}
+
+	dispatch(toggleLoading(FORM_SIGN_UP, true));
+
+	let publicKey = null;
+
+
+	const isWithoutWIFRegistr = isCustomSettings && !getState().form.getIn([FORM_SIGN_UP, 'userWIF']).value;
+	if (isWithoutWIFRegistr) {
+		publicKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']).value;
+	} else {
+		publicKey = PrivateKey.fromWif(generatedWIF).toPublicKey().toString();
+	}
+
+	const valid = await dispatch(registerAccountByType(accountName, publicKey));
+	const isDefaultRegistration = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'optionType']) === SIGN_UP_OPTIONS_TYPES.DEFAULT;
+
+
+	if (publicKey && valid) {
+		return { isWithoutWIFRegistr, publicKey };
+	}
+
+	dispatch(toggleLoading(FORM_SIGN_UP, false));
+
+	if (!valid && !isDefaultRegistration) {
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'isMoreOptionsActive', true));
+	}
+	return null;
+};
+
+/**
+ * @method saveWIFAfterCreateAccount
+ * @param {Object} param0
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const saveWIFAfterCreateAccount = ({
+	accountName, generatedWIF, publicKey, password, isWithoutWIFRegistr,
+}) => async (dispatch, getState) => {
 	try {
 		const network = getState().global.getIn(['network']).toJS();
-		accountNameError = await validateAccountExist(accountName, false);
 
-		if (isAddAccount && !accountNameError) {
-			accountNameError = isAccountAdded(accountName, network.name);
-		}
-
-		if (accountNameError) {
-			dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
-			return;
-		}
-
-		dispatch(toggleLoading(FORM_SIGN_UP, true));
-
-		let pubKey;
-		let isSuccess = false;
-		const isWithoutWIFRegistr = isCustomSettings && !getState().form.getIn([FORM_SIGN_UP, 'userWIF']).value;
 		const userStorage = Services.getUserStorage();
-		if (isWithoutWIFRegistr) {
-			pubKey = getState().form.getIn([FORM_SIGN_UP, 'userPublicKey']).value;
-			isSuccess = await dispatch(registerAccountByType(accountName, pubKey));
-		} else {
-			pubKey = PrivateKey.fromWif(generatedWIF).toPublicKey().toString();
-			isSuccess = await dispatch(registerAccountByType(accountName, pubKey));
-		}
-
-		if (!pubKey || !isSuccess) {
-			return;
-		}
-
 		const account = await echo.api.getAccountByName(accountName);
 
 		if (!isWithoutWIFRegistr) {
-			await userStorage.addKey(Key.create(pubKey, generatedWIF, account.id, 'active'), { password });
-			await userStorage.addKey(Key.create(pubKey, generatedWIF, account.id, 'echoRand'), { password });
+			await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
+			await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'echoRand'), { password });
 		}
 
 		dispatch(addAccount(
 			accountName,
 			network.name,
-			[[pubKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
+			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
+	} catch (_) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
+	}
+};
+
+/**
+ * @method createAccount
+ * @param {Object} param0
+ * @param {Boolean} isAddAccount
+ * @param isCustomWIF
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const createAccount = ({
+	accountName, generatedWIF, confirmWIF, password,
+}, isAddAccount, isCustomWIF) => async (dispatch) => {
+	try {
+		const result = await dispatch(validateCreateAccount(
+			{ accountName, generatedWIF, confirmWIF },
+			isAddAccount, isCustomWIF,
+		));
+
+		if (!result) {
+			return null;
+		}
+
+		const { publicKey, isWithoutWIFRegistr } = result;
+
+		await dispatch(saveWIFAfterCreateAccount({
+			accountName, generatedWIF, password, publicKey, isWithoutWIFRegistr,
+		}));
+
+		return true;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
+		return null;
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
 
 };
+
 /**
  * @method isAllWIFsAdded
  * @param {Object} account
