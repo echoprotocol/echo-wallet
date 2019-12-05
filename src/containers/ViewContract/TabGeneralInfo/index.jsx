@@ -1,13 +1,30 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
+import { CACHE_MAPS } from 'echojs-lib';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import ActionBtn from '../../../components/ActionBtn';
+import {
+	initGeneralContractInfo,
+	resetGeneralContractInfo,
+} from '../../../actions/ContractActions';
 
 class TabGeneralInfo extends React.Component {
 
+	componentDidMount() {
+		this.props.initGeneralContractInfo(this.props.match.params.id);
+	}
+
+	componentWillUnmount() {
+		this.props.resetGeneralContractInfo();
+	}
+
 
 	render() {
+		const { contract } = this.props;
+		console.log(contract);
 		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
 		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
 		return (
@@ -100,7 +117,26 @@ class TabGeneralInfo extends React.Component {
 
 }
 
-TabGeneralInfo.propTypes = {};
+TabGeneralInfo.propTypes = {
+	contract: PropTypes.object,
+	match: PropTypes.object.isRequired,
+	initGeneralContractInfo: PropTypes.func.isRequired,
+	resetGeneralContractInfo: PropTypes.func.isRequired,
+};
 
+TabGeneralInfo.defaultProps = {
+	contract: null,
+};
 
-export default TabGeneralInfo;
+export default withRouter(connect(
+	(state, ownProps) => ({
+		contract: state.echojs.getIn([
+			CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID,
+			ownProps.match.params.id,
+		]),
+	}),
+	(dispatch) => ({
+		initGeneralContractInfo: (contractId) => dispatch(initGeneralContractInfo(contractId)),
+		resetGeneralContractInfo: () => dispatch(resetGeneralContractInfo()),
+	}),
+)(TabGeneralInfo));

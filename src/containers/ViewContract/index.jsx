@@ -3,7 +3,7 @@ import { Tab, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
@@ -21,30 +21,15 @@ import TabGeneralInfo from './TabGeneralInfo';
 
 class ViewContract extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			contractCallback: () => {},
-		};
-	}
-
-
 	componentWillMount() {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	async componentDidMount() {
-		await echo.api.getFullContract(this.props.match.params.id);
-		await echo.subscriber.setContractSubscribe(
-			[this.props.match.params.id],
-			this.state.contractCallback,
-		);
 		this.props.setDefaultAsset();
 	}
 
 	componentWillUnmount() {
-		echo.subscriber.removeContractSubscribe(this.state.contractCallback);
 		this.props.clearForm(FORM_CALL_CONTRACT);
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 		this.props.clearContract();
@@ -93,7 +78,6 @@ class ViewContract extends React.Component {
 }
 
 ViewContract.propTypes = {
-	contract: PropTypes.object,
 	match: PropTypes.object.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,

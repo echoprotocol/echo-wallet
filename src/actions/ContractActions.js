@@ -626,3 +626,26 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 	}
 	await dispatch(contractCodeCompile());
 };
+
+/**
+ * @method initGeneralContractInfo
+ * @param {String} contractId
+ * @returns {Function}
+ */
+export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	await echo.api.getFullContract(contractId);
+	await echo.subscriber.setContractSubscribe(
+		[contractId],
+		subscribeCallback,
+	);
+};
+
+/**
+ * @method resetGeneralContractInfo
+ * @returns {Function}
+ */
+export const resetGeneralContractInfo = () => (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	echo.subscriber.removeContractSubscribe(subscribeCallback);
+};
