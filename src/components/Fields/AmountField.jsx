@@ -316,6 +316,7 @@ class AmountField extends React.Component {
 						amount.error || fee.error ?
 							<span className="error-message">{amount.error || fee.error}</span> : null
 					}
+
 					{
 						assetDropdown ? <Dropdown
 							search
@@ -337,6 +338,13 @@ class AmountField extends React.Component {
 
 
 				</Input>
+				{
+					!amount.error || !fee.error ?
+						<span className="warning-message">
+							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+						</span> : null
+				}
+
 
 			</Form.Field>
 		);

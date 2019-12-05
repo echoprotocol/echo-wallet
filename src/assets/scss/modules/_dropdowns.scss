@@ -24,6 +24,12 @@
             }
         }
     }
+    
+    &.upward {
+        .menu {
+            max-height: 300px
+        }
+    }
 
     &.assets-tokens-dropdown {
         display: flex;
@@ -277,7 +283,7 @@
 		bottom: 4px;
 		margin: auto;
 		color: $bd-gray;
-		z-index: 2;
+		z-index: 3;
 		height: 0;
 		line-height: 0;
 		will-change: transform;
@@ -353,7 +359,7 @@
 		line-height: 20px;
 	}
 
-	.dropdown {
+	& > .dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
@@ -406,7 +412,8 @@
 			align-items: center;
 			justify-content: center;
 			text-transform: uppercase;
-			font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
 			font-size: 12px;
 			transition: color $speed;
 			z-index: 44;
@@ -455,7 +462,8 @@
 			min-height: 26px;
 			.title {
 				margin: 10px 0 0;
-				font-family: proximanovaSemibold;
+				font-family: proxima;
+				font-weight: 600;
 				font-size: 12px;
 				color: rgba(#3B3B3B, 0.3);
 				text-transform: uppercase;

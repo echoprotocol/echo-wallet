@@ -34,7 +34,8 @@
 		align-items: center;
 		color: rgba(#5C637D, 0.6);
 		font-size: 15px;
-		font-family: proximaNovaSemibold;
+		font-family: proxima;
+		font-weight: 600;
 	}
 	.icon-info {
 		cursor: pointer;
@@ -50,7 +51,7 @@
 		margin-bottom: 29px;
 	}
 
-	.radio-list + .selection {
+	.radio-list + .error-wrap {
 		margin: 16px 0 0;
 	}
 	.field-wrap {

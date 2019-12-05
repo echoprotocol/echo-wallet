@@ -17,6 +17,7 @@ import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } fro
 import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
+import TabGeneralInfo from './TabGeneralInfo';
 
 class ViewContract extends React.Component {
 
@@ -53,7 +54,15 @@ class ViewContract extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="View properties" />,
+				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="General info" />,
+				render: () => (
+					<Tab.Pane className="scroll-fix">
+						<TabGeneralInfo />
+					</Tab.Pane>
+				),
+			},
+			{
+				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="View properties" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -61,7 +70,7 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="call contracts" />,
+				menuItem: <Button className="tab-btn" key={2} onClick={(e) => e.target.blur()} content="call contracts" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />

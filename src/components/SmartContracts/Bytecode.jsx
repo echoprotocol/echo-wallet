@@ -3,22 +3,19 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 
+import { FORM_CREATE_CONTRACT_BYTECODE } from '../../constants/FormConstants';
+
 class Bytecode extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
 	componentDidMount() {
-		this.props.setDefaultAsset();
+		this.props.setDefaultAsset(FORM_CREATE_CONTRACT_BYTECODE);
 	}
 
 	onChange(e) {
 		const field = e.target.name;
 		const { value } = e.target;
 		if (field) {
-			this.props.setFormValue(field, value);
+			this.props.setFormValue(FORM_CREATE_CONTRACT_BYTECODE, field, value);
 		}
 	}
 
@@ -38,6 +35,7 @@ class Bytecode extends React.Component {
 						placeholder="Bytecode"
 						name="bytecode"
 						className="input"
+						value={bytecode.value}
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
@@ -47,7 +45,7 @@ class Bytecode extends React.Component {
 					<label htmlFor="bytecode">
 						ABI
 						<span className="label-info">(If you insert ABI, contract will add to watchlist)</span>
-						<span className="label-info">Optional</span>
+						<span className="label-info right">(optional)</span>
 					</label>
 					<textarea
 						type="text"
@@ -83,8 +81,5 @@ Bytecode.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 };
-
-Bytecode.defaultProps = {};
-
 
 export default Bytecode;
