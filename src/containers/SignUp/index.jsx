@@ -19,7 +19,6 @@ import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 import { generateWIF, createAccount } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
-import { isPublicKey } from '../../helpers/ValidateHelper';
 
 class SignUp extends React.Component {
 
@@ -33,44 +32,15 @@ class SignUp extends React.Component {
 
 	onCreate(password) {
 		const {
-			accountName, generatedWIF, confirmWIF, isAddAccount, isCustomWIF, userWIF, userPublicKey,
+			accountName, generatedWIF, confirmWIF, isAddAccount, isCustomWIF, userWIF,
 		} = this.props;
+		this.props.createAccount({
+			accountName: accountName.value.trim(),
+			generatedWIF: isCustomWIF ? userWIF.value.trim() : generatedWIF.value.trim(),
+			confirmWIF: isCustomWIF ? userWIF.value.trim() : confirmWIF.value.trim(),
+			password,
+		}, isAddAccount, isCustomWIF);
 
-		if (isCustomWIF) {
-			let isValidPub = true;
-			let isValidWif = true;
-			if (userPublicKey.value) {
-				isValidPub = isPublicKey(userPublicKey.value);
-			}
-			if (userWIF.value) {
-				try {
-					PrivateKey.fromWif(userWIF.value).toPublicKey().toString();
-				} catch (e) {
-					isValidWif = false;
-					this.props.setFormError('userWIF', 'Invalid WIF');
-				}
-			}
-			if (!isValidPub) {
-				this.props.setFormError('userPublicKey', 'Invalid public key');
-				return;
-			}
-			if (!isValidPub || !isValidWif) {
-				return;
-			}
-			this.props.createAccount({
-				accountName: accountName.value.trim(),
-				generatedWIF: userWIF.value.trim(),
-				confirmWIF: userWIF.value.trim(),
-				password,
-			}, isAddAccount, isCustomWIF);
-		} else {
-			this.props.createAccount({
-				accountName: accountName.value.trim(),
-				generatedWIF: generatedWIF.value.trim(),
-				confirmWIF: confirmWIF.value.trim(),
-				password,
-			}, isAddAccount, isCustomWIF);
-		}
 	}
 
 	isDisabledSubmit() {
@@ -102,7 +72,7 @@ class SignUp extends React.Component {
 	}
 
 	render() {
-		const {	location, loading } = this.props;
+		const { location, loading } = this.props;
 
 		const { isAddAccount } = qs.parse(location.search);
 
@@ -152,7 +122,7 @@ class SignUp extends React.Component {
 								/>
 								<div className="form-panel">
 									<span className="sign-nav">
-									Have an account?
+										Have an account?
 										<Link
 											className={classnames('link', 'orange', { disabled: loading })}
 											to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
