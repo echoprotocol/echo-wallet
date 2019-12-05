@@ -1,0 +1,23 @@
+import { OPERATIONS_IDS } from 'echojs-lib';
+
+export const SIDECHAIN_TRANSFER_OPS = [
+	[
+		OPERATIONS_IDS.SIDECHAIN_ETH_DEPOSIT,
+		OPERATIONS_IDS.SIDECHAIN_ETH_WITHDRAW,
+		OPERATIONS_IDS.SIDECHAIN_ISSUE,
+		OPERATIONS_IDS.SIDECHAIN_BURN,
+	], [
+		OPERATIONS_IDS.SIDECHAIN_BTC_WITHDRAW,
+	],
+];
+
+export const SIDECHAIN_ASSETS_DATA = [
+	{
+		precision: 8,
+		symbol: 'EETH',
+	},
+	{
+		precision: 18,
+		symbol: 'EBTC',
+	},
+];
