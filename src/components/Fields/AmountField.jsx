@@ -335,8 +335,6 @@ class AmountField extends React.Component {
 							onClose={() => this.clearSearchText()}
 						/> : this.renderCurrencyLabel(currency)
 					}
-
-
 				</Input>
 				{
 					!amount.error || !fee.error ?
