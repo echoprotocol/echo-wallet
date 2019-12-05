@@ -39,6 +39,21 @@ class AuthApi {
 		return { privateKey, publicKey };
 	}
 
+
+	/**
+     *  @method getPublicKeyFromWif
+     *
+     * 	@param  {String} wif
+     *
+     *  @return {Object}
+     */
+	static getPublicKeyFromWif(wif) {
+		const privateKey = PrivateKey.fromWif(wif);
+		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
+
+		return { privateKey, publicKey };
+	}
+
 }
 
 export default AuthApi;

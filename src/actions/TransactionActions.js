@@ -1076,11 +1076,17 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
 	toastSuccess(`${operations[operation].name} transaction was sent`);
-	if (operationId === operations.account_update.value) {
-		dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-		history.push(PERMISSIONS_PATH);
-	} else if (operationId !== operations.balance_freeze.value) {
-		history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
+
+	switch (operationId) {
+		case operations.account_update.value:
+			dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
+			history.push(PERMISSIONS_PATH);
+			break;
+		case operations.balance_freeze.value:
+		case operations.account_create.value:
+			break;
+		default:
+			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 	}
 
 	dispatch(closeModal(MODAL_DETAILS));
@@ -1505,15 +1511,16 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 
 /**
  * @method createAccount
- * @param {Object} param0
- * @param {Boolean} isAddAccount
+ * @param {String} fromAccount
+ * @param {Object} param1
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const createAccount = (fromAccount, { name, publicKey }) => async (dispatch) => {
+export const createAccountTransaction = (fromAccount, { name, publicKey }) => async (dispatch) => {
 	try {
+		console.log('createAccountTransactions', name)
 
 		const sender = await echo.api.getAccountByName(fromAccount);
-
+		console.log('sender obj', sender);
 		if (!sender) {
 			return null;
 		}
@@ -1521,7 +1528,7 @@ export const createAccount = (fromAccount, { name, publicKey }) => async (dispat
 		const { id: senderId } = sender;
 
 		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
-
+		console.log('1111111111111')
 		const options = {
 			fee: {
 				asset_id: feeAsset.id,
@@ -1531,7 +1538,7 @@ export const createAccount = (fromAccount, { name, publicKey }) => async (dispat
 			active: {
 				weight_threshold: 1,
 				account_auths: [],
-				key_auths: [publicKey],
+				key_auths: [[publicKey, 1]],
 			},
 			name,
 			options: {
@@ -1539,11 +1546,14 @@ export const createAccount = (fromAccount, { name, publicKey }) => async (dispat
 				delegate_share: 2000,
 			},
 		};
+		console.log('222222222')
 
 		const operation = 'account_create';
 		options.fee.amount = await getOperationFee(operation, options);
+		console.log('33333333333')
 
 		const precision = new BN(10).pow(feeAsset.precision);
+		console.log('44444444444444')
 
 		const showOptions = {
 			from: sender.name,
@@ -1551,6 +1561,7 @@ export const createAccount = (fromAccount, { name, publicKey }) => async (dispat
 			key: publicKey,
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 		};
+		console.log('5555555555555555')
 
 		dispatch(TransactionReducer.actions.setOperation({
 			operation,
@@ -1560,6 +1571,8 @@ export const createAccount = (fromAccount, { name, publicKey }) => async (dispat
 
 		return true;
 	} catch (error) {
+		console.log(error)
+
 		return null;
 	}
 };

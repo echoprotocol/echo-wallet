@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
+import _ from 'lodash';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 import TransactionScenario from '../TransactionScenario';
@@ -17,10 +18,27 @@ import AdditionalOptions from './AdditionalOptions';
 import { SIGN_IN_PATH } from '../../constants/RouterConstants';
 import { FORM_SIGN_UP, FORM_SIGN_UP_OPTIONS, SIGN_UP_OPTIONS_TYPES } from '../../constants/FormConstants';
 
-import { generateWIF, createAccount } from '../../actions/AuthActions';
+import {
+	generateWIF,
+	createAccount,
+	validateCreateAccount,
+	saveWIFAfterCreateAccount,
+} from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm } from '../../actions/FormActions';
+import { createAccountTransaction } from '../../actions/TransactionActions';
 
 class SignUp extends React.Component {
+
+	constructor(props) {
+		super(props);
+
+		this.DEFAULT_STATE = {
+			password: null,
+			publicKey: null,
+		};
+
+		this.state = _.cloneDeep(this.DEFAULT_STATE);
+	}
 
 	componentDidMount() {
 		this.props.generateWIF();
@@ -28,10 +46,15 @@ class SignUp extends React.Component {
 
 	componentWillUnmount() {
 		this.props.clearForm(FORM_SIGN_UP_OPTIONS);
+		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
 	onCancel() {
 		this.props.history.goBack();
+	}
+
+	onUnlock(password) {
+		this.setState({ password });
 	}
 
 	onCreate(password) {
@@ -47,6 +70,44 @@ class SignUp extends React.Component {
 		}, isAddAccount);
 	}
 
+	async validateCreateAccount() {
+		const {
+			accountName, generatedWIF, confirmWIF, isAddAccount,
+		} = this.props;
+
+		const publicKey = await this.props.validateCreateAccount({
+			accountName: accountName.value.trim(),
+			generatedWIF: generatedWIF.value.trim(),
+			confirmWIF: confirmWIF.value.trim(),
+		}, isAddAccount);
+
+		if (!publicKey) {
+			return null;
+		}
+		this.setState({ publicKey });
+		return this.createAccountTransactions(publicKey);
+	}
+
+	saveWIFAfterCreateAccount() {
+		const { accountName, generatedWIF } = this.props;
+		const { publicKey, password } = this.state;
+
+		this.props.saveWIFAfterCreateAccount({
+			accountName: accountName.value.trim(),
+			generatedWIF: generatedWIF.value.trim(),
+			publicKey,
+			password,
+		});
+	}
+
+	createAccountTransactions(publicKey) {
+		const { signupOptionsForm, accountName } = this.props;
+		const name = accountName.value.trim();
+		const senderName = signupOptionsForm.get('registrarAccount').value;
+
+		return this.props.createAccountTransaction(senderName, { name, publicKey });
+	}
+
 	isDisabledSubmit() {
 		const {
 			accepted,
@@ -58,6 +119,28 @@ class SignUp extends React.Component {
 		if ((!accountName.value || accountName.error) ||
 			(!generatedWIF.value || generatedWIF.error) ||
 			(!confirmWIF.value || confirmWIF.error) || !accepted) {
+			return true;
+		}
+
+		return false;
+	}
+
+	isDisabledSubmitParent() {
+		const {
+			accepted,
+			accountName,
+			generatedWIF,
+			confirmWIF,
+			accounts,
+			signupOptionsForm,
+		} = this.props;
+
+		if ((!accountName.value || accountName.error) ||
+			(!generatedWIF.value || generatedWIF.error) ||
+			(!confirmWIF.value || confirmWIF.error) ||
+			(!accounts.length) ||
+			(!signupOptionsForm.get('registrarAccount').value) ||
+			!accepted) {
 			return true;
 		}
 
@@ -126,13 +209,17 @@ class SignUp extends React.Component {
 						</span>
 						{
 							check === SIGN_UP_OPTIONS_TYPES.PARENT ? (
-								<TransactionScenario handleTransaction={(password) => this.onCreate(password)}>
+								<TransactionScenario
+									handleTransaction={() => this.validateCreateAccount()}
+									onUnlock={(password) => this.onUnlock(password)}
+									onSuccess={() => this.saveWIFAfterCreateAccount()}
+								>
 									{
 										(submit) => (
 											<ButtonComponent
 												loading={loading}
 												isAddAccount={isAddAccount}
-												disabled={this.isDisabledSubmit()}
+												disabled={this.isDisabledSubmitParent()}
 												submit={submit}
 											/>
 										)
@@ -175,6 +262,9 @@ SignUp.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	validateCreateAccount: PropTypes.func.isRequired,
+	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
+	createAccountTransaction: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
@@ -198,6 +288,9 @@ export default connect(
 	(dispatch) => ({
 		generateWIF: () => dispatch(generateWIF()),
 		createAccount: (value, isAdd) => dispatch(createAccount(value, isAdd)),
+		createAccountTransaction: (sender, value) => dispatch(createAccountTransaction(sender, value)),
+		validateCreateAccount: (value, isAdd) => dispatch(validateCreateAccount(value, isAdd)),
+		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		clearForm: (form) => dispatch(clearForm(form)),

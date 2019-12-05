@@ -42,14 +42,16 @@ export const generateWIF = () => (dispatch) => {
 
 const customParentAccount = () => async (dispatch, getState) => {
 	try {
+		console.log('customParentAccount')
 		const networkName = getState().global.getIn(['network', 'name']);
 
 		const account = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'registrarAccount']);
-
+		console.log('1111111')
 		if (!account.value) {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Input shouldn\'t be empty'));
 			return null;
 		}
+		console.log('22222222')
 
 		const sender = await echo.api.getAccountByName(account.value);
 
@@ -57,6 +59,7 @@ const customParentAccount = () => async (dispatch, getState) => {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account not exist'));
 			return null;
 		}
+		console.log('3333333333')
 
 		let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -65,28 +68,27 @@ const customParentAccount = () => async (dispatch, getState) => {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account isn\'t login'));
 			return null;
 		}
+		console.log('44444444444')
 
+		return true;
 	} catch (_) {
 		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Invalid account'));
 		return null;
 	}
-
-	return true;
 };
 
 /**
- * @method validateCreateAccountAndCreateTransactionOptions
+ * @method validateCreateAccount
  * @param {Object} param0
  * @param {Boolean} isAddAccount
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const validateCreateAccountAndCreateTransactionOptions = ({
+export const validateCreateAccount = ({
 	accountName, generatedWIF, confirmWIF,
 }, isAddAccount) => async (dispatch, getState) => {
 	let accountNameError = validateAccountName(accountName);
 	let confirmWIFError = validateWIF(confirmWIF);
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
-	console.log('confirmWIF ', generatedWIF, confirmWIF)
 	if (generatedWIF !== confirmWIF) {
 		confirmWIFError = 'WIFs do not match';
 	}
@@ -116,14 +118,14 @@ export const validateCreateAccountAndCreateTransactionOptions = ({
 	dispatch(toggleLoading(FORM_SIGN_UP, true));
 
 	let publicKey = null;
-	let valid = null;
+	let valid = true;
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
 			({ publicKey } = await AuthApi.registerAccount(accountName, generatedWIF));
-			valid = true;
 			break;
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			valid = await dispatch(customParentAccount());
+			({ publicKey } = AuthApi.getPublicKeyFromWif(generatedWIF));
 			break;
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
 			break;
@@ -133,7 +135,9 @@ export const validateCreateAccountAndCreateTransactionOptions = ({
 			return null;
 	}
 
+	console.log('publicKey || valid', publicKey, valid);
 	if (!publicKey || !valid) {
+		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		return null;
 	}
 
@@ -141,11 +145,11 @@ export const validateCreateAccountAndCreateTransactionOptions = ({
 };
 
 /**
- * @method saveWIFsAfterCreateAccount
+ * @method saveWIFAfterCreateAccount
  * @param {Object} param0
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const saveWIFsAfterCreateAccount = ({
+export const saveWIFAfterCreateAccount = ({
 	accountName, generatedWIF, publicKey, password,
 }) => async (dispatch, getState) => {
 	const network = getState().global.getIn(['network']).toJS();
@@ -172,8 +176,8 @@ export const createAccount = ({
 	accountName, generatedWIF, confirmWIF, password,
 }, isAddAccount) => async (dispatch) => {
 	try {
-		const publicKey = await dispatch(validateCreateAccountAndCreateTransactionOptions(
-			{ accountName, generateWIF, confirmWIF },
+		const publicKey = await dispatch(validateCreateAccount(
+			{ accountName, generatedWIF, confirmWIF },
 			isAddAccount,
 		));
 
@@ -181,7 +185,7 @@ export const createAccount = ({
 			return null;
 		}
 
-		await dispatch(saveWIFsAfterCreateAccount({
+		await dispatch(saveWIFAfterCreateAccount({
 			accountName, generatedWIF, password, publicKey,
 		}));
 
