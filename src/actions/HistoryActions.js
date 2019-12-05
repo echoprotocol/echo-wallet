@@ -91,11 +91,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 
 	if (options.value) {
-		console.log('opt1')
-		console.log(operation)
-		console.log(options)
-		console.log(options.value)
-		console.log(_.get(operation, options.value))
 		if (validators.isUInt64(operation.amount)) {
 			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
 			result.value = {
@@ -129,7 +124,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				};
 			}
 		}
-		console.log(result)
 	}
 
 	if (options.asset) {
