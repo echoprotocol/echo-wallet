@@ -45,7 +45,6 @@ class TabGeneralInfo extends React.Component {
 		}
 
 		if (!_.isEqual(prevProps.contract, this.props.contract)) {
-			console.log('here!!!!');
 			this.props.formatAbi(this.props.match.params.id);
 		}
 	}
