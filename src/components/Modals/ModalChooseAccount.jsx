@@ -89,6 +89,16 @@ class ModalChooseAccount extends React.Component {
 
 		this.props.toggleChecked('accounts', accounts);
 	}
+
+	renderSort(sortType, sortInc, type) {
+		return (
+			<div className="sort">
+				<i className={classnames('icon-sort-up', { active: sortType === type && sortInc })} />
+				<i className={classnames('icon-sort-down', { active: sortType === type && !sortInc })} />
+			</div>
+		);
+	}
+
 	renderAccounts(account) {
 		const { accounts } = this.props;
 
@@ -148,32 +158,16 @@ class ModalChooseAccount extends React.Component {
 												<span className="label-text">Accounts</span>
 											</label>
 										</div>
+
+
 										<button className="sort" onClick={() => this.onSort('name')}>
-											<Icon
-												name="dropdown"
-												flipped="vertically"
-												className={classnames({ active: sortType === 'name' && sortInc })}
-											/>
-											<Icon
-												name="dropdown"
-												flipped="horizontally"
-												className={classnames({ active: sortType === 'name' && !sortInc })}
-											/>
+											{ this.renderSort(sortType, sortInc, 'name') }
 										</button>
 									</div>
 									<div className="check-container">
 										<div className="txt">Balance</div>
 										<button className="sort" onClick={() => this.onSort('balance')}>
-											<Icon
-												name="dropdown"
-												flipped="vertically"
-												className={classnames({ active: sortType === 'balance' && sortInc })}
-											/>
-											<Icon
-												name="dropdown"
-												flipped="horizontally"
-												className={classnames({ active: sortType === 'balance' && !sortInc })}
-											/>
+											{ this.renderSort(sortType, sortInc, 'balance') }
 										</button>
 									</div>
 								</div>

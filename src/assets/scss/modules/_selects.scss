@@ -53,8 +53,6 @@
 		transition: color $speed;
 		pointer-events: none;
 		line-height: 1;
-		max-width: 250px;
-		@include cut-text();
 	}
 
 	input[type="checkbox"] {
