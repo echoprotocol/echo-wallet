@@ -1027,7 +1027,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
-	console.log('11111', operation, options)
+	// console.log('11111', operation, options)
 	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
