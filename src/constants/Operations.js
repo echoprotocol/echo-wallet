@@ -391,6 +391,7 @@ export default {
 			amount: 'value.amount',
 			asset: 'value.asset_id',
 		},
+		signer: 'sender',
 	},
 	contract_whitelist: {
 		value: OPERATIONS_IDS.CONTRACT_WHITELIST,
@@ -455,7 +456,7 @@ export default {
 		},
 	},
 	sidechain_eth_issue: {
-		value: OPERATIONS_IDS.SIDECHAIN_ETH_ISSUE,
+		value: OPERATIONS_IDS.SIDECHAIN_ISSUE,
 		name: 'Sidechain eth issue',
 		options: {
 			from: 'account',
@@ -465,7 +466,7 @@ export default {
 		},
 	},
 	sidechain_eth_burn: {
-		value: OPERATIONS_IDS.SIDECHAIN_ETH_BURN,
+		value: OPERATIONS_IDS.SIDECHAIN_BURN,
 		name: 'Sidechain eth burn',
 		options: {
 			from: 'account',
