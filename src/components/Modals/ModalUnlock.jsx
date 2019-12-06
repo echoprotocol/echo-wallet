@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import FocusTrap from 'focus-trap-react';
 
 class ModalUnlockWallet extends React.Component {
 
@@ -30,56 +31,56 @@ class ModalUnlockWallet extends React.Component {
 		} = this.props;
 
 		return (
-			<Modal className="small unclock-size" open={show} dimmer="inverted">
-				<div className="modal-content">
-
-					<span
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
-					/>
-					<div className="modal-header" />
-					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Unlock Wallet</h3>
-							</div>
-							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="Password">Password</label>
-									<input
-										type="password"
-										placeholder="Password"
-										name="password"
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-									<span className="error-message">{error}</span>
-								</Form.Field>
-							</div>
-							<div className="form-panel">
-								<a
-									className="action-link"
-									role="button"
-									onClick={(e) => this.onForgot(e)}
-									onKeyPress={(e) => this.onForgot(e)}
-									tabIndex="0"
-								>
+			<Modal className="small" open={show}>
+				<FocusTrap>
+					<div className="focus-trap-wrap">
+						<div className="modal-content">
+							<button
+								className="icon-close"
+								onClick={(e) => this.onClose(e)}
+							/>
+							<div className="modal-header" />
+							<div className="modal-body">
+								<Form className="main-form">
+									<div className="form-info">
+										<h3>Unlock Wallet</h3>
+									</div>
+									<div className="field-wrap">
+										<Form.Field className={classnames('error-wrap', { error: !!error })}>
+											<label htmlFor="Password">Password</label>
+											<input
+												type="password"
+												placeholder="Password"
+												name="password"
+												onChange={(e) => this.onChange(e)}
+												autoFocus
+											/>
+											<span className="error-message">{error}</span>
+										</Form.Field>
+									</div>
+									<div className="form-panel">
+										<a
+											className="action-link"
+											role="button"
+											onClick={(e) => this.onForgot(e)}
+											onKeyPress={(e) => this.onForgot(e)}
+											tabIndex="0"
+										>
 									Forgot password?
-								</a>
-								<Button
-									type="submit"
-									className="main-btn"
-									onClick={(e) => this.onSuccess(e)}
-									disabled={disabled}
-									content="Unlock Wallet"
-								/>
+										</a>
+										<Button
+											type="submit"
+											className="main-btn"
+											onClick={(e) => this.onSuccess(e)}
+											disabled={disabled}
+											content="Unlock Wallet"
+										/>
+									</div>
+								</Form>
 							</div>
-						</Form>
+						</div>
 					</div>
-				</div>
+				</FocusTrap>
 			</Modal>
 		);
 	}

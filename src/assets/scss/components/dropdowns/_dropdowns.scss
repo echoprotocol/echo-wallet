@@ -17,6 +17,7 @@
             display: none !important;
         }
 	}
+
 }
 
 .dropdown.icon {
@@ -37,21 +38,21 @@
     align-items: center;
 }
 
-.visible.transition {
-    display: flex;
-    visibility: visible !important;
 
-    &.menu {
-        display: block;
-    }
-}
 
 .dropdown > .selected.item {
 	background-color: rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, 0.95);
 }
 
+.visible {
+	display: flex;
+	visibility: visible !important;
 
+	&.menu {
+		display: block;
+	}
+}
 
 .dropdown-wrap {
 

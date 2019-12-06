@@ -26,13 +26,10 @@ class ModalToWhitelist extends React.Component {
 		} = this.props;
 
 		return (
-			<Modal className="to-whitelist-modal" open={show} dimmer="inverted">
-				<span
+			<Modal className="to-whitelist-modal" open={show}>
+				<button
 					className="icon-close"
 					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
 				/>
 				<div className="modal-header">
 					<h3 className="modal-header-title">Add account to whitelist</h3>
