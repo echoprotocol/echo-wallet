@@ -27,19 +27,27 @@ class ContractList extends React.Component {
 	}
 
 	showBalance(balance) {
+		if (balance.length === 0) {
+			return {};
+		}
+
 		if (balance.length === 1) {
 			return balance[0];
 		}
 
 		const coreAsset = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
 
-		if (!coreAsset) {
-			const anotherNotNullBalance = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
-
-			return anotherNotNullBalance || balance[0];
+		if (coreAsset) {
+			return coreAsset;
 		}
 
-		return coreAsset;
+		const anotherNotNullBalance = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+		if (anotherNotNullBalance) {
+			return anotherNotNullBalance;
+		}
+
+		return balance[0];
 	}
 
 	sortList() {
@@ -49,8 +57,8 @@ class ContractList extends React.Component {
 		return Object.entries(contracts)
 			.sort(([id1, data1], [id2, data2]) => {
 
-				const balanceToShow1 = this.showBalance(data1.balance);
-				const balanceToShow2 = this.showBalance(data2.balance);
+				const balanceToShow1 = this.showBalance(data1.balances);
+				const balanceToShow2 = this.showBalance(data2.balances);
 
 				let t1 = '';
 				let t2 = '';
@@ -75,12 +83,12 @@ class ContractList extends React.Component {
 			});
 	}
 
-	renderRow([id, { name, disabled, balance }]) {
+	renderRow([id, { name, disabled, balances }]) {
 		if (disabled) {
 			return null;
 		}
 
-		const balanceToShow = this.showBalance(balance);
+		const balanceToShow = this.showBalance(balances);
 
 		return (
 			<Table.Row

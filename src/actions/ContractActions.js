@@ -93,9 +93,6 @@ export const getContractBalances = async (contractsIds) => {
 		return map;
 	}, {});
 
-
-	// [[],[{"amount":10000000,"asset_id":"1.3.0"}]]
-
 	return contractWithMapBalances;
 };
 
@@ -123,7 +120,7 @@ export const loadContracts = (accountId, networkName) => async (dispatch) => {
 	const balances = await getContractBalances(Object.keys(contracts[accountId]));
 
 	const contractWithBalances = contractMap
-		.mapEntries(([contractId, data]) => [contractId, { balance: balances[contractId], ...data }]);
+		.mapEntries(([contractId, data]) => [contractId, { balances: balances[contractId], ...data }]);
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
 		value: contractWithBalances,
