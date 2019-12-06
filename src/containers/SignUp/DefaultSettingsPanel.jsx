@@ -7,7 +7,10 @@ class DefaultSettingsPanel extends React.Component {
 		return (
 			<div className="register-info">
 				<p>
-					Your account will be registered by public default registrar.
+					Register for free by public registrar.
+				</p>
+				<p>
+					Delegation to participate in the consensus will be granted to public registrar.
 				</p>
 			</div>
 		);
