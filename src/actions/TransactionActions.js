@@ -16,6 +16,7 @@ import {
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
 	FORM_SIGN_UP,
+	FORM_CHANGE_DELEGATE,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
@@ -1523,6 +1524,8 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
  */
 export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 	try {
+		dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', null));
+
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 		const [delegate] = await echo.api.getFullAccounts([delegateId]);
@@ -1533,10 +1536,19 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 		] = await echo.api.getObjects([ECHO_ASSET_ID, activeUserId]);
 
 		if (!delegate) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'Delegate not found'));
 			return null;
 		}
 
-		const { delegate_share: delegateShare } = activeUser.options;
+		const {
+			delegate_share: delegateShare,
+			delegating_account: currentDelegate,
+		} = activeUser.options;
+
+		if (currentDelegate === delegateId) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'This account already your delegate'));
+			return null;
+		}
 
 		const options = {
 			fee: {

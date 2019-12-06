@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { closeModal } from '../../actions/ModalActions';
 import { lookupAccountsList } from '../../actions/AccountActions';
 import { changeDelegate } from '../../actions/TransactionActions';
-import { setFormValue } from '../../actions/FormActions';
+import { setFormValue, clearForm } from '../../actions/FormActions';
 
 import { MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { FORM_CHANGE_DELEGATE } from '../../constants/FormConstants';
@@ -48,11 +48,12 @@ class ModalChangeDelegate extends React.Component {
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		this.setState({ searchText: accountName.text });
-		this.setFormValue('delegate', accountName.text);
+		this.props.setFormValue('delegate', accountName.text);
 	}
 
 	clear() {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
+		this.props.clearForm();
 	}
 
 	async accountSearchHandler(e, data) {
@@ -163,8 +164,8 @@ class ModalChangeDelegate extends React.Component {
 										onChange={(e, { value }) => this.onChangeAccount(value)}
 									/>
 								</div>
+								{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
 							</div>
-							{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
 						</div>
 					</div>
 					<div className="form-panel">
@@ -196,6 +197,7 @@ ModalChangeDelegate.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	changeDelegate: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
 	delegateObject: PropTypes.object.isRequired,
 };
@@ -214,5 +216,6 @@ export default connect(
 		closeModal: (modal) => dispatch(closeModal(modal)),
 		changeDelegate: (delegateId) => dispatch(changeDelegate(delegateId)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CHANGE_DELEGATE, field, value)),
+		clearForm: () => dispatch(clearForm(FORM_CHANGE_DELEGATE)),
 	}),
 )(ModalChangeDelegate);
