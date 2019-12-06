@@ -12,7 +12,7 @@ class TabGeneralInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contractId: '',
+			contractId: props.contractId,
 			open: false,
 		};
 	}

@@ -637,7 +637,7 @@ export const getFullContract = (id) => async (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const contract = await echo.api.getFullContract(id);
 	console.log(contract)
-	
+
 	// const whitelist = await echo.api.getContractPoolWhitelist(id);
 	// console.log(whitelist)
 };
