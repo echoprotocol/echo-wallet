@@ -3,7 +3,6 @@ import { Tab, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import { CACHE_MAPS } from 'echojs-lib';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
@@ -86,17 +85,8 @@ ViewContract.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 };
 
-ViewContract.defaultProps = {
-	contract: null,
-};
-
 export default withRouter(connect(
-	(state, ownProps) => ({
-		contract: state.echojs.getIn([
-			CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID,
-			ownProps.match.params.id,
-		]),
-	}),
+	() => ({}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
