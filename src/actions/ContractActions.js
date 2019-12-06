@@ -35,6 +35,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_VIEW_CONTRACT,
+	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 import {
@@ -492,10 +493,15 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	fees = await Promise.all(fees);
 
-
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
 			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+		} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
+
+			const formData = getState().form.getIn([form]).toJS();
+			if (formData.amount.value && formData.id.value) {
+				dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+			}
 		} else {
 			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
 		}
@@ -628,6 +634,8 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 };
 export const getFullContract = (id) => async (dispatch) => {
 	const contract = await echo.api.getFullContract(id);
-	const whitelist = await echo.api.
 	console.log(contract)
+	// const whitelist = await echo.api.getContractPoolWhitelist(id);
+	// console.log(whitelist)
 };
+

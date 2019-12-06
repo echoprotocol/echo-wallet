@@ -7,6 +7,8 @@ const DEFAULT_FIELDS = Map({
 	id: '',
 	name: '',
 	intervalId: null,
+	whitelist: [],
+	blacklist: [],
 });
 
 export default createModule({

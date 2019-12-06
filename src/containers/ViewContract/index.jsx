@@ -17,7 +17,7 @@ import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 import TabGeneralInfo from './TabGeneralInfo';
-import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
+import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST, MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 class ViewContract extends React.Component {
@@ -45,9 +45,13 @@ class ViewContract extends React.Component {
 					<Tab.Pane className="scroll-fix">
 						<TabGeneralInfo
 							contractId={this.props.contractId}
+							whitelist={this.props.whitelist}
+							blacklist={this.props.blacklist}
 							getFullContract={this.props.getFullContract}
 							openWhitelistModal={this.props.openWhitelistModal}
 							openBlacklistModal={this.props.openBlacklistModal}
+							openToWhitelistModal={this.props.openToWhitelistModal}
+							openToBlacklistModal={this.props.openToBlacklistModal}
 						/>
 					</Tab.Pane>
 				),
@@ -85,6 +89,8 @@ class ViewContract extends React.Component {
 
 ViewContract.propTypes = {
 	match: PropTypes.object.isRequired,
+	whitelist: PropTypes.array.isRequired,
+	blacklist: PropTypes.array.isRequired,
 	contractId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
@@ -94,11 +100,15 @@ ViewContract.propTypes = {
 	getFullContract: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
+	openToWhitelistModal: PropTypes.func.isRequired,
+	openToBlacklistModal: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		contractId: state.contract.get('id'),
+		whitelist: state.contract.get('whitelist'),
+		blacklist: state.contract.get('blacklist'),
 	}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),
@@ -107,7 +117,9 @@ export default withRouter(connect(
 		resetConverter: () => dispatch(resetConverter()),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CALL_CONTRACT_VIA_ID)),
 		getFullContract: (id) => dispatch(getFullContract(id)),
-		openWhitelistModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
-		openBlacklistModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
+		openWhitelistModal: () => dispatch(openModal(MODAL_WHITELIST)),
+		openBlacklistModal: () => dispatch(openModal(MODAL_BLACKLIST)),
+		openToWhitelistModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
+		openToBlacklistModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 	}),
 )(ViewContract));

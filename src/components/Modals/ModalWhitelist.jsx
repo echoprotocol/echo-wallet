@@ -2,11 +2,13 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeModal } from '../../actions/ModalActions';
+import { closeModal, openModal } from '../../actions/ModalActions';
 
-import { MODAL_WHITELIST } from '../../constants/ModalConstants';
+import { MODAL_WHITELIST, MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
+import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
+import { REMOVE_FROM_WHITELIST } from '../../constants/ContractsConstants';
 
 class ModalWhitelist extends React.Component {
 
@@ -21,6 +23,26 @@ class ModalWhitelist extends React.Component {
 		this.props.closeModal();
 	}
 
+	onOpenAddModal(e) {
+		e.preventDefault();
+		this.props.closeModal();
+		this.props.openAddModal();
+	}
+
+	renderList() {
+		const { whitelist } = this.props;
+		return whitelist.map((el) => (
+			<button className="segment">
+				<Avatar accountName={el.name} />
+				<div className="name">{el.name}</div>
+				<ActionBtn
+					icon="remove"
+					text="Remove"
+					onClick={this.props.removeFromWhiteList(el.id)}
+				/>
+			</button>
+		));
+	}
 
 	render() {
 		const {
@@ -41,44 +63,13 @@ class ModalWhitelist extends React.Component {
 				</div>
 				<div className="modal-body">
 					<div className="segments">
-						<button className="segment">
-							<Avatar accountName="pet88" />
-							<div className="name">pet88</div>
-							<ActionBtn
-								icon="remove"
-								text="Remove"
-							/>
-						</button>
-						<button className="segment">
-							<Avatar accountName="val32" />
-							<div className="name">val32</div>
-							<ActionBtn
-								icon="remove"
-								text="Remove"
-							/>
-						</button>
-						<button className="segment">
-							<Avatar accountName="rom24" />
-							<div className="name">rom24</div>
-							<ActionBtn
-								icon="remove"
-								text="Remove"
-							/>
-						</button>
-						<button className="segment">
-							<Avatar accountName="alex_92" />
-							<div className="name">alex_92</div>
-							<ActionBtn
-								icon="remove"
-								text="Remove"
-							/>
-						</button>
+						{this.renderList()}
 					</div>
 					<div className="form-panel">
 						<Button
 							className="main-btn"
 							content="Add account"
-							onClick={(e) => this.onClose(e)}
+							onClick={(e) => this.onOpenAddModal(e)}
 						/>
 					</div>
 				</div>
@@ -91,6 +82,9 @@ class ModalWhitelist extends React.Component {
 ModalWhitelist.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
+	whitelist: PropTypes.array.isRequired,
+	openAddModal: PropTypes.func.isRequired,
+	removeFromWhiteList: PropTypes.func.isRequired,
 };
 
 ModalWhitelist.defaultProps = {
@@ -99,9 +93,13 @@ ModalWhitelist.defaultProps = {
 
 export default connect(
 	(state) => ({
+		whitelist: state.contract.get('whitelist'),
 		show: state.modal.getIn([MODAL_WHITELIST, 'show']),
 	}),
 	(dispatch) => ({
+		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
 		closeModal: () => dispatch(closeModal(MODAL_WHITELIST)),
+		removeFromWhiteList: (accId) =>
+			dispatch(contractChangeWhiteAndBlackLists(accId, REMOVE_FROM_WHITELIST)),
 	}),
 )(ModalWhitelist);

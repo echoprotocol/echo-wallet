@@ -1,74 +1,72 @@
-.dropdown.network-dropdown {
+.network-dropdown {
 	margin-right: -18px;
 
-	&.upward {
-		&>.menu {
-			bottom: calc(100% - 5px);
+	.dropdown-trigger {
+		height: 39px;
+		display: flex;
+		align-items: center;
+		padding: 0 15px;
+		background-color: transparent;
+		transition: background-color $speed;
+		border-left: 1px solid rgb(212, 212, 212);
+	
+		&:hover {
+			background-color: #f7f7f7;
+		}
+	
+		.icon.dropdown {
+			right: 0;
+			margin: auto 10px auto 0;
 		}
 	}
 
 	&.disconnected {
-		.network-dropdown-trigger {
+		.dropdown-trigger {
 			&:hover {
 				background-color: transparent;
 			}
-
+	
 			.status.connected {
 				color: #fff;
-
+	
 				&:before {
 					background-color: #fff;
 				}
 			}
-
+	
 			.pipeline-block,
-			.icon-dropdown_arrow,
+			.icon.dropdown,
 			.description {
 				color: #fff;
 			}
 		}
 	}
-	
+
 	&.warning {
-		.network-dropdown-trigger {
+		.dropdown-trigger {
 			&:hover {
 				background-color: transparent;
 			}
-
+	
 			.status.connected {
 				color: #fff;
-
+	
 				&:before {
 					background-color: #fff;
 				}
 			}
-
+	
 			.pipeline-block,
-			.icon-dropdown_arrow,
+			.icon.dropdown,
 			.description {
 				color: rgba(#fff, .7);
 			}
 		}
 	}
 
-	.network-dropdown-trigger {
-		height: 39px;
-		display: flex;
-		align-items: center;
-		padding: 0 13px 0 12px;
-		background-color: transparent;
-		transition: background-color $speed;
-		border-left: 1px solid rgb(212, 212, 212);
-
-		&:hover {
-			background-color: #f7f7f7;
-
-		}
-
-		.icon-dropdown_arrow {
-			margin-left: auto;
-			margin-right: 2px;
-			font-size: 4px;
+	&.upward {
+		&>.menu {
+			bottom: calc(100% - 5px);
 		}
 	}
 
@@ -85,7 +83,6 @@
 		}
 
 	}
-
 
 	.network-link {
 		color: $main-color;
@@ -116,6 +113,7 @@
 
 		}
 
+
 		.item {
 			padding: 0;
 			height: 40px;
@@ -124,16 +122,6 @@
 			justify-content: center;
 			color: $black;
 			transition: color $speed, background-color $speed;
-
-			&-divider {
-				height: 1px;
-				background-color: $bd-gray;
-				margin: 6px 0 0;
-
-				&.disabled {
-					opacity: 1;
-				}
-			}
 
 			&:hover {
 				&.selected {
@@ -193,7 +181,7 @@
 				}
 			}
 
-			&.item-divider+.item:not(.item-link) {
+			&.item-divider + .item:not(.item-link) {
 				margin-top: 6px;
 			}
 
@@ -281,6 +269,15 @@
 			}
 		}
 
+		.item-divider {
+			height: 1px;
+			background-color: $bd-gray;
+			margin: 6px 0 0;
+
+			&.disabled {
+				opacity: 1;
+			}
+		}
 	}
 
 	.icon-remove {

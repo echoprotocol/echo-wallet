@@ -7,10 +7,9 @@ import ModalInfo from './ModalInfo';
 import ModalAddProposalWIF from './ModalAddProposalWIF';
 import ModalERC20ToWatchList from './ModalERC20ToWatchList';
 import ModalChangeParentAccount from './ModalChangeParentAccount';
-import ModalToWhitelist from './ModalToWhitelist';
-import ModalToBlacklist from './ModalToBlacklist';
 import ModalReplenish from './ModalReplenish';
 import ModalWhitelist from './ModalWhitelist';
+import ModalBlacklist from './ModalBlacklist';
 
 export default class ModalsComponent extends React.Component {
 
@@ -24,10 +23,9 @@ export default class ModalsComponent extends React.Component {
 				<ModalAddProposalWIF />
 				<ModalERC20ToWatchList />
 				<ModalChangeParentAccount />
-				<ModalToWhitelist />
-				<ModalToBlacklist />
 				<ModalReplenish />
 				<ModalWhitelist />
+				<ModalBlacklist />
 			</React.Fragment>
 		);
 	}
