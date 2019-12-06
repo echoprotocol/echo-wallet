@@ -11,9 +11,7 @@ class IpUrlPanel extends React.Component {
 		return (
 			<React.Fragment>
 				<div className="register-info">
-					<p>
-						Register a new account through a running node.
-					</p>
+					<p>Register a new account through a running node.</p>
 				</div>
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error: !!ipOrUrl.error })}>
