@@ -2,13 +2,13 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeModal, openModal } from '../../actions/ModalActions';
+import { CACHE_MAPS } from 'echojs-lib';
 
+import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
-import { REMOVE_FROM_BLACKLIST } from '../../constants/ContractsConstants';
 
 class ModalBalcklist extends React.Component {
 
@@ -30,18 +30,23 @@ class ModalBalcklist extends React.Component {
 	}
 
 	renderList() {
-		const { blacklist, owner, activeUser } = this.props;
-		return blacklist.map((el) => (
-			<button className="segment">
-				<Avatar accountName={el.name} />
-				<div className="name">{el.name}</div>
+		const {
+			contracts, contractId, owner, activeUser, accounts,
+		} = this.props;
+		if (!contracts.get(contractId)) {
+			return [];
+		}
+		return contracts.getIn([contractId, 'blacklist']).map((el, i) => (
+			<div className="segment" key={i.toString()}>
+				<Avatar accountName={accounts.getIn([el, 'name'])} />
+				<div className="name">{accounts.getIn([el, 'name'])}</div>
 				{ owner === activeUser && <ActionBtn
 					icon="remove"
 					text="Remove"
-					onClick={this.props.removeFromBlackList(el.id)}
+					action={() => this.props.removeFromBlackList(el)}
 				/>}
-			</button>
-		));
+			</div>
+		)).toArray();
 	}
 
 	render() {
@@ -83,7 +88,9 @@ ModalBalcklist.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
 	openAddModal: PropTypes.func.isRequired,
-	blacklist: PropTypes.array.isRequired,
+	contracts: PropTypes.object.isRequired,
+	accounts: PropTypes.object.isRequired,
+	contractId: PropTypes.string.isRequired,
 	removeFromBlackList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
@@ -95,15 +102,17 @@ ModalBalcklist.defaultProps = {
 
 export default connect(
 	(state) => ({
-		blacklist: state.contract.get('blacklist'),
+		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
+		accounts: state.echojs.get(CACHE_MAPS.ACCOUNTS_BY_ID),
 		show: state.modal.getIn([MODAL_BLACKLIST, 'show']),
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 		closeModal: () => dispatch(closeModal(MODAL_BLACKLIST)),
 		removeFromBlackList: (accId) =>
-			dispatch(contractChangeWhiteAndBlackLists(accId, REMOVE_FROM_BLACKLIST)),
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_BLACKLIST)),
 	}),
 )(ModalBalcklist);

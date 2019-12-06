@@ -2,13 +2,13 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeModal, openModal } from '../../actions/ModalActions';
+import { CACHE_MAPS } from 'echojs-lib';
 
+import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_WHITELIST, MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
-import { REMOVE_FROM_WHITELIST } from '../../constants/ContractsConstants';
 
 class ModalWhitelist extends React.Component {
 
@@ -30,18 +30,26 @@ class ModalWhitelist extends React.Component {
 	}
 
 	renderList() {
-		const { whitelist, owner, activeUser } = this.props;
-		return whitelist.map((el) => (
-			<button className="segment">
-				<Avatar accountName={el.name} />
-				<div className="name">{el.name}</div>
+		const {
+			contracts, owner, activeUser, contractId, accounts,
+		} = this.props;
+		if (!contracts.get(contractId)) {
+			return [];
+		}
+		return contracts.getIn([contractId, 'whitelist']).map((el, i) => (
+			<div
+				className="segment"
+				key={i.toString()}
+			>
+				<Avatar accountName={accounts.getIn([el, 'name'])} />
+				<div className="name">{accounts.getIn([el, 'name'])}</div>
 				{ owner === activeUser && <ActionBtn
 					icon="remove"
 					text="Remove"
-					onClick={this.props.removeFromWhiteList(el.id)}
+					action={() => this.props.removeFromWhiteList(el)}
 				/>}
-			</button>
-		));
+			</div>
+		)).toArray();
 	}
 
 	render() {
@@ -82,7 +90,9 @@ class ModalWhitelist extends React.Component {
 ModalWhitelist.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
-	whitelist: PropTypes.array.isRequired,
+	contracts: PropTypes.object.isRequired,
+	accounts: PropTypes.object.isRequired,
+	contractId: PropTypes.string.isRequired,
 	openAddModal: PropTypes.func.isRequired,
 	removeFromWhiteList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
@@ -95,15 +105,17 @@ ModalWhitelist.defaultProps = {
 
 export default connect(
 	(state) => ({
-		whitelist: state.contract.get('whitelist'),
+		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
+		accounts: state.echojs.get(CACHE_MAPS.ACCOUNTS_BY_ID),
 		show: state.modal.getIn([MODAL_WHITELIST, 'show']),
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
 		closeModal: () => dispatch(closeModal(MODAL_WHITELIST)),
 		removeFromWhiteList: (accId) =>
-			dispatch(contractChangeWhiteAndBlackLists(accId, REMOVE_FROM_WHITELIST)),
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_WHITELIST)),
 	}),
 )(ModalWhitelist);

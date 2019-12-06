@@ -3,22 +3,21 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { CACHE_MAPS } from 'echojs-lib';
+
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
-
 import { MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
-import { ADD_TO_WHITELIST } from '../../constants/ContractsConstants';
 
 class ModalToWhitelist extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			id: '',
+			accountName: '',
 		};
 	}
-
 
 	onClose(e) {
 		e.preventDefault();
@@ -28,15 +27,19 @@ class ModalToWhitelist extends React.Component {
 	onInputChange(e) {
 		this.props.setError(null);
 		const value = e.target.value.trim();
-		this.setState({ id: value });
+		this.setState({ accountName: value });
 	}
 	onAdd(submit) {
-		if (this.props.blacklist.some((el) => el.id === this.state.id)) {
-			this.props.setError('This addres already exists in blacklist');
+		const { contracts, contractId } = this.props;
+		if (!contracts.get(contractId)) {
 			return;
 		}
-		this.props.closeModal();
+		if (contracts.getIn([contractId, 'whitelist']).some((el) => el.id === this.state.accountName)) {
+			this.props.setError('This address already exists in whitelist');
+			return;
+		}
 		submit();
+		this.props.closeModal();
 	}
 
 	render() {
@@ -94,11 +97,12 @@ class ModalToWhitelist extends React.Component {
 
 ModalToWhitelist.propTypes = {
 	show: PropTypes.bool,
+	contracts: PropTypes.object.isRequired,
+	contractId: PropTypes.string.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	addToWhiteList: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
-	blacklist: PropTypes.array.isRequired,
 };
 
 ModalToWhitelist.defaultProps = {
@@ -108,12 +112,14 @@ ModalToWhitelist.defaultProps = {
 
 export default connect(
 	(state) => ({
+		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
-		blacklist: state.contract.get('blacklist'),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_WHITELIST)),
-		addToWhiteList: (accId) => dispatch(contractChangeWhiteAndBlackLists(accId, ADD_TO_WHITELIST)),
+		addToWhiteList: (accId) =>
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_WHITELIST)),
 		setError: (value) => dispatch(setError(MODAL_TO_WHITELIST, value)),
 	}),
 )(ModalToWhitelist);

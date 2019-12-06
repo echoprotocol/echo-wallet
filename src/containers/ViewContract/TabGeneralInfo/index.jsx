@@ -11,7 +11,7 @@ import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
 import ActionBtn from '../../../components/ActionBtn';
 import {
 	initGeneralContractInfo,
-	resetGeneralContractInfo,
+	resetGeneralContractInfo, updateGeneralContractInfo,
 } from '../../../actions/ContractActions';
 import { ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
 import { formatAmount } from '../../../helpers/FormatHelper';
@@ -29,6 +29,12 @@ class TabGeneralInfo extends React.Component {
 
 	componentDidMount() {
 		this.props.initGeneralContractInfo(this.props.match.params.id);
+	}
+
+	async componentDidUpdate(prevProps) {
+		if ((prevProps.contract !== this.props.contract) && prevProps.contract) {
+			await updateGeneralContractInfo(this.props.contract);
+		}
 	}
 
 	componentWillUnmount() {
@@ -113,6 +119,9 @@ class TabGeneralInfo extends React.Component {
 		const {
 			contract, owner, activeUser,
 		} = this.props;
+		if (!contract) {
+			return null;
+		}
 		return (
 			<React.Fragment>
 				<ModalToWhitelist />
@@ -166,12 +175,12 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Whitelist:</td>
 								<td className="val">
 									{
-										contract.get('whitelist').length ?
+										contract.get('whitelist').size ?
 											<button
 												className="link-btn"
 												onClick={this.props.openWhitelistModal}
 											>
-												{contract.get('whitelist').length} members
+												{contract.get('whitelist').size} members
 											</button> :
 											<React.Fragment>
 												{
@@ -195,12 +204,12 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Blacklist:</td>
 								<td className="val">
 									{
-										contract.get('blacklist').length ?
+										contract.get('blacklist').size ?
 											<button
 												className="link-btn"
 												onClick={this.props.openBlacklistModal}
 											>
-												{contract.get('blacklist').length} members
+												{contract.get('blacklist').size} members
 											</button> :
 											<React.Fragment>
 												{

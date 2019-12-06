@@ -19,7 +19,14 @@ import {
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
-import { MODAL_DETAILS, MODAL_REPLENISH } from '../constants/ModalConstants';
+import {
+	MODAL_BLACKLIST,
+	MODAL_DETAILS,
+	MODAL_REPLENISH,
+	MODAL_TO_BLACKLIST,
+	MODAL_TO_WHITELIST,
+	MODAL_WHITELIST,
+} from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
@@ -40,10 +47,6 @@ import {
 import {
 	SOURCE_CODE_MODE,
 	SUPPORTED_ASSET_CUSTOM,
-	ADD_TO_WHITELIST,
-	ADD_TO_BLACKLIST,
-	REMOVE_FROM_BLACKLIST,
-	REMOVE_FROM_WHITELIST,
 } from '../constants/ContractsConstants';
 
 import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
@@ -1167,7 +1170,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
-	// console.log('11111', operation, options)
 	if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
@@ -1728,6 +1730,7 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 };
 
 export const contractChangeWhiteAndBlackLists = (accountId, type) => async (dispatch, getState) => {
+	console.log(accountId, type);
 	const op = {
 		add_to_whitelist: [],
 		add_to_blacklist: [],
@@ -1735,16 +1738,16 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		remove_from_blacklist: [],
 	};
 	switch (type) {
-		case ADD_TO_WHITELIST:
+		case MODAL_TO_WHITELIST:
 			op.add_to_whitelist = [accountId];
 			break;
-		case ADD_TO_BLACKLIST:
+		case MODAL_TO_BLACKLIST:
 			op.add_to_blacklist = [accountId];
 			break;
-		case REMOVE_FROM_WHITELIST:
+		case MODAL_WHITELIST:
 			op.remove_from_whitelist = [accountId];
 			break;
-		case REMOVE_FROM_BLACKLIST:
+		case MODAL_BLACKLIST:
 			op.remove_from_blacklist = [accountId];
 			break;
 		default: return null;
@@ -1779,6 +1782,7 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		}));
 		return true;
 	} catch (e) {
+		console.log(e);
 		return null;
 	}
 };

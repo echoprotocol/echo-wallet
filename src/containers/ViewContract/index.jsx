@@ -44,12 +44,8 @@ class ViewContract extends React.Component {
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabGeneralInfo
-							contractId={this.props.contractId}
 							owner={this.props.owner}
 							activeUser={this.props.activeUser}
-							whitelist={this.props.whitelist}
-							blacklist={this.props.blacklist}
-							getFullContract={this.props.getFullContract}
 							openWhitelistModal={this.props.openWhitelistModal}
 							openBlacklistModal={this.props.openBlacklistModal}
 							openToWhitelistModal={this.props.openToWhitelistModal}
@@ -91,15 +87,11 @@ class ViewContract extends React.Component {
 
 ViewContract.propTypes = {
 	match: PropTypes.object.isRequired,
-	whitelist: PropTypes.array.isRequired,
-	blacklist: PropTypes.array.isRequired,
-	contractId: PropTypes.string.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearContract: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
-	getFullContract: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
 	openToWhitelistModal: PropTypes.func.isRequired,
@@ -110,9 +102,6 @@ ViewContract.propTypes = {
 
 export default withRouter(connect(
 	(state) => ({
-		contractId: state.contract.get('id'),
-		whitelist: state.contract.get('whitelist'),
-		blacklist: state.contract.get('blacklist'),
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
 	}),

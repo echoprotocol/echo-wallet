@@ -642,11 +642,21 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
 	const contractOwner = (await echo.api.getObject(contractId)).owner;
 	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	await echo.api.getFullContract(contractId);
+	const contract = await echo.api.getFullContract(contractId);
+	await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
 	await echo.subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,
 	);
+};
+
+/**
+ * @method updateGeneralContractInfo
+ * @param contract
+ * @returns {Promise<void>}
+ */
+export const updateGeneralContractInfo = async (contract) => {
+	await echo.api.getAccounts(contract.get('whitelist').concat(contract.get('blacklist')).toArray());
 };
 
 /**

@@ -3,12 +3,12 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { CACHE_MAPS } from 'echojs-lib';
+
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
-
 import { MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
-import { ADD_TO_BLACKLIST } from '../../constants/ContractsConstants';
 
 class ModalToBlacklist extends React.Component {
 
@@ -31,8 +31,12 @@ class ModalToBlacklist extends React.Component {
 		this.setState({ id: value });
 	}
 	onAdd(submit) {
-		if (this.props.whitelist.some((el) => el.id === this.state.id)) {
-			this.props.setError('This addres already exists in whitelist');
+		const { contracts, contractId } = this.props;
+		if (!contracts.get(contractId)) {
+			return;
+		}
+		if (contracts.getIn([contractId, 'blacklist']).some((el) => el.id === this.state.id)) {
+			this.props.setError('This address already exists in blacklist');
 			return;
 		}
 		this.props.closeModal();
@@ -95,11 +99,12 @@ class ModalToBlacklist extends React.Component {
 
 ModalToBlacklist.propTypes = {
 	show: PropTypes.bool,
-	closeModal: PropTypes.func.isRequired,
 	error: PropTypes.string,
+	contracts: PropTypes.object.isRequired,
+	contractId: PropTypes.string.isRequired,
+	closeModal: PropTypes.func.isRequired,
 	addToBlackList: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
-	whitelist: PropTypes.array.isRequired,
 };
 
 ModalToBlacklist.defaultProps = {
@@ -111,11 +116,13 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TO_BLACKLIST, 'show']),
 		error: state.modal.getIn([MODAL_TO_BLACKLIST, 'error']),
-		whitelist: state.contract.get('whitelist'),
+		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
+		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_BLACKLIST)),
-		addToBlackList: (accId) => dispatch(contractChangeWhiteAndBlackLists(accId, ADD_TO_BLACKLIST)),
+		addToBlackList: (accId) =>
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_BLACKLIST)),
 		setError: (value) => dispatch(setError(MODAL_TO_BLACKLIST, value)),
 	}),
 )(ModalToBlacklist);
