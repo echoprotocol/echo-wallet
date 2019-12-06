@@ -37,7 +37,8 @@ class ModalWhitelist extends React.Component {
 		if (!contracts.get(contractId)) {
 			return [];
 		}
-		return contracts.getIn([contractId, 'whitelist']).map((el, i) => (
+		const whitelist = contracts.getIn([contractId, 'whitelist']);
+		return whitelist ? whitelist.map((el, i) => (
 			<TransactionScenario
 				handleTransaction={() => this.props.removeFromWhiteList(el)}
 				key={i.toString()}
@@ -56,7 +57,7 @@ class ModalWhitelist extends React.Component {
 					)
 				}
 			</TransactionScenario>
-		)).toArray();
+		)).toArray() : [];
 	}
 
 	render() {

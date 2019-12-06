@@ -24,7 +24,7 @@ import { checkErc20Contract } from '../helpers/ValidateHelper';
 import { MODAL_TOKENS, MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
-import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT, SIDECHAIN_ASSETS_SYMBOLS } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -116,11 +116,33 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch, ge
 			dispatch(diffBalanceChecker('assets', balances));
 		}
 	}
-
-	dispatch(BalanceReducer.actions.set({
-		field: 'assets',
-		value: new List(balances),
-	}));
+	const sidechainAssetSymbols = Object.values(SIDECHAIN_ASSETS_SYMBOLS);
+	const sidechainAssets = [];
+	const echoAssets = balances.filter((b) => {
+		let isSidechainAsset = false;
+		if (sidechainAssetSymbols.some((a) => b.symbol === a.toUpperCase())) {
+			b.notEmpty = true;
+			sidechainAssets.push(b);
+			isSidechainAsset = true;
+		}
+		return !isSidechainAsset;
+	});
+	if (sidechainAssets.length !== sidechainAssetSymbols.length) {
+		for (let i = 0; i < sidechainAssetSymbols.length; i += 1) {
+			if (!sidechainAssets.find((sa) => sa.symbol === sidechainAssetSymbols[i].toUpperCase())) {
+				sidechainAssets.push({
+					balance: 0,
+					precision: 8,
+					symbol: sidechainAssetSymbols[i].toUpperCase(),
+					notEmpty: false,
+				});
+			}
+		}
+	}
+	sidechainAssets.sort((a, b) => (a.symbol > b.symbol ? 1 : -1));
+	dispatch(BalanceReducer.actions.set({ field: 'echoAssets', value: new List(echoAssets) }));
+	dispatch(BalanceReducer.actions.set({ field: 'sidechainAssets', value: new List(sidechainAssets) }));
+	dispatch(BalanceReducer.actions.set({ field: 'assets', value: new List(balances) }));
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 

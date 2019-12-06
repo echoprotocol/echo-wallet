@@ -204,7 +204,7 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Whitelist:</td>
 								<td className="val">
 									{
-										contract.get('whitelist').size ?
+										(contract.get('whitelist') && contract.get('whitelist').size) ?
 											<button
 												className="link-btn"
 												onClick={this.props.openWhitelistModal}
@@ -235,7 +235,7 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Blacklist:</td>
 								<td className="val">
 									{
-										contract.get('blacklist').size ?
+										(contract.get('blacklist') && contract.get('blacklist').size) ?
 											<button
 												className="link-btn"
 												onClick={this.props.openBlacklistModal}
