@@ -15,6 +15,9 @@ import {
 } from '../../../actions/ContractActions';
 import { clearForm } from '../../../actions/FormActions';
 
+import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
+import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
+
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 import { ECHO_ASSET_ID, ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
 import { formatAmount } from '../../../helpers/FormatHelper';
@@ -137,110 +140,114 @@ class TabGeneralInfo extends React.Component {
 		const { mainBalance, otherBalances } = this.showBalance(balances);
 
 		return (
-			<div className="tab-content">
-				<table className="table-key-value">
-					<tbody>
-						<tr>
-							<td className="key">Contract Balance:</td>
-							<td className="val">
-								<div className="val-wrap">
-									<div className="balance-wrap">
-										<div className="balance">{mainBalance.amount}</div>
-										<div className="coin">{mainBalance.symbol}</div>
+			<React.Fragment>
+				<ModalToWhitelist />
+				<ModalToBlacklist />
+				<div className="tab-content">
+					<table className="table-key-value">
+						<tbody>
+							<tr>
+								<td className="key">Contract Balance:</td>
+								<td className="val">
+									<div className="val-wrap">
+										<div className="balance-wrap">
+											<div className="balance">{mainBalance.amount}</div>
+											<div className="coin">{mainBalance.symbol}</div>
+										</div>
+										{
+											otherBalances.length > 0 && (
+												<Dropdown
+													open={open}
+													onFocus={() => { this.setState({ open: true }); }}
+													onBlur={() => { this.setState({ open: false }); }}
+													icon={false}
+													disabled={otherBalances.length === 0}
+													className={classnames('assets-balance-dropdown', { empty: otherBalances.length === 0 })}
+													options={otherBalances.length === 0 ? [] : this.renderList(otherBalances)}
+													selectOnBlur={false}
+													trigger={this.renderDropdownTrigger()}
+												/>
+											)
+										}
 									</div>
-									{
-										otherBalances.length > 0 && (
-											<Dropdown
-												open={open}
-												onFocus={() => { this.setState({ open: true }); }}
-												onBlur={() => { this.setState({ open: false }); }}
-												icon={false}
-												disabled={otherBalances.length === 0}
-												className={classnames('assets-balance-dropdown', { empty: otherBalances.length === 0 })}
-												options={otherBalances.length === 0 ? [] : this.renderList(otherBalances)}
-												selectOnBlur={false}
-												trigger={this.renderDropdownTrigger()}
-											/>
-										)
-									}
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td className="key">Fee Pool:</td>
-							<td className="val">
-								<div className="val-wrap">
-									<div className="balance-wrap">
-										<div className="balance">{this.getPoolAmount() || '0'}</div>
-										<div className="coin">{poolAsset ? poolAsset.get('symbol') : ADDRESS_PREFIX}</div>
+								</td>
+							</tr>
+							<tr>
+								<td className="key">Fee Pool:</td>
+								<td className="val">
+									<div className="val-wrap">
+										<div className="balance-wrap">
+											<div className="balance">{this.getPoolAmount() || '0'}</div>
+											<div className="coin">{poolAsset ? poolAsset.get('symbol') : ADDRESS_PREFIX}</div>
+										</div>
+										<Button
+											className="main-btn"
+											size="small"
+											content="Replenish"
+											onClick={() => this.props.openModal(
+												MODAL_REPLENISH,
+												{ contractId: this.props.match.params.id },
+											)}
+										/>
 									</div>
-									<Button
-										className="main-btn"
-										size="small"
-										content="Replenish"
-										onClick={() => this.props.openModal(
-											MODAL_REPLENISH,
-											{ contractId: this.props.match.params.id },
-										)}
-									/>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td className="key">Whitelist:</td>
-							<td className="val">
-								<button className="link-btn">4 members</button>
-							</td>
-						</tr>
-						<tr>
-							<td className="key">Blacklist:</td>
-							<td className="val">
-								<button className="link-btn">Add account</button>
-								<div className="val-hint">(List is empty)</div>
-							</td>
-						</tr>
-						<tr>
-							<td className="key">Bytecode:</td>
-							<td className="val">
-								<div className="field">
-									<textarea
-										type="text"
-										placeholder="Bytecode"
-										className="code"
-										value={bytecode}
-										readOnly
-									/>
-									<ActionBtn
-										copy={bytecode}
-										icon="icon-copy"
-										text="Copy"
-									/>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td className="key">ABI:</td>
-							<td className="val">
-								<div className="field">
-									<textarea
-										type="text"
-										placeholder="Bytecode"
-										className="code"
-										value={abi}
-										readOnly
-									/>
-									<ActionBtn
-										copy={abi}
-										icon="icon-copy"
-										text="Copy"
-									/>
-								</div>
-							</td>
-						</tr>
+								</td>
+							</tr>
+							<tr>
+								<td className="key">Whitelist:</td>
+								<td className="val">
+									<button className="link-btn">4 members</button>
+								</td>
+							</tr>
+							<tr>
+								<td className="key">Blacklist:</td>
+								<td className="val">
+									<button className="link-btn">Add account</button>
+									<div className="val-hint">(List is empty)</div>
+								</td>
+							</tr>
+							<tr>
+								<td className="key">Bytecode:</td>
+								<td className="val">
+									<div className="field">
+										<textarea
+											type="text"
+											placeholder="Bytecode"
+											className="code"
+											value={bytecode}
+											readOnly
+										/>
+										<ActionBtn
+											copy={bytecode}
+											icon="icon-copy"
+											text="Copy"
+										/>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td className="key">ABI:</td>
+								<td className="val">
+									<div className="field">
+										<textarea
+											type="text"
+											placeholder="Bytecode"
+											className="code"
+											value={abi}
+											readOnly
+										/>
+										<ActionBtn
+											copy={abi}
+											icon="icon-copy"
+											text="Copy"
+										/>
+									</div>
+								</td>
+							</tr>
 
-					</tbody>
-				</table>
-			</div>
+						</tbody>
+					</table>
+				</div>
+			</React.Fragment>
 		);
 	}
 
