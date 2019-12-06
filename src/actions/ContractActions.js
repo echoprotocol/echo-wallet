@@ -62,9 +62,8 @@ export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
 };
 
-export const updateContractBalances = async (contracts) => {
-	const contractObject = contracts.toObject();
-	const balances = Object.keys(contractObject).map((id) => echo.api.getContractBalances(id));
+export const getContractBalances = async (contractsIds) => {
+	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
 	const contractsBalances = await Promise.all(balances);
 
 	const usedAssets = contractsBalances.flat().map((b) => b.asset_id);
@@ -78,7 +77,7 @@ export const updateContractBalances = async (contracts) => {
 	}, {});
 
 
-	const contractWithMapBalances = Object.keys(contractObject).reduce((map, id, i) => {
+	const contractWithMapBalances = contractsIds.reduce((map, id, i) => {
 		const contractBalances = (contractsBalances[i] || []).filter((b) => b);
 		if (contractBalances.length === 0) {
 			map[id] = [{ amount: 0, ...requestedAssetsMap[ECHO_ASSET_ID] }];
@@ -121,7 +120,7 @@ export const loadContracts = (accountId, networkName) => async (dispatch) => {
 	}
 
 	const contractMap = new Map(contracts[accountId]);
-	const balances = await updateContractBalances(contractMap);
+	const balances = await getContractBalances(Object.keys(contracts[accountId]));
 
 	const contractWithBalances = contractMap
 		.mapEntries(([contractId, data]) => [contractId, { balance: balances[contractId], ...data }]);
@@ -420,6 +419,8 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 
 	const [, { code: bytecode }] = await echo.api.getContract(id);
 
+	const { [id]: balances } = await getContractBalances([id]);
+
 	dispatch(ContractReducer.actions.set({
 		field: 'constants',
 		value: new List(constants),
@@ -450,6 +451,11 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 	dispatch(ContractReducer.actions.set({
 		field: 'bytecode',
 		value: bytecode,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'balances',
+		value: balances,
 	}));
 
 };

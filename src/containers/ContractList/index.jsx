@@ -12,7 +12,7 @@ import {
 	CALL_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
 } from '../../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX, SORT_CONTRACTS } from '../../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, SORT_CONTRACTS, ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 
 import { toggleSort } from '../../actions/SortActions';
 
@@ -26,23 +26,61 @@ class ContractList extends React.Component {
 		history.push(link);
 	}
 
+	showBalance(balance) {
+		if (balance.length === 1) {
+			return balance[0];
+		}
+
+		const coreAsset = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
+
+		if (!coreAsset) {
+			const anotherNotNullBalance = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+			return anotherNotNullBalance || balance[0];
+		}
+
+		return coreAsset;
+	}
+
 	sortList() {
 		const contracts = this.props.contracts.toJS();
 		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return Object.entries(contracts)
-			.sort(([id1, { name: name1 }], [id2, { name: name2 }]) => {
+			.sort(([id1, data1], [id2, data2]) => {
 
-				const t1 = (sortType === 'id' ? id1.split(`${CONTRACT_ID_PREFIX}.`)[1] : name1) || '';
-				const t2 = (sortType === 'id' ? id2.split(`${CONTRACT_ID_PREFIX}.`)[1] : name2) || '';
+				const balanceToShow1 = this.showBalance(data1.balance);
+				const balanceToShow2 = this.showBalance(data2.balance);
+
+				let t1 = '';
+				let t2 = '';
+
+				switch (sortType) {
+					case 'id':
+						t1 = id1.split(`${CONTRACT_ID_PREFIX}.`)[1] || '';
+						t2 = id2.split(`${CONTRACT_ID_PREFIX}.`)[1] || '';
+						break;
+					case 'name':
+						t1 = data1.name || '';
+						t2 = data2.name || '';
+						break;
+					case 'balance':
+						t1 = balanceToShow1.amount || '';
+						t2 = balanceToShow2.amount || '';
+						break;
+					default:
+				}
+
 				return (t1.localeCompare(t2, [], { numeric: true })) * (sortInc ? 1 : -1);
 			});
 	}
 
-	renderRow([id, { name, disabled }]) {
+	renderRow([id, { name, disabled, balance }]) {
 		if (disabled) {
 			return null;
 		}
+
+		const balanceToShow = this.showBalance(balance);
 
 		return (
 			<Table.Row
@@ -59,8 +97,8 @@ class ContractList extends React.Component {
 				</Table.Cell>
 				<Table.Cell>
 					<div className="balance-wrap">
-						<span className="balance">35</span>
-						<span className="coin">ECHO</span>
+						<span className="balance">{balanceToShow.amount}</span>
+						<span className="coin">{balanceToShow.symbol}</span>
 					</div>
 				</Table.Cell>
 			</Table.Row>
@@ -86,19 +124,19 @@ class ContractList extends React.Component {
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
 								<div className="sort-wrap">
 									Contract ID
-									{ this.renderSort(sortType, sortInc, 'id') }
+									{this.renderSort(sortType, sortInc, 'id')}
 								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
 								<div className="sort-wrap" >
 									Watched Contract Name
-									{ this.renderSort(sortType, sortInc, 'name') }
+									{this.renderSort(sortType, sortInc, 'name')}
 								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('balance')}>
 								<div className="sort-wrap">
 									Contract Balance
-									{ this.renderSort(sortType, sortInc, 'balance') }
+									{this.renderSort(sortType, sortInc, 'balance')}
 								</div>
 							</Table.HeaderCell>
 						</Table.Row>

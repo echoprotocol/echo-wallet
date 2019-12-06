@@ -10,6 +10,7 @@ import { formatAbi } from '../../../actions/ContractActions';
 import { clearForm } from '../../../actions/FormActions';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+import { ECHO_ASSET_ID } from '../../../constants/GlobalConstants';
 
 class TabGeneralInfo extends React.Component {
 
@@ -24,48 +25,60 @@ class TabGeneralInfo extends React.Component {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
-	renderList() {
-		const options = [
-			{
-				balance: 0.09297,
-				coin: 'myEcho',
-			},
-			{
-				balance: 0.02,
-				coin: 'ethEcho',
-			},
-			{
-				balance: 8.374,
-				coin: 'ercToken',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho2',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho3',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho4',
-			},
-		];
+	componentWillUnmount() {
+		this.props.clearForm(FORM_VIEW_CONTRACT);
+	}
 
-		return options.map(({
-			balance,
-			coin,
+
+	showBalance(balance) {
+
+		const balances = balance
+			.filter(({ amount, id: assetId }) => amount !== '0' || (amount === '0' && assetId === ECHO_ASSET_ID));
+
+		if (balances.length === 0) {
+			return { mainBalance: {}, otherBalances: [] };
+		}
+
+		if (balances.length === 1) {
+			return { mainBalance: balances[0], otherBalances: [] };
+		}
+
+		const coreAsset = balances.findIndex(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
+
+		if (coreAsset !== -1) {
+			return {
+				mainBalance: balances[coreAsset],
+				otherBalances: balances.filter((_, i) => i !== coreAsset),
+			};
+		}
+
+		const anotherNotNullBalance = balances.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+		if (anotherNotNullBalance !== -1) {
+			return {
+				mainBalance: balances[anotherNotNullBalance],
+				otherBalances: balances.filter((_, i) => i !== anotherNotNullBalance),
+			};
+		}
+
+		return { mainBalance: balances[0], otherBalances: balances.filter((_, i) => i !== 0) };
+	}
+
+	renderList(balances) {
+		return balances.map(({
+			symbol,
+			amount,
 		}) => {
 			const content = (
 				<div className="balance-wrap">
-					<div className="balance">{balance}</div>
-					<div className="coin">{coin}</div>
+					<div className="balance">{amount}</div>
+					<div className="coin">{symbol}</div>
 				</div>
 			);
 
 			return ({
-				value: coin,
-				key: coin,
+				value: symbol,
+				key: symbol,
 				content,
 			});
 		});
@@ -82,7 +95,8 @@ class TabGeneralInfo extends React.Component {
 
 	render() {
 		const { open } = this.state;
-		const { bytecode, abi } = this.props;
+		const { bytecode, abi, balances } = this.props;
+		const { mainBalance, otherBalances } = this.showBalance(balances);
 
 		return (
 			<div className="tab-content">
@@ -93,21 +107,24 @@ class TabGeneralInfo extends React.Component {
 							<td className="val">
 								<div className="val-wrap">
 									<div className="balance-wrap">
-										<div className="balance">0.0038</div>
-										<div className="coin">ECHO</div>
+										<div className="balance">{mainBalance.amount}</div>
+										<div className="coin">{mainBalance.symbol}</div>
 									</div>
-
-									<Dropdown
-										open={open}
-										onFocus={() => { this.setState({ open: true }); }}
-										onBlur={() => { this.setState({ open: false }); }}
-										icon={false}
-										disabled={this.renderList().length < 2}
-										className={classnames('assets-balance-dropdown', { empty: this.renderList().length < 2 })}
-										options={this.renderList().length < 2 ? [] : this.renderList()}
-										selectOnBlur={false}
-										trigger={this.renderDropdownTrigger()}
-									/>
+									{
+										otherBalances.length && (
+											<Dropdown
+												open={open}
+												onFocus={() => { this.setState({ open: true }); }}
+												onBlur={() => { this.setState({ open: false }); }}
+												icon={false}
+												disabled={otherBalances.length === 0}
+												className={classnames('assets-balance-dropdown', { empty: otherBalances.length === 0 })}
+												options={otherBalances.length === 0 ? [] : this.renderList(otherBalances)}
+												selectOnBlur={false}
+												trigger={this.renderDropdownTrigger()}
+											/>
+										)
+									}
 								</div>
 							</td>
 						</tr>
@@ -191,6 +208,7 @@ class TabGeneralInfo extends React.Component {
 TabGeneralInfo.propTypes = {
 	abi: PropTypes.string.isRequired,
 	bytecode: PropTypes.string.isRequired,
+	balances: PropTypes.array.isRequired,
 	match: PropTypes.object.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
