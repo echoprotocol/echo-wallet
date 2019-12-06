@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
-import { formatAbi } from '../../actions/ContractActions';
+import { formatAbi, getFullContract } from '../../actions/ContractActions';
 import { clearForm } from '../../actions/FormActions';
 import { resetConverter } from '../../actions/ConverterActions';
 import { setDefaultAsset } from '../../actions/AmountActions';
@@ -18,6 +18,8 @@ import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 import TabGeneralInfo from './TabGeneralInfo';
+import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST, MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
+import { openModal } from '../../actions/ModalActions';
 
 class ViewContract extends React.Component {
 
@@ -42,7 +44,14 @@ class ViewContract extends React.Component {
 				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="General info" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabGeneralInfo />
+						<TabGeneralInfo
+							owner={this.props.owner}
+							activeUser={this.props.activeUser}
+							openWhitelistModal={this.props.openWhitelistModal}
+							openBlacklistModal={this.props.openBlacklistModal}
+							openToWhitelistModal={this.props.openToWhitelistModal}
+							openToBlacklistModal={this.props.openToBlacklistModal}
+						/>
 					</Tab.Pane>
 				),
 			},
@@ -87,15 +96,29 @@ ViewContract.propTypes = {
 	clearContract: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
+	openWhitelistModal: PropTypes.func.isRequired,
+	openBlacklistModal: PropTypes.func.isRequired,
+	openToWhitelistModal: PropTypes.func.isRequired,
+	openToBlacklistModal: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
 };
 
 export default withRouter(connect(
-	() => ({}),
+	(state) => ({
+		owner: state.contract.get('owner'),
+		activeUser: state.global.getIn(['activeUser', 'id']),
+	}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
 		resetConverter: () => dispatch(resetConverter()),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CALL_CONTRACT_VIA_ID)),
+		getFullContract: (id) => dispatch(getFullContract(id)),
+		openWhitelistModal: () => dispatch(openModal(MODAL_WHITELIST)),
+		openBlacklistModal: () => dispatch(openModal(MODAL_BLACKLIST)),
+		openToWhitelistModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
+		openToBlacklistModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 	}),
 )(ViewContract));

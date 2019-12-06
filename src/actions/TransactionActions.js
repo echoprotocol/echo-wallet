@@ -16,12 +16,20 @@ import {
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
 	FORM_SIGN_UP,
-	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
+	FORM_CHANGE_DELEGATE,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
-import { MODAL_DETAILS, MODAL_CHANGE_PARENT_ACCOUNT, MODAL_REPLENISH } from '../constants/ModalConstants';
+import {
+	MODAL_BLACKLIST,
+	MODAL_DETAILS,
+	MODAL_REPLENISH,
+	MODAL_TO_BLACKLIST,
+	MODAL_TO_WHITELIST,
+	MODAL_WHITELIST,
+	MODAL_CHANGE_PARENT_ACCOUNT,
+} from '../constants/ModalConstants';
 import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
@@ -39,9 +47,12 @@ import {
 	ADDRESS_SUBJECT_TYPE,
 	CONTRACT_ID_SUBJECT_TYPE,
 } from '../constants/TransferConstants';
-import { SOURCE_CODE_MODE, SUPPORTED_ASSET_CUSTOM } from '../constants/ContractsConstants';
+import {
+	SOURCE_CODE_MODE,
+	SUPPORTED_ASSET_CUSTOM,
+} from '../constants/ContractsConstants';
 
-import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading, setError as setModalError } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -49,7 +60,7 @@ import {
 	setIn,
 	setInFormError,
 } from './FormActions';
-import { addContractByName } from './ContractActions';
+import { addContractByName, set as contractSet } from './ContractActions';
 import { getBalanceFromAssets } from './BalanceActions';
 import { setValue as setTableValue, setError } from './TableActions';
 import { signTransaction } from './SignActions';
@@ -1173,6 +1184,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
+	dispatch(contractSet('loading', true));
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const contractMode = getState().form.getIn([FORM_CREATE_CONTRACT_OPTIONS, 'contractMode']);
 	const formName = contractMode === SOURCE_CODE_MODE
@@ -1208,6 +1220,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
+			dispatch(contractSet('loading', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
@@ -1216,6 +1229,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+			dispatch(contractSet('loading', false));
 			dispatch(setError(PERMISSION_TABLE, message));
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
@@ -1236,6 +1250,12 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			break;
 		case operations.contract_fund_pool.value:
 			dispatch(closeModal(MODAL_REPLENISH));
+			break;
+		case operations.contract_whitelist.value:
+			dispatch(closeModal(MODAL_WHITELIST));
+			dispatch(closeModal(MODAL_BLACKLIST));
+			dispatch(closeModal(MODAL_TO_WHITELIST));
+			dispatch(closeModal(MODAL_TO_BLACKLIST));
 			break;
 		default:
 			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
@@ -1784,6 +1804,89 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 		return true;
 	} catch (error) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
+		return null;
+	}
+};
+
+export const contractChangeWhiteAndBlackLists = (accountId, type) => async (dispatch, getState) => {
+	if (!accountId) {
+		dispatch(setModalError(type, 'Account shouldn\'t be empty'));
+		return null;
+	}
+	if (!validators.isAccountId(accountId)) {
+		const account = await echo.api.getAccountByName(accountId);
+		if (!account) {
+			dispatch(setModalError(type, 'Account is not found'));
+			return null;
+		}
+		accountId = account.id;
+	}
+	if ([MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST].includes(type)) {
+		const contracts = getState().echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID);
+		const contractId = getState().contract.get('id');
+		if (!contracts.get(contractId)) {
+			dispatch(setModalError(type, 'Network error'));
+			return null;
+		}
+		if (contracts.getIn([contractId, type === MODAL_TO_WHITELIST ? 'whitelist' : 'blacklist'])
+			.some((el) => el === accountId)) {
+			dispatch(setModalError(type, 'This address already exists'));
+			return null;
+		}
+	}
+	const op = {
+		add_to_whitelist: [],
+		add_to_blacklist: [],
+		remove_from_whitelist: [],
+		remove_from_blacklist: [],
+	};
+	switch (type) {
+		case MODAL_TO_WHITELIST:
+			op.add_to_whitelist = [accountId];
+			break;
+		case MODAL_TO_BLACKLIST:
+			op.add_to_blacklist = [accountId];
+			break;
+		case MODAL_WHITELIST:
+			op.remove_from_whitelist = [accountId];
+			break;
+		case MODAL_BLACKLIST:
+			op.remove_from_blacklist = [accountId];
+			break;
+		default: {
+			return null;
+		}
+	}
+	const operation = 'contract_whitelist';
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+	const constractId = getState().contract.get('id');
+	try {
+		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			sender: activeUserId,
+			contract: constractId,
+			...op,
+		};
+
+		options.fee.amount = await getOperationFee(operation, options);
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			sender: getState().global.getIn(['activeUser', 'name']),
+			contract: constractId,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+		return true;
+	} catch (err) {
+		dispatch(setModalError(type, formatError(err)));
 		return null;
 	}
 };
