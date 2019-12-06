@@ -44,6 +44,7 @@
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
     "file-loader": "^1.1.11",
+    "focus-trap-react": "^6.0.0",
     "history": "^4.7.2",
     "idb": "^4.0.4",
     "immutable": "^3.8.2",
