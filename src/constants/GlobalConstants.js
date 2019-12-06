@@ -168,3 +168,7 @@ export const REGISTRATION = {
 };
 
 export const CUSTOM_NODE_BLOCKS_MAX_DIFF = 2;
+export const SIDECHAIN_ASSETS_SYMBOLS = {
+	1: 'eBTC',
+	2: 'eETH',
+};
