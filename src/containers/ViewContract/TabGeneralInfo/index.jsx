@@ -85,7 +85,7 @@ class TabGeneralInfo extends React.Component {
 		if (coreAsset !== -1) {
 			return {
 				mainBalance: balances[coreAsset],
-				otherBalances: balances.filter((_, i) => i !== coreAsset),
+				otherBalances: balances.filter((__, i) => i !== coreAsset),
 			};
 		}
 
@@ -94,11 +94,11 @@ class TabGeneralInfo extends React.Component {
 		if (anotherNotNullBalance !== -1) {
 			return {
 				mainBalance: balances[anotherNotNullBalance],
-				otherBalances: balances.filter((_, i) => i !== anotherNotNullBalance),
+				otherBalances: balances.filter((__, i) => i !== anotherNotNullBalance),
 			};
 		}
 
-		return { mainBalance: balances[0], otherBalances: balances.filter((_, i) => i !== 0) };
+		return { mainBalance: balances[0], otherBalances: balances.filter((__, i) => i !== 0) };
 	}
 
 	renderList(balances) {
@@ -149,7 +149,7 @@ class TabGeneralInfo extends React.Component {
 										<div className="coin">{mainBalance.symbol}</div>
 									</div>
 									{
-										otherBalances.length && (
+										otherBalances.length > 0 && (
 											<Dropdown
 												open={open}
 												onFocus={() => { this.setState({ open: true }); }}
