@@ -62,9 +62,9 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
-		const { id, name } = await echo.api.getAccountByName(accountName);
+		const { id, name, options } = await echo.api.getAccountByName(accountName);
 
-		await echo.api.getFullAccounts([id]);
+		await echo.api.getFullAccounts([id, options.delegating_account]);
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
 
@@ -76,7 +76,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		await dispatch(initBalances(id, networkName));
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 		dispatch(initSorts(networkName));
-		dispatch(loadContracts(id, networkName));
+		await dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
 
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));

@@ -23,6 +23,8 @@ import {
 	FORM_ETH_RECEIVE,
 	FORM_SIGN_UP_OPTIONS,
 	SIGN_UP_OPTIONS_TYPES,
+	FORM_CHANGE_DELEGATE,
+	FORM_REPLENISH,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -318,6 +320,28 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
+	[FORM_CHANGE_DELEGATE]: Map({
+		delegate: {
+			value: '',
+			error: null,
+		},
+	}),
+	[FORM_REPLENISH]: Map({
+		amount: {
+			value: '',
+			error: null,
+		},
+		currency: null,
+		fee: {
+			value: '',
+			asset: null,
+			error: null,
+		},
+		balance: {
+			assets: new List([]),
+		},
+		isAvailableBalance: false,
+	}),
 };
 
 export default createModule({
@@ -349,9 +373,12 @@ export default createModule({
 		[FORM_PASSWORD_CREATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_PASSWORD_CREATE]),
 		[FORM_FREEZE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_FREEZE]),
+		[FORM_REPLENISH]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_REPLENISH]),
 		[FORM_ETH_RECEIVE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ETH_RECEIVE]),
 		[FORM_SIGN_UP_OPTIONS]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
+		[FORM_CHANGE_DELEGATE]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_CHANGE_DELEGATE]),
 	}),
 	transformations: {
 		set: {

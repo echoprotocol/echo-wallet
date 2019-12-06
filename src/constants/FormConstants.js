@@ -14,9 +14,11 @@ export const FORM_PERMISSION_KEY = 'permission_key';
 export const FORM_PASSWORD_CREATE = 'password_create';
 export const FORM_COMMITTEE = 'committee_key';
 export const FORM_FREEZE = 'freeze_amount';
+export const FORM_REPLENISH = 'pool_replenish';
 export const FORM_BTC_RECEIVE = 'btc_receive';
 export const FORM_ETH_RECEIVE = 'eth_receive';
 export const FORM_SIGN_UP_OPTIONS = 'sign_up_options';
+export const FORM_CHANGE_DELEGATE = 'change_delegate';
 
 export const SIGN_UP_OPTIONS_TYPES = {
 	DEFAULT: 'default',

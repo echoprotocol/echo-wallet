@@ -6,7 +6,11 @@ const DEFAULT_FIELDS = Map({
 	constants: List([]),
 	id: '',
 	name: '',
+	abi: '',
+	bytecode: '',
+	balances: [],
 	intervalId: null,
+	subscribeCallback: () => {},
 });
 
 export default createModule({
