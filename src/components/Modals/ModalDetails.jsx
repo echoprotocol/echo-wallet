@@ -28,7 +28,7 @@ class ModalDetails extends React.Component {
 			return null;
 		}
 
-		const isImageInput = ['from', 'to'].includes(key);
+		const isImageInput = ['from', 'to', 'sender'].includes(key);
 
 		return (
 			<Form.Field key={key} >

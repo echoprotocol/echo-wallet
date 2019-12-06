@@ -6,9 +6,6 @@ import ModalWipe from './ModalWipe';
 import ModalInfo from './ModalInfo';
 import ModalAddProposalWIF from './ModalAddProposalWIF';
 import ModalChangeParentAccount from './ModalChangeParentAccount';
-import ModalToWhitelist from './ModalToWhitelist';
-import ModalToBlacklist from './ModalToBlacklist';
-import ModalReplenish from './ModalReplenish';
 import ModalWhitelist from './ModalWhitelist';
 
 export default class ModalsComponent extends React.Component {
@@ -22,9 +19,6 @@ export default class ModalsComponent extends React.Component {
 				<ModalInfo />
 				<ModalAddProposalWIF />
 				<ModalChangeParentAccount />
-				<ModalToWhitelist />
-				<ModalToBlacklist />
-				<ModalReplenish />
 				<ModalWhitelist />
 			</React.Fragment>
 		);

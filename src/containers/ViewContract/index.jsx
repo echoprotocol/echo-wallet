@@ -10,6 +10,7 @@ import { formatAbi } from '../../actions/ContractActions';
 import { clearForm } from '../../actions/FormActions';
 import { resetConverter } from '../../actions/ConverterActions';
 import { setDefaultAsset } from '../../actions/AmountActions';
+import ModalReplenish from '../../components/Modals/ModalReplenish';
 
 import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
@@ -24,7 +25,7 @@ class ViewContract extends React.Component {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.setDefaultAsset();
 	}
 
@@ -63,14 +64,17 @@ class ViewContract extends React.Component {
 			},
 		];
 		return (
-			<div>
-				<ContractSettings />
-				<Tab
-					menu={{ tabular: false }}
-					className="tab-full"
-					panes={panes}
-				/>
-			</div>
+			<React.Fragment>
+				<ModalReplenish />
+				<div>
+					<ContractSettings />
+					<Tab
+						menu={{ tabular: false }}
+						className="tab-full"
+						panes={panes}
+					/>
+				</div>
+			</React.Fragment>
 		);
 	}
 
