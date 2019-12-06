@@ -6,6 +6,7 @@
 		&:not(:last-child) {
 			margin-bottom: 20px;
 		}
+
 		&.small {
 			margin-bottom: 16px;
 		}
@@ -14,36 +15,36 @@
 
 .check {
 
-    .label {
-        display: flex;
-        align-items: center;
-        position: relative;
-        cursor: pointer;
+	.label {
+		display: flex;
+		align-items: center;
+		position: relative;
+		cursor: pointer;
 
 		&:before {
-            text-align: center;
-            font-family: 'icomoon';
-            src: url('../fonts/iconmoon/icomoon.eot?h46e29');
-            src: url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
-                url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
-                url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
-                url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
-            font-weight: normal;
-            font-style: normal;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            min-width: 24px;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            border: 2px solid $main-color;
-            margin-right: 10px;
-            content: "\e924";
-            transition: border $speed, background-color $speed, color $speed;
-            font-size: 7px;
-        }
+			text-align: center;
+			font-family: 'icomoon';
+			src: url('../fonts/iconmoon/icomoon.eot?h46e29');
+			src: url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+				url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+				url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+				url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+			font-weight: normal;
+			font-style: normal;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			min-width: 24px;
+			width: 24px;
+			height: 24px;
+			border-radius: 4px;
+			border: 2px solid $main-color;
+			margin-right: 10px;
+			content: "\e924";
+			transition: border $speed, background-color $speed, color $speed;
+			font-size: 7px;
+		}
 	}
 
 	.label-text {
@@ -52,39 +53,41 @@
 		transition: color $speed;
 		pointer-events: none;
 		line-height: 1;
+		max-width: 250px;
+		@include cut-text();
 	}
 
-    input[type="checkbox"] {
-        position: absolute;
-        opacity: 0;
+	input[type="checkbox"] {
+		position: absolute;
+		opacity: 0;
 
-        &:disabled ~ .label {
-            opacity: .6;
-        }
+		&:disabled~.label {
+			opacity: .6;
+		}
 
-        &:checked ~ .label {
-            &:before {
-                background-color: $main-color;
-                border: 2px solid $main-color;
-            }
-        }
+		&:checked~.label {
+			&:before {
+				background-color: $main-color;
+				border: 2px solid $main-color;
+			}
+		}
 
-        &:focus {
-            & ~ .label {
-                &:before {
-                    @include on-focus(4px);
-                }
+		&:focus {
+			&~.label {
+				&:before {
+					@include on-focus(4px);
+				}
 
-            }
-        }
+			}
+		}
 
-        &:checked ~ .label {
-            .label-text {
-                color: $black;
-            }
-        }
+		&:checked~.label {
+			.label-text {
+				color: $black;
+			}
+		}
 	}
-	
+
 	// SIZE
 	&.small {
 		.label {

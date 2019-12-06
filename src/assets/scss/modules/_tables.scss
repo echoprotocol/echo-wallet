@@ -8,8 +8,9 @@ $thead-height: 46px;
     border: 0;
     background: none;
 
-    i {
-		margin: 0;
+    .dropdown {
+		position: relative;
+		margin-left: 12px;
 		width: 10px;
 		line-height: 5px;
 		font-size: 3.3px;
