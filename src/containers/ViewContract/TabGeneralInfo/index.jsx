@@ -7,17 +7,18 @@ import { Button, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
-import ActionBtn from '../../../components/ActionBtn';
-import {
-	formatAbi,
-	initGeneralContractInfo,
-	resetGeneralContractInfo,
-} from '../../../actions/ContractActions';
-import { clearForm } from '../../../actions/FormActions';
-
 import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
 import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
-
+import ModalWhitelist from '../../../components/Modals/ModalWhitelist';
+import ModalBlacklist from '../../../components/Modals/ModalBlacklist';
+import ActionBtn from '../../../components/ActionBtn';
+import {
+	initGeneralContractInfo,
+	resetGeneralContractInfo,
+	updateGeneralContractInfo,
+	formatAbi,
+} from '../../../actions/ContractActions';
+import { clearForm } from '../../../actions/FormActions';
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 import { ECHO_ASSET_ID, ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
 import { formatAmount } from '../../../helpers/FormatHelper';
@@ -34,21 +35,21 @@ class TabGeneralInfo extends React.Component {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
+		this.props.initGeneralContractInfo(this.props.match.params.id);
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
-	componentDidMount() {
-		this.props.initGeneralContractInfo(this.props.match.params.id);
-	}
-
-	componentDidUpdate(prevProps) {
+	async componentDidUpdate(prevProps) {
 		if (!prevProps.contract || !this.props.contract) {
 			return;
 		}
 
 		if (!_.isEqual(prevProps.contract, this.props.contract)) {
 			this.props.formatAbi(this.props.match.params.id);
+			if (prevProps.contract) {
+				await updateGeneralContractInfo(this.props.contract);
+			}
 		}
 	}
 
@@ -133,16 +134,23 @@ class TabGeneralInfo extends React.Component {
 		);
 	}
 
+
 	render() {
 		const { poolAsset } = this.props;
 		const { open } = this.state;
-		const { bytecode, abi, balances } = this.props;
+		const {
+			bytecode, abi, balances, contract, owner, activeUser, loading,
+		} = this.props;
 		const { mainBalance, otherBalances } = this.showBalance(balances);
-
+		if (!contract) {
+			return null;
+		}
 		return (
 			<React.Fragment>
 				<ModalToWhitelist />
 				<ModalToBlacklist />
+				<ModalWhitelist />
+				<ModalBlacklist />
 				<div className="tab-content">
 					<table className="table-key-value">
 						<tbody>
@@ -195,14 +203,63 @@ class TabGeneralInfo extends React.Component {
 							<tr>
 								<td className="key">Whitelist:</td>
 								<td className="val">
-									<button className="link-btn">4 members</button>
+									{
+										contract.get('whitelist').size ?
+											<button
+												className="link-btn"
+												onClick={this.props.openWhitelistModal}
+												disabled={loading}
+											>
+												{contract.get('whitelist').size} members
+											</button> :
+											<React.Fragment>
+												{
+													owner === activeUser ?
+														<React.Fragment>
+															<button
+																className="link-btn"
+																onClick={this.props.openToWhitelistModal}
+																disabled={loading}
+															>
+																Add account
+															</button>
+															<div className="val-hint">(List is empty)</div>
+														</React.Fragment> :
+														<div className="val-hint">List is empty</div>
+												}
+											</React.Fragment>
+									}
 								</td>
 							</tr>
 							<tr>
 								<td className="key">Blacklist:</td>
 								<td className="val">
-									<button className="link-btn">Add account</button>
-									<div className="val-hint">(List is empty)</div>
+									{
+										contract.get('blacklist').size ?
+											<button
+												className="link-btn"
+												onClick={this.props.openBlacklistModal}
+												disabled={loading}
+											>
+												{contract.get('blacklist').size} members
+											</button> :
+											<React.Fragment>
+												{
+													owner === activeUser ?
+														<React.Fragment>
+															<button
+																className="link-btn"
+																onClick={this.props.openToBlacklistModal}
+																disabled={loading}
+															>
+																Add account
+															</button>
+															<div className="val-hint">(List is empty)</div>
+														</React.Fragment> :
+														<div className="val-hint">List is empty</div>
+												}
+											</React.Fragment>
+									}
 								</td>
 							</tr>
 							<tr>
@@ -257,14 +314,21 @@ TabGeneralInfo.propTypes = {
 	abi: PropTypes.string.isRequired,
 	bytecode: PropTypes.string.isRequired,
 	balances: PropTypes.array.isRequired,
-	match: PropTypes.object.isRequired,
-	formatAbi: PropTypes.func.isRequired,
-	clearForm: PropTypes.func.isRequired,
 	contract: PropTypes.object,
 	poolAsset: PropTypes.object,
+	match: PropTypes.object.isRequired,
 	initGeneralContractInfo: PropTypes.func.isRequired,
 	resetGeneralContractInfo: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
+	loading: PropTypes.bool.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+	openWhitelistModal: PropTypes.func.isRequired,
+	openBlacklistModal: PropTypes.func.isRequired,
+	openToWhitelistModal: PropTypes.func.isRequired,
+	openToBlacklistModal: PropTypes.func.isRequired,
 };
 
 TabGeneralInfo.defaultProps = {
@@ -288,6 +352,7 @@ export default withRouter(connect(
 			abi: state.contract.get('abi'),
 			bytecode: state.contract.get('bytecode'),
 			balances: state.contract.get('balances'),
+			loading: state.contract.get('loading'),
 		};
 	},
 	(dispatch) => ({

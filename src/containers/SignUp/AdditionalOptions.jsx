@@ -18,9 +18,9 @@ class AdditionalOptions extends React.Component {
 		this.props.setValue('optionType', e.target.name);
 	}
 
-	toggleAcordion() {
+	toggleAcordion(e) {
+		e.target.blur();
 		const isMoreOptionsActive = this.props.signupOptionsForm.get('isMoreOptionsActive');
-
 		this.props.setValue('isMoreOptionsActive', !isMoreOptionsActive);
 	}
 
@@ -62,13 +62,13 @@ class AdditionalOptions extends React.Component {
 		const isMoreOptionsActive = signupOptionsForm.get('isMoreOptionsActive');
 
 		return (
-			<div className="accordion fluid">
+			<div className={classnames('accordion fluid', { active: isMoreOptionsActive })}>
 				<Button
 					disabled={loading}
 					className="accordion-trigger"
-					onClick={() => this.toggleAcordion()}
+					onClick={(e) => this.toggleAcordion(e)}
 					icon="dropdown"
-					content="More Options"
+					content={<span className="content">More Options</span>}
 				/>
 				<CSSTransition
 					in={isMoreOptionsActive}
