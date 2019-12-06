@@ -76,7 +76,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		await dispatch(initBalances(id, networkName));
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 		dispatch(initSorts(networkName));
-		dispatch(loadContracts(id, networkName));
+		await dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));
 
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));

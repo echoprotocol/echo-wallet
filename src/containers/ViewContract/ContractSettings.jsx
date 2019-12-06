@@ -9,6 +9,7 @@ import { updateContractName, disableContract } from '../../actions/ContractActio
 import { setFormValue, setValue, setFormError } from '../../actions/FormActions';
 
 import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
+import { ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 import { validateContractName } from '../../helpers/ValidateHelper';
 import ActionBtn from '../../components/ActionBtn';
 
@@ -90,6 +91,30 @@ class ContractSettings extends React.Component {
 		this.props.disableContract(id);
 	}
 
+	showBalance(balance) {
+		if (balance.length === 0) {
+			return {};
+		}
+
+		if (balance.length === 1) {
+			return balance[0];
+		}
+
+		const coreAsset = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
+
+		if (coreAsset) {
+			return coreAsset;
+		}
+
+		const anotherNotNullBalance = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+		if (anotherNotNullBalance) {
+			return anotherNotNullBalance;
+		}
+
+		return balance[0];
+	}
+
 	renderName() {
 		const { contractName } = this.props;
 
@@ -145,7 +170,9 @@ class ContractSettings extends React.Component {
 	}
 
 	render() {
-		const { contractId } = this.props;
+		const { contractId, balances } = this.props;
+
+		const balanceToShow = this.showBalance(balances);
 
 		return (
 			<div className="tab-full">
@@ -161,8 +188,8 @@ class ContractSettings extends React.Component {
 							<span className="label">Balance:</span>
 							<span className="value">
 								<div className="balance-wrap">
-									<div className="balance">0.0038</div>
-									<div className="coin">ECHO</div>
+									<div className="balance">{balanceToShow.amount}</div>
+									<div className="coin">{balanceToShow.symbol}</div>
 								</div>
 							</span>
 						</li>
@@ -195,11 +222,13 @@ ContractSettings.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
+	balances: PropTypes.array.isRequired,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		newName: state.form.getIn([FORM_VIEW_CONTRACT, 'newName']),
+		balances: state.contract.get('balances'),
 		contractId: state.contract.get('id'),
 		contractName: state.contract.get('name'),
 	}),
