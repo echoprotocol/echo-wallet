@@ -27,7 +27,7 @@ class Loading extends React.PureComponent {
 					options={loaderOptions}
 					isClickToPauseDisabled
 				/>
-				<Loader inverted content={text} />
+				<Loader content={text} />
 			</Dimmer>
 		);
 	}
