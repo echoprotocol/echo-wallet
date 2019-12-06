@@ -626,3 +626,8 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 	}
 	await dispatch(contractCodeCompile());
 };
+export const getFullContract = (id) => async (dispatch) => {
+	const contract = await echo.api.getFullContract(id);
+	const whitelist = await echo.api.
+	console.log(contract)
+};
