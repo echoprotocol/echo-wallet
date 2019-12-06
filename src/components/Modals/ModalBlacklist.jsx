@@ -9,6 +9,7 @@ import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConsta
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
+import TransactionScenario from '../../containers/TransactionScenario';
 
 class ModalBalcklist extends React.Component {
 
@@ -37,15 +38,24 @@ class ModalBalcklist extends React.Component {
 			return [];
 		}
 		return contracts.getIn([contractId, 'blacklist']).map((el, i) => (
-			<div className="segment" key={i.toString()}>
-				<Avatar accountName={accounts.getIn([el, 'name'])} />
-				<div className="name">{accounts.getIn([el, 'name'])}</div>
-				{ owner === activeUser && <ActionBtn
-					icon="remove"
-					text="Remove"
-					action={() => this.props.removeFromBlackList(el)}
-				/>}
-			</div>
+			<TransactionScenario
+				handleTransaction={() => this.props.removeFromBlackList(el)}
+				key={i.toString()}
+			>
+				{
+					(submit) => (
+						<div className="segment">
+							<Avatar accountName={accounts.getIn([el, 'name'])} />
+							<div className="name">{accounts.getIn([el, 'name'])}</div>
+							{ owner === activeUser && <ActionBtn
+								icon="remove"
+								text="Remove"
+								action={() => submit()}
+							/>}
+						</div>
+					)
+				}
+			</TransactionScenario>
 		)).toArray();
 	}
 

@@ -3,7 +3,6 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { CACHE_MAPS } from 'echojs-lib';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -15,7 +14,7 @@ class ModalToBlacklist extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			id: '',
+			accountName: '',
 		};
 	}
 
@@ -28,18 +27,9 @@ class ModalToBlacklist extends React.Component {
 	onInputChange(e) {
 		this.props.setError(null);
 		const value = e.target.value.toLowerCase().trim();
-		this.setState({ id: value });
+		this.setState({ accountName: value });
 	}
 	onAdd(submit) {
-		const { contracts, contractId } = this.props;
-		if (!contracts.get(contractId)) {
-			return;
-		}
-		if (contracts.getIn([contractId, 'blacklist']).some((el) => el.id === this.state.id)) {
-			this.props.setError('This address already exists in blacklist');
-			return;
-		}
-		this.props.closeModal();
 		submit();
 	}
 
@@ -51,7 +41,7 @@ class ModalToBlacklist extends React.Component {
 
 		return (
 			<TransactionScenario
-				handleTransaction={() => this.props.addToBlackList(this.state.id)}
+				handleTransaction={() => this.props.addToBlackList(this.state.accountName)}
 			>
 				{
 					(submit) => (
@@ -100,8 +90,6 @@ class ModalToBlacklist extends React.Component {
 ModalToBlacklist.propTypes = {
 	show: PropTypes.bool,
 	error: PropTypes.string,
-	contracts: PropTypes.object.isRequired,
-	contractId: PropTypes.string.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	addToBlackList: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
@@ -116,8 +104,6 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TO_BLACKLIST, 'show']),
 		error: state.modal.getIn([MODAL_TO_BLACKLIST, 'error']),
-		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
-		contractId: state.contract.get('id'),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_BLACKLIST)),

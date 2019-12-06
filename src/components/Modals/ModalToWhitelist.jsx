@@ -3,7 +3,6 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { CACHE_MAPS } from 'echojs-lib';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -30,16 +29,7 @@ class ModalToWhitelist extends React.Component {
 		this.setState({ accountName: value });
 	}
 	onAdd(submit) {
-		const { contracts, contractId } = this.props;
-		if (!contracts.get(contractId)) {
-			return;
-		}
-		if (contracts.getIn([contractId, 'whitelist']).some((el) => el.id === this.state.accountName)) {
-			this.props.setError('This address already exists in whitelist');
-			return;
-		}
 		submit();
-		this.props.closeModal();
 	}
 
 	render() {
@@ -49,7 +39,7 @@ class ModalToWhitelist extends React.Component {
 
 		return (
 			<TransactionScenario
-				handleTransaction={() => this.props.addToWhiteList(this.state.id)}
+				handleTransaction={() => this.props.addToWhiteList(this.state.accountName)}
 			>
 				{
 					(submit) => (
@@ -97,8 +87,6 @@ class ModalToWhitelist extends React.Component {
 
 ModalToWhitelist.propTypes = {
 	show: PropTypes.bool,
-	contracts: PropTypes.object.isRequired,
-	contractId: PropTypes.string.isRequired,
 	closeModal: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	addToWhiteList: PropTypes.func.isRequired,
@@ -112,9 +100,8 @@ ModalToWhitelist.defaultProps = {
 
 export default connect(
 	(state) => ({
-		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
-		contractId: state.contract.get('id'),
+		error: state.modal.getIn([MODAL_TO_WHITELIST, 'error']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_WHITELIST)),

@@ -52,7 +52,7 @@ import {
 	SUPPORTED_ASSET_CUSTOM,
 } from '../constants/ContractsConstants';
 
-import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading, setError as setModalError } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
@@ -60,7 +60,7 @@ import {
 	setIn,
 	setInFormError,
 } from './FormActions';
-import { addContractByName } from './ContractActions';
+import { addContractByName, set as contractSet } from './ContractActions';
 import { getBalanceFromAssets } from './BalanceActions';
 import { setValue as setTableValue, setError } from './TableActions';
 import { signTransaction } from './SignActions';
@@ -1184,6 +1184,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		permissionTableLoaderTimer = setTimeout(() => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false })), APPLY_CHANGES_TIMEOUT);
 	}
 	dispatch(toggleModalLoading(MODAL_DETAILS, true));
+	dispatch(contractSet('loading', true));
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	const contractMode = getState().form.getIn([FORM_CREATE_CONTRACT_OPTIONS, 'contractMode']);
 	const formName = contractMode === SOURCE_CODE_MODE
@@ -1219,6 +1220,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess(`${operations[operation].name} transaction was completed`);
+			dispatch(contractSet('loading', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
 		}).catch((error) => {
@@ -1227,6 +1229,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+			dispatch(contractSet('loading', false));
 			dispatch(setError(PERMISSION_TABLE, message));
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
@@ -1247,6 +1250,12 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			break;
 		case operations.contract_fund_pool.value:
 			dispatch(closeModal(MODAL_REPLENISH));
+			break;
+		case operations.contract_whitelist.value:
+			dispatch(closeModal(MODAL_WHITELIST));
+			dispatch(closeModal(MODAL_BLACKLIST));
+			dispatch(closeModal(MODAL_TO_WHITELIST));
+			dispatch(closeModal(MODAL_TO_BLACKLIST));
 			break;
 		default:
 			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
@@ -1800,7 +1809,31 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 };
 
 export const contractChangeWhiteAndBlackLists = (accountId, type) => async (dispatch, getState) => {
-	console.log(accountId, type);
+	if (!accountId) {
+		dispatch(setModalError(type, 'Account shouldn\'t be empty'));
+		return null;
+	}
+	if (!validators.isAccountId(accountId)) {
+		const account = await echo.api.getAccountByName(accountId);
+		if (!account) {
+			dispatch(setModalError(type, 'Account is not found'));
+			return null;
+		}
+		accountId = account.id;
+	}
+	if ([MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST].includes(type)) {
+		const contracts = getState().echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID);
+		const contractId = getState().contract.get('id');
+		if (!contracts.get(contractId)) {
+			dispatch(setModalError(type, 'Network error'));
+			return null;
+		}
+		if (contracts.getIn([contractId, type === MODAL_TO_WHITELIST ? 'whitelist' : 'blacklist'])
+			.some((el) => el === accountId)) {
+			dispatch(setModalError(type, 'This address already exists'));
+			return null;
+		}
+	}
 	const op = {
 		add_to_whitelist: [],
 		add_to_blacklist: [],
@@ -1820,7 +1853,9 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		case MODAL_BLACKLIST:
 			op.remove_from_blacklist = [accountId];
 			break;
-		default: return null;
+		default: {
+			return null;
+		}
 	}
 	const operation = 'contract_whitelist';
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -1840,9 +1875,8 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		const precision = new BN(10).pow(feeAsset.precision);
 
 		const showOptions = {
-			from: getState().global.getIn(['activeUser', 'name']),
-			account: getState().global.getIn(['activeUser', 'name']),
-			type: accountId,
+			sender: getState().global.getIn(['activeUser', 'name']),
+			contract: constractId,
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 		};
 		dispatch(TransactionReducer.actions.setOperation({
@@ -1851,8 +1885,8 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 			showOptions,
 		}));
 		return true;
-	} catch (e) {
-		console.log(e);
+	} catch (err) {
+		dispatch(setModalError(type, formatError(err)));
 		return null;
 	}
 };

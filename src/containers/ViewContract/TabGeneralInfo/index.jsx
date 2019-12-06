@@ -9,6 +9,8 @@ import _ from 'lodash';
 
 import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
 import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
+import ModalWhitelist from '../../../components/Modals/ModalWhitelist';
+import ModalBlacklist from '../../../components/Modals/ModalBlacklist';
 import ActionBtn from '../../../components/ActionBtn';
 import {
 	initGeneralContractInfo,
@@ -137,7 +139,7 @@ class TabGeneralInfo extends React.Component {
 		const { poolAsset } = this.props;
 		const { open } = this.state;
 		const {
-			bytecode, abi, balances, contract, owner, activeUser,
+			bytecode, abi, balances, contract, owner, activeUser, loading,
 		} = this.props;
 		const { mainBalance, otherBalances } = this.showBalance(balances);
 		if (!contract) {
@@ -147,6 +149,8 @@ class TabGeneralInfo extends React.Component {
 			<React.Fragment>
 				<ModalToWhitelist />
 				<ModalToBlacklist />
+				<ModalWhitelist />
+				<ModalBlacklist />
 				<div className="tab-content">
 					<table className="table-key-value">
 						<tbody>
@@ -204,6 +208,7 @@ class TabGeneralInfo extends React.Component {
 											<button
 												className="link-btn"
 												onClick={this.props.openWhitelistModal}
+												disabled={loading}
 											>
 												{contract.get('whitelist').size} members
 											</button> :
@@ -214,6 +219,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={this.props.openToWhitelistModal}
+																disabled={loading}
 															>
 																Add account
 															</button>
@@ -233,6 +239,7 @@ class TabGeneralInfo extends React.Component {
 											<button
 												className="link-btn"
 												onClick={this.props.openBlacklistModal}
+												disabled={loading}
 											>
 												{contract.get('blacklist').size} members
 											</button> :
@@ -243,6 +250,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={this.props.openToBlacklistModal}
+																disabled={loading}
 															>
 																Add account
 															</button>
@@ -314,6 +322,7 @@ TabGeneralInfo.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	loading: PropTypes.bool.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
@@ -343,6 +352,7 @@ export default withRouter(connect(
 			abi: state.contract.get('abi'),
 			bytecode: state.contract.get('bytecode'),
 			balances: state.contract.get('balances'),
+			loading: state.contract.get('loading'),
 		};
 	},
 	(dispatch) => ({
