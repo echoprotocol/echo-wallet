@@ -235,7 +235,11 @@ class AmountField extends React.Component {
 	}
 	render() {
 		const {
-			assets, amount, form, fee, isAvailableBalance, fees, assetDropdown, labelText, showAvailable,
+			assets, amount, form,
+			fee, isAvailableBalance,
+			fees, assetDropdown,
+			labelText, showAvailable,
+			warningMessage,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -336,12 +340,7 @@ class AmountField extends React.Component {
 						/> : this.renderCurrencyLabel(currency)
 					}
 				</Input>
-				{
-					!amount.error || !fee.error ?
-						<span className="warning-message">
-							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
-						</span> : null
-				}
+				{ warningMessage }
 
 
 			</Form.Field>
@@ -370,6 +369,7 @@ AmountField.propTypes = {
 	labelText: PropTypes.string,
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
+	warningMessage: PropTypes.node,
 };
 
 
@@ -384,6 +384,7 @@ AmountField.defaultProps = {
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),
 	showAvailable: true,
+	warningMessage: null,
 };
 
 export default AmountField;
