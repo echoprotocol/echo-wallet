@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import BN from 'bignumber.js';
-import echo, { CACHE_MAPS, validators } from 'echojs-lib';
+import echo, { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
 
 import {
 	getTokenPrecision,
@@ -30,6 +30,7 @@ import BalanceReducer from '../reducers/BalanceReducer';
 
 import history from '../history';
 import GlobalReducer from '../reducers/GlobalReducer';
+import { loadContracts } from './ContractActions';
 
 BN.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -449,6 +450,7 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	let isBalanceUpdated = false;
 	let isTokenUpdated = false;
 	let isCurrentTransferBalanceUpdated = false;
+	let isContractCalled = false;
 
 	const accountFromTransfer = await dispatch(getAccountFromTransferFrom());
 
@@ -464,6 +466,10 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 		if (!isTokenUpdated && object.contract) {
 			isTokenUpdated = Object.values(tokens).some((t) => t.id === object.contract);
+		}
+
+		if (!isContractCalled && object.op && object.op[0] === OPERATIONS_IDS.CONTRACT_CALL) {
+			isContractCalled = true;
 		}
 
 		if (
@@ -486,6 +492,9 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	}
 
 
+	if (isContractCalled) {
+		await dispatch(loadContracts(accountId, networkName));
+	}
 	if (isTokenUpdated) {
 		await dispatch(updateTokenBalances());
 	}

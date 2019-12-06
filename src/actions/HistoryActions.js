@@ -12,6 +12,7 @@ import { setField } from './TransactionActions';
 
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
+import { getSidechainTrxAsset } from '../helpers/ValidateHelper';
 
 /**
  * @method viewTransaction
@@ -30,6 +31,27 @@ export const viewTransaction = (transaction) => async (dispatch) => {
 	dispatch(setField('details', transaction));
 
 	history.push(VIEW_TRANSACTION_PATH);
+};
+
+const additionalFields = async (options, operation) => {
+	if (!(options.subject && options.subject[0] &&
+		!validators.isObjectId(_.get(operation, options.subject[0])))) {
+		return null;
+	}
+	if (!validators.isObject(_.get(operation, options.value))) {
+		return null;
+	}
+	const assetId = _.get(operation, options.value).asset_id;
+
+	if (!validators.isObjectId(assetId)) {
+		return null;
+	}
+	const { precision, symbol } = await echo.api.getObject(assetId);
+	return {
+		..._.get(operation, options.value),
+		precision,
+		symbol,
+	};
 };
 
 /**
@@ -69,11 +91,18 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.subject) {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
-			const response = await echo.api.getObject(request);
-			result.subject = {
-				value: response[options.subject[1]],
-				id: response.id,
-			};
+			if (validators.isObjectId(request)) {
+				const response = await echo.api.getObject(request);
+				result.subject = {
+					value: response[options.subject[1]],
+					id: response.id,
+				};
+			} else {
+				result.subject = {
+					value: operation[options.subject[0]] || '',
+					id: null,
+				};
+			}
 		} else {
 			result.subject = {
 				value: operation[options.subject[0]],
@@ -96,7 +125,19 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				...result.value,
 				amount: _.get(operation, options.value),
 			};
+			const addFields = await additionalFields(options, operation);
+			if (addFields) {
+				result.value = {
+					...result.value,
+					...addFields,
+				};
+			}
 		}
+		const sidechainAsset = getSidechainTrxAsset(type);
+		result.value = {
+			...result.value,
+			...sidechainAsset,
+		};
 	}
 
 	if (options.asset) {

@@ -15,7 +15,9 @@ import {
 	FORM_CREATE_CONTRACT_OPTIONS,
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
-	FORM_SIGN_UP, FORM_REPLENISH,
+	FORM_SIGN_UP,
+	FORM_REPLENISH,
+	FORM_CHANGE_DELEGATE,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
@@ -26,8 +28,9 @@ import {
 	MODAL_TO_BLACKLIST,
 	MODAL_TO_WHITELIST,
 	MODAL_WHITELIST,
+	MODAL_CHANGE_PARENT_ACCOUNT,
 } from '../constants/ModalConstants';
-import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
 	CONTRACT_ID_PREFIX,
@@ -1192,6 +1195,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		getState().form.getIn([formName, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
+
 	try {
 		const tr = echo.createTransaction();
 		tr.addOperation(operationId, options);
@@ -1237,7 +1241,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	switch (operationId) {
 		case operations.account_update.value:
 			dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-			history.push(PERMISSIONS_PATH);
 			break;
 		case operations.balance_freeze.value:
 		case operations.account_create.value:
@@ -1250,6 +1253,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	}
 
 	dispatch(closeModal(MODAL_DETAILS));
+	dispatch(closeModal(MODAL_CHANGE_PARENT_ACCOUNT));
 	dispatch(resetTransaction());
 };
 
@@ -1668,6 +1672,72 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 	}
 };
 
+/**
+ * @method changeDelegate
+ * @param {String} delegateId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const changeDelegate = (delegateId) => async (dispatch, getState) => {
+	try {
+		dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', null));
+
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const [delegate] = await echo.api.getFullAccounts([delegateId]);
+
+		const [
+			feeAsset,
+			activeUser,
+		] = await echo.api.getObjects([ECHO_ASSET_ID, activeUserId]);
+
+		if (!delegate) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'Delegate not found'));
+			return null;
+		}
+
+		const {
+			delegate_share: delegateShare,
+			delegating_account: currentDelegate,
+		} = activeUser.options;
+
+		if (currentDelegate === delegateId) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'This account already your delegate'));
+			return null;
+		}
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			new_options: {
+				delegating_account: delegateId,
+				delegate_share: delegateShare,
+			},
+		};
+
+		const operation = 'account_update';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			delegate: delegate.name,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
 
 /**
  * @method createAccount

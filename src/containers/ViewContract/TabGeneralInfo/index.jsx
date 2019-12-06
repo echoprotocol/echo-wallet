@@ -5,18 +5,24 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
+import _ from 'lodash';
 
 import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
 import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
 import ActionBtn from '../../../components/ActionBtn';
 import {
 	initGeneralContractInfo,
-	resetGeneralContractInfo, updateGeneralContractInfo,
+	resetGeneralContractInfo,
+	updateGeneralContractInfo,
+	formatAbi,
 } from '../../../actions/ContractActions';
-import { ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
+import { clearForm } from '../../../actions/FormActions';
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
+import { ECHO_ASSET_ID, ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
 import { formatAmount } from '../../../helpers/FormatHelper';
 import { openModal } from '../../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../../constants/ModalConstants';
+
 
 class TabGeneralInfo extends React.Component {
 
@@ -29,16 +35,25 @@ class TabGeneralInfo extends React.Component {
 
 	componentDidMount() {
 		this.props.initGeneralContractInfo(this.props.match.params.id);
+		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	async componentDidUpdate(prevProps) {
-		if ((prevProps.contract !== this.props.contract) && prevProps.contract) {
-			await updateGeneralContractInfo(this.props.contract);
+		if (!prevProps.contract || !this.props.contract) {
+			return;
+		}
+
+		if (!_.isEqual(prevProps.contract, this.props.contract)) {
+			this.props.formatAbi(this.props.match.params.id);
+			if (prevProps.contract) {
+				await updateGeneralContractInfo(this.props.contract);
+			}
 		}
 	}
 
 	componentWillUnmount() {
 		this.props.resetGeneralContractInfo();
+		this.props.clearForm(FORM_VIEW_CONTRACT);
 	}
 
 	getPoolAmount() {
@@ -54,48 +69,55 @@ class TabGeneralInfo extends React.Component {
 		);
 	}
 
-	renderList() {
-		const options = [
-			{
-				balance: 0.09297,
-				coin: 'myEcho',
-			},
-			{
-				balance: 0.02,
-				coin: 'ethEcho',
-			},
-			{
-				balance: 8.374,
-				coin: 'ercToken',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho2',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho3',
-			},
-			{
-				balance: 0.09297,
-				coin: 'myEcho4',
-			},
-		];
+	showBalance(balance) {
 
-		return options.map(({
-			balance,
-			coin,
+		const balances = balance
+			.filter(({ amount, id: assetId }) => amount !== '0' || (amount === '0' && assetId === ECHO_ASSET_ID));
+
+		if (balances.length === 0) {
+			return { mainBalance: {}, otherBalances: [] };
+		}
+
+		if (balances.length === 1) {
+			return { mainBalance: balances[0], otherBalances: [] };
+		}
+
+		const coreAsset = balances.findIndex(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
+
+		if (coreAsset !== -1) {
+			return {
+				mainBalance: balances[coreAsset],
+				otherBalances: balances.filter((__, i) => i !== coreAsset),
+			};
+		}
+
+		const anotherNotNullBalance = balances.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+		if (anotherNotNullBalance !== -1) {
+			return {
+				mainBalance: balances[anotherNotNullBalance],
+				otherBalances: balances.filter((__, i) => i !== anotherNotNullBalance),
+			};
+		}
+
+		return { mainBalance: balances[0], otherBalances: balances.filter((__, i) => i !== 0) };
+	}
+
+	renderList(balances) {
+		return balances.map(({
+			symbol,
+			amount,
 		}) => {
 			const content = (
 				<div className="balance-wrap">
-					<div className="balance">{balance}</div>
-					<div className="coin">{coin}</div>
+					<div className="balance">{amount}</div>
+					<div className="coin">{symbol}</div>
 				</div>
 			);
 
 			return ({
-				value: coin,
-				key: coin,
+				value: symbol,
+				key: symbol,
 				content,
 			});
 		});
@@ -114,11 +136,10 @@ class TabGeneralInfo extends React.Component {
 	render() {
 		const { poolAsset } = this.props;
 		const { open } = this.state;
-		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
-		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
 		const {
-			contract, owner, activeUser,
+			bytecode, abi, balances, contract, owner, activeUser,
 		} = this.props;
+		const { mainBalance, otherBalances } = this.showBalance(balances);
 		if (!contract) {
 			return null;
 		}
@@ -134,20 +155,24 @@ class TabGeneralInfo extends React.Component {
 								<td className="val">
 									<div className="val-wrap">
 										<div className="balance-wrap">
-											<div className="balance">0.0038</div>
-											<div className="coin">ECHO</div>
+											<div className="balance">{mainBalance.amount}</div>
+											<div className="coin">{mainBalance.symbol}</div>
 										</div>
-										<Dropdown
-											open={open}
-											onFocus={() => { this.setState({ open: true }); }}
-											onBlur={() => { this.setState({ open: false }); }}
-											icon={false}
-											disabled={this.renderList().length < 2}
-											className={classnames('assets-balance-dropdown', { empty: this.renderList().length < 2 })}
-											options={this.renderList().length < 2 ? [] : this.renderList()}
-											selectOnBlur={false}
-											trigger={this.renderDropdownTrigger()}
-										/>
+										{
+											otherBalances.length > 0 && (
+												<Dropdown
+													open={open}
+													onFocus={() => { this.setState({ open: true }); }}
+													onBlur={() => { this.setState({ open: false }); }}
+													icon={false}
+													disabled={otherBalances.length === 0}
+													className={classnames('assets-balance-dropdown', { empty: otherBalances.length === 0 })}
+													options={otherBalances.length === 0 ? [] : this.renderList(otherBalances)}
+													selectOnBlur={false}
+													trigger={this.renderDropdownTrigger()}
+												/>
+											)
+										}
 									</div>
 								</td>
 							</tr>
@@ -278,6 +303,9 @@ class TabGeneralInfo extends React.Component {
 }
 
 TabGeneralInfo.propTypes = {
+	abi: PropTypes.string.isRequired,
+	bytecode: PropTypes.string.isRequired,
+	balances: PropTypes.array.isRequired,
 	contract: PropTypes.object,
 	poolAsset: PropTypes.object,
 	match: PropTypes.object.isRequired,
@@ -286,6 +314,8 @@ TabGeneralInfo.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
 	openToWhitelistModal: PropTypes.func.isRequired,
@@ -310,11 +340,16 @@ export default withRouter(connect(
 		return {
 			contract,
 			poolAsset,
+			abi: state.contract.get('abi'),
+			bytecode: state.contract.get('bytecode'),
+			balances: state.contract.get('balances'),
 		};
 	},
 	(dispatch) => ({
 		initGeneralContractInfo: (contractId) => dispatch(initGeneralContractInfo(contractId)),
 		resetGeneralContractInfo: () => dispatch(resetGeneralContractInfo()),
 		openModal: (value, params) => dispatch(openModal(value, params)),
+		formatAbi: (id) => dispatch(formatAbi(id)),
+		clearForm: (value) => dispatch(clearForm(value)),
 	}),
 )(TabGeneralInfo));
