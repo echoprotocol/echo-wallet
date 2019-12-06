@@ -21,6 +21,8 @@ import {
 	FORM_FREEZE,
 	FORM_BTC_RECEIVE,
 	FORM_ETH_RECEIVE,
+	FORM_SIGN_UP_OPTIONS,
+	SIGN_UP_OPTIONS_TYPES,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -62,6 +64,18 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		wif: {
+			value: '',
+			error: null,
+		},
+	}),
+	[FORM_SIGN_UP_OPTIONS]: Map({
+		isMoreOptionsActive: false,
+		optionType: SIGN_UP_OPTIONS_TYPES.DEFAULT,
+		registrarAccount: {
+			value: '',
+			error: null,
+		},
+		ipOrUrl: {
 			value: '',
 			error: null,
 		},
@@ -336,6 +350,8 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_PASSWORD_CREATE]),
 		[FORM_FREEZE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_FREEZE]),
 		[FORM_ETH_RECEIVE]: _.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_FORM_FIELDS[FORM_ETH_RECEIVE]),
+		[FORM_SIGN_UP_OPTIONS]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
 	}),
 	transformations: {
 		set: {

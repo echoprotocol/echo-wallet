@@ -17,7 +17,6 @@
     content: "\e923";
 }
 
-
 .icon-hide:before {
     content: "\e920";
 }
@@ -144,9 +143,8 @@ i.copy,
 .icon-dotted:before {
     content: "\e906";
 }
-
-.icon-dropdown_arrow:before {
-    content: "\e907";
+.icon.dropdown:before {
+	content: "\e907";
 }
 
 .icon-info:before {

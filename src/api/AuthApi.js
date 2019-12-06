@@ -1,4 +1,4 @@
-import echo, { PrivateKey, ED25519 } from 'echojs-lib';
+import { ED25519 } from 'echojs-lib';
 import bs58 from 'bs58';
 
 
@@ -19,35 +19,16 @@ class AuthApi {
 	}
 
 	/**
-     *  @method registerAccount
-     *
-     * 	@param  {String} accountName
-     * 	@param  {String} wif
-     *
-     *  @return {Object}
-     */
-	static async registerAccount(accountName, wif) {
-		const privateKey = PrivateKey.fromWif(wif);
-		const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
-
-		try {
-			await echo.api.registerAccount(accountName, publicKey, publicKey);
-		} catch (error) {
-			throw new Error(error.message);
-		}
-
-		return { privateKey, publicKey };
-	}
-
-	/**
-	 * @method registerAccountViaPublicKey
+	 * @method registerAccount
 	 *
+	 * @param {Object} echoInstanceApi
 	 * @param {String} accountName
 	 * @param {String} publicKey
 	 */
-	static async registerAccountViaPublicKey(accountName, publicKey) {
+	static async registerAccount(echoInstanceApi, accountName, publicKey) {
 		try {
-			await echo.api.registerAccount(accountName, publicKey, publicKey);
+			await echoInstanceApi.registerAccount(accountName, publicKey, publicKey);
+			return true;
 		} catch (error) {
 			throw new Error(error.message);
 		}

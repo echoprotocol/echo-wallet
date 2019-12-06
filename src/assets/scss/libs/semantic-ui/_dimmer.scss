@@ -1,46 +1,33 @@
 .dimmable:not(body) {
-  position: relative;
+	position: relative;
 }
 
-.ui.dimmer {
-  display: none;
-  position: absolute;
-  top: 0em !important;
-  left: 0em !important;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  vertical-align: middle;
-  padding: 1em;
-  background-color: rgba(0, 0, 0, 0.85);
-  opacity: 0;
-  line-height: 1;
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
-  -webkit-animation-duration: 0.5s;
-          animation-duration: 0.5s;
-  -webkit-transition: background-color 0.5s linear;
-  transition: background-color 0.5s linear;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  will-change: opacity;
-  z-index: 1000;
+.dimmer {
+	display: none;
+	position: absolute;
+	top: 0em !important;
+	left: 0em !important;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	padding: 1em;
+	background-color: rgba(0, 0, 0, 0.85);
+	opacity: 0;
+	line-height: 1;
+	animation-fill-mode: both;
+	animation-duration: 0.5s;
+	transition: background-color 0.5s linear;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	user-select: none;
+	will-change: opacity;
+	z-index: 1000;
 }
 
 /* Dimmer Content */
-.ui.dimmer > .content {
+.dimmer > .content {
   -webkit-user-select: text;
      -moz-user-select: text;
       -ms-user-select: text;
@@ -48,22 +35,22 @@
 }
 
 /* Loose Coupling */
-.ui.segment > .ui.dimmer {
+.segment > .dimmer {
   min-height: 100vh;
   border-radius: inherit !important;
 }
 
 /* Scrollbars */
-.ui.dimmer:not(.inverted)::-webkit-scrollbar-track {
+.dimmer:not(.inverted)::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
 }
-.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb {
+.dimmer:not(.inverted)::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.25);
 }
-.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
+.dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255, 255, 255, 0.15);
 }
-.ui.dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
+.dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.35);
 }
 
@@ -80,16 +67,15 @@
 }
 
 /* Animating / Active / Visible */
-.dimmed.dimmable > .ui.animating.dimmer,
-.dimmed.dimmable > .ui.visible.dimmer,
-.ui.active.dimmer {
-  display: -webkit-box;
-  display: -ms-flexbox;
+.dimmed.dimmable > .animating.dimmer,
+.dimmed.dimmable > .visible.dimmer,
+.active.dimmer {
+//   display: -webkit-box;
   opacity: 1;
 }
 
 /* Disabled */
-.ui.disabled.dimmer {
+.disabled.dimmer {
   width: 0 !important;
   height: 0 !important;
 }
@@ -104,12 +90,12 @@
     Alignment
 ---------------*/
 
-.ui[class*="top aligned"].dimmer {
+[class*="top aligned"].dimmer {
   -webkit-box-pack: start;
       -ms-flex-pack: start;
           justify-content: flex-start;
 }
-.ui[class*="bottom aligned"].dimmer {
+[class*="bottom aligned"].dimmer {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
@@ -119,7 +105,7 @@
       Page
 ---------------*/
 
-.ui.page.dimmer {
+.page.dimmer {
   position: fixed;
   -webkit-transform-style: '';
           transform-style: '';
@@ -165,10 +151,10 @@ body.dimmable > .dimmer {
     Aligned
 ---------------*/
 
-.ui.dimmer > .top.aligned.content > * {
+.dimmer > .top.aligned.content > * {
   vertical-align: top;
 }
-.ui.dimmer > .bottom.aligned.content > * {
+.dimmer > .bottom.aligned.content > * {
   vertical-align: bottom;
 }
 
@@ -176,12 +162,12 @@ body.dimmable > .dimmer {
     Inverted
 ---------------*/
 
-.ui.inverted.dimmer {
+.inverted.dimmer {
   background-color: rgba(255, 255, 255, 0.85);
 }
-.ui.inverted.dimmer > .content {
+.inverted.dimmer > .content {
     display: contents;
 }
-.ui.inverted.dimmer > .content > * {
+.inverted.dimmer > .content > * {
   color: #33353F;
 }

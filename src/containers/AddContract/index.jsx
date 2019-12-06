@@ -99,8 +99,6 @@ class AddContractComponent extends React.Component {
 						/>
 					</div>
 				</div>
-
-
 			</Form>
 		);
 	}

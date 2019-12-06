@@ -211,18 +211,21 @@ color: rgba(115, 115, 115, 0.87);
     text-align: center;
     max-width: 432px;
 }
-.page-wrap {
+
+.modal {
 	.main-form {
-		
+		padding: 0;
+
 		@media only screen and (max-height: 800px) {
-			padding: 30px 0;
+			padding: 0;
 		}
 
 		@media only screen and (min-height: 800px) {
-			padding: 112px 0 30px;
+			padding: 0;
 		}
 	}
 }
+
 .main-form {
 	display: flex;
 	flex-direction: column;
@@ -231,9 +234,11 @@ color: rgba(115, 115, 115, 0.87);
 	max-width: 500px;
 	width: 100%;
 	margin: auto;
+	padding: 70px 0 30px;
 
-
-
+	.field-wrap {
+		min-width: 100%;
+	}
 
 	.field {
 		width: 100%;
@@ -548,7 +553,7 @@ color: rgba(115, 115, 115, 0.87);
 
     .label {
         color: $bd-gray;
-        font-size: 1em;
+        font-size: 14px;
         position: absolute;
         left: 12px;
         top: 0;
