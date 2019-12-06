@@ -1,6 +1,7 @@
-import { Map, List } from 'immutable';
+import { Map, List, Set } from 'immutable';
 import echo, { validators } from 'echojs-lib';
 import * as wrapper from 'solc/wrapper';
+import BN from 'bignumber.js';
 
 import {
 	setFormError,
@@ -61,6 +62,40 @@ export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
 };
 
+export const getContractBalances = async (contractsIds) => {
+	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
+	const contractsBalances = await Promise.all(balances);
+
+	const usedAssets = contractsBalances.flat().map((b) => b.asset_id);
+	const uniqAssets = new Set([...usedAssets, ECHO_ASSET_ID]).toArray();
+
+	const requestedAssets = await echo.api.getAssets(uniqAssets);
+	const requestedAssetsMap = requestedAssets.reduce((map, a) => {
+		const asset = { id: a.id, symbol: a.symbol, precision: a.precision };
+		map[a.id] = asset;
+		return map;
+	}, {});
+
+
+	const contractWithMapBalances = contractsIds.reduce((map, id, i) => {
+		const contractBalances = (contractsBalances[i] || []).filter((b) => b);
+		if (contractBalances.length === 0) {
+			map[id] = [{ amount: 0, ...requestedAssetsMap[ECHO_ASSET_ID] }];
+		} else {
+			map[id] = contractBalances.map((b) => {
+				const asset = requestedAssetsMap[b.asset_id] || requestedAssetsMap[ECHO_ASSET_ID];
+				const amount = new BN(b.amount).div(new BN(10).pow(asset.precision)).toString(10);
+
+				return { amount, ...asset };
+			});
+		}
+
+		return map;
+	}, {});
+
+	return contractWithMapBalances;
+};
+
 /**
  * @method loadContracts
  *
@@ -68,7 +103,7 @@ export const set = (field, value) => (dispatch) => {
  * @param {String} networkName
  * @returns {function(dispatch): Promise<undefined>}
  */
-export const loadContracts = (accountId, networkName) => (dispatch) => {
+export const loadContracts = (accountId, networkName) => async (dispatch) => {
 	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
@@ -81,10 +116,16 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 		return;
 	}
 
+	const contractMap = new Map(contracts[accountId]);
+	const balances = await getContractBalances(Object.keys(contracts[accountId]));
+
+	const contractWithBalances = contractMap
+		.mapEntries(([contractId, data]) => [contractId, { balances: balances[contractId], ...data }]);
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
-		value: new Map(contracts[accountId]),
+		value: contractWithBalances,
 	}));
+
 };
 
 /**
@@ -147,7 +188,11 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		contracts[accountId][id] = { abi, name };
 		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-		dispatch(push('contracts', id, { disabled: false, abi, name }));
+		const { [id]: balances } = await getContractBalances([id]);
+
+		dispatch(push('contracts', id, {
+			disabled: false, abi, name, balances,
+		}));
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
@@ -255,7 +300,11 @@ export const addContractByName = (
 
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-	dispatch(push('contracts', id, { disabled: false, abi, name }));
+	const { [id]: balances } = await getContractBalances([id]);
+
+	dispatch(push('contracts', id, {
+		disabled: false, abi, name, balances,
+	}));
 };
 
 /**
@@ -341,7 +390,8 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	const contracts = JSON.parse(localStorage.getItem(`contracts_${networkName}`));
-	const abi = JSON.parse(contracts[accountId][id].abi);
+	const plainABI = contracts[accountId][id].abi;
+	const abi = JSON.parse(plainABI);
 	const { name } = contracts[accountId][id];
 
 	let constants = abi.filter((value) =>
@@ -372,6 +422,10 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 
 	constants = await Promise.all(constants);
 
+	const [, { code: bytecode }] = await echo.api.getContract(id);
+
+	const { [id]: balances } = await getContractBalances([id]);
+
 	dispatch(ContractReducer.actions.set({
 		field: 'constants',
 		value: new List(constants),
@@ -394,6 +448,21 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 		value: name,
 	}));
 
+	dispatch(ContractReducer.actions.set({
+		field: 'abi',
+		value: plainABI,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'bytecode',
+		value: bytecode,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'balances',
+		value: balances,
+	}));
+
 };
 
 /**
@@ -403,7 +472,7 @@ export const formatAbi = (id) => async (dispatch, getState) => {
  * @param {String} newName
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const updateContractName = (id, newName) => (dispatch, getState) => {
+export const updateContractName = (id, newName) => async (dispatch, getState) => {
 	const nameError = validateContractName(newName);
 
 	if (nameError) {
@@ -435,8 +504,9 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 			});
 	});
 
-	// contracts[accountId][id] = contracts[accountId][id];
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
+
+	const { [id]: balances } = await getContractBalances([id]);
 
 	dispatch(remove('contracts', id));
 	dispatch(push('contracts', id, {
@@ -444,6 +514,7 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 		abi: contracts[accountId][id].abi,
 		id: contracts[accountId][id].id,
 		name: newName,
+		balances,
 	}));
 
 	dispatch(formatAbi(id));
