@@ -191,7 +191,11 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		contracts[accountId][id] = { abi, name };
 		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-		dispatch(push('contracts', id, { disabled: false, abi, name }));
+		const { [id]: balances } = await getContractBalances([id]);
+
+		dispatch(push('contracts', id, {
+			disabled: false, abi, name, balances,
+		}));
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
@@ -299,7 +303,11 @@ export const addContractByName = (
 
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-	dispatch(push('contracts', id, { disabled: false, abi, name }));
+	const { [id]: balances } = await getContractBalances([id]);
+
+	dispatch(push('contracts', id, {
+		disabled: false, abi, name, balances,
+	}));
 };
 
 /**
@@ -499,7 +507,6 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 			});
 	});
 
-	// contracts[accountId][id] = contracts[accountId][id];
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
 
 	dispatch(remove('contracts', id));
