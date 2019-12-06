@@ -1,16 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CACHE_MAPS } from 'echojs-lib';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
+import _ from 'lodash';
 
 import ActionBtn from '../../../components/ActionBtn';
-import { formatAbi } from '../../../actions/ContractActions';
+import {
+	formatAbi,
+	initGeneralContractInfo,
+	resetGeneralContractInfo,
+} from '../../../actions/ContractActions';
 import { clearForm } from '../../../actions/FormActions';
 
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
-import { ECHO_ASSET_ID } from '../../../constants/GlobalConstants';
+import { ECHO_ASSET_ID, ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
+import { formatAmount } from '../../../helpers/FormatHelper';
+import { openModal } from '../../../actions/ModalActions';
+import { MODAL_REPLENISH } from '../../../constants/ModalConstants';
+
 
 class TabGeneralInfo extends React.Component {
 
@@ -25,10 +35,38 @@ class TabGeneralInfo extends React.Component {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
+	componentDidMount() {
+		this.props.initGeneralContractInfo(this.props.match.params.id);
+	}
+
+	componentDidUpdate(prevProps) {
+		if (!prevProps.contract || !this.props.contract) {
+			return;
+		}
+
+		if (!_.isEqual(prevProps.contract, this.props.contract)) {
+			console.log('here!!!!');
+			this.props.formatAbi(this.props.match.params.id);
+		}
+	}
+
 	componentWillUnmount() {
+		this.props.resetGeneralContractInfo();
 		this.props.clearForm(FORM_VIEW_CONTRACT);
 	}
 
+	getPoolAmount() {
+		const { contract, poolAsset } = this.props;
+
+		if (!contract || !poolAsset) {
+			return null;
+		}
+
+		return formatAmount(
+			contract.getIn(['poolBalance', 'amount']),
+			poolAsset.get('precision'),
+		);
+	}
 
 	showBalance(balance) {
 
@@ -94,6 +132,7 @@ class TabGeneralInfo extends React.Component {
 	}
 
 	render() {
+		const { poolAsset } = this.props;
 		const { open } = this.state;
 		const { bytecode, abi, balances } = this.props;
 		const { mainBalance, otherBalances } = this.showBalance(balances);
@@ -133,13 +172,17 @@ class TabGeneralInfo extends React.Component {
 							<td className="val">
 								<div className="val-wrap">
 									<div className="balance-wrap">
-										<div className="balance">0</div>
-										<div className="coin">ECHO</div>
+										<div className="balance">{this.getPoolAmount() || '0'}</div>
+										<div className="coin">{poolAsset ? poolAsset.get('symbol') : ADDRESS_PREFIX}</div>
 									</div>
 									<Button
 										className="main-btn"
 										size="small"
 										content="Replenish"
+										onClick={() => this.props.openModal(
+											MODAL_REPLENISH,
+											{ contractId: this.props.match.params.id },
+										)}
 									/>
 								</div>
 							</td>
@@ -204,7 +247,6 @@ class TabGeneralInfo extends React.Component {
 
 }
 
-
 TabGeneralInfo.propTypes = {
 	abi: PropTypes.string.isRequired,
 	bytecode: PropTypes.string.isRequired,
@@ -212,15 +254,40 @@ TabGeneralInfo.propTypes = {
 	match: PropTypes.object.isRequired,
 	formatAbi: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	contract: PropTypes.object,
+	poolAsset: PropTypes.object,
+	initGeneralContractInfo: PropTypes.func.isRequired,
+	resetGeneralContractInfo: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
+};
+
+TabGeneralInfo.defaultProps = {
+	contract: null,
+	poolAsset: null,
 };
 
 export default withRouter(connect(
-	(state) => ({
-		abi: state.contract.get('abi'),
-		bytecode: state.contract.get('bytecode'),
-		balances: state.contract.get('balances'),
-	}),
+	(state, ownProps) => {
+		const contract = state.echojs.getIn([
+			CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID,
+			ownProps.match.params.id,
+		]);
+		const poolAsset = contract && state.echojs.getIn([
+			CACHE_MAPS.ASSET_BY_ASSET_ID,
+			contract.getIn(['poolBalance', 'asset_id']),
+		]);
+		return {
+			contract,
+			poolAsset,
+			abi: state.contract.get('abi'),
+			bytecode: state.contract.get('bytecode'),
+			balances: state.contract.get('balances'),
+		};
+	},
 	(dispatch) => ({
+		initGeneralContractInfo: (contractId) => dispatch(initGeneralContractInfo(contractId)),
+		resetGeneralContractInfo: () => dispatch(resetGeneralContractInfo()),
+		openModal: (value, params) => dispatch(openModal(value, params)),
 		formatAbi: (id) => dispatch(formatAbi(id)),
 		clearForm: (value) => dispatch(clearForm(value)),
 	}),

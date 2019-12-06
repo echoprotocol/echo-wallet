@@ -10,6 +10,7 @@ const DEFAULT_FIELDS = Map({
 	bytecode: '',
 	balances: [],
 	intervalId: null,
+	subscribeCallback: () => {},
 });
 
 export default createModule({

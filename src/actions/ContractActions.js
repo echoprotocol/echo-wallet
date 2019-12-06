@@ -472,7 +472,7 @@ export const formatAbi = (id) => async (dispatch, getState) => {
  * @param {String} newName
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const updateContractName = (id, newName) => (dispatch, getState) => {
+export const updateContractName = (id, newName) => async (dispatch, getState) => {
 	const nameError = validateContractName(newName);
 
 	if (nameError) {
@@ -506,12 +506,15 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
 
+	const { [id]: balances } = await getContractBalances([id]);
+
 	dispatch(remove('contracts', id));
 	dispatch(push('contracts', id, {
 		disabled: false,
 		abi: contracts[accountId][id].abi,
 		id: contracts[accountId][id].id,
 		name: newName,
+		balances,
 	}));
 
 	dispatch(formatAbi(id));
@@ -699,4 +702,27 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 		return;
 	}
 	await dispatch(contractCodeCompile());
+};
+
+/**
+ * @method initGeneralContractInfo
+ * @param {String} contractId
+ * @returns {Function}
+ */
+export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	await echo.api.getFullContract(contractId);
+	await echo.subscriber.setContractSubscribe(
+		[contractId],
+		subscribeCallback,
+	);
+};
+
+/**
+ * @method resetGeneralContractInfo
+ * @returns {Function}
+ */
+export const resetGeneralContractInfo = () => (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	echo.subscriber.removeContractSubscribe(subscribeCallback);
 };

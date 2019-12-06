@@ -26,7 +26,7 @@ class ContractList extends React.Component {
 		history.push(link);
 	}
 
-	showBalance(balance) {
+	showBalance(balance = []) {
 		if (balance.length === 0) {
 			return {};
 		}

@@ -16,11 +16,13 @@ import {
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_CREATE_CONTRACT_BYTECODE,
 	FORM_SIGN_UP,
+	FORM_CHANGE_DELEGATE,
+	FORM_REPLENISH,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
-import { MODAL_DETAILS } from '../constants/ModalConstants';
-import { CONTRACT_LIST_PATH, ACTIVITY_PATH, PERMISSIONS_PATH } from '../constants/RouterConstants';
+import { MODAL_DETAILS, MODAL_CHANGE_PARENT_ACCOUNT, MODAL_REPLENISH } from '../constants/ModalConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
 	CONTRACT_ID_PREFIX,
@@ -159,6 +161,47 @@ export const getFreezeBalanceFee = (form, asset) => async (dispatch, getState) =
 
 	dispatch(setValue(form, 'isAvailableBalance', true));
 	return dispatch(getTransactionFee(FORM_FREEZE, 'balance_freeze', options));
+};
+
+/**
+ * @method getFreezeBalanceFee
+ *
+ * @param {String} form
+ * @param {String} asset
+ * @returns {function(dispatch, getState): Promise<(Object | null)>}
+ */
+export const getContractPoolBalanceFee = (form, asset) => async (dispatch, getState) => {
+	const formOptions = getState().form.get(form);
+	const contractId = getState().modal.getIn([MODAL_REPLENISH, 'contractId']);
+
+	const amount = formOptions.get('amount').value || '0';
+
+	let amountValue = 0;
+	const currency = formOptions.get('currency');
+
+	if (currency) {
+		const amountError = validateAmount(amount, currency);
+		if (!amountError) {
+			amountValue = new BN(amount).times(new BN(10).pow(currency.precision)).toString(10);
+		}
+	}
+
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	const options = {
+		sender: activeUserId,
+		contract: contractId,
+		value: {
+			amount: amountValue,
+			asset_id: constants.ECHO_ASSET_ID,
+		},
+		fee: {
+			asset_id: asset || (currency && currency.id) || constants.ECHO_ASSET_ID,
+		},
+	};
+
+	dispatch(setValue(form, 'isAvailableBalance', true));
+	return dispatch(getTransactionFee(FORM_REPLENISH, 'contract_fund_pool', options));
 };
 
 export const setTransferFee = (assetId) => async (dispatch, getState) => {
@@ -889,6 +932,105 @@ export const freezeBalance = () => async (dispatch, getState) => {
 };
 
 /**
+ * @method replenishContractPool
+ *
+ * @returns {function(dispatch, getState): Promise<Boolean>}
+ */
+export const replenishContractPool = () => async (dispatch, getState) => {
+
+	const form = getState().form.get(FORM_REPLENISH).toJS();
+	const contractId = getState().modal.getIn([MODAL_REPLENISH, 'contractId']);
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	const {
+		currency,
+	} = form;
+
+	let { fee } = form;
+	const amount = new BN(form.amount.value).toString();
+
+	if (form.amount.error || fee.error || !activeUserId) {
+		return false;
+	}
+
+	if ((new BN(amount)).eq(0)) {
+		dispatch(setFormError(FORM_REPLENISH, 'amount', 'Amount shouldn\'t be 0 value'));
+		return false;
+	}
+
+	const amountError = validateAmount(amount, currency);
+	if (amountError) {
+		dispatch(setFormError(FORM_REPLENISH, 'amount', amountError));
+		return false;
+	}
+
+
+	if (!fee.value || !fee.asset) {
+		fee = await dispatch(getTransferFee(FORM_REPLENISH));
+	}
+
+	const echoAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS();
+	const feeAsset = getState().echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, fee.asset.id]).toJS();
+
+	if (!checkFeePool(echoAsset, feeAsset, fee.value)) {
+		dispatch(setFormError(
+			FORM_REPLENISH,
+			'fee',
+			`${fee.asset.symbol} fee pool balance is less than fee amount`,
+		));
+		return false;
+	}
+
+	if (currency.id === fee.asset.id) {
+		const total = new BN(amount).times(10 ** currency.precision).plus(fee.value);
+
+		if (total.gt(currency.balance)) {
+			dispatch(setFormError(FORM_REPLENISH, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	} else {
+		const asset = getState().balance.get('assets').toArray().find((i) => i.id === fee.asset.id);
+		if (new BN(fee.value).gt(asset.balance)) {
+			dispatch(setFormError(FORM_REPLENISH, 'fee', 'Insufficient funds for fee'));
+			return false;
+		}
+	}
+
+	dispatch(toggleLoading(FORM_REPLENISH, true));
+
+	const options = {
+		fee: {
+			amount: fee.value,
+			asset_id: fee.asset.id,
+		},
+		sender: activeUserId,
+		contract: contractId,
+		value: {
+			amount: new BN(amount).times(10 ** currency.precision).toString(),
+			asset_id: currency.id,
+		},
+	};
+
+	const precision = new BN(10).pow(fee.asset.precision);
+	const showOptions = {
+		value: `${amount} ${currency.symbol}`,
+		sender: getState().global.getIn(['activeUser', 'name']),
+		contract: contractId,
+		fee: `${new BN(fee.value).div(precision).toString(10)} ${fee.asset.symbol}`,
+	};
+
+	dispatch(resetTransaction());
+
+	dispatch(TransactionReducer.actions.setOperation({
+		operation: 'contract_fund_pool',
+		options,
+		showOptions,
+	}));
+
+	return true;
+};
+
+/**
  * @method createContract
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
@@ -1042,6 +1184,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		getState().form.getIn([formName, 'bytecode']).value ||
 		getState().form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'bytecode']).value;
 
+
 	try {
 		const tr = echo.createTransaction();
 		tr.addOperation(operationId, options);
@@ -1087,16 +1230,19 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	switch (operationId) {
 		case operations.account_update.value:
 			dispatch(setValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-			history.push(PERMISSIONS_PATH);
 			break;
 		case operations.balance_freeze.value:
 		case operations.account_create.value:
+			break;
+		case operations.contract_fund_pool.value:
+			dispatch(closeModal(MODAL_REPLENISH));
 			break;
 		default:
 			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
 	}
 
 	dispatch(closeModal(MODAL_DETAILS));
+	dispatch(closeModal(MODAL_CHANGE_PARENT_ACCOUNT));
 	dispatch(resetTransaction());
 };
 
@@ -1500,7 +1646,7 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
-			label,
+			'Address name': label,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({
@@ -1515,6 +1661,72 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 	}
 };
 
+/**
+ * @method changeDelegate
+ * @param {String} delegateId
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const changeDelegate = (delegateId) => async (dispatch, getState) => {
+	try {
+		dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', null));
+
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const [delegate] = await echo.api.getFullAccounts([delegateId]);
+
+		const [
+			feeAsset,
+			activeUser,
+		] = await echo.api.getObjects([ECHO_ASSET_ID, activeUserId]);
+
+		if (!delegate) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'Delegate not found'));
+			return null;
+		}
+
+		const {
+			delegate_share: delegateShare,
+			delegating_account: currentDelegate,
+		} = activeUser.options;
+
+		if (currentDelegate === delegateId) {
+			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'This account already your delegate'));
+			return null;
+		}
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			new_options: {
+				delegating_account: delegateId,
+				delegate_share: delegateShare,
+			},
+		};
+
+		const operation = 'account_update';
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			delegate: delegate.name,
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
 
 /**
  * @method createAccount

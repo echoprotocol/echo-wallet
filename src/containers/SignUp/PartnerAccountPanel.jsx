@@ -80,7 +80,8 @@ class PartnerAccountPanel extends React.Component {
 			<React.Fragment>
 				<div className="register-info">
 					<p>
-						Registrate a new account on your own. Choose account below
+						Register with an existing account.
+						The selected account will be charged fee for account creation.
 					</p>
 				</div>
 				<div className={classnames('field-wrap error-wrap', { error: registrarAccount.error })}>
@@ -111,8 +112,8 @@ class PartnerAccountPanel extends React.Component {
 			<div className="register-info">
 				<p>You don&apos;t have an account.</p>
 				<p>
-				You can generate a new account on your own.
-				Log in your another wallet account beforehand to do so
+					You can generate a new account on your own.
+					Log in your another wallet account beforehand to do so
 				</p>
 			</div>
 		);

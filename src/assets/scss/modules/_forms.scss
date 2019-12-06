@@ -83,7 +83,6 @@ color: rgba(115, 115, 115, 0.87);
 .form input[type="url"]:focus {
 	color: rgba(0, 0, 0, 0.95);
 	border-color: $border-hover;
-	border-radius: 4px;
 	background: #FFFFFF;
 }
 
@@ -405,6 +404,7 @@ color: rgba(115, 115, 115, 0.87);
                     .assets-tokens-dropdown {
                         border-color: $border-hover;
                         position: relative;
+						
 
                         &:before {
                             top: -5px;
@@ -424,18 +424,22 @@ color: rgba(115, 115, 115, 0.87);
                 }
 
                 &.error {
-
+					.assets-tokens-dropdown {
+						border-left: 0;
+					}
                     .assets-tokens-dropdown,
                     .amount {
-                        border-color: $err-red;
-                    }
+						border-color: $err-red;
+						
+					}
                 }
 
                 .amount {
                     max-height: 38px;
                     width: 100%;
                     border-top-right-radius: 0;
-                    border-bottom-right-radius: 0;
+					border-bottom-right-radius: 0;
+					
 				}
 
 				.amount-wrap {
@@ -448,27 +452,23 @@ color: rgba(115, 115, 115, 0.87);
 							border-color: $border-hover;
 						}
 					}
-
-					&:after {
-						width: 1px;
+					&:after,
+					&:before {
+						width: 2px;
 						background: #fff;
 						content: "";
 						height: 10px;
 						position: absolute;
-						right: 0;
-						top: 1px;
+						right: -1px;
 						z-index: 2;
 					}
 
+					&:after {
+						top: 1px;
+					}
+
 					&:before {
-						width: 1px;
-						background: #fff;
-						content: "";
-						height: 10px;
-						position: absolute;
-						right: 0;
 						bottom: 1px;
-						z-index: 2;
 					}
 
 					&.without-dropdown {
