@@ -24,7 +24,7 @@ class ViewContract extends React.Component {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.setDefaultAsset();
 	}
 

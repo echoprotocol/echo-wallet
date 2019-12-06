@@ -7,6 +7,7 @@ const DEFAULT_FIELDS = Map({
 	id: '',
 	name: '',
 	intervalId: null,
+	subscribeCallback: () => {},
 });
 
 export default createModule({
