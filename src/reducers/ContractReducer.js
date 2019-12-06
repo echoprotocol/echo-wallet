@@ -7,9 +7,8 @@ const DEFAULT_FIELDS = Map({
 	id: '',
 	name: '',
 	intervalId: null,
-	whitelist: [],
-	blacklist: [],
 	owner: '',
+	subscribeCallback: () => {},
 });
 
 export default createModule({

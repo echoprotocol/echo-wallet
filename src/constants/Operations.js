@@ -391,6 +391,7 @@ export default {
 			amount: 'value.amount',
 			asset: 'value.asset_id',
 		},
+		signer: 'sender',
 	},
 	contract_whitelist: {
 		value: OPERATIONS_IDS.CONTRACT_WHITELIST,

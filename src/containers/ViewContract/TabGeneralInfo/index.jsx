@@ -1,27 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CACHE_MAPS } from 'echojs-lib';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Button, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
 import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
 import ActionBtn from '../../../components/ActionBtn';
+import {
+	initGeneralContractInfo,
+	resetGeneralContractInfo,
+} from '../../../actions/ContractActions';
+import { ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
+import { formatAmount } from '../../../helpers/FormatHelper';
+import { openModal } from '../../../actions/ModalActions';
+import { MODAL_REPLENISH } from '../../../constants/ModalConstants';
 
 class TabGeneralInfo extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			contractId: props.contractId,
 			open: false,
 		};
 	}
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (prevState.contractId !== nextProps.contractId) {
-			setTimeout(() => nextProps.getFullContract(nextProps.contractId), 300);
-			return { contractId: nextProps.contractId };
+
+	componentDidMount() {
+		this.props.initGeneralContractInfo(this.props.match.params.id);
+	}
+
+	componentWillUnmount() {
+		this.props.resetGeneralContractInfo();
+	}
+
+	getPoolAmount() {
+		const { contract, poolAsset } = this.props;
+
+		if (!contract || !poolAsset) {
+			return null;
 		}
-		return null;
+
+		return formatAmount(
+			contract.getIn(['poolBalance', 'amount']),
+			poolAsset.get('precision'),
+		);
 	}
 
 	renderList() {
@@ -82,11 +106,12 @@ class TabGeneralInfo extends React.Component {
 
 
 	render() {
+		const { poolAsset } = this.props;
 		const { open } = this.state;
 		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
 		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
 		const {
-			whitelist, blacklist, owner, activeUser,
+			contract, owner, activeUser,
 		} = this.props;
 		return (
 			<React.Fragment>
@@ -103,7 +128,6 @@ class TabGeneralInfo extends React.Component {
 											<div className="balance">0.0038</div>
 											<div className="coin">ECHO</div>
 										</div>
-
 										<Dropdown
 											open={open}
 											onFocus={() => { this.setState({ open: true }); }}
@@ -123,13 +147,17 @@ class TabGeneralInfo extends React.Component {
 								<td className="val">
 									<div className="val-wrap">
 										<div className="balance-wrap">
-											<div className="balance">0</div>
-											<div className="coin">ECHO</div>
+											<div className="balance">{this.getPoolAmount() || '0'}</div>
+											<div className="coin">{poolAsset ? poolAsset.get('symbol') : ADDRESS_PREFIX}</div>
 										</div>
 										<Button
 											className="main-btn"
 											size="small"
 											content="Replenish"
+											onClick={() => this.props.openModal(
+												MODAL_REPLENISH,
+												{ contractId: this.props.match.params.id },
+											)}
 										/>
 									</div>
 								</td>
@@ -138,12 +166,12 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Whitelist:</td>
 								<td className="val">
 									{
-										whitelist.length ?
+										contract.get('whitelist').length ?
 											<button
 												className="link-btn"
 												onClick={this.props.openWhitelistModal}
 											>
-												{whitelist.length} members
+												{contract.get('whitelist').length} members
 											</button> :
 											<React.Fragment>
 												{
@@ -167,12 +195,12 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Blacklist:</td>
 								<td className="val">
 									{
-										blacklist.length ?
+										contract.get('blacklist').length ?
 											<button
 												className="link-btn"
 												onClick={this.props.openBlacklistModal}
 											>
-												{blacklist.length} members
+												{contract.get('blacklist').length} members
 											</button> :
 											<React.Fragment>
 												{
@@ -241,12 +269,14 @@ class TabGeneralInfo extends React.Component {
 }
 
 TabGeneralInfo.propTypes = {
-	whitelist: PropTypes.array,
-	blacklist: PropTypes.array,
+	contract: PropTypes.object,
+	poolAsset: PropTypes.object,
+	match: PropTypes.object.isRequired,
+	initGeneralContractInfo: PropTypes.func.isRequired,
+	resetGeneralContractInfo: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
-	contractId: PropTypes.string.isRequired,
-	getFullContract: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
 	openToWhitelistModal: PropTypes.func.isRequired,
@@ -254,9 +284,28 @@ TabGeneralInfo.propTypes = {
 };
 
 TabGeneralInfo.defaultProps = {
-	whitelist: [],
-	blacklist: [],
+	contract: null,
+	poolAsset: null,
 };
 
-
-export default TabGeneralInfo;
+export default withRouter(connect(
+	(state, ownProps) => {
+		const contract = state.echojs.getIn([
+			CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID,
+			ownProps.match.params.id,
+		]);
+		const poolAsset = contract && state.echojs.getIn([
+			CACHE_MAPS.ASSET_BY_ASSET_ID,
+			contract.getIn(['poolBalance', 'asset_id']),
+		]);
+		return {
+			contract,
+			poolAsset,
+		};
+	},
+	(dispatch) => ({
+		initGeneralContractInfo: (contractId) => dispatch(initGeneralContractInfo(contractId)),
+		resetGeneralContractInfo: () => dispatch(resetGeneralContractInfo()),
+		openModal: (value, params) => dispatch(openModal(value, params)),
+	}),
+)(TabGeneralInfo));

@@ -632,13 +632,28 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 	}
 	await dispatch(contractCodeCompile());
 };
-export const getFullContract = (id) => async (dispatch) => {
-	const contractOwner = (await echo.api.getObject(id)).owner;
-	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
-	const contract = await echo.api.getFullContract(id);
-	console.log(contract)
 
-	// const whitelist = await echo.api.getContractPoolWhitelist(id);
-	// console.log(whitelist)
+/**
+ * @method initGeneralContractInfo
+ * @param {String} contractId
+ * @returns {Function}
+ */
+export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
+	const contractOwner = (await echo.api.getObject(contractId)).owner;
+	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	await echo.api.getFullContract(contractId);
+	await echo.subscriber.setContractSubscribe(
+		[contractId],
+		subscribeCallback,
+	);
 };
 
+/**
+ * @method resetGeneralContractInfo
+ * @returns {Function}
+ */
+export const resetGeneralContractInfo = () => (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	echo.subscriber.removeContractSubscribe(subscribeCallback);
+};
