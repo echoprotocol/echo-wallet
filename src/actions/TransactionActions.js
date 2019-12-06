@@ -1508,7 +1508,7 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
-			label,
+			'Address name': label,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({
