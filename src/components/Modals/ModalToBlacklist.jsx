@@ -42,9 +42,8 @@ class ModalToBlacklist extends React.Component {
 
 	render() {
 		const {
-			show,
+			show, error,
 		} = this.props;
-		const error = 'wergarg';
 
 		return (
 			<TransactionScenario

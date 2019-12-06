@@ -45,6 +45,8 @@ class ViewContract extends React.Component {
 					<Tab.Pane className="scroll-fix">
 						<TabGeneralInfo
 							contractId={this.props.contractId}
+							owner={this.props.owner}
+							activeUser={this.props.activeUser}
 							whitelist={this.props.whitelist}
 							blacklist={this.props.blacklist}
 							getFullContract={this.props.getFullContract}
@@ -102,6 +104,8 @@ ViewContract.propTypes = {
 	openBlacklistModal: PropTypes.func.isRequired,
 	openToWhitelistModal: PropTypes.func.isRequired,
 	openToBlacklistModal: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
 };
 
 export default withRouter(connect(
@@ -109,6 +113,8 @@ export default withRouter(connect(
 		contractId: state.contract.get('id'),
 		whitelist: state.contract.get('whitelist'),
 		blacklist: state.contract.get('blacklist'),
+		owner: state.contract.get('owner'),
+		activeUser: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),

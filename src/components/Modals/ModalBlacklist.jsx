@@ -30,23 +30,23 @@ class ModalBalcklist extends React.Component {
 	}
 
 	renderList() {
-		const { blacklist } = this.props;
+		const { blacklist, owner, activeUser } = this.props;
 		return blacklist.map((el) => (
 			<button className="segment">
 				<Avatar accountName={el.name} />
 				<div className="name">{el.name}</div>
-				<ActionBtn
+				{ owner === activeUser && <ActionBtn
 					icon="remove"
 					text="Remove"
 					onClick={this.props.removeFromBlackList(el.id)}
-				/>
+				/>}
 			</button>
 		));
 	}
 
 	render() {
 		const {
-			show,
+			show, owner, activeUser,
 		} = this.props;
 
 		return (
@@ -66,11 +66,11 @@ class ModalBalcklist extends React.Component {
 						{this.renderList()}
 					</div>
 					<div className="form-panel">
-						<Button
+						{ owner === activeUser && <Button
 							className="main-btn"
 							content="Add account"
 							onClick={(e) => this.onOpenAddModal(e)}
-						/>
+						/>}
 					</div>
 				</div>
 			</Modal>
@@ -85,6 +85,8 @@ ModalBalcklist.propTypes = {
 	openAddModal: PropTypes.func.isRequired,
 	blacklist: PropTypes.array.isRequired,
 	removeFromBlackList: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
 };
 
 ModalBalcklist.defaultProps = {
@@ -95,6 +97,8 @@ export default connect(
 	(state) => ({
 		blacklist: state.contract.get('blacklist'),
 		show: state.modal.getIn([MODAL_BLACKLIST, 'show']),
+		owner: state.contract.get('owner'),
+		activeUser: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),

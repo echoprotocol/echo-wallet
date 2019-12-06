@@ -85,7 +85,9 @@ class TabGeneralInfo extends React.Component {
 		const { open } = this.state;
 		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
 		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
-		const { whitelist, blacklist } = this.props;
+		const {
+			whitelist, blacklist, owner, activeUser,
+		} = this.props;
 		return (
 			<React.Fragment>
 				<ModalToWhitelist />
@@ -136,7 +138,7 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Whitelist:</td>
 								<td className="val">
 									{
-										!whitelist.length ?
+										whitelist.length ?
 											<button
 												className="link-btn"
 												onClick={this.props.openWhitelistModal}
@@ -144,13 +146,19 @@ class TabGeneralInfo extends React.Component {
 												{whitelist.length} members
 											</button> :
 											<React.Fragment>
-												<button
-													className="link-btn"
-													onClick={this.props.openToWhitelistModal}
-												>
-													Add account
-												</button>
-												<div className="val-hint">(List is empty)</div>
+												{
+													owner === activeUser ?
+														<React.Fragment>
+															<button
+																className="link-btn"
+																onClick={this.props.openToWhitelistModal}
+															>
+																Add account
+															</button>
+															<div className="val-hint">(List is empty)</div>
+														</React.Fragment> :
+														<div className="val-hint">List is empty</div>
+												}
 											</React.Fragment>
 									}
 								</td>
@@ -159,7 +167,7 @@ class TabGeneralInfo extends React.Component {
 								<td className="key">Blacklist:</td>
 								<td className="val">
 									{
-										!blacklist.length ?
+										blacklist.length ?
 											<button
 												className="link-btn"
 												onClick={this.props.openBlacklistModal}
@@ -167,13 +175,19 @@ class TabGeneralInfo extends React.Component {
 												{blacklist.length} members
 											</button> :
 											<React.Fragment>
-												<button
-													className="link-btn"
-													onClick={this.props.openToBlacklistModal}
-												>
-													Add account
-												</button>
-												<div className="val-hint">(List is empty)</div>
+												{
+													owner === activeUser ?
+														<React.Fragment>
+															<button
+																className="link-btn"
+																onClick={this.props.openToBlacklistModal}
+															>
+																Add account
+															</button>
+															<div className="val-hint">(List is empty)</div>
+														</React.Fragment> :
+														<div className="val-hint">List is empty</div>
+												}
 											</React.Fragment>
 									}
 								</td>
@@ -227,9 +241,11 @@ class TabGeneralInfo extends React.Component {
 }
 
 TabGeneralInfo.propTypes = {
-	contractId: PropTypes.string.isRequired,
 	whitelist: PropTypes.array,
 	blacklist: PropTypes.array,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
+	contractId: PropTypes.string.isRequired,
 	getFullContract: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,

@@ -30,23 +30,23 @@ class ModalWhitelist extends React.Component {
 	}
 
 	renderList() {
-		const { whitelist } = this.props;
+		const { whitelist, owner, activeUser } = this.props;
 		return whitelist.map((el) => (
 			<button className="segment">
 				<Avatar accountName={el.name} />
 				<div className="name">{el.name}</div>
-				<ActionBtn
+				{ owner === activeUser && <ActionBtn
 					icon="remove"
 					text="Remove"
 					onClick={this.props.removeFromWhiteList(el.id)}
-				/>
+				/>}
 			</button>
 		));
 	}
 
 	render() {
 		const {
-			show,
+			show, owner, activeUser,
 		} = this.props;
 
 		return (
@@ -66,11 +66,11 @@ class ModalWhitelist extends React.Component {
 						{this.renderList()}
 					</div>
 					<div className="form-panel">
-						<Button
+						{ owner === activeUser && <Button
 							className="main-btn"
 							content="Add account"
 							onClick={(e) => this.onOpenAddModal(e)}
-						/>
+						/>}
 					</div>
 				</div>
 			</Modal>
@@ -85,6 +85,8 @@ ModalWhitelist.propTypes = {
 	whitelist: PropTypes.array.isRequired,
 	openAddModal: PropTypes.func.isRequired,
 	removeFromWhiteList: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
 };
 
 ModalWhitelist.defaultProps = {
@@ -95,6 +97,8 @@ export default connect(
 	(state) => ({
 		whitelist: state.contract.get('whitelist'),
 		show: state.modal.getIn([MODAL_WHITELIST, 'show']),
+		owner: state.contract.get('owner'),
+		activeUser: state.global.getIn(['activeUser', 'id']),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),

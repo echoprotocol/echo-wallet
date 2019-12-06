@@ -633,8 +633,12 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 	await dispatch(contractCodeCompile());
 };
 export const getFullContract = (id) => async (dispatch) => {
+	const contractOwner = (await echo.api.getObject(id)).owner;
+	console.log(contractOwner);
+	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const contract = await echo.api.getFullContract(id);
 	console.log(contract)
+	
 	// const whitelist = await echo.api.getContractPoolWhitelist(id);
 	// console.log(whitelist)
 };
