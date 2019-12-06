@@ -17,7 +17,7 @@ class ModalERC20ToWatchList extends React.Component {
 
 	onClose(e) {
 		e.preventDefault();
-		this.props.closeModal();
+		this.props.closeModal(MODAL_ERC20_TO_WATCH_LIST);
 	}
 
 	onConfirm(e) {

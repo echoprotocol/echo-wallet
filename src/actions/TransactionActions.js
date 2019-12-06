@@ -1828,8 +1828,8 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 			dispatch(setModalError(type, 'Network error'));
 			return null;
 		}
-		if (contracts.getIn([contractId, type === MODAL_TO_WHITELIST ? 'whitelist' : 'blacklist'])
-			.some((el) => el === accountId)) {
+		const list = contracts.getIn([contractId, type === MODAL_TO_WHITELIST ? 'whitelist' : 'blacklist']);
+		if (list && list.some((el) => el === accountId)) {
 			dispatch(setModalError(type, 'This address already exists'));
 			return null;
 		}

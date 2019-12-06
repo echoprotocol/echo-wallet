@@ -728,7 +728,9 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
 	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const subscribeCallback = getState().contract.get('subscribeCallback');
 	const contract = await echo.api.getFullContract(contractId);
-	await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
+	if (contract && contract.whitelist && contract.blacklist) {
+		await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
+	}
 	await echo.subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,

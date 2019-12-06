@@ -37,7 +37,8 @@ class ModalBalcklist extends React.Component {
 		if (!contracts.get(contractId)) {
 			return [];
 		}
-		return contracts.getIn([contractId, 'blacklist']).map((el, i) => (
+		const blacklist = contracts.getIn([contractId, 'blacklist']);
+		return blacklist ? blacklist.map((el, i) => (
 			<TransactionScenario
 				handleTransaction={() => this.props.removeFromBlackList(el)}
 				key={i.toString()}
@@ -56,7 +57,7 @@ class ModalBalcklist extends React.Component {
 					)
 				}
 			</TransactionScenario>
-		)).toArray();
+		)).toArray() : [];
 	}
 
 	render() {

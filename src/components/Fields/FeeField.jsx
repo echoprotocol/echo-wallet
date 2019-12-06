@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
+import { ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 
 class FeeComponent extends React.Component {
 
@@ -131,7 +132,7 @@ class FeeComponent extends React.Component {
 					selection
 					tabIndex={(options.length < 2) ? '-1' : '0'}
 					options={(options.length < 2) ? [] : options}
-					text={`${text}\u00a0${fee.asset.symbol}`}
+					text={`${text}\u00a0${fee.asset ? fee.asset.symbol : ADDRESS_PREFIX}`}
 					selectOnBlur={false}
 					noResultsMessage={null}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
