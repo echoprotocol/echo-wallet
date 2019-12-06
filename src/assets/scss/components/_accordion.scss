@@ -6,14 +6,27 @@
 
 .accordion-trigger {
 	color: $main-color;
-	border-bottom: 1px dashed;
 	position: relative;
 	font-size: 15px;
+	border-radius: 4px;
+	margin: -1px 0 -3px -5px;
+    padding: 1px 20px 3px 5px;
+	
+	.content {
+		border-bottom: 1px dashed;
+		pointer-events: none;
+	}
+
 	.icon.dropdown {
 		position: absolute;
-		right: -14px;
+		right: 6px;
 		top: 0;
 		bottom: 0;
+		pointer-events: none;
+	}
+
+	&:focus:not(:active) {
+		@include on-focus(2px);
 	}
 }
 
