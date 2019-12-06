@@ -1,9 +1,15 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Button, Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import ActionBtn from '../../../components/ActionBtn';
+import { formatAbi } from '../../../actions/ContractActions';
+import { clearForm } from '../../../actions/FormActions';
+
+import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 class TabGeneralInfo extends React.Component {
 
@@ -12,6 +18,10 @@ class TabGeneralInfo extends React.Component {
 		this.state = {
 			open: false,
 		};
+	}
+
+	componentWillMount() {
+		this.props.formatAbi(this.props.match.params.id);
 	}
 
 	renderList() {
@@ -72,9 +82,7 @@ class TabGeneralInfo extends React.Component {
 
 	render() {
 		const { open } = this.state;
-		const bytecode = '608060405234801561001057600080fd5b506101a2806100206000396000f300608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630775107014610046575b600080fd5b34801561005257600080fd5b5061005b61005d565b005b60405180807f312e322e35206c69666574696d655f72656665727265725f6665655f7065726381526020017f656e746167650000000000000054600181600116156101000203166002900490629';
-		const abi = '[\n {\n "constant": true,\n "inputs": [],\n "name": "name",\n "outputs": [\n {\n';
-
+		const { bytecode, abi } = this.props;
 
 		return (
 			<div className="tab-content">
@@ -179,7 +187,23 @@ class TabGeneralInfo extends React.Component {
 
 }
 
-TabGeneralInfo.propTypes = {};
 
+TabGeneralInfo.propTypes = {
+	abi: PropTypes.string.isRequired,
+	bytecode: PropTypes.string.isRequired,
+	match: PropTypes.object.isRequired,
+	formatAbi: PropTypes.func.isRequired,
+	clearForm: PropTypes.func.isRequired,
+};
 
-export default TabGeneralInfo;
+export default withRouter(connect(
+	(state) => ({
+		abi: state.contract.get('abi'),
+		bytecode: state.contract.get('bytecode'),
+		balances: state.contract.get('balances'),
+	}),
+	(dispatch) => ({
+		formatAbi: (id) => dispatch(formatAbi(id)),
+		clearForm: (value) => dispatch(clearForm(value)),
+	}),
+)(TabGeneralInfo));
