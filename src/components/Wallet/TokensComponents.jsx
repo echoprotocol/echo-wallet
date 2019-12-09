@@ -40,6 +40,7 @@ class Tokens extends React.Component {
 				key={id}
 			>
 				<button
+					className="balance-item"
 					key={id}
 					onFocus={() => this.onFocus(id)}
 					onBlur={() => this.onBlur()}
@@ -51,6 +52,7 @@ class Tokens extends React.Component {
 					<span className="currency-amount">{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
+					className="remove-token"
 					onFocus={() => this.onFocus(id)}
 					onBlur={() => this.onBlur()}
 					onClick={(e) => this.onRemoveToken(symbol, id, e)}
@@ -65,7 +67,7 @@ class Tokens extends React.Component {
 	renderList() {
 		return (
 			<React.Fragment>
-				<div className="currency-title">Tokens</div>
+				<h3 className="currency-title">Tokens</h3>
 				<ul className="currency-list">
 					{
 						this.props.tokens.map((t) => this.renderRow(t))

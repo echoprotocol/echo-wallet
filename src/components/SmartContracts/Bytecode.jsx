@@ -45,7 +45,7 @@ class Bytecode extends React.Component {
 					<label htmlFor="bytecode">
 						ABI
 						<span className="label-info">(If you insert ABI, contract will add to watchlist)</span>
-						<span className="label-info">Optional</span>
+						<span className="label-info right">(optional)</span>
 					</label>
 					<textarea
 						type="text"

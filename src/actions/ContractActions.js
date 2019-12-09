@@ -1,6 +1,7 @@
-import { Map, List } from 'immutable';
+import { Map, List, Set } from 'immutable';
 import echo, { validators } from 'echojs-lib';
 import * as wrapper from 'solc/wrapper';
+import BN from 'bignumber.js';
 
 import {
 	setFormError,
@@ -28,6 +29,7 @@ import {
 	validateContractName,
 	validateByType,
 	checkAccessVersion,
+	checkErc20Contract,
 } from '../helpers/ValidateHelper';
 
 import {
@@ -35,6 +37,7 @@ import {
 	FORM_CALL_CONTRACT,
 	FORM_CREATE_CONTRACT_SOURCE_CODE,
 	FORM_VIEW_CONTRACT,
+	FORM_CALL_CONTRACT_VIA_ID,
 } from '../constants/FormConstants';
 import { CONTRACT_LIST_PATH, VIEW_CONTRACT_PATH } from '../constants/RouterConstants';
 import {
@@ -44,9 +47,14 @@ import {
 	MIN_ACCESS_VERSION_BUILD,
 } from '../constants/GlobalConstants';
 
+import { MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
+
 import history from '../history';
 
 import { estimateFormFee } from './TransactionActions';
+
+import { openModal } from './ModalActions';
+
 import { loadScript } from '../api/ContractApi';
 
 /**
@@ -60,6 +68,40 @@ export const set = (field, value) => (dispatch) => {
 	dispatch(ContractReducer.actions.set({ field, value }));
 };
 
+export const getContractBalances = async (contractsIds) => {
+	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
+	const contractsBalances = await Promise.all(balances);
+
+	const usedAssets = contractsBalances.flat().map((b) => b.asset_id);
+	const uniqAssets = new Set([...usedAssets, ECHO_ASSET_ID]).toArray();
+
+	const requestedAssets = await echo.api.getAssets(uniqAssets);
+	const requestedAssetsMap = requestedAssets.reduce((map, a) => {
+		const asset = { id: a.id, symbol: a.symbol, precision: a.precision };
+		map[a.id] = asset;
+		return map;
+	}, {});
+
+
+	const contractWithMapBalances = contractsIds.reduce((map, id, i) => {
+		const contractBalances = (contractsBalances[i] || []).filter((b) => b);
+		if (contractBalances.length === 0) {
+			map[id] = [{ amount: 0, ...requestedAssetsMap[ECHO_ASSET_ID] }];
+		} else {
+			map[id] = contractBalances.map((b) => {
+				const asset = requestedAssetsMap[b.asset_id] || requestedAssetsMap[ECHO_ASSET_ID];
+				const amount = new BN(b.amount).div(new BN(10).pow(asset.precision)).toString(10);
+
+				return { amount, ...asset };
+			});
+		}
+
+		return map;
+	}, {});
+
+	return contractWithMapBalances;
+};
+
 /**
  * @method loadContracts
  *
@@ -67,7 +109,7 @@ export const set = (field, value) => (dispatch) => {
  * @param {String} networkName
  * @returns {function(dispatch): Promise<undefined>}
  */
-export const loadContracts = (accountId, networkName) => (dispatch) => {
+export const loadContracts = (accountId, networkName) => async (dispatch) => {
 	let contracts = localStorage.getItem(`contracts_${networkName}`);
 
 	contracts = contracts ? JSON.parse(contracts) : {};
@@ -80,10 +122,16 @@ export const loadContracts = (accountId, networkName) => (dispatch) => {
 		return;
 	}
 
+	const contractMap = new Map(contracts[accountId]);
+	const balances = await getContractBalances(Object.keys(contracts[accountId]));
+
+	const contractWithBalances = contractMap
+		.mapEntries(([contractId, data]) => [contractId, { balances: balances[contractId], ...data }]);
 	dispatch(GlobalReducer.actions.set({
 		field: 'contracts',
-		value: new Map(contracts[accountId]),
+		value: contractWithBalances,
 	}));
+
 };
 
 /**
@@ -146,7 +194,19 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		contracts[accountId][id] = { abi, name };
 		localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-		dispatch(push('contracts', id, { disabled: false, abi, name }));
+		const { [id]: balances } = await getContractBalances([id]);
+
+		dispatch(push('contracts', id, {
+			disabled: false, abi, name, balances,
+		}));
+
+		const [, { code }] = contract;
+
+		const isErc20Token = checkErc20Contract(code);
+
+		if (isErc20Token) {
+			dispatch(openModal(MODAL_ERC20_TO_WATCH_LIST, { accountId, contractId: id }));
+		}
 
 		history.push(CONTRACT_LIST_PATH);
 	} catch (err) {
@@ -254,7 +314,11 @@ export const addContractByName = (
 
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(contracts));
 
-	dispatch(push('contracts', id, { disabled: false, abi, name }));
+	const { [id]: balances } = await getContractBalances([id]);
+
+	dispatch(push('contracts', id, {
+		disabled: false, abi, name, balances,
+	}));
 };
 
 /**
@@ -340,7 +404,8 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	const contracts = JSON.parse(localStorage.getItem(`contracts_${networkName}`));
-	const abi = JSON.parse(contracts[accountId][id].abi);
+	const plainABI = contracts[accountId][id].abi;
+	const abi = JSON.parse(plainABI);
 	const { name } = contracts[accountId][id];
 
 	let constants = abi.filter((value) =>
@@ -371,6 +436,10 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 
 	constants = await Promise.all(constants);
 
+	const [, { code: bytecode }] = await echo.api.getContract(id);
+
+	const { [id]: balances } = await getContractBalances([id]);
+
 	dispatch(ContractReducer.actions.set({
 		field: 'constants',
 		value: new List(constants),
@@ -393,6 +462,21 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 		value: name,
 	}));
 
+	dispatch(ContractReducer.actions.set({
+		field: 'abi',
+		value: plainABI,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'bytecode',
+		value: bytecode,
+	}));
+
+	dispatch(ContractReducer.actions.set({
+		field: 'balances',
+		value: balances,
+	}));
+
 };
 
 /**
@@ -402,7 +486,7 @@ export const formatAbi = (id) => async (dispatch, getState) => {
  * @param {String} newName
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
-export const updateContractName = (id, newName) => (dispatch, getState) => {
+export const updateContractName = (id, newName) => async (dispatch, getState) => {
 	const nameError = validateContractName(newName);
 
 	if (nameError) {
@@ -434,8 +518,9 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 			});
 	});
 
-	// contracts[accountId][id] = contracts[accountId][id];
 	localStorage.setItem(`contracts_${networkName}`, JSON.stringify(newContracts));
+
+	const { [id]: balances } = await getContractBalances([id]);
 
 	dispatch(remove('contracts', id));
 	dispatch(push('contracts', id, {
@@ -443,6 +528,7 @@ export const updateContractName = (id, newName) => (dispatch, getState) => {
 		abi: contracts[accountId][id].abi,
 		id: contracts[accountId][id].id,
 		name: newName,
+		balances,
 	}));
 
 	dispatch(formatAbi(id));
@@ -492,10 +578,15 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	fees = await Promise.all(fees);
 
-
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
 			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+		} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
+
+			const formData = getState().form.getIn([form]).toJS();
+			if (formData.amount.value && formData.id.value) {
+				dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+			}
 		} else {
 			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
 		}
@@ -625,4 +716,41 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
 		return;
 	}
 	await dispatch(contractCodeCompile());
+};
+
+/**
+ * @method initGeneralContractInfo
+ * @param {String} contractId
+ * @returns {Function}
+ */
+export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
+	const contractOwner = (await echo.api.getObject(contractId)).owner;
+	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	const contract = await echo.api.getFullContract(contractId);
+	if (contract && contract.whitelist && contract.blacklist) {
+		await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
+	}
+	await echo.subscriber.setContractSubscribe(
+		[contractId],
+		subscribeCallback,
+	);
+};
+
+/**
+ * @method updateGeneralContractInfo
+ * @param contract
+ * @returns {Promise<void>}
+ */
+export const updateGeneralContractInfo = async (contract) => {
+	await echo.api.getAccounts(contract.get('whitelist').concat(contract.get('blacklist')).toArray());
+};
+
+/**
+ * @method resetGeneralContractInfo
+ * @returns {Function}
+ */
+export const resetGeneralContractInfo = () => (dispatch, getState) => {
+	const subscribeCallback = getState().contract.get('subscribeCallback');
+	echo.subscriber.removeContractSubscribe(subscribeCallback);
 };

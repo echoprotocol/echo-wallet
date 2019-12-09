@@ -63,7 +63,7 @@ class TransactionScenario extends React.Component {
 	send() {
 		const { password } = this.state;
 
-		this.props.sendTransaction(password);
+		this.props.sendTransaction(password, this.props.onSuccess);
 		this.clear();
 	}
 
@@ -82,10 +82,11 @@ class TransactionScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
+			key,
 		} = this.props;
 
 		return (
-			<React.Fragment>
+			<React.Fragment key={key}>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
 					show={modalUnlock.get('show')}
@@ -114,8 +115,10 @@ class TransactionScenario extends React.Component {
 TransactionScenario.propTypes = {
 	handleTransaction: PropTypes.func.isRequired,
 	onUnlock: PropTypes.func,
+	onSuccess: PropTypes.func,
 	children: PropTypes.func.isRequired,
 
+	key: PropTypes.string,
 	operation: PropTypes.string,
 	showOptions: PropTypes.object,
 	[MODAL_UNLOCK]: PropTypes.object.isRequired,
@@ -129,9 +132,11 @@ TransactionScenario.propTypes = {
 };
 
 TransactionScenario.defaultProps = {
+	key: '',
 	operation: null,
 	showOptions: {},
 	onUnlock: () => {},
+	onSuccess: () => {},
 };
 
 export default connect(
@@ -146,7 +151,7 @@ export default connect(
 		closeModal: (value) => dispatch(closeModal(value)),
 		clearError: (value) => dispatch(setError(value, null)),
 		unlock: (password, callback) => dispatch(unlock(password, callback)),
-		sendTransaction: (keys) => dispatch(sendTransaction(keys)),
+		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
 )(TransactionScenario);

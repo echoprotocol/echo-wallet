@@ -1,8 +1,6 @@
 @import "scroll";
 @import "buttons";
-@import "dropdowns";
 @import "selects";
-@import "modals";
 @import "forms";
 @import "tables";
 @import "tabs";
@@ -11,14 +9,7 @@
 @import "links";
 @import "input";
 @import "textarea";
-
-@import "modals/edit-permissions";
-@import "modals/add-wif";
-@import "modals/view-wif";
-@import "modals/backup";
-@import "modals/confirm-editing-of-permissions.scss";
-@import "modals/create-address.scss";
-
+@import "tag";
 
 @import "nav-popup";
 

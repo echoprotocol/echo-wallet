@@ -1,0 +1,290 @@
+.network-dropdown {
+	margin-right: -18px;
+
+	.dropdown-trigger {
+		height: 39px;
+		display: flex;
+		align-items: center;
+		padding: 0 15px;
+		background-color: transparent;
+		transition: background-color $speed;
+		border-left: 1px solid rgb(212, 212, 212);
+	
+		&:hover {
+			background-color: #f7f7f7;
+		}
+	
+		.icon.dropdown {
+			right: 0;
+			margin: auto 10px auto 0;
+		}
+	}
+
+	&.disconnected {
+		.dropdown-trigger {
+			&:hover {
+				background-color: transparent;
+			}
+	
+			.status.connected {
+				color: #fff;
+	
+				&:before {
+					background-color: #fff;
+				}
+			}
+	
+			.pipeline-block,
+			.icon.dropdown,
+			.description {
+				color: #fff;
+			}
+		}
+	}
+
+	&.warning {
+		.dropdown-trigger {
+			&:hover {
+				background-color: transparent;
+			}
+	
+			.status.connected {
+				color: #fff;
+	
+				&:before {
+					background-color: #fff;
+				}
+			}
+	
+			.pipeline-block,
+			.icon.dropdown,
+			.description {
+				color: rgba(#fff, .7);
+			}
+		}
+	}
+
+	&.upward {
+		&>.menu {
+			bottom: calc(100% - 5px);
+		}
+	}
+
+	.description {
+		margin-right: 6px;
+		line-height: 1;
+	}
+
+	.status {
+		.ellipsis {
+			@include cut-text;
+			max-width: 85px;
+			display: block;
+		}
+
+	}
+
+	.network-link {
+		color: $main-color;
+		transition: color $speed;
+	}
+
+	& > .menu {
+		padding-top: 6px;
+		border-radius: 0;
+		width: 100%;
+		max-height: 245px;
+		overflow: auto;
+		width: 289px;
+
+		&.left {
+			right: 10px;
+		}
+
+		&:before {
+			content: "Choose Network";
+			padding: 7px 0 7px 19px;
+			text-transform: uppercase;
+			display: block;
+			font-family: proxima;
+			font-weight: 600;
+			font-size: 14px;
+			color: rgba(#5D637B, .5);
+
+		}
+
+
+		.item {
+			padding: 0;
+			height: 40px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			color: $black;
+			transition: color $speed, background-color $speed;
+
+			&:hover {
+				&.selected {
+					.label-text {
+						&:before {
+							background-color: #fff;
+							border-color: #fff;
+						}
+					}
+				}
+
+				.label-text {
+					&:before {
+						border-color: #fff;
+					}
+				}
+
+				.label-link {
+					color: #fff;
+				}
+			}
+
+			&.selected {
+				background-color: transparent;
+
+				.label-text {
+					&:before {
+						background-color: $main-color;
+						border-color: $main-color;
+					}
+				}
+			}
+
+			&-link {
+				height: 42px;
+				color: $main-color;
+				font-family: proxima;
+				font-weight: 600;
+
+				&:hover {
+					background-color: $main-color;
+
+					.network-link {
+						color: #fff;
+					}
+				}
+
+				&.active {
+					text-decoration: underline;
+				}
+
+				.network-link {
+					width: 100%;
+					padding: 10px 19px;
+					height: 36px;
+					align-items: flex-start;
+				}
+			}
+
+			&.item-divider + .item:not(.item-link) {
+				margin-top: 6px;
+			}
+
+			&:not(.item-link):not(.item-divider) {
+				&.active {
+					background-color: #f8f8f8;
+				}
+
+				&:hover {
+					background-color: $main-color;
+					color: #fff;
+
+					.icon-remove,
+					.network-link {
+						color: #fff;
+					}
+				}
+
+
+				&.active {
+					.label {
+						&:before {
+							@include on-focus(4px);
+						}
+					}
+				}
+
+			}
+
+			.icon-remove {
+				margin: 0;
+				border-radius: 0;
+				padding: 0 16px;
+				height: 40px;
+				position: absolute;
+				right: 0;
+
+				&:hover {
+					background-color: #4258b5;
+				}
+			}
+
+			.label-text {
+				position: relative;
+				display: flex;
+				align-items: center;
+
+				&:before {
+					width: 6px;
+					height: 6px;
+					content: "";
+					border-radius: 50%;
+					margin: 0;
+					background-color: transparent;
+					border: 1px solid rgba(#5D637B, .5);
+					transition: background-color $speed, border $speed;
+					margin-left: 19px;
+					display: block;
+				}
+
+				.name {
+					@include cut-text;
+					padding: 0 0 0 7px;
+					max-width: 200px;
+				}
+			}
+
+			.label-link {
+				@include cut-text;
+				padding: 0 0 0 33px;
+				color: #5267C6;
+				transition: color $speed;
+				max-width: 225px;
+			}
+
+			.error-wrap {
+				margin: 0;
+				padding-bottom: 20px;
+			}
+
+			.field {
+				label {
+					padding: 19px 19px 5px;
+				}
+			}
+		}
+
+		.item-divider {
+			height: 1px;
+			background-color: $bd-gray;
+			margin: 6px 0 0;
+
+			&.disabled {
+				opacity: 1;
+			}
+		}
+	}
+
+	.icon-remove {
+		box-shadow: none;
+		background-color: transparent;
+		border: 0;
+		color: #bcbcbc;
+		transition: color $speed, background-color $speed;
+	}
+}

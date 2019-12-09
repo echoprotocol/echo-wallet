@@ -42,9 +42,9 @@ input[type="url"] {
 	font-family: $font-family;
 	margin: 0em;
 	outline: none;
-	line-height: 1.1em;
-	padding: 0.67857143em 1em;
-	font-size: 1.0714em;
+	line-height: 17px;
+	padding: 10px 14px;
+	font-size: 15px;
 	border: 1px solid $inut-color;
 	color: rgba(0, 0, 0, 0.87);
 	border-radius: 4px;
@@ -74,19 +74,4 @@ input {
   }
  .input > input:-ms-input-placeholder {
 	color: rgba(191, 191, 191, 0.87);
-  }
-  
-  
-  /*--------------------
-		  Size
-  ---------------------*/
-  
-  .ui.mini.input {
-	font-size: 0.78571429em;
-  }
-  .ui.small.input {
-	font-size: 0.92857143em;
-  }
-  .ui.input {
-	font-size: 1em;
-  }
+}

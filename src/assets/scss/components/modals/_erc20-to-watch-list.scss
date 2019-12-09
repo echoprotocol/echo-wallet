@@ -1,0 +1,25 @@
+.erc20-to-watch-list-modal {
+	flex-direction: column;
+	padding: 35px 40px 46px;
+	max-width: 340px;
+	.modal-header-title {
+		font-size: 20px;
+		font-weight: 700;
+		text-align: center;
+		line-height: 26.4px;
+		padding: 0 8px;
+		margin: 0;
+	}
+	.form-panel {
+		margin: 27px 0 0;
+		.button {
+			&:not(:last-child) {
+				margin: 0 20px 0 0;
+			}
+		}
+	}
+	.icon-close {
+		right: 12px;
+		top: 12px;
+	}
+}

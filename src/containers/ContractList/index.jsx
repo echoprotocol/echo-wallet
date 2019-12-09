@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Icon } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -12,7 +12,7 @@ import {
 	CALL_CONTRACT_PATH,
 	SMART_CONTRACTS_PATH,
 } from '../../constants/RouterConstants';
-import { CONTRACT_ID_PREFIX, SORT_CONTRACTS } from '../../constants/GlobalConstants';
+import { CONTRACT_ID_PREFIX, SORT_CONTRACTS, ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 
 import { toggleSort } from '../../actions/SortActions';
 
@@ -26,23 +26,69 @@ class ContractList extends React.Component {
 		history.push(link);
 	}
 
+	showBalance(balance = []) {
+		if (balance.length === 0) {
+			return {};
+		}
+
+		if (balance.length === 1) {
+			return balance[0];
+		}
+
+		const coreAsset = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId === ECHO_ASSET_ID);
+
+		if (coreAsset) {
+			return coreAsset;
+		}
+
+		const anotherNotNullBalance = balance.find(({ amount, id: assetId }) => amount !== '0' && assetId !== ECHO_ASSET_ID);
+
+		if (anotherNotNullBalance) {
+			return anotherNotNullBalance;
+		}
+
+		return balance[0];
+	}
+
 	sortList() {
 		const contracts = this.props.contracts.toJS();
 		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return Object.entries(contracts)
-			.sort(([id1, { name: name1 }], [id2, { name: name2 }]) => {
+			.sort(([id1, data1], [id2, data2]) => {
 
-				const t1 = (sortType === 'id' ? id1.split(`${CONTRACT_ID_PREFIX}.`)[1] : name1) || '';
-				const t2 = (sortType === 'id' ? id2.split(`${CONTRACT_ID_PREFIX}.`)[1] : name2) || '';
+				const balanceToShow1 = this.showBalance(data1.balances);
+				const balanceToShow2 = this.showBalance(data2.balances);
+
+				let t1 = '';
+				let t2 = '';
+
+				switch (sortType) {
+					case 'id':
+						t1 = id1.split(`${CONTRACT_ID_PREFIX}.`)[1] || '';
+						t2 = id2.split(`${CONTRACT_ID_PREFIX}.`)[1] || '';
+						break;
+					case 'name':
+						t1 = data1.name || '';
+						t2 = data2.name || '';
+						break;
+					case 'balance':
+						t1 = balanceToShow1.amount || '';
+						t2 = balanceToShow2.amount || '';
+						break;
+					default:
+				}
+
 				return (t1.localeCompare(t2, [], { numeric: true })) * (sortInc ? 1 : -1);
 			});
 	}
 
-	renderRow([id, { name, disabled }]) {
+	renderRow([id, { name, disabled, balances }]) {
 		if (disabled) {
 			return null;
 		}
+
+		const balanceToShow = this.showBalance(balances);
 
 		return (
 			<Table.Row
@@ -52,16 +98,27 @@ class ContractList extends React.Component {
 				onClick={(e) => this.onLink(VIEW_CONTRACT_PATH.replace(/:id/, id), e)}
 			>
 				<Table.Cell>
-					<span className="ellips">
-						{id}
-					</span>
+					{id}
+				</Table.Cell>
+				<Table.Cell >
+					<div className="name">{name}</div>
 				</Table.Cell>
 				<Table.Cell>
-					<span className="ellips">
-						{name}
-					</span>
+					<div className="balance-wrap">
+						<span className="balance">{balanceToShow.amount}</span>
+						<span className="coin">{balanceToShow.symbol}</span>
+					</div>
 				</Table.Cell>
 			</Table.Row>
+		);
+	}
+
+	renderSort(sortType, sortInc, type) {
+		return (
+			<div className="sort">
+				<i className={classnames('icon-sort-up', { active: sortType === type && sortInc })} />
+				<i className={classnames('icon-sort-down', { active: sortType === type && !sortInc })} />
+			</div>
 		);
 	}
 
@@ -73,38 +130,22 @@ class ContractList extends React.Component {
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
-								<span className="sort-wrap">
-                                    Contract ID
-									<div className="sort">
-										<Icon
-											name="dropdown"
-											flipped="vertically"
-											className={classnames({ active: sortType === 'id' && sortInc })}
-										/>
-										<Icon
-											name="dropdown"
-											flipped="horizontally"
-											className={classnames({ active: sortType === 'id' && !sortInc })}
-										/>
-									</div>
-								</span>
+								<div className="sort-wrap">
+									Contract ID
+									{this.renderSort(sortType, sortInc, 'id')}
+								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
-								<span className="sort-wrap">
-                                    Watched Contract Name
-									<div className="sort">
-										<Icon
-											name="dropdown"
-											flipped="vertically"
-											className={classnames({ active: sortType === 'name' && sortInc })}
-										/>
-										<Icon
-											name="dropdown"
-											flipped="horizontally"
-											className={classnames({ active: sortType === 'name' && !sortInc })}
-										/>
-									</div>
-								</span>
+								<div className="sort-wrap" >
+									Watched Contract Name
+									{this.renderSort(sortType, sortInc, 'name')}
+								</div>
+							</Table.HeaderCell>
+							<Table.HeaderCell onClick={() => this.onSort('balance')}>
+								<div className="sort-wrap">
+									Contract Balance
+									{this.renderSort(sortType, sortInc, 'balance')}
+								</div>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>

@@ -24,13 +24,14 @@ class Assets extends React.Component {
 	}
 
 	setAsset(symbol) {
+		this.props.setGlobalValue('activeCoinTypeTab', 0);
 		this.props.setAsset(symbol);
 	}
 
 	renderEmpty() {
 		return (
 			<li>
-				<button>
+				<button onClick={() => this.props.setAsset('ECHO')}>
 					<span className="currency-symbol">ECHO</span>
 					<span className="currency-amount">0</span>
 				</button>
@@ -49,6 +50,7 @@ class Assets extends React.Component {
 						className={classnames({ focused: id === this.state.focusedId })}
 					>
 						<button
+							className="balance-item"
 							onFocus={() => this.onFocus(id)}
 							onBlur={() => this.onBlur()}
 							onClick={() => this.setAsset(asset)}
@@ -67,15 +69,12 @@ class Assets extends React.Component {
 
 	render() {
 		return (
-			<React.Fragment>
-				<div className="currency-title">Assets</div>
-				<ul className="currency-list">
-					{
-						!this.props.assets || !this.props.assets.size ?
-							this.renderEmpty() : this.renderList()
-					}
-				</ul>
-			</React.Fragment>
+			<ul className="currency-list">
+				{
+					!this.props.assets || !this.props.assets.size ?
+						this.renderEmpty() : this.renderList()
+				}
+			</ul>
 		);
 	}
 
@@ -85,6 +84,7 @@ Assets.propTypes = {
 	assets: PropTypes.object.isRequired,
 	setAsset: PropTypes.func.isRequired,
 	setAssetActiveAccount: PropTypes.func.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
 };
 
 export default Assets;

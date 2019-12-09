@@ -157,7 +157,18 @@ export const ECHO_REF = 'https://echo.org/';
 export const ECHO_DOCS_LINK = 'https://docs.echo.org/';
 export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
 
+export const CSS_TRANSITION_SPEED = 300;
+
 export const REGISTRATION = {
 	BATCH: 1e3,
 	TIMEOUT: 0,
+	DEFAULT_THRESHOLD: 1,
+	DEFAULT_KEY_WEIGHT: 1,
+	DEFAULT_DELEGATE_SHARE: 2000,
+};
+
+export const CUSTOM_NODE_BLOCKS_MAX_DIFF = 2;
+export const SIDECHAIN_ASSETS_SYMBOLS = {
+	1: 'eBTC',
+	2: 'eETH',
 };
