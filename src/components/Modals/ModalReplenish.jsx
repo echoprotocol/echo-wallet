@@ -33,7 +33,7 @@ class ModalToWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, error,
 		} = this.props;
 
 		return (
@@ -81,7 +81,10 @@ class ModalToWhitelist extends React.Component {
 												form={FORM_REPLENISH}
 												fee={fee}
 												assets={assets}
-												amount={amount}
+												amount={{
+													...amount,
+													error,
+												}}
 												currency={currency}
 												isAvailableBalance={isAvailableBalance}
 												amountInput={this.props.amountInput}
@@ -118,6 +121,7 @@ class ModalToWhitelist extends React.Component {
 ModalToWhitelist.propTypes = {
 	activeAccount: PropTypes.object,
 	show: PropTypes.bool,
+	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
 	fees: PropTypes.array.isRequired,
 	fee: PropTypes.object.isRequired,
@@ -138,6 +142,7 @@ ModalToWhitelist.defaultProps = {
 	activeAccount: null,
 	show: false,
 	currency: null,
+	error: null,
 };
 
 export default connect(
@@ -146,6 +151,7 @@ export default connect(
 		fee: state.form.getIn([FORM_REPLENISH, 'fee']),
 		activeAccount: state.global.get('activeUser'),
 		show: state.modal.getIn([MODAL_REPLENISH, 'show']),
+		error: state.modal.getIn([MODAL_REPLENISH, 'error']),
 		assets: state.form.getIn([FORM_REPLENISH, 'balance']).assets,
 		amount: state.form.getIn([FORM_REPLENISH, 'amount']),
 		currency: state.form.getIn([FORM_REPLENISH, 'currency']),
