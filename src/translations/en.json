@@ -1,0 +1,246 @@
+,{
+    "global_loader": {
+        "title": "Please wait",
+        "subtitle": "We’re loading all data..."
+    },
+    "sign_page": {
+
+    },
+    "account_dropdown": {
+
+    },
+    "wallet_page": {
+        "title": "Wallet",
+        "balances": {
+            "title": "Balances",
+            "add_erc20_token_text": "Watch Tokens",
+            "stable_coins": {
+                "title": "Stable Coins",
+                "popup_info": "Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain.",
+                "deposit": "Deposit",
+                "withdrawal": "Withdrawal"
+            },
+            "assets": {
+                "title": "Assets"
+            }
+        },
+        "create_payment": {
+            "title": "CREATE PAYMENT",
+            "button_text": "Send",
+            "from_input": {
+                "title": "FROM",
+                "placeholder": "Account Name"
+            },
+            "to_input": {
+                "title": "TO",
+                "placeholder": "Account ID, Account Name or Address"
+            },
+            "amount_input": {
+                "title": "Amount"
+            }
+        },
+        "receive_payment": {
+            "title": "RECEIVE PAYMENT",
+            "echo": {
+                "title": "ECHO NETWORK",
+                "description_part1": "Fill in payment information to get a unique QR code.",
+                "description_part2": "You can use several addresses referring to one account for different targets.",
+                "generate_address_dropdown": {
+                    "title": "RECIPIENT ACCOUNT OR ADDRESS",
+                    "button_text": "GENERATE NEW ADDRESS",
+                    "placeholder": "Choose account or adress"
+                },
+                "amount_input": {
+                    "title": "Amount"
+                }
+            },
+            "btc": {
+                "title": "BITCOIN",
+                "no_address_page": {
+                    "title": "You should generate address to receive payment.",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "button_text": "GENERATE ADDRESS"
+                }, 
+                "wait_address_page": {
+                    "title": "Wait please, address is not ready yet",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                },
+                "complete_adress_page": {
+                    "input_title": "ADDRESS",
+                    "warning_message": "Send eBTC to Original Blockchain to get BTC or send it within ECHO Network.",
+                    "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
+                },
+                "amount_input": {
+                    "title": "Amount"
+                }
+            },
+            "eth": {
+                "title": "",
+                "no_address_page": {
+                    "title": "You should generate address to receive payment.",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "button_text": "GENERATE ADDRESS"
+                }, 
+                "wait_address_page": {
+                    "title": "Wait please, address is not ready yet",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                },
+                "complete_address_page": {
+                    "input_title": "ADDRESS",
+                    "warning_message": "Send eETH to Original Blockchain to get ETH or send it within ECHO Network.",
+                    "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
+                },
+                "amount_input": {
+                    "title": "Amount"
+                }
+            }
+        },
+        "frozen_funds": {
+            "title": "Frozen Funds",
+            "total_sum_text": "Total Frozen Amount:",
+            "button_text": "FREEZE",
+            "period_input_title": "PERIOD",
+            "period_input_placeholder": "Choose period",
+            "frozen_funds_list": {
+                "title": "Frozen amounts",
+                "empty_text": "You have not frozen any funds yet",
+                "description": "The sum you freeze will affect the reward for participating in blocks creation when re-calculated with the coefficient (the longer the period, the bigger reward you receive).",
+                "coefficient_text": "Coefficient",
+                "popup_text": "This is the coefficient that will be used to calculate the reward for participating in blocks creation.",
+                "frozen_until": "Frozen until"
+            }
+        }
+    },
+    "recent_activity_page": {
+        "loader_title": "History is loading...",
+        "title": "Recent activity",
+        "table": {
+            "headers": {
+                "operation": "Operation",
+                "block": "Block",
+                "from": "From",
+                "subject": "Subject",
+                "value": "Value",
+                "fee": "Fee",
+                "time": "Time"
+            }
+        }
+    },
+    "smart_contract_page": {
+        "title": "Smart Contracts",
+        "empty_text": "Start watch contract or create a new one",
+        "watch_contract_button_text": "WATCH CONTRACT",
+        "create_contract_button_text": "CREATE CONTRACT",
+        "call_contract_button_text": "CALL CONTRACT",
+        "table": {
+            "contract_id": "Contract ID",
+            "watched_contract_name": "Watched Contract Name",
+            "contract_balance": "Contract Balance"
+        },
+        "watch_contract_page": {
+            "title": "Add contract to watch list",
+            "input_name": {
+                "title": "NAME",
+                "placeholder": "Name"
+            },
+            "input_id": {
+                "title": "ID",
+                "placeholder": "Contract ID"
+            },
+            "input_abi": {
+                "title": "ABI",
+                "placeholder": "Contract ABI"
+            },
+            "button_text": "WATCH CONTRACT"
+        },
+        "create_contract_page": {
+            "title": "Create Smart Contract",
+            "code_type_selectors": {
+                "source_code": "Source Code",
+                "bytecode": "Bytecode"
+            },
+            "source_code": {
+                "input_source_code": {
+                    "title": "CODE EDITOR"
+                },
+                "compile_version_text": "COMPILER VERSION",
+                "contract_complete_dropdown": {
+                    "title": "CONTRACT TO COMPLETE",
+                    "placeholder": "Select contract"
+                }
+            },
+            "contract_deploy": {
+                "title": "Contract deploy parameters",
+                "eth_accuracy": {
+                    "title": "ETH Accuracy:",
+                    "on": "On",
+                    "off": "Off",
+                    "popup_text": "The option allows to interpret ECHO assets as ETH. The amount will be automatically recalculated to the 1e18 precision."
+                },
+                "supported_assets": {
+                    "title": "Supported assets",
+                    "all": "All",
+                    "choose_asset": "Choose asset",
+                    "popup_text": "You can specify assets to be supported by your contract."
+                },
+                "deploying_amount": {
+                    "title": "Deploying amount:",
+                    "amount": {
+                        "title": "AMOUNT"
+                    },
+                    "popup_text": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+                }
+
+            },
+            "button_text": "CREATE CONTRACT"
+        },
+        "call_contract": {
+            "title": "Call contract via ID",
+            "input_bytecode": {
+                "title": "BYTECODE",
+                "placeholder": "Bytecode"
+            },
+            "input_id": {
+                "title": "ID",
+                "placeholder": "Contract ID"
+            },
+            "amount_input": {
+                "title": "Amount"
+            },
+            "button_text": "CALL CONTRACT"
+        },
+        "contract_info": {
+            "header": {
+                "contract_id_text": "Contract ID:",
+                "balance_text": "Balance:",
+                "name_text": "Name:",
+                "remove_button_text": "Remove"
+            },
+            "general_info_tab": {
+                "title": "GENERAL INFO",
+                "fee_pool": "FEE POOL", 
+                "replenish_button_text": "REPLENISH",
+                "whitelist": "Whitelist",
+                "blacklist": "Blacklist",
+                "bytecode": "Bytecode",
+                "abi": "ABI",
+                "copy_button_text": "Copy",
+                "add_account_to_list_button_text": "Add account",
+                "empty_list_info": "List is empty",
+                "lists_members_text": ""
+            }
+        }
+    },
+    "backup_and_permissions_page": {
+
+    },
+    "modals": {
+
+    },
+    "toasts": {
+
+    },
+    "footer": {
+
+    }
+}
