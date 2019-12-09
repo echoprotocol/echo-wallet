@@ -143,7 +143,6 @@
 	font-size: 18px;
 	text-align: right;
 	min-width: 35%;
-	max-width: 195px;
 
 	&.small {
 		font-size: 16px;
@@ -179,6 +178,10 @@
 
 	.frozen-interval {
 		width: 60%;
+	}
+
+	.currency-amount {
+		max-width: 195px;
 	}
 }
 
