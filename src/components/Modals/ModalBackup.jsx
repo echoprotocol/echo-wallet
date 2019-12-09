@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 import ActionBtn from '../ActionBtn';
 
@@ -46,68 +46,66 @@ class ModalBackup extends React.Component {
 
 		return (
 			<Modal className="backup-modal" open={show}>
-				<FocusTrap>
-					<div className="focus-trap-wrap">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header">
-							<h3 className="modal-header-title">Backup</h3>
-						</div>
-						<div className="modal-body">
-							<Form.Field>
-								<label htmlFor="account-name">Account name</label>
-								<input
-									type="text"
-									placeholder="Account name"
-									disabled
-									name="account-name"
-									value={activeUser.get('name')}
-								/>
-							</Form.Field>
-							<Form.Field>
-								<label htmlFor="id-account">ID account</label>
-								<input
-									type="text"
-									placeholder="ID account"
-									disabled
-									name="id-account"
-									value={activeUser.get('id')}
-								/>
-							</Form.Field>
-							<Form.Field>
-								<label htmlFor="backup-data">Backup data</label>
-								<textarea
-									type="text"
-									placeholder="Backup data"
-									name="backup-data"
-									value={activeKeysString}
-									readOnly
-								/>
-								<span className="warning-message">
+				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h3 className="modal-header-title">Backup</h3>
+					</div>
+					<div className="modal-body">
+						<Form.Field>
+							<label htmlFor="account-name">Account name</label>
+							<input
+								type="text"
+								placeholder="Account name"
+								disabled
+								name="account-name"
+								value={activeUser.get('name')}
+							/>
+						</Form.Field>
+						<Form.Field>
+							<label htmlFor="id-account">ID account</label>
+							<input
+								type="text"
+								placeholder="ID account"
+								disabled
+								name="id-account"
+								value={activeUser.get('id')}
+							/>
+						</Form.Field>
+						<Form.Field>
+							<label htmlFor="backup-data">Backup data</label>
+							<textarea
+								type="text"
+								placeholder="Backup data"
+								name="backup-data"
+								value={activeKeysString}
+								readOnly
+							/>
+							<span className="warning-message">
 									Warning: Anyone who has access to your WIF can steal all your Echo
 									assets and this key can never be recovered if you lose it.
-								</span>
-							</Form.Field>
+							</span>
+						</Form.Field>
 
-							<div className="form-panel">
-								<ActionBtn
-									icon="icon-copy"
-									copy={activeKeysString}
-									text="Copy Backup Data"
-								/>
+						<div className="form-panel">
+							<ActionBtn
+								icon="icon-copy"
+								copy={activeKeysString}
+								text="Copy Backup Data"
+							/>
 
-								<Button
-									type="submit"
-									className="main-btn"
-									onClick={() => this.onSave(activeKeysString)}
-									content="Save As .TXT"
-								/>
-							</div>
+							<Button
+								type="submit"
+								className="main-btn"
+								onClick={() => this.onSave(activeKeysString)}
+								content="Save As .TXT"
+							/>
 						</div>
 					</div>
-				</FocusTrap>
+				</FocusLock>
 			</Modal>
 		);
 	}
