@@ -1,7 +1,22 @@
 .network-dropdown {
 	margin-right: -18px;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		z-index: 12;
+		top: -1px;
+		right: 0;
+		width: 150%;
+		height: calc(100% + 1px);
+		background: #fff;
+		border-top: 1px solid $bd-gray;
+	}
 
 	.dropdown-trigger {
+		position: relative;
+		z-index: 13;
 		height: 39px;
 		display: flex;
 		align-items: center;
@@ -9,11 +24,12 @@
 		background-color: transparent;
 		transition: background-color $speed;
 		border-left: 1px solid rgb(212, 212, 212);
-	
+		user-select: none;
+
 		&:hover {
 			background-color: #f7f7f7;
 		}
-	
+
 		.icon.dropdown {
 			right: 0;
 			margin: auto 10px auto 0;
@@ -21,19 +37,25 @@
 	}
 
 	&.disconnected {
+		&:after {
+			background-color: rgb(246, 92, 92);
+		}
+
 		.dropdown-trigger {
+			background-color: rgb(246, 92, 92);
+
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -43,19 +65,25 @@
 	}
 
 	&.warning {
+		&:after {
+			background-color: rgb(238, 133, 28);
+		}
+
 		.dropdown-trigger {
+			background-color: rgb(238, 133, 28);
+
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -66,7 +94,16 @@
 
 	&.upward {
 		&>.menu {
+			display: inline-block;
 			bottom: calc(100% - 5px);
+			opacity: 0;
+			transform: translateY(100%);
+			transition: transform 120ms ease-in-out, opacity 100ms ease-out;
+
+			&.visible {
+				transform: translateY(0);
+				opacity: 1;
+			}
 		}
 	}
 
@@ -86,7 +123,7 @@
 
 
 
-	& > .menu {
+	&>.menu {
 		padding-top: 6px;
 		border-radius: 0;
 		width: 100%;
@@ -152,7 +189,7 @@
 				}
 			}
 
-			&.item-divider + .item:not(.item-link) {
+			&.item-divider+.item:not(.item-link) {
 				margin-top: 6px;
 			}
 
@@ -239,6 +276,7 @@
 				}
 			}
 		}
+
 		.item-link {
 			height: 42px;
 			color: $main-color;
