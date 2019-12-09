@@ -7,13 +7,18 @@
 	padding: 50px 20px;
 	position: relative;
 }
+
+.focus-trap-wrap {
+	display: contents;
+}
+
 .modal {
 	.icon-close {
 		width: 35px;
 		height: 35px;
 		position: absolute;
-		right: 20px;
-		top: 20px;
+		right: 8px;
+		top: 8px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -23,6 +28,18 @@
 
 		&:hover {
 			color: #6d7178;
+		}
+	}
+
+	.main-form {
+		padding: 0;
+
+		@media only screen and (max-height: 800px) {
+			padding: 0;
+		}
+
+		@media only screen and (min-height: 800px) {
+			padding: 0;
 		}
 	}
 
@@ -37,10 +54,6 @@
 
 	}
 
-    .form.main-form {
-        padding: 0;
-    }
-
     &.choose-account {
         width: 600px;
 
@@ -54,41 +67,6 @@
 
             .form-info {
                 margin-bottom: 23px;
-            }
-        }
-    }
-
-    &.wipe-data {
-        .main-form {
-            max-width: 468px;
-            margin: auto;
-        }
-
-        .form-info {
-            margin-bottom: 18px;
-        }
-
-        .form-info-description {
-            font-size: 15px;
-            font-family: proxima;
-            font-weight: 400;
-            line-height: 1.467;
-            color: rgba(59, 59, 59, 0.8);
-            line-height: 1.429;
-            text-align: center;
-            margin: 0 auto 42px;
-        }
-
-        .check-list {
-            margin: auto;
-        }
-
-        .form-panel {
-            justify-content: flex-end;
-
-            .main-btn {
-                min-height: 37px;
-                min-width: 160px;
             }
         }
     }
@@ -142,21 +120,21 @@
             max-height: 255px;
             overflow: auto;
 
-            &::-webkit-scrollbar {
-                width: 7px;
-            }
+        //     &::-webkit-scrollbar {
+        //         width: 7px;
+        //     }
 
-            &::-webkit-scrollbar-track {
-                background: transparent;
-            }
+        //     &::-webkit-scrollbar-track {
+        //         background: transparent;
+        //     }
 
-            &::-webkit-scrollbar-thumb {
-                background-color: rgba(0, 0, 0, .1);
-            }
+        //     &::-webkit-scrollbar-thumb {
+        //         background-color: rgba(0, 0, 0, .1);
+        //     }
 
-           &::-webkit-scrollbar-thumb:hover {
-                background: #555;
-            }
+        //    &::-webkit-scrollbar-thumb:hover {
+        //         background: #555;
+        //     }
 
             .line {
                 display: flex;
@@ -186,7 +164,7 @@
 }
 
 .modals {
-    &.ui.dimmer {
+    &.dimmer {
         background-color: rgba(#cacccf, .9);
     }
 }
@@ -234,21 +212,14 @@
     }
 }
 
-.small.modal.visible.unclock-size {
+.modal.small {
     max-width: 600px;
 
     .modal-content {
         min-height: 240px;
-        padding: 20px 0 30px;
+        padding: 42px 0 30px;
         max-width: 600px;
         margin: auto;
-
-        .icon-close {
-            width: 20px;
-            height: 20px;
-            right: 16px;
-            top: 16px;
-        }
 
         .form-info + .field-wrap {
             margin-top: 11px;
@@ -261,7 +232,7 @@
 }
 
 // style for info modal window
-.modal.visible.small.unclock-size .modal-content.info {
+.modal.small .modal-content.info {
     min-height: 200px;
 	padding: 20px 0 26px;
 	
@@ -312,7 +283,7 @@
     }
 }
 
-.modal.visible.small.unclock-size .modal-content.add-key {
+.modal.small .modal-content.add-key {
     min-height: 230px;
 	padding: 38px 0 0;
 	justify-content: flex-start;
@@ -332,6 +303,7 @@
 		text-align: center;
 		color: rgba(#3B3B3B, .8);
 	}
+
 	.form-panel {
 		justify-content: center;
 		margin: 27px 0px 40px;

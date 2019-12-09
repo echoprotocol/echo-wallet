@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import FocusTrap from 'focus-trap-react';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
@@ -24,66 +25,67 @@ class ModalViewWIF extends React.Component {
 		const { show, keys } = this.props;
 
 		return (
-			<Modal className="view-wif-modal" open={show} dimmer="inverted">
-				<span
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
-				/>
-				<div className="modal-header">
-					<h3 className="modal-header-title">View WIF</h3>
-				</div>
-				<div className="modal-body">
-
-					<Form.Field>
-						<label htmlFor="public-key">Public Key</label>
-						<div className="ui action input">
-							<input
-								type="text"
-								placeholder="Public Key"
-								disabled
-								name="public-key"
-								value={keys.publicKey}
-							/>
-							<ActionBtn
-								icon="icon-copy"
-								copy={keys.publicKey}
-							/>
-						</div>
-					</Form.Field>
-
-					<Form.Field>
-						<label htmlFor="public-key">WIF *</label>
-						<div className="ui action input">
-							<input
-								type="text"
-								placeholder="WIF"
-								disabled
-								name="wif"
-								value={keys.wif}
-							/>
-							<ActionBtn
-								icon="icon-copy"
-								copy={keys.wif}
-							/>
-						</div>
-						<span className="warning-message">
-							* Warning: Anyone who has this key can steal all your Echo
-							assets and this key can never be recovered if you lose it.
-						</span>
-					</Form.Field>
-
-					<div className="form-panel">
-						<Button
-							type="submit"
-							className="main-btn"
-							onClick={() => this.onSave()}
-							content="Save As .TXT"
+			<Modal className="view-wif-modal" open={show}>
+				<FocusTrap>
+					<div className="focus-trap-wrap">
+						<button
+							className="icon-close"
+							onClick={(e) => this.onClose(e)}
 						/>
+						<div className="modal-header">
+							<h3 className="modal-header-title">View WIF</h3>
+						</div>
+						<div className="modal-body">
+
+							<Form.Field>
+								<label htmlFor="public-key">Public Key</label>
+								<div className="ui action input">
+									<input
+										type="text"
+										placeholder="Public Key"
+										disabled
+										name="public-key"
+										value={keys.publicKey}
+									/>
+									<ActionBtn
+										icon="icon-copy"
+										copy={keys.publicKey}
+									/>
+								</div>
+							</Form.Field>
+
+							<Form.Field>
+								<label htmlFor="public-key">WIF *</label>
+								<div className="ui action input">
+									<input
+										type="text"
+										placeholder="WIF"
+										disabled
+										name="wif"
+										value={keys.wif}
+									/>
+									<ActionBtn
+										icon="icon-copy"
+										copy={keys.wif}
+									/>
+								</div>
+								<span className="warning-message">
+									* Warning: Anyone who has this key can steal all your Echo
+									assets and this key can never be recovered if you lose it.
+								</span>
+							</Form.Field>
+
+							<div className="form-panel">
+								<Button
+									type="submit"
+									className="main-btn"
+									onClick={() => this.onSave()}
+									content="Save As .TXT"
+								/>
+							</div>
+						</div>
 					</div>
-				</div>
+				</FocusTrap>
 			</Modal>
 		);
 	}

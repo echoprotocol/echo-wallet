@@ -84,10 +84,7 @@
 
 	}
 
-	.network-link {
-		color: $main-color;
-		transition: color $speed;
-	}
+
 
 	& > .menu {
 		padding-top: 6px;
@@ -152,32 +149,6 @@
 						background-color: $main-color;
 						border-color: $main-color;
 					}
-				}
-			}
-
-			&-link {
-				height: 42px;
-				color: $main-color;
-				font-family: proxima;
-				font-weight: 600;
-
-				&:hover {
-					background-color: $main-color;
-
-					.network-link {
-						color: #fff;
-					}
-				}
-
-				&.active {
-					text-decoration: underline;
-				}
-
-				.network-link {
-					width: 100%;
-					padding: 10px 19px;
-					height: 36px;
-					align-items: flex-start;
 				}
 			}
 
@@ -267,6 +238,34 @@
 					padding: 19px 19px 5px;
 				}
 			}
+		}
+		.item-link {
+			height: 42px;
+			color: $main-color;
+			font-family: proxima;
+			font-weight: 600;
+
+			&:hover {
+				background-color: $main-color;
+
+				.network-link {
+					color: #fff;
+				}
+			}
+
+			&.active {
+				color: $main-color;
+				text-decoration: underline;
+			}
+		}
+
+		.network-link {
+			color: $main-color;
+			transition: color $speed;
+			width: 100%;
+			padding: 10px 19px;
+			height: 36px;
+			align-items: flex-start;
 		}
 
 		.item-divider {
