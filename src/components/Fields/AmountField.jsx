@@ -64,7 +64,8 @@ class AmountField extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(() => {
-				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency.id.startsWith(PREFIX_ASSET)) {
+				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency
+				&& currency.id.startsWith(PREFIX_ASSET)) {
 					this.props.getTransferFee()
 						.then((fee) => fee && this.onFee(fee));
 				}
@@ -240,6 +241,7 @@ class AmountField extends React.Component {
 			fees, assetDropdown,
 			labelText, showAvailable,
 			warningMessage,
+			isDisplaySidechainNotification,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -252,7 +254,7 @@ class AmountField extends React.Component {
 				<label htmlFor="amount">
 					{labelText}
 					<ul className="list-amount">
-						{fee && fee.value &&
+						{fee && fee.value && amount.value &&
 							<li>
 								{fee && fee.value && 'Fee:'}
 								<FeeField
@@ -341,6 +343,12 @@ class AmountField extends React.Component {
 					}
 				</Input>
 				{ warningMessage }
+				{
+					(!amount.error || !fee.error) && isDisplaySidechainNotification ?
+						<span className="warning-message">
+							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+						</span> : null
+				}
 
 
 			</Form.Field>
@@ -370,6 +378,7 @@ AmountField.propTypes = {
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
 	warningMessage: PropTypes.node,
+	isDisplaySidechainNotification: PropTypes.bool,
 };
 
 
@@ -385,6 +394,7 @@ AmountField.defaultProps = {
 	getTransferFee: () => Promise.resolve(),
 	showAvailable: true,
 	warningMessage: null,
+	isDisplaySidechainNotification: false,
 };
 
 export default AmountField;
