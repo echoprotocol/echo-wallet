@@ -105,12 +105,9 @@ class SidebarMenu extends React.Component {
 					<div className="sidebar-header">
 						<div className="sidebar-logo" />
 						<div className="sidebar-close">
-							<span
+							<button
 								className="icon-close"
-								onKeyPress={() => this.props.toggleBar(this.props.visibleBar)}
 								onClick={() => this.props.toggleBar(this.props.visibleBar)}
-								role="button"
-								tabIndex="0"
 							/>
 						</div>
 						<span

@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import FocusTrap from 'focus-trap-react';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -44,39 +45,40 @@ class ModalToWhitelist extends React.Component {
 				{
 					(submit) => (
 						<Modal className="to-whitelist-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Add account to whitelist</h3>
-							</div>
-							<div className="modal-body">
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="account-name">Account name</label>
-									<input
-										type="text"
-										placeholder="Account name"
-										name="account-name"
-										onChange={(e) => this.onInputChange(e)}
+							<FocusTrap>
+								<div className="focus-trap-wrap">
+									<button
+										className="icon-close"
+										onClick={(e) => this.onClose(e)}
 									/>
-									{
-										<span className="error-message">{error}</span>
-									}
-								</Form.Field>
-								<div className="form-panel">
-									<Button
-										className="main-btn"
-										content="Confirm"
-										onClick={() => {
-											this.onAdd(submit);
-										}}
-									/>
+									<div className="modal-header">
+										<h3 className="modal-header-title">Add account to whitelist</h3>
+									</div>
+									<div className="modal-body">
+										<Form.Field className={classnames('error-wrap', { error: !!error })}>
+											<label htmlFor="account-name">Account name</label>
+											<input
+												type="text"
+												placeholder="Account name"
+												name="account-name"
+												onChange={(e) => this.onInputChange(e)}
+											/>
+											{
+												<span className="error-message">{error}</span>
+											}
+										</Form.Field>
+										<div className="form-panel">
+											<Button
+												className="main-btn"
+												content="Confirm"
+												onClick={() => {
+													this.onAdd(submit);
+												}}
+											/>
+										</div>
+									</div>
 								</div>
-							</div>
+							</FocusTrap>
 						</Modal>)
 				}
 			</TransactionScenario>

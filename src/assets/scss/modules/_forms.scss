@@ -211,20 +211,6 @@ color: rgba(115, 115, 115, 0.87);
     max-width: 432px;
 }
 
-.modal {
-	.main-form {
-		padding: 0;
-
-		@media only screen and (max-height: 800px) {
-			padding: 0;
-		}
-
-		@media only screen and (min-height: 800px) {
-			padding: 0;
-		}
-	}
-}
-
 .main-form {
 	display: flex;
 	flex-direction: column;
@@ -288,6 +274,7 @@ color: rgba(115, 115, 115, 0.87);
 .form-panel {
 	width: 100%;
 	
+	.check + .button,
 	.action-link + .button {
 		margin: 0 0 0 auto;
 	}
