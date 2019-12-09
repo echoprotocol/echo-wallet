@@ -171,7 +171,7 @@ class ModalChooseAccount extends React.Component {
 										</button>
 									</div>
 								</div>
-								<div className="accounts-list_list">
+								<div className="accounts-list-list">
 									{
 										this.sortList().map((account) => this.renderAccounts(account))
 									}
