@@ -24,7 +24,9 @@ class InputComponent extends React.Component {
 			inputData, field: currentField, inputs, onKeyDown,
 		} = this.props;
 
-		const { value } = inputs.toJS()[currentField.name][currentField.id];
+		const inputValue = inputs.toJS()[currentField.name] &&
+			inputs.toJS()[currentField.name][currentField.id] &&
+			inputs.toJS()[currentField.name][currentField.id].value;
 		let placeholder = `${inputData.type.replace(/address/g, 'id')}`;
 		if (inputData.name) placeholder = `${formatCallContractField(inputData.name)}(${placeholder})`;
 
@@ -32,7 +34,7 @@ class InputComponent extends React.Component {
 			<Input
 				className="item"
 				size="mini"
-				value={value}
+				value={inputValue}
 				onChange={(e) => this.onChange(e)}
 				onKeyDown={onKeyDown}
 				placeholder={placeholder}

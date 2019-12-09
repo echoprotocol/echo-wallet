@@ -21,6 +21,8 @@ const DEFAULT_FIELDS = Map({
 	inited: false,
 	isConnected: false,
 	permissionLoading: false,
+	activePaymentTypeTab: 0,
+	activeCoinTypeTab: 0,
 });
 
 export default createModule({

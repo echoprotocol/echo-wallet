@@ -1,11 +1,5 @@
 .dropdown {
-    &.active:not(.empty) {
-        .dropdown.icon {
-			transform: rotate(180deg);
-			height: 4px;
-        }
-    }
-    
+
     &.upward {
         .menu {
             max-height: 300px
@@ -16,6 +10,13 @@
         .menu {
             display: none !important;
         }
+	}
+}
+
+.active:not(.empty) {
+	.dropdown.icon {
+		transform: rotate(180deg);
+		height: 4px;
 	}
 }
 

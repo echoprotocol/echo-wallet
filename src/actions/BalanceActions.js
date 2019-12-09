@@ -18,13 +18,13 @@ import {
 import { setValue, setFormError } from './FormActions';
 
 import { formatError } from '../helpers/FormatHelper';
-import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
+import { toastSuccess, toastInfo, toastError } from '../helpers/ToastHelper';
 import { checkErc20Contract } from '../helpers/ValidateHelper';
 
-import { MODAL_TOKENS } from '../constants/ModalConstants';
+import { MODAL_TOKENS, MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
 import { FORM_TRANSFER } from '../constants/FormConstants';
 import { INDEX_PATH } from '../constants/RouterConstants';
-import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT, SIDECHAIN_ASSETS_SYMBOLS } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -116,11 +116,33 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch, ge
 			dispatch(diffBalanceChecker('assets', balances));
 		}
 	}
-
-	dispatch(BalanceReducer.actions.set({
-		field: 'assets',
-		value: new List(balances),
-	}));
+	const sidechainAssetSymbols = Object.values(SIDECHAIN_ASSETS_SYMBOLS);
+	const sidechainAssets = [];
+	const echoAssets = balances.filter((b) => {
+		let isSidechainAsset = false;
+		if (sidechainAssetSymbols.some((a) => b.symbol === a.toUpperCase())) {
+			b.notEmpty = true;
+			sidechainAssets.push(b);
+			isSidechainAsset = true;
+		}
+		return !isSidechainAsset;
+	});
+	if (sidechainAssets.length !== sidechainAssetSymbols.length) {
+		for (let i = 0; i < sidechainAssetSymbols.length; i += 1) {
+			if (!sidechainAssets.find((sa) => sa.symbol === sidechainAssetSymbols[i].toUpperCase())) {
+				sidechainAssets.push({
+					balance: 0,
+					precision: 8,
+					symbol: sidechainAssetSymbols[i].toUpperCase(),
+					notEmpty: false,
+				});
+			}
+		}
+	}
+	sidechainAssets.sort((a, b) => (a.symbol > b.symbol ? 1 : -1));
+	dispatch(BalanceReducer.actions.set({ field: 'echoAssets', value: new List(echoAssets) }));
+	dispatch(BalanceReducer.actions.set({ field: 'sidechainAssets', value: new List(sidechainAssets) }));
+	dispatch(BalanceReducer.actions.set({ field: 'assets', value: new List(balances) }));
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
 
@@ -361,6 +383,60 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		dispatch(toggleLoading(MODAL_TOKENS, false));
 	}
 
+};
+
+/**
+ * @method watchContractAsToken
+ *
+ * @param {String} contractId
+ * @@returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const watchContractAsToken = (contractId) => async (dispatch, getState) => {
+
+	const accountId = getState().global.getIn(['activeUser', 'id']);
+	const networkName = getState().global.getIn(['network', 'name']);
+
+	try {
+		const symbol = await getTokenSymbol(accountId, contractId);
+		const precision = await getTokenPrecision(accountId, contractId);
+
+		if (!symbol || !Number.isInteger(precision)) {
+			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
+			toastError('Invalid ERC20 token');
+			return;
+		}
+
+		let tokens = localStorage.getItem(`tokens_${networkName}`);
+		tokens = tokens ? JSON.parse(tokens) : {};
+
+		if (!tokens[accountId]) {
+			tokens[accountId] = [];
+		}
+
+		if (tokens[accountId].includes(contractId)) {
+			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
+			toastError('Token already exists');
+			return;
+		}
+
+		tokens[accountId].push(contractId);
+		localStorage.setItem(`tokens_${networkName}`, JSON.stringify(tokens));
+
+		const balance = await getTokenBalance(accountId, contractId);
+
+		dispatch(BalanceReducer.actions.push({
+			field: 'tokens',
+			value: {
+				id: contractId, symbol, precision, balance,
+			},
+		}));
+
+		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
+		toastSuccess('Token was successfully added');
+	} catch (err) {
+		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
+		toastError(formatError(err));
+	}
 };
 
 /**

@@ -4,6 +4,8 @@ import { Map, List } from 'immutable';
 const DEFAULT_FIELDS = Map({
 	tokens: new List([]),
 	assets: new List([]),
+	echoAssets: new List([]),
+	sidechainAssets: new List([]),
 	preview: new List([]),
 	frozenFunds: new List([]),
 	totalFrozenFunds: '0',
