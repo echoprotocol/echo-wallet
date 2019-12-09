@@ -18,7 +18,7 @@ import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 import TabGeneralInfo from './TabGeneralInfo';
-import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST, MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
+import { MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 class ViewContract extends React.Component {
