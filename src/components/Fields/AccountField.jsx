@@ -81,7 +81,6 @@ class AccountField extends React.Component {
 			showAccountId, showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
-		console.log(additionalAccountInfo);
 		return (
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
