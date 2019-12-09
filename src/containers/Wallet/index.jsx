@@ -41,6 +41,7 @@ export default connect(
 		currency: state.form.getIn([FORM_TRANSFER, 'currency']),
 		feeError: state.form.getIn([FORM_TRANSFER, 'feeError']),
 		isAvailableBalance: state.form.getIn([FORM_TRANSFER, 'isAvailableBalance']),
+		additionalAccountInfo: state.form.getIn([FORM_TRANSFER, 'additionalAccountInfo']),
 		accountAddresses: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ADDRESSES_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new List([]),
 		btcAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_BTC_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),

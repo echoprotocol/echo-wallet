@@ -75,6 +75,7 @@ import {
 	validateAmount,
 	validateFee,
 	validateAccountAddress,
+	validateAccountName,
 } from '../helpers/ValidateHelper';
 import { formatError } from '../helpers/FormatHelper';
 
@@ -513,6 +514,15 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			checked: true,
 			error: null,
 		}));
+		const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
+		if (!accountId) {
+			return ADDRESS_SUBJECT_TYPE;
+		}
+		const account = await echo.api.getObject(accountId);
+		if (!account) {
+			return ADDRESS_SUBJECT_TYPE;
+		}
+		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
 		return ADDRESS_SUBJECT_TYPE;
@@ -541,8 +551,17 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			return false;
 		}
 		value = account.name;
+		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
 	} else {
+		if (value && !validateAccountName(value)) {
+			const account = await echo.api.getAccountByName(value);
+			if (account) {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
+			} else {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+			}
+		}
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
 	}
 
