@@ -30,7 +30,7 @@ import {
 	MODAL_WHITELIST,
 	MODAL_CHANGE_PARENT_ACCOUNT,
 } from '../constants/ModalConstants';
-import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH, INDEX_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
 	CONTRACT_ID_PREFIX,
@@ -1256,6 +1256,11 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(closeModal(MODAL_BLACKLIST));
 			dispatch(closeModal(MODAL_TO_WHITELIST));
 			dispatch(closeModal(MODAL_TO_BLACKLIST));
+			break;
+		case operations.sidechain_btc_create_address.value:
+		case operations.sidechain_eth_create_address.value:
+		case operations.account_address_create.value:
+			history.push(INDEX_PATH);
 			break;
 		default:
 			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);
