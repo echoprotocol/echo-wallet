@@ -26,7 +26,7 @@
 	transition: color $speed ease, border-color $speed ease;
 }
 
-.form .field > .selection.dropdown {
+.form .field>.selection.dropdown {
 	width: 100%;
 }
 
@@ -51,12 +51,9 @@
 
 
 .form :focus::-webkit-input-placeholder {
-color: rgba(115, 115, 115, 0.87);
+	color: rgba(115, 115, 115, 0.87);
 }
 
-.form :focus::-moz-placeholder {
-color: rgba(115, 115, 115, 0.87);
-}
 
 .form input:not([type]):hover,
 .form input[type="email"]:hover,
@@ -101,31 +98,32 @@ color: rgba(115, 115, 115, 0.87);
 }
 
 .field-wrap {
-    width: 100%;
+	width: 100%;
 
-    .field {
-        position: relative;
+	.field {
+		position: relative;
 
-        &:last-child {
-            margin-bottom: 0;
-        }
+		&:last-child {
+			margin-bottom: 0;
+		}
 
-        .image-input {
-            position: relative;
-            .avatar-image {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 15px;
-                z-index: 2;
-                display: flex;
-                align-items: center;
-                margin: auto;
-            }
+		.image-input {
+			position: relative;
 
-            input {
-                text-indent: 30px;
-            }
+			.avatar-image {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 15px;
+				z-index: 2;
+				display: flex;
+				align-items: center;
+				margin: auto;
+			}
+
+			input {
+				text-indent: 30px;
+			}
 		}
 
 		.input.icon {
@@ -138,77 +136,79 @@ color: rgba(115, 115, 115, 0.87);
 				left: 10px;
 			}
 		}
-		.input.icon > input {
+
+		.input.icon>input {
 			z-index: 3;
 			background-color: transparent;
 			padding-left: 40px;
 		}
+
 		.input.icon.disabled {
 			background-color: rgba(233, 233, 237, 0.5);
 		}
-    }
+	}
 }
 
 .form-info {
-    display: flex;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	align-items: center;
+	width: 100%;
 
-    .back-link {
-        background-color: transparent;
-        border: 0;
-        margin-right: -48px;
-        transform: translate(0);
-        color: rgb(156, 160, 176);
-        display: flex;
-        align-items: center;
-        line-height: 20px;
-        text-transform: uppercase;
+	.back-link {
+		background-color: transparent;
+		border: 0;
+		margin-right: -48px;
+		transform: translate(0);
+		color: rgb(156, 160, 176);
+		display: flex;
+		align-items: center;
+		line-height: 20px;
+		text-transform: uppercase;
 		font-family: proxima;
 		font-weight: 600;
-        cursor: pointer;
-        padding: 0;
-        font-size: 12px;
+		cursor: pointer;
+		padding: 0;
+		font-size: 12px;
 
-        &:focus {
-            &:not(:active) {
-                .icon-back {
-                    @include on-focus(2px);
-                }
-            }
-        }
+		&:focus {
+			&:not(:active) {
+				.icon-back {
+					@include on-focus(2px);
+				}
+			}
+		}
 
-        &:hover {
-            .icon-back {
-                color: $main-color;
-            }
-        }
+		&:hover {
+			.icon-back {
+				color: $main-color;
+			}
+		}
 
-        .icon-back {
-            transition: color $speed;
-            margin: -2px 5px 0 -5px;
-            padding: 5px 6px 5px 5px;
-            border-radius: $angulars;
-        }
-    }
+		.icon-back {
+			transition: color $speed;
+			margin: -2px 5px 0 -5px;
+			padding: 5px 6px 5px 5px;
+			border-radius: $angulars;
+		}
+	}
 
-    h3 {
-        font-size: 1.428571429em;
-        margin: 0 auto;
-        text-align: center;
-        margin-top: -4px;
-        padding: 0 0 1px 1px;
-    }
+	h3 {
+		font-size: 1.428571429em;
+		margin: 0 auto;
+		text-align: center;
+		margin-top: -4px;
+		padding: 0 0 1px 1px;
+	}
 }
 
 .form-info-description {
-    font-size: 14px;
-    font-family: proxima;
-    font-weight: 400;
-    color: rgba(59, 59, 59, 0.8);
-    line-height: 1.429;
-    text-align: center;
-    max-width: 432px;
+	font-size: 14px;
+	font-family: proxima;
+	font-weight: 400;
+	color: rgba(59, 59, 59, 0.8);
+	line-height: 1.429;
+	text-align: center;
+	max-width: 432px;
 }
 
 .main-form {
@@ -273,15 +273,15 @@ color: rgba(115, 115, 115, 0.87);
 
 .form-panel {
 	width: 100%;
-	
-	.check + .button,
-	.action-link + .button {
+
+	.check+.button,
+	.action-link+.button {
 		margin: 0 0 0 auto;
 	}
 
 	.button {
 		width: 160px;
-		
+
 		&:only-child {
 			margin: 0 0 0 auto;
 			min-width: 120px;
@@ -302,70 +302,70 @@ color: rgba(115, 115, 115, 0.87);
 
 .form {
 
-    &.pin-form {
-        .form-panel {
-            justify-content: flex-end;
+	&.pin-form {
+		.form-panel {
+			justify-content: flex-end;
 
-            .main-btn {
-                margin: 0;
-                min-width: 160px;
-                min-height: 37px;
-            }
-        }
-    }
+			.main-btn {
+				margin: 0;
+				min-width: 160px;
+				min-height: 37px;
+			}
+		}
+	}
 
-    &.ui.form {
-        textarea {
-            resize: none;
-        }
-    }
+	&.ui.form {
+		textarea {
+			resize: none;
+		}
+	}
 
-    .action-wrap {
-        position: relative;
-        transition: margin .3s;
+	.action-wrap {
+		position: relative;
+		transition: margin .3s;
 
-        &.loading {
-            &:after {
-                width: 14px;
-                height: 14px;
-                border: 2px solid $green;
-                border-top: 2px solid transparent;
-                right: 11px;
-                top: 0;
-                bottom: 0;
-                border-radius: 50%;
-                margin: auto;
-                content: "";
-                position: absolute;
-                animation: rotating 1s linear infinite;
-            }
-        }
+		&.loading {
+			&:after {
+				width: 14px;
+				height: 14px;
+				border: 2px solid $green;
+				border-top: 2px solid transparent;
+				right: 11px;
+				top: 0;
+				bottom: 0;
+				border-radius: 50%;
+				margin: auto;
+				content: "";
+				position: absolute;
+				animation: rotating 1s linear infinite;
+			}
+		}
 
-        &.input,
-        &.textarea-wrap {
-            &.error {
-                textarea {
-                    border-color: $err-red;
-                }
+		&.input,
+		&.textarea-wrap {
+			&.error {
+				textarea {
+					border-color: $err-red;
+				}
 
-                .error-message {
-                    top: 99%;
-                }
-            }
+				.error-message {
+					top: 99%;
+				}
+			}
 
-            input {
-                padding-right: 30px;
-            }
-        }
-    }
+			input {
+				padding-right: 30px;
+			}
+		}
+	}
 
-    .form-panel {
+	.form-panel {
 		display: flex;
 		flex-wrap: wrap;
-        align-items: center;
-        margin: 30px 0 0;
+		align-items: center;
+		margin: 30px 0 0;
 
-        .total-sum {
+		.total-sum {
 			display: flex;
 			align-items: center;
 			font-size: 14px;
@@ -377,56 +377,57 @@ color: rgba(115, 115, 115, 0.87);
 				margin: 0 5px 0 0;
 			}
 
-            .balance {
-				
-                color: $main-color;
-            }
-        }
-    }
+			.balance {
 
-    .field-wrap {
-        .field {
-            .input {
-                &.focused {
-                    .assets-tokens-dropdown {
-                        border-color: $border-hover;
-                        position: relative;
-						
+				color: $main-color;
+			}
+		}
+	}
 
-                        &:before {
-                            top: -5px;
-                            bottom: -5px;
-                            right: -5px;
-                            left: 0;
-                            position: absolute;
-                            display: block;
-                            content: "";
-                            border: 4px solid #f1f1f1;
-                            border-left: 0;
-                            border-radius: 0.5rem;
-                            border-top-left-radius: 0;
-                            border-bottom-left-radius: 0;
-                        }
-                    }
-                }
+	.field-wrap {
+		.field {
+			.input {
+				&.focused {
+					.assets-tokens-dropdown {
+						border-color: $border-hover;
+						position: relative;
 
-                &.error {
+
+						&:before {
+							top: -5px;
+							bottom: -5px;
+							right: -5px;
+							left: 0;
+							position: absolute;
+							display: block;
+							content: "";
+							border: 4px solid #f1f1f1;
+							border-left: 0;
+							border-radius: 0.5rem;
+							border-top-left-radius: 0;
+							border-bottom-left-radius: 0;
+						}
+					}
+				}
+
+				&.error {
 					.assets-tokens-dropdown {
 						border-left: 0;
 					}
-                    .assets-tokens-dropdown,
-                    .amount {
-						border-color: $err-red;
-						
-					}
-                }
 
-                .amount {
-                    max-height: 38px;
-                    width: 100%;
-                    border-top-right-radius: 0;
+					.assets-tokens-dropdown,
+					.amount {
+						border-color: $err-red;
+
+					}
+				}
+
+				.amount {
+					max-height: 38px;
+					width: 100%;
+					border-top-right-radius: 0;
 					border-bottom-right-radius: 0;
-					
+
 				}
 
 				.amount-wrap {
@@ -435,10 +436,11 @@ color: rgba(115, 115, 115, 0.87);
 					display: flex;
 
 					&:hover {
-						& + .assets-tokens-dropdown {
+						&+.assets-tokens-dropdown {
 							border-color: $border-hover;
 						}
 					}
+
 					&:after,
 					&:before {
 						width: 2px;
@@ -473,6 +475,7 @@ color: rgba(115, 115, 115, 0.87);
 					}
 
 				}
+
 				.currency-label {
 					font-size: 15px;
 					position: absolute;
@@ -485,90 +488,90 @@ color: rgba(115, 115, 115, 0.87);
 					color: rgba(#3B3B3B, 0.8);
 
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 .field,
 .textarea-wrap {
 
-    &.error,
-    .error {
-        position: relative;
+	&.error,
+	.error {
+		position: relative;
 
-        .error-message {
-            display: flex;
-        }
+		.error-message {
+			display: flex;
+		}
 
-        .input {
-            &:focus {
-                border: 1px solid $err-red;
-            }
-        }
-    }
+		.input {
+			&:focus {
+				border: 1px solid $err-red;
+			}
+		}
+	}
 }
 
 .textarea-wrap {
-    .error-message {
-        margin-top: 2px;
-    }
+	.error-message {
+		margin-top: 2px;
+	}
 }
 
 .form-info {
-    & + .field-wrap {
-        margin-top: 21px;
-    }
+	&+.field-wrap {
+		margin-top: 21px;
+	}
 
-    &+.form-info-description {
-        margin: 11px auto 26px;
-    }
+	&+.form-info-description {
+		margin: 11px auto 26px;
+	}
 }
 
 
 .label-in-left {
-    display: flex;
-    position: relative;
+	display: flex;
+	position: relative;
 
-    width: 100%;
+	width: 100%;
 
-    input {
-        min-width: 314px;
-        padding-right: 55px;
-        height: 34px;
-    }
+	input {
+		min-width: 314px;
+		padding-right: 55px;
+		height: 34px;
+	}
 
-    .label {
-        color: $bd-gray;
-        font-size: 14px;
-        position: absolute;
-        left: 12px;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        display: table;
-        line-height: 38px;
-    }
+	.label {
+		color: $bd-gray;
+		font-size: 14px;
+		position: absolute;
+		left: 12px;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		display: table;
+		line-height: 38px;
+	}
 
-    .edit-option {
-        top: 7.5px;
-        height: 20px;
-        min-width: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        z-index: 4;
-        border: 0;
-        background-color: transparent;
-        color: #d6d9df;
-        transition: color .3s;
-        cursor: pointer;
+	.edit-option {
+		top: 7.5px;
+		height: 20px;
+		min-width: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		z-index: 4;
+		border: 0;
+		background-color: transparent;
+		color: #d6d9df;
+		transition: color .3s;
+		cursor: pointer;
 
-        &:hover,
-        &:focus {
-            color: #aeb4c0;
-        }
+		&:hover,
+		&:focus {
+			color: #aeb4c0;
+		}
 	}
 
 	.icon-edit-checked {
@@ -582,35 +585,35 @@ color: rgba(115, 115, 115, 0.87);
 
 
 .error-wrap {
-    position: relative;
-    margin-bottom: 25px;
+	position: relative;
+	margin-bottom: 25px;
 
-    &.error {
-        .error-message {
-            display: block;
-        }
+	&.error {
+		.error-message {
+			display: block;
+		}
 
-        input,
-        textarea {
-            border-color: $err-red !important;
-        }
-    }
+		input,
+		textarea {
+			border-color: $err-red !important;
+		}
+	}
 }
 
 .error-message {
-    display: none;
-    position: absolute;
-    right: 0;
-    margin-right: 3px;
-    background-color: $err-red;
-    padding: 0 5px;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    font-size: 12px;
-    color: $white;
-    animation: fadeIn .3s;
-    line-height: 1.1;
-    z-index: 5;
+	display: none;
+	position: absolute;
+	right: 0;
+	margin-right: 3px;
+	background-color: $err-red;
+	padding: 0 5px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	font-size: 12px;
+	color: $white;
+	animation: fadeIn .3s;
+	line-height: 1.1;
+	z-index: 5;
 }
 
 .value-status {
@@ -623,18 +626,20 @@ color: rgba(115, 115, 115, 0.87);
 	align-items: center;
 	width: 25px;
 }
-textarea + .value-status {
+
+textarea+.value-status {
 	bottom: auto;
 	height: 39px;
 }
 
 .warning-message {
-    display: block;
-    margin-top: 4px;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 400;
+	display: block;
+	margin-top: 4px;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 400;
 	color: #EE851C;
+
 	.special {
 		font-weight: 600;
 		font-style: italic;
@@ -642,61 +647,61 @@ textarea + .value-status {
 }
 
 .amount-wrap {
-    input:focus {
-        box-shadow: 0 0 0 4px #f1f1f1;
-    }
+	input:focus {
+		box-shadow: 0 0 0 4px #f1f1f1;
+	}
 }
 
 .horizontal-input {
-    .field {
-        display: inline-flex;
-        align-items: center;
-        position: relative;
+	.field {
+		display: inline-flex;
+		align-items: center;
+		position: relative;
 
-        &.error {
-            .error-message {
-                top: 100%;
-            }
-        }
+		&.error {
+			.error-message {
+				top: 100%;
+			}
+		}
 
-        &.loading {
-            &:after {
-                width: 14px;
-                height: 14px;
-                border: 2px solid #7ad38d;
-                border-top: 2px solid transparent;
-                right: 11px;
-                top: 0;
-                bottom: 0;
-                border-radius: 50%;
-                margin: auto;
-                content: "";
-                position: absolute;
-                animation: rotating 1s linear infinite;
-            }
-        }
+		&.loading {
+			&:after {
+				width: 14px;
+				height: 14px;
+				border: 2px solid #7ad38d;
+				border-top: 2px solid transparent;
+				right: 11px;
+				top: 0;
+				bottom: 0;
+				border-radius: 50%;
+				margin: auto;
+				content: "";
+				position: absolute;
+				animation: rotating 1s linear infinite;
+			}
+		}
 
-        input {
-            padding: 4px 10px;
-            font-size: 15px;
-            min-width: 320px;
-            max-width: 320px;
+		input {
+			padding: 4px 10px;
+			font-size: 15px;
+			min-width: 320px;
+			max-width: 320px;
 
-            &::placeholder {
-                font-size: 15px;
-            }
-        }
-    }
+			&::placeholder {
+				font-size: 15px;
+			}
+		}
+	}
 
-    .i-title {
-        font-size: 12px;
-        font-weight: 600;
-        color: #aeb4c0;
-        margin: 0;
-        flex-shrink: 0;
-        margin-right: 11px;
-        text-transform: uppercase;
-    }
+	.i-title {
+		font-size: 12px;
+		font-weight: 600;
+		color: #aeb4c0;
+		margin: 0;
+		flex-shrink: 0;
+		margin-right: 11px;
+		text-transform: uppercase;
+	}
 }
 
 .label-wrap {
@@ -715,8 +720,8 @@ textarea + .value-status {
 	}
 }
 
-.label-wrap > label,
-.field > label {
+.label-wrap>label,
+.field>label {
 	@include label();
 	display: flex;
 	justify-content: space-between;
@@ -726,6 +731,7 @@ textarea + .value-status {
 	.label-info {
 		text-transform: none;
 		margin-left: 5px;
+
 		&.right {
 			margin-left: auto;
 		}
@@ -735,6 +741,7 @@ textarea + .value-status {
 		color: #3B3B3B;
 		font-weight: 400;
 	}
+
 	.account-name {
 		color: #3B3B3B;
 		font-weight: 400;

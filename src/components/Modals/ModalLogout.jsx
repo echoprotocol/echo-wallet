@@ -9,6 +9,7 @@ import { closeModal, openModal, setError } from '../../actions/ModalActions';
 
 import { MODAL_LOGOUT, MODAL_WIPE } from '../../constants/ModalConstants';
 import { removeAccount } from '../../actions/GlobalActions';
+import PasswordInput from '../PasswordInput';
 
 
 class ModalLogout extends React.Component {
@@ -78,19 +79,15 @@ class ModalLogout extends React.Component {
 								</div>
 									You will be signed out of your account.
 								<div className="field-wrap">
-									<Form.Field className={classnames('error-wrap', { error: !!error })}>
-										<label htmlFor="Password">Password</label>
-										<input
-											type="password"
-											placeholder="Password"
-											name="password"
-											className="ui input"
-											value={password}
-											onChange={(e) => this.onChange(e)}
-											autoFocus
-										/>
-										<span className="error-message">{error}</span>
-									</Form.Field>
+									<PasswordInput
+										errorMessage={error}
+										inputLabel="Password"
+										inputPlaceholder="Password"
+										inputName="password"
+										value={password}
+										onChange={(e) => this.onChange(e)}
+										autoFocus
+									/>
 								</div>
 								<div className="form-panel">
 									<a
@@ -104,6 +101,7 @@ class ModalLogout extends React.Component {
 									</a>
 									<Button
 										className="main-btn"
+										type="button"
 										onClick={() => this.onClose()}
 										content="Cancel"
 									/>

@@ -34,6 +34,7 @@ class ModalAddWIF extends React.Component {
 	}
 
 	render() {
+		const { wif } = this.state;
 		const {
 			show, error, disabled, publicKey,
 		} = this.props;
@@ -71,6 +72,7 @@ class ModalAddWIF extends React.Component {
 						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
 						errorMessage={error}
 						onChange={(e) => this.onChange(e)}
+						value={wif}
 						autoFocus
 					/>
 

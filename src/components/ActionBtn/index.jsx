@@ -33,6 +33,7 @@ class actionBtn extends React.Component {
 		return (
 			<button
 				onClick={(e) => action(e)}
+				type="button"
 				className={classnames(
 					'action-btn',
 					{ flat: !text },

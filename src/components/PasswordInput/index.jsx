@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import ActionBtn from '../ActionBtn';
 
 export default class PasswordInput extends React.PureComponent {
 
@@ -11,12 +12,15 @@ export default class PasswordInput extends React.PureComponent {
 		this.state = {
 			show: false,
 		};
+
+		this.input = React.createRef();
 	}
 
 	toggleShow(show) {
 		this.setState({
 			show: !show,
 		});
+		this.input.current.focus();
 	}
 
 	render() {
@@ -29,6 +33,8 @@ export default class PasswordInput extends React.PureComponent {
 			inputPlaceholder,
 			inputName,
 			onChange,
+			value,
+			autoFocus,
 		} = this.props;
 
 		return (
@@ -42,20 +48,22 @@ export default class PasswordInput extends React.PureComponent {
 						placeholder={inputPlaceholder}
 						name={inputName}
 						onChange={(e) => onChange(e)}
+						value={value}
+						autoFocus={autoFocus}
+						ref={this.input}
 					/>
-					{
-						show ?
-							<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-show" /> :
-							<button onClick={() => { this.toggleShow(show); }} className="icon icon-e-hide" />
-					}
+					<ActionBtn
+						icon={show ? 'icon-e-show' : 'icon-e-hide'}
+						action={() => this.toggleShow(show)}
+					/>
 				</div>
-				<div>
+				<React.Fragment>
 					{errorMessage && <span className="error-message">{ errorMessage }</span>}
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>
 					}
-				</div>
+				</React.Fragment>
 			</Form.Field>
 		);
 	}
@@ -69,6 +77,8 @@ PasswordInput.propTypes = {
 	inputPlaceholder: PropTypes.string,
 	inputName: PropTypes.string,
 	onChange: PropTypes.func,
+	value: PropTypes.string,
+	autoFocus: PropTypes.bool,
 };
 
 PasswordInput.defaultProps = {
@@ -77,5 +87,7 @@ PasswordInput.defaultProps = {
 	inputLabel: '',
 	inputPlaceholder: '',
 	inputName: '',
+	value: '',
 	onChange: () => {},
+	autoFocus: false,
 };

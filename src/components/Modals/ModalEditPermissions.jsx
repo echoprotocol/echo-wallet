@@ -1,9 +1,10 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import Countdown from 'react-countdown-now';
 import FocusLock from 'react-focus-lock';
+
+import PasswordInput from '../PasswordInput';
 
 class ModalEditPermissions extends React.Component {
 
@@ -27,6 +28,7 @@ class ModalEditPermissions extends React.Component {
 			changeVisiblity: false,
 		};
 	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		return (nextState.changeVisiblity) ? true : !(nextState.timerIsOn && !nextState.timerComplete);
 	}
@@ -62,7 +64,7 @@ class ModalEditPermissions extends React.Component {
 
 	render() {
 		const {
-			show, error, disabled, warningTime,
+			show, error, disabled, warningTime, password,
 		} = this.props;
 
 		const { agree, timerComplete } = this.state;
@@ -92,19 +94,14 @@ class ModalEditPermissions extends React.Component {
 								</label>
 							</div>
 						</div>
-						<Form.Field className={classnames('error-wrap', { error: !!error })}>
-							<label htmlFor="Password">Password</label>
-							<input
-								type="password"
-								placeholder="Password"
-								name="password"
-								onChange={(e) => this.onChange(e)}
-								autoFocus
-							/>
-							{
-								error && <span className="error-message">{error}</span>
-							}
-						</Form.Field>
+						<PasswordInput
+							errorMessage={error}
+							inputLabel="Password"
+							inputPlaceholder="Password"
+							inputName="password"
+							value={password}
+							onChange={(e) => this.onChange(e)}
+						/>
 						<div className="form-panel">
 							<a
 								className="action-link"

@@ -13,6 +13,7 @@ import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { importAccount } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
+import PasswordInput from '../../components/PasswordInput';
 
 class SignIn extends React.Component {
 
@@ -99,19 +100,14 @@ class SignIn extends React.Component {
 						}
 
 					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
-						<label htmlFor="PasOrWifiKey">WIF-key</label>
-						<input
-							type="password"
-							placeholder="WIF-key"
-							name="wif"
-							value={wif.value}
-							onChange={(e) => this.onChange(e)}
-						/>
-						{
-							wif.error && <span className="error-message">{wif.error}</span>
-						}
-					</Form.Field>
+					<PasswordInput
+						inputLabel="WIF-key"
+						inputPlaceholder="WIF-key"
+						inputName="wif"
+						errorMessage={wif.error}
+						onChange={(e) => this.onChange(e)}
+						value={wif.value}
+					/>
 				</div>
 				<div className="form-panel">
 					<span className="sign-nav">

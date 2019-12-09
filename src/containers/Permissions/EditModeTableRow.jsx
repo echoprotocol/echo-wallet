@@ -3,28 +3,14 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
+import PasswordInput from './../../components/PasswordInput';
+
 class EditModeTableRow extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			show: false,
-		};
-	}
-
-	toggleShow(show) {
-		this.setState({
-			show: !show,
-		});
-	}
-
 	renderType(type) {
-		const { show } = this.state;
 		const {
 			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
 		} = this.props;
-		const inputType = show ? 'text' : 'password';
 
 		return type === 'keys' ? (
 			<React.Fragment>
@@ -40,25 +26,15 @@ class EditModeTableRow extends React.Component {
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
-				<Form.Field className={classnames('input-password error-wrap', { error: wif.error })}>
-					<label htmlFor="WIF">WIF (optional)</label>
-					<div className="action-input">
-						<input
-							type={inputType}
-							placeholder="WIF (optional)"
-							name={name}
-							className="input"
-							value={wif.value}
-							onChange={setWif}
-						/>
-						{
-							show ?
-								<button onClick={() => this.toggleShow(show)} className="icon icon-e-show" /> :
-								<button onClick={() => this.toggleShow(show)} className="icon icon-e-hide" />
-						}
-					</div>
-					{wif.error && <span className="error-message">{wif.error}</span>}
-				</Form.Field>
+				<PasswordInput
+					errorMessage={wif.error}
+					inputLabel="WIF (optional)"
+					inputPlaceholder="WIF (optional)"
+					inputName={name}
+					value={wif.value}
+					onChange={setWif}
+				/>
+
 			</React.Fragment>
 		) : (
 			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
