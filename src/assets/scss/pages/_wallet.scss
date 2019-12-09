@@ -1,25 +1,25 @@
 .page-wrap {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 
-    .form .field:nth-child(2) {
-        margin-bottom: 18px;
-    }
+	.form .field:nth-child(2) {
+		margin-bottom: 18px;
+	}
 
-    @media only screen and (max-width: 1150px) {
-        .send-wrap {
-            padding: 0 90px;
-        }
-    }
+	@media only screen and (max-width: 1150px) {
+		.send-wrap {
+			padding: 0 90px;
+		}
+	}
 
-    @media only screen and (max-width: 1000px) {
-        .send-wrap {
-            padding: 0 20px;
-        }
+	@media only screen and (max-width: 1000px) {
+		.send-wrap {
+			padding: 0 20px;
+		}
 
-        .form.main-form {
-            min-width: 175px;
-        }
+		.form.main-form {
+			min-width: 175px;
+		}
 	}
 
 	.balance-wrap {
@@ -27,17 +27,17 @@
 		width: 100%;
 	}
 
-	.balance-wrap + div {
+	.balance-wrap+div {
 		width: 100%;
 		max-height: calc(100vh - 122px);
 		overflow: overlay;
 		background-color: #FCFCFC;
-		
-	
+
+
 		@include max-vw(1000) {
 			padding: 0 20px;
 		}
-	
+
 		.send-wrap {
 			border-top: 2px solid rgba(#DEDEDE, 0.2);
 		}
@@ -46,21 +46,22 @@
 }
 
 .send-wrap {
-    .form-info {
-        h3 {
-            color: #5c637d;
-            margin: 0;
+	.form-info {
+		h3 {
+			color: #5c637d;
+			margin: 0;
 			font-family: proxima;
 			font-weight: 600;
-            font-size: 20px;
-            line-height: 26.4px;
-        }
+			font-size: 20px;
+			line-height: 26.4px;
+		}
 
-        & + .field-wrap {
-            margin-top: 15px;
-            margin-left: 2px;
-        }
+		&+.field-wrap {
+			margin-top: 15px;
+			margin-left: 2px;
+		}
 	}
+
 	.main-form {
 		max-width: 400px;
 	}
@@ -70,26 +71,26 @@
 
 
 .balance-scroll {
-    position: relative;
-    height: calc(100vh - 176px);
-    overflow: overlay;
-    padding: 0 20px 0 17px;
-    margin-top: 17px;
+	position: relative;
+	height: calc(100vh - 176px);
+	overflow: overlay;
+	padding: 0 20px 0 17px;
+	margin-top: 17px;
 }
 
 .balance-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 13px;
-    padding: 0 20px 0 17px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 13px;
+	padding: 0 20px 0 17px;
 
-    .balance-title {
-        font-size: 20px;
-        color: rgb(92, 99, 125);
-        line-height: 1.32;
+	.balance-title {
+		font-size: 20px;
+		color: rgb(92, 99, 125);
+		line-height: 1.32;
 	}
-	
+
 	.main-btn {
 		min-width: 110px;
 		width: 110px;
@@ -98,11 +99,11 @@
 }
 
 .currency-title {
-    color: $gray;
+	color: $gray;
 	font-family: proxima;
 	font-weight: 600;
-    line-height: 18px;
-    padding-bottom: 2px;
+	line-height: 18px;
+	padding-bottom: 2px;
 	font-size: 15px;
 	display: flex;
 	align-items: center;
@@ -197,30 +198,31 @@
 
 .currency-list {
 
-    & + .currency-title {
-        margin: 25px 0 0 0;
+	&+.currency-title {
+		margin: 25px 0 0 0;
 	}
-	
-    li {
-        background-color: #F5F5F6;
-        height: 50px;
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        overflow: hidden;
-        transition: background-color .2s;
-        border-radius: 6px;
-        margin-bottom: 6px;
+
+	li {
+		background-color: #F5F5F6;
+		height: 50px;
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		overflow: hidden;
+		transition: background-color .2s;
+		border-radius: 6px;
+		margin-bottom: 6px;
 	}
 
 	&.stable-coins {
 		li {
-			height: 56px;	
+			height: 56px;
 		}
 	}
 
 	&:not(.stable-coins) {
 		li {
+
 			&.focused,
 			&:hover {
 				background-color: #5267C6;
@@ -234,7 +236,7 @@
 				.currency-symbol {
 					color: $yellow;
 				}
-				
+
 				.balance-item,
 				.currency-amount {
 					color: #fff;
@@ -243,5 +245,3 @@
 		}
 	}
 }
-
-
