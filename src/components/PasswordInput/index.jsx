@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 
-export default class InputEye extends React.PureComponent {
+export default class PasswordInput extends React.PureComponent {
 
 	constructor(props) {
 		super(props);
@@ -32,7 +32,7 @@ export default class InputEye extends React.PureComponent {
 		} = this.props;
 
 		return (
-			<Form.Field className={classnames('input-eye error-wrap', { error: !!errorMessage })}>
+			<Form.Field className={classnames('input-password error-wrap', { error: !!errorMessage })}>
 				{
 					inputLabel && <label htmlFor="WIF">{ inputLabel }</label>
 				}
@@ -62,7 +62,7 @@ export default class InputEye extends React.PureComponent {
 
 }
 
-InputEye.propTypes = {
+PasswordInput.propTypes = {
 	errorMessage: PropTypes.string,
 	warningMessage: PropTypes.string,
 	inputLabel: PropTypes.string,
@@ -71,7 +71,7 @@ InputEye.propTypes = {
 	onChange: PropTypes.func,
 };
 
-InputEye.defaultProps = {
+PasswordInput.defaultProps = {
 	errorMessage: '',
 	warningMessage: '',
 	inputLabel: '',

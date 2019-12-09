@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import InputEye from '../InputEye';
+import PasswordInput from '../PasswordInput';
 
 
 class ModalAddWIF extends React.Component {
@@ -64,7 +64,7 @@ class ModalAddWIF extends React.Component {
 						}
 					</Form.Field>
 
-					<InputEye
+					<PasswordInput
 						inputLabel="WIF (optional)"
 						inputPlaceholder="WIF"
 						inputName="WIF"

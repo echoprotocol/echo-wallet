@@ -40,7 +40,7 @@ class EditModeTableRow extends React.Component {
 					/>
 					{subject.error && <span className="error-message">{subject.error}</span>}
 				</Form.Field>
-				<Form.Field className={classnames('input-eye error-wrap', { error: wif.error })}>
+				<Form.Field className={classnames('input-password error-wrap', { error: wif.error })}>
 					<label htmlFor="WIF">WIF (optional)</label>
 					<div className="action-input">
 						<input
