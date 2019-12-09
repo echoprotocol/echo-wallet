@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 class ModalConfirmEditingOfPermissions extends React.Component {
 
@@ -17,7 +17,7 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 		} = this.props;
 		return (
 			<Modal className="small" open={show}>
-				<FocusTrap>
+				<FocusLock autoFocus={false}>
 					<div className="focus-trap-wrap">
 						<div className="modal-content add-key">
 							<div className="modal-header">Please, confirm applying changes</div>
@@ -48,7 +48,7 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 							</div>
 						</div>
 					</div>
-				</FocusTrap>
+				</FocusLock>
 			</Modal>
 		);
 	}

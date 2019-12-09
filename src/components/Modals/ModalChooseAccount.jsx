@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import FocusLock from 'react-focus-lock';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -124,80 +125,84 @@ class ModalChooseAccount extends React.Component {
 
 		return (
 			<Modal className="choose-account" open={show}>
-				<div className="modal-content">
-					<div className="modal-header" />
-					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Choose account</h3>
-							</div>
-							<section className="accounts-list">
-								<div className="accounts-list_header">
-									<div className="check-container">
-										<div className="check">
-											<input
-												onChange={(e) => this.toggleAllChecked(e, accounts)}
-												checked={checkedAll}
-												type="checkbox"
-												id="check-all"
-											/>
-											<label
-												className="label"
-												htmlFor="check-all"
-											>
-												<span className="label-text">Accounts</span>
-											</label>
+				<FocusLock autoFocus={false}>
+					<div className="focus-trap-wrap">
+						<div className="modal-content">
+							<div className="modal-header" />
+							<div className="modal-body">
+								<Form className="main-form">
+									<div className="form-info">
+										<h3>Choose account</h3>
+									</div>
+									<section className="accounts-list">
+										<div className="accounts-list_header">
+											<div className="check-container">
+												<div className="check">
+													<input
+														onChange={(e) => this.toggleAllChecked(e, accounts)}
+														checked={checkedAll}
+														type="checkbox"
+														id="check-all"
+													/>
+													<label
+														className="label"
+														htmlFor="check-all"
+													>
+														<span className="label-text">Accounts</span>
+													</label>
+												</div>
+												<button className="sort" onClick={() => this.onSort('name')}>
+													<Icon
+														name="dropdown"
+														flipped="vertically"
+														className={classnames({ active: sortType === 'name' && sortInc })}
+													/>
+													<Icon
+														name="dropdown"
+														flipped="horizontally"
+														className={classnames({ active: sortType === 'name' && !sortInc })}
+													/>
+												</button>
+											</div>
+											<div className="check-container">
+												<div className="txt">Balance</div>
+												<button className="sort" onClick={() => this.onSort('balance')}>
+													<Icon
+														name="dropdown"
+														flipped="vertically"
+														className={classnames({ active: sortType === 'balance' && sortInc })}
+													/>
+													<Icon
+														name="dropdown"
+														flipped="horizontally"
+														className={classnames({ active: sortType === 'balance' && !sortInc })}
+													/>
+												</button>
+											</div>
 										</div>
-										<button className="sort" onClick={() => this.onSort('name')}>
-											<Icon
-												name="dropdown"
-												flipped="vertically"
-												className={classnames({ active: sortType === 'name' && sortInc })}
-											/>
-											<Icon
-												name="dropdown"
-												flipped="horizontally"
-												className={classnames({ active: sortType === 'name' && !sortInc })}
-											/>
-										</button>
+										<div className="accounts-list_list">
+											{
+												this.sortList().map((account) => this.renderAccounts(account))
+											}
+										</div>
+									</section>
+									<div className="form-panel">
+										<Button
+											className="main-btn"
+											onClick={() => this.onClose()}
+											content="Cancel"
+										/>
+										<Button
+											className="main-btn"
+											onClick={() => this.onConfirm(accounts)}
+											content="Continue"
+										/>
 									</div>
-									<div className="check-container">
-										<div className="txt">Balance</div>
-										<button className="sort" onClick={() => this.onSort('balance')}>
-											<Icon
-												name="dropdown"
-												flipped="vertically"
-												className={classnames({ active: sortType === 'balance' && sortInc })}
-											/>
-											<Icon
-												name="dropdown"
-												flipped="horizontally"
-												className={classnames({ active: sortType === 'balance' && !sortInc })}
-											/>
-										</button>
-									</div>
-								</div>
-								<div className="accounts-list_list">
-									{
-										this.sortList().map((account) => this.renderAccounts(account))
-									}
-								</div>
-							</section>
-							<div className="form-panel">
-								<Button
-									className="main-btn"
-									onClick={() => this.onClose()}
-									content="Cancel"
-								/>
-								<Button
-									className="main-btn"
-									onClick={() => this.onConfirm(accounts)}
-									content="Continue"
-								/>
+								</Form>
 							</div>
-						</Form>
+						</div>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}

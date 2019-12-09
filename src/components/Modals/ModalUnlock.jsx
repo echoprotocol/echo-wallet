@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 class ModalUnlockWallet extends React.Component {
 
@@ -32,7 +32,7 @@ class ModalUnlockWallet extends React.Component {
 
 		return (
 			<Modal className="small" open={show}>
-				<FocusTrap>
+				<FocusLock autoFocus={false}>
 					<div className="focus-trap-wrap">
 						<div className="modal-content">
 							<button
@@ -66,7 +66,7 @@ class ModalUnlockWallet extends React.Component {
 											onKeyPress={(e) => this.onForgot(e)}
 											tabIndex="0"
 										>
-									Forgot password?
+											Forgot password?
 										</a>
 										<Button
 											type="submit"
@@ -80,7 +80,7 @@ class ModalUnlockWallet extends React.Component {
 							</div>
 						</div>
 					</div>
-				</FocusTrap>
+				</FocusLock>
 			</Modal>
 		);
 	}
