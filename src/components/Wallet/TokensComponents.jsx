@@ -32,8 +32,6 @@ class Tokens extends React.Component {
 	renderRow({
 		id, symbol, precision, balance, disabled,
 	}) {
-		const isLongBalance = balance.length > 18;
-
 		if (disabled || !precision) return null;
 
 		return (
@@ -51,7 +49,7 @@ class Tokens extends React.Component {
 					})}
 				>
 					<span className="currency-symbol">{symbol}</span>
-					<span className={classnames('currency-amount', { small: isLongBalance })}>{formatAmount(balance, precision, '')}</span>
+					<span className={classnames('currency-amount', { short: balance.length > 18 })}>{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
 					className="remove-token"
