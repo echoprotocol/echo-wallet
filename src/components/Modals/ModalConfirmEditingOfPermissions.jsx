@@ -18,33 +18,31 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 		return (
 			<Modal className="small" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="focus-trap-wrap">
-						<div className="modal-content add-key">
-							<div className="modal-header">Please, confirm applying changes</div>
-							<div className="modal-body">
-								<div className="info-text">
-									{
-										warningMessage && <span>{warningMessage}</span>
-									}
-									{
-										echoRandMessage && warningMessage && <br />
-									}
-									{
-										echoRandMessage && <span>{echoRandMessage}</span>
-									}
-								</div>
-								<div className="form-panel">
-									<Button
-										className="main-btn"
-										onClick={(e) => this.onClose(e)}
-										content="No"
-									/>
-									<Button
-										className="main-btn"
-										onClick={(e) => this.onConfirm(e)}
-										content="Proceed"
-									/>
-								</div>
+					<div className="modal-content add-key">
+						<div className="modal-header">Please, confirm applying changes</div>
+						<div className="modal-body">
+							<div className="info-text">
+								{
+									warningMessage && <span>{warningMessage}</span>
+								}
+								{
+									echoRandMessage && warningMessage && <br />
+								}
+								{
+									echoRandMessage && <span>{echoRandMessage}</span>
+								}
+							</div>
+							<div className="form-panel">
+								<Button
+									className="main-btn"
+									onClick={(e) => this.onClose(e)}
+									content="No"
+								/>
+								<Button
+									className="main-btn"
+									onClick={(e) => this.onConfirm(e)}
+									content="Proceed"
+								/>
 							</div>
 						</div>
 					</div>
