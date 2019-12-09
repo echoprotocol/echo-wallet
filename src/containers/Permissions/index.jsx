@@ -202,11 +202,12 @@ class Permissions extends React.Component {
 	}
 
 	setWif(keyRole, type, e) {
+
 		const { form } = this.props;
 		const { privateKeys } = this.state;
 
 		const field = e.target.name;
-		const wif = e.target.value;
+		const wif = e.target.value.trim();
 		const newPrivateKeys = { ...privateKeys };
 		if (!newPrivateKeys[keyRole][field]) {
 			newPrivateKeys[keyRole][field] = {};
