@@ -49,7 +49,7 @@ class Tokens extends React.Component {
 					})}
 				>
 					<span className="currency-symbol">{symbol}</span>
-					<span className="currency-amount">{formatAmount(balance, precision, '')}</span>
+					<span className={classnames('currency-amount', { short: balance.length > 18 })}>{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
 					className="remove-token"
