@@ -133,7 +133,7 @@ class ModalChooseAccount extends React.Component {
 		const { sortType, sortInc } = this.props.sort.toJS();
 
 		return (
-			<Modal className="choose-account" open={show} dimmer="inverted">
+			<Modal className="choose-account" open={show}>
 				<div className="modal-content">
 					<div className="modal-header" />
 					<div className="modal-body">
@@ -142,7 +142,7 @@ class ModalChooseAccount extends React.Component {
 								<h3>Choose account</h3>
 							</div>
 							<section className="accounts-list">
-								<div className="accounts-list_header">
+								<div className="accounts-list-header">
 									<div className="check-container">
 										<div className="check">
 											<input

@@ -61,7 +61,7 @@ class Networks extends React.Component {
 						/>
 					</div>
 					<div className="form-panel">
-						<div className="check" style={{ marginRight: '75px' }}>
+						<div className="check">
 							<input
 								type="checkbox"
 								id="addToNetworks"

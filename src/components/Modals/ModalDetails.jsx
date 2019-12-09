@@ -2,9 +2,9 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import FocusTrap from 'focus-trap-react';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
-
 import Avatar from '../Avatar';
 
 class ModalDetails extends React.Component {
@@ -85,41 +85,42 @@ class ModalDetails extends React.Component {
 		const { showOptions, show, disabled } = this.props;
 
 		return (
-			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<span
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
-					/>
-					<div className="modal-header" />
-					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Confirm transaction</h3>
+			<Modal className="small confirm-transaction" open={show}>
+				<FocusTrap>
+					<div className="focus-trap-wrap">
+						<div className="modal-content">
+							<button
+								className="icon-close"
+								onClick={(e) => this.onClose(e)}
+							/>
+							<div className="modal-header" />
+							<div className="modal-body">
+								<Form className="main-form">
+									<div className="form-info">
+										<h3>Confirm transaction</h3>
+									</div>
+									<div className="field-wrap">
+										{ showOptions ? this.renderOptions() : null }
+									</div>
+									<div className="form-panel">
+										<Button
+											className="main-btn"
+											onClick={() => this.onClose()}
+											content="Cancel"
+										/>
+										<Button
+											type="submit"
+											className="main-btn"
+											onClick={() => this.onConfirm()}
+											disabled={disabled}
+											content="Confirm"
+										/>
+									</div>
+								</Form>
 							</div>
-							<div className="field-wrap">
-								{ showOptions ? this.renderOptions() : null }
-							</div>
-							<div className="form-panel">
-								<Button
-									className="main-btn"
-									onClick={() => this.onClose()}
-									content="Cancel"
-								/>
-								<Button
-									type="submit"
-									className="main-btn"
-									onClick={() => this.onConfirm()}
-									disabled={disabled}
-									content="Confirm"
-								/>
-							</div>
-						</Form>
+						</div>
 					</div>
-				</div>
+				</FocusTrap>
 			</Modal>
 		);
 	}

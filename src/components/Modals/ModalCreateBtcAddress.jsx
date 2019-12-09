@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import FocusTrap from 'focus-trap-react';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
@@ -52,51 +53,53 @@ class ModalCreateBtcAddress extends React.Component {
 			>
 				{
 					(submit) => (
-						<Modal className="create-address-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Create BTC address</h3>
-							</div>
-							<div className="modal-body">
-								<div className="info-text">
-									To create your new BTC Address, please, provide your external backup BTC address.
-									Backup BTC address is needed to be able to withhold a sent transaction to
-									ECHO network during the first 24 hours after the transaction being made.
-								</div>
+						<Modal className="create-address-modal" open={show}>
+							<FocusTrap>
+								<div className="focus-trap-wrap">
+									<button
+										className="icon-close"
+										onClick={(e) => this.onClose(e)}
+									/>
+									<div className="modal-header">
+										<h3 className="modal-header-title">Create BTC address</h3>
+									</div>
+									<div className="modal-body">
+										<div className="info-text">
+											To create your new BTC Address, please,
+											provide your external backup BTC address.
+											Backup BTC address is needed to be able to withhold a sent transaction to
+											ECHO network during the first 24 hours after the transaction being made.
+										</div>
 
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="address">Backup address</label>
-									<input
-										type="text"
-										placeholder="Backup address"
-										name="address"
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-									{
-										<span className="error-message">{error}</span>
-									}
-									<span className="warning-message">
-										Submit your backup BTC address above.
-									</span>
-								</Form.Field>
-								<div className="form-panel">
-									<Button
-										basic
-										className="main-btn countdown-wrap"
-										content="Generate address"
-										onClick={() => {
-											this.onGenerateBtcAddress(submit);
-										}}
-									/>
+										<Form.Field className={classnames('error-wrap', { error: !!error })}>
+											<label htmlFor="address">Backup address</label>
+											<input
+												type="text"
+												placeholder="Backup address"
+												name="address"
+												onChange={(e) => this.onChange(e)}
+												autoFocus
+											/>
+											{
+												<span className="error-message">{error}</span>
+											}
+											<span className="warning-message">
+												Submit your backup BTC address above.
+											</span>
+										</Form.Field>
+										<div className="form-panel">
+											<Button
+												basic
+												className="main-btn countdown-wrap"
+												content="Generate address"
+												onClick={() => {
+													this.onGenerateBtcAddress(submit);
+												}}
+											/>
+										</div>
+									</div>
 								</div>
-							</div>
+							</FocusTrap>
 						</Modal>)
 				}
 			</TransactionScenario>
