@@ -82,10 +82,11 @@ class TransactionScenario extends React.Component {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
+			key,
 		} = this.props;
 
 		return (
-			<React.Fragment>
+			<React.Fragment key={key}>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
 					show={modalUnlock.get('show')}
@@ -117,6 +118,7 @@ TransactionScenario.propTypes = {
 	onSuccess: PropTypes.func,
 	children: PropTypes.func.isRequired,
 
+	key: PropTypes.string,
 	operation: PropTypes.string,
 	showOptions: PropTypes.object,
 	[MODAL_UNLOCK]: PropTypes.object.isRequired,
@@ -130,6 +132,7 @@ TransactionScenario.propTypes = {
 };
 
 TransactionScenario.defaultProps = {
+	key: '',
 	operation: null,
 	showOptions: {},
 	onUnlock: () => {},

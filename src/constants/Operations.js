@@ -402,6 +402,7 @@ export default {
 			value: null,
 			asset: null,
 		},
+		signer: 'sender',
 	},
 	sidechain_eth_create_address: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_CREATE_ADDRESS,

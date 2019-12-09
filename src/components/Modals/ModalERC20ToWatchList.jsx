@@ -3,6 +3,7 @@ import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeModal } from '../../actions/ModalActions';
+import { watchContractAsToken } from '../../actions/BalanceActions';
 
 import { MODAL_ERC20_TO_WATCH_LIST } from '../../constants/ModalConstants';
 
@@ -16,9 +17,16 @@ class ModalERC20ToWatchList extends React.Component {
 
 	onClose(e) {
 		e.preventDefault();
-		this.props.closeModal();
+		this.props.closeModal(MODAL_ERC20_TO_WATCH_LIST);
 	}
 
+	onConfirm(e) {
+		e.preventDefault();
+
+		const { contractId } = this.props;
+
+		this.props.watchContractAsToken(contractId);
+	}
 
 	render() {
 		const {
@@ -44,6 +52,7 @@ class ModalERC20ToWatchList extends React.Component {
 					<Button
 						className="main-btn"
 						content="Yes"
+						onClick={(e) => this.onConfirm(e)}
 					/>
 				</div>
 			</Modal>
@@ -52,9 +61,12 @@ class ModalERC20ToWatchList extends React.Component {
 
 }
 
+
 ModalERC20ToWatchList.propTypes = {
 	show: PropTypes.bool,
+	contractId: PropTypes.string.isRequired,
 	closeModal: PropTypes.func.isRequired,
+	watchContractAsToken: PropTypes.func.isRequired,
 };
 
 ModalERC20ToWatchList.defaultProps = {
@@ -64,8 +76,11 @@ ModalERC20ToWatchList.defaultProps = {
 export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_ERC20_TO_WATCH_LIST, 'show']),
+		contractId: state.modal.getIn([MODAL_ERC20_TO_WATCH_LIST, 'contractId']),
 	}),
 	(dispatch) => ({
-		closeModal: () => dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST)),
+		closeModal: (modal) => dispatch(closeModal(modal)),
+		watchContractAsToken: (accountId, contractId) =>
+			dispatch(watchContractAsToken(accountId, contractId)),
 	}),
 )(ModalERC20ToWatchList);

@@ -18,15 +18,21 @@ class Wallet extends React.Component {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
-			btcAddress, accountId,
+			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
 		} = this.props;
 
+		const isDisplaySidechainNotification = !!((fee.asset && !!sidechainAssets
+			.find((sa) => sa.symbol === fee.asset.symbol))
+			|| (currency && sidechainAssets.find((sa) => sa.symbol === currency.symbol))) || false;
 		const externalTabs = [
 			{
 				menuItem: <Button
 					className="tab-btn"
 					key="0"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activePaymentTypeTab', 0);
+						e.target.blur();
+					}}
 					content="CREATE PAYMENT"
 				/>,
 				render: () => (
@@ -59,6 +65,7 @@ class Wallet extends React.Component {
 							setFormValue={this.props.setFormValue}
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
+							isDisplaySidechainNotification={isDisplaySidechainNotification}
 						/>
 					</div>),
 			},
@@ -66,7 +73,10 @@ class Wallet extends React.Component {
 				menuItem: <Button
 					className="tab-btn"
 					key="1"
-					onClick={(e) => e.target.blur()}
+					onClick={(e) => {
+						this.props.setGlobalValue('activePaymentTypeTab', 1);
+						e.target.blur();
+					}}
 					content="RECEIVE PAYMENT"
 				/>,
 				render: () => (
@@ -78,6 +88,7 @@ class Wallet extends React.Component {
 							amount={amount}
 							fee={fee}
 							currency={currency}
+							activeCoinTypeTab={activeCoinTypeTab}
 							isAvailableBalance={isAvailableBalance}
 							accountAddresses={accountAddresses}
 							amountInput={this.props.amountInput}
@@ -88,6 +99,7 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							updateAccountAddresses={this.props.updateAccountAddresses}
+							setGlobalValue={this.props.setGlobalValue}
 							getBtcAddress={this.props.getBtcAddress}
 							btcAddress={btcAddress}
 							accountName={accountName}
@@ -123,7 +135,7 @@ class Wallet extends React.Component {
 
 					<div className="balance-scroll">
 						<Assets
-							assets={assets}
+							assets={echoAssets}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
 								this.props.getTransferFee().then((res) => {
@@ -134,8 +146,23 @@ class Wallet extends React.Component {
 								});
 							}}
 							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
-						<StableCoins />
+						<StableCoins
+							assets={sidechainAssets}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+							activeCoinTypeTab={activeCoinTypeTab}
+							activePaymentTypeTab={activePaymentTypeTab}
+						/>
 						<Tokens
 							tokens={tokens}
 							removeToken={this.props.removeToken}
@@ -147,7 +174,7 @@ class Wallet extends React.Component {
 					</div>
 				</div>
 				<Tab
-					defaultActiveIndex="0"
+					activeIndex={activePaymentTypeTab}
 					menu={{
 						tabular: false,
 						className: 'wallet-tab-menu',
@@ -166,6 +193,8 @@ Wallet.propTypes = {
 	amount: PropTypes.object.isRequired,
 	tokens: PropTypes.object,
 	assets: PropTypes.object,
+	echoAssets: PropTypes.object,
+	sidechainAssets: PropTypes.object,
 	currency: PropTypes.object,
 	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
@@ -175,6 +204,8 @@ Wallet.propTypes = {
 	fee: PropTypes.object.isRequired,
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	activePaymentTypeTab: PropTypes.number.isRequired,
+	activeCoinTypeTab: PropTypes.number.isRequired,
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -200,6 +231,7 @@ Wallet.propTypes = {
 	getBtcAddress: PropTypes.func.isRequired,
 	generateEthAddress: PropTypes.func.isRequired,
 	getEthAddress: PropTypes.func.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
 	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
@@ -208,6 +240,8 @@ Wallet.propTypes = {
 Wallet.defaultProps = {
 	tokens: null,
 	assets: null,
+	echoAssets: null,
+	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
 };
