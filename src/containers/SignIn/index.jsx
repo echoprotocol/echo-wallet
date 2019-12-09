@@ -100,10 +100,10 @@ class SignIn extends React.Component {
 
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
-						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
+						<label htmlFor="PasOrWifiKey">WIF-key</label>
 						<input
 							type="password"
-							placeholder="Password or WIF-key"
+							placeholder="WIF-key"
 							name="wif"
 							value={wif.value}
 							onChange={(e) => this.onChange(e)}
