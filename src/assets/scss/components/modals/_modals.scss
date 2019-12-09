@@ -99,90 +99,90 @@
 		border: 1px solid #babccb;
 		border-radius: 4px;
 		margin-bottom: 5px;
+	}
 
-		&_header {
+	.accounts-list_header {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		justify-content: space-between;
+		padding-left: 15px;
+		padding-right: 24px;
+		border-bottom: 1px solid #f1f1f1;
+		height: 37px;
+
+		.check-container {
 			display: flex;
 			align-items: center;
-			width: 100%;
-			justify-content: space-between;
-			padding-left: 15px;
-			padding-right: 24px;
-			border-bottom: 1px solid #f1f1f1;
-			height: 37px;
 
-			.check-container {
-				display: flex;
-				align-items: center;
+			.txt {
+				font-weight: 600;
+				color: rgba(92, 99, 125, 0.5);
+				font-size: 12px;
+			}
 
-				.txt {
+			.check {
+				.label:before {
+					width: 24px;
+					height: 24px;
+				}
+
+				.label-text {
 					font-weight: 600;
 					color: rgba(92, 99, 125, 0.5);
 					font-size: 12px;
 				}
-
-				.check {
-					.label:before {
-						width: 24px;
-						height: 24px;
-					}
-
-					.label-text {
-						font-weight: 600;
-						color: rgba(92, 99, 125, 0.5);
-						font-size: 12px;
-					}
-				}
 			}
 		}
+	}
 
-		&_list {
-			padding-left: 15px;
-			padding-top: 12px;
-			padding-bottom: 12px;
-			padding-right: 30px;
-			max-height: 255px;
-			overflow: auto;
+	.accounts-list_list {
+		padding-left: 15px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		padding-right: 30px;
+		max-height: 255px;
+		overflow: auto;
 
-			&::-webkit-scrollbar {
-				width: 7px;
+		&::-webkit-scrollbar {
+			width: 7px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: rgba(0, 0, 0, .1);
+		}
+
+		&::-webkit-scrollbar-thumb:hover {
+			background: #555;
+		}
+
+		.line {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			&:not(:last-child) {
+				margin-bottom: 20px;
 			}
 
-			&::-webkit-scrollbar-track {
-				background: transparent;
+			.label:before {
+				margin-right: 11px;
 			}
 
-			&::-webkit-scrollbar-thumb {
-				background-color: rgba(0, 0, 0, .1);
+			.label-text {
+				font-size: 15px;
+				max-width: 250px;
+				@include cut-text();
 			}
 
-			&::-webkit-scrollbar-thumb:hover {
-				background: #555;
-			}
-
-			.line {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-
-				&:not(:last-child) {
-					margin-bottom: 20px;
-				}
-
-				.label:before {
-					margin-right: 11px;
-				}
-
-				.label-text {
-					font-size: 15px;
-					max-width: 250px;
-					@include cut-text();
-				}
-
-				.value {
-					font-size: 15px;
-					font-weight: 600;
-					color: #5c637d;
-				}
+			.value {
+				font-size: 15px;
+				font-weight: 600;
+				color: #5c637d;
 			}
 		}
 	}
@@ -195,44 +195,42 @@
 }
 
 .modal.confirm-transaction {
-	.field-block {
-		&_title {
-			display: flex;
-			justify-content: space-between;
-			min-height: 20px;
-			color: #adb1be;
-			font-size: 0.75857143em;
-			font-family: proxima;
-			font-weight: 600;
-			text-transform: uppercase;
-			margin: 0;
+	.field-block_title {
+		display: flex;
+		justify-content: space-between;
+		min-height: 20px;
+		color: #adb1be;
+		font-size: 0.75857143em;
+		font-family: proxima;
+		font-weight: 600;
+		text-transform: uppercase;
+		margin: 0;
+	}
+
+	.field-block_edit {
+		line-height: 1.21428571em;
+		padding: 0.67857143em 14px;
+		font-size: 14px;
+		background-color: #fff;
+		border: 1px solid #dddddd;
+		color: rgba(0, 0, 0, 0.87);
+		border-radius: 4px;
+		background-color: rgba(233, 233, 237, 0.5);
+		transition: background-color 0.3s;
+
+		span::-webkit-selection {
+			background-color: rgba(100, 100, 100, 0.4);
+			color: rgba(0, 0, 0, 0.87);
 		}
 
-		&_edit {
-			line-height: 1.21428571em;
-			padding: 0.67857143em 14px;
-			font-size: 14px;
-			background-color: #fff;
-			border: 1px solid #dddddd;
+		span::-moz-selection {
+			background-color: rgba(100, 100, 100, 0.4);
 			color: rgba(0, 0, 0, 0.87);
-			border-radius: 4px;
-			background-color: rgba(233, 233, 237, 0.5);
-			transition: background-color 0.3s;
+		}
 
-			span::-webkit-selection {
-				background-color: rgba(100, 100, 100, 0.4);
-				color: rgba(0, 0, 0, 0.87);
-			}
-
-			span::-moz-selection {
-				background-color: rgba(100, 100, 100, 0.4);
-				color: rgba(0, 0, 0, 0.87);
-			}
-
-			span::selection {
-				background-color: rgba(100, 100, 100, 0.4);
-				color: rgba(0, 0, 0, 0.87);
-			}
+		span::selection {
+			background-color: rgba(100, 100, 100, 0.4);
+			color: rgba(0, 0, 0, 0.87);
 		}
 	}
 }
