@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -45,40 +45,39 @@ class ModalToWhitelist extends React.Component {
 				{
 					(submit) => (
 						<Modal className="to-whitelist-modal" open={show} dimmer="inverted">
-							<FocusTrap>
-								<div className="focus-trap-wrap">
-									<button
-										className="icon-close"
-										onClick={(e) => this.onClose(e)}
-									/>
-									<div className="modal-header">
-										<h3 className="modal-header-title">Add account to whitelist</h3>
-									</div>
-									<div className="modal-body">
-										<Form.Field className={classnames('error-wrap', { error: !!error })}>
-											<label htmlFor="account-name">Account name</label>
-											<input
-												type="text"
-												placeholder="Account name"
-												name="account-name"
-												onChange={(e) => this.onInputChange(e)}
-											/>
-											{
-												<span className="error-message">{error}</span>
-											}
-										</Form.Field>
-										<div className="form-panel">
-											<Button
-												className="main-btn"
-												content="Confirm"
-												onClick={() => {
-													this.onAdd(submit);
-												}}
-											/>
-										</div>
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h3 className="modal-header-title">Add account to whitelist</h3>
+								</div>
+								<div className="modal-body">
+									<Form.Field className={classnames('error-wrap', { error: !!error })}>
+										<label htmlFor="account-name">Account name</label>
+										<input
+											type="text"
+											placeholder="Account name"
+											name="account-name"
+											onChange={(e) => this.onInputChange(e)}
+											autoFocus
+										/>
+										{
+											<span className="error-message">{error}</span>
+										}
+									</Form.Field>
+									<div className="form-panel">
+										<Button
+											className="main-btn"
+											content="Confirm"
+											onClick={() => {
+												this.onAdd(submit);
+											}}
+										/>
 									</div>
 								</div>
-							</FocusTrap>
+							</FocusLock>
 						</Modal>)
 				}
 			</TransactionScenario>
