@@ -44,7 +44,7 @@ class Networks extends React.Component {
 		const isFormValid = (address.value && name.value) && (!address.error && !name.error);
 
 		return (
-			<div className="sign-scroll-fix">
+			<div className="sign-scroll">
 				<Form className="main-form">
 					<div className="form-info">
 						<button className="back-link" onClick={() => this.goBack()}>
@@ -81,7 +81,6 @@ class Networks extends React.Component {
 							disabled={!isFormValid}
 						/>
 					</div>
-
 				</Form>
 			</div>
 		);

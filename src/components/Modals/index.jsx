@@ -5,6 +5,8 @@ import ModalLogout from './ModalLogout';
 import ModalWipe from './ModalWipe';
 import ModalInfo from './ModalInfo';
 import ModalAddProposalWIF from './ModalAddProposalWIF';
+import ModalERC20ToWatchList from './ModalERC20ToWatchList';
+import ModalChangeParentAccount from './ModalChangeParentAccount';
 
 export default class ModalsComponent extends React.Component {
 
@@ -16,6 +18,8 @@ export default class ModalsComponent extends React.Component {
 				<ModalWipe />
 				<ModalInfo />
 				<ModalAddProposalWIF />
+				<ModalERC20ToWatchList />
+				<ModalChangeParentAccount />
 			</React.Fragment>
 		);
 	}

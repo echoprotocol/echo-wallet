@@ -1,0 +1,74 @@
+.table-key-value {
+	font-size: 0;
+	border-collapse: collapse;
+	margin: 3px 2px;
+
+	.key {
+		font-family: proxima;
+		font-weight: 600;
+		color: rgba(#3B3B3B, 0.5);
+		font-size: 14px;
+		padding: 0 40px 0 0;
+		white-space: nowrap;
+		vertical-align: baseline;
+		line-height: 40px;
+	}
+	
+	.val {
+		width: 100%;
+		font-size: 14px;
+		vertical-align: text-top;
+	}
+	
+	.val-wrap {
+		display: flex;
+		align-items: center;
+	}
+
+	.val-hint {
+		color: #3B3B3B;
+		display: inline-block;
+		margin: 0 0 0 7px;	
+	}
+
+	.link-btn {
+		font-size: 14px;
+	}
+
+	.balance-wrap {
+		display: flex;
+		color: #3B3B3B;
+		font-size: 14px;
+
+		.balance {
+			font-family: proxima;
+			font-weight: 600;
+			margin-right: 3px;
+		}
+	}
+
+	.balance-wrap + button {
+		margin: 0 0 0 20px;
+		width: 100px;
+	}
+
+	.balance-wrap + .assets-balance-dropdown {
+		margin: 0 0 0 12px;
+	}
+
+	textarea {
+		min-height: 140px;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		padding: 12px 0 0;
+	}
+	
+	.action-btn {
+		margin: 4px 0 0 auto;
+	}
+	
+                    
+}

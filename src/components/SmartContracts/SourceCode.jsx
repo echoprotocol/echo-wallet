@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/webpack-resolver';
 
 import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
 
@@ -142,6 +143,7 @@ class SourceCode extends React.Component {
 						height="384px"
 						mode="javascript"
 						name="editor"
+						theme="textmate"
 						enableLiveAutocompletion
 						editorProps={{ $blockScrolling: true }}
 						onLoad={(editor) => { this.onEditorLoad(editor); }}
@@ -151,6 +153,9 @@ class SourceCode extends React.Component {
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
+						setOptions={{
+							useWorker: false,
+						}}
 					/>
 					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
 				</div>

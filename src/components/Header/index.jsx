@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
+import { Map } from 'immutable';
 
 import { NavLink } from 'react-router-dom';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import { initAccount } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
-import { MODAL_LOGOUT } from '../../constants/ModalConstants';
+import { MODAL_LOGOUT, MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 import { HEADER_TITLE } from '../../constants/GlobalConstants';
@@ -58,7 +60,7 @@ class Header extends React.Component {
 	}
 
 
-	onChangeAccount(e, name) {
+	onChangeAccount(name) {
 		const { accountName, networkName } = this.props;
 
 		if (accountName === name) {
@@ -69,7 +71,13 @@ class Header extends React.Component {
 	}
 
 	onRemoveAccount(name) {
-		this.props.openModal({ accountName: name });
+		this.props.openModal(MODAL_LOGOUT, { accountName: name });
+	}
+
+	onChangeParentAccount(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		this.props.openModal(MODAL_CHANGE_PARENT_ACCOUNT);
 	}
 
 	onDropdownChange(e, value) {
@@ -131,36 +139,74 @@ class Header extends React.Component {
 		);
 	}
 
+	renderUser(name, accountId, amount, precision, symbol) {
+		return (
+			<div key={name} className="user-item-wrap">
+				<button
+					className="user-item"
+					onClick={() => this.onChangeAccount(name)}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName={name} />
+					</div>
+					<div className="user-base-info">
+						<div className="name">{name}</div>
+						<div className="id">{accountId}</div>
+					</div>
+					<div className="balance">
+						<span>{formatAmount(amount, precision) || '0'}</span>
+						<span>{symbol || 'ECHO'}</span>
+					</div>
+				</button>
+				<button
+					className="logout-user-btn"
+					onClick={() => this.onRemoveAccount(name)}
+				/>
+			</div>
+		);
+	}
+
+	renderUserWithParent(name, accountId, amount, precision, symbol) {
+		const { delegate } = this.props;
+		return (
+			<div key={name} className="parent-user-wrap">
+				{this.renderUser(name, accountId, amount, precision, symbol)}
+				<div className="divider" />
+				<button
+					className="user-item"
+					onClick={() => {}}
+				>
+					<div className="avatar-wrap">
+						<Avatar accountName={delegate.get('name')} />
+					</div>
+					<div className="user-base-info">
+						<div className="name-wrap">
+							<div className="name">{delegate.get('name')}</div>
+							<div className="parent-label">(delegated to)</div>
+						</div>
+						<div className="id">{delegate.get('id')}</div>
+					</div>
+					<a
+						href=""
+						className="parent-link"
+						onClick={(e) => this.onChangeParentAccount(e)}
+					> Change
+					</a>
+				</button>
+
+			</div>
+		);
+	}
+
 	renderList() {
 		const { preview, accountName } = this.props;
 		return preview.map(({
 			accountId,
 			name, balance: { amount, precision, symbol },
 		}) => {
-			const content = (
-				<div key={name} className="user-item-wrap">
-					<button
-						className="user-item"
-						onClick={(e) => this.onChangeAccount(e, name)}
-					>
-						<div className="avatar-wrap">
-							<Avatar accountName={name} />
-						</div>
-						<div className="user-base-info">
-							<div className="name">{name}</div>
-							<div className="id">{accountId}</div>
-						</div>
-
-						<div className="balance">
-							<span>{formatAmount(amount, precision) || '0'}</span>
-							<span>{symbol || 'ECHO'}</span>
-						</div>
-					</button>
-					<button
-						className="logout-user-btn"
-						onClick={() => this.onRemoveAccount(name)}
-					/>
-				</div>
+			const content = (accountName === name ?
+				this.renderUserWithParent(name, accountId, amount, precision, symbol) :
+				this.renderUser(name, accountId, amount, precision, symbol)
 			);
 
 			return ({
@@ -276,6 +322,7 @@ Header.propTypes = {
 	transactionData: PropTypes.object,
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	delegate: PropTypes.object.isRequired,
 };
 
 Header.defaultProps = {
@@ -283,17 +330,24 @@ Header.defaultProps = {
 };
 
 export default withRouter(connect(
-	(state) => ({
-		accountName: state.global.getIn(['activeUser', 'name']),
-		networkName: state.global.getIn(['network', 'name']),
-		assets: state.balance.get('assets').toJS(),
-		preview: state.balance.get('preview').toJS(),
-		totalFrozenFunds: state.balance.get('totalFrozenFunds'),
-		showBackButton: state.global.get('showBackButton'),
-		transactionData: state.transaction.get('details'),
-	}),
+	(state) => {
+		const currentAccountId = state.global.getIn(['activeUser', 'id']);
+		const currentAccount = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccountId]);
+		const delegateId = currentAccount.getIn(['options', 'delegating_account']);
+
+		return {
+			accountName: state.global.getIn(['activeUser', 'name']),
+			networkName: state.global.getIn(['network', 'name']),
+			assets: state.balance.get('assets').toJS(),
+			preview: state.balance.get('preview').toJS(),
+			totalFrozenFunds: state.balance.get('totalFrozenFunds'),
+			showBackButton: state.global.get('showBackButton'),
+			transactionData: state.transaction.get('details'),
+			delegate: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, delegateId]) || Map({}),
+		};
+	},
 	(dispatch) => ({
-		openModal: (accountName) => dispatch(openModal(MODAL_LOGOUT, accountName)),
+		openModal: (type, accountName) => dispatch(openModal(type, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 	}),

@@ -1,4 +1,4 @@
-import { validators, PublicKey } from 'echojs-lib';
+import { validators, PublicKey, OPERATIONS_IDS } from 'echojs-lib';
 import BN from 'bignumber.js';
 import validate from 'bitcoin-address-validation';
 
@@ -10,6 +10,7 @@ import {
 	PUBLIC_KEY_LENGTH,
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
+import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConsts';
 
 const reg = /^(([\da-fA-F]){2})*$/;
 
@@ -37,8 +38,8 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
-	if (!(/[.\-/0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
-		return `${suffix} contain digit, number, dash, slash or consist only of consonants`;
+	if (!(/[.\-0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
+		return `${suffix} contain digit, number, dash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
 		suffix = 'Each account segment should';
@@ -574,6 +575,19 @@ export const isBackupAddress = (hex) => {
 			validationData.type === 'p2pkh';
 	} catch (e) {
 		return false;
+	}
+};
+
+export const getSidechainTrxAsset = (id) => {
+	switch (id) {
+		case OPERATIONS_IDS.SIDECHAIN_ETH_DEPOSIT:
+		case OPERATIONS_IDS.SIDECHAIN_ETH_WITHDRAW:
+		case OPERATIONS_IDS.SIDECHAIN_ISSUE:
+		case OPERATIONS_IDS.SIDECHAIN_BURN:
+			return SIDECHAIN_ASSETS_DATA.eETH;
+		case OPERATIONS_IDS.SIDECHAIN_BTC_WITHDRAW:
+			return SIDECHAIN_ASSETS_DATA.eBTC;
+		default: return null;
 	}
 };
 

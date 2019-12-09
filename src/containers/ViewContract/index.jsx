@@ -6,16 +6,20 @@ import { withRouter } from 'react-router';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
-import { formatAbi } from '../../actions/ContractActions';
+import { formatAbi, getFullContract } from '../../actions/ContractActions';
 import { clearForm } from '../../actions/FormActions';
 import { resetConverter } from '../../actions/ConverterActions';
 import { setDefaultAsset } from '../../actions/AmountActions';
+import ModalReplenish from '../../components/Modals/ModalReplenish';
 
 import { FORM_VIEW_CONTRACT, FORM_CALL_CONTRACT, FORM_CALL_CONTRACT_VIA_ID } from '../../constants/FormConstants';
 
 import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
+import TabGeneralInfo from './TabGeneralInfo';
+import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST, MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
+import { openModal } from '../../actions/ModalActions';
 
 class ViewContract extends React.Component {
 
@@ -23,7 +27,7 @@ class ViewContract extends React.Component {
 		this.props.formatAbi(this.props.match.params.id);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.setDefaultAsset();
 	}
 
@@ -37,7 +41,22 @@ class ViewContract extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="View properties" />,
+				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="General info" />,
+				render: () => (
+					<Tab.Pane className="scroll-fix">
+						<TabGeneralInfo
+							owner={this.props.owner}
+							activeUser={this.props.activeUser}
+							openWhitelistModal={this.props.openWhitelistModal}
+							openBlacklistModal={this.props.openBlacklistModal}
+							openToWhitelistModal={this.props.openToWhitelistModal}
+							openToBlacklistModal={this.props.openToBlacklistModal}
+						/>
+					</Tab.Pane>
+				),
+			},
+			{
+				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="View properties" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -45,7 +64,7 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="call contracts" />,
+				menuItem: <Button className="tab-btn" key={2} onClick={(e) => e.target.blur()} content="call contracts" />,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />
@@ -54,14 +73,17 @@ class ViewContract extends React.Component {
 			},
 		];
 		return (
-			<div>
-				<ContractSettings />
-				<Tab
-					menu={{ tabular: false }}
-					className="tab-full"
-					panes={panes}
-				/>
-			</div>
+			<React.Fragment>
+				<ModalReplenish />
+				<div>
+					<ContractSettings />
+					<Tab
+						menu={{ tabular: false }}
+						className="tab-full"
+						panes={panes}
+					/>
+				</div>
+			</React.Fragment>
 		);
 	}
 
@@ -74,15 +96,29 @@ ViewContract.propTypes = {
 	clearContract: PropTypes.func.isRequired,
 	resetConverter: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
+	openWhitelistModal: PropTypes.func.isRequired,
+	openBlacklistModal: PropTypes.func.isRequired,
+	openToWhitelistModal: PropTypes.func.isRequired,
+	openToBlacklistModal: PropTypes.func.isRequired,
+	owner: PropTypes.string.isRequired,
+	activeUser: PropTypes.string.isRequired,
 };
 
 export default withRouter(connect(
-	() => ({}),
+	(state) => ({
+		owner: state.contract.get('owner'),
+		activeUser: state.global.getIn(['activeUser', 'id']),
+	}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),
 		formatAbi: (value) => dispatch(formatAbi(value)),
 		clearContract: () => dispatch(ContractReducer.actions.reset()),
 		resetConverter: () => dispatch(resetConverter()),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_CALL_CONTRACT_VIA_ID)),
+		getFullContract: (id) => dispatch(getFullContract(id)),
+		openWhitelistModal: () => dispatch(openModal(MODAL_WHITELIST)),
+		openBlacklistModal: () => dispatch(openModal(MODAL_BLACKLIST)),
+		openToWhitelistModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
+		openToBlacklistModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 	}),
 )(ViewContract));

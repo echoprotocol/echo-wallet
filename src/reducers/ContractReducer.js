@@ -6,7 +6,13 @@ const DEFAULT_FIELDS = Map({
 	constants: List([]),
 	id: '',
 	name: '',
+	abi: '',
+	bytecode: '',
+	balances: [],
 	intervalId: null,
+	owner: '',
+	subscribeCallback: () => {},
+	loading: false,
 });
 
 export default createModule({
@@ -22,7 +28,7 @@ export default createModule({
 		},
 		reset: {
 			reducer: (state) => {
-				state = DEFAULT_FIELDS;
+				state = DEFAULT_FIELDS.set('loading', state.get('loading'));
 
 				return state;
 			},

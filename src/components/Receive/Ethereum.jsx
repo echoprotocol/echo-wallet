@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import BN from 'bignumber.js';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
@@ -9,6 +8,7 @@ import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
 import TransactionScenario from '../../containers/TransactionScenario';
+import ActionBtn from '../ActionBtn';
 
 
 class Ethereum extends React.Component {
@@ -50,9 +50,10 @@ class Ethereum extends React.Component {
 							name="public-key"
 							value={address}
 						/>
-						<CopyToClipboard text={address}>
-							<Button icon="copy" className="input-copy-btn" />
-						</CopyToClipboard>
+						<ActionBtn
+							icon="icon-copy"
+							copy={address}
+						/>
 					</div>
 				</Form.Field>
 				<AmountField
@@ -70,6 +71,11 @@ class Ethereum extends React.Component {
 					showAvailable={false}
 					receive
 					labelText="amount"
+					warningMessage={
+						<span className="warning-message">
+							Send eETH to <span className="special">Original Blockchain</span> to get ETH or send it within ECHO Network.
+						</span>
+					}
 				/>
 				<QrCode link={qrText} />
 			</React.Fragment>

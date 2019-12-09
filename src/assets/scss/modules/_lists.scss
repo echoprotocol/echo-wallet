@@ -22,7 +22,10 @@
 			span {
 				margin-left: 4px;
 				color: $main-color;
-				cursor: pointer;
+
+				&:not(.disabled) {
+					cursor: pointer;
+				}
 
 				&.disabled {
 					color: $gray;
@@ -38,20 +41,44 @@
 
 
 
+.watchlist-line {
+	display: block;
 
+	&:not(:last-child) {
+		margin: 0 0 12px 0;
+	}
+}
 
+.watchlist-col {
+	&:first-child {
+		display: flex;
+		height: 27px;
+		align-items: center;
+		margin: 0 5px 0 0;
+		align-self: flex-start;
+	}
 
+	&:last-child {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		
+		.contract-type-dropdown + .item {
+			&.air {
+				margin-right: 10px;
+			}
+		}
+	}
+
+	.contract-type-dropdown {
+		align-self: auto;
+		margin-right: 10px;
+	}
+
+}
 
 .watchlist {
     margin: 30px 0;
-
-    &-line {
-        display: block;
-
-        &:not(:last-child) {
-            margin: 0 0 12px 0;
-        }
-    }
 
     .error-wrap {
         margin-bottom: 0;
@@ -64,19 +91,20 @@
             &:not(:last-child) {
                 margin: 0 0 12px 0;
             }
-        }
+		}
+		
         &.inner {
             margin-left: 29px;
-        }
+		}
+		
         &--h {
             display: flex;
         }
 
         span {
             &:not(.error-message) {
-                font-size: 1em;
+                font-size: 14px;
                 color: $black;
-                letter-spacing: -.2px;
             }
 
             &:not(:last-child) {
@@ -102,7 +130,7 @@
             }
         }
 
-        .input.mini.ui {
+        .input.mini {
             input {
                 height: 26px;
                 font-size: 14px;
@@ -110,7 +138,7 @@
             }
         }
 
-        .button.mini.ui {
+        .button.mini {
             height: 26px;
             font-size: 12px;
             line-height: 10px;
@@ -122,43 +150,6 @@
         padding: 10px 30px 0;
     }
 
-    &-col {
-        &:first-child {
-            display: flex;
-            height: 27px;
-            align-items: center;
-            margin: 0 5px 0 0;
-            align-self: flex-start;
-        }
-
-        &:last-child {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-end;
-
-            .item {
-                &.air {
-                    margin-right: 10px;
-                }
-
-                &.value {
-                    line-height: 25px;
-                    margin-bottom: -1px;
-                }
-
-                margin-top: 10px;
-                min-height: 26px;
-            }
-        }
-
-        .ui.dropdown {
-            &.contract-type-dropdown {
-                align-self: auto;
-                margin-right: 10px;
-            }
-        }
-
-    }
 
     .icon-dotted {
         color: $gray;
@@ -177,7 +168,7 @@
     }
 
     .row-title {
-        &+.input.mini.ui {
+        & + .input.mini {
             margin-left: 10px;
         }
     }
@@ -264,7 +255,7 @@
 
     .bytecode {
         &-wrap {
-            &+.ui.button {
+            & + .button {
                 margin: 15px 0 0 auto;
                 display: flex;
                 align-items: center;
@@ -278,7 +269,8 @@
         &-method {
             margin-bottom: 10px;
             font-size: 13px;
-            font-family: proximanovaSemibold;
+			font-family: proxima;
+			font-weight: 600;
         }
 
         &-item {
@@ -291,7 +283,7 @@
 
     }
 
-    .ui.button {
+    .button {
         margin-top: -6px;
         padding: 5px 8px 4px;
     }

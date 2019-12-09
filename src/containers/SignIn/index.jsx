@@ -100,10 +100,10 @@ class SignIn extends React.Component {
 
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
-						<label htmlFor="PasOrWifiKey">Password or WIF-key</label>
+						<label htmlFor="PasOrWifiKey">WIF-key</label>
 						<input
 							type="password"
-							placeholder="Password or WIF-key"
+							placeholder="WIF-key"
 							name="wif"
 							value={wif.value}
 							onChange={(e) => this.onChange(e)}
@@ -115,7 +115,7 @@ class SignIn extends React.Component {
 				</div>
 				<div className="form-panel">
 					<span className="sign-nav">
-					Don’t have an account?
+						Don’t have an account?
 						<Link
 							className={classnames('link', 'main-link', { disabled: loading })}
 							to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
@@ -150,7 +150,7 @@ class SignIn extends React.Component {
 			<AuthorizationScenario authorize={(password) => this.onClick(password)}>
 				{
 					(submit) => (
-						<div className="sign-scroll-fix">
+						<div className="sign-scroll">
 							{ this.renderSignIn(submit) }
 						</div>
 					)

@@ -1,0 +1,44 @@
+.tag {
+	position: relative;
+	font-size: 10px;
+	font-family: proxima;
+	font-weight: 600;
+	text-transform: uppercase;
+	border-radius: 2px;
+	color: $main-color;
+	height: 16px;
+	border: 1px solid rgba($main-color, .2);
+	padding: 0 4px;
+	transition:
+		color $speed,
+		border-color $speed,
+		background-color $speed;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(3px);
+		}
+	}
+
+	&:not(:last-child) {
+		margin: 0 6px 0 0;
+	}
+
+	&:hover {
+		color: #fff;
+		border-color: $main-color;
+		background-color: $main-color;
+	}
+
+	&.active {
+		color: #fff;
+		border-color: $main-color;
+		background-color: $main-color;
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .2);
+		color: rgba($main-color, .7);
+		background-color: transparent;
+	}
+}

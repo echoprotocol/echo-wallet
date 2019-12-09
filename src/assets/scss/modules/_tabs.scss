@@ -1,7 +1,9 @@
 .tab-full {
     .scroll-fix {
-        max-height: calc(100vh - 206px);
-        overflow: overlay;
+		max-height: calc(100vh - 206px);
+		height: 100vh;
+		overflow: auto;
+		position: relative;
     }
 
     &.hide-menu {
@@ -13,12 +15,14 @@
             display: none;
         }
     }
+	
 	.control-wrap {
 		background-color: rgb(247, 247, 247);
 		width: 100%;
 		border-top: 1px solid $bd-gray;
 	}
-    .control-panel {
+	
+	.control-panel {
 		max-width: 900px;
 		margin: auto;
 
@@ -36,35 +40,51 @@
 			margin-bottom: 0;
 		}
 
-		li {
-			.transparent {
-				i {
-					&:before {
-						font-size: 1.05em;
-						vertical-align: middle;
-					}
-				}
+		li:not(:last-child) {
+			margin-right: 40px;
+		}
+
+		.action-panel {
+			margin: 0 0 0 auto;
+		}
+
+		.id-panel {
+			display: flex;
+			align-items: center;
+		}
+
+		.balance-panel {
+			display: flex;
+			align-items: center;
+		}
+
+		.balance-wrap {
+			display: flex;
+			align-items: center;
+
+			.balance {
+				color: #5C637D;
+				font-weight: 600;
+				margin: 0 5px 0 0;
 			}
 
-			&:not(:last-child) {
-				margin-right: 40px;
+			.coin {
+				color: rgba(#5C637D, .9);
+				font-weight: 300;
 			}
+		}
 
-			&.id {
-				display: flex;
-				align-items: center;
-			}
 
-			&.name {
-				display: flex;
-				align-items: center;
-				margin: -1px auto 0 0;
-			}
+		.name-panel {
+			display: flex;
+			align-items: center;
+			margin: -1px auto 0 0;
 		}
 
 		.label {
 			color: $gray;
 			margin-right: 8px;
+			white-space: nowrap;
 		}
 
 		.value {
@@ -147,20 +167,20 @@
 
     .tab {
         background-color: #fff;
-        border: 0;
+		border: 0;
+		
     }
 
     .tab-content {
         max-width: 860px;
         margin: auto;
         padding: 20px 45px 60px;
-        overflow: -webkit-paged-x;
 
         @media (max-width: 1200px) {
             margin: 0;
             max-width: 100%;
         }
-    }
+	}
 }
 
 .tab-content {
@@ -170,13 +190,19 @@
 
     .watchlist {
         margin: 0
-    }
+	}
+	
+	.table-key-value {
+		width: 100%;
+		max-width: 612px;
+	}
 }
+
+
 
 .tab-btn {
 	border: 0;
 	font-size: 12px;
-	font-weight: 600;
 	color: rgb(168, 168, 168);
 	border-bottom: 2px solid transparent;
 	border-radius: 0;
@@ -188,7 +214,8 @@
 	position: relative;
 	cursor: pointer;
 	text-transform: uppercase;
-	font-family: proximaNovaSemibold;
+	font-family: proxima;
+	font-weight: 600;
 	&:not(:last-child) {
 		margin-right: 36px;
 	}

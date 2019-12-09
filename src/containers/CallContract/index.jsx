@@ -45,6 +45,7 @@ class AddContractComponent extends React.Component {
 										type="text"
 										placeholder="Contract ID"
 										name="id"
+										autoComplete="off"
 										className="ui input"
 										value={id.value}
 										onChange={(e) => this.onInput(e)}
