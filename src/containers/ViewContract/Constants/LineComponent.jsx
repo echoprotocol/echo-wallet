@@ -53,7 +53,9 @@ class LineComponent extends React.Component {
 				{
 					constant.inputs.map((input, index) => {
 						const id = index;
-						const errorValue = inputs.toJS()[constant.name][index].error;
+						const errorValue = inputs.toJS()[constant.name] &&
+							inputs.toJS()[constant.name][index] &&
+							inputs.toJS()[constant.name][index].error;
 						return (
 							<Form.Field key={id} className={classnames({ error: errorValue, 'error-wrap': true })}>
 								{ id !== 0 && <span className="comma item">,</span> }
