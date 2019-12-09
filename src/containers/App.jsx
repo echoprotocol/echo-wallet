@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Segment, Sidebar } from 'semantic-ui-react';
 import { withRouter, matchPath } from 'react-router';
+import { IntlProvider } from 'react-intl';
 
 import { connection, toggleBar } from '../actions/GlobalActions';
 
@@ -11,6 +12,7 @@ import Loading from '../components/Loading/index';
 import SidebarMenu from '../components/SideMenu/index';
 import Header from '../components/Header/index';
 import GlobalHeader from '../components/GlobalHeader';
+import en from '../translations/en.json';
 
 import Footer from '../components/Footer/index';
 import Toast from '../components/Toast';
@@ -20,6 +22,7 @@ import {
 	VIEW_CONTRACT_PATH,
 	VIEW_TRANSACTION_PATH,
 } from '../constants/RouterConstants';
+import TranslateHelper from '../helpers/TranslateHelper';
 
 class App extends React.Component {
 
@@ -57,7 +60,7 @@ class App extends React.Component {
 		const { children, location } = this.props;
 		return (
 			<div className="wrapper">
-				{ !PUBLIC_ROUTES.includes(location.pathname) && <Header /> }
+				{!PUBLIC_ROUTES.includes(location.pathname) && <Header />}
 				<div className="content">
 					{children}
 				</div>
@@ -79,7 +82,7 @@ class App extends React.Component {
 								dimmed={this.props.visibleBar}
 								onClick={() => this.onPusher()}
 							>
-								{ this.renderWrapper() }
+								{this.renderWrapper()}
 							</Sidebar.Pusher>,
 						] : this.renderWrapper()
 				}
@@ -93,29 +96,33 @@ class App extends React.Component {
 		return (
 			<div className="loader-container">
 				<Loading disconnected={inited && disconnected} />
-				{ inited && disconnected ? <Footer /> : null }
+				{inited && disconnected ? <Footer /> : null}
 			</div>
 		);
 	}
 
 	render() {
-		const { globalLoading } = this.props;
+		const { globalLoading, language } = this.props;
+		const messages = { en };
 
+		const flatten = TranslateHelper.flattenMessages(messages[language]);
 		return (
-			<React.Fragment>
-				{ ELECTRON ? <GlobalHeader /> : null }
+			<IntlProvider locale={language} messages={flatten}>
+				<React.Fragment>
+					{ELECTRON ? <GlobalHeader /> : null}
 
 
-				<div className="global-wrapper">
-					<Segment>
-						{globalLoading ? this.renderLoading() : this.renderSidebar()}
-					</Segment>
+					<div className="global-wrapper">
+						<Segment>
+							{globalLoading ? this.renderLoading() : this.renderSidebar()}
+						</Segment>
 
-					<Modals />
-					<Toast />
+						<Modals />
+						<Toast />
 
-				</div>
-			</React.Fragment>
+					</div>
+				</React.Fragment>
+			</IntlProvider>
 		);
 	}
 
@@ -128,6 +135,7 @@ App.propTypes = {
 	history: PropTypes.object.isRequired,
 	globalLoading: PropTypes.bool.isRequired,
 	accountId: PropTypes.string.isRequired,
+	language: PropTypes.string.isRequired,
 	networkName: PropTypes.string.isRequired,
 	children: PropTypes.element.isRequired,
 	visibleBar: PropTypes.bool.isRequired,
@@ -144,6 +152,7 @@ export default withRouter(connect(
 	(state) => ({
 		globalLoading: state.global.get('globalLoading'),
 		inited: state.global.get('inited'),
+		language: state.global.get('language'),
 		visibleBar: state.global.get('visibleBar'),
 		accountId: state.global.getIn(['activeUser', 'id']),
 		networkName: state.global.getIn(['network', 'name']),

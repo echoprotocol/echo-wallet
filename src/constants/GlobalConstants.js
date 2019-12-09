@@ -172,3 +172,5 @@ export const SIDECHAIN_ASSETS_SYMBOLS = {
 	1: 'eBTC',
 	2: 'eETH',
 };
+
+export const EN_LOCALE = 'en';
