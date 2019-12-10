@@ -46,6 +46,7 @@ class SignUp extends React.Component {
 	}
 
 	componentWillUnmount() {
+		this.props.clearForm(FORM_SIGN_UP);
 		this.props.clearForm(FORM_SIGN_UP_OPTIONS);
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
@@ -313,7 +314,8 @@ export default connect(
 		createAccount: (value, isAdd, isCustomWIF) =>
 			dispatch(createAccount(value, isAdd, isCustomWIF)),
 		createAccountTransaction: (sender, value) => dispatch(createAccountTransaction(sender, value)),
-		validateCreateAccount: (value, isAdd) => dispatch(validateCreateAccount(value, isAdd)),
+		validateCreateAccount: (value, isAdd, isCustomWIF) =>
+			dispatch(validateCreateAccount(value, isAdd, isCustomWIF)),
 		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
