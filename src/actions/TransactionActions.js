@@ -75,7 +75,6 @@ import {
 	validateAmount,
 	validateFee,
 	validateAccountAddress,
-	validateAccountName,
 } from '../helpers/ValidateHelper';
 import { formatError } from '../helpers/FormatHelper';
 
@@ -135,6 +134,46 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		return null;
 	}
 };
+
+/**
+ * @method setAdditionalAccountInfo
+ *
+ * @param {String} value
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const setAdditionalAccountInfo = (value) => async (dispatch, getState) => {
+	if (!value) {
+		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+		return;
+	}
+	switch (getState().form.getIn([FORM_TRANSFER, 'subjectTransferType'])) {
+		case ADDRESS_SUBJECT_TYPE: {
+			const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
+			if (!accountId) {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+				return;
+			}
+			const account = await echo.api.getObject(accountId);
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
+			break;
+		}
+		case ACCOUNT_ID_SUBJECT_TYPE: {
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${value}`));
+			break;
+		}
+		case ACCOUNT_NAME_SUBJECT_TYPE: {
+			try {
+				const account = await echo.api.getAccountByName(value);
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
+			} catch (e) {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+			}
+			break;
+		}
+		default: dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+	}
+};
+
 /**
  * @method getFreezeBalanceFee
  *
@@ -507,6 +546,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 	return true;
 };
 
+
 export const subjectToSendSwitch = (value) => async (dispatch) => {
 	if (validateAccountAddress(value)) {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
@@ -514,17 +554,9 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			checked: true,
 			error: null,
 		}));
-		const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
-		if (!accountId) {
-			return ADDRESS_SUBJECT_TYPE;
-		}
-		const account = await echo.api.getObject(accountId);
-		if (!account) {
-			return ADDRESS_SUBJECT_TYPE;
-		}
-		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
+		dispatch(setAdditionalAccountInfo(value));
 		return ADDRESS_SUBJECT_TYPE;
 
 	} else if (validators.isContractId(value)) {
@@ -551,18 +583,12 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			return false;
 		}
 		value = account.name;
-		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
+		dispatch(setAdditionalAccountInfo(value));
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
 	} else {
-		if (value && !validateAccountName(value)) {
-			const account = await echo.api.getAccountByName(value);
-			if (account) {
-				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
-			}
-		} else {
-			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
-		}
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
+		dispatch(setAdditionalAccountInfo(value));
+
 	}
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
