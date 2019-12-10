@@ -626,6 +626,7 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 			error: null,
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
+		await dispatch(setAdditionalAccountInfo(''));
 		return WITHDRAW_SUBJECT_TYPE;
 	}
 
@@ -637,7 +638,7 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 		return ADDRESS_SUBJECT_TYPE;
 
 	} else if (validators.isContractId(value)) {
@@ -653,7 +654,7 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 			error: null,
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
-		dispatch(setAdditionalAccountInfo(''));
+		await dispatch(setAdditionalAccountInfo(''));
 
 		return CONTRACT_ID_SUBJECT_TYPE;
 
@@ -666,10 +667,10 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 		}
 		value = account.name;
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 	} else {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 	}
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));

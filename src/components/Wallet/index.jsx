@@ -176,6 +176,7 @@ class Wallet extends React.Component {
 								this.props.setAsset(symbol, 'tokens');
 								this.props.setContractFees();
 							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 					</div>
 				</div>
