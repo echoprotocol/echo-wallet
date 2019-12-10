@@ -558,9 +558,9 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			const account = await echo.api.getAccountByName(value);
 			if (account) {
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
-			} else {
-				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 			}
+		} else {
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 		}
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
 	}
