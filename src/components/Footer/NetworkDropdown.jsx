@@ -15,6 +15,14 @@ import ProgressBar from '../ProgressBar';
 
 class Network extends React.PureComponent {
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			open: false,
+		};
+	}
+
 	onDropdownChange(e, value) {
 		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
 			return;
@@ -29,7 +37,7 @@ class Network extends React.PureComponent {
 
 	onDeleteNetwork(network, e) {
 		e.preventDefault();
-
+		this.setState({ open: false });
 		this.props.deleteNetwork(network);
 	}
 
@@ -56,39 +64,43 @@ class Network extends React.PureComponent {
 				content: (
 
 					<React.Fragment>
-						<div className="label-text">
-							<span className="name">{i.name}</span>
+						<div className="network">
+							<div className="label-text">
+								<span className="name">{i.name}</span>
+							</div>
+							<span className="label-link">{i.url}</span>
+							{ !NETWORKS.find((n) => n.name === i.name) ?
+								<Button
+									id="btn-dlt"
+									onClick={(e) => this.onDeleteNetwork(i, e)}
+									className="icon-remove"
+								/> : null
+							}
 						</div>
-						<span className="label-link">{i.url}</span>
-						{ !NETWORKS.find((n) => n.name === i.name) ?
-							<Button
-								id="btn-dlt"
-								onClick={(e) => this.onDeleteNetwork(i, e)}
-								className="icon-remove"
-							/> : null
-						}
+						<div className="node-info">sdsdsdsd</div>
 					</React.Fragment>
 				),
 			}));
 	}
 
-	getDivider(key) {
-		return {
-			key,
-			disabled: true,
-			selected: false,
-			className: 'item-divider',
-		};
-	}
-
 	render() {
+		const { open } = this.state;
 		const {
 			networks, network, loading, disconnected, warning,
 		} = this.props;
-		let options = this.getList(NETWORKS);
+		let options = [
+			{
+				value: 'Choose network',
+				key: 'choose-network',
+				className: 'item-header',
+				content: 'Choose network',
+				disabled: true,
+				onClick: (e) => e.preventDefault(),
+			},
+		];
+		options = options.concat(this.getList(NETWORKS));
 
 		if (networks.length || networks.length === 0) {
-			options.push(this.getDivider('divider'));
 			options = options.concat(this.getList(networks));
 		}
 		options.push({
@@ -100,44 +112,44 @@ class Network extends React.PureComponent {
 		});
 
 		return (
-			<React.Fragment>
-				<Dropdown
-					options={options}
-					onChange={(e, { value }) => this.onDropdownChange(e, value)}
-					direction="left"
-					icon={false}
-					selectOnBlur={false}
-					upward
-					disabled={loading}
-					className={classnames('network-dropdown', {
-						disconnected,
-						warning,
-					})}
-					trigger={
-						<div className="dropdown-trigger">
+			<Dropdown
+				open={open}
+				options={options}
+				onChange={(e, { value }) => this.onDropdownChange(e, value)}
+				direction="left"
+				icon={false}
+				selectOnBlur={false}
+				upward
+				disabled={loading}
+				onClick={() => { if (!open) { this.setState({ open: true }); } }}
+				onBlur={() => this.setState({ open: false })}
+				className={classnames('network-dropdown', {
+					disconnected,
+					warning,
+				})}
+				trigger={
+					<div className="dropdown-trigger">
 
-							<span className="description">
-								{ disconnected ? 'Disconnected:' : 'Network:' }
-							</span>
-							<span className="status connected">
-								<div className="ellipsis">{network.name}</div>
-							</span>
+						<span className="description">
+							{ disconnected ? 'Disconnected:' : 'Network:' }
+						</span>
+						<span className="status connected">
+							<div className="ellipsis">{network.name}</div>
+						</span>
 
-							<ProgressBar
-								percentage={30}
-								size={20}
-								value={64}
-							/>
-							<span className="pipeline-block">
+						<ProgressBar
+							percentage={30}
+							size={20}
+							value={64}
+						/>
+						<span className="pipeline-block">
 								Block
-								<span>{this.props.lastBlock}</span>
-							</span>
-							<span className="icon dropdown" />
-						</div>
-					}
-				/>
-
-			</React.Fragment>
+							<span>{this.props.lastBlock}</span>
+						</span>
+						<span className="icon dropdown" />
+					</div>
+				}
+			/>
 		);
 
 
