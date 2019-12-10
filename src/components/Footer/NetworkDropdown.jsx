@@ -11,6 +11,8 @@ import { FORM_SIGN_UP } from '../../constants/FormConstants';
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
+import ProgressBar from '../ProgressBar';
+
 class Network extends React.PureComponent {
 
 	onDropdownChange(e, value) {
@@ -98,34 +100,45 @@ class Network extends React.PureComponent {
 		});
 
 		return (
-			<Dropdown
-				options={options}
-				onChange={(e, { value }) => this.onDropdownChange(e, value)}
-				direction="left"
-				icon={false}
-				selectOnBlur={false}
-				upward
-				disabled={loading}
-				className={classnames('network-dropdown', {
-					disconnected,
-					warning,
-				})}
-				trigger={
-					<div className="dropdown-trigger">
-						<span className="description">
-							{ disconnected ? 'Disconnected:' : 'Network:' }
-						</span>
-						<span className="status connected">
-							<div className="ellipsis">{network.name}</div>
-						</span>
-						<span className="pipeline-block">
-                            Block
-							<span>{this.props.lastBlock}</span>
-						</span>
-						<span className="icon dropdown" />
-					</div>
-				}
-			/>
+			<React.Fragment>
+				<Dropdown
+					options={options}
+					onChange={(e, { value }) => this.onDropdownChange(e, value)}
+					direction="left"
+					icon={false}
+					selectOnBlur={false}
+					upward
+					disabled={loading}
+					className={classnames('network-dropdown', {
+						disconnected,
+						warning,
+					})}
+					trigger={
+						<div className="dropdown-trigger">
+
+							<span className="description">
+								{ disconnected ? 'Disconnected:' : 'Network:' }
+							</span>
+							<span className="status connected">
+								<div className="ellipsis">{network.name}</div>
+							</span>
+							<span className="pipeline-block">
+		               		Block
+								<span>{this.props.lastBlock}</span>
+							</span>
+							<span className="icon dropdown" />
+						</div>
+					}
+				/>
+				<ProgressBar
+					percentage={50}
+					startColor="#green"
+					endColor="red"
+					gradientId="progress"
+				>
+					<h5> some text </h5>
+				</ProgressBar>
+			</React.Fragment>
 		);
 
 
