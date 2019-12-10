@@ -1,13 +1,12 @@
-/**
- * Base webpack config used across other specific configs
- */
-
 import path from 'path';
 import webpack from 'webpack';
 import fs from 'fs';
+import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 
 import { dependencies } from '../package.json';
+
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 export default {
 	externals: [...Object.keys(dependencies || {})],
@@ -28,8 +27,7 @@ export default {
 	},
 
 	output: {
-		path: path.join(__dirname, '..', 'app'),
-		// https://github.com/webpack/webpack/issues/1114
+		path: path.join(__dirname, '..', 'build'),
 		libraryTarget: 'commonjs2',
 	},
 

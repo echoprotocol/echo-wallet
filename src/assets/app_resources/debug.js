@@ -1,18 +1,35 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-// Modules to control application life and create native browser window
-const {
-	app, BrowserWindow, Menu, shell, ipcMain,
-} = require('electron');
+import {
+	app,
+	BrowserWindow,
+	shell,
+	ipcMain,
+	Menu,
+} from 'electron';
+import getPort from 'get-port';
+import { xor } from 'lodash';
+import notifier from 'node-notifier';
+import rimraf from 'rimraf';
+import { PrivateKey } from 'echojs-lib';
+import { Subject, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
+import { WIN_PLATFORM } from '../../constants/PlatformConstants';
 
-const notifier = require('node-notifier');
-const getPort = require('get-port');
-const rimraf = require('rimraf');
-const { Subject, from } = require('rxjs');
-const { switchMap } = require('rxjs/operators');
-const { xor } = require('lodash');
-const { PrivateKey } = require('echojs-lib');
+import {
+	TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS,
+	DEFAULT_NETWORK_ID,
+} from '../../constants/GlobalConstants';
+
+import {
+	DATA_DIR,
+	CHAIN_MIN_RANGE_PORT,
+	CHAIN_MAX_RANGE_PORT,
+} from '../../constants/ChainConstants';
+
+import getPlatform from '../../../main/GetPlatform';
+import EchoNode from '../../../main/EchoNode';
 
 require('electron-context-menu')({
 	labels: {
@@ -21,17 +38,6 @@ require('electron-context-menu')({
 		paste: 'paste',
 	},
 });
-
-const { WIN_PLATFORM } = require('../../constants/PlatformнуConstants');
-const { TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS, DEFAULT_NETWORK_ID } = require('../../constants/GlobalConstants');
-const {
-	DATA_DIR,
-	CHAIN_MIN_RANGE_PORT,
-	CHAIN_MAX_RANGE_PORT,
-} = require('../../constants/ChainConstants');
-
-const getPlatform = require('../../../main/GetPlatform');
-const EchoNode = require('../../../main/EchoNode');
 
 let mainWindow;
 let quited = false;
