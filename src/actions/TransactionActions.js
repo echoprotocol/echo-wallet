@@ -142,8 +142,8 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAdditionalAccountInfo = (value) => async (dispatch, getState) => {
+	dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 	if (!value) {
-		dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 		return;
 	}
 	switch (getState().form.getIn([FORM_TRANSFER, 'subjectTransferType'])) {
@@ -572,23 +572,23 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			error: null,
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
+		dispatch(setAdditionalAccountInfo(''));
 
 		return CONTRACT_ID_SUBJECT_TYPE;
 
 	} else if (validators.isAccountId(value)) {
-
 		const account = await echo.api.getObject(value);
+
 		if (!account) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid account ID'));
 			return false;
 		}
 		value = account.name;
-		dispatch(setAdditionalAccountInfo(value));
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
+		dispatch(setAdditionalAccountInfo(value));
 	} else {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
 		dispatch(setAdditionalAccountInfo(value));
-
 	}
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
