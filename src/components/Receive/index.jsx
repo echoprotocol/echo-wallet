@@ -18,13 +18,22 @@ class Receive extends React.Component {
 		this.props.getAssetsBalances();
 	}
 
+	getActiveCoinTypeTab() {
+		const { activeCoinTypeTab } = this.props;
+		switch (activeCoinTypeTab) {
+			case 'EBTC': return 1;
+			case 'EETH': return 2;
+			default: return 0;
+		}
+	}
+
 	render() {
 
 		const {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
 			getEthAddress, ethAddress, clearForm,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
-			btcAddress, accountId, activeCoinTypeTab,
+			btcAddress, accountId,
 		} = this.props;
 
 		const internalTabs = [
@@ -65,7 +74,7 @@ class Receive extends React.Component {
 					className="tab-btn"
 					key="1"
 					onClick={(e) => {
-						this.props.setGlobalValue('activeCoinTypeTab', 1);
+						this.props.setGlobalValue('activeCoinTypeTab', 'EBTC');
 						e.target.blur();
 					}}
 					content="Bitcoin"
@@ -90,7 +99,7 @@ class Receive extends React.Component {
 					className="tab-btn"
 					key="2"
 					onClick={(e) => {
-						this.props.setGlobalValue('activeCoinTypeTab', 2);
+						this.props.setGlobalValue('activeCoinTypeTab', 'EETH');
 						e.target.blur();
 					}}
 					content="Ethereum"
@@ -115,7 +124,7 @@ class Receive extends React.Component {
 			<Form className="main-form">
 				<div className="field-wrap">
 					<Tab
-						activeIndex={activeCoinTypeTab}
+						activeIndex={this.getActiveCoinTypeTab()}
 						menu={{
 							tabular: false,
 							className: 'receive-tab-menu',
@@ -160,7 +169,7 @@ Receive.propTypes = {
 	btcAddress: PropTypes.object,
 	accountId: PropTypes.string.isRequired,
 	setGlobalValue: PropTypes.func.isRequired,
-	activeCoinTypeTab: PropTypes.number.isRequired,
+	activeCoinTypeTab: PropTypes.any.isRequired,
 };
 
 Receive.defaultProps = {

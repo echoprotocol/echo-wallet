@@ -10,7 +10,7 @@ import {
 	PUBLIC_KEY_LENGTH,
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
-import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConsts';
+import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConstants';
 
 const reg = /^(([\da-fA-F]){2})*$/;
 
