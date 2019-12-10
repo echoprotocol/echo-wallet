@@ -22,7 +22,7 @@ require('electron-context-menu')({
 	},
 });
 
-const { WIN_PLATFORM } = require('../../constants/PlatformConstants');
+const { WIN_PLATFORM } = require('../../constants/PlatformнуConstants');
 const { TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS, DEFAULT_NETWORK_ID } = require('../../constants/GlobalConstants');
 const {
 	DATA_DIR,
@@ -33,8 +33,6 @@ const {
 const getPlatform = require('../../../main/GetPlatform');
 const EchoNode = require('../../../main/EchoNode');
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let quited = false;
 
@@ -42,7 +40,6 @@ let lastNode = null;
 let restartTimer = null;
 
 function createWindow() {
-	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		show: false,
 		width: 1100,
@@ -56,17 +53,12 @@ function createWindow() {
 		frame: false,
 	});
 
-	// and load the index.html of the app.
 	mainWindow.loadFile('build/index.html');
 
 	// Open the DevTools.
 	// mainWindow.webContents.openDevTools()
 
-	// Emitted when the window is closed.
 	mainWindow.on('closed', () => {
-		// Dereference the window object, usually you would store windows
-		// in an array if your app supports multi windows, this is the time
-		// when you should delete the corresponding element.
 		mainWindow = null;
 	});
 
