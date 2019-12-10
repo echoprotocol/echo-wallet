@@ -26,6 +26,7 @@ class Tokens extends React.Component {
 	}
 
 	setAsset(symbol) {
+		this.props.setGlobalValue('activeCoinTypeTab', 0);
 		this.props.setAsset(symbol);
 	}
 
@@ -95,6 +96,7 @@ Tokens.propTypes = {
 	tokens: PropTypes.object.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
 };
 
 export default Tokens;

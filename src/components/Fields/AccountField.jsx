@@ -17,13 +17,23 @@ class AccountField extends React.Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.activeCoinTypeTab !== this.props.activeCoinTypeTab && this.props.field.value) {
+			this.checkInput(this.props.field.value);
+		}
+	}
+
 	onInput(e) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
 
-		const value = e.target.value.toLowerCase().trim();
+		const value = e.target.value.trim();
 
+		this.checkInput(value);
+	}
+
+	checkInput(value) {
 		this.props.setIn(this.props.subject, {
 			loading: true,
 			error: null,
@@ -132,6 +142,7 @@ AccountField.propTypes = {
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
 	avatarName: PropTypes.string,
+	activeCoinTypeTab: PropTypes.any,
 	additionalAccountInfo: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
@@ -154,6 +165,7 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
+	activeCoinTypeTab: '',
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
 };
