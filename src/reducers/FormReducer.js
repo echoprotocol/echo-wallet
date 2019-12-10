@@ -117,6 +117,7 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
+		additionalAccountInfo: '',
 		isAvailableBalance: false,
 		subjectTransferType: '',
 		avatarName: '',
