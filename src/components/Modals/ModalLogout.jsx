@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
 
 import { closeModal, openModal, setError } from '../../actions/ModalActions';
