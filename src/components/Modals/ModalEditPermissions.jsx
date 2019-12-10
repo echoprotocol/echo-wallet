@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Countdown from 'react-countdown-now';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 class ModalEditPermissions extends React.Component {
 
@@ -69,74 +69,72 @@ class ModalEditPermissions extends React.Component {
 
 		return (
 			<Modal className="edit-permissions-modal" open={show}>
-				<FocusTrap>
-					<div className="focus-trap-wrap">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header">
-							<h3 className="modal-header-title">Edit Mode Warning</h3>
-						</div>
-						<form className="modal-body">
-							<div className="info-text">
+				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h3 className="modal-header-title">Edit Mode Warning</h3>
+					</div>
+					<form className="modal-body">
+						<div className="info-text">
 								Please, keep in mind that uncontrolled changes may lead to
 								loosing access to the wallet or restricting your actions within it.
 								Be careful with editing permissions and adding the accounts to manage the wallet,
 								ensuring that you grant permissions only to the accounts you trust.
+						</div>
+						<div className="check-list">
+							<div className="check">
+								<input type="checkbox" id="edit-mode-checkbox" onChange={(e) => this.onCheck(e)} />
+								<label className="label" htmlFor="edit-mode-checkbox">
+									<span className="label-text">I have read and understood the possible consequences of editing</span>
+								</label>
 							</div>
-							<div className="check-list">
-								<div className="check">
-									<input type="checkbox" id="edit-mode-checkbox" onChange={(e) => this.onCheck(e)} />
-									<label className="label" htmlFor="edit-mode-checkbox">
-										<span className="label-text">I have read and understood the possible consequences of editing</span>
-									</label>
-								</div>
-							</div>
-							<Form.Field className={classnames('error-wrap', { error: !!error })}>
-								<label htmlFor="Password">Password</label>
-								<input
-									type="password"
-									placeholder="Password"
-									name="password"
-									onChange={(e) => this.onChange(e)}
-									autoFocus
-								/>
-								{
-									error && <span className="error-message">{error}</span>
-								}
-							</Form.Field>
-							<div className="form-panel">
-								<a
-									className="action-link"
-									role="button"
-									onClick={(e) => this.onForgot(e)}
-									onKeyPress={(e) => this.onForgot(e)}
-									tabIndex="0"
-								>
+						</div>
+						<Form.Field className={classnames('error-wrap', { error: !!error })}>
+							<label htmlFor="Password">Password</label>
+							<input
+								type="password"
+								placeholder="Password"
+								name="password"
+								onChange={(e) => this.onChange(e)}
+								autoFocus
+							/>
+							{
+								error && <span className="error-message">{error}</span>
+							}
+						</Form.Field>
+						<div className="form-panel">
+							<a
+								className="action-link"
+								role="button"
+								onClick={(e) => this.onForgot(e)}
+								onKeyPress={(e) => this.onForgot(e)}
+								tabIndex="0"
+							>
 							Forgot password?
-								</a>
-								<Button
-									type="submit"
-									className="main-btn countdown-wrap"
-									onClick={(e) => this.onSuccess(e)}
-									disabled={(disabled) || !(agree && timerComplete)}
-								>
-									<Countdown
-										date={Date.now() + (warningTime * 1000)}
-										renderer={(props) => this.countdown(props)}
-										onStart={() => this.setState({ timerIsOn: true })}
-										onComplete={() => this.setState({
-											timerComplete: true,
-											timerIsOn: false,
-										})}
-									/>
-									{(agree && timerComplete) ? 'Go to edit mode' : 'READ PLEASE'}
-								</Button>
-							</div>
-						</form>
-					</div>
-				</FocusTrap>
+							</a>
+							<Button
+								type="submit"
+								className="main-btn countdown-wrap"
+								onClick={(e) => this.onSuccess(e)}
+								disabled={(disabled) || !(agree && timerComplete)}
+							>
+								<Countdown
+									date={Date.now() + (warningTime * 1000)}
+									renderer={(props) => this.countdown(props)}
+									onStart={() => this.setState({ timerIsOn: true })}
+									onComplete={() => this.setState({
+										timerComplete: true,
+										timerIsOn: false,
+									})}
+								/>
+								{(agree && timerComplete) ? 'Go to edit mode' : 'READ PLEASE'}
+							</Button>
+						</div>
+					</form>
+				</FocusLock>
 			</Modal>
 		);
 	}

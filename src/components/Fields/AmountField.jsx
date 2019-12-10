@@ -242,6 +242,7 @@ class AmountField extends React.Component {
 			labelText, showAvailable,
 			warningMessage,
 			isDisplaySidechainNotification,
+			autoFocus,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -313,6 +314,7 @@ class AmountField extends React.Component {
 							onChange={(e) => this.onChangeAmount(e)}
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							autoFocus={autoFocus}
 						/>
 						{
 							this.renderErrorStaus(assetDropdown, amount.error, fee.error)
@@ -379,6 +381,7 @@ AmountField.propTypes = {
 	showAvailable: PropTypes.bool,
 	warningMessage: PropTypes.node,
 	isDisplaySidechainNotification: PropTypes.bool,
+	autoFocus: PropTypes.bool,
 };
 
 
@@ -395,6 +398,7 @@ AmountField.defaultProps = {
 	showAvailable: true,
 	warningMessage: null,
 	isDisplaySidechainNotification: false,
+	autoFocus: false,
 };
 
 export default AmountField;
