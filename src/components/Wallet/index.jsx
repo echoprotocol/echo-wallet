@@ -13,10 +13,14 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class Wallet extends React.Component {
 
+	componentWillUnmount() {
+		this.props.setGlobalValue('activeCoinTypeTab', 0);
+	}
+
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
-			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress, additionalAccountInfo,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
 			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
 		} = this.props;
@@ -50,6 +54,7 @@ class Wallet extends React.Component {
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
+							additionalAccountInfo={additionalAccountInfo}
 							subjectTransferType={subjectTransferType}
 							transfer={this.props.transfer}
 							resetTransaction={this.props.resetTransaction}
@@ -66,6 +71,7 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							isDisplaySidechainNotification={isDisplaySidechainNotification}
+							activeCoinTypeTab={activeCoinTypeTab}
 						/>
 					</div>),
 			},
@@ -170,6 +176,7 @@ class Wallet extends React.Component {
 								this.props.setAsset(symbol, 'tokens');
 								this.props.setContractFees();
 							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 					</div>
 				</div>
@@ -205,7 +212,7 @@ Wallet.propTypes = {
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	activePaymentTypeTab: PropTypes.number.isRequired,
-	activeCoinTypeTab: PropTypes.number.isRequired,
+	activeCoinTypeTab: PropTypes.any.isRequired,
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -235,6 +242,7 @@ Wallet.propTypes = {
 	getAssetsBalances: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	additionalAccountInfo: PropTypes.string,
 };
 
 Wallet.defaultProps = {
@@ -244,6 +252,7 @@ Wallet.defaultProps = {
 	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
+	additionalAccountInfo: '',
 };
 
 export default Wallet;

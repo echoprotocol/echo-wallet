@@ -9,7 +9,7 @@ import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 import { generateBtcAddress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
-import { isBackupAddress } from '../../helpers/ValidateHelper';
+import { isBackupAddress } from '../../helpers/SidechainHelper';
 
 class ModalCreateBtcAddress extends React.Component {
 
