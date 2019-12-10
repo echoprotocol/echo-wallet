@@ -1,16 +1,18 @@
 import React from "react";
 import { Animate } from "react-move";
 
-let interval = null;
 class AnimatedProgressProvider extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state ={
+			isAnimated: false
+		}
+		this.interval = null;
+	}
 
-  state = {
-    isAnimated: false
-  };
-
-  static defaultProps = {
-    valueStart: 0
-  };
+	static defaultProps = {
+		valueStart: 0
+	};
 
   componentDidMount() {
     if (this.props.repeat) {
