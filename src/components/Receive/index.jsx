@@ -8,6 +8,7 @@ import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
+import { STABLE_COINS } from '../../constants/SidechainConstants';
 
 
 class Receive extends React.Component {
@@ -21,8 +22,8 @@ class Receive extends React.Component {
 	getActiveCoinTypeTab() {
 		const { activeCoinTypeTab } = this.props;
 		switch (activeCoinTypeTab) {
-			case 'EBTC': return 1;
-			case 'EETH': return 2;
+			case STABLE_COINS.EBTC: return 1;
+			case STABLE_COINS.EETH: return 2;
 			default: return 0;
 		}
 	}
@@ -74,7 +75,7 @@ class Receive extends React.Component {
 					className="tab-btn"
 					key="1"
 					onClick={(e) => {
-						this.props.setGlobalValue('activeCoinTypeTab', 'EBTC');
+						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EBTC);
 						e.target.blur();
 					}}
 					content="Bitcoin"
@@ -99,7 +100,7 @@ class Receive extends React.Component {
 					className="tab-btn"
 					key="2"
 					onClick={(e) => {
-						this.props.setGlobalValue('activeCoinTypeTab', 'EETH');
+						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EETH);
 						e.target.blur();
 					}}
 					content="Ethereum"

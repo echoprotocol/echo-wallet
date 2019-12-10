@@ -83,7 +83,8 @@ import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
-import { isBtcAddress, isEthAddress } from '../helpers/SidechainHelper';
+import { isBackupAddress, isEthAddress } from '../helpers/SidechainHelper';
+import { STABLE_COINS } from '../constants/SidechainConstants';
 
 /**
  * @method resetTransaction
@@ -324,7 +325,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 				};
 
 				let operationType = '';
-				if (activeCoinTypeTab === 'EBTC') {
+				if (activeCoinTypeTab === STABLE_COINS.EBTC) {
 					options.btc_addr = to;
 					operationType = 'sidechain_btc_withdraw';
 				} else {
@@ -554,7 +555,7 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 		}
 
 		switch (activeCoinTypeTab) {
-			case 'EETH': {
+			case STABLE_COINS.EETH: {
 				if (!value.startsWith('0x')) {
 					dispatch(setFormError(FORM_TRANSFER, 'to', 'Ethereum address must starts with 0x'));
 					return false;
@@ -566,8 +567,8 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 				}
 				break;
 			}
-			case 'EBTC': {
-				if (!isBtcAddress(value)) {
+			case STABLE_COINS.EBTC: {
+				if (!isBackupAddress(value)) {
 					dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid btc address'));
 					return false;
 				}
@@ -933,7 +934,7 @@ export const transferSwitch = () => async (dispatch, getState) => {
 			};
 
 			let operationType = '';
-			if (activeCoinTypeTab === 'EBTC') {
+			if (activeCoinTypeTab === STABLE_COINS.EBTC) {
 				options.btc_addr = to.value;
 				showOptions.btc_address = to.value;
 				operationType = 'sidechain_btc_withdraw';

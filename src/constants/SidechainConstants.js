@@ -1,11 +1,16 @@
+export const STABLE_COINS = {
+	EBTC: 'EBTC',
+	EETH: 'EETH',
+};
+
 export const SIDECHAIN_ASSETS_DATA = {
 	eETH: {
 		precision: 18,
-		symbol: 'EETH',
+		symbol: STABLE_COINS.EETH,
 	},
 	eBTC: {
 		precision: 8,
-		symbol: 'EBTC',
+		symbol: STABLE_COINS.EBTC,
 	},
 };
 

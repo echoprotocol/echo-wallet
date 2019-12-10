@@ -10,6 +10,7 @@ import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 import BytecodeField from '../Fields/BytecodeField';
 import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
+import { STABLE_COINS } from '../../constants/SidechainConstants';
 
 class Transfer extends React.Component {
 
@@ -43,10 +44,10 @@ class Transfer extends React.Component {
 	getAssets() {
 		const { assets, activeCoinTypeTab } = this.props;
 
-		if (activeCoinTypeTab === 'EBTC') {
-			return assets.filter((asset) => asset.symbol === 'EBTC');
-		} else if (activeCoinTypeTab === 'EETH') {
-			return assets.filter((asset) => asset.symbol === 'EETH');
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return [assets.find((asset) => asset.symbol === STABLE_COINS.EBTC)];
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return [assets.find((asset) => asset.symbol === STABLE_COINS.EETH)];
 		}
 
 		return assets;

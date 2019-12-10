@@ -1,5 +1,12 @@
+import validate from 'bitcoin-address-validation';
+
 import { getHash } from './ContractHelper';
 
+/**
+ * @method isEthAddress
+ * @param address
+ * @returns {boolean}
+ */
 export const isEthAddress = (address) => {
 	if (/^(0x)?[0-9a-f]{40}$/i.test(address.toLowerCase())) {
 		return true;
@@ -18,4 +25,21 @@ export const isEthAddress = (address) => {
 	return true;
 };
 
-export const isBtcAddress = (address) => /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(address);
+/**
+ * @method isBackupAddress
+ * @param {String} hex
+ * @returns {boolean}
+ */
+export const isBackupAddress = (hex) => {
+	try {
+		const validationData = validate(hex);
+
+		return validationData &&
+			!validationData.bech32 &&
+			!validationData.testnet &&
+			validationData.address &&
+			validationData.type === 'p2pkh';
+	} catch (e) {
+		return false;
+	}
+};
