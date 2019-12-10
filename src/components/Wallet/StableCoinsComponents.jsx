@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Popup } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -24,6 +24,7 @@ class StableCoins extends React.Component {
 	}
 
 	onStableClick(e, p, c) {
+		e.preventDefault();
 		e.stopPropagation();
 		this.props.setGlobalValue('activePaymentTypeTab', p);
 		this.props.setGlobalValue('activeCoinTypeTab', c);
@@ -54,14 +55,11 @@ class StableCoins extends React.Component {
 						key={id}
 						className={classnames({ focused: id === this.state.focusedId })}
 					>
-						<div
-							role="button"
+						<button
 							className="balance-item"
 							onFocus={() => this.onFocus(id)}
 							onBlur={() => this.onBlur()}
 							onClick={(e) => this.onClickAsset(e, asset)}
-							onKeyPress={(e) => this.onPressAsset(e, asset)}
-							tabIndex="0"
 						>
 							<span className="currency-symbol">{asset.symbol}</span>
 							<div className="currency-value">
@@ -69,27 +67,29 @@ class StableCoins extends React.Component {
 									{formatAmount(asset.balance, asset.precision)}
 								</span>
 								<div className="balance-tags">
-									<Button
+									<a
+										href=""
+										onClick={(e) => this.onStableClick(e, 1, asset.symbol)}
 										className={classnames('tag', {
 											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
 										})}
-										content="Deposit"
-										onClick={(e) => this.onStableClick(e, 1, asset.symbol)}
-									/>
-									<Button
-										className={classnames('tag', {
-											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
-										})}
-										content="Withdrawal"
-										disabled={!asset.notEmpty}
+									>Deposit
+									</a>
+									<a
+										href=""
 										onClick={(e) => {
 											this.onStableClick(e, 0, asset.symbol);
 											this.props.setAsset(asset);
 										}}
-									/>
+										className={classnames('tag', {
+											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
+										})}
+										disabled={!asset.notEmpty}
+									>Withdrawal
+									</a>
 								</div>
 							</div>
-						</div>
+						</button>
 					</li>
 				);
 
