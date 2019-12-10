@@ -22,9 +22,6 @@ class ModalToWhitelist extends React.Component {
 	}
 
 
-	componentDidMount() {
-
-	}
 	onClose(e) {
 		this.props.setValue('amount', {
 			...this.props.amount,
