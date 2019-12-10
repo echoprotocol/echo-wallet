@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
 
-import { closeModal } from '../../actions/ModalActions';
+import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
@@ -22,7 +22,14 @@ class ModalToWhitelist extends React.Component {
 	}
 
 
+	componentDidMount() {
+
+	}
 	onClose(e) {
+		this.props.setValue('amount', {
+			...this.props.amount,
+			value: '',
+		});
 		e.preventDefault();
 		this.props.closeModal();
 	}
@@ -31,6 +38,12 @@ class ModalToWhitelist extends React.Component {
 		submit();
 	}
 
+	onChangeFeePoolValue(val, cur, name) {
+		this.props.amountInput(val, cur, name);
+		if (val && this.props.error) {
+			this.props.setModalError('');
+		}
+	}
 	render() {
 		const {
 			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, error,
@@ -87,7 +100,9 @@ class ModalToWhitelist extends React.Component {
 												}}
 												currency={currency}
 												isAvailableBalance={isAvailableBalance}
-												amountInput={this.props.amountInput}
+												amountInput={(val, cur, name) => {
+													this.onChangeFeePoolValue(val, cur, name);
+												}}
 												setFormError={this.props.setFormError}
 												setFormValue={this.props.setFormValue}
 												setValue={this.props.setValue}
@@ -132,6 +147,7 @@ ModalToWhitelist.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
+	setModalError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
@@ -162,6 +178,7 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(FORM_REPLENISH, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_REPLENISH, field, value)),
 		setFormError: (field, error) => dispatch(setFormError(FORM_REPLENISH, field, error)),
+		setModalError: (err) => dispatch(setError(MODAL_REPLENISH, err)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_REPLENISH, value, currency, name)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_REPLENISH)),
