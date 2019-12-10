@@ -123,7 +123,7 @@ class Network extends React.PureComponent {
 								<div className="ellipsis">{network.name}</div>
 							</span>
 							<span className="pipeline-block">
-		               		Block
+								Block
 								<span>{this.props.lastBlock}</span>
 							</span>
 							<span className="icon dropdown" />
@@ -131,7 +131,7 @@ class Network extends React.PureComponent {
 					}
 				/>
 				<ProgressBar
-					percentage={50}
+					percentage={10}
 					startColor="#green"
 					endColor="red"
 					gradientId="progress"
