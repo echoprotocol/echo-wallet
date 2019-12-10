@@ -83,7 +83,7 @@ import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
-import { isBackupAddress, isBtcAddress, isEthAddress } from '../helpers/SidechainHelper';
+import { isBtcAddress, isEthAddress } from '../helpers/SidechainHelper';
 import { STABLE_COINS } from '../constants/SidechainConstants';
 
 /**
