@@ -122,6 +122,12 @@ class Network extends React.PureComponent {
 							<span className="status connected">
 								<div className="ellipsis">{network.name}</div>
 							</span>
+
+							<ProgressBar
+								percentage={30}
+								size={20}
+								value={64}
+							/>
 							<span className="pipeline-block">
 								Block
 								<span>{this.props.lastBlock}</span>
@@ -130,14 +136,7 @@ class Network extends React.PureComponent {
 						</div>
 					}
 				/>
-				<ProgressBar
-					percentage={10}
-					startColor="#green"
-					endColor="red"
-					gradientId="progress"
-				>
-					<h5> some text </h5>
-				</ProgressBar>
+
 			</React.Fragment>
 		);
 

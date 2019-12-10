@@ -1,0 +1,19 @@
+.progress-wrap {
+	display: flex;
+	align-items: center;
+
+	&>.value {
+		color: #5C637D;
+		font-size: 13px;
+		font-weight: 600;
+		margin: 0 0 0 4px;
+
+		.symbol {
+			font-size: 10px;
+		}
+	}
+}
+
+.CircularProgressbar {
+	vertical-align: middle;
+}

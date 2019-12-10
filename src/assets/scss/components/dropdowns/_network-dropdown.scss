@@ -8,12 +8,11 @@
 		padding: 0 15px;
 		background-color: transparent;
 		transition: background-color $speed;
-		border-left: 1px solid rgb(212, 212, 212);
-	
+
 		&:hover {
 			background-color: #f7f7f7;
 		}
-	
+
 		.icon.dropdown {
 			right: 0;
 			margin: auto 10px auto 0;
@@ -25,15 +24,15 @@
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -47,15 +46,15 @@
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -72,21 +71,77 @@
 
 	.description {
 		margin-right: 6px;
-		line-height: 1;
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(#5C637D, .6);
 	}
 
 	.status {
+		color: #4D66CD;
+		font-weight: 600;
+		font-size: 13px;
+		position: relative;
+		align-items: center;
+		display: flex;
+		line-height: 1;
+
 		.ellipsis {
 			@include cut-text;
 			max-width: 85px;
 			display: block;
 		}
 
+		&:before {
+			width: 6px;
+			height: 6px;
+			content: "";
+			border-radius: 50%;
+			margin-right: 6px;
+		}
+
+		&.connected {
+			color: $main-color;
+
+			&:before {
+				background-color: $main-color;
+			}
+		}
+
+		&.white {
+			color: $white;
+
+			&:before {
+				background-color: $white;
+			}
+		}
+
+		&+.network-link {
+			margin-left: 5px;
+		}
+
+		&+.network-dropdown {
+			margin-left: 5px;
+		}
 	}
 
+	.progress-wrap {
+		margin: 0 0 0 15px;
+	}
 
+	.pipeline-block {
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(#5C637D, .6);
+		margin: 1px 10px 0 15px;
 
-	& > .menu {
+		span {
+			font-family: source;
+			margin-left: 5px;
+			letter-spacing: -.2px;
+		}
+	}
+
+	&>.menu {
 		padding-top: 6px;
 		border-radius: 0;
 		width: 100%;
@@ -152,7 +207,7 @@
 				}
 			}
 
-			&.item-divider + .item:not(.item-link) {
+			&.item-divider+.item:not(.item-link) {
 				margin-top: 6px;
 			}
 
@@ -239,6 +294,7 @@
 				}
 			}
 		}
+
 		.item-link {
 			height: 42px;
 			color: $main-color;
