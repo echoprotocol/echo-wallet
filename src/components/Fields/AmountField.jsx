@@ -248,7 +248,7 @@ class AmountField extends React.Component {
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
-			.includes(form) && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>
