@@ -78,7 +78,7 @@ class AccountField extends React.Component {
 	render() {
 		const {
 			field, autoFocus, subject,	disabled, avatarName,
-			showAccountId, showAccountName,
+			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
 		return (
@@ -87,18 +87,11 @@ class AccountField extends React.Component {
 				<label htmlFor={`account${subject}`}>
 					{subject}
 					{
-						showAccountId &&
-						<div className="account-id">
-							ID: 1.2.0
-						</div>
-					}
-					{
-						showAccountName &&
+						showAdditionalAccountInfo && !field.error &&
 						<div className="account-name">
-							Account name: valik48
+							{additionalAccountInfo}
 						</div>
 					}
-
 				</label>
 				<Input
 					type="text"
@@ -139,6 +132,7 @@ AccountField.propTypes = {
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
 	avatarName: PropTypes.string,
+	additionalAccountInfo: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,
@@ -148,9 +142,7 @@ AccountField.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setVisibility: PropTypes.func,
 	disabled: PropTypes.bool,
-	showAccountId: PropTypes.bool,
-	showAccountName: PropTypes.bool,
-
+	showAdditionalAccountInfo: PropTypes.bool,
 };
 
 AccountField.defaultProps = {
@@ -162,8 +154,8 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
-	showAccountId: false,
-	showAccountName: false,
+	showAdditionalAccountInfo: false,
+	additionalAccountInfo: '',
 };
 
 export default AccountField;
