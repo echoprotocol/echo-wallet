@@ -83,7 +83,7 @@ import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
-import { isBackupAddress, isEthAddress } from '../helpers/SidechainHelper';
+import { isBackupAddress, isBtcAddress, isEthAddress } from '../helpers/SidechainHelper';
 import { STABLE_COINS } from '../constants/SidechainConstants';
 
 /**
@@ -568,7 +568,7 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 				break;
 			}
 			case STABLE_COINS.EBTC: {
-				if (!isBackupAddress(value)) {
+				if (!isBtcAddress(value)) {
 					dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid btc address'));
 					return false;
 				}

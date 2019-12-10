@@ -45,9 +45,9 @@ class Transfer extends React.Component {
 		const { assets, activeCoinTypeTab } = this.props;
 
 		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
-			return [assets.find((asset) => asset.symbol === STABLE_COINS.EBTC)];
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EBTC);
 		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
-			return [assets.find((asset) => asset.symbol === STABLE_COINS.EETH)];
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EETH);
 		}
 
 		return assets;

@@ -4,7 +4,7 @@ import { getHash } from './ContractHelper';
 
 /**
  * @method isEthAddress
- * @param address
+ * @param {String} address
  * @returns {boolean}
  */
 export const isEthAddress = (address) => {
@@ -23,6 +23,23 @@ export const isEthAddress = (address) => {
 		}
 	}
 	return true;
+};
+
+/**
+ * @method isBtcAddress
+ * @param {String} hex
+ * @returns {boolean}
+ */
+export const isBtcAddress = (hex) => {
+	try {
+		const validationData = validate(hex);
+
+		return validationData &&
+			!validationData.testnet &&
+			validationData.address;
+	} catch (e) {
+		return false;
+	}
 };
 
 /**
