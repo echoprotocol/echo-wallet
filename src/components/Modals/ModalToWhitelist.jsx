@@ -69,6 +69,7 @@ class ModalToWhitelist extends React.Component {
 									</Form.Field>
 									<div className="form-panel">
 										<Button
+											type="submit"
 											className="main-btn"
 											content="Confirm"
 											onClick={() => {

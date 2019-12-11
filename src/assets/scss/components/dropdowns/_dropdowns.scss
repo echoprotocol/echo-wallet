@@ -1,25 +1,27 @@
 .dropdown {
 
-    &.upward {
-        .menu {
-            max-height: 300px
-        }
-    }
+	&.upward {
+		.menu {
+			max-height: 300px
+		}
+	}
 
-    &.empty {
-        .menu {
-            display: none !important;
-        }
+	&.empty {
+		.menu {
+			display: none !important;
+		}
+	}
+
+	&.active:not(.empty) {
+		.dropdown.icon {
+			transform: rotate(180deg);
+			height: 4px;
+		}
 	}
 
 }
 
-.active:not(.empty) {
-	.dropdown.icon {
-		transform: rotate(180deg);
-		height: 4px;
-	}
-}
+
 
 .dropdown.icon {
 	position: absolute;
@@ -36,12 +38,12 @@
 	border: 0;
 	max-width: 8px;
 	display: flex;
-    align-items: center;
+	align-items: center;
 }
 
 
 
-.dropdown > .selected.item {
+.dropdown>.selected.item {
 	background-color: rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, 0.95);
 }
@@ -58,11 +60,10 @@
 .dropdown-wrap {
 
 	.dropdown-label {
-		@include label()
-		line-height: 20px;
+		@include label() line-height: 20px;
 	}
 
-	& > .dropdown {
+	&>.dropdown {
 		width: 100%;
 		background-color: #fff;
 		height: 38px;
@@ -71,24 +72,28 @@
 		transition: border-color $speed;
 
 		&:hover {
-			border-color:#BABCCB;
+			border-color: #BABCCB;
+
 			.menu {
-				border-color:#BABCCB;
+				border-color: #BABCCB;
 			}
+
 			.item.generate-address {
-				border-color:#BABCCB;
+				border-color: #BABCCB;
 			}
 		}
 
 		.item:not(.dropdown-header) {
 			transition: background-color $speed;
+
 			&:hover {
 				background-color: $main-color;
-				
+
 				&.address-item-wrap {
 					.address {
 						color: #fff;
 					}
+
 					.name {
 						color: rgba(#fff, .8);
 					}
@@ -102,6 +107,7 @@
 
 				.action-btn {
 					color: #fff;
+
 					&:active,
 					&:hover {
 						background-color: transparent;
@@ -109,7 +115,7 @@
 				}
 			}
 		}
-		
+
 		.generate-address {
 			position: sticky;
 			bottom: 0;
@@ -168,12 +174,13 @@
 			padding: 0.678571em 32px 0.678571em 1em
 		}
 
-		input.search + .text {
+		input.search+.text {
 			line-height: 36px;
 			padding: 0 1em;
 			font-size: 15px;
 			font-family: proxima;
 			font-weight: 400;
+
 			&:not(.filtered) {
 				color: rgba(#3B3B3B, 0.5);
 			}
@@ -184,6 +191,7 @@
 			display: flex;
 			justify-content: space-between;
 			min-height: 26px;
+
 			.title {
 				margin: 10px 0 0;
 				font-family: proxima;
@@ -193,6 +201,7 @@
 				text-transform: uppercase;
 			}
 		}
+
 		.user-item {
 			display: flex;
 			align-items: center;
@@ -229,6 +238,7 @@
 				color: #3B3B3B;
 				transition: color $speed;
 			}
+
 			.name {
 				@include cut-text;
 				max-width: 324px;
