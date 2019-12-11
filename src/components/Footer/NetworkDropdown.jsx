@@ -63,22 +63,24 @@ class Network extends React.PureComponent {
 				selected: name === i.name,
 				content: (
 
-					<React.Fragment>
+					<div className="network-wrap">
 						<div className="network">
 							<div className="label-text">
-								<span className="name">{i.name}</span>
+								<span className="network-title">
+									{i.name}
+								</span>
 							</div>
 							<span className="label-link">{i.url}</span>
-							{ !NETWORKS.find((n) => n.name === i.name) ?
+							{ !NETWORKS.find((n) => n.name === i.name) &&
 								<Button
 									id="btn-dlt"
 									onClick={(e) => this.onDeleteNetwork(i, e)}
 									className="icon-remove"
-								/> : null
+								/>
 							}
 						</div>
 						<div className="node-info">sdsdsdsd</div>
-					</React.Fragment>
+					</div>
 				),
 			}));
 	}
@@ -106,14 +108,14 @@ class Network extends React.PureComponent {
 		options.push({
 			value: 'custom',
 			key: 'custom',
-			className: 'item-link',
+			className: 'item-footer',
 			selected: false,
 			content: (<div className="network-link">+ Add custom Network</div>),
 		});
 
 		return (
 			<Dropdown
-				open={open}
+				open
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
