@@ -87,7 +87,7 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName,
+			field, autoFocus, subject,	disabled, avatarName, placeholder,
 			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
@@ -105,7 +105,7 @@ class AccountField extends React.Component {
 				</label>
 				<Input
 					type="text"
-					placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
+					placeholder={subject === 'to' ? placeholder : 'Account Name'}
 					icon={this.isAvatar()}
 					className={classnames('action-wrap', { loading: field.loading && !field.error })}
 					autoFocus={autoFocus}
@@ -142,6 +142,7 @@ AccountField.propTypes = {
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
 	avatarName: PropTypes.string,
+	placeholder: PropTypes.string,
 	activeCoinTypeTab: PropTypes.any,
 	additionalAccountInfo: PropTypes.string,
 	checkAccount: PropTypes.func,
@@ -168,6 +169,7 @@ AccountField.defaultProps = {
 	activeCoinTypeTab: '',
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
+	placeholder: '',
 };
 
 export default AccountField;
