@@ -151,10 +151,10 @@ textarea {
 	display: flex;
 	min-height: calc(100vh - 30px);
 	flex-direction: column;
-}
 
-.pusher .content {
-	flex: 1;
+	&>.content {
+		flex: 1;
+	}
 }
 
 .link {
