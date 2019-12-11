@@ -19,7 +19,7 @@
     "postbuild-electron": "copyfiles -f src/assets/app_resources/preload.js build/electron/",
     "build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
-    "package": "electron-builder build -p never",
+    "package": "electron-builder build -p never --linux deb",
     "package-win": "npm run build-electron && electron-builder build -p never --windows",
     "package-deb": "npm run build-electron && electron-builder build -p never --linux deb",
     "package-mac": "npm run build-electron && electron-builder build -p never --mac dmg",
@@ -166,10 +166,10 @@
     "files": [
       "*.js",
       "build",
-      "node_modules"
+      "package.json"
     ],
     "directories": {
-      "buildResources": "src/assets/app_resources",
+      "buildResources": "resources",
       "output": "build/binaries"
     },
     "dmg": {

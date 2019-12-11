@@ -53,16 +53,12 @@ function createWindow() {
 		minWidth: 1100,
 		minHeight: 800,
 		webPreferences: {
-			nodeIntegration: false,
-			preload: `${__dirname}/preload.js`,
+			nodeIntegration: true,
 		},
 		frame: false,
 	});
 
-	mainWindow.loadFile('build/index.html');
-
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools()
+	mainWindow.loadURL(`file://${__dirname}/build/index.html`);
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;

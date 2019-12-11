@@ -113,7 +113,7 @@ const config = {
 		extensions: ['.js', '.jsx', '.json'],
 	},
 	plugins: [
-		new CleanWebpackPlugin(['build']),
+		new CleanWebpackPlugin(['build', 'dist']),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
 		new webpack.DefinePlugin({
