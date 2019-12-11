@@ -63,6 +63,18 @@ class Transfer extends React.Component {
 		return tokens;
 	}
 
+	getToPlaceholder() {
+		const { activeCoinTypeTab } = this.props;
+
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return 'BTC address';
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return 'ETH address';
+		}
+
+		return 'Account ID, Account Name, Contract ID or Address';
+	}
+
 	async subjectToSendSwitch(subject) {
 		const { amount, fee } = this.props;
 		const isValid = await this.props.subjectToSendSwitch(subject);
@@ -125,6 +137,7 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
+									placeholder={this.getToPlaceholder()}
 								/>
 								{
 									bytecodeVisible &&
