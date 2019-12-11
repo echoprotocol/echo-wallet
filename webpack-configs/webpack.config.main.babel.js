@@ -17,7 +17,7 @@ export default merge.smart(baseConfig, {
 
 	target: 'electron-main',
 
-	entry: './src/assets/app_resources/debug.js',
+	entry: './src/assets/app_resources/index.js',
 
 	output: {
 		path: path.join(__dirname, '..'),

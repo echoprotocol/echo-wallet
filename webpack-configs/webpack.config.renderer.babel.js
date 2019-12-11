@@ -28,24 +28,16 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 
 const miniExtractSass = new MiniCssExtractPlugin({
 	filename: '[name].[hash].css',
-	disable: process.env.NODE_ENV === 'local',
 });
 
 CheckNodeEnv('production');
 const config = merge.smart(baseConfig, {
-	devtool: 'cheap-module-source-map',
-
 	mode: 'production',
-
-	target: 'electron-renderer',
-
 	entry: [path.resolve('src/index.js')],
-
 	output: {
-		publicPath: '/',
+		publicPath: './',
 		path: path.resolve('build'),
 		filename: `[name].${version}.js`,
-		pathinfo: process.env.NODE_ENV === 'local',
 		sourceMapFilename: '[name].js.map',
 		chunkFilename: '[name].bundle.js',
 	},

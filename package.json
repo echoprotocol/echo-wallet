@@ -13,13 +13,13 @@
   "scripts": {
     "start": "cross-env NODE_ENV=local node --trace-warnings -r @babel/register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack-configs/webpack.config.web.babel.js --mode development --progress --colors --history-api-fallback --hot --inline",
     "build-electron": " npm run build-main && npm run build-renderer",
-    "build": "cross-env NODE_ENV=production webpack --display-error-details --colors --mode production",
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.web.babel.js --display-error-details --colors --mode production",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.renderer.babel.js --colors",
     "postbuild-electron": "copyfiles -f src/assets/app_resources/preload.js build/electron/",
-    "build-dev": "cross-env NODE_ENV=development webpack --progress --display-error-details --colors --mode production",
+    "build-dev": "cross-env NODE_ENV=development webpack --config ./webpack-configs/webpack.config.web.babel.js  --progress --display-error-details --colors --mode production",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
-    "package": "electron-builder build -p never --linux deb",
+    "package": "build -p never --linux deb",
     "package-win": "npm run build-electron && electron-builder build -p never --windows",
     "package-deb": "npm run build-electron && electron-builder build -p never --linux deb",
     "package-mac": "npm run build-electron && electron-builder build -p never --mac dmg",
@@ -166,7 +166,7 @@
     "files": [
       "*.js",
       "build",
-      "package.json"
+      "node_modules"
     ],
     "directories": {
       "buildResources": "resources",
