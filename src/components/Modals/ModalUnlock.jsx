@@ -1,10 +1,17 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import PasswordInput from '../PasswordInput';
 
 class ModalUnlockWallet extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			password: '',
+		};
+	}
 
 	onForgot(e) {
 		e.preventDefault();
@@ -22,6 +29,7 @@ class ModalUnlockWallet extends React.Component {
 	}
 
 	onChange(e) {
+		this.setState({ password: e.target.value.trim() });
 		this.props.change(e.target.value.trim());
 	}
 
@@ -29,7 +37,7 @@ class ModalUnlockWallet extends React.Component {
 		const {
 			show, error, disabled,
 		} = this.props;
-
+		const { password } = this.state;
 		return (
 			<Modal className="small" open={show}>
 				<FocusLock autoFocus={false}>
@@ -45,17 +53,16 @@ class ModalUnlockWallet extends React.Component {
 									<h3>Unlock Wallet</h3>
 								</div>
 								<div className="field-wrap">
-									<Form.Field className={classnames('error-wrap', { error: !!error })}>
-										<label htmlFor="Password">Password</label>
-										<input
-											type="password"
-											placeholder="Password"
-											name="password"
-											onChange={(e) => this.onChange(e)}
-											autoFocus
-										/>
-										<span className="error-message">{error}</span>
-									</Form.Field>
+									<PasswordInput
+										errorMessage={error}
+										inputLabel="Password"
+										inputPlaceholder="Password"
+										inputName="password"
+										value={password}
+										onChange={(e) => this.onChange(e)}
+										autoFocus
+									/>
+
 								</div>
 								<div className="form-panel">
 									<a

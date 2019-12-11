@@ -1,5 +1,5 @@
 import React from 'react';
-import { Popup, Dropdown, Button } from 'semantic-ui-react';
+import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
@@ -12,7 +12,8 @@ import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 import ProgressBar from '../ProgressBar';
-import ProgressLine from '../ProgressLine';
+import RemoteNode from './RemoteNode';
+// import LocalNode from './LocalNode';
 
 
 class Network extends React.PureComponent {
@@ -83,30 +84,8 @@ class Network extends React.PureComponent {
 						</div>
 						{ i.name === 'testnet' &&
 							<div className="node-info">
-								<div className="node-label">
-									<div className="node-title">
-										Remote Node
-									</div>
-									<div className="sync">
-										<div className="percent">
-											32
-											<span className="symbol">%</span>
-										</div>
-										<Popup
-											trigger={<span className="icon-info" />}
-											content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
-											className="inner-tooltip"
-											position="bottom center"
-											style={{ width: 200 }}
-										/>
-									</div>
-								</div>
-								<div className="sync-progress">
-									<div className="sync-label">
-										Network synchronization
-									</div>
-									<ProgressLine value={64} />
-								</div>
+								{/* <LocalNode /> */}
+								<RemoteNode value={64} />
 							</div>
 						}
 					</div>
@@ -189,12 +168,9 @@ class Network extends React.PureComponent {
 				}
 			/>
 		);
-
-
 	}
 
 }
-
 
 Network.propTypes = {
 	loading: PropTypes.bool,
@@ -206,7 +182,6 @@ Network.propTypes = {
 	lastBlock: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
-
 };
 
 Network.defaultProps = {

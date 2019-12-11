@@ -1,153 +1,152 @@
 .frozen {
-    font-family: proxima;
-    height: calc(100vh - 120px);
+	font-family: proxima;
+	height: calc(100vh - 120px);
 
-    .frozen-about {
-        margin-top: 17px;
-        padding: 1px 20px;
-        font-size: 13px;
-        font-weight: 300;
-        line-height: 18px;
-        color: #3b3b3b;
-        word-wrap: none;
-    }
+	.frozen-about {
+		margin-top: 17px;
+		padding: 1px 20px;
+		font-size: 13px;
+		font-weight: 300;
+		line-height: 18px;
+		color: #3b3b3b;
+		word-wrap: none;
+	}
 
-    .balance-scroll {
-        height: calc(100vh - 285px);
-    }
+	.balance-scroll {
+		height: calc(100vh - 285px);
+	}
 
 
 
-    &-value {
-        align-self: flex-end;
-        color: #4d66cd;
+	&-value {
+		align-self: flex-end;
+		color: #4d66cd;
 		font-family: proxima;
 		font-weight: 600;
-        font-size: 15px;
-        text-transform: uppercase;
-        text-align: left;
-        padding-left: 1px;
+		font-size: 15px;
+		text-transform: uppercase;
+		text-align: left;
+		padding-left: 1px;
 
-        span:nth-child(2) {
-            padding-left: 3px;
-        }
-    }
+		span:nth-child(2) {
+			padding-left: 3px;
+		}
+	}
 
-    &-term {
-        align-self: flex-end;
+	&-term {
+		align-self: flex-end;
 		font-family: proxima;
 		font-weight: 600;
-        font-size: 15px;
-        text-align: right;
-        padding-right: 8px;
+		font-size: 15px;
+		text-align: right;
+		padding-right: 8px;
 
-        span {
-            padding-left: 4px;
-        }
-    }
+		span {
+			padding-left: 4px;
+		}
+	}
 
-    &-coefficient {
-        align-self: flex-start;
-        text-align: left;
-        line-height: 19px;
+	&-coefficient {
+		align-self: flex-start;
+		text-align: left;
+		line-height: 19px;
 
-        span {
-            opacity: 0.7;
-        }
-    }
+		span {
+			opacity: 0.7;
+		}
+	}
 
-    &-interval {
-        align-self: flex-start;
-        opacity: 0.7;
-        text-align: right;
-        line-height: 19px;
-        padding-right: 8px;
+	&-interval {
+		align-self: flex-start;
+		opacity: 0.7;
+		text-align: right;
+		line-height: 19px;
+		padding-right: 8px;
 
-        span {
-            padding-left: 2px;
-        }
-    }
+		span {
+			padding-left: 2px;
+		}
+	}
 
-    .inner-tooltip-trigger {
-        opacity: 0.4;
-        padding-left: 7px;
-        position: relative;
-        font-size: 12px;
-        width: 10px;
-        display: inline-block;
+	.inner-tooltip-trigger {
+		opacity: 0.4;
+		padding-left: 7px;
+		position: relative;
+		font-size: 12px;
+		width: 10px;
+		display: inline-block;
 
-        &:hover {
-            cursor: pointer;
-            opacity: 1;
-        }
-    }
+		&:hover {
+			cursor: pointer;
+			opacity: 1;
+		}
+	}
 
-    .send-wrap {
-        width: 100%;
-        max-height: calc(100vh - 120px);
-        overflow: overlay;
+	.send-wrap {
+		width: 100%;
+		max-height: calc(100vh - 120px);
+		overflow: overlay;
 		background-color: #FCFCFC;
 
 		@include max-vw(1000) {
 			padding: 0 20px;
 		}
-		
-        .field {
 
-            .input-value::placeholder,
-            .dropdown:not(.fee-dropdown) .default {
-                opacity: 0.5;
-                color: #3b3b3b;
-                font-size: 15px;
-                font-weight: 400;
-                line-height: 16px;
-            }
+		.field {
 
-        }
+			.input-value::placeholder,
+			.dropdown:not(.fee-dropdown) .default {
+				color: rgba(#3b3b3b, .5);
+				font-size: 15px;
+				font-weight: 400;
+				line-height: 16px;
+			}
 
-        .form-panel {
-            button {
-                line-height: 2px;
-                cursor: pointer;
-            }
+		}
 
-            .coefficient-value {
-                cursor: default;
+		.form-panel {
+			button {
+				line-height: 2px;
+				cursor: pointer;
+			}
 
-                span:nth-child(2) {
-                    padding-left: 3px;
-                    color: #4d66cd;
-                }
+			.coefficient-value {
+				cursor: default;
 
-                .inner-tooltip-trigger {
-                    opacity: 0.25;
-
-                    &:hover {
-                        opacity: 0.8;
-                    }
+				span:nth-child(2) {
+					padding-left: 3px;
+					color: #4d66cd;
 				}
-				
-				& + .main-btn {
+
+				.inner-tooltip-trigger {
+					opacity: 0.25;
+
+					&:hover {
+						opacity: 0.8;
+					}
+				}
+
+				&+.main-btn {
 					margin: 0 0 0 auto;
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 
-    .empty-frozen-funds {
-        text-align: center;
-        margin-top: 100px;
-        color: rgba(#5C637D, .6);
-        line-height: 18px;
-        font-size: 15px;
-        font-weight: 400;
+	.empty-frozen-funds {
+		text-align: center;
+		margin-top: 100px;
+		color: rgba(#5C637D, .6);
+		line-height: 18px;
+		font-size: 15px;
+		font-weight: 400;
 
-        .icon-frozen-funds {
-            color: rgba(#5C637D, .5);
-            display: block;
-            font-size: 19px;
-            line-height: 41px;
-            margin-right: 0px;
-        }
-    }
+		.icon-frozen-funds {
+			color: rgba(#5C637D, .5);
+			display: block;
+			font-size: 19px;
+			line-height: 41px;
+			margin-right: 0px;
+		}
+	}
 }
