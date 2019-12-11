@@ -8,7 +8,7 @@ import { dependencies } from '../package.json';
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
-export default {
+const config = {
 	externals: [...Object.keys(dependencies || {})],
 
 	module: {
@@ -51,3 +51,9 @@ export default {
 		new webpack.NamedModulesPlugin(),
 	],
 };
+
+if (fs.existsSync('./.git')) {
+	config.plugins.push(gitRevisionPlugin);
+}
+
+export default config;

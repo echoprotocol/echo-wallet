@@ -2,17 +2,14 @@ import path from 'path';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
+import CleanWebpackPlugin from 'clean-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import GitRevisionPlugin from 'git-revision-webpack-plugin';
-import fs from 'fs';
 
 import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 import baseConfig from './webpack.config.base.babel';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 
 CheckNodeEnv('production');
-const gitRevisionPlugin = new GitRevisionPlugin();
-
 export default merge.smart(baseConfig, {
 	devtool: 'source-map',
 
@@ -40,6 +37,7 @@ export default merge.smart(baseConfig, {
 	},
 
 	plugins: [
+		new CleanWebpackPlugin(['build']),
 		new BundleAnalyzerPlugin({
 			analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
@@ -54,11 +52,12 @@ export default merge.smart(baseConfig, {
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
-			COMMITHASH: fs.existsSync('./.git') ? JSON.stringify(gitRevisionPlugin.commithash()) : '',
 		}),
 	],
 	node: {
-		__dirname: false,
-		__filename: false,
+		fs: 'empty',
+		net: 'empty',
+		tls: 'empty',
+		module: 'empty',
 	},
 });
