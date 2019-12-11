@@ -306,7 +306,7 @@
 	}
 }
 
-.dropdown .menu .active.item {
+.dropdown .active.item {
 	background: transparent;
 	color: rgba(0, 0, 0, 0.95);
 	z-index: 12;
@@ -318,7 +318,7 @@
 }
 
 .dropdown.selected,
-.dropdown .menu .selected.item {
+.dropdown .selected.item {
 	transition: background $speed;
 	background: rgba(0, 0, 0, 0.03);
 	color: rgba(0, 0, 0, 0.95);

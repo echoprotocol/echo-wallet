@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Button } from 'semantic-ui-react';
+import { Popup, Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
@@ -12,6 +12,8 @@ import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 import ProgressBar from '../ProgressBar';
+import ProgressLine from '../ProgressLine';
+
 
 class Network extends React.PureComponent {
 
@@ -72,17 +74,45 @@ class Network extends React.PureComponent {
 							</div>
 							<span className="label-link">{i.url}</span>
 							{ !NETWORKS.find((n) => n.name === i.name) &&
-								<Button
-									id="btn-dlt"
-									onClick={(e) => this.onDeleteNetwork(i, e)}
-									className="icon-remove"
-								/>
+							<Button
+								id="btn-dlt"
+								onClick={(e) => this.onDeleteNetwork(i, e)}
+								className="icon-remove"
+							/>
 							}
 						</div>
-						<div className="node-info">sdsdsdsd</div>
+						{ i.name === 'testnet' &&
+							<div className="node-info">
+								<div className="node-label">
+									<div className="node-title">
+										Remote Node
+									</div>
+									<div className="sync">
+										<div className="percent">
+											32
+											<span className="symbol">%</span>
+										</div>
+										<Popup
+											trigger={<span className="icon-info" />}
+											content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+											className="inner-tooltip"
+											position="bottom center"
+											style={{ width: 200 }}
+										/>
+									</div>
+								</div>
+								<div className="sync-progress">
+									<div className="sync-label">
+										Network synchronization
+									</div>
+									<ProgressLine value={64} />
+								</div>
+							</div>
+						}
 					</div>
 				),
-			}));
+			}
+		));
 	}
 
 	render() {
@@ -110,12 +140,15 @@ class Network extends React.PureComponent {
 			key: 'custom',
 			className: 'item-footer',
 			selected: false,
-			content: (<div className="network-link">+ Add custom Network</div>),
+			content: (
+				<div className="network-link">
+					<span className="network-link-content">+ Add custom Network</span>
+				</div>),
 		});
 
 		return (
 			<Dropdown
-				open
+				open={open}
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
@@ -124,6 +157,7 @@ class Network extends React.PureComponent {
 				upward
 				disabled={loading}
 				onClick={() => { if (!open) { this.setState({ open: true }); } }}
+				onFocus={() => this.setState({ open: true })}
 				onBlur={() => this.setState({ open: false })}
 				className={classnames('network-dropdown', {
 					disconnected,
@@ -140,10 +174,12 @@ class Network extends React.PureComponent {
 						</span>
 
 						<ProgressBar
-							percentage={30}
 							size={20}
 							value={64}
+							disconnected={disconnected}
+							warning={warning}
 						/>
+
 						<span className="pipeline-block">
 								Block
 							<span>{this.props.lastBlock}</span>

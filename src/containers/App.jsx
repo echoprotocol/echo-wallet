@@ -69,7 +69,7 @@ class App extends React.Component {
 	renderSidebar() {
 		const { location } = this.props;
 		return (
-			<Sidebar.Pushable as={Segment}>
+			<Sidebar.Pushable>
 				{
 					!PUBLIC_ROUTES.includes(location.pathname) ?
 						[
@@ -107,9 +107,7 @@ class App extends React.Component {
 
 
 				<div className="global-wrapper">
-					<Segment>
-						{globalLoading ? this.renderLoading() : this.renderSidebar()}
-					</Segment>
+					{globalLoading ? this.renderLoading() : this.renderSidebar()}
 
 					<Modals />
 					<Toast />

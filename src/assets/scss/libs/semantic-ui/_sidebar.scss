@@ -1,20 +1,3 @@
-/*!
- * # Semantic UI 2.3.1 - Sidebar
- * http://github.com/semantic-org/semantic-ui/
- *
- *
- * Released under the MIT license
- * http://opensource.org/licenses/MIT
- *
- */
-
-
-/*******************************
-            Sidebar
-*******************************/
-
-
-/* Sidebar Menu */
 .sidebar {
 	position: fixed;
 	top: 0;
@@ -26,78 +9,27 @@
 	will-change: transform;
 	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
-	//   visibility: hidden;
 	-webkit-overflow-scrolling: touch;
-	height: 100% !important;
+	height: 100%;
 	max-height: 100%;
-	border-radius: 0em !important;
-	margin: 0em !important;
-	//   overflow-y: auto !important;
+	border-radius: 0;
+	margin: 0;
 	z-index: 102;
 }
 
-/* GPU Layers for Child Elements */
 .sidebar>* {
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 }
 
-/*--------------
-   Direction
----------------*/
-
-.left.sidebar {
-	right: auto;
-	left: 0px;
-	//   -webkit-transform: translate3d(-100%, 0, 0);
-	//           transform: translate3d(-100%, 0, 0);
-}
-
-.right.sidebar {
-	right: 0px !important;
-	left: auto !important;
-	-webkit-transform: translate3d(100%, 0%, 0);
-	transform: translate3d(100%, 0%, 0);
-}
-
-.top.sidebar,
-.bottom.sidebar {
-	width: 100% !important;
-	height: auto !important;
-}
-
-.top.sidebar {
-	top: 0px !important;
-	bottom: auto !important;
-	-webkit-transform: translate3d(0, -100%, 0);
-	transform: translate3d(0, -100%, 0);
-}
-
-.bottom.sidebar {
-	top: auto !important;
-	bottom: 0px !important;
-	-webkit-transform: translate3d(0, 100%, 0);
-	transform: translate3d(0, 100%, 0);
-}
-
-/*--------------
-     Pushable
----------------*/
 
 .pushable {
 	height: 100%;
-	overflow-x: hidden;
-	padding: 0em !important;
+	overflow: hidden;
+	padding: 0;
 }
 
-/* Whole Page */
-body.pushable {
-	background: #545454 !important;
-}
-
-/* Page Context */
 .pushable:not(body) {
-	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 }
 
@@ -106,10 +38,6 @@ body.pushable {
 .pushable:not(body)>.pusher:after {
 	position: absolute;
 }
-
-/*--------------
-     Fixed
----------------*/
 
 .pushable>.fixed {
 	position: fixed;
@@ -123,9 +51,6 @@ body.pushable {
 	z-index: 101;
 }
 
-/*--------------
-     Page
----------------*/
 
 .pushable>.pusher {
 	position: relative;
@@ -139,22 +64,13 @@ body.pushable {
 	transition: transform 500ms ease, -webkit-transform 500ms ease;
 	z-index: 2;
 	max-width: calc(100vw - 56px);
-	//   max-height: calc(100vh - 30px);
 	margin-left: auto;
+	background: inherit;
 }
 
 body.pushable>.pusher {
 	background: #FFFFFF;
 }
-
-/* Pusher should inherit background from context */
-.pushable>.pusher {
-	background: inherit;
-}
-
-/*--------------
-     Dimmer
----------------*/
 
 .pushable>.pusher:after {
 	position: fixed;
@@ -170,23 +86,9 @@ body.pushable>.pusher {
 	z-index: -1;
 }
 
-/*--------------
-    Coupling
----------------*/
-
 .sidebar.menu .item {
-	border-radius: 0em !important;
+	border-radius: 0 !important;
 }
-
-
-/*******************************
-            States
-*******************************/
-
-
-/*--------------
-     Dimmed
----------------*/
 
 .pushable>.pusher.dimmed:after {
 	width: 100% !important;

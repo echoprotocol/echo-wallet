@@ -1,20 +1,42 @@
+// ProgressBar
 .progress-wrap {
 	display: flex;
 	align-items: center;
-
-	&>.value {
-		color: #5C637D;
-		font-size: 13px;
-		font-weight: 600;
-		margin: 0 0 0 4px;
-		min-width: 30px;
-
-		.symbol {
-			font-size: 10px;
-		}
-	}
 }
 
 .CircularProgressbar {
 	vertical-align: middle;
+}
+
+.percent {
+	color: #5C637D;
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0 0 0 4px;
+	min-width: 30px;
+
+	.symbol {
+		font-size: 10px;
+	}
+}
+
+// ProgressLine
+.progress-line {
+	width: 90px;
+	height: 3px;
+	position: relative;
+	display: flex;
+	border-radius: 4px;
+	background-color: rgba(#D0D0D5, .5);
+
+	.progress {
+		position: absolute;
+		right: 0;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		background: linear-gradient(to right, #4c5898 0%, #64b2ac 100%);
+		border-radius: 4px;
+		transition: background $speed, max-width $speed;
+	}
 }
