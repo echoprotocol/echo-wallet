@@ -318,6 +318,7 @@ class Permissions extends React.Component {
 			<div className="sub-header-panel">
 				<div className="view-panel-wrap">
 					<PrivateKeysScenario
+						permissionsKeys={this.props.permissionsKeys}
 						onKeys={(privateKeys) => this.changeMode(FORM_PERMISSION_MODE_EDIT, privateKeys)}
 					>
 						{
