@@ -24,13 +24,24 @@ class EchoNetwork extends React.Component {
 		this.state = {
 			addresses: new List([]),
 			receiver: '',
+			searchText: '',
 			open: false,
+			timeout: null,
+			searchAddr: [],
+			searchAccs: [],
 		};
 	}
 
 
 	componentDidMount() {
 		this.props.updateAccountAddresses();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.accountAddresses !== prevProps.accountAddresses ||
+			this.props.accountName !== prevProps.accountName) {
+			this.onChange(null, this.state.searchText);
+		}
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -45,13 +56,29 @@ class EchoNetwork extends React.Component {
 
 	onClickItem(value) {
 		this.setState({
+			searchText: '',
 			receiver: value,
 			open: !this.state.open,
 		});
 	}
 
 	onChange(e, value) {
-		this.setState({ receiver: value });
+		this.setState({ searchText: value });
+		const addresses = this.props.accountAddresses.toJS();
+		const users = this.props.accountName;
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+		this.setState({
+			timeout: setTimeout(() => {
+				const filteredAddresses = addresses.filter(({ address }) => address.match(value));
+				const filteredAccs = [users].filter((user) => user.match(value));
+				this.setState({
+					searchAddr: filteredAddresses,
+					searchAccs: filteredAccs,
+				});
+			}, 300),
+		});
 	}
 
 	getReceiver() {
@@ -99,10 +126,8 @@ class EchoNetwork extends React.Component {
 		return new BN(amount.value).toString(10);
 	}
 
-	renderAccountsList() {
 
-		const users = [{ name: this.props.accountName }];
-
+	renderAccountHeader() {
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
 		const header = [{
@@ -112,10 +137,13 @@ class EchoNetwork extends React.Component {
 			content: acconutHeaderTitle,
 			disabled: true,
 		}];
+		return header;
+	}
+	renderAccountsList() {
 
-		const options = users.map(({
-			name,
-		}) => {
+		const users = this.state.searchAccs;
+
+		const options = users.map((name) => {
 			const content = (
 				<React.Fragment>
 					<div className="avatar-wrap">
@@ -135,19 +163,11 @@ class EchoNetwork extends React.Component {
 			});
 		});
 
-		return header.concat(options);
+		return options;
 	}
 
 
-	renderAddressesList() {
-		const { addresses } = this.state;
-
-
-		const users = addresses.map((a) => ({
-			name: a.get('label'),
-			address: a.get('address'),
-		})).toArray();
-
+	renderAddressesHeader() {
 		const addressHeaderTitle = (
 			<div className="title">ADDRESSES</div>
 		);
@@ -160,18 +180,17 @@ class EchoNetwork extends React.Component {
 			onClick: (e) => e.stopPropagation(),
 			disabled: true,
 		}];
+		return header;
+	}
+	renderAddressesList() {
+		const addresses = this.state.searchAddr;
 
-		const generateAddressItem = [{
-			className: 'generate-address',
-			value: 'generate-address',
-			key: 'generate-address',
-			content: 'Generate new address',
-			onClick: () => {
-				this.setState({ open: false });
-				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
-			},
-			selected: false,
-		}];
+
+		const users = addresses.map((a) => ({
+			name: a.label,
+			address: a.address,
+		}));
+
 
 		const options = users.map(({
 			name, address,
@@ -202,17 +221,40 @@ class EchoNetwork extends React.Component {
 			});
 		});
 
-		return !options.length ?
-			generateAddressItem :
-			header.concat(options).concat(generateAddressItem);
+		return options.length && options;
+	}
+	renderGenerateAddressButton() {
+		const generateAddressItem = [{
+			className: 'generate-address',
+			value: 'generate-address',
+			key: 'generate-address',
+			content: 'Generate new address',
+			onClick: () => {
+				this.setState({ open: false });
+				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+			},
+			selected: false,
+		}];
+		return generateAddressItem;
 	}
 
+	renderOptions() {
+		const { searchAddr, searchAccs } = this.state;
+		const renderAccSection = searchAccs.length;
+		const renderAdrSection = searchAddr.length;
+		const AccSection = renderAccSection ?
+			this.renderAccountHeader().concat(this.renderAccountsList(searchAccs)) : [];
+		const AdrSection = renderAdrSection ?
+			this.renderAddressesHeader().concat(this.renderAddressesList(searchAddr)) : [];
+		return [].concat(AccSection).concat(AdrSection).concat(this.renderGenerateAddressButton())
+			.filter((el) => el !== null);
+	}
 	render() {
 
 		const {
 			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-		const { receiver, open } = this.state;
+		const { receiver, open, searchText } = this.state;
 		const receiverValue = this.getReceiver();
 
 		const link = this.getQrData();
@@ -229,10 +271,10 @@ class EchoNetwork extends React.Component {
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
 						placeholder="Choose account or address"
-						options={this.renderAccountsList().concat(this.renderAddressesList())}
-						search
-						text="Choose account or address"
-						searchQuery={receiver}
+						options={this.renderOptions()}
+						search={() => this.renderOptions()}
+						text={receiver || 'Choose account or address'}
+						searchQuery={searchText}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 						onClick={() => { if (!open) { this.setState({ open: true }); } }}
 						onBlur={() => this.setState({ open: false })}
