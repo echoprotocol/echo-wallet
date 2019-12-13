@@ -13,6 +13,7 @@ class SourceCode extends React.Component {
 		this.state = {
 			timeout: null,
 			isDropdownUpdward: false,
+			isAceError: false,
 		};
 	}
 
@@ -134,7 +135,7 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form } = this.props;
-		const { isDropdownUpdward } = this.state;
+		const { isDropdownUpdward, isAceError } = this.state;
 
 		return (
 			<React.Fragment>
@@ -146,7 +147,11 @@ class SourceCode extends React.Component {
 
 				>
 					<div className="editor-label">CODE EDITOR</div>
-					<button className="ace-warning" />
+					<button
+						onMouseEnter={() => { this.setState({ isAceError: true }); }}
+						onMouseLeave={() => { this.setState({ isAceError: false }); }}
+						className="ace-warning"
+					/>
 					<AceEditor
 						className="editor"
 						width="100%"
@@ -177,6 +182,10 @@ class SourceCode extends React.Component {
 							},
 						] : null}
 					/>
+					{
+						isAceError && <div className="ace-error">No Contract Compiled Yet</div>
+					}
+
 				</div>
 				<div className="fields">
 					<div className="field">
@@ -208,6 +217,7 @@ class SourceCode extends React.Component {
 						/>
 					</div>
 				</div>
+
 			</React.Fragment>
 		);
 	}

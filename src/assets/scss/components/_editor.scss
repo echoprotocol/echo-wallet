@@ -4,10 +4,41 @@
 
 }
 
-.warning {}
-
 .ace-warning {
 	padding: 0;
+	background-image: url('../images/warning-ace.svg');
+	width: 35px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: 3px center;
+	background-size: 9px;
+	position: absolute;
+	top: 18px;
+	z-index: 9;
+}
+
+.ace-error {
+	top: calc(100% - 3px);
+	right: 0;
+	left: 0;
+	position: absolute;
+	display: block;
+	pointer-events: unset;
+	border: 0;
+	border-radius: 0;
+	border-top: 2px solid #EE851C;
+	padding: 7px 16px;
+	font-weight: 600;
+	font-size: 11px;
+	line-height: 15px;
+	background-color: #E9E9ED;
+	font-family: proxima;
+	box-shadow: 0 34px 28px rgba(255, 255, 255, 0.4);
+	color: #3B3B3B;
+	background-image: none;
+	white-space: normal;
+	animation: fadeIn $speed;
+	z-index: 44;
 }
 
 .editor {
@@ -41,9 +72,9 @@
 	}
 
 	.ace_tooltip {
-		top: 100% !important;
+		top: calc(100% - 2px) !important;
 		right: 0;
-		left: 0 !important;
+		left: -1px !important;
 		position: absolute;
 		display: block;
 		pointer-events: unset;
@@ -60,6 +91,7 @@
 		color: #3B3B3B;
 		background-image: none;
 		white-space: normal;
+		min-width: 573px;
 		animation: fadeIn $speed;
 	}
 
