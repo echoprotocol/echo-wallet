@@ -1,40 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 
-function VerificationField(props) {
+const VerificationField = (props) => {
 	const {
-		loading, value,
-		error, status,
-		disabled, name,
-		label,
+		loading, value, error,
+		status, disabled, name,
+		label, placeholder,
+		additionalLabel, autoFocus,
+		icon,
 	} = props;
 
 	return (
+		<div className={classnames('field error-wrap', { error: !!error })}>
+			{label &&
+				<label htmlFor={name}>
+					{label}
+					{additionalLabel}
+				</label>
+			}
 
-		<Form.Field className={classnames('error-wrap', { error })}>
-			{label && <label htmlFor={name}>{label}</label>}
-			<div className={classnames('action-wrap', { loading: false })}>
+			<div className={classnames('action-wrap', { loading, icon: !!icon })}>
+				{icon}
 				<input
 					type="text"
-					placeholder="Enter IP or URL"
+					placeholder={placeholder}
 					name={name}
 					value={value}
 					autoComplete="off"
 					onChange={(e) => props.onChange(e.target.value)}
 					disabled={disabled}
+					autoFocus={autoFocus}
 				/>
-				{ !loading && true &&
-					<span className={classnames('value-status', `icon-${status}`)} />
+
+				{ !loading && !disabled &&
+				<span className={classnames('value-status', `icon-${status}`)} />
 				}
 			</div>
 
-			{ error && <span className="error-message">{error}</span> }
-		</Form.Field>
+			{ !!error && <span className="error-message">{error}</span> }
+		</div>
 	);
-}
+};
 
 
 VerificationField.propTypes = {
@@ -43,19 +51,28 @@ VerificationField.propTypes = {
 	name: PropTypes.string,
 	value: PropTypes.string,
 	status: PropTypes.string, // error or checked
+	placeholder: PropTypes.string,
 	loading: PropTypes.bool,
-	error: PropTypes.bool,
+	error: PropTypes.string,
 	disabled: PropTypes.bool,
+	autoFocus: PropTypes.bool,
+	additionalLabel: PropTypes.node,
+	icon: PropTypes.node,
+
 };
 
 VerificationField.defaultProps = {
 	label: '',
 	name: '',
 	value: '',
-	error: false,
+	placeholder: '',
+	error: '',
 	loading: false,
-	status: null,
 	disabled: false,
+	autoFocus: false,
+	status: '',
+	additionalLabel: 'null',
+	icon: null,
 };
 
 export default VerificationField;

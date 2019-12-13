@@ -99,6 +99,7 @@
 
 .field-wrap {
 	width: 100%;
+	position: relative;
 
 	.field {
 		position: relative;
@@ -126,7 +127,7 @@
 			}
 		}
 
-		.input.icon {
+		.icon {
 			.avatar-wrap {
 				position: absolute;
 				top: 0;
@@ -137,13 +138,13 @@
 			}
 		}
 
-		.input.icon>input {
+		.icon>input {
 			z-index: 3;
 			background-color: transparent;
 			padding-left: 40px;
 		}
 
-		.input.icon.disabled {
+		.icon.disabled {
 			background-color: rgba(233, 233, 237, 0.5);
 		}
 	}
@@ -391,7 +392,6 @@
 						border-color: $border-hover;
 						position: relative;
 
-
 						&:before {
 							top: -5px;
 							bottom: -5px;
@@ -624,6 +624,7 @@
 	display: flex;
 	align-items: center;
 	width: 25px;
+	z-index: 10;
 
 	&.icon-error {
 		color: $err-red;
