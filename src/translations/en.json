@@ -1,13 +1,99 @@
-,{
+{
     "global_loader": {
         "title": "Please wait",
         "subtitle": "We’re loading all data..."
     },
     "sign_page": {
-
+        "title": "Add Account",
+        "welcome_title": "Welcome to Echo",
+        "back_button_text": "BACK",
+        "add_account_button": "Add Account",
+        "login_button": "Login",
+        "create_account_button": "Create Account",
+        "account_button_loading": "Creating...",
+        "import_account_page": {
+            "name_input": {
+                "title": "Account name",
+                "placeholder": "Account Name"
+            },
+            "wif_input": {
+                "title": "WIF-key",
+                "placeholder": "WIF-key"
+            },
+            "dont_have_acc_text": "Don’t have an account?",
+            "dont_have_acc_link": "Sign Up"
+        },
+        "register_account_page": {
+            "default_settings_page": {
+                "text_to_custom_settings": "Or use your own WIF or Public Key",
+                "name_input": {
+                    "title": "Account name (public)",
+                    "placeholder": "Account Name"
+                },
+                "generated_wif_input": {
+                    "title": "Generated WIF"
+                },
+                "confirm_wif_input": {
+                    "title": "Confirm WIF",
+                    "placeholder": "Confirm WIF"
+                }
+            },
+            "custom_settings_page": {
+                "text_to_custom_settings": "Or generate WIF",
+                "text": "You can use your own WIF or Public Key:",
+                "name_input": {
+                    "title": "Account name (public)",
+                    "placeholder": "Account Name"
+                },
+                "wif_input": {
+                    "title": "WIF (optional)",
+                    "placeholder": "WIF"
+                },
+                "pub_key_input": {
+                    "title": "PUBLIC KEY",
+                    "placeholder": "Enter public key"
+                }
+            },
+            "checkboxes": {
+                "first": "I understand that I will lose access to my funds if I loose my WIF",
+                "second": "I understand no one can recover my WIF if I lose or forget it",
+                "third": "I have written down or otherwise stored my WIF"
+            },
+            "more_options_section": {
+                "title": "More Options",
+                "subtitle": "Register using:",
+                "default_settings_section": {
+                    "title": "Default settings",
+                    "text_pt1": "Register for free by public registrar.",
+                    "text_pt2": "Delegation to participate in the consensus will be granted to public registrar."
+                },
+                "parent_account_section": {
+                    "title": "Parent account",
+                    "text": "Register with an existing account. The selected account will be charged fee for account creation.",
+                    "dropdown": {
+                        "title": "Parent account name",
+                        "placeholder": "Parent account name"
+                    },
+                    "dont_have_acc_text_pt1": "You don't have an account.",
+                    "dont_have_acc_text_pt2": "You can generate a new account on your own. Log in your another wallet account beforehand to do so"
+                },
+                "ip_url_section": {
+                    "title": "IP/URL",
+                    "text": "Register a new account through a running node.",
+                    "dropdown": {
+                        "title": "IP or URL",
+                        "placeholder": "Enter IP or URL"
+                    }
+                }
+            },
+            "have_acc_text": "Have an account?",
+            "have_acc_link": "Login"
+        }
     },
     "account_dropdown": {
-
+        "add_account_button": "ADD_ACCOUNT",
+        "delegated_to": "(delegated_to)",
+        "change_delegate_button": "Change"
     },
     "wallet_page": {
         "title": "Wallet",
@@ -22,6 +108,9 @@
             },
             "assets": {
                 "title": "Assets"
+            },
+            "tokens": {
+                "title": "Tokens"
             }
         },
         "create_payment": {
@@ -60,7 +149,7 @@
                     "title": "You should generate address to receive payment.",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
                     "button_text": "GENERATE ADDRESS"
-                }, 
+                },
                 "wait_address_page": {
                     "title": "Wait please, address is not ready yet",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
@@ -80,7 +169,7 @@
                     "title": "You should generate address to receive payment.",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
                     "button_text": "GENERATE ADDRESS"
-                }, 
+                },
                 "wait_address_page": {
                     "title": "Wait please, address is not ready yet",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
@@ -123,6 +212,11 @@
                 "value": "Value",
                 "fee": "Fee",
                 "time": "Time"
+            },
+            "transaction": {
+                "title": "Transaction",
+                "subtitle": "Transaction",
+                "link_text": "Open in explorer"
             }
         }
     },
@@ -190,7 +284,6 @@
                     },
                     "popup_text": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
                 }
-
             },
             "button_text": "CREATE CONTRACT"
         },
@@ -218,7 +311,7 @@
             },
             "general_info_tab": {
                 "title": "GENERAL INFO",
-                "fee_pool": "FEE POOL", 
+                "fee_pool": "FEE POOL",
                 "replenish_button_text": "REPLENISH",
                 "whitelist": "Whitelist",
                 "blacklist": "Blacklist",
@@ -228,19 +321,102 @@
                 "add_account_to_list_button_text": "Add account",
                 "empty_list_info": "List is empty",
                 "lists_members_text": ""
+            },
+            "view_properties_tab": {
+                "title": "VIEW PROPERTIES",
+                "call_btn": "CALL"
+            },
+            "call_contract_tab": {
+                "title": "CALL CONTRACTS",
+                "form": {
+                    "select_method_field": "SELECT METHOD",
+                    "spender_field": "SPENDER",
+                    "value_field": "VALUE",
+                    "fee_field": "FEE",
+                    "send_button_text": "SEND"
+                }
             }
         }
     },
     "backup_and_permissions_page": {
-
-    },
-    "modals": {
-
-    },
-    "toasts": {
-
+        "title": "Backup and Permissions",
+        "subtitile": "Account ID:",
+        "threshold": "threshold",
+        "threshold_popup": "You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction.",
+        "echorand_key_section": {
+            "title": "EchoRand Key",
+            "subtitile": "(for advanced users)",
+            "info": "EchoRand Key is used for participating in blocks generation and signing sidechain transactions by committee members.",
+            "link_to_docs_text": "Know more in Echo Docs"
+        },
+        "view_mode": {
+            "info": "Making a backup of your keys helps ensure you can always maintain access to your funds. Anyone having access to your keys will take full control of the funds, so we strongly recommend storing it offline in a secure place.",
+            "pub_keys_and_accs_section": {
+                "title": "Public Keys and Accounts",
+                "weight": "weight"
+            },
+            "wif_key_button": {
+                "view_wif_button": "VIEW WIF",
+                "add_wif_button": "ADD WIF"
+            },
+            "button_section": {
+                "edit_mode_button": "EDIT MODE",
+                "backup_button": "VIEW & BACKUP KEYS"
+            }
+        },
+        "edit_mode": {
+            "info": "The settings below allow you to specify the keys and / or accounts, whose signatures will be necessary to send a transaction from your account. Using threshold and weight you can separate access to an account between several keys and / or accounts.",
+            "public_key_field": "Public key",
+            "wif_field": "WIF (optional)",
+            "weight_field": "Weight",
+            "button_section": {
+                "save_button": "SAVE",
+                "cancel_button": "CANCEL"
+            },
+            "add_buttons_section": {
+                "add_acc_button": "ADD ACCOUNT",
+                "add_pub_key_button": "ADD PUBLIC KEY"
+            },
+            "loader_applying_text": "Applying changes..."
+        }
     },
     "footer": {
-
-    }
+        "about_wallet": "About wallet",
+        "network_section": {
+            "title": "Network",
+            "block": "Block",
+            "choose_network_dropdown": {
+                "title": "CHOOSE NETWORK",
+                "add_custom_network_buttom": "Add custom Network"
+            }
+        }
+    },
+    "add_connection_page": {
+        "title": "Add connection",
+        "back_button_text": "BACK",
+        "add_account_button": "CREATE",
+        "address_input": {
+            "title": "address",
+            "placeholder": "address"
+        },
+        "name_input": {
+            "title": "name",
+            "placeholder": "name"
+        },
+        "agree_switch_checkbox": "Switch to this Network upon creating"
+    },
+    "toasts": {
+        "success": {
+            "trx_sent_postfix": "transaction was sent",
+            "trx_complete_postfix": "transaction was completed"
+        },
+        "error": {
+            "trx_dont_complete_postfix": "transaction wasn't completed",
+            "trx_dont_comp_by_lose_connection": "transaction wasn't completed. Please, check your connection.",
+            "trx_error": "Transaction sending error",
+            "private_key_error": "Private key was not imported in Echo Desktop Wallet"
+        }
+    },
+    "modals": {},
+    "errors": {}
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
+
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -34,7 +36,9 @@ class StableCoins extends React.Component {
 										className={classnames('tag', {
 											active: activeCoinTypeTab === i + 1 && activePaymentTypeTab === 1,
 										})}
-										content="Deposit"
+										content={
+											<FormattedMessage id="wallet_page.balances.stable_coins.deposit" />
+										}
 										onClick={() => {
 											this.onStableClick(1, i + 1);
 										}}
@@ -43,7 +47,9 @@ class StableCoins extends React.Component {
 										className={classnames('tag', {
 											active: activeCoinTypeTab === i + 1 && activePaymentTypeTab === 0,
 										})}
-										content="Withdrawal"
+										content={
+											<FormattedMessage id="wallet_page.balances.stable_coins.withdrawal" />
+										}
 										disabled={!asset.notEmpty}
 										onClick={() => {
 											this.onStableClick(0, i + 1);
@@ -64,10 +70,12 @@ class StableCoins extends React.Component {
 		return (
 			<React.Fragment>
 				<h3 className="currency-title">
-					Stable Coins
+					<FormattedMessage id="wallet_page.balances.stable_coins.title" />
 					<Popup
 						trigger={<span className="inner-tooltip-trigger icon-info" />}
-						content="Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain."
+						content={
+							<FormattedMessage id="wallet_page.balances.stable_coins.popup_info" />
+						}
 						className="inner-tooltip"
 						style={{ width: 373 }}
 						inverted

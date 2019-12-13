@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import { List } from 'immutable';
+import { FormattedMessage } from 'react-intl';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -134,7 +135,9 @@ class Transfer extends React.Component {
 										basic
 										type="submit"
 										className="main-btn"
-										content="Send"
+										content={
+											<FormattedMessage id="wallet_page.create_payment.button_text" />
+										}
 										onClick={submit}
 									/>
 								</div>

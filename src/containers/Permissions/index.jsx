@@ -537,7 +537,7 @@ class Permissions extends React.Component {
 		const { showLoader } = this.props;
 		return (
 			showLoader ?
-			<Loading text="Apllying changes..." /> :
+			<Loading text="Applying changes..." /> :
 			<div className="permissions-wrap">
 				<div className="sub-header">
 					{

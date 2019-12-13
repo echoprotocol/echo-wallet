@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 class IpUrlPanel extends React.Component {
 
@@ -11,15 +12,21 @@ class IpUrlPanel extends React.Component {
 		return (
 			<React.Fragment>
 				<div className="register-info">
-					<p>Register a new account through a running node.</p>
+					<p>
+						<FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.text" />
+					</p>
 				</div>
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error: !!ipOrUrl.error })}>
-						<label htmlFor="accountName">IP or URL</label>
+						<label htmlFor="accountName">
+							<FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.dropdown.title" />
+						</label>
 						<input
 							name="IpUrl"
 							disabled={loading}
-							placeholder="Enter IP or URL"
+							placeholder={
+								<FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.dropdown.placeholder" />
+							}
 							value={ipOrUrl.value}
 							onChange={(e) => this.props.setFormValue('ipOrUrl', e.target.value)}
 						/>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
+import { FormattedMessage } from 'react-intl';
 
 import { SIGN_UP_OPTIONS_TYPES } from '../../constants/FormConstants';
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
@@ -68,7 +69,11 @@ class AdditionalOptions extends React.Component {
 					className="accordion-trigger"
 					onClick={(e) => this.toggleAcordion(e)}
 					icon="dropdown"
-					content={<span className="content">More Options</span>}
+					content={
+						<span className="content">
+							<FormattedMessage id="sign_page.register_account_page.more_options_section.title" />
+						</span>
+					}
 				/>
 				<CSSTransition
 					in={isMoreOptionsActive}
@@ -79,27 +84,35 @@ class AdditionalOptions extends React.Component {
 				>
 					<div className="accordion-body">
 						<div className="field">
-							<label htmlFor="register">Register using:</label>
+							<label htmlFor="register">
+								<FormattedMessage id="sign_page.register_account_page.more_options_section.subtitle" />
+							</label>
 							<div name="register" className="radio-list">
 								<Button
 									name={SIGN_UP_OPTIONS_TYPES.DEFAULT}
 									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.DEFAULT })}
 									onClick={(e) => this.setActive(e)}
-									content="Default settings"
+									content={
+										<FormattedMessage id="sign_page.register_account_page.more_options_section.default_settings_section.title" />
+									}
 									disabled={false}
 								/>
 								<Button
 									name={SIGN_UP_OPTIONS_TYPES.PARENT}
 									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.PARENT })}
 									onClick={(e) => this.setActive(e)}
-									content="Parent account"
+									content={
+										<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.title" />
+									}
 									disabled={false}
 								/>
 								<Button
 									name={SIGN_UP_OPTIONS_TYPES.IP_URL}
 									className={classnames('radio', { checked: checked === SIGN_UP_OPTIONS_TYPES.IP_URL })}
 									onClick={(e) => this.setActive(e)}
-									content="IP/URL"
+									content={
+										<FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.title" />
+									}
 									disabled={false}
 								/>
 							</div>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { PrivateKey } from 'echojs-lib';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import ActionBtn from '../../components/ActionBtn';
 
 class FormComponent extends React.Component {
@@ -66,13 +67,21 @@ class FormComponent extends React.Component {
 	}
 
 	renderGeneratedWIF() {
-		const { generatedWIF, confirmWIF, loading } = this.props;
+		const {
+			generatedWIF, confirmWIF, loading, intl,
+		} = this.props;
+		const confirmWIFPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.default_settings_page.confirm_wif_input.title' });
+
 		return (
 			<React.Fragment>
 				<Form.Field>
 					<div className="label-wrap">
-						<label htmlFor="generatedWIF">Generated WIF</label>
-						<button onClick={() => this.onToogleWifType()} className="link-btn">Or use your own WIF or Public Key</button>
+						<label htmlFor="generatedWIF">
+							<FormattedMessage id="sign_page.register_account_page.default_settings_page.generated_wif_input.title" />
+						</label>
+						<button onClick={() => this.onToogleWifType()} className="link-btn">
+							<FormattedMessage id="sign_page.register_account_page.default_settings_page.text_to_custom_settings" />
+						</button>
 					</div>
 					<div className="action input">
 						<input
@@ -89,33 +98,45 @@ class FormComponent extends React.Component {
 					</div>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>
-					<label htmlFor="confirmWIF">Confirm WIF</label>
+					<label htmlFor="confirmWIF">
+						<FormattedMessage id="sign_page.register_account_page.default_settings_page.confirm_wif_input.title" />
+					</label>
 					<input
 						name="confirmWIF"
-						placeholder="Confirm WIF"
+						placeholder={confirmWIFPlaceholder}
 						value={confirmWIF.value}
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					{ confirmWIF.error && <span className="error-message">{confirmWIF.error}</span> }
+					{confirmWIF.error && <span className="error-message">{confirmWIF.error}</span>}
 				</Form.Field>
 			</React.Fragment>
 		);
 	}
 
 	renderUserWIF() {
-		const { loading, userPublicKey, userWIF } = this.props;
+		const {
+			loading, userPublicKey, userWIF, intl,
+		} = this.props;
+		const WIFPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.custom_settings_page.wif_input.placeholder' });
+		const pubKeyPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.custom_settings_page.pub_key_input.placeholder' });
 		return (
 			<React.Fragment>
 				<Form.Field className={classnames('error-wrap', { error: userWIF.error })}>
-					<h3 className="field-title">You can use your own WIF or Public Key:</h3>
+					<h3 className="field-title">
+						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.text" />
+					</h3>
 					<div className="label-wrap">
-						<label htmlFor="userWIF">WIF (optional)</label>
-						<button onClick={() => this.onToogleWifType()} className="link-btn">Or generate WIF</button>
+						<label htmlFor="userWIF">
+							<FormattedMessage id="sign_page.register_account_page.custom_settings_page.wif_input.title" />
+						</label>
+						<button onClick={() => this.onToogleWifType()} className="link-btn">
+							<FormattedMessage id="sign_page.register_account_page.custom_settings_page.text_to_custom_settings" />
+						</button>
 					</div>
 					<input
 						name="userWIF"
-						placeholder="WIF"
+						placeholder={WIFPlaceholder}
 						disabled={loading}
 						value={userWIF.value}
 						onChange={(e) => {
@@ -126,10 +147,12 @@ class FormComponent extends React.Component {
 					<span className="error-message">{userWIF.error}</span>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: userPublicKey.error })}>
-					<label htmlFor="confirmWIF">PUBLIC KEY</label>
+					<label htmlFor="confirmWIF">
+						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.pub_key_input.title" />
+					</label>
 					<input
 						name="userPublicKey"
-						placeholder="Enter public key"
+						placeholder={pubKeyPlaceholder}
 						disabled={loading}
 						value={userPublicKey.value}
 						onChange={(e) => {
@@ -144,14 +167,20 @@ class FormComponent extends React.Component {
 	}
 
 	render() {
-		const { accountName, loading, isCustomWIF } = this.props;
+		const {
+			accountName, loading, isCustomWIF, intl,
+		} = this.props;
+		const accountPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.default_settings_page.name_input.placeholder' });
+
 		return (
 			<div className="field-wrap">
 				<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
-					<label htmlFor="accountName">Account name (public)</label>
+					<label htmlFor="accountName">
+						<FormattedMessage id="sign_page.register_account_page.default_settings_page.name_input.title" />
+					</label>
 					<input
 						name="accountName"
-						placeholder="Account Name"
+						placeholder={accountPlaceholder}
 						value={accountName.value}
 						onChange={(e) => this.onChange(e, true)}
 						disabled={loading}
@@ -159,7 +188,7 @@ class FormComponent extends React.Component {
 					/>
 					<span className="error-message">{accountName.error}</span>
 				</Form.Field>
-				{ isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF() }
+				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}
 
 			</div>
 		);
@@ -179,10 +208,11 @@ FormComponent.propTypes = {
 	setFormError: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
 	loading: PropTypes.bool.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 FormComponent.defaultProps = {
 	isCustomWIF: false,
 };
 
-export default FormComponent;
+export default injectIntl(FormComponent);

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
 import { Map } from 'immutable';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { NavLink } from 'react-router-dom';
 import { CACHE_MAPS } from 'echojs-lib';
@@ -182,7 +183,9 @@ class Header extends React.Component {
 					<div className="user-base-info">
 						<div className="name-wrap">
 							<div className="name">{delegate.get('name')}</div>
-							<div className="parent-label">(delegated to)</div>
+							<div className="parent-label">
+								<FormattedMessage id="account_dropdown.delegated_to" />
+							</div>
 						</div>
 						<div className="id">{delegate.get('id')}</div>
 					</div>
@@ -190,7 +193,8 @@ class Header extends React.Component {
 						href=""
 						className="parent-link"
 						onClick={(e) => this.onChangeParentAccount(e)}
-					> Change
+					>
+						<FormattedMessage id="account_dropdown.change_delegate_button" />
 					</a>
 				</button>
 
@@ -246,20 +250,21 @@ class Header extends React.Component {
 
 	render() {
 		const {
-			location, accountName, assets,
+			location, accountName, assets, intl,
 		} = this.props;
 
 		const parsedLocation = `/${location.pathname.split('/')[1]}`;
 		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
+		const addAcText = intl.formatMessage({ id: 'account_dropdown.add_account_button' });
 
 		let options = [
 			{
 				value: 'add-account',
 				key: 'add-account',
 				className: 'add-account',
-				content: 'Add account',
+				content: addAcText,
 				onClick: (e) => this.onAddAccount(e),
 			},
 		];
@@ -272,7 +277,9 @@ class Header extends React.Component {
 					this.renderLinkToParent()
 				}
 
-				<div className="page-title">{this.getTitle()}</div>
+				<div className="page-title">
+					<FormattedMessage id={this.getTitle()} />
+				</div>
 				{
 					this.props.location.pathname === INDEX_PATH ?
 						this.renderLinkToFrozenFunds() : null
@@ -323,13 +330,14 @@ Header.propTypes = {
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	delegate: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 Header.defaultProps = {
 	transactionData: null,
 };
 
-export default withRouter(connect(
+export default injectIntl(withRouter(connect(
 	(state) => {
 		const currentAccountId = state.global.getIn(['activeUser', 'id']);
 		const currentAccount = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccountId]);
@@ -351,4 +359,4 @@ export default withRouter(connect(
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 	}),
-)(Header));
+)(Header)));
