@@ -35,7 +35,7 @@ class BytecodeField extends React.Component {
 						value={field.value}
 						onInput={(e) => this.onInput(e)}
 					/>
-					{ field.error && <span className="icon-error-red value-status" /> }
+					{ field.error && <span className="icon-error value-status" /> }
 				</div>
 				<span className="error-message">{field.error}</span>
 

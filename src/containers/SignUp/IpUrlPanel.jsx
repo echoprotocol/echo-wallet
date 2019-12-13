@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
-import classnames from 'classnames';
+import VerificationField from '../../components/Fields/VerificationField';
 
 class IpUrlPanel extends React.Component {
 
@@ -14,17 +13,20 @@ class IpUrlPanel extends React.Component {
 					<p>Register a new account through a running node.</p>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: !!ipOrUrl.error })}>
-						<label htmlFor="accountName">IP or URL</label>
-						<input
-							name="IpUrl"
-							disabled={loading}
-							placeholder="Enter IP or URL"
-							value={ipOrUrl.value}
-							onChange={(e) => this.props.setFormValue('ipOrUrl', e.target.value)}
-						/>
-						{ ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span> }
-					</Form.Field>
+					<VerificationField
+						value={ipOrUrl.value}
+						name="IpUrl"
+						label="IP or URL"
+						status="checked"
+						onChange={(value) => this.props.setFormValue('ipOrUrl', value)}
+						loading={false}
+						error={ipOrUrl.error}
+						disabled={loading}
+					/>
+					<div className="action-tooltip">
+						<div className="header">You can save IP or URL to use it next time</div>
+						<div className="panel">dsd</div>
+					</div>
 				</div>
 			</React.Fragment>
 		);

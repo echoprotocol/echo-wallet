@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import Avatar from '../../components/Avatar';
 
@@ -94,13 +94,12 @@ class AccountField extends React.Component {
 					}
 
 				</label>
-				<Input
-					type="text"
-					placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
-					icon={this.isAvatar()}
-					className={classnames('action-wrap', { loading: field.loading && !field.error })}
-					autoFocus={autoFocus}
-					disabled={disabled}
+				<div
+					className={classnames(
+						'action-wrap',
+						{ icon: this.isAvatar() },
+						{ loading: field.loading && !field.error },
+					)}
 				>
 					{
 						this.isAvatar() &&
@@ -109,16 +108,25 @@ class AccountField extends React.Component {
 						</div>
 					}
 					<input
+						type="text"
 						name={`account${subject}`}
 						value={field.value}
 						autoComplete="off"
 						onInput={(e) => this.onInput(e)}
+						autoFocus={autoFocus}
+						disabled={disabled}
+						placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
 					/>
-					{ field.checked && !field.error && !disabled &&
-						<span className={classnames('icon-checked value-status', { success: field.checked })} />
+
+					{ !field.loading && !disabled &&
+						<span className={classnames(
+							'value-status',
+							{ 'icon-error': field.error },
+							{ 'icon-checked': field.checked && !field.error },
+						)}
+						/>
 					}
-					{ field.error ? <span className="icon-error-red value-status" /> : null }
-				</Input>
+				</div>
 				<span className="error-message">{field.error}</span>
 
 			</Form.Field>
