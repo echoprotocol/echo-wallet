@@ -136,7 +136,7 @@ class TabGeneralInfo extends React.Component {
 
 
 	render() {
-		const { poolAsset } = this.props;
+		const { poolAsset, keyWeightWarn } = this.props;
 		const { open } = this.state;
 		const {
 			bytecode, abi, balances, contract, owner, activeUser, loading,
@@ -196,6 +196,7 @@ class TabGeneralInfo extends React.Component {
 												MODAL_REPLENISH,
 												{ contractId: this.props.match.params.id },
 											)}
+											disabled={keyWeightWarn}
 										/>
 									</div>
 								</td>
@@ -219,7 +220,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={this.props.openToWhitelistModal}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
 																Add account
 															</button>
@@ -250,7 +251,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={this.props.openToBlacklistModal}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
 																Add account
 															</button>
@@ -329,6 +330,7 @@ TabGeneralInfo.propTypes = {
 	openBlacklistModal: PropTypes.func.isRequired,
 	openToWhitelistModal: PropTypes.func.isRequired,
 	openToBlacklistModal: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 TabGeneralInfo.defaultProps = {

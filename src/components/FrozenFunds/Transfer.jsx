@@ -37,7 +37,7 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			currency,
+			currency, keyWeightWarn,
 			fee, assets, tokens, amount, isAvailableBalance, fees, duration,
 		} = this.props;
 		let coefficient = '0.0';
@@ -109,7 +109,7 @@ class Transfer extends React.Component {
 										className="main-btn"
 										content="Freeze"
 										onClick={submit}
-										disabled={!duration.isSelected}
+										disabled={!duration.isSelected || keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -142,6 +142,7 @@ Transfer.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
 	setAssets: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {

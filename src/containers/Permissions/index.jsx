@@ -314,6 +314,7 @@ class Permissions extends React.Component {
 	}
 
 	renderViewPanel() {
+		const {keyWeightWarn} = this.props;
 		return (
 			<div className="sub-header-panel">
 				<div className="view-panel-wrap">
@@ -329,6 +330,7 @@ class Permissions extends React.Component {
 										size="medium"
 										content="Edit mode"
 										onClick={getKeys}
+										disabled={keyWeightWarn}
 									/>
 								</React.Fragment>
 							)
@@ -578,6 +580,7 @@ Permissions.propTypes = {
 	editWifs: PropTypes.func.isRequired,
 	checkKeyWeightWarning: PropTypes.func.isRequired,
 	setWeightWarning: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -598,6 +601,7 @@ export default connect(
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
 			showLoader: state.global.get('permissionLoading'),
+			keyWeightWarn: state.global.get('keyWeightWarn'),
 		};
 	},
 	(dispatch) => ({

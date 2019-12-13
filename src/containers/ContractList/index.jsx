@@ -123,6 +123,7 @@ class ContractList extends React.Component {
 	}
 
 	renderList() {
+		const { keyWeightWarn } = this.props;
 		const { sortType, sortInc } = this.props.sort.toJS();
 		return (
 			<React.Fragment>
@@ -166,11 +167,13 @@ class ContractList extends React.Component {
 						content="create new contract"
 						className="main-btn"
 						onClick={(e) => this.onLink(SMART_CONTRACTS_PATH, e)}
+						disabled={keyWeightWarn}
 					/>
 					<Button
 						content="call contract"
 						className="main-btn"
 						onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)}
+						disabled={keyWeightWarn}
 					/>
 				</div>
 			</React.Fragment>
@@ -178,6 +181,7 @@ class ContractList extends React.Component {
 	}
 
 	renderEmpty() {
+		const { keyWeightWarn } = this.props;
 		return (
 			<div className="empty-contracts">
 				<div className="contract-navigator">
@@ -194,12 +198,14 @@ class ContractList extends React.Component {
 							className="main-btn"
 							basic
 							onClick={(e) => this.onLink(SMART_CONTRACTS_PATH, e)}
+							disabled={keyWeightWarn}
 						/>
 						<Button
 							content="call contract"
 							className="main-btn"
 							basic
 							onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)}
+							disabled={keyWeightWarn}
 						/>
 					</div>
 				</div>
@@ -225,6 +231,7 @@ ContractList.propTypes = {
 	contracts: PropTypes.any,
 	toggleSort: PropTypes.func.isRequired,
 	sort: PropTypes.object.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ContractList.defaultProps = {
@@ -235,6 +242,7 @@ export default connect(
 	(state) => ({
 		contracts: state.global.get('contracts'),
 		sort: state.sort.get(SORT_CONTRACTS),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		toggleSort: (type) => dispatch(toggleSort(SORT_CONTRACTS, type)),

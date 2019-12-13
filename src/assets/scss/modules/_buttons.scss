@@ -53,6 +53,10 @@ $stripe-width: 10px;
 	&:focus:not(:active):before {
 		@include on-focus(2px);
 	}
+
+	&:disabled {
+		color: rgba($main-color, 0.4);
+	}
 }
 
 .load {

@@ -62,7 +62,7 @@ class Transfer extends React.Component {
 		const {
 			from, to, currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
-			subjectTransferType, additionalAccountInfo,
+			subjectTransferType, additionalAccountInfo, keyWeightWarn,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 
@@ -137,6 +137,7 @@ class Transfer extends React.Component {
 										className="main-btn"
 										content="Send"
 										onClick={submit}
+										disabled={keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -179,6 +180,7 @@ Transfer.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {
