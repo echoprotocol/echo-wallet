@@ -365,7 +365,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'active'), { password });
 
 		if (keyAndType[1].echoRand) {
-			await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRan'), { password });
+			await userStorage.addKey(Key.create(key.publicKey, wif, account.id, 'echoRand'), { password });
 		}
 
 		if (!isAccountAdded(accountName, networkName)) {
