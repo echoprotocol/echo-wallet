@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
-import 'ace-builds/src-noconflict/mode-javascript';
-import 'ace-builds/src-noconflict/theme-github';
-import 'ace-builds/webpack-resolver';
 
 import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
 
@@ -16,6 +13,7 @@ class SourceCode extends React.Component {
 		this.state = {
 			timeout: null,
 			isDropdownUpdward: false,
+			isAceError: false,
 		};
 	}
 
@@ -30,9 +28,9 @@ class SourceCode extends React.Component {
 	}
 
 	onEditorLoad(editor) {
-		editor.setOptions({
-			fontSize: '15px',
-		});
+
+		editor.renderer.setScrollMargin(16, 14);
+		editor.renderer.setPadding(22);
 	}
 
 	onChange(value) {
@@ -43,11 +41,16 @@ class SourceCode extends React.Component {
 
 		if (!value) {
 			this.props.resetCompiler();
+			this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', false);
 			return;
 		}
+
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', false);
+
 		if (form.get('code').value === value) {
 			return;
 		}
+
 
 		if (value) {
 			setTimeout(() => {
@@ -58,6 +61,9 @@ class SourceCode extends React.Component {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
+
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', true);
+
 
 		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		this.setState({
@@ -129,19 +135,28 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form } = this.props;
-		const { isDropdownUpdward } = this.state;
+		const { isDropdownUpdward, isAceError } = this.state;
+
 		return (
 			<React.Fragment>
-				<div className={classnames(['editor-wrap error-wrap',
-					{ error: !!form.get('code').error },
-					{ loading: form.get('compileLoading') }])}
+				<div className={classnames(
+					'editor-wrap',
+					{ loading: form.get('compileLoading') },
+					{ warning: form.get('editorWorker') && !form.get('compileLoading') },
+				)}
+
 				>
 					<div className="editor-label">CODE EDITOR</div>
+					<button
+						onMouseEnter={() => { this.setState({ isAceError: true }); }}
+						onMouseLeave={() => { this.setState({ isAceError: false }); }}
+						className="ace-warning"
+					/>
 					<AceEditor
 						className="editor"
 						width="100%"
 						height="384px"
-						mode="javascript"
+						mode="text"
 						name="editor"
 						theme="textmate"
 						enableLiveAutocompletion
@@ -150,14 +165,27 @@ class SourceCode extends React.Component {
 						style={{
 							borderRadius: '4px',
 							borderColor: '#DDDDDD',
+							fontSize: '15px',
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
-						setOptions={{
-							useWorker: false,
-						}}
+						annotations={form.get('editorWorker') && !form.get('compileLoading') ? [
+							{
+								row: 0,
+								type: 'error',
+								text: form.get('code').error,
+							},
+							{
+								row: 2,
+								type: 'error',
+								text: 'browser/Untitled1.sol:26:12: ParserError: Expected but got identifier function transferOwnership(address newOwner) public onlyOwner {',
+							},
+						] : null}
 					/>
-					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
+					{
+						isAceError && <div className="ace-error">No Contract Compiled Yet</div>
+					}
+
 				</div>
 				<div className="fields">
 					<div className="field">
@@ -189,6 +217,7 @@ class SourceCode extends React.Component {
 						/>
 					</div>
 				</div>
+
 			</React.Fragment>
 		);
 	}
