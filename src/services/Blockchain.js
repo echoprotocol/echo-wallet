@@ -17,6 +17,7 @@ let ipcRenderer;
 
 try {
 	/* eslint-disable global-require */
+	// eslint-disable-next-line import/no-extraneous-dependencies
 	const electron = require('electron');
 	({ ipcRenderer } = electron);
 } catch (e) {
