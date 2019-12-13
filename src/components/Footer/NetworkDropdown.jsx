@@ -11,7 +11,20 @@ import { FORM_SIGN_UP } from '../../constants/FormConstants';
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
+import ProgressBar from '../ProgressBar';
+import RemoteNode from './RemoteNode';
+// import LocalNode from './LocalNode';
+
+
 class Network extends React.PureComponent {
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			open: false,
+		};
+	}
 
 	onDropdownChange(e, value) {
 		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
@@ -27,7 +40,7 @@ class Network extends React.PureComponent {
 
 	onDeleteNetwork(network, e) {
 		e.preventDefault();
-
+		this.setState({ open: false });
 		this.props.deleteNetwork(network);
 	}
 
@@ -53,52 +66,68 @@ class Network extends React.PureComponent {
 				selected: name === i.name,
 				content: (
 
-					<React.Fragment>
-						<div className="label-text">
-							<span className="name">{i.name}</span>
-						</div>
-						<span className="label-link">{i.url}</span>
-						{ !NETWORKS.find((n) => n.name === i.name) ?
+					<div className="network-wrap">
+						<div className="network">
+							<div className="label-text">
+								<span className="network-title">
+									{i.name}
+								</span>
+							</div>
+							<span className="label-link">{i.url}</span>
+							{ !NETWORKS.find((n) => n.name === i.name) &&
 							<Button
 								id="btn-dlt"
 								onClick={(e) => this.onDeleteNetwork(i, e)}
 								className="icon-remove"
-							/> : null
+							/>
+							}
+						</div>
+						{ i.name === 'testnet' &&
+							<div className="node-info">
+								{/* <LocalNode /> */}
+								<RemoteNode value={64} />
+							</div>
 						}
-					</React.Fragment>
+					</div>
 				),
-			}));
-	}
-
-	getDivider(key) {
-		return {
-			key,
-			disabled: true,
-			selected: false,
-			className: 'item-divider',
-		};
+			}
+		));
 	}
 
 	render() {
+		const { open } = this.state;
 		const {
 			networks, network, loading, disconnected, warning,
 		} = this.props;
-		let options = this.getList(NETWORKS);
+		let options = [
+			{
+				value: 'Choose network',
+				key: 'choose-network',
+				className: 'item-header',
+				content: 'Choose network',
+				disabled: true,
+				onClick: (e) => e.preventDefault(),
+			},
+		];
+		options = options.concat(this.getList(NETWORKS));
 
 		if (networks.length || networks.length === 0) {
-			options.push(this.getDivider('divider'));
 			options = options.concat(this.getList(networks));
 		}
 		options.push({
 			value: 'custom',
 			key: 'custom',
-			className: 'item-link',
+			className: 'item-footer',
 			selected: false,
-			content: (<div className="network-link">+ Add custom Network</div>),
+			content: (
+				<div className="network-link">
+					<span className="network-link-content">+ Add custom Network</span>
+				</div>),
 		});
 
 		return (
 			<Dropdown
+				open={open}
 				options={options}
 				onChange={(e, { value }) => this.onDropdownChange(e, value)}
 				direction="left"
@@ -106,20 +135,32 @@ class Network extends React.PureComponent {
 				selectOnBlur={false}
 				upward
 				disabled={loading}
+				onClick={() => { if (!open) { this.setState({ open: true }); } }}
+				onFocus={() => this.setState({ open: true })}
+				onBlur={() => this.setState({ open: false })}
 				className={classnames('network-dropdown', {
 					disconnected,
 					warning,
 				})}
 				trigger={
 					<div className="dropdown-trigger">
+
 						<span className="description">
 							{ disconnected ? 'Disconnected:' : 'Network:' }
 						</span>
 						<span className="status connected">
 							<div className="ellipsis">{network.name}</div>
 						</span>
+
+						<ProgressBar
+							size={20}
+							value={64}
+							disconnected={disconnected}
+							warning={warning}
+						/>
+
 						<span className="pipeline-block">
-                            Block
+								Block
 							<span>{this.props.lastBlock}</span>
 						</span>
 						<span className="icon dropdown" />
@@ -127,12 +168,9 @@ class Network extends React.PureComponent {
 				}
 			/>
 		);
-
-
 	}
 
 }
-
 
 Network.propTypes = {
 	loading: PropTypes.bool,
@@ -144,7 +182,6 @@ Network.propTypes = {
 	lastBlock: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
-
 };
 
 Network.defaultProps = {
