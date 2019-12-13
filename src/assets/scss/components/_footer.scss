@@ -8,7 +8,7 @@
 		padding: 0 18px;
 		min-height: 39px;
 
-		li {
+		&>li {
 			cursor: default;
 			font-weight: 300;
 			font-size: 13px;
@@ -31,11 +31,12 @@
 		background-color: rgb(246, 92, 92);
 
 		ul {
-			li {
+			&>li {
 				&:first-child {
 					width: 100%;
 					text-align: center;
-					margin: 0 0 0 0;
+					// margin: 0 -120px 0 0;
+					margin: 0;
 					text-transform: uppercase;
 					color: $white;
 				}
@@ -51,7 +52,7 @@
 		background-color: #EE851C;
 
 		ul {
-			li {
+			&>li {
 				&:first-child {
 					width: 100%;
 					text-align: center;
@@ -67,57 +68,5 @@
 				}
 			}
 		}
-	}
-}
-
-.pipeline {
-	&-block {
-		line-height: 0;
-		margin: 1px 10px 0 15px;
-
-		span {
-			font-family: source;
-			margin-left: 5px;
-			letter-spacing: -.2px;
-		}
-	}
-}
-
-.status {
-	position: relative;
-	align-items: center;
-	display: flex;
-	line-height: 1;
-
-	&:before {
-		width: 4px;
-		height: 4px;
-		content: "";
-		border-radius: 50%;
-		margin-right: 6px;
-	}
-
-	&.connected {
-		color: $main-color;
-
-		&:before {
-			background-color: $main-color;
-		}
-	}
-
-	&.white {
-		color: $white;
-
-		&:before {
-			background-color: $white;
-		}
-	}
-
-	&+.network-link {
-		margin-left: 5px;
-	}
-
-	&+.network-dropdown {
-		margin-left: 5px;
 	}
 }
