@@ -296,6 +296,7 @@ class Header extends React.Component {
 							</span>
 						</NavLink>
 						<Dropdown
+							className="user-dropdown"
 							options={options}
 							text={accountName}
 							selectOnBlur={false}

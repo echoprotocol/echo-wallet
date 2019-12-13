@@ -2,8 +2,9 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeModal } from '../../actions/ModalActions';
+import FocusLock from 'react-focus-lock';
 
+import { closeModal } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
@@ -27,7 +28,6 @@ class ModalToWhitelist extends React.Component {
 	}
 
 	onSend(submit) {
-		// this.props.closeModal();
 		submit();
 	}
 
@@ -43,71 +43,69 @@ class ModalToWhitelist extends React.Component {
 				{
 					(submit) => (
 						<Modal className="replenish-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Replenish Fee Pool</h3>
-							</div>
-							<div className="modal-body">
-								<Form className="main-form">
-									<div className="field-wrap">
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h3 className="modal-header-title">Replenish Fee Pool</h3>
+								</div>
+								<div className="modal-body">
+									<Form className="main-form">
+										<div className="field-wrap">
 
-										{
-											activeAccount ?
-												<AccountField
-													subject="from"
-													field={{
-														value: activeAccount.get('name'),
-														checked: true,
-													}}
-													avatarName={activeAccount.get('name')}
-													setIn={() => {
-													}}
-													getTransferFee={() => {
-													}}
-													setContractFees={() => {
-													}}
-													setValue={() => {
-													}}
-													disabled
-												/> : null
-										}
+											{
+												activeAccount ?
+													<AccountField
+														subject="from"
+														field={{
+															value: activeAccount.get('name'),
+															checked: true,
+														}}
+														avatarName={activeAccount.get('name')}
+														setIn={() => {
+														}}
+														getTransferFee={() => {
+														}}
+														setContractFees={() => {
+														}}
+														setValue={() => {
+														}}
+														disabled
+													/> : null
+											}
 
-										<AmountField
-											fees={fees}
-											form={FORM_REPLENISH}
-											fee={fee}
-											assets={assets}
-											amount={amount}
-											currency={currency}
-											isAvailableBalance={isAvailableBalance}
-											amountInput={this.props.amountInput}
-											setFormError={this.props.setFormError}
-											setFormValue={this.props.setFormValue}
-											setValue={this.props.setValue}
-											setDefaultAsset={this.props.setDefaultAsset}
-											getTransferFee={this.props.getTransactionFee}
-											setContractFees={() => {
-											}}
-										/>
-									</div>
+											<AmountField
+												fees={fees}
+												form={FORM_REPLENISH}
+												fee={fee}
+												assets={assets}
+												amount={amount}
+												currency={currency}
+												isAvailableBalance={isAvailableBalance}
+												amountInput={this.props.amountInput}
+												setFormError={this.props.setFormError}
+												setFormValue={this.props.setFormValue}
+												setValue={this.props.setValue}
+												setDefaultAsset={this.props.setDefaultAsset}
+												getTransferFee={this.props.getTransactionFee}
+												setContractFees={() => {}}
+												autoFocus
+											/>
+										</div>
 
-									<div className="form-panel">
-										<Button
-											className="main-btn"
-											content="Send"
-											type="submit"
-											onClick={() => this.onSend(submit)}
-											onKeyDown={() => this.onSend(submit)}
-										/>
-									</div>
-								</Form>
-							</div>
+										<div className="form-panel">
+											<Button
+												className="main-btn"
+												content="Send"
+												type="submit"
+												onClick={() => this.onSend(submit)}
+											/>
+										</div>
+									</Form>
+								</div>
+							</FocusLock>
 						</Modal>
 					)
 				}

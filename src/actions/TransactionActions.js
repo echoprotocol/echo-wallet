@@ -30,7 +30,7 @@ import {
 	MODAL_WHITELIST,
 	MODAL_CHANGE_PARENT_ACCOUNT,
 } from '../constants/ModalConstants';
-import { CONTRACT_LIST_PATH, ACTIVITY_PATH } from '../constants/RouterConstants';
+import { CONTRACT_LIST_PATH, ACTIVITY_PATH, INDEX_PATH } from '../constants/RouterConstants';
 import { ERROR_FORM_TRANSFER } from '../constants/FormErrorConstants';
 import {
 	CONTRACT_ID_PREFIX,
@@ -134,6 +134,46 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		return null;
 	}
 };
+
+/**
+ * @method setAdditionalAccountInfo
+ *
+ * @param {String} value
+ * @returns {function(dispatch, getState): Promise<undefined>}
+ */
+export const setAdditionalAccountInfo = (value) => async (dispatch, getState) => {
+	dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+	if (!value) {
+		return;
+	}
+	switch (getState().form.getIn([FORM_TRANSFER, 'subjectTransferType'])) {
+		case ADDRESS_SUBJECT_TYPE: {
+			const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
+			if (!accountId) {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+				return;
+			}
+			const account = await echo.api.getObject(accountId);
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
+			break;
+		}
+		case ACCOUNT_ID_SUBJECT_TYPE: {
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${value}`));
+			break;
+		}
+		case ACCOUNT_NAME_SUBJECT_TYPE: {
+			try {
+				const account = await echo.api.getAccountByName(value);
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
+			} catch (e) {
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+			}
+			break;
+		}
+		default: dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+	}
+};
+
 /**
  * @method getFreezeBalanceFee
  *
@@ -506,6 +546,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 	return true;
 };
 
+
 export const subjectToSendSwitch = (value) => async (dispatch) => {
 	if (validateAccountAddress(value)) {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
@@ -515,6 +556,7 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
+		dispatch(setAdditionalAccountInfo(value));
 		return ADDRESS_SUBJECT_TYPE;
 
 	} else if (validators.isContractId(value)) {
@@ -530,20 +572,23 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 			error: null,
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
+		dispatch(setAdditionalAccountInfo(''));
 
 		return CONTRACT_ID_SUBJECT_TYPE;
 
 	} else if (validators.isAccountId(value)) {
-
 		const account = await echo.api.getObject(value);
+
 		if (!account) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid account ID'));
 			return false;
 		}
 		value = account.name;
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
+		dispatch(setAdditionalAccountInfo(value));
 	} else {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
+		dispatch(setAdditionalAccountInfo(value));
 	}
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
@@ -1256,6 +1301,11 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(closeModal(MODAL_BLACKLIST));
 			dispatch(closeModal(MODAL_TO_WHITELIST));
 			dispatch(closeModal(MODAL_TO_BLACKLIST));
+			break;
+		case operations.sidechain_btc_create_address.value:
+		case operations.sidechain_eth_create_address.value:
+		case operations.account_address_create.value:
+			history.push(INDEX_PATH);
 			break;
 		default:
 			history.push(bytecode ? CONTRACT_LIST_PATH : ACTIVITY_PATH);

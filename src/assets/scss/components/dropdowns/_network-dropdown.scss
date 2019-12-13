@@ -1,7 +1,22 @@
 .network-dropdown {
 	margin-right: -18px;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		z-index: 12;
+		top: -1px;
+		width: 100%;
+		height: calc(100% + 1px);
+		border-top: 1px solid $bd-gray;
+		min-width: 308px;
+		background-color: #fff;
+	}
 
 	.dropdown-trigger {
+		position: relative;
+		z-index: 13;
 		height: 39px;
 		display: flex;
 		align-items: center;
@@ -9,11 +24,12 @@
 		background-color: transparent;
 		transition: background-color $speed;
 		border-left: 1px solid rgb(212, 212, 212);
-	
+		user-select: none;
+
 		&:hover {
 			background-color: #f7f7f7;
 		}
-	
+
 		.icon.dropdown {
 			right: 0;
 			margin: auto 10px auto 0;
@@ -21,19 +37,25 @@
 	}
 
 	&.disconnected {
+		&:after {
+			background-color: rgb(246, 92, 92);
+		}
+
 		.dropdown-trigger {
+			background-color: rgb(246, 92, 92);
+
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -43,19 +65,25 @@
 	}
 
 	&.warning {
+		&:after {
+			background-color: rgb(238, 133, 28);
+		}
+
 		.dropdown-trigger {
+			background-color: rgb(238, 133, 28);
+
 			&:hover {
 				background-color: transparent;
 			}
-	
+
 			.status.connected {
 				color: #fff;
-	
+
 				&:before {
 					background-color: #fff;
 				}
 			}
-	
+
 			.pipeline-block,
 			.icon.dropdown,
 			.description {
@@ -66,208 +94,113 @@
 
 	&.upward {
 		&>.menu {
-			bottom: calc(100% - 5px);
+			display: inline-block;
+			bottom: calc(100% + 6px);
+			opacity: 0;
+			transform: translateY(100%);
+			transition: transform 120ms ease-in-out, opacity 100ms ease-out;
+
+			&.visible {
+				transform: translateY(0);
+				opacity: 1;
+			}
 		}
 	}
 
 	.description {
 		margin-right: 6px;
-		line-height: 1;
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(#5C637D, .6);
 	}
 
 	.status {
+		color: #4D66CD;
+		font-weight: 600;
+		font-size: 13px;
+		position: relative;
+		align-items: center;
+		display: flex;
+		line-height: 1;
+
 		.ellipsis {
 			@include cut-text;
 			max-width: 85px;
 			display: block;
 		}
 
+		&:before {
+			width: 6px;
+			height: 6px;
+			content: "";
+			border-radius: 50%;
+			margin-right: 6px;
+		}
+
+		&.connected {
+			color: $main-color;
+
+			&:before {
+				background-color: $main-color;
+			}
+		}
+
+		&.white {
+			color: $white;
+
+			&:before {
+				background-color: $white;
+			}
+		}
+
+		&+.network-link {
+			margin-left: 5px;
+		}
+
+		&+.network-dropdown {
+			margin-left: 5px;
+		}
 	}
 
-	.network-link {
-		color: $main-color;
-		transition: color $speed;
+	.progress-wrap {
+		margin: 0 0 0 15px;
 	}
 
-	& > .menu {
-		padding-top: 6px;
+	.pipeline-block {
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(#5C637D, .6);
+		margin: 1px 10px 0 15px;
+
+		span {
+			font-family: source;
+			margin-left: 5px;
+			letter-spacing: -.2px;
+		}
+	}
+
+	&>.menu {
 		border-radius: 0;
 		width: 100%;
 		max-height: 245px;
 		overflow: auto;
-		width: 289px;
+		width: 294px;
+
 
 		&.left {
 			right: 10px;
 		}
 
-		&:before {
-			content: "Choose Network";
-			padding: 7px 0 7px 19px;
-			text-transform: uppercase;
-			display: block;
-			font-family: proxima;
-			font-weight: 600;
-			font-size: 14px;
-			color: rgba(#5D637B, .5);
+		.selected.item {
+			background-color: transparent;
+		}
 
+		.network-link {
+			width: 100%;
+			padding: 12px 16px;
 		}
 
 
-		.item {
-			padding: 0;
-			height: 40px;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			color: $black;
-			transition: color $speed, background-color $speed;
-
-			&:hover {
-				&.selected {
-					.label-text {
-						&:before {
-							background-color: #fff;
-							border-color: #fff;
-						}
-					}
-				}
-
-				.label-text {
-					&:before {
-						border-color: #fff;
-					}
-				}
-
-				.label-link {
-					color: #fff;
-				}
-			}
-
-			&.selected {
-				background-color: transparent;
-
-				.label-text {
-					&:before {
-						background-color: $main-color;
-						border-color: $main-color;
-					}
-				}
-			}
-
-			&-link {
-				height: 42px;
-				color: $main-color;
-				font-family: proxima;
-				font-weight: 600;
-
-				&:hover {
-					background-color: $main-color;
-
-					.network-link {
-						color: #fff;
-					}
-				}
-
-				&.active {
-					text-decoration: underline;
-				}
-
-				.network-link {
-					width: 100%;
-					padding: 10px 19px;
-					height: 36px;
-					align-items: flex-start;
-				}
-			}
-
-			&.item-divider + .item:not(.item-link) {
-				margin-top: 6px;
-			}
-
-			&:not(.item-link):not(.item-divider) {
-				&.active {
-					background-color: #f8f8f8;
-				}
-
-				&:hover {
-					background-color: $main-color;
-					color: #fff;
-
-					.icon-remove,
-					.network-link {
-						color: #fff;
-					}
-				}
-
-
-				&.active {
-					.label {
-						&:before {
-							@include on-focus(4px);
-						}
-					}
-				}
-
-			}
-
-			.icon-remove {
-				margin: 0;
-				border-radius: 0;
-				padding: 0 16px;
-				height: 40px;
-				position: absolute;
-				right: 0;
-
-				&:hover {
-					background-color: #4258b5;
-				}
-			}
-
-			.label-text {
-				position: relative;
-				display: flex;
-				align-items: center;
-
-				&:before {
-					width: 6px;
-					height: 6px;
-					content: "";
-					border-radius: 50%;
-					margin: 0;
-					background-color: transparent;
-					border: 1px solid rgba(#5D637B, .5);
-					transition: background-color $speed, border $speed;
-					margin-left: 19px;
-					display: block;
-				}
-
-				.name {
-					@include cut-text;
-					padding: 0 0 0 7px;
-					max-width: 200px;
-				}
-			}
-
-			.label-link {
-				@include cut-text;
-				padding: 0 0 0 33px;
-				color: #5267C6;
-				transition: color $speed;
-				max-width: 225px;
-			}
-
-			.error-wrap {
-				margin: 0;
-				padding-bottom: 20px;
-			}
-
-			.field {
-				label {
-					padding: 19px 19px 5px;
-				}
-			}
-		}
 
 		.item-divider {
 			height: 1px;
@@ -280,11 +213,269 @@
 		}
 	}
 
+	.item {
+		padding: 0 3px 2px;
+		min-height: 45px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		letter-spacing: 0;
+
+		.network-wrap {
+			transition: background-color $speed;
+			padding: 8px 14px 5px;
+		}
+
+
+		&.selected {
+			background-color: transparent;
+
+			.label-text {
+				&:before {
+					background-color: $main-color;
+					border-color: $main-color;
+				}
+			}
+		}
+
+		&:not(.item-footer):not(.item-header) {
+			border-bottom: 1px solid #E5E6EB;
+
+			&.active {
+				background-color: #f8f8f8;
+			}
+
+			&:hover {
+
+				.network-wrap {
+					background-color: $main-color;
+					color: #fff;
+
+				}
+
+				.label-text {
+					&:before {
+						border-color: #fff;
+					}
+				}
+
+				.label-text {
+					&:before {
+						background-color: #fff;
+						border-color: #fff;
+					}
+
+					.network-title {
+						color: #fff;
+					}
+				}
+
+				.icon-remove,
+				.network-link-content {
+					color: #fff;
+				}
+
+				.label-link {
+					color: #fff;
+				}
+
+				.node-title {
+					color: #fff;
+				}
+
+				.percent {
+					color: #fff;
+				}
+
+				.icon-info {
+					color: #FFF9B5;
+				}
+
+				.sync-label {
+					color: rgba(#fff, .6);
+				}
+
+				.progress-line {
+					background-color: rgba(#fff, .5);
+
+					.progress {
+						background: #fff;
+					}
+				}
+			}
+
+
+			&.active {
+				.label {
+					&:before {
+						@include on-focus(4px);
+					}
+				}
+			}
+
+		}
+
+		.label-text {
+			position: relative;
+			display: flex;
+			align-items: center;
+
+			&:before {
+				width: 6px;
+				height: 6px;
+				content: "";
+				border-radius: 50%;
+				margin: 0;
+				background-color: transparent;
+				border: 1px solid rgba(#5D637B, .5);
+				transition: background-color $speed, border $speed;
+				display: block;
+			}
+		}
+
+		.network-title {
+			@include cut-text;
+			padding: 0px 0 1px 8px;
+			max-width: 200px;
+			font-weight: 600;
+			color: #3B3B3B;
+			font-size: 16px;
+			text-transform: capitalize;
+			transition: color $speed;
+		}
+
+		.label-link {
+			@include cut-text;
+			padding: 0 0 0 14px;
+			color: rgba(#4D66CD, .8);
+			transition: color $speed;
+			max-width: 225px;
+		}
+
+		.error-wrap {
+			margin: 0;
+			padding-bottom: 20px;
+		}
+
+		.field {
+			label {
+				padding: 19px 19px 5px;
+			}
+		}
+	}
+
+	.item-header {
+		padding: 10px 16px 6px;
+		min-height: 33px;
+
+		.text {
+			color: #5C637D;
+			font-size: 14px;
+			font-weight: 600;
+			text-transform: uppercase;
+		}
+	}
+
+	.item-footer {
+
+		&:hover {
+			background-color: $main-color;
+
+			.network-link-content {
+				color: #fff;
+			}
+		}
+
+		&.active {
+
+			.network-link-content {
+				color: $main-color;
+				border-bottom: 1px solid;
+			}
+
+			&:hover {
+				background-color: $main-color;
+
+				.network-link-content {
+					color: #fff;
+				}
+			}
+		}
+	}
+
+	.network-link-content {
+		color: $main-color;
+		font-weight: 600;
+		border-bottom: 1px solid transparent;
+		transition: border-color $speed, color $speed;
+	}
+
 	.icon-remove {
+		border-radius: 0;
+		padding: 0 16px;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		padding: 10px;
 		box-shadow: none;
 		background-color: transparent;
 		border: 0;
 		color: #bcbcbc;
 		transition: color $speed, background-color $speed;
+
+		&:hover {
+			background-color: #4258b5;
+		}
+	}
+
+	.network {
+		position: relative;
+	}
+
+	.node-info {
+		background-color: rgba(#DDDDDD, .3);
+		padding: 10px 11px 10px 14px;
+		margin: 4px 0 0;
+	}
+
+	.node-label {
+		display: flex;
+		align-items: center;
+	}
+
+	.sync {
+		margin: 0 0 0 auto;
+		display: flex;
+		align-items: center;
+	}
+
+	.icon-info {
+		color: rgba(#5C637D, .5);
+	}
+
+	.node-title {
+		color: #3B3B3B;
+		font-size: 12px;
+		font-weight: 600;
+		transition: color $speed;
+
+		&+.icon-info {
+			margin: 0 0 0 auto;
+		}
+	}
+
+	.sync-progress {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+	}
+
+	.sync-label {
+		font-size: 12px;
+		line-height: 16px;
+		color: rgba(#5C637D, 0.6);
+		transition: color $speed;
 	}
 }

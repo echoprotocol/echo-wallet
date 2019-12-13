@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import FocusLock from 'react-focus-lock';
 
 class ModalConfirmEditingOfPermissions extends React.Component {
 
@@ -15,35 +16,37 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 			show, warningMessage, echoRandMessage,
 		} = this.props;
 		return (
-			<Modal className="small unclock-size" open={show} dimmer="inverted">
-				<div className="modal-content add-key">
-					<div className="modal-header">Please, confirm applying changes</div>
-					<div className="modal-body">
-						<div className="info-text">
-							{
-								warningMessage && <span>{warningMessage}</span>
-							}
-							{
-								echoRandMessage && warningMessage && <br />
-							}
-							{
-								echoRandMessage && <span>{echoRandMessage}</span>
-							}
-						</div>
-						<div className="form-panel">
-							<Button
-								className="main-btn"
-								onClick={(e) => this.onClose(e)}
-								content="No"
-							/>
-							<Button
-								className="main-btn"
-								onClick={(e) => this.onConfirm(e)}
-								content="Proceed"
-							/>
+			<Modal className="small" open={show}>
+				<FocusLock autoFocus={false}>
+					<div className="modal-content add-key">
+						<div className="modal-header">Please, confirm applying changes</div>
+						<div className="modal-body">
+							<div className="info-text">
+								{
+									warningMessage && <span>{warningMessage}</span>
+								}
+								{
+									echoRandMessage && warningMessage && <br />
+								}
+								{
+									echoRandMessage && <span>{echoRandMessage}</span>
+								}
+							</div>
+							<div className="form-panel">
+								<Button
+									className="main-btn"
+									onClick={(e) => this.onClose(e)}
+									content="No"
+								/>
+								<Button
+									className="main-btn"
+									onClick={(e) => this.onConfirm(e)}
+									content="Proceed"
+								/>
+							</div>
 						</div>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}

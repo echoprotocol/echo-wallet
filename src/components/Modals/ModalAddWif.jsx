@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import InputEye from '../InputEye';
+import PasswordInput from '../PasswordInput';
 
 
 class ModalAddWIF extends React.Component {
@@ -34,18 +34,16 @@ class ModalAddWIF extends React.Component {
 	}
 
 	render() {
+		const { wif } = this.state;
 		const {
 			show, error, disabled, publicKey,
 		} = this.props;
 
 		return (
-			<Modal className="add-wif-modal" open={show} dimmer="inverted">
-				<span
+			<Modal className="add-wif-modal" open={show}>
+				<button
 					className="icon-close"
 					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
 				/>
 				<div className="modal-header">
 					<h3 className="modal-header-title">Add WIF</h3>
@@ -67,13 +65,14 @@ class ModalAddWIF extends React.Component {
 						}
 					</Form.Field>
 
-					<InputEye
+					<PasswordInput
 						inputLabel="WIF (optional)"
 						inputPlaceholder="WIF"
 						inputName="WIF"
 						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
 						errorMessage={error}
 						onChange={(e) => this.onChange(e)}
+						value={wif}
 						autoFocus
 					/>
 

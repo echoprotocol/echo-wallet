@@ -26,6 +26,7 @@ class ContractBar extends React.Component {
 
 	onChangeAsset(assetSymbol) {
 		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', assetSymbol);
+		this.props.setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', null);
 		this.setState({ searchText: assetSymbol });
 	}
 
@@ -44,6 +45,7 @@ class ContractBar extends React.Component {
 
 	async assetSearchHandler(e, data) {
 		this.props.setFormValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAsset', data.searchQuery);
+		this.props.setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', null);
 		this.setState({
 			searchText: data.searchQuery,
 			loading: true,
