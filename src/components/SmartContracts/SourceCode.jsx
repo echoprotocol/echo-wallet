@@ -141,7 +141,7 @@ class SourceCode extends React.Component {
 						className="editor"
 						width="100%"
 						height="384px"
-						mode="javascript"
+						mode="text"
 						name="editor"
 						theme="textmate"
 						enableLiveAutocompletion
@@ -153,9 +153,6 @@ class SourceCode extends React.Component {
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
-						setOptions={{
-							useWorker: false,
-						}}
 					/>
 					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
 				</div>

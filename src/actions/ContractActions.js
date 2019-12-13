@@ -657,12 +657,59 @@ export const resetCompiler = () => (dispatch) => {
 
 /**
  *
+ * @param {Object} error
+ * @param {String} filename
+ * @returns {Object|null}
+ */
+const parseSolidityError = (error, filename) => {
+	if (
+		!error ||
+		!validators.isObject(error) ||
+		!error.formattedMessage ||
+		!error.message ||
+		!error.severity
+	) {
+		return null;
+	}
+
+	if (!error.formattedMessage.startsWith(filename)) {
+		return null;
+	}
+
+	const [, row] = error.formattedMessage.split(':');
+
+	return { row: parseInt(row, 10), type: error.severity, text: error.message };
+};
+
+/**
+ *
+ * @param {Object} output
+ * @param {String} filename
+ * @returns {Array<Object>}
+ */
+const getCompilationErrors = (output, filename) => {
+	if (!output.errors) {
+		return [];
+	}
+
+	const errors = output.errors.reduce((res, e) => {
+		const handledError = parseSolidityError(e, filename);
+
+		return handledError ? [handledError, ...res] : res;
+	}, []);
+
+	return errors;
+};
+
+/**
+ *
  * @returns {Function}
  */
 export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'code']);
 	dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', ''));
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', []));
 
 	try {
 		const input = {
@@ -683,6 +730,8 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 
 		const solc = wrapper(window.Module);
 		const output = JSON.parse(solc.compile(JSON.stringify(input)));
+		const errors = getCompilationErrors(output, filename);
+		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
 		let contracts = new Map({});
 		contracts = contracts.withMutations((contractsMap) => {
 			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
@@ -696,6 +745,7 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', Object.keys(output.contracts[filename])[0]));
 		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', contracts));
 	} catch (err) {
+		console.log('err', err);
 		dispatch(resetCompiler());
 		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'Invalid contract code'));
 	}
