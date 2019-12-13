@@ -18,6 +18,7 @@ const DEFAULT_FIELDS = Map({
 		url: '',
 	}),
 	networks: new List([]),
+	remoteRegistrationAddresses: new List([]),
 	inited: false,
 	isConnected: false,
 	permissionLoading: false,

@@ -14,7 +14,12 @@ import {
 import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT, REGISTRATION } from '../constants/GlobalConstants';
-import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
+import {
+	FORM_ADD_CUSTOM_NETWORK,
+	FORM_PERMISSION_KEY,
+	FORM_PASSWORD_CREATE,
+	FORM_SIGN_UP_OPTIONS,
+} from '../constants/FormConstants';
 
 
 import {
@@ -606,4 +611,75 @@ export const resetData = () => async (dispatch) => {
 	} finally {
 		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
 	}
+};
+
+
+const saveRemoteAddressToLocalStorage = ({ address, network, account }) => {
+
+	let accounts = localStorage.getItem(`accounts_${network}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const currentAccountStorage = accounts.find(({ name }) => name === account);
+
+	if (!currentAccountStorage) {
+		return;
+	}
+
+	const remoteAddresses = currentAccountStorage.addedRegistrationAddresses || [];
+
+	const isAddressAlreadyAdded = remoteAddresses.find((a) => a.address === address);
+
+	if (isAddressAlreadyAdded) {
+		return;
+	}
+
+	remoteAddresses.push({ address });
+
+	currentAccountStorage.addedRegistrationAddresses = remoteAddresses;
+
+	localStorage.setItem(`accounts_${network}`, JSON.stringify(accounts));
+};
+
+const getRemoteAddressesFromLocalStorage = ({ network, account }) => {
+
+	let accounts = localStorage.getItem(`accounts_${network}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const currentAccountStorage = accounts.find(({ name }) => name === account);
+
+	if (!currentAccountStorage) {
+		return [];
+	}
+
+	const remoteAddresses = currentAccountStorage.addedRegistrationAddresses || [];
+
+	return remoteAddresses;
+};
+
+export const getRemoteAddressesForRegistration = () => async (dispatch, getState) => {
+	const account = getState().global.getIn(['activeUser', 'name']);
+	const network = getState().global.getIn(['network', 'name']);
+
+	if (!account || !network) {
+		return;
+	}
+
+	const remoteAddresses = getRemoteAddressesFromLocalStorage({ network, account });
+
+	
+};
+
+export const saveRemoteAddressForRegistration = () => async (dispatch, getState) => {
+	const address = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'ipOrUrl']);
+	const account = getState().global.getIn(['activeUser', 'name']);
+	const network = getState().global.getIn(['network', 'name']);
+
+	if (!account || !address || !network) {
+		return;
+	}
+
+	saveRemoteAddressToLocalStorage({ address, network, account });
+	dispatch(getRemoteAddressesForRegistration());
 };
