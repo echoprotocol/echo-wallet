@@ -2,6 +2,7 @@ import React from 'react';
 import QRCode from 'qrcode.react';
 import PropTypes from 'prop-types';
 import ActionBtn from '../ActionBtn';
+import { FormattedMessage } from 'react-intl';
 
 class QrCode extends React.PureComponent {
 
@@ -40,8 +41,7 @@ class QrCode extends React.PureComponent {
 						/>
 					</div>
 					<div className="qr-description">
-					QR code and link are generated automatically.
-					You can copy it and send to someone for payment.
+						<FormattedMessage id="wallet_page.receive_payment.qr_description" />
 					</div>
 				</div>
 			</div>

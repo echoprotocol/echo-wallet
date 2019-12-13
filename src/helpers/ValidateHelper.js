@@ -352,7 +352,7 @@ export const validateAmount = (value, { symbol, precision, balance }) => {
 	let amount = new BN(value);
 
 	if (amount.eq(0)) {
-		return null;
+		return `Amount should be more than 0 (${symbol} precision is ${precision} symbols)`;
 	}
 
 	if (!Math.floor(value * (10 ** precision))) {

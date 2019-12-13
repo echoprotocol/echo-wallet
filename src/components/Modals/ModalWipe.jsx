@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 import { MODAL_WIPE } from '../../constants/ModalConstants';
 
@@ -39,54 +39,52 @@ class ModalWipeWallet extends React.Component {
 
 		return (
 			<Modal className="small wipe-data" open={show}>
-				<FocusTrap>
-					<div className="focus-trap-wrap">
-						<div className="modal-content">
-							<button
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-							/>
-							<div className="modal-header" />
-							<div className="modal-body">
-								<div className="main-form">
-									<div className="form-info">
-										<h3>Your password cannot be restored</h3>
-									</div>
-									<div className="form-info-description">
+				<FocusLock autoFocus={false}>
+					<div className="modal-content">
+						<button
+							className="icon-close"
+							onClick={(e) => this.onClose(e)}
+						/>
+						<div className="modal-header" />
+						<div className="modal-body">
+							<div className="main-form">
+								<div className="form-info">
+									<h3>Your password cannot be restored</h3>
+								</div>
+								<div className="form-info-description">
 										You can clear your account data from Echo Desktop and set a new password.
 										If you do, you wil lose access to the accounts you’ve logged into.
 										You will need to log into them again, after you have set a new password.
-									</div>
-									<div className="check-list">
-										<div className="check">
-											<input
-												checked={checked}
-												onChange={() => this.toggleChecked()}
-												type="checkbox"
-												id="wipe-agree"
-											/>
-											<label className="label" htmlFor="wipe-agree">
-												<span className="label-text">
+								</div>
+								<div className="check-list">
+									<div className="check">
+										<input
+											checked={checked}
+											onChange={() => this.toggleChecked()}
+											type="checkbox"
+											id="wipe-agree"
+										/>
+										<label className="label" htmlFor="wipe-agree">
+											<span className="label-text">
 													I understand the Echo Desktop does not store backups of my account keys,
 													and I will lose access to them  by clearing my account data
-												</span>
-											</label>
-										</div>
+											</span>
+										</label>
 									</div>
-									<div className="form-panel">
-										<Button
-											type="submit"
-											className="main-btn"
-											content="Clear data"
-											onClick={this.props.wipe}
-											disabled={loading || !checked}
-										/>
-									</div>
+								</div>
+								<div className="form-panel">
+									<Button
+										type="submit"
+										className="main-btn"
+										content="Clear data"
+										onClick={this.props.wipe}
+										disabled={loading || !checked}
+									/>
 								</div>
 							</div>
 						</div>
 					</div>
-				</FocusTrap>
+				</FocusLock>
 			</Modal>
 		);
 	}

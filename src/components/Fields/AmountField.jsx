@@ -5,6 +5,7 @@ import { Form, Input, Dropdown, Popup } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 import { List } from 'immutable';
+import { FormattedMessage } from 'react-intl';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
@@ -242,6 +243,7 @@ class AmountField extends React.Component {
 			labelText, showAvailable,
 			warningMessage,
 			isDisplaySidechainNotification,
+			autoFocus,
 		} = this.props;
 
 		const { searchText } = this.state;
@@ -273,7 +275,7 @@ class AmountField extends React.Component {
 						{
 							showAvailable && (
 								<li>
-									Available:
+									<FormattedMessage id="amount_input.available" />
 									<span
 										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 										role="button"
@@ -292,7 +294,9 @@ class AmountField extends React.Component {
 				</label>
 				<Input
 					type="text"
-					placeholder="Amount"
+					placeholder={
+						<FormattedMessage id="amount_input.title" />
+					}
 					tabIndex="0"
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
@@ -313,6 +317,7 @@ class AmountField extends React.Component {
 							onChange={(e) => this.onChangeAmount(e)}
 							onFocus={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
 							onBlur={(e) => this.amountFocusToggle(e, this.state.amountFocus)}
+							autoFocus={autoFocus}
 						/>
 						{
 							this.renderErrorStaus(assetDropdown, amount.error, fee.error)
@@ -379,6 +384,7 @@ AmountField.propTypes = {
 	showAvailable: PropTypes.bool,
 	warningMessage: PropTypes.node,
 	isDisplaySidechainNotification: PropTypes.bool,
+	autoFocus: PropTypes.bool,
 };
 
 
@@ -395,6 +401,7 @@ AmountField.defaultProps = {
 	showAvailable: true,
 	warningMessage: null,
 	isDisplaySidechainNotification: false,
+	autoFocus: false,
 };
 
 export default AmountField;

@@ -237,12 +237,14 @@ class Header extends React.Component {
 							<span>{totalFrozenFunds}</span>
 							<span>ECHO</span>
 						</div>
-						<span>Frozen funds</span>
+						<span>
+							<FormattedMessage id="wallet_page.frozen_funds.title" />
+						</span>
 					</div>
 					<span className="icon-frozen-funds" />
 				</NavLink>
 				<div className="inner-tooltip">
-					Frozen funds allow you to get bigger reward for participating in blocks creation.
+					<FormattedMessage id="wallet_page.frozen_funds.popup_header_text" />
 				</div>
 			</div>
 		);
@@ -303,6 +305,7 @@ class Header extends React.Component {
 							</span>
 						</NavLink>
 						<Dropdown
+							className="user-dropdown"
 							options={options}
 							text={accountName}
 							selectOnBlur={false}

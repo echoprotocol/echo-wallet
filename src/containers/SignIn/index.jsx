@@ -14,6 +14,7 @@ import { FORM_SIGN_IN } from '../../constants/FormConstants';
 
 import { importAccount } from '../../actions/AuthActions';
 import { setFormValue, clearForm } from '../../actions/FormActions';
+import PasswordInput from '../../components/PasswordInput';
 
 class SignIn extends React.Component {
 
@@ -67,6 +68,7 @@ class SignIn extends React.Component {
 		const { isAddAccount } = qs.parse(location.search);
 		const accPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.name_input.placeholder' });
 		const WIFPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.placeholder' });
+		const WIFTtitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
 		const addMsg = intl.formatMessage({ id: 'sign_page.add_account_button' });
 		const loginMsg = intl.formatMessage({ id: 'sign_page.login_button' });
 		const loadingMsg = intl.formatMessage({ id: 'sign_page.account_button_loading' });
@@ -106,21 +108,14 @@ class SignIn extends React.Component {
 						}
 
 					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: wif.error })}>
-						<label htmlFor="PasOrWifiKey">
-							<FormattedMessage id="sign_page.import_account_page.wif_input.title" />
-						</label>
-						<input
-							type="password"
-							placeholder={WIFPlaceholder}
-							name="wif"
-							value={wif.value}
-							onChange={(e) => this.onChange(e)}
-						/>
-						{
-							wif.error && <span className="error-message">{wif.error}</span>
-						}
-					</Form.Field>
+					<PasswordInput
+						inputLabel={WIFTtitle}
+						inputPlaceholder={WIFPlaceholder}
+						inputName="wif"
+						errorMessage={wif.error}
+						onChange={(e) => this.onChange(e)}
+						value={wif.value}
+					/>
 				</div>
 				<div className="form-panel">
 					<span className="sign-nav">

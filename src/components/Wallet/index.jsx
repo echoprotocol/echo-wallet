@@ -17,7 +17,7 @@ class Wallet extends React.Component {
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
-			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress,
+			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress, additionalAccountInfo,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses,
 			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
 		} = this.props;
@@ -53,6 +53,7 @@ class Wallet extends React.Component {
 							fee={fee}
 							currency={currency}
 							isAvailableBalance={isAvailableBalance}
+							additionalAccountInfo={additionalAccountInfo}
 							subjectTransferType={subjectTransferType}
 							transfer={this.props.transfer}
 							resetTransaction={this.props.resetTransaction}
@@ -218,6 +219,7 @@ Wallet.propTypes = {
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
+	additionalAccountInfo: PropTypes.string,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
@@ -253,6 +255,7 @@ Wallet.defaultProps = {
 	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
+	additionalAccountInfo: '',
 };
 
 export default Wallet;

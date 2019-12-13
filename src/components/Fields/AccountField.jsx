@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'semantic-ui-react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import classnames from 'classnames';
 import Avatar from '../../components/Avatar';
 
@@ -77,32 +78,29 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName,
-			showAccountId, showAccountName,
+			field, autoFocus, subject,	disabled, avatarName, intl,
+			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
 		return (
 			<Form.Field className={classnames('error-wrap', { error: field.error })}>
 
 				<label htmlFor={`account${subject}`}>
-					{subject}
+					<FormattedMessage id={`wallet_page.create_payment.${subject}_input.title`} />
 					{
-						showAccountId &&
-						<div className="account-id">
-							ID: 1.2.0
-						</div>
-					}
-					{
-						showAccountName &&
+						showAdditionalAccountInfo && !field.error &&
 						<div className="account-name">
-							Account name: valik48
+							{additionalAccountInfo}
 						</div>
 					}
 
 				</label>
 				<Input
 					type="text"
-					placeholder={subject === 'to' ? 'Account ID, Account Name, Contract ID or Address' : 'Account Name'}
+					placeholder={subject === 'to' ?
+						intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' }) :
+						intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
+					}
 					icon={this.isAvatar()}
 					className={classnames('action-wrap', { loading: field.loading && !field.error })}
 					autoFocus={autoFocus}
@@ -138,6 +136,7 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
+	additionalAccountInfo: PropTypes.string,
 	avatarName: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
@@ -148,9 +147,8 @@ AccountField.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setVisibility: PropTypes.func,
 	disabled: PropTypes.bool,
-	showAccountId: PropTypes.bool,
-	showAccountName: PropTypes.bool,
-
+	showAdditionalAccountInfo: PropTypes.bool,
+	intl: PropTypes.any.isRequired,
 };
 
 AccountField.defaultProps = {
@@ -162,8 +160,8 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
-	showAccountId: false,
-	showAccountName: false,
+	showAdditionalAccountInfo: false,
+	additionalAccountInfo: '',
 };
 
-export default AccountField;
+export default injectIntl(AccountField);

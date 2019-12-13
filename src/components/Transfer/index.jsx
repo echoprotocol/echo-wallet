@@ -63,7 +63,7 @@ class Transfer extends React.Component {
 		const {
 			from, to, currency,
 			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
-			subjectTransferType,
+			subjectTransferType, additionalAccountInfo,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 
@@ -88,7 +88,8 @@ class Transfer extends React.Component {
 								/>
 
 								<AccountField
-									showAccountName // or showAccountId
+									showAdditionalAccountInfo
+									additionalAccountInfo={additionalAccountInfo}
 									currency={currency}
 									subject="to"
 									field={to}
@@ -163,6 +164,7 @@ Transfer.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
+	additionalAccountInfo: PropTypes.string,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	subjectToSendSwitch: PropTypes.func.isRequired,
@@ -185,6 +187,7 @@ Transfer.propTypes = {
 Transfer.defaultProps = {
 	currency: null,
 	isDisplaySidechainNotification: false,
+	additionalAccountInfo: '',
 };
 
 

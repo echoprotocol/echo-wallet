@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
@@ -44,10 +45,14 @@ class Bitcoin extends React.Component {
 
 		return (
 			<React.Fragment>
-				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+				<p className="payment-description">
+					<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.info" />
+				</p>
 
 				<Form.Field>
-					<label htmlFor="public-key">address</label>
+					<label htmlFor="public-key">
+						<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.input_title" />
+					</label>
 					<div className="ui action input">
 						<input
 							type="text"
@@ -84,7 +89,11 @@ class Bitcoin extends React.Component {
 					labelText="amount"
 					warningMessage={
 						<span className="warning-message">
-							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt1" />
+							<span className="special">
+								<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt2" />
+							</span>
+							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt3" />
 						</span>
 					}
 				/>
@@ -98,18 +107,19 @@ class Bitcoin extends React.Component {
 		);
 	}
 
-	renderGenerateAdressProcess() {
+	renderGenerateaddressProcess() {
 		const { btcAddress } = this.props;
 
 		if (btcAddress && btcAddress.size && !btcAddress.getIn(['is_relevant'])) {
 			return (
 				<React.Fragment>
 					<h2 className="payment-header t-center">
-						Wait please, <br /> address is not ready yet
+						<FormattedMessage id="wallet_page.receive_payment.btc.wait_address_page.title_pt1" />
+						<br />
+						<FormattedMessage id="wallet_page.receive_payment.btc.wait_address_page.title_pt2" />
 					</h2>
 					<p className="payment-description t-center">
-						Please, allow some time for address generation as it may take up to one hour.
-						It will appear on this page when generated.
+						<FormattedMessage id="wallet_page.receive_payment.btc.wait_address_page.description" />
 					</p>
 				</React.Fragment>
 			);
@@ -119,15 +129,18 @@ class Bitcoin extends React.Component {
 			<React.Fragment>
 				<ModalCreateBtcAddress />
 				<h2 className="payment-header t-center">
-					You should generate address<br /> to receive payment.
+					<FormattedMessage id="wallet_page.receive_payment.btc.no_address_page.title_pt1" />
+					<br />
+					<FormattedMessage id="wallet_page.receive_payment.btc.no_address_page.title_pt2" />
 				</h2>
 				<p className="payment-description t-center">
-					Please, allow some time for address generation as it may take up to one hour.
-					It will appear on this page when generated.
+					<FormattedMessage id="wallet_page.receive_payment.btc.no_address_page.description" />
 				</p>
 				<Button
 					className="main-btn"
-					content="Generate address"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.btc.no_address_page.button_text" />
+					}
 					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
@@ -143,7 +156,7 @@ class Bitcoin extends React.Component {
 			<div className="payment-wrap" >
 				{
 					btcAddressData && btcAddressData.address && btcAddressData.account === accountId ?
-						this.renderPayment() : this.renderGenerateAdressProcess()
+						this.renderPayment() : this.renderGenerateaddressProcess()
 				}
 			</div>
 		);

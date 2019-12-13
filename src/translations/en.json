@@ -123,9 +123,6 @@
             "to_input": {
                 "title": "TO",
                 "placeholder": "Account ID, Account Name or Address"
-            },
-            "amount_input": {
-                "title": "Amount"
             }
         },
         "receive_payment": {
@@ -137,52 +134,54 @@
                 "generate_address_dropdown": {
                     "title": "RECIPIENT ACCOUNT OR ADDRESS",
                     "button_text": "GENERATE NEW ADDRESS",
-                    "placeholder": "Choose account or adress"
-                },
-                "amount_input": {
-                    "title": "Amount"
+                    "placeholder": "Choose account or address",
+                    "acc_separator": "Account",
+                    "adr_separator": "Addresses"
                 }
             },
             "btc": {
                 "title": "BITCOIN",
                 "no_address_page": {
-                    "title": "You should generate address to receive payment.",
+                    "title_pt1": "You should generate address",
+                    "title_pt2": " to receive payment.",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
                     "button_text": "GENERATE ADDRESS"
                 },
                 "wait_address_page": {
-                    "title": "Wait please, address is not ready yet",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
-                },
-                "complete_adress_page": {
-                    "input_title": "ADDRESS",
-                    "warning_message": "Send eBTC to Original Blockchain to get BTC or send it within ECHO Network.",
-                    "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
-                },
-                "amount_input": {
-                    "title": "Amount"
-                }
-            },
-            "eth": {
-                "title": "",
-                "no_address_page": {
-                    "title": "You should generate address to receive payment.",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
-                    "button_text": "GENERATE ADDRESS"
-                },
-                "wait_address_page": {
-                    "title": "Wait please, address is not ready yet",
+                    "title_pt1": "Wait please, ",
+                    "title_pt2": "address is not ready yet",
                     "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
                 },
                 "complete_address_page": {
                     "input_title": "ADDRESS",
-                    "warning_message": "Send eETH to Original Blockchain to get ETH or send it within ECHO Network.",
-                    "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
-                },
-                "amount_input": {
-                    "title": "Amount"
+                    "info": "Fill in payment information to get a unique QR code.",
+                    "warning_message_pt1": "Send eBTC to ",
+                    "warning_message_pt2": "Original Blockchain",
+                    "warning_message_pt3": " to get BTC or send it within ECHO Network."
                 }
-            }
+            },
+            "eth": {
+                "title": "ETHEREUM",
+                "no_address_page": {
+                    "title_pt1": "You should generate address",
+                    "title_pt2": " to receive payment.",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "button_text": "GENERATE ADDRESS"
+                },
+                "wait_address_page": {
+                    "title_pt1": "Wait please, ",
+                    "title_pt2": "address is not ready yet",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                },
+                "complete_address_page": {
+                    "input_title": "ADDRESS",
+                    "info": "Fill in payment information to get a unique QR code.",
+                    "warning_message_pt1": "Send eETH to ",
+                    "warning_message_pt2": "Original Blockchain",
+                    "warning_message_pt3": " to get ETH or send it within ECHO Network."
+                }
+            },
+            "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
         },
         "frozen_funds": {
             "title": "Frozen Funds",
@@ -190,9 +189,11 @@
             "button_text": "FREEZE",
             "period_input_title": "PERIOD",
             "period_input_placeholder": "Choose period",
+            "popup_header_text": "Frozen funds allow you to get bigger reward for participating in blocks creation.",
             "frozen_funds_list": {
                 "title": "Frozen amounts",
-                "empty_text": "You have not frozen any funds yet",
+                "empty_text_pt1": "You have not frozen ",
+                "empty_text_pt2": "any funds yet",
                 "description": "The sum you freeze will affect the reward for participating in blocks creation when re-calculated with the coefficient (the longer the period, the bigger reward you receive).",
                 "coefficient_text": "Coefficient",
                 "popup_text": "This is the coefficient that will be used to calculate the reward for participating in blocks creation.",
@@ -296,9 +297,6 @@
             "input_id": {
                 "title": "ID",
                 "placeholder": "Contract ID"
-            },
-            "amount_input": {
-                "title": "Amount"
             },
             "button_text": "CALL CONTRACT"
         },
@@ -416,6 +414,10 @@
             "trx_error": "Transaction sending error",
             "private_key_error": "Private key was not imported in Echo Desktop Wallet"
         }
+    },
+    "amount_input": {
+        "title": "Amount",
+        "available": "Available:"
     },
     "modals": {},
     "errors": {}

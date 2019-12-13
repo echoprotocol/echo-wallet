@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -67,15 +67,15 @@ class StableCoins extends React.Component {
 	}
 
 	render() {
+		const { intl } = this.props;
+		const popupMsg = intl.formatMessage({ id: 'wallet_page.balances.stable_coins.popup_info' });
 		return (
 			<React.Fragment>
 				<h3 className="currency-title">
 					<FormattedMessage id="wallet_page.balances.stable_coins.title" />
 					<Popup
 						trigger={<span className="inner-tooltip-trigger icon-info" />}
-						content={
-							<FormattedMessage id="wallet_page.balances.stable_coins.popup_info" />
-						}
+						content={popupMsg}
 						className="inner-tooltip"
 						style={{ width: 373 }}
 						inverted
@@ -96,6 +96,7 @@ StableCoins.propTypes = {
 	activePaymentTypeTab: PropTypes.number.isRequired,
 	activeCoinTypeTab: PropTypes.number.isRequired,
 	assets: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default StableCoins;
+export default injectIntl(StableCoins);
