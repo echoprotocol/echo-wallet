@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
-// import classnames from 'classnames';
 
 
 function VerificationField(props) {
-	// const {} = props;
 
 	return (
 		<div className="action-tooltip">
