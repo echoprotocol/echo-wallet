@@ -2,13 +2,13 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
-import FocusTrap from 'focus-trap-react';
+import FocusLock from 'react-focus-lock';
 
 import { closeModal, openModal, setError } from '../../actions/ModalActions';
 
 import { MODAL_LOGOUT, MODAL_WIPE } from '../../constants/ModalConstants';
 import { removeAccount } from '../../actions/GlobalActions';
+import PasswordInput from '../PasswordInput';
 
 
 class ModalLogout extends React.Component {
@@ -65,61 +65,56 @@ class ModalLogout extends React.Component {
 
 		return (
 			<Modal className="small" open={show}>
-				<FocusTrap>
-					<div className="focus-trap-wrap">
-						<div className="modal-content">
-							<button
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-							/>
-							<div className="modal-body">
-								<Form className="main-form">
-									<div className="form-info">
-										<h3>Confirm logout</h3>
-									</div>
+				<FocusLock autoFocus={false}>
+					<div className="modal-content">
+						<button
+							className="icon-close"
+							onClick={(e) => this.onClose(e)}
+						/>
+						<div className="modal-body">
+							<Form className="main-form">
+								<div className="form-info">
+									<h3>Confirm logout</h3>
+								</div>
 									You will be signed out of your account.
-									<div className="field-wrap">
-										<Form.Field className={classnames('error-wrap', { error: !!error })}>
-											<label htmlFor="Password">Password</label>
-											<input
-												type="password"
-												placeholder="Password"
-												name="password"
-												className="ui input"
-												value={password}
-												onChange={(e) => this.onChange(e)}
-												autoFocus
-											/>
-											<span className="error-message">{error}</span>
-										</Form.Field>
-									</div>
-									<div className="form-panel">
-										<a
-											className="action-link"
-											role="button"
-											onClick={(e) => this.onForgot(e)}
-											onKeyPress={(e) => this.onForgot(e)}
-											tabIndex="0"
-										>
+								<div className="field-wrap">
+									<PasswordInput
+										errorMessage={error}
+										inputLabel="Password"
+										inputPlaceholder="Password"
+										inputName="password"
+										value={password}
+										onChange={(e) => this.onChange(e)}
+										autoFocus
+									/>
+								</div>
+								<div className="form-panel">
+									<a
+										className="action-link"
+										role="button"
+										onClick={(e) => this.onForgot(e)}
+										onKeyPress={(e) => this.onForgot(e)}
+										tabIndex="0"
+									>
 									Forgot password?
-										</a>
-										<Button
-											className="main-btn"
-											onClick={() => this.onClose()}
-											content="Cancel"
-										/>
-										<Button
-											type="submit"
-											className="main-btn"
-											onClick={() => this.onConfirm()}
-											content="Confirm"
-										/>
-									</div>
-								</Form>
-							</div>
+									</a>
+									<Button
+										className="main-btn"
+										type="button"
+										onClick={() => this.onClose()}
+										content="Cancel"
+									/>
+									<Button
+										type="submit"
+										className="main-btn"
+										onClick={() => this.onConfirm()}
+										content="Confirm"
+									/>
+								</div>
+							</Form>
 						</div>
 					</div>
-				</FocusTrap>
+				</FocusLock>
 			</Modal>
 		);
 	}

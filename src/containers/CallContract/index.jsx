@@ -82,14 +82,14 @@ class AddContractComponent extends React.Component {
 									setContractFees={this.props.setContractFees}
 								/>
 							</div>
-
-							<Button
-								basic
-								type="button"
-								className="main-btn"
-								onClick={submit}
-								content="Call Contract"
-							/>
+							<div className="form-panel">
+								<Button
+									type="button"
+									className="main-btn"
+									onClick={submit}
+									content="Call Contract"
+								/>
+							</div>
 						</Form>
 					)
 				}
