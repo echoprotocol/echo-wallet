@@ -653,6 +653,7 @@ export const resetCompiler = () => (dispatch) => {
 	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', ''));
 	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', ''));
 	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', new Map({})));
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', []));
 };
 
 /**
@@ -678,7 +679,7 @@ const parseSolidityError = (error, filename) => {
 
 	const [, row] = error.formattedMessage.split(':');
 
-	return { row: parseInt(row, 10), type: error.severity, text: error.message };
+	return { row: parseInt(row, 10) - 1, type: error.severity, text: error.message };
 };
 
 /**
@@ -710,7 +711,7 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'code']);
 	dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', ''));
 	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', []));
-
+	let errors = [];
 	try {
 		const input = {
 			language: 'Solidity',
@@ -730,24 +731,30 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 
 		const solc = wrapper(window.Module);
 		const output = JSON.parse(solc.compile(JSON.stringify(input)));
-		const errors = getCompilationErrors(output, filename);
+		errors = getCompilationErrors(output, filename);
+
 		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
 		let contracts = new Map({});
 		contracts = contracts.withMutations((contractsMap) => {
 			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
+				if (!contract.evm.bytecode.object) {
+					return;
+				}
 				contractsMap.setIn([name, 'abi'], JSON.stringify(contract.abi));
 				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
+				contractsMap.setIn([name, 'name'], name);
 			});
 		});
 
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', Object.keys(output.contracts[filename])[0]));
+		const firstContract = contracts.first();
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', firstContract.get('abi')));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', firstContract.get('bytecode')));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', firstContract.get('name')));
 		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', contracts));
 	} catch (err) {
-		console.log('err', err);
 		dispatch(resetCompiler());
-		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'Invalid contract code'));
+		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
+		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'No Contract Compiled Yet'));
 	}
 };
 

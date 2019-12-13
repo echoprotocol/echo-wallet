@@ -169,6 +169,7 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		compileLoading: false,
 		annotations: [],
+		editorWorker: false,
 	}),
 	[FORM_CREATE_CONTRACT_BYTECODE]: Map({
 		bytecode: {
