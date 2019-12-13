@@ -2,7 +2,7 @@
 	max-width: 600px;
 	flex-direction: column;
 	padding: 38px 0 47px;
-	
+
 	.modal-header {
 		align-items: center;
 		max-width: 500px;
@@ -23,16 +23,18 @@
 	}
 
 	.field {
-		& > label {
+		&>label {
 			min-height: 18px;
 		}
 	}
-	.input-eye {
+
+	.input-password {
 		margin-bottom: 0;
 	}
 
 	.form-panel {
 		margin: 12px 0 0;
+
 		.main-btn {
 			margin-left: auto;
 			min-width: 160px;

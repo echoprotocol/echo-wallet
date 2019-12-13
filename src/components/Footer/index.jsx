@@ -77,7 +77,10 @@ class Footer extends React.PureComponent {
 						</Button>
 					</li>
 					<li>
-						<NetworkDropdown lastBlock={lastBlock} disconnected />
+						<NetworkDropdown
+							lastBlock={lastBlock}
+							disconnected
+						/>
 					</li>
 				</ul>
 			</div>
