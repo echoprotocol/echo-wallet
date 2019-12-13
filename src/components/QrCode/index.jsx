@@ -1,8 +1,8 @@
 import React from 'react';
 import QRCode from 'qrcode.react';
 import PropTypes from 'prop-types';
-import ActionBtn from '../ActionBtn';
 import { FormattedMessage } from 'react-intl';
+import ActionBtn from '../ActionBtn';
 
 class QrCode extends React.PureComponent {
 
