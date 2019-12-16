@@ -2,16 +2,15 @@ import thunk from 'redux-thunk';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
-import { Provider } from 'react-redux';
 
 import echo, { echoReducer } from 'echojs-lib';
 
-import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
+import { routerMiddleware, routerReducer } from 'react-router-redux';
 
 import reducers from './reducers';
-import Routes from './routes'; // Or wherever you keep your reducers
 import history from './history';
 import './assets/loader';
+import Root from './root';
 
 
 // Build the middleware for intercepting and dispatching navigation actions
@@ -38,13 +37,6 @@ echo.syncCacheWithStore(store);
 // store.dispatch(push('/foo'))
 
 ReactDOM.render(
-	<Provider store={store}>
-		{/* ConnectedRouter will use the store from Provider automatically */}
-		<ConnectedRouter history={history}>
-			<div>
-				<Routes />
-			</div>
-		</ConnectedRouter>
-	</Provider>,
+	<Root store={store} history={history} />,
 	document.getElementById('root'),
 );

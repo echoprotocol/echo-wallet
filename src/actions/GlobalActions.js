@@ -13,7 +13,14 @@ import {
 } from '../constants/RouterConstants';
 import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT, REGISTRATION } from '../constants/GlobalConstants';
+import {
+	ECHO_ASSET_ID,
+	NETWORKS,
+	USER_STORAGE_SCHEMES,
+	GLOBAL_ERROR_TIMEOUT,
+	REGISTRATION,
+	DEFAULT_NETWORK,
+} from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
 
 
@@ -39,6 +46,64 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, setError } from './ModalActions';
 
 import Services from '../services';
+
+
+/**
+ *  @method initNetworks
+ *
+ * 	Set value to global reducer
+ *
+ * 	@param store
+ */
+export const initNetworks = (store) => async (dispatch) => {
+	let current = localStorage.getItem('current_network');
+	if (!current) {
+		[current] = DEFAULT_NETWORK;
+		localStorage.setItem('current_network', JSON.stringify(current));
+	}
+
+	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(current) }));
+
+	let networks = localStorage.getItem('custom_networks');
+	networks = networks ? JSON.parse(networks) : [];
+
+	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+
+	await Services.getUserStorage().setNetworkId(current.name);
+	await Services.getEcho().init(current.name, { store });
+
+	Services.getEcho().setOptions([], current);
+
+	dispatch(setValue('networks', fromJS(networks)));
+};
+
+/**
+ *  @method initApp
+ *
+ * 	Initialization application
+ *
+ * 	@param {Object} store - redux store
+ */
+export const initApp = (store) => async (dispatch, getState) => {
+	// const listeners = new Listeners();
+	// listeners.initListeners(dispatch, getState);
+	//
+	// dispatch(setValue('loading', 'global.loading'));
+
+	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.init();
+
+		await dispatch(initNetworks(store));
+
+		dispatch(setInValue('inited', { app: true }));
+	} catch (err) {
+		console.warn(err.message || err);
+	} finally {
+		dispatch(setValue('loading', ''));
+	}
+
+};
 
 /**
  * @method initAccount

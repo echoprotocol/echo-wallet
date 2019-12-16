@@ -98,6 +98,11 @@ export const KEY_CODE_ENTER = 13;
 
 export const DEFAULT_NETWORK_ID = 'testnet';
 
+export const DEFAULT_NETWORK = {
+	name: 'testnet',
+	url: 'wss://testnet.echo-dev.io/ws',
+};
+
 export const NETWORKS = [
 	{
 		name: 'testnet',
