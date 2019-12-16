@@ -1,0 +1,30 @@
+@mixin modal-wrap {
+	max-width: 600px;
+	flex-direction: column;
+	padding: 31px 0 47px;
+}
+
+@mixin modal-header() {
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	max-width: 500px;
+	margin: 0 auto;
+	min-height: 34px;
+	text-align: center;
+}
+
+@mixin modal-header-title() {
+	color: #3B3B3B;
+	font-size: 20px;
+	line-height: 26.4px;
+	font-weight: 700;
+	margin: 0;
+}
+
+@mixin modal-body() {
+	width: 100%;
+	max-width: 500px;
+	margin: 13px auto 0;
+}

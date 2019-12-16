@@ -24,3 +24,5 @@ export const MODAL_BLACKLIST = 'modal_blacklist';
 export const MODAL_TO_WHITELIST = 'modal_to_whitelist';
 export const MODAL_WHITELIST = 'modal_whitelist';
 export const MODAL_REPLENISH = 'modal_replenish';
+export const MODAL_ACCEPT_INCOMING_CONNECTIONS = 'modal_accept_incoming_connections';
+

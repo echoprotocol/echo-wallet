@@ -42,20 +42,35 @@
 @import "components/dropdowns/user-dropdown";
 @import "components/dropdowns/ip-url-dropdown";
 
+@import "components/modals/modal-helper";
 @import "components/modals/modals";
 @import "components/modals/wipe-data";
 @import "components/modals/edit-permissions";
 @import "components/modals/add-wif";
 @import "components/modals/view-wif";
 @import "components/modals/backup";
-@import "components/modals/confirm-editing-of-permissions.scss";
-@import "components/modals/create-address.scss";
-@import "components/modals/erc20-to-watch-list.scss";
-@import "components/modals/change-parent-account.scss";
+@import "components/modals/confirm-editing-of-permissions";
+@import "components/modals/create-address";
+@import "components/modals/erc20-to-watch-list";
+@import "components/modals/change-parent-account";
 @import "components/modals/replenish";
 @import "components/modals/whitelist-blacklist";
+@import "components/modals/accept-connections";
+@import "components/modals/confirm-transaction";
+
 @import "components/progress";
 @import "components/input-password";
+@import "components/buttons/button-helper";
+@import "components/buttons/main-btn";
+@import "components/buttons/link-btn";
+@import "components/buttons/grey-btn";
+@import "components/buttons/blue-btn";
+@import "components/buttons/green-btn";
+@import "components/buttons/transparent-btn";
+@import "components/buttons/copy-btn";
+@import "components/buttons/remove-btn";
+@import "components/buttons/version-btn";
+@import "components/buttons/btn-lock";
 
 @import "modules/all";
 @import "pages/all";

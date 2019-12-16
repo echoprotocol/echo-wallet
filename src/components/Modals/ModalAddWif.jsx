@@ -46,7 +46,7 @@ class ModalAddWIF extends React.Component {
 					onClick={(e) => this.onClose(e)}
 				/>
 				<div className="modal-header">
-					<h3 className="modal-header-title">Add WIF</h3>
+					<h2 className="modal-header-title">Add WIF</h2>
 				</div>
 				<div className="modal-body">
 
