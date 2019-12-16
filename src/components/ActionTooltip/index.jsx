@@ -13,12 +13,12 @@ function VerificationField(props) {
 				<div className="action-tooltip-panel">
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onDismiss(e.target.value)}
+						onClick={() => props.onDismiss()}
 						content="Dismiss"
 					/>
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onConfirm(e.target.value)}
+						onClick={() => props.onConfirm()}
 						content="Save"
 					/>
 				</div>

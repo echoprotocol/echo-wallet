@@ -5,9 +5,9 @@ import DropdownIpUrl from '../../components/DropdownIpUrl';
 
 import ActionTooltip from '../../components/ActionTooltip';
 
-function IpUrlPanel() {
+function IpUrlPanel(props) {
 
-	// const { loading, ipOrUrl } =  props;
+	const { loading, signupOptionsForm } =  props;
 
 	return (
 
@@ -20,7 +20,14 @@ function IpUrlPanel() {
 				<DropdownIpUrl
 					status="checked" // or error
 				/>
-				<ActionTooltip />
+				{
+					signupOptionsForm.get('showSaveAddressTooltip') && (
+						<ActionTooltip
+							onConfirm={props.saveRemoteAddress}
+							onDismiss={props.hideSaveAddressTooltip}
+						/>
+					)
+				}
 
 			</div>
 		</React.Fragment>
@@ -32,6 +39,9 @@ function IpUrlPanel() {
 IpUrlPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	saveRemoteAddress: PropTypes.func.isRequired,
+	hideSaveAddressTooltip: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
 };
 

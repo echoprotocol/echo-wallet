@@ -26,6 +26,10 @@ import {
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
 import { createAccountTransaction } from '../../actions/TransactionActions';
+import {
+	getRemoteAddressesForRegistration,
+	saveRemoteAddressForRegistration,
+} from '../../actions/GlobalActions';
 
 class SignUp extends React.Component {
 
@@ -43,6 +47,7 @@ class SignUp extends React.Component {
 
 	componentDidMount() {
 		this.props.generateWIF();
+		this.props.getRemoteAddresses();
 	}
 
 	componentWillUnmount() {
@@ -157,6 +162,12 @@ class SignUp extends React.Component {
 		return false;
 	}
 
+	hideSaveAddressTooltip() {
+		const set = this.props.setValue(FORM_SIGN_UP_OPTIONS);
+		set('showSaveAddressTooltip', false);
+	}
+
+
 	render() {
 		const {
 			location, loading, signupOptionsForm, accounts,
@@ -206,6 +217,8 @@ class SignUp extends React.Component {
 						signupOptionsForm={signupOptionsForm}
 						setFormValue={this.props.setFormValue(FORM_SIGN_UP_OPTIONS)}
 						setValue={this.props.setValue(FORM_SIGN_UP_OPTIONS)}
+						saveRemoteAddress={this.props.saveRemoteAddress}
+						hideSaveAddressTooltip={() => this.hideSaveAddressTooltip()}
 						accounts={accounts}
 					/>
 
@@ -284,6 +297,8 @@ SignUp.propTypes = {
 	validateCreateAccount: PropTypes.func.isRequired,
 	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
 	createAccountTransaction: PropTypes.func.isRequired,
+	getRemoteAddresses: PropTypes.func.isRequired,
+	saveRemoteAddress: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
@@ -315,6 +330,8 @@ export default connect(
 		createAccountTransaction: (sender, value) => dispatch(createAccountTransaction(sender, value)),
 		validateCreateAccount: (value, isAdd) => dispatch(validateCreateAccount(value, isAdd)),
 		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
+		getRemoteAddresses: () => dispatch(getRemoteAddressesForRegistration()),
+		saveRemoteAddress: () => dispatch(saveRemoteAddressForRegistration()),
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
