@@ -19,6 +19,7 @@ import {
 	FORM_PERMISSION_KEY,
 	FORM_PASSWORD_CREATE,
 	FORM_SIGN_UP_OPTIONS,
+	URI_TYPES,
 } from '../constants/FormConstants';
 
 
@@ -26,6 +27,8 @@ import {
 	validateNetworkName,
 	validateNetworkAddress,
 	validatePassword,
+	isIpAddress,
+	isUrlOrAddress,
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { formatError } from '../helpers/FormatHelper';
@@ -630,11 +633,13 @@ const saveRemoteAddressToLocalStorage = ({ address, network, account }) => {
 
 	const isAddressAlreadyAdded = remoteAddresses.find((a) => a.address === address);
 
-	if (isAddressAlreadyAdded) {
+	if (isAddressAlreadyAdded || !isUrlOrAddress(address)) {
 		return;
 	}
 
-	remoteAddresses.push({ address });
+	const type = isIpAddress(address) ? URI_TYPES.IP : URI_TYPES.URL;
+
+	remoteAddresses.push({ address, type });
 
 	currentAccountStorage.addedRegistrationAddresses = remoteAddresses;
 
@@ -699,12 +704,13 @@ export const saveRemoteAddressForRegistration = () => async (dispatch, getState)
 	const account = getState().global.getIn(['activeUser', 'name']);
 	const network = getState().global.getIn(['network', 'name']);
 
-	if (!account || !address || !network) {
+	if (!account || !address.value || address.error || !network) {
 		return;
 	}
 
-	saveRemoteAddressToLocalStorage({ address, network, account });
+	saveRemoteAddressToLocalStorage({ address: address.value, network, account });
 	dispatch(getRemoteAddressesForRegistration());
+	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', false));
 };
 
 export const removeRemoteAddressesForRegistration = (address) => async (dispatch, getState) => {

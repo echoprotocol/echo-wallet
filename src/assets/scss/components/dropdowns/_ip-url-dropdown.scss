@@ -1,5 +1,12 @@
 .ip-url-dropdown {
 
+	&.empty-search {
+		
+		.visible.transition {
+			display: none;
+		}
+	}
+
 	.menu {
 		padding: 4px 0 5px;
 		max-width: 245px;

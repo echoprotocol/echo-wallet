@@ -25,6 +25,7 @@ import {
 	SIGN_UP_OPTIONS_TYPES,
 	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
+	CHECK_URI_ADDRESS_TYPES,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -81,6 +82,7 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		ipOrUrlStatus: CHECK_URI_ADDRESS_TYPES.DEFAULT,
 		showSavedAddressesDropdown: false,
 		showSaveAddressTooltip: false,
 	}),

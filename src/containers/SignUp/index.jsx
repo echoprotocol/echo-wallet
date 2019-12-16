@@ -23,6 +23,7 @@ import {
 	createAccount,
 	validateCreateAccount,
 	saveWIFAfterCreateAccount,
+	validateAndSetIpOrUrl,
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
 import { createAccountTransaction } from '../../actions/TransactionActions';
@@ -218,7 +219,9 @@ class SignUp extends React.Component {
 						setFormValue={this.props.setFormValue(FORM_SIGN_UP_OPTIONS)}
 						setValue={this.props.setValue(FORM_SIGN_UP_OPTIONS)}
 						saveRemoteAddress={this.props.saveRemoteAddress}
+						remoteRegistrationAddresses={this.props.remoteRegistrationAddresses}
 						hideSaveAddressTooltip={() => this.hideSaveAddressTooltip()}
+						validateAndSetIpOrUrl={this.props.validateAndSetIpOrUrl}
 						accounts={accounts}
 					/>
 
@@ -299,7 +302,9 @@ SignUp.propTypes = {
 	createAccountTransaction: PropTypes.func.isRequired,
 	getRemoteAddresses: PropTypes.func.isRequired,
 	saveRemoteAddress: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
 
@@ -321,6 +326,7 @@ export default connect(
 		signupOptionsForm: state.form.get(FORM_SIGN_UP_OPTIONS),
 		accounts: state.balance.get('preview').toJS(),
 		userPublicKey: state.form.getIn([FORM_SIGN_UP, 'userPublicKey']),
+		remoteRegistrationAddresses: state.global.get('remoteRegistrationAddresses'),
 		userWIF: state.form.getIn([FORM_SIGN_UP, 'userWIF']),
 	}),
 	(dispatch) => ({
@@ -335,6 +341,7 @@ export default connect(
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
+		validateAndSetIpOrUrl: (value) => dispatch(validateAndSetIpOrUrl(value)),
 		clearForm: (form) => dispatch(clearForm(form)),
 	}),
 )(SignUp);

@@ -1,27 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import VerificationField from '../../components/Fields/VerificationField';
-import DropdownIpUrl from '../../components/DropdownIpUrl';
+import classnames from 'classnames';
 
+import DropdownIpUrl from '../../components/DropdownIpUrl';
 import ActionTooltip from '../../components/ActionTooltip';
 
 function IpUrlPanel(props) {
 
-	const { loading, signupOptionsForm, setFormValue } = props;
-
+	const {
+		loading,
+		signupOptionsForm,
+		setFormValue,
+		remoteRegistrationAddresses,
+		validateAndSetIpOrUrl,
+	} = props;
+	const ipOrUrl = signupOptionsForm.get('ipOrUrl');
 	return (
 
 		<React.Fragment>
 			<div className="register-info">
 				<p>Register a new account through a running node.</p>
 			</div>
-			<div className="field-wrap">
+			<div className={classnames('field error-wrap', { error: !!ipOrUrl.error })}>
 
 				<DropdownIpUrl
-					status="checked" // or error
+					status={signupOptionsForm.get('ipOrUrlStatus')}
 					loading={loading}
 					signupOptionsForm={signupOptionsForm}
+					remoteRegistrationAddresses={remoteRegistrationAddresses}
 					setFormValue={setFormValue}
+					validateAndSetIpOrUrl={validateAndSetIpOrUrl}
 				/>
 				{
 					signupOptionsForm.get('showSaveAddressTooltip') && (
@@ -31,7 +39,9 @@ function IpUrlPanel(props) {
 						/>
 					)
 				}
-
+				{
+					ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span>
+				}
 			</div>
 		</React.Fragment>
 	);
@@ -42,10 +52,11 @@ function IpUrlPanel(props) {
 IpUrlPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
-	setValue: PropTypes.func.isRequired,
 	saveRemoteAddress: PropTypes.func.isRequired,
 	hideSaveAddressTooltip: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 };
 
 export default IpUrlPanel;
