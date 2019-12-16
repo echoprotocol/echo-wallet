@@ -20,7 +20,7 @@ function IpUrlPanel() {
 				<DropdownIpUrl
 					status="checked" // or error
 				/>
-				{/* <ActionTooltip /> */}
+				<ActionTooltip />
 
 			</div>
 		</React.Fragment>
