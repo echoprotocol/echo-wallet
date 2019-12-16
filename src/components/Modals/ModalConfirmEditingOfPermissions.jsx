@@ -41,7 +41,7 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 							<div className="form-panel">
 								<Button
 									className="main-btn"
-									onClick={(e) => this.onClose()}
+									onClick={() => this.onClose()}
 									content="No"
 								/>
 								<Button
