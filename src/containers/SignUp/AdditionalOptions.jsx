@@ -26,7 +26,13 @@ class AdditionalOptions extends React.Component {
 
 	renderPanel() {
 		const {
-			loading, signupOptionsForm, setFormValue, accounts, setValue, saveRemoteAddress, hideSaveAddressTooltip,
+			loading,
+			signupOptionsForm,
+			setFormValue,
+			accounts,
+			setValue,
+			saveRemoteAddress,
+			hideSaveAddressTooltip,
 		} = this.props;
 		const checked = signupOptionsForm.get('optionType');
 
@@ -50,7 +56,7 @@ class AdditionalOptions extends React.Component {
 						setFormValue={setFormValue}
 						setValue={setValue}
 						saveRemoteAddress={saveRemoteAddress}
-						hideSaveAddressTooltip={saveRemoteAddress}
+						hideSaveAddressTooltip={hideSaveAddressTooltip}
 					/>
 				);
 			default:

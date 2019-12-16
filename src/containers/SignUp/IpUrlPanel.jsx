@@ -7,7 +7,7 @@ import ActionTooltip from '../../components/ActionTooltip';
 
 function IpUrlPanel(props) {
 
-	const { loading, signupOptionsForm } =  props;
+	const { loading, signupOptionsForm, setFormValue } = props;
 
 	return (
 
@@ -19,6 +19,9 @@ function IpUrlPanel(props) {
 
 				<DropdownIpUrl
 					status="checked" // or error
+					loading={loading}
+					signupOptionsForm={signupOptionsForm}
+					setFormValue={setFormValue}
 				/>
 				{
 					signupOptionsForm.get('showSaveAddressTooltip') && (

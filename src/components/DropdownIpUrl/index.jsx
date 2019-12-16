@@ -5,16 +5,8 @@ import classnames from 'classnames';
 
 class DropdownIpUrl extends React.Component {
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			searchText: '',
-		};
-	}
-
 	onSearch(e) {
-		this.setState({ searchText: e.target.value });
+		this.props.setFormValue('ipOrUrl', e.target.value);
 	}
 
 	renderList(options) {
@@ -49,9 +41,9 @@ class DropdownIpUrl extends React.Component {
 
 
 	render() {
-		const { searchText } = this.state;
+		const { status, loading, signupOptionsForm } = this.props;
 
-		const { status } = this.props;
+		const ipOrUrl = signupOptionsForm.get('ipOrUrl');
 
 		const options = [
 			{
@@ -69,15 +61,17 @@ class DropdownIpUrl extends React.Component {
 					floating
 					search
 					fluid
+					disabled={loading}
 					className="ip-url-dropdown"
-					searchQuery={searchText}
+					searchQuery={ipOrUrl.value}
 					closeOnChange
 					icon={false}
 					onSearchChange={(e) => this.onSearch(e)}
-					text={searchText}
+					text={ipOrUrl.value}
 					selection
 					onBlur={() => {}}
 					options={this.renderList(options)}
+					noResultsMessage={undefined}
 				/>
 				{
 					status &&
@@ -91,6 +85,9 @@ class DropdownIpUrl extends React.Component {
 
 DropdownIpUrl.propTypes = {
 	status: PropTypes.string,
+	loading: PropTypes.bool.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	signupOptionsForm: PropTypes.object.isRequired,
 };
 
 DropdownIpUrl.defaultProps = {
