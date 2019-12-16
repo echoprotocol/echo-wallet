@@ -24,7 +24,6 @@ class Network extends React.PureComponent {
 		this.state = {
 			open: false,
 		};
-
 	}
 
 	onDropdownChange(e, value) {
@@ -96,9 +95,7 @@ class Network extends React.PureComponent {
 	}
 
 	openDropdown(e) {
-		if (e.target.className === 'play-node') {
-			return;
-		}
+		console.log(e);
 
 		const { open } = this.state;
 		if (!open) { this.setState({ open: true }); }
@@ -136,52 +133,47 @@ class Network extends React.PureComponent {
 		});
 
 		return (
-			<div
-				className="network-dropdown"
-				onFocus={(e) => this.openDropdown(e)}
+			<Dropdown
+				open={open}
+				options={options}
+				onChange={(e, { value }) => this.onDropdownChange(e, value)}
+				direction="left"
+				icon={false}
+				selectOnBlur={false}
+				upward
+				disabled={loading}
+				onClick={(e) => this.openDropdown(e)}
+				onFocus={() => this.setState({ open: true })}
 				onBlur={() => this.setState({ open: false })}
-				role="button"
-				tabIndex="0"
-			>
-				<div className="trigger" >
-					<span className="description">
-						{ disconnected ? 'Disconnected:' : 'Network:' }
-					</span>
-					<span className="status connected">
-						<div className="ellipsis">{network.name}</div>
-					</span>
+				className={classnames('network-dropdown', {
+					disconnected,
+					warning,
+				})}
+				trigger={
+					<div className="dropdown-trigger">
 
-					<ProgressBar
-						size={20}
-						value={64}
-						disconnected={disconnected}
-						warning={warning}
-					/>
+						<span className="description">
+							{ disconnected ? 'Disconnected:' : 'Network:' }
+						</span>
+						<span className="status connected">
+							<div className="ellipsis">{network.name}</div>
+						</span>
 
-					<span className="pipeline-block">
+						<ProgressBar
+							size={20}
+							value={64}
+							disconnected={disconnected}
+							warning={warning}
+						/>
+
+						<span className="pipeline-block">
 								Block
-						<span>{this.props.lastBlock}</span>
-					</span>
-					<span className="icon dropdown" />
-				</div>
-				<Dropdown
-					open={open}
-					options={options}
-					onChange={(e, { value }) => this.onDropdownChange(e, value)}
-					direction="left"
-					icon={false}
-					selectOnBlur={false}
-					upward
-					tabIndex="-1"
-					disabled={loading}
-					className={classnames('', {
-						disconnected,
-						warning,
-					})}
-				/>
-
-			</div>
-
+							<span>{this.props.lastBlock}</span>
+						</span>
+						<span className="icon dropdown" />
+					</div>
+				}
+			/>
 		);
 	}
 
