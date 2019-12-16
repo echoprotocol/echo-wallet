@@ -73,6 +73,10 @@ const DEFAULT_FORM_FIELDS = {
 	[FORM_SIGN_UP_OPTIONS]: Map({
 		isMoreOptionsActive: false,
 		optionType: SIGN_UP_OPTIONS_TYPES.DEFAULT,
+		registrarAccountKeyWarn: {
+			value: false,
+			error: null,
+		},
 		registrarAccount: {
 			value: '',
 			error: null,
@@ -286,6 +290,7 @@ const DEFAULT_FORM_FIELDS = {
 		}),
 		firstFetch: false,
 		isChanged: false,
+		isOnlyWIFChanged: false,
 		isEditMode: false,
 	}),
 	[FORM_COMMITTEE]: new Map({

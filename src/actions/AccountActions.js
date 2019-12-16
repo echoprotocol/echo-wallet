@@ -33,3 +33,4 @@ export const lookupAccountsList = async (name, limit = 15) => {
 	const list = await echo.api.lookupAccounts(name, limit);
 	return list;
 };
+

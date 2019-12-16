@@ -228,7 +228,7 @@ class EchoNetwork extends React.Component {
 			className: 'generate-address',
 			value: 'generate-address',
 			key: 'generate-address',
-			content: 'Generate new address',
+			content: 'Generate new addres',
 			onClick: () => {
 				this.setState({ open: false });
 				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);

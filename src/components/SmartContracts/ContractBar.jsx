@@ -93,7 +93,7 @@ class ContractBar extends React.Component {
 			searchText, options, loading,
 		} = this.state;
 		const {
-			assets, fees, form,
+			assets, fees, form, keyWeightWarn,
 		} = this.props;
 		return (
 			<div className="contract-bar">
@@ -209,7 +209,7 @@ class ContractBar extends React.Component {
 								className="main-btn"
 								content="CREATE SMART CONTRACT"
 								onClick={submit}
-								disabled={form.get('compileLoading')}
+								disabled={form.get('compileLoading') || keyWeightWarn}
 							/>
 						)
 					}
@@ -231,6 +231,7 @@ ContractBar.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
 	createContract: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 

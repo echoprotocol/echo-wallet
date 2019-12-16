@@ -40,7 +40,7 @@ class ModalCreateEchoAddress extends React.Component {
 
 	render() {
 		const {
-			show, error,
+			show, error, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -87,6 +87,7 @@ class ModalCreateEchoAddress extends React.Component {
 											className="main-btn"
 											onClick={() => this.onGenerateEchoAdress(submit)}
 											content="Generate address"
+											disabled={keyWeightWarn}
 										/>
 									</div>
 								</Form>
@@ -106,6 +107,7 @@ ModalCreateEchoAddress.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	generateEchoAddress: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalCreateEchoAddress.defaultProps = {
@@ -117,6 +119,7 @@ export default connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'show']),
 		error: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'error']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ECHO_ADDRESS)),

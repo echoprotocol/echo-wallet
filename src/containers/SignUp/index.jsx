@@ -23,6 +23,7 @@ import {
 	createAccount,
 	validateCreateAccount,
 	saveWIFAfterCreateAccount,
+	checkParentKeys,
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
 import { createAccountTransaction } from '../../actions/TransactionActions';
@@ -45,6 +46,12 @@ class SignUp extends React.Component {
 		this.props.generateWIF();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.signupOptionsForm.get('registrarAccount').value !==
+			this.props.signupOptionsForm.get('registrarAccount').value) {
+			this.props.checkParentKeys(this.props.signupOptionsForm.get('registrarAccount').value);
+		}
+	}
 	componentWillUnmount() {
 		this.props.clearForm(FORM_SIGN_UP_OPTIONS);
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
@@ -147,10 +154,11 @@ class SignUp extends React.Component {
 			accounts,
 			signupOptionsForm,
 		} = this.props;
+		const accountName = signupOptionsForm.get('registrarAccount').value;
 
 		if (this.isDisabledSubmit() ||
 			(!accounts.length) ||
-			(!signupOptionsForm.get('registrarAccount').value)) {
+			(!accountName)) {
 			return true;
 		}
 
@@ -162,6 +170,7 @@ class SignUp extends React.Component {
 			location, loading, signupOptionsForm, accounts,
 		} = this.props;
 
+		// const { isParentDisabled } = this.state;
 		const { isAddAccount } = qs.parse(location.search);
 
 		const check = signupOptionsForm.get('optionType');
@@ -234,7 +243,7 @@ class SignUp extends React.Component {
 											<ButtonComponent
 												loading={loading}
 												isAddAccount={isAddAccount}
-												disabled={this.isDisabledSubmitParent()}
+												disabled={this.isDisabledSubmitParent() || signupOptionsForm.get('registrarAccountKeyWarn').value}
 												submit={submit}
 											/>
 										)
@@ -284,6 +293,7 @@ SignUp.propTypes = {
 	validateCreateAccount: PropTypes.func.isRequired,
 	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
 	createAccountTransaction: PropTypes.func.isRequired,
+	checkParentKeys: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
@@ -319,5 +329,6 @@ export default connect(
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
 		clearForm: (form) => dispatch(clearForm(form)),
+		checkParentKeys: (accName) => dispatch(checkParentKeys(accName)),
 	}),
 )(SignUp);

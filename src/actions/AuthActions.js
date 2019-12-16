@@ -651,3 +651,10 @@ export const saveWifToDb = (
 		dispatch(toggleModalLoading(modal, false));
 	}
 };
+
+export const checkParentKeys = (accName) => async (dispatch, getState) => {
+	const accountId = (await echo.api.getAccountByName(accName)).id;
+	const networkName = getState().global.getIn(['network', 'name']);
+	const isNotEnoughKeys = await dispatch(checkKeyWeightWarning(networkName, accountId));
+	dispatch(setFormValue(FORM_SIGN_UP_OPTIONS, 'registrarAccountKeyWarn', isNotEnoughKeys));
+};

@@ -58,7 +58,6 @@ class Receive extends React.Component {
 						setContractFees={this.props.setContractFees}
 						openModal={(value) => this.props.openModal(value)}
 						updateAccountAddresses={this.props.updateAccountAddresses}
-						keyWeightWarn={keyWeightWarn}
 					/>),
 			},
 			{

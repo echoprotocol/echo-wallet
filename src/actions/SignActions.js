@@ -79,7 +79,7 @@ export const signTransaction = async (accountId, tr, password) => {
 
 	const keys = (await Promise
 		.all(publicKeys.map((k) => Services.getUserStorage().getAllPossibleWIFs(k, { password }))))
-		.flat();
+		.reduce((acc, val) => [...acc, ...val], []);
 
 	const signers = await getSigners(signer, keys.filter((k) => k));
 	signers.map((s) => tr.addSigner(s));
