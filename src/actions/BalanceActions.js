@@ -672,5 +672,3 @@ export const setAsset = (asset, type) => (dispatch, getState) => {
 export const resetBalance = () => (dispatch) => {
 	dispatch(BalanceReducer.actions.reset());
 };
-
-
