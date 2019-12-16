@@ -696,15 +696,7 @@ export const isOnlyWifChanged = (privateKeys, basePrivateKeys) => (dispatch, get
 	const isEchoRandKeysChange = isEchoRandKeysChanged(permissionForm, permissionTable);
 	const isActiveWifChange = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
 	const isEchoRandWifChange = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
-	// console.log('1', isActiveKeysChange)
-	// console.log('2', isActiveAccountsChange)
-	// console.log('3', isThresholdChange)
-	// console.log('4', isEchoRandKeysChange)
-	// console.log('5', isActiveWifChange)
-	// console.log('6', isEchoRandWifChange)
-
 	const isOnlyWIFChanged = (isActiveWifChange || isEchoRandWifChange) &&
 		!(isActiveKeysChange || isActiveAccountsChange || isThresholdChange || isEchoRandKeysChange);
-	// console.log('c', isOnlyWIFChanged)
 	dispatch(setFormValue(FORM_PERMISSION_KEY, 'isOnlyWIFChanged', isOnlyWIFChanged));
 };

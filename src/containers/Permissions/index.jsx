@@ -360,7 +360,6 @@ class Permissions extends React.Component {
 
 	renderEditPanel() {
 		const { isOnlyWIFChanged, keyWeightWarn } = this.props;
-		// console.log('is', isOnlyWIFChanged)
 		return (
 			<div className="sub-header-panel">
 				<div className="edit-panel-wrap">
