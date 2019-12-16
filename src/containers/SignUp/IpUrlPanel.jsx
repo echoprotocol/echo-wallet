@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import VerificationField from '../../components/Fields/VerificationField';
-import DropdownIpUrl from '../../components/DropdownIpUrl';
+import classnames from 'classnames';
 
+import DropdownIpUrl from '../../components/DropdownIpUrl';
 import ActionTooltip from '../../components/ActionTooltip';
 
 function IpUrlPanel(props) {
 
-	const { loading, signupOptionsForm } =  props;
+	const { loading, signupOptionsForm } = props;
 
 	return (
 
@@ -15,7 +15,7 @@ function IpUrlPanel(props) {
 			<div className="register-info">
 				<p>Register a new account through a running node.</p>
 			</div>
-			<div className="field-wrap">
+			<div className={classnames('field error-wrap', { error: true })}>
 
 				<DropdownIpUrl
 					status="checked" // or error
@@ -28,7 +28,9 @@ function IpUrlPanel(props) {
 						/>
 					)
 				}
-
+				{
+					true && <span className="error-message">Some error</span>
+				}
 			</div>
 		</React.Fragment>
 	);
