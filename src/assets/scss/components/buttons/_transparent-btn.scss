@@ -1,0 +1,50 @@
+.transparet-btn {
+	@include btn();
+	border: 1px solid transparent;
+	background-color: transparent;
+
+	&.grey {
+
+		color: rgba(#5C637D, .5);
+
+		&:hover {
+			background-color: #EDEEF2;
+		}
+
+		&:not(:active) {
+			&:focus {
+				@include on-focus(4px);
+			}
+		}
+
+		&:active {
+			color: rgba(#A5A8B7, .6);
+		}
+
+		&:disabled {
+			border: 1px solid rgba(#EDEEF2, .5);
+			background-color: transparent;
+		}
+	}
+
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-color;
+	}
+}

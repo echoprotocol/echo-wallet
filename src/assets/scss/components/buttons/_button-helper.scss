@@ -1,0 +1,61 @@
+$stripe-color: rgba(255, 255, 255, .7);
+$stripe-width: 10px;
+
+@keyframes loading-stripes {
+	0% {
+		background-position: 0px
+	}
+
+	100% {
+		background-position: $stripe-width
+	}
+}
+
+@mixin btn($fz: 12px) {
+	position: relative;
+	font-size: $fz;
+	font-family: proxima;
+	font-weight: 600;
+	text-transform: uppercase;
+	border-radius: 4px;
+	height: 38px;
+	line-height: 38px;
+	min-width: 120px;
+	padding: 0 15px;
+	white-space: nowrap;
+	transition:
+		background-color $speed,
+		color $speed,
+		border-color $speed;
+}
+
+.btn-list {
+	padding: 20px;
+
+	.button {
+		margin: 0 10px 0 0;
+	}
+}
+
+.load {
+	position: relative;
+
+	&:after {
+		position: absolute;
+		bottom: -2px;
+		right: 0;
+		left: 0;
+		height: 4px;
+		content: "";
+		display: block;
+		background-image: linear-gradient(-45deg, $stripe-color 25%,
+				transparent 25%,
+				transparent 50%,
+				$stripe-color 50%,
+				$stripe-color 75%,
+				transparent 75%,
+				transparent);
+		background-size: $stripe-width $stripe-width;
+		animation: loading-stripes .4s linear infinite;
+	}
+}

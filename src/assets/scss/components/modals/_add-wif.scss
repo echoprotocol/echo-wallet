@@ -1,25 +1,16 @@
 .add-wif-modal {
-	max-width: 600px;
-	flex-direction: column;
-	padding: 38px 0 47px;
+	@include modal-wrap();
 
 	.modal-header {
-		align-items: center;
-		max-width: 500px;
-		margin: 0 auto;
+		@include modal-header();
 	}
 
 	.modal-header-title {
-		color: #3B3B3B;
-		font-size: 20px;
-		font-weight: 600;
-		margin: 0;
+		@include modal-header-title();
 	}
 
 	.modal-body {
-		width: 100%;
-		max-width: 500px;
-		margin: 13px auto 0;
+		@include modal-body();
 	}
 
 	.field {
@@ -33,7 +24,7 @@
 	}
 
 	.form-panel {
-		margin: 12px 0 0;
+		margin: 30px 0 0;
 
 		.main-btn {
 			margin-left: auto;

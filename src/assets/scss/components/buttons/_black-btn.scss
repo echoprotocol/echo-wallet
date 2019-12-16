@@ -1,0 +1,42 @@
+.black-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #515459;
+	background-color: #515459;
+
+	&:hover {
+		border: 1px solid #73777E;
+		background-color: #73777E;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#515459, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#515459, .5);
+		background-color: rgba(#515459, .5);
+		color: rgba($main-color, .5);
+	}
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
