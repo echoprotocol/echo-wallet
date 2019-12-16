@@ -45,7 +45,7 @@ class AdditionalOptions extends React.Component {
 			case SIGN_UP_OPTIONS_TYPES.IP_URL:
 				return (
 					<IpUrlPanel
-						ipOrUrl={signupOptionsForm.get('ipOrUrl')}
+						signupOptionsForm={signupOptionsForm}
 						loading={loading}
 						setFormValue={setFormValue}
 					/>

@@ -81,6 +81,8 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		showSavedAddressesDropdown: false,
+		showSaveAddressTooltip: false,
 	}),
 	[FORM_UNLOCK_MODAL]: Map({
 		password: {
