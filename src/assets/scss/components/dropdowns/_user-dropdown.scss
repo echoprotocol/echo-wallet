@@ -1,0 +1,296 @@
+.user-dropdown {
+	display: flex;
+	padding: 0 14px 0 0;
+
+	.dropdown.icon {
+		right: 0;
+	}
+
+	.menu {
+		right: -12px;
+		margin-top: 2px;
+		left: auto;
+		min-width: 344px;
+		border-radius: 0;
+		overflow: hidden;
+
+		.balance {
+			margin-left: 10px;
+		}
+
+		&>.item {
+			padding: 0;
+			color: #6d7178;
+			font-size: 13px;
+
+			&:not(.add-account) {
+				transition: background-color $speed;
+
+				&:hover {
+					background-color: $main-color;
+
+					.name {
+						color: #fff;
+					}
+
+					.parent-label {
+						color: rgba(#fff, .5);
+					}
+
+					.balance {
+						color: #fff;
+					}
+
+					.logout-user-btn {
+						color: transparent;
+						width: auto;
+						padding: 0 20px 0 0;
+					}
+
+					.parent-link {
+						color: #FFF9B5;
+					}
+
+					.divider {
+						background-color: rgba(#E5E6EB, 0.1);
+					}
+				}
+
+			}
+
+			.avatar-wrap {
+				border: 1px solid transparent;
+				border-radius: 4px;
+				overflow: hidden;
+				transition: border $speed;
+			}
+
+			.user-base-info {
+				margin: 0 auto 0 9px;
+				text-align: left;
+				font-family: $font-family;
+			}
+
+			.parent-link {
+				color: #4D66CD;
+				transition: color $speed;
+				font-family: proxima;
+				font-weight: 600;
+				font-size: 13px;
+			}
+
+			.name-wrap {
+				display: flex;
+				align-items: center;
+			}
+
+			.parent-label {
+				color: rgba(#5C637D, .5);
+				transition: color $speed;
+				font-size: 13px;
+				font-weight: 400;
+				margin: -3px 5px 0 5px;
+			}
+
+			.name {
+				@include cut-text;
+				color: $main-color;
+				max-width: 130px;
+				color: #3B3B3B;
+				transition: color $speed;
+				line-height: 16px;
+				font-family: proxima;
+				font-weight: 600;
+				font-size: 13px;
+			}
+
+			.id {
+				color: rgba(#3B3B3B, .6);
+				transition: color $speed;
+				line-height: 13px;
+				font-family: proxima;
+				font-weight: 600;
+				font-size: 13px;
+				font-weight: 400;
+			}
+
+			&:hover {
+				.id {
+					color: rgba(#fff, .6);
+				}
+
+				.avatar-wrap {
+					border: 1px solid rgba(#fff, .1);
+				}
+			}
+
+			&.selected {
+				background-color: transparent;
+
+				&:hover {
+					.name {
+						color: #fff;
+					}
+
+					.balance {
+						color: #fff;
+						font-family: proxima;
+						font-weight: 600;
+
+					}
+
+				}
+			}
+
+			&.active {
+				background-color: #f8f8f8;
+			}
+
+			&.add-account {
+				text-transform: uppercase;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-top: 1px solid $bd-gray;
+				height: 39px;
+				z-index: 2;
+				font-family: proxima;
+				font-weight: 600;
+				font-size: .9rem;
+				color: rgb(211, 212, 214);
+				transition: color $speed, background-color $speed;
+
+				&.selected {
+					color: $border-hover;
+					background-color: transparent;
+
+					.text {
+						position: relative;
+
+						&:before {
+							@include on-focus(2px);
+							position: absolute;
+							content: '';
+							display: block;
+							right: -3px;
+							left: -3px;
+							top: -3px;
+							bottom: -1px;
+							border-radius: $angulars;
+						}
+					}
+				}
+
+				&:hover {
+					color: #fff;
+					background-color: $main-color;
+				}
+
+				&:focus {
+					color: $border-hover;
+				}
+
+				&:before {
+					font-family: 'icomoon';
+					speak: none;
+					font-style: normal;
+					font-weight: normal;
+					font-variant: normal;
+					text-transform: none;
+					line-height: 1px;
+					/* Better Font Rendering =========== */
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					font-size: 1.3em;
+					content: "\e900";
+					margin-right: 7px;
+					display: block;
+				}
+			}
+
+			.user-item,
+			.user-panel {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.user-item {
+				background-color: transparent;
+				width: 100%;
+				border: 0;
+				cursor: pointer;
+				color: $black;
+				transition: background-color $speed, color $speed;
+				padding: 7px 18px 7px 16px;
+			}
+
+			.parent-user-wrap,
+			.user-item-wrap {
+				display: flex;
+				width: 100%;
+			}
+
+			.parent-user-wrap {
+				flex-direction: column;
+			}
+
+			.divider {
+				height: 1px;
+				width: 100%;
+				background-color: #E5E6EB;
+				margin: 0 0 0 17px;
+				transition: background-color $speed;
+			}
+
+			.logout-user-btn {
+				overflow: hidden;
+				width: 0;
+				padding: 0;
+				font-family: 'icomoon';
+				speak: none;
+				font-style: normal;
+				font-weight: normal;
+				font-variant: normal;
+				text-transform: none;
+				line-height: 1;
+				cursor: pointer;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				background-color: transparent;
+				border: 0;
+				transition:
+					width $speed,
+					padding $speed;
+
+				&:before {
+					content: "\e923";
+					font-size: 18px;
+					color: #fff;
+					transition: color $speed;
+				}
+
+				&:hover {
+					&:before {
+						color: $yellow;
+					}
+				}
+			}
+
+			.user-panel {
+				padding: 0;
+
+			}
+		}
+	}
+
+	&>.text {
+		@include cut-text;
+		color: $main-color;
+		font-family: proxima;
+		font-weight: 600;
+		max-width: 296px;
+		user-select: none;
+	}
+
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Dropdown, Button, Form, Popup } from 'semantic-ui-react';
+import { Dropdown, Button, Popup } from 'semantic-ui-react';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
 import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
@@ -51,7 +51,7 @@ class Transfer extends React.Component {
 			>
 				{
 					(submit) => (
-						<Form className="main-form">
+						<form className="form main-form">
 							<div className="form-info">
 								<h3>Freeze Funds</h3>
 							</div>
@@ -75,7 +75,7 @@ class Transfer extends React.Component {
 									assetDropdown={false}
 									labelText="Amount"
 								/>
-								<Form.Field>
+								<div className="field">
 									<label htmlFor="period">Period</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
@@ -84,7 +84,7 @@ class Transfer extends React.Component {
 										options={dateOptions}
 										noResultsMessage="No results are found"
 									/>
-								</Form.Field>
+								</div>
 								<div className="form-panel">
 									{duration.isSelected &&
 										<React.Fragment>
@@ -104,7 +104,6 @@ class Transfer extends React.Component {
 										</React.Fragment>
 									}
 									<Button
-										basic
 										type="submit"
 										className="main-btn"
 										content="Freeze"
@@ -113,7 +112,7 @@ class Transfer extends React.Component {
 									/>
 								</div>
 							</div>
-						</Form>
+						</form>
 					)
 				}
 			</TransactionScenario>

@@ -1,136 +1,128 @@
-
 .icon-sort-down:before {
-    content: "\e90d";
+	content: "\e90d";
 }
+
 .icon-sort-up:before {
-    content: "\e910";
+	content: "\e910";
 }
+
 .icon-global-max:before {
-    content: "\e926";
+	content: "\e926";
 }
 
 .icon-check:before {
-    content: "\e924";
+	content: "\e924";
 }
 
 .icon-logout:before {
-    content: "\e923";
+	content: "\e923";
 }
 
 .icon-hide:before {
-    content: "\e920";
+	content: "\e920";
 }
 
 .icon-permission:before {
-    content: "\e921";
+	content: "\e921";
 }
 
 .icon-show:before {
-    content: "\e922";
+	content: "\e922";
 }
 
 .icon-e-show:before {
-    content: '\e927';
+	content: '\e927';
 }
 
 .icon-e-hide:before {
-    content: '\e925';
+	content: '\e925';
 }
 
 .icon-edit:before {
-    content: "\e91f";
+	content: "\e91f";
 }
 
 .icon-comment:before {
-    content: "\e91c";
+	content: "\e91c";
 }
 
 .icon-menu-wallet:before {
-    content: "\e91d";
+	content: "\e91d";
 }
 
 .icon-menu-voting:before {
-    content: "\e92a";
+	content: "\e92a";
 }
 
 .icon-sort:before {
-    content: "\e91e";
+	content: "\e91e";
 }
 
 .icon-send:before {
-    content: "\e91b";
+	content: "\e91b";
 }
 
 .icon-recent-activity:before {
-    content: "\e91a";
+	content: "\e91a";
 }
 
 .icon-edit-close:before {
-    content: "\e919";
+	content: "\e919";
 }
 
 .icon-edit-checked:before {
-    content: "\e916";
+	content: "\e916";
 }
 
-.icon-error-red:before {
-    content: "\e918";
-    color: #f65c5c;
+// WARN: in Icomoon .icon-error-red
+.icon-error:before {
+	content: "\e918";
 }
 
 .icon-close-white:before {
-    content: "\e917";
-    color: #fff;
+	content: "\e917";
+	color: #fff;
 }
 
 .icon-checked-white:before {
-    content: "\e916";
-    color: #fff;
+	content: "\e916";
+	color: #fff;
 }
 
 .icon-contractCopy:before {
-    content: "\e915";
+	content: "\e915";
 }
 
 .icon-contractSearch:before {
-    content: "\e914";
+	content: "\e914";
 }
 
 .icon-contractAdd:before {
-    content: "\e912";
+	content: "\e912";
 }
 
 .icon-add2:before {
-    content: "\e912";
+	content: "\e912";
 }
 
 .icon-send2:before {
-    content: "\e914";
+	content: "\e914";
 }
 
 .icon-add:before {
-    content: "\e900";
+	content: "\e900";
 }
 
 .icon-back:before {
-    content: "\e901";
+	content: "\e901";
 }
 
-.icon-checked {
-    &:before {
-        content: "\e902";
-        color: #fff;
-    }
-
-    &.success {
-        &:before {
-            color: #7ad38d;
-        }
-    }
+.icon-checked:before {
+	content: "\e902";
 }
 
 .icon-close:before {
-    content: "\e904";
+	content: "\e904";
 }
 
 i.copy,
@@ -141,58 +133,59 @@ i.copy,
 }
 
 .icon-dotted:before {
-    content: "\e906";
+	content: "\e906";
 }
+
 .icon.dropdown:before {
 	content: "\e907";
 }
 
 .icon-info:before {
-    content: "\e908";
+	content: "\e908";
 }
 
 .icon-voted:before {
-    content: "\e929";
+	content: "\e929";
 }
 
 .icon-lock:before {
-    content: "\e928";
+	content: "\e928";
 }
 
 
 .icon-menu:before {
-    content: "\e90e";
+	content: "\e90e";
 }
 
 .icon-remove:before,
 .icon.remove:before {
-    content: "\e90f";
+	content: "\e90f";
 }
 
 .icon-top_1:before {
-    content: "\e911";
+	content: "\e911";
 }
 
 .icon-frozen-funds:before {
-    content: "\e909";
+	content: "\e909";
 }
 
 .icon-coin {
-    opacity: 0.7;
-    margin-left: 5px;
+	opacity: 0.7;
+	margin-left: 5px;
 
-    &:before {
-        content: "\e90a";
-        color: #3d66d0;
-    }
+	&:before {
+		content: "\e90a";
+		color: #3d66d0;
+	}
 
-    &:hover {
-        opacity: 1;
-    }
+	&:hover {
+		opacity: 1;
+	}
 }
 
 .icon-commit:before {
-    content: "\e90b";
+	content: "\e90b";
 }
 
 .icon-icopy-tiny:before {

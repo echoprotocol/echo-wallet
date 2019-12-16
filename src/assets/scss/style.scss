@@ -8,9 +8,55 @@
 @import "libs/reset";
 @import "libs/semantic-ui/semantic-ui";
 @import "libs/toastify/main";
-@import "components/all";
+
+
+@import "components/loader";
+@import "components/header";
+@import "components/sub-header";
+@import "components/sidebar";
+@import "components/user";
+@import "components/signIn";
+@import "components/footer";
+@import "components/avatar";
+@import "components/tooltip";
+@import "components/countdown";
+@import "components/wallet-tab-menu";
+@import "components/receive-tab-menu";
+@import "components/qr";
+@import "components/input-action";
+@import "components/contract-bar";
+@import "components/accordion";
+@import "components/action-btn";
+@import "components/toggle";
+@import "components/editor";
+@import "components/table-key-value";
+@import "components/action-tooltip";
+@import "components/copy-label";
+@import "components/dropdowns/dropdowns";
+@import "components/dropdowns/fee-dropdown";
+@import "components/dropdowns/network-dropdown";
+@import "components/dropdowns/assets-tokens-dropdown";
+@import "components/dropdowns/contract-type-dropdown";
+@import "components/dropdowns/fee-dropdown";
+@import "components/dropdowns/assets-balance-dropdown";
+@import "components/dropdowns/user-dropdown";
+@import "components/dropdowns/ip-url-dropdown";
+
+@import "components/modals/modals";
+@import "components/modals/wipe-data";
+@import "components/modals/edit-permissions";
+@import "components/modals/add-wif";
+@import "components/modals/view-wif";
+@import "components/modals/backup";
+@import "components/modals/confirm-editing-of-permissions.scss";
+@import "components/modals/create-address.scss";
+@import "components/modals/erc20-to-watch-list.scss";
+@import "components/modals/change-parent-account.scss";
+@import "components/modals/replenish";
+@import "components/modals/whitelist-blacklist";
+@import "components/progress";
+@import "components/input-password";
+
 @import "modules/all";
 @import "pages/all";
 @import "base";
-
-
