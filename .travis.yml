@@ -17,11 +17,13 @@ jobs:
 
     - stage: build
       name: "Build Linux App"
+      env:
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.5.tar"
       if: tag IS present
       script:
         - rm -rf node_modules
         - npm i
-        - npm run package-deb
+        - npm run package-deb-with-download-build
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
@@ -49,11 +51,13 @@ jobs:
     - stage: build
       os: osx
       name: "Build macOS App"
+      env:
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-mac.0.13.5.tar"
       if: tag IS present
       script:
         - rm -rf node_modules
         - npm i
-        - npm run package-mac
+        - npm run package-mac-with-download-build
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
