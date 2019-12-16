@@ -1,45 +1,47 @@
-const path = require('path');
-const fs = require('fs');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
-const {
-	SOLC_LIST_URL,
-	SOLC_BIN_URL,
-} = require('config');
+/**
+ * Build config for electron renderer process
+ */
+
+import path from 'path';
+import webpack from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import merge from 'webpack-merge';
+import fs from 'fs';
+import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
+
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import GitRevisionPlugin from 'git-revision-webpack-plugin';
+
+import baseConfig from './webpack.config.base.babel';
+import CheckNodeEnv from '../scripts/CheckNodeEnv';
+
+const { version } = require('../package.json');
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-	template: `${__dirname}/src/assets/index.html`,
+	template: `${__dirname}/../src/assets/index.html`,
 	filename: 'index.html',
 	inject: 'body',
 });
 
 const miniExtractSass = new MiniCssExtractPlugin({
 	filename: '[name].[hash].css',
-	disable: process.env.NODE_ENV === 'local',
 });
 
-const { version } = require('./package.json');
-
-const config = {
-	entry: {
-		app: path.resolve('src/index.js'),
-	},
+CheckNodeEnv('production');
+const config = merge.smart(baseConfig, {
+	mode: 'production',
+	entry: [path.resolve('src/index.js')],
 	output: {
-		publicPath: process.env.ELECTRON ? './' : '/',
-		path: process.env.ELECTRON ? path.resolve('build') : path.resolve('dist'),
+		publicPath: './',
+		path: path.resolve('build'),
 		filename: `[name].${version}.js`,
-		pathinfo: process.env.NODE_ENV === 'local',
 		sourceMapFilename: '[name].js.map',
 		chunkFilename: '[name].bundle.js',
 	},
-	devtool: process.env.NODE_ENV !== 'local' ? 'cheap-module-source-map' : 'source-map',
+
 	module: {
 		rules: [
 			{
@@ -83,6 +85,14 @@ const config = {
 			},
 		],
 	},
+	resolve: {
+		modules: [
+			'node_modules',
+			path.resolve('src'),
+		],
+		extensions: ['.js', '.jsx', '.json'],
+	},
+
 	optimization: {
 		minimizer: [
 			new TerserPlugin({
@@ -99,30 +109,14 @@ const config = {
 				},
 			}),
 		],
-		splitChunks: {
-			cacheGroups: {
-				default: false,
-				commons: {
-					test: /[\\/]node_modules[\\/]/,
-					name: 'vendor',
-					chunks: 'all',
-				},
-			},
-		},
-	},
-	resolve: {
-		modules: [
-			'node_modules',
-			path.resolve('src'),
-		],
-		extensions: ['.js', '.jsx', '.json'],
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(['build']),
+		new webpack.EnvironmentPlugin({
+			NODE_ENV: 'production',
+		}),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
-		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
 		new webpack.DefinePlugin({
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
@@ -136,10 +130,10 @@ const config = {
 		tls: 'empty',
 		module: 'empty',
 	},
-};
+});
 
 if (fs.existsSync('./.git')) {
 	config.plugins.push(gitRevisionPlugin);
 }
 
-module.exports = config;
+export default config;

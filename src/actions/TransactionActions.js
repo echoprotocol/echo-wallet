@@ -1183,6 +1183,16 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT_OPTIONS, 'fee', fee));
 		} else {
+			if (abi.value) {
+				const handledAbi = JSON.parse(abi.value);
+				const isConstructorExistAndPayable = handledAbi
+					.find(({ type, payable }) => type === 'constructor' && payable);
+				if (!isConstructorExistAndPayable && !new BN(options.value.amount).eq(0)) {
+					dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', 'Can\'t calculate fee. Looks like your contract has no payable constructor.'));
+					return null;
+				}
+			}
+
 			dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', 'Can\'t calculate fee'));
 			return null;
 		}
