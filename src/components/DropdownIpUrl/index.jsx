@@ -22,23 +22,25 @@ class DropdownIpUrl extends React.Component {
 		return options.map((i) => {
 			const content = (
 				<div className="dropdown-item">
-					<div className="dropdown-item-title">
-						{i.title}
-					</div>
-					<div className="dropdown-item-link">
-						<a
-							href={i.link}
-							target="_blank"
-							rel="noreferrer noopener"
-						>
-							{i.link}
-						</a>
-					</div>
+					{
+						i.type === 'ip' ?
+							<div className={classnames(i.type)} >
+								{i.title}
+							</div> :
+							<a
+								href={i.title}
+								target="_blank"
+								rel="noreferrer noopener"
+								className={classnames(i.type)}
+							>
+								{i.title}
+							</a>
+					}
 				</div>
 			);
 			return {
 				value: i.title,
-				key: i.link,
+				key: i.title,
 				content,
 			};
 		});
@@ -54,19 +56,15 @@ class DropdownIpUrl extends React.Component {
 		const options = [
 			{
 				title: '192.168.0.4',
-				link: 'http://savedurl.com/123451',
+				type: 'ip',
 			},
 			{
-				title: '192.168.0.2',
-				link: 'http://savedurl.com/123452',
-			},
-			{
-				title: '192.168.0.5',
-				link: 'http://savedurl.com/1s23451',
+				title: 'http://savedurl.com/123451',
+				type: 'url',
 			},
 		];
 		return (
-			<div className="ip-url-dropdown-wrap">
+			<React.Fragment>
 				<Dropdown
 					floating
 					search
@@ -85,7 +83,7 @@ class DropdownIpUrl extends React.Component {
 					status &&
 						<span className={classnames('value-status', `icon-${status}`)} />
 				}
-			</div>
+			</React.Fragment>
 		);
 	}
 

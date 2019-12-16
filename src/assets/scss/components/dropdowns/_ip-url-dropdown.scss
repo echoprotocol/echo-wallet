@@ -21,7 +21,7 @@
 		width: 100%;
 	}
 
-	.dropdown-item-title {
+	.ip {
 		min-height: 39px;
 		border-bottom: 1px solid #E5E6EB;
 		font-size: 13px;
@@ -31,16 +31,13 @@
 		font-weight: 600;
 	}
 
-	.dropdown-item-link {
+	.url {
 		display: flex;
 		align-items: center;
 		min-height: 40px;
-
-		a {
-			font-size: 13px;
-			line-height: 17px;
-			font-weight: 600;
-			color: #4D66CD;
-		}
+		font-size: 13px;
+		line-height: 17px;
+		font-weight: 600;
+		color: #4D66CD;
 	}
 }
