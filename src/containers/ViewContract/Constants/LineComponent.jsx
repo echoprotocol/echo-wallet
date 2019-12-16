@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import { contractQuery } from '../../../actions/ContractActions';
 
@@ -73,7 +74,9 @@ class LineComponent extends React.Component {
 					basic
 					className="item main-btn"
 					size="mini"
-					content="call"
+					content={
+						<FormattedMessage id="smart_contract_page.contract_info.view_properties_tab.call_btn" />
+					}
 					onClick={() => this.onQuery()}
 				/>
 			</React.Fragment>

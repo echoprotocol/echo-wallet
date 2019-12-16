@@ -2,6 +2,7 @@ import React from 'react';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import PasswordInput from './../../components/PasswordInput';
 
@@ -9,16 +10,25 @@ class EditModeTableRow extends React.Component {
 
 	renderType(type) {
 		const {
-			name, keyRole, subject, wif, setPublicKey, setWif, setAccount,
+			name, keyRole, subject, wif, setPublicKey, setWif, setAccount, intl,
 		} = this.props;
 
+		const accountPlaceholder = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.account_input.placeholder' });
+		const label = keyRole === 'active' ?
+			intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.public_key_field.title' }) :
+			intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.echorand_field.title' });
+		const placeholder = keyRole === 'active' ?
+			intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.public_key_field.placeholder' }) :
+			intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.echorand_field.placeholder' });
+		const WIFlabel = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.wif_input.title' });
+		const WIFplaceholder = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.wif_input.placeholder' });
 		return type === 'keys' ? (
 			<React.Fragment>
 				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
-					<label htmlFor="PublicKey">{keyRole === 'active' ? 'Public key' : 'EchoRand key'}</label>
+					<label htmlFor="PublicKey">{label}</label>
 					<input
 						type="text"
-						placeholder={keyRole === 'active' ? 'Public key' : 'EchoRand key'}
+						placeholder={placeholder}
 						name={name}
 						className="input"
 						value={subject.value}
@@ -28,8 +38,8 @@ class EditModeTableRow extends React.Component {
 				</Form.Field>
 				<PasswordInput
 					errorMessage={wif.error}
-					inputLabel="WIF (optional)"
-					inputPlaceholder="WIF (optional)"
+					inputLabel={WIFlabel}
+					inputPlaceholder={WIFplaceholder}
 					inputName={name}
 					value={wif.value}
 					onChange={setWif}
@@ -38,10 +48,12 @@ class EditModeTableRow extends React.Component {
 			</React.Fragment>
 		) : (
 			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
-				<label htmlFor="AccountName">Account name</label>
+				<label htmlFor="AccountName">
+					<FormattedMessage id="backup_and_permissions_page.edit_mode.account_input.title" />
+				</label>
 				<input
 					type="text"
-					placeholder="Account name"
+					placeholder={accountPlaceholder}
 					name={name}
 					value={subject.value}
 					onChange={setAccount}
@@ -53,8 +65,9 @@ class EditModeTableRow extends React.Component {
 
 	render() {
 		const {
-			type, keyRole, removeKey, subject, weight, setWeight, name, showRemove,
+			type, keyRole, removeKey, subject, weight, setWeight, name, showRemove, intl,
 		} = this.props;
+		const weightPlaceholder = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.weight_input.placeholder' });
 
 		return (
 			<div className="list-item">
@@ -64,10 +77,12 @@ class EditModeTableRow extends React.Component {
 						{
 							keyRole === 'active' && (
 								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
-									<label htmlFor="weight">Weight</label>
+									<label htmlFor="weight">
+										<FormattedMessage id="backup_and_permissions_page.edit_mode.weight_input.title" />
+									</label>
 									<input
 										type="text"
-										placeholder="Weight"
+										placeholder={weightPlaceholder}
 										name={name}
 										className="input"
 										value={weight.value}
@@ -108,6 +123,7 @@ EditModeTableRow.propTypes = {
 	setPublicKey: PropTypes.func.isRequired,
 	setAccount: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 EditModeTableRow.defaultProps = {
@@ -117,4 +133,4 @@ EditModeTableRow.defaultProps = {
 	wif: {},
 };
 
-export default EditModeTableRow;
+export default injectIntl(EditModeTableRow);

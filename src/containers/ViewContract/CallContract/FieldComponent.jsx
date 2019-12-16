@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue, setValue } from '../../../actions/FormActions';
@@ -31,11 +32,13 @@ class TabCallContracts extends React.Component {
 	render() {
 		const { data, type, field } = this.props;
 		const formatedField = formatCallContractField(field);
-
+		const tag = formatedField.trim().toLowerCase().replace(' ', '_').concat('_field');
 		return (
 
 			<Form.Field className={classnames('error-wrap', { error: data.error })}>
-				<label htmlFor={formatedField}>{formatedField}</label>
+				<label htmlFor={formatedField}>
+					<FormattedMessage id={`smart_contract_page.contract_info.call_contract_tab.form.${tag}`} />
+				</label>
 
 				<input
 					placeholder={`${type.replace(/address/g, 'id')}`}

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import { ACCOUNT_ID_PREFIX } from '../../constants/GlobalConstants';
 
@@ -38,7 +39,7 @@ class TabOverview extends React.Component {
 				</div> :
 				<React.Fragment>
 					<div className="bytecode-method">
-						Method: 0x{methodHash}
+						<FormattedMessage id="recent_activity_page.transaction.keys.method" />{methodHash}
 					</div>
 					{
 						args.map((arg, index) => {
@@ -72,29 +73,39 @@ class TabOverview extends React.Component {
 				{
 					contract ?
 						<li>
-							<div className="col">Contract ID:</div>
+							<div className="col">
+								<FormattedMessage id="recent_activity_page.transaction.keys.contract_id" />
+							</div>
 							<div className="col">{contract}</div>
 						</li> : null
 				}
 				<li>
-					<div className="col">Excepted:</div>
+					<div className="col">
+						<FormattedMessage id="recent_activity_page.transaction.keys.expected" />
+					</div>
 					<div className="col">{details.exec_res.excepted}</div>
 				</li>
 				<li>
-					<div className="col">Code deposit:</div>
+					<div className="col">
+						<FormattedMessage id="recent_activity_page.transaction.keys.deposit" />
+					</div>
 					<div className="col">{details.exec_res.code_deposit}</div>
 				</li>
 				{
 					parseInt(details.exec_res.new_address, 16) ?
 						<li>
-							<div className="col">New address:</div>
+							<div className="col">
+								<FormattedMessage id="recent_activity_page.transaction.keys.new_address" />
+							</div>
 							<div className="col">{details.exec_res.new_address}</div>
 						</li> : null
 				}
 				{
 					bytecode ?
 						<li>
-							<div className="col">Bytecode:</div>
+							<div className="col">
+								<FormattedMessage id="recent_activity_page.transaction.keys.bytecode" />
+							</div>
 							<div className="col">
 
 								<div className="bytecode-wrap">
@@ -125,19 +136,25 @@ class TabOverview extends React.Component {
 			<div className="tab-content">
 				<ul className="overview-list">
 					<li>
-						<div className="col">Type:</div>
+						<div className="col">
+							<FormattedMessage id="recent_activity_page.transaction.keys.type" />
+						</div>
 						<div className="col">{data.name}</div>
 					</li>
 
 					<li>
-						<div className="col">Block:</div>
+						<div className="col">
+							<FormattedMessage id="recent_activity_page.transaction.keys.block" />
+						</div>
 						<div className="col">#{data.block}</div>
 					</li>
 
 					{
 						data.from ?
 							<li>
-								<div className="col">From:</div>
+								<div className="col">
+									<FormattedMessage id="recent_activity_page.transaction.keys.from" />
+								</div>
 								<div className="col avatar-block">
 									{isFromAccount && <Avatar accountName={data.from.value} />}
 									<span>{data.from.value}</span>
@@ -148,7 +165,9 @@ class TabOverview extends React.Component {
 					{
 						data.subject ?
 							<li>
-								<div className="col">Subject:</div>
+								<div className="col">
+									<FormattedMessage id="recent_activity_page.transaction.keys.subject" />
+								</div>
 								<div className={classnames('col', { 'avatar-block': isSubjectAccount })}>
 									{isSubjectAccount && <Avatar accountName={data.subject.value} />}
 									<span>{data.subject.value}</span>
@@ -159,7 +178,9 @@ class TabOverview extends React.Component {
 					{
 						data.value ?
 							<li>
-								<div className="col">Amount:</div>
+								<div className="col">
+									<FormattedMessage id="recent_activity_page.transaction.keys.amount" />
+								</div>
 								<div className="col">
 									{data.value.amount ? this.format(data.value) : '0 ECHO'}
 								</div>
@@ -169,7 +190,9 @@ class TabOverview extends React.Component {
 					{
 						data.fee ?
 							<li>
-								<div className="col">Fee:</div>
+								<div className="col">
+									<FormattedMessage id="recent_activity_page.transaction.keys.fee" />
+								</div>
 								<div className="col">
 									{data.fee.amount ? this.format(data.fee) : '0 ECHO'}
 								</div>
@@ -190,7 +213,9 @@ class TabOverview extends React.Component {
 						className="external-link"
 					>
 						<img src={externalLink} alt="" />
-						<span>Open in explorer</span>
+						<span>
+							<FormattedMessage id="recent_activity_page.transaction.explorer_link_text" />
+						</span>
 					</a>
 				}
 

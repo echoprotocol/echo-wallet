@@ -219,6 +219,26 @@
                 "subtitle": "Transaction",
                 "link_text": "Open in explorer"
             }
+        },
+        "transaction": {
+            "title": "Transaction:",
+            "keys": {
+                "topics": "Topics:",
+                "data": "Data:",
+                "method": "Method: 0x",
+                "contract_id": "Contract ID:",
+                "expected": "Excepted:",
+                "deposit": "Code deposit:",
+                "new_address": "New address:",
+                "bytecode": "Bytecode:",
+                "type": "Type:",
+                "block": "Block:",
+                "from": "From:",
+                "subject": "Subject:",
+                "amount": "Amount:",
+                "fee": "Fee:"
+            },
+            "explorer_link_text": "Open in explorer"
         }
     },
     "smart_contract_page": {
@@ -255,40 +275,53 @@
                 "bytecode": "Bytecode"
             },
             "source_code": {
-                "input_source_code": {
+                "input": {
                     "title": "CODE EDITOR"
                 },
                 "compile_version_text": "COMPILER VERSION",
                 "contract_complete_dropdown": {
                     "title": "CONTRACT TO COMPLETE",
                     "placeholder": "Select contract"
+                },
+                "no_contract_compile": "No Contract Compiled Yet"
+            },
+            "bytecode": {
+                "input_bytecode": {
+                    "title": "BYTECODE",
+                    "placeholder": "Bytecode"
+                },
+                "input_abi": {
+                    "title_pt1": "ABI",
+                    "title_pt2": "(If you insert ABI, contract will add to watchlist)",
+                    "title_pt3": "(optional)",
+                    "placeholder": "Contract ID"
+                },
+                "input_name": {
+                    "title": "CONTRACT NAME",
+                    "placeholder": "Contract Name"
                 }
             },
             "contract_deploy": {
                 "title": "Contract deploy parameters",
                 "eth_accuracy": {
                     "title": "ETH Accuracy:",
-                    "on": "On",
-                    "off": "Off",
-                    "popup_text": "The option allows to interpret ECHO assets as ETH. The amount will be automatically recalculated to the 1e18 precision."
+                    "popup_text": "The option allows to interpret ECHO assets as ETH. The amount will be automatically recalculated to the 1e18 precision.",
+                    "popup_link": "Read more"
                 },
                 "supported_assets": {
-                    "title": "Supported assets",
+                    "title": "Supported assets:",
                     "all": "All",
                     "choose_asset": "Choose asset",
                     "popup_text": "You can specify assets to be supported by your contract."
                 },
                 "deploying_amount": {
                     "title": "Deploying amount:",
-                    "amount": {
-                        "title": "AMOUNT"
-                    },
                     "popup_text": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
                 }
             },
             "button_text": "CREATE CONTRACT"
         },
-        "call_contract": {
+        "call_contract_page": {
             "title": "Call contract via ID",
             "input_bytecode": {
                 "title": "BYTECODE",
@@ -309,16 +342,21 @@
             },
             "general_info_tab": {
                 "title": "GENERAL INFO",
-                "fee_pool": "FEE POOL",
+                "contract_balance": "Contract Balance:",
+                "fee_pool": "FEE POOL:",
+                "other_assets_text": "Other Assets Balance",
                 "replenish_button_text": "REPLENISH",
-                "whitelist": "Whitelist",
-                "blacklist": "Blacklist",
-                "bytecode": "Bytecode",
-                "abi": "ABI",
+                "whitelist": "Whitelist:",
+                "blacklist": "Blacklist:",
+                "bytecode": "Bytecode:",
+                "abi": "ABI:",
                 "copy_button_text": "Copy",
                 "add_account_to_list_button_text": "Add account",
                 "empty_list_info": "List is empty",
-                "lists_members_text": ""
+                "empty_list_info_2": "(List is empty)",
+                "lists_members_text": "members",
+                "bytecode_placeholder": "Bytecode",
+                "abi_placeholder": "ABI"
             },
             "view_properties_tab": {
                 "title": "VIEW PROPERTIES",
@@ -328,6 +366,7 @@
                 "title": "CALL CONTRACTS",
                 "form": {
                     "select_method_field": "SELECT METHOD",
+                    "no_result_message": "No results are found",
                     "spender_field": "SPENDER",
                     "value_field": "VALUE",
                     "fee_field": "FEE",
@@ -339,19 +378,20 @@
     "backup_and_permissions_page": {
         "title": "Backup and Permissions",
         "subtitile": "Account ID:",
-        "threshold": "threshold",
         "threshold_popup": "You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction.",
+        "loader_applying_text": "Applying changes...",
         "echorand_key_section": {
             "title": "EchoRand Key",
             "subtitile": "(for advanced users)",
             "info": "EchoRand Key is used for participating in blocks generation and signing sidechain transactions by committee members.",
-            "link_to_docs_text": "Know more in Echo Docs"
+            "link_to_docs_text": " Know more in Echo Docs"
         },
         "view_mode": {
             "info": "Making a backup of your keys helps ensure you can always maintain access to your funds. Anyone having access to your keys will take full control of the funds, so we strongly recommend storing it offline in a secure place.",
+            "threshold": "threshold",
             "pub_keys_and_accs_section": {
                 "title": "Public Keys and Accounts",
-                "weight": "weight"
+                "weight": "Weight"
             },
             "wif_key_button": {
                 "view_wif_button": "VIEW WIF",
@@ -364,28 +404,36 @@
         },
         "edit_mode": {
             "info": "The settings below allow you to specify the keys and / or accounts, whose signatures will be necessary to send a transaction from your account. Using threshold and weight you can separate access to an account between several keys and / or accounts.",
-            "public_key_field": "Public key",
-            "wif_field": "WIF (optional)",
-            "weight_field": "Weight",
+            "public_key_field": {
+                "title": "Public key",
+                "placeholder": "Public key"
+            },
+            "echorand_field": {
+                "title": "EchoRand key",
+                "placeholder": "EchoRand key"
+            },
+            "wif_input": {
+                "title": "WIF (optional)",
+                "placeholder": "WIF (optional)"
+            },
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "weight_input": {
+                "title": "Weight",
+                "placeholder": "Weight"
+            },
+            "threshold": "threshold:",
             "button_section": {
                 "save_button": "SAVE",
                 "cancel_button": "CANCEL"
             },
             "add_buttons_section": {
                 "add_acc_button": "ADD ACCOUNT",
-                "add_pub_key_button": "ADD PUBLIC KEY"
-            },
-            "loader_applying_text": "Applying changes..."
-        }
-    },
-    "footer": {
-        "about_wallet": "About wallet",
-        "network_section": {
-            "title": "Network",
-            "block": "Block",
-            "choose_network_dropdown": {
-                "title": "CHOOSE NETWORK",
-                "add_custom_network_buttom": "Add custom Network"
+                "add_acc_tooltip": "Grant access for sending transactions to another account",
+                "add_pub_key_button": "ADD PUBLIC KEY",
+                "add_key_tooltip": "Add an additional key to sign transactions"
             }
         }
     },
@@ -415,10 +463,22 @@
             "private_key_error": "Private key was not imported in Echo Desktop Wallet"
         }
     },
+    "footer": {
+        "about_wallet": "About wallet",
+        "network_section": {
+            "title": "Network",
+            "block": "Block",
+            "choose_network_dropdown": {
+                "title": "CHOOSE NETWORK",
+                "add_custom_network_buttom": "Add custom Network"
+            }
+        }
+    },
     "amount_input": {
         "title": "Amount",
         "available": "Available:"
     },
+    "copied_text": "Copied",
     "modals": {},
     "errors": {}
 }

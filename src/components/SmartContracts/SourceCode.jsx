@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
 
@@ -134,8 +135,9 @@ class SourceCode extends React.Component {
 
 	render() {
 
-		const { form } = this.props;
+		const { form, intl } = this.props;
 		const { isDropdownUpdward, isAceError } = this.state;
+		const dropdwnPlaceholder = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.source_code.contract_complete_dropdown.placeholder' });
 
 		return (
 			<React.Fragment>
@@ -146,7 +148,9 @@ class SourceCode extends React.Component {
 				)}
 
 				>
-					<div className="editor-label">CODE EDITOR</div>
+					<div className="editor-label">
+						<FormattedMessage id="smart_contract_page.create_contract_page.source_code.input.title" />
+					</div>
 					<button
 						onMouseEnter={() => { this.setState({ isAceError: true }); }}
 						onMouseLeave={() => { this.setState({ isAceError: false }); }}
@@ -183,13 +187,18 @@ class SourceCode extends React.Component {
 						] : null}
 					/>
 					{
-						isAceError && <div className="ace-error">No Contract Compiled Yet</div>
+						isAceError &&
+							<div className="ace-error">
+								<FormattedMessage id="smart_contract_page.create_contract_page.source_code.no_contract_compile" />
+							</div>
 					}
 
 				</div>
 				<div className="fields">
 					<div className="field">
-						<div className="field-label">Compiler version</div>
+						<div className="field-label">
+							<FormattedMessage id="smart_contract_page.create_contract_page.source_code.compile_version_text" />
+						</div>
 						<Dropdown
 							options={this.getCompilersOptions()}
 							value={form.get('currentCompiler').value}
@@ -203,13 +212,15 @@ class SourceCode extends React.Component {
 						/>
 					</div>
 					<div className="field">
-						<div className="field-label">Contract to complete</div>
+						<div className="field-label">
+							<FormattedMessage id="smart_contract_page.create_contract_page.source_code.contract_complete_dropdown.title" />
+						</div>
 						<Dropdown
 							options={this.getContracts()}
 							value={form.get('name').value}
 							selection
 							fluid
-							placeholder="Select contract"
+							placeholder={dropdwnPlaceholder}
 							selectOnNavigation={false}
 							onChange={(e, { value }) => this.onChangeItem(e, value)}
 							disabled={!form.get('contracts').size || form.get('compileLoading')}
@@ -232,9 +243,10 @@ SourceCode.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 SourceCode.defaultProps = {};
 
 
-export default SourceCode;
+export default injectIntl(SourceCode);

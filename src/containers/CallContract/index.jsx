@@ -3,6 +3,7 @@ import { Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import TransactionScenario from '../TransactionScenario';
 import AmountField from '../../components/Fields/AmountField';
@@ -27,8 +28,10 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees,
+			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, intl,
 		} = this.props;
+		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_bytecode.placeholder' });
+		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_id.placeholder' });
 
 		return (
 			<TransactionScenario handleTransaction={() => this.props.callContract()}>
@@ -36,14 +39,18 @@ class AddContractComponent extends React.Component {
 					(submit) => (
 						<Form className="main-form">
 							<div className="form-info">
-								<h3>Call contract via ID</h3>
+								<h3>
+									<FormattedMessage id="smart_contract_page.call_contract_page.title" />
+								</h3>
 							</div>
 							<div className="field-wrap">
 								<Form.Field className={classnames('error-wrap', { error: id.error })}>
-									<label htmlFor="id">ID</label>
+									<label htmlFor="id">
+										<FormattedMessage id="smart_contract_page.call_contract_page.input_id.title" />
+									</label>
 									<input
 										type="text"
-										placeholder="Contract ID"
+										placeholder={IDPlaceholder}
 										name="id"
 										autoComplete="off"
 										className="ui input"
@@ -54,9 +61,11 @@ class AddContractComponent extends React.Component {
 									<span className="error-message">{id.error}</span>
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
-									<label htmlFor="bytecode">Bytecode</label>
+									<label htmlFor="bytecode">
+										<FormattedMessage id="smart_contract_page.call_contract_page.input_bytecode.title" />
+									</label>
 									<textarea
-										placeholder="Bytecode"
+										placeholder={bytecodePlaceholder}
 										name="bytecode"
 										className="ui input"
 										value={bytecode.value}
@@ -87,7 +96,9 @@ class AddContractComponent extends React.Component {
 									type="button"
 									className="main-btn"
 									onClick={submit}
-									content="Call Contract"
+									content={
+										<FormattedMessage id="smart_contract_page.call_contract_page.button_text" />
+									}
 								/>
 							</div>
 						</Form>
@@ -118,6 +129,7 @@ AddContractComponent.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 AddContractComponent.defaultProps = {
@@ -128,7 +140,7 @@ AddContractComponent.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		fees: state.fee.toArray() || [],
 		id: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'id']),
@@ -152,4 +164,4 @@ export default connect(
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 		getTransferFee: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 	}),
-)(AddContractComponent);
+)(AddContractComponent));

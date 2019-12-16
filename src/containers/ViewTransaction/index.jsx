@@ -3,6 +3,7 @@ import { Tab, Button } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
 import operations from '../../constants/Operations';
@@ -64,7 +65,9 @@ class ViewTransaction extends React.Component {
 					<div className="control-wrap">
 						<ul className="control-panel">
 							<li className="name-panel">
-								<span className="label">Transaction:</span>
+								<span className="label">
+									<FormattedMessage id="recent_activity_page.transaction.title" />
+								</span>
 								<span className="value">
 									{data.id}
 								</span>

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
+import { FormattedMessage } from 'react-intl';
+
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
@@ -53,7 +55,7 @@ class actionBtn extends React.Component {
 				>
 					<span className="copy-label-wrap">
 						<span className="copy-label-content">
-							copied
+							<FormattedMessage id="copied_text" />
 						</span>
 					</span>
 				</CSSTransition>

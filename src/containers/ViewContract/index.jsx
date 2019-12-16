@@ -3,6 +3,7 @@ import { Tab, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { FormattedMessage } from 'react-intl';
 
 import ContractReducer from '../../reducers/ContractReducer';
 
@@ -41,7 +42,14 @@ class ViewContract extends React.Component {
 	render() {
 		const panes = [
 			{
-				menuItem: <Button className="tab-btn" key={0} onClick={(e) => e.target.blur()} content="General info" />,
+				menuItem: <Button
+					className="tab-btn"
+					key={0}
+					onClick={(e) => e.target.blur()}
+					content={
+						<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.title" />
+					}
+				/>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabGeneralInfo
@@ -56,7 +64,14 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: <Button className="tab-btn" key={1} onClick={(e) => e.target.blur()} content="View properties" />,
+				menuItem: <Button
+					className="tab-btn"
+					key={1}
+					onClick={(e) => e.target.blur()}
+					content={
+						<FormattedMessage id="smart_contract_page.contract_info.view_properties_tab.title" />
+					}
+				/>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabContractProps />
@@ -64,7 +79,14 @@ class ViewContract extends React.Component {
 				),
 			},
 			{
-				menuItem: <Button className="tab-btn" key={2} onClick={(e) => e.target.blur()} content="call contracts" />,
+				menuItem: <Button
+					className="tab-btn"
+					key={2}
+					onClick={(e) => e.target.blur()}
+					content={
+						<FormattedMessage id="smart_contract_page.contract_info.call_contract_tab.title" />
+					}
+				/>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
 						<TabCallContracts />
