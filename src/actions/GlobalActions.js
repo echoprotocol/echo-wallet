@@ -658,7 +658,28 @@ const getRemoteAddressesFromLocalStorage = ({ network, account }) => {
 	return remoteAddresses;
 };
 
-export const getRemoteAddressesForRegistration = () => async (dispatch, getState) => {
+const removeRemoteAddressesFromLocalStorage = ({ network, account, address }) => {
+
+	let accounts = localStorage.getItem(`accounts_${network}`);
+
+	accounts = accounts ? JSON.parse(accounts) : [];
+
+	const currentAccountStorage = accounts.find(({ name }) => name === account);
+
+	if (!currentAccountStorage) {
+		return;
+	}
+
+	const remoteAddresses = currentAccountStorage.addedRegistrationAddresses || [];
+
+	const filteredAddresses = remoteAddresses.filter((a) => a.address !== address);
+
+	currentAccountStorage.addedRegistrationAddresses = filteredAddresses;
+
+	localStorage.setItem(`accounts_${network}`, JSON.stringify(accounts));
+};
+
+export const getRemoteAddressesForRegistration = () => (dispatch, getState) => {
 	const account = getState().global.getIn(['activeUser', 'name']);
 	const network = getState().global.getIn(['network', 'name']);
 
@@ -668,7 +689,9 @@ export const getRemoteAddressesForRegistration = () => async (dispatch, getState
 
 	const remoteAddresses = getRemoteAddressesFromLocalStorage({ network, account });
 
-	
+	const remoteAddressesList = new List(remoteAddresses);
+
+	dispatch(GlobalReducer.actions.set({ field: 'remoteRegistrationAddresses', value: remoteAddressesList }));
 };
 
 export const saveRemoteAddressForRegistration = () => async (dispatch, getState) => {
@@ -681,5 +704,17 @@ export const saveRemoteAddressForRegistration = () => async (dispatch, getState)
 	}
 
 	saveRemoteAddressToLocalStorage({ address, network, account });
+	dispatch(getRemoteAddressesForRegistration());
+};
+
+export const removeRemoteAddressesForRegistration = (address) => async (dispatch, getState) => {
+	const account = getState().global.getIn(['activeUser', 'name']);
+	const network = getState().global.getIn(['network', 'name']);
+
+	if (!account || !address || !network) {
+		return;
+	}
+
+	removeRemoteAddressesFromLocalStorage({ address, network, account });
 	dispatch(getRemoteAddressesForRegistration());
 };
