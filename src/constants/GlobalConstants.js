@@ -96,6 +96,8 @@ export const USER_STORAGE_SCHEMES = {
 
 export const KEY_CODE_ENTER = 13;
 
+export const DEFAULT_NETWORK_ID = 'testnet';
+
 export const NETWORKS = [
 	{
 		name: 'testnet',
@@ -159,6 +161,17 @@ export const MIN_ACCESS_VERSION_BUILD = '0.4.0';
 
 export const CSS_TRANSITION_SPEED = 300;
 
+export const DISCONNECT_STATUS = 'disconnect';
+export const CONNECT_STATUS = 'connect';
+
+export const REMOTE_NODE = 'remote';
+export const LOCAL_NODE = 'local';
+
+export const CONNECTION_TIMEOUT = 5000;
+export const MAX_RETRIES = 999999999;
+export const PING_TIMEOUT = 7000;
+export const PING_INTERVAL = 7000;
+
 export const REGISTRATION = {
 	BATCH: 1e3,
 	TIMEOUT: 0,
@@ -172,3 +185,5 @@ export const SIDECHAIN_ASSETS_SYMBOLS = {
 	1: 'eBTC',
 	2: 'eETH',
 };
+
+export const TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS = 30000;

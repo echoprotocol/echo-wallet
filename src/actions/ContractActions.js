@@ -72,7 +72,9 @@ export const getContractBalances = async (contractsIds) => {
 	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
 	const contractsBalances = await Promise.all(balances);
 
-	const usedAssets = contractsBalances.flat().map((b) => b.asset_id);
+	const usedAssets = contractsBalances
+		.reduce((res, b) => [...res, ...b], [])
+		.map((b) => b.asset_id);
 	const uniqAssets = new Set([...usedAssets, ECHO_ASSET_ID]).toArray();
 
 	const requestedAssets = await echo.api.getAssets(uniqAssets);
