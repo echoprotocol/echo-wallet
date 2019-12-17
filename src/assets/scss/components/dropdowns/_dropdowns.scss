@@ -83,6 +83,12 @@
 			}
 		}
 
+		&.selected {
+			input.search+.text {
+				color: rgba(#3B3B3B, 1);
+			}
+		}
+
 		.item:not(.dropdown-header) {
 			transition: background-color $speed;
 
@@ -132,17 +138,17 @@
 			font-size: 12px;
 			z-index: 44;
 
-			.text {
-				border-radius: 4px;
-				padding: 4px 5px 0 5px;
-				transition: color $speed;
-			}
-
-			&.active {
+			&.selected {
 				.text {
 					color: $main-color;
 					@include on-focus(2px);
 				}
+			}
+
+			.text {
+				border-radius: 4px;
+				padding: 4px 5px 0 5px;
+				transition: color $speed;
 			}
 
 			&:hover {
@@ -151,6 +157,7 @@
 				}
 			}
 		}
+
 
 		.message {
 			padding: 14px 15px;
@@ -180,14 +187,7 @@
 			font-size: 15px;
 			font-family: proxima;
 			font-weight: 400;
-
-			&:not(.filtered) {
-				color: rgba(#3B3B3B, 1);
-			}
-
-			.placeholder {
-				color: rgba(#3B3B3B, .5);
-			}
+			color: rgba(#3B3B3B, .5);
 		}
 
 		.dropdown-header {

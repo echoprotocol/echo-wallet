@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Form } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 

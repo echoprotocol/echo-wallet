@@ -4,6 +4,7 @@ import { Dropdown } from 'semantic-ui-react';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
+import classnames from 'classnames';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -55,28 +56,32 @@ class EchoNetwork extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (e.type !== 'click' && e.keyCode !== 13) {
+		if (value === 'address-header' || value === 'accounts-header') {
 			return;
 		}
+		if (e.type === 'click' || e.keyCode === 13) {
 
-		if (value === 'generate-address') {
+			if (value === 'generate-address') {
+				this.setState({
+					open: !this.state.open,
+					searchText: '',
+				});
+				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+				return;
+			}
+
 			this.setState({
-				open: !this.state.open,
 				searchText: '',
+				receiver: value,
+				open: !this.state.open,
 			});
-			this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
-			return;
 		}
 
-		this.setState({
-			searchText: '',
-			receiver: value,
-			open: !this.state.open,
-		});
 	}
 
 	onChange(e, value) {
-		this.setState({ searchText: value });
+
+		this.setState({ searchText: e.target.value });
 		const addresses = this.props.accountAddresses.toJS();
 		const users = this.props.accountName;
 		if (this.state.timeout) {
@@ -182,8 +187,8 @@ class EchoNetwork extends React.Component {
 
 			return ({
 				className: 'user-item',
-				value: name,
 				key: name,
+				value: name,
 				text: name,
 				content,
 			});
@@ -255,7 +260,7 @@ class EchoNetwork extends React.Component {
 			value: 'generate-address',
 			key: 'generate-address',
 			content: 'Generate new address',
-
+			active: false,
 		}];
 		return generateAddressItem;
 	}
@@ -277,7 +282,7 @@ class EchoNetwork extends React.Component {
 		const {
 			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
 		} = this.props;
-		const { receiver, open, searchText } = this.state;
+		const { open, receiver, searchText } = this.state;
 		const receiverValue = this.getReceiver();
 
 		const link = this.getQrData();
@@ -293,21 +298,21 @@ class EchoNetwork extends React.Component {
 				<div className="dropdown-wrap">
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
-						placeholder="koko"
+						className={classnames({ selected: !!receiver })}
+						placeholder="Choose account or address"
 						options={this.renderOptions()}
 						search={() => this.renderOptions()}
 						searchQuery={searchText}
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 						onFocus={() => this.initDropdown()}
-						onBlur={() => this.setState({ open: false })}
+						onBlur={() => this.setState({
+							open: false,
+						})}
+						selectOnNavigation={false}
+						selectOnBlur={false}
 						open={open}
-						text={
-							receiver &&
-							<span className="placeholder">
-								Choose account or address
-							</span>
-						}
+						text={receiver || 'Choose account or address'}
 					/>
 				</div>
 
