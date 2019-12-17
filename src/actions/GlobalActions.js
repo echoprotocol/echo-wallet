@@ -47,6 +47,50 @@ import { closeModal, setError } from './ModalActions';
 
 import Services from '../services';
 
+/**
+ *  @method setAccounts
+ */
+export const setAccounts = () => (async () => {
+
+	const userStorage = Services.getUserStorage();
+	const networkId = await userStorage.getNetworkId();
+
+	let storageAccounts = localStorage.getItem(`accounts_${networkId}`);
+	storageAccounts = storageAccounts ? JSON.parse(storageAccounts) : [];
+
+	const accounts =
+		await Promise.all(storageAccounts.map(({ name }) =>
+			Services.getEcho().remote.api.getAccountByName(name)));
+	console.log('accounts111', accounts);
+	await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, 'qwe123QWE123');
+
+	const chainToken = await userStorage.getChainToken();
+
+	const keyPromises = accounts.map((account) => new Promise(async (resolve) => {
+
+		const keys = await userStorage.getAllWIFKeysForAccount(account.id);
+
+		return resolve(keys.map((key) => ({
+			id: account.id,
+			key: key.wif,
+		})));
+
+	}));
+
+	const accountsKeysResults = await Promise.all(keyPromises);
+	console.log('accountsKeysResults', accountsKeysResults);
+	const accountsKeys = [];
+
+	accountsKeysResults.forEach((accountKeysArr) => {
+		accountKeysArr.forEach((accountKey) => {
+			accountsKeys.push(accountKey);
+		});
+	});
+
+	console.log('setOptions', accountsKeys, networkId, chainToken);
+	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+
+});
 
 /**
  *  @method initNetworks
@@ -60,21 +104,27 @@ export const initNetworks = (store) => async (dispatch) => {
 	if (!current) {
 		[current] = DEFAULT_NETWORK;
 		localStorage.setItem('current_network', JSON.stringify(current));
+	} else {
+		current = JSON.parse(current);
 	}
 
-	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(current) }));
+	dispatch(GlobalReducer.actions.set({
+		field: 'network',
+		value: new Map(current),
+	}));
 
 	let networks = localStorage.getItem('custom_networks');
 	networks = networks ? JSON.parse(networks) : [];
 
-	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
 
 	await Services.getUserStorage().setNetworkId(current.name);
 	await Services.getEcho().init(current.name, { store });
 
-	Services.getEcho().setOptions([], current);
-
-	dispatch(setValue('networks', fromJS(networks)));
+	Services.getEcho().setOptions([], current.name);
 };
 
 /**
@@ -84,7 +134,7 @@ export const initNetworks = (store) => async (dispatch) => {
  *
  * 	@param {Object} store - redux store
  */
-export const initApp = (store) => async (dispatch, getState) => {
+export const initApp = (store) => async (dispatch) => {
 	// const listeners = new Listeners();
 	// listeners.initListeners(dispatch, getState);
 	//
@@ -95,8 +145,7 @@ export const initApp = (store) => async (dispatch, getState) => {
 		await userStorage.init();
 
 		await dispatch(initNetworks(store));
-
-		dispatch(setInValue('inited', { app: true }));
+		await dispatch(setAccounts());
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {

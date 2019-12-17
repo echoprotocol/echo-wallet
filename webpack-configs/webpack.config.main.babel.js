@@ -52,6 +52,28 @@ export default merge.smart(baseConfig, {
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
+			NETWORKS: {
+				devnet: {
+					remote: {
+						name: JSON.stringify('Remote node'),
+						url: JSON.stringify('wss://devnet.echo-dev.io/ws'),
+					},
+					local: {
+						name: JSON.stringify('Local node'),
+						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
+					},
+				},
+				testnet: {
+					remote: {
+						name: JSON.stringify('Remote node'),
+						url: JSON.stringify('ws://testnet.echo-dev.io/ws'),
+					},
+					local: {
+						name: JSON.stringify('Local node'),
+						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
+					},
+				},
+			},
 		}),
 	],
 	node: {

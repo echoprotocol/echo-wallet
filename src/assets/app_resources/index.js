@@ -209,6 +209,7 @@ function createWindow() {
 				networkId: data.networkId,
 			})));
 		})).subscribe((data) => {
+			console.log('subscribe111');
 
 			mainWindow.webContents.send('startEchoNode', { networkId: data.networkId });
 
@@ -228,8 +229,10 @@ function createWindow() {
 			});
 		});
 
+		console.log('did-finish-load111');
 		ipcMain.on('startNode', async (_, args) => {
 
+			console.log('yeah1');
 			const NETWORK_ID = args && args.networkId ? args.networkId : DEFAULT_NETWORK_ID;
 			const chainToken = args && args.chainToken ? args.chainToken : null;
 
@@ -241,6 +244,7 @@ function createWindow() {
 				// devnet: null,
 				// 'seed-node': 'node1.devnet.echo-dev.io:6310',
 			};
+			console.log('yeah2');
 
 			switch (NETWORK_ID) {
 				case 'testnet':
@@ -254,17 +258,20 @@ function createWindow() {
 
 			}
 
+			console.log('yeah3');
 			const accounts = args && args.accounts ? args.accounts : [];
 
 			const receivedPublicKeys = accounts.map(({ key }) =>
 				PrivateKey.fromWif(key).toPublicKey().toString());
 
+			console.log('yeah4');
 			if (
 				prevNetwork !== NETWORK_ID ||
 				!lastNode ||
 				previousPublicKeys.length !== receivedPublicKeys.length ||
 				xor(receivedPublicKeys, previousPublicKeys).length
 			) {
+				console.log('yeah5');
 				subject.next({
 					lastNode,
 					networkOptions,

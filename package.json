@@ -30,6 +30,7 @@
     "package-deb-debug": "npm run build-electron-debug && electron-builder build -p never --linux deb",
     "download-linux-build": "DOWNLOAD_ECHO_NODE_OS=linux node -r @babel/register ./scripts/DownloadBuild.js",
     "download-mac-build": "DOWNLOAD_ECHO_NODE_OS=mac node -r @babel/register ./scripts/DownloadBuild.js",
+
     "package-linux": "npm run prepackage && build -p never --linux deb",
     "prepackage": "npm run build-electron",
     "build-electron": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --env.prod --env.electron --env.hash",

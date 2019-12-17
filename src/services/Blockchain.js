@@ -16,9 +16,7 @@ import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/Cha
 let ipcRenderer;
 
 try {
-	/* eslint-disable global-require */
-	const electron = require('electron');
-	({ ipcRenderer } = electron);
+	({ ipcRenderer } = window);
 } catch (e) {
 	console.log('Err electron import');
 }
@@ -506,10 +504,13 @@ class Blockchain {
 	 */
 	setOptions(accounts = [], networkId, chainToken) {
 
+		console.log('dazaebalo1');
 		if (!ipcRenderer) {
+			console.log('dazaebalo2');
 			return false;
 		}
 
+		console.log('dazaebalo3', accounts, networkId, chainToken);
 		ipcRenderer.send('startNode', { accounts, networkId, chainToken });
 
 		return true;
