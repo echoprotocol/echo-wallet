@@ -173,9 +173,15 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
 		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
-		const { id, name, options } = await echo.api.getAccountByName(accountName);
 
-		await echo.api.getFullAccounts([id, options.delegating_account]);
+		const { id, name, options } = await Services.getEcho().api.getAccountByName(accountName);
+
+		// const { id, name, options } = await echo.api.getAccountByName(accountName);
+
+		// await echo.api.getFullAccounts([id, options.delegating_account]);
+
+		await Services.getEcho().api.getFullAccounts([id, options.delegating_account]);
+
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
 
@@ -254,12 +260,16 @@ export const connection = () => async (dispatch) => {
 				registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
 			},
 		);
-		await echo.api.getDynamicGlobalProperties(true);
+
+		await Services.getEcho().api.getDynamicGlobalProperties(true);
+		// await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
-		await echo.api.getObject(ECHO_ASSET_ID);
+		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+
+		// await echo.api.getObject(ECHO_ASSET_ID);
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
@@ -381,7 +391,9 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		return;
 	}
 
-	const account = await echo.api.getAccountByName(accountName);
+	const account = await Services.getEcho().api.getAccountByName(accountName);
+
+	// const account = await echo.api.getAccountByName(accountName);
 	await userStorage.removeKeys(
 		account.active.key_auths.map(([k]) => k),
 		{ password, accountId: account.id },

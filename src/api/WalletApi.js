@@ -1,6 +1,8 @@
 import echo, { PrivateKey } from 'echojs-lib';
 import { CUSTOM_NODE_BLOCKS_MAX_DIFF } from '../constants/GlobalConstants';
 
+import Services from '../services';
+
 /**
  * @method getKeyFromWif
  *
@@ -25,7 +27,8 @@ export const getKeyFromWif = (wif) => {
  * @returns {(null | String)}
  */
 export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
-	echo.api.lookupAccounts(accountName, limit)
+	Services.getEcho().api.lookupAccounts(accountName, limit)
+	// echo.api.lookupAccounts(accountName, limit)
 		.then((result) => {
 			if (!result.find((i) => i[0] === accountName) && shouldExist) {
 				return 'Account not found';
@@ -89,14 +92,16 @@ export const nodeRegisterValidate = async (echoInstance) => {
 	}
 
 	const customNodeChainId = await echoInstance.api.getChainId();
-	const baseNodeChainId = await echo.api.getChainId();
+	const baseNodeChainId = await Services.getEcho().api.getChainId();
+	// const baseNodeChainId = await echo.api.getChainId();
 
 	if (customNodeChainId !== baseNodeChainId) {
 		return 'Chain id is not correct. Check your network node';
 	}
 
 	const customNodeDynamic = await echoInstance.api.getDynamicGlobalProperties();
-	const baseNodeDynamic = await echo.api.getDynamicGlobalProperties();
+	const baseNodeDynamic = await Services.getEcho().api.getDynamicGlobalProperties();
+	// const baseNodeDynamic = await echo.api.getDynamicGlobalProperties();
 	const diff = baseNodeDynamic.head_block_number - customNodeDynamic.head_block_number;
 
 	if (diff > CUSTOM_NODE_BLOCKS_MAX_DIFF) {

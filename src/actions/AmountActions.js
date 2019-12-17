@@ -1,5 +1,7 @@
 import echo from 'echojs-lib';
 import BN from 'bignumber.js';
+
+import Services from '../services';
 import { setFormValue, setFormError, setValue } from './FormActions';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 
@@ -51,7 +53,9 @@ export const setDefaultAsset = (form) => async (dispatch, getState) => {
 		return;
 	}
 
-	let defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
+	const defaultAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+
+	// let defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
 	const assets = getState().balance.get('assets');
 	const asset = assets.find((value) => value.id === ECHO_ASSET_ID);
 
