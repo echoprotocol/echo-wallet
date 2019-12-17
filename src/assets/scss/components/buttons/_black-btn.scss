@@ -28,6 +28,12 @@
 		color: rgba($main-color, .5);
 	}
 
+	&.small {
+		line-height: 25px;
+		height: 24px;
+		min-width: auto;
+	}
+
 	&.tiny {
 		line-height: 20px;
 		height: 20px;

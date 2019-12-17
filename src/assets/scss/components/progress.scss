@@ -1,4 +1,3 @@
-// ProgressBar
 .progress-wrap {
 	display: flex;
 	align-items: center;
@@ -20,7 +19,6 @@
 	}
 }
 
-// ProgressLine
 .progress-line {
 	width: 90px;
 	height: 3px;
@@ -38,5 +36,14 @@
 		background: linear-gradient(to right, #4c5898 0%, #64b2ac 100%);
 		border-radius: 4px;
 		transition: background $speed, max-width $speed;
+	}
+}
+
+.action-node {
+	font-size: 0;
+	border-radius: 50%;
+
+	img {
+		pointer-events: none;
 	}
 }
