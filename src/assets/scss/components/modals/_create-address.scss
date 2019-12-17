@@ -1,27 +1,16 @@
 .create-address-modal {
-	max-width: 600px;
-	flex-direction: column;
-	padding: 31px 0 47px;
-	
+	@include modal-wrap();
+
 	.modal-header {
-		display: flex;
-		align-items: center;
-		max-width: 500px;
-		margin: 0 auto;
-		min-height: 34px;
-		position: relative;
+		@include modal-header();
 	}
 
 	.modal-header-title {
-		color: #3B3B3B;
-		font-size: 20px;
-		font-weight: 600;
-		margin: 0 auto;
+		@include modal-header-title();
 	}
 
 	.modal-body {
-		max-width: 500px;
-		margin: 0 auto;
+		@include modal-body();
 	}
 
 	.info-text {
@@ -36,6 +25,7 @@
 
 	.check-list {
 		margin: 26px 14px 0;
+
 		.label {
 			font-family: proxima;
 			font-weight: 600;
@@ -44,14 +34,16 @@
 
 	.field {
 		margin: 20px 0;
-		& > label {
+
+		&>label {
 			min-height: 18px;
 		}
 	}
 
 	.form-panel {
-		margin: 20px 0 0;
+		margin: 30px 0 0;
 		justify-content: flex-end;
+
 		.main-btn {
 			min-width: 160px;
 		}

@@ -219,7 +219,7 @@ Wallet.propTypes = {
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
@@ -255,7 +255,7 @@ Wallet.defaultProps = {
 	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
-	additionalAccountInfo: '',
+	additionalAccountInfo: null,
 };
 
 export default Wallet;

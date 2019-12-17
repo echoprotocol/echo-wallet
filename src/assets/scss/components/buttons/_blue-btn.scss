@@ -1,0 +1,51 @@
+.blue-btn {
+	@include btn();
+	color: #fff;
+	border: 1px solid $main-color;
+	background-color: $main-color;
+
+	&:hover {
+		border: 1px solid #3E51A3;
+		background-color: #3E51A3;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba($main-color, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .5);
+		background-color: transparent;
+		color: rgba($main-color, .5);
+	}
+
+	// SIZE
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-color;
+	}
+}

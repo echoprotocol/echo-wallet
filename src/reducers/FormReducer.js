@@ -117,7 +117,10 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
-		additionalAccountInfo: '',
+		additionalAccountInfo: {
+			prefix: '',
+			value: '',
+		},
 		isAvailableBalance: false,
 		subjectTransferType: '',
 		avatarName: '',
@@ -168,6 +171,7 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		compileLoading: false,
+		annotations: [],
 		editorWorker: false,
 	}),
 	[FORM_CREATE_CONTRACT_BYTECODE]: Map({

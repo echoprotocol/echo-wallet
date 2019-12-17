@@ -164,7 +164,7 @@ Transfer.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	subjectToSendSwitch: PropTypes.func.isRequired,
@@ -187,7 +187,7 @@ Transfer.propTypes = {
 Transfer.defaultProps = {
 	currency: null,
 	isDisplaySidechainNotification: false,
-	additionalAccountInfo: '',
+	additionalAccountInfo: null,
 };
 
 

@@ -28,6 +28,7 @@ import {
 	MODAL_TO_WHITELIST,
 	MODAL_WHITELIST,
 	MODAL_REPLENISH,
+	MODAL_ACCEPT_INCOMING_CONNECTIONS,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -73,6 +74,7 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_TO_WHITELIST]: Map({}),
 	[MODAL_REPLENISH]: Map({}),
 	[MODAL_WHITELIST]: Map({}),
+	[MODAL_ACCEPT_INCOMING_CONNECTIONS]: Map({}),
 };
 
 export default createModule({
@@ -119,6 +121,9 @@ export default createModule({
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_REPLENISH]),
 		[MODAL_WHITELIST]:
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_WHITELIST]),
+		[MODAL_ACCEPT_INCOMING_CONNECTIONS]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ACCEPT_INCOMING_CONNECTIONS]),
+
 	}),
 	transformations: {
 		open: {

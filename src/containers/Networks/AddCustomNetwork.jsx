@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { injectIntl } from 'react-intl';
 
 
 class AddCustomNetwork extends React.Component {
@@ -12,13 +13,15 @@ class AddCustomNetwork extends React.Component {
 	}
 
 	renderField(name, { value, error }, isFocus) {
+		const { intl } = this.props;
+		const text = intl.formatMessage({ id: `add_connection_page.${name}_input.title` });
 		return (
 			<Form.Field className={classnames('error-wrap', { error })}>
 				<label htmlFor="address">{name}</label>
 				<input
 					className="ui input"
-					placeholder={name}
-					name={name}
+					placeholder={text}
+					name={text}
 					value={value}
 					onChange={(e) => this.onChange(e)}
 					autoFocus={isFocus}
@@ -47,6 +50,7 @@ AddCustomNetwork.propTypes = {
 	address: PropTypes.object.isRequired,
 	name: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default AddCustomNetwork;
+export default injectIntl(AddCustomNetwork);

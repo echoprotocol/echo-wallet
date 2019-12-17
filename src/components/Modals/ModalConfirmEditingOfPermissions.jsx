@@ -18,8 +18,14 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 		return (
 			<Modal className="small" open={show}>
 				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={() => this.onClose()}
+					/>
 					<div className="modal-content add-key">
-						<div className="modal-header">Please, confirm applying changes</div>
+						<div className="modal-header">
+							<h2 className="modal-header-title">Please, confirm applying changes</h2>
+						</div>
 						<div className="modal-body">
 							<div className="info-text">
 								{
@@ -35,12 +41,12 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 							<div className="form-panel">
 								<Button
 									className="main-btn"
-									onClick={(e) => this.onClose(e)}
+									onClick={() => this.onClose()}
 									content="No"
 								/>
 								<Button
 									className="main-btn"
-									onClick={(e) => this.onConfirm(e)}
+									onClick={() => this.onConfirm()}
 									content="Proceed"
 								/>
 							</div>

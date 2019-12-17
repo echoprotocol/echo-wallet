@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -34,45 +34,42 @@ class ModalTokens extends React.Component {
 		const { show, contractId, disabled } = this.props;
 
 		return (
-			<Modal className="small" open={show}>
+			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header" />
-						<div className="modal-body">
-							<Form className="main-form">
-								<div className="form-info">
-									<h3>Add ERC20 token to watch list</h3>
-								</div>
-								<div className="field-wrap">
-									<Form.Field className={classnames('error-wrap', { error: contractId.error })}>
-										<label htmlFor="tokens">Contract ID</label>
-										<input
-											type="text"
-											placeholder="Contract ID"
-											name="contractId"
-											className="ui input"
-											value={contractId.value}
-											onChange={(e) => this.onInput(e)}
-											autoFocus
-										/>
-										<span className="error-message">{contractId.error}</span>
-									</Form.Field>
-								</div>
-								<div className="form-panel">
-									<Button
-										type="submit"
-										className="main-btn"
-										onClick={(e) => this.onClick(e)}
-										disabled={disabled}
-										content="Watch Token"
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">Add ERC20 token to watch list</h2>
+					</div>
+					<div className="modal-body">
+						<form className="main-form">
+							<div className="field-wrap">
+								<div className={classnames('field error-wrap', { error: contractId.error })}>
+									<label htmlFor="tokens">Contract ID</label>
+									<input
+										type="text"
+										placeholder="Contract ID"
+										name="contractId"
+										className="ui input"
+										value={contractId.value}
+										onChange={(e) => this.onInput(e)}
+										autoFocus
 									/>
+									<span className="error-message">{contractId.error}</span>
 								</div>
-							</Form>
-						</div>
+							</div>
+							<div className="form-panel">
+								<Button
+									type="submit"
+									className="main-btn"
+									onClick={(e) => this.onClick(e)}
+									disabled={disabled}
+									content="Watch Token"
+								/>
+							</div>
+						</form>
 					</div>
 				</FocusLock>
 			</Modal>

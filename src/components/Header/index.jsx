@@ -280,7 +280,7 @@ class Header extends React.Component {
 				}
 
 				<div className="page-title">
-					<FormattedMessage id={this.getTitle()} />
+					{this.getTitle() && <FormattedMessage id={this.getTitle()} />}
 				</div>
 				{
 					this.props.location.pathname === INDEX_PATH ?

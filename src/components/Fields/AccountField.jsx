@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input } from 'semantic-ui-react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import classnames from 'classnames';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import Avatar from '../../components/Avatar';
 
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
+import VerificationField from './VerificationField';
 
 class AccountField extends React.Component {
 
@@ -18,12 +17,11 @@ class AccountField extends React.Component {
 		};
 	}
 
-	onInput(e) {
+	onInput(value) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
-
-		const value = e.target.value.toLowerCase().trim();
+		value = value.toLowerCase().trim();
 
 		this.props.setIn(this.props.subject, {
 			loading: true,
@@ -62,6 +60,19 @@ class AccountField extends React.Component {
 		});
 	}
 
+	getStatus(field) {
+
+		if (field.error) {
+			return 'error';
+		}
+
+		if (field.checked) {
+			return 'checked';
+		}
+
+		return null;
+	}
+
 	isAvatar() {
 		const { field, subject, avatarName } = this.props;
 
@@ -76,56 +87,47 @@ class AccountField extends React.Component {
 		return false;
 	}
 
+
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName, intl,
+			field, autoFocus, subject, disabled, avatarName, intl,
 			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
+		console.log(additionalAccountInfo)
+		const additionalLabel = showAdditionalAccountInfo && !field.error &&
+			<div className="account-name">
+				{additionalAccountInfo.prefix &&
+					<React.Fragment>
+						<FormattedMessage id={additionalAccountInfo.prefix} />
+						{additionalAccountInfo.value}
+					</React.Fragment>
+				}
+			</div>;
+
+		const icon = this.isAvatar() &&
+			<div className="avatar-wrap">
+				<Avatar accountName={avatarName || field.value} />
+			</div>;
+
 		return (
-			<Form.Field className={classnames('error-wrap', { error: field.error })}>
-
-				<label htmlFor={`account${subject}`}>
-					<FormattedMessage id={`wallet_page.create_payment.${subject}_input.title`} />
-					{
-						showAdditionalAccountInfo && !field.error &&
-						<div className="account-name">
-							{additionalAccountInfo}
-						</div>
-					}
-
-				</label>
-				<Input
-					type="text"
-					placeholder={subject === 'to' ?
-						intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' }) :
-						intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
-					}
-					icon={this.isAvatar()}
-					className={classnames('action-wrap', { loading: field.loading && !field.error })}
-					autoFocus={autoFocus}
-					disabled={disabled}
-				>
-					{
-						this.isAvatar() &&
-						<div className="avatar-wrap">
-							<Avatar accountName={avatarName || field.value} />
-						</div>
-					}
-					<input
-						name={`account${subject}`}
-						value={field.value}
-						autoComplete="off"
-						onInput={(e) => this.onInput(e)}
-					/>
-					{ field.checked && !field.error && !disabled &&
-						<span className={classnames('icon-checked value-status', { success: field.checked })} />
-					}
-					{ field.error ? <span className="icon-error-red value-status" /> : null }
-				</Input>
-				<span className="error-message">{field.error}</span>
-
-			</Form.Field>
+			<VerificationField
+				label={subject}
+				additionalLabel={additionalLabel}
+				name={`account${subject}`}
+				onChange={(value) => this.onInput(value)}
+				value={field.value}
+				autoFocus={autoFocus}
+				icon={icon}
+				disabled={disabled}
+				status={this.getStatus(field, disabled)}
+				error={field.error}
+				loading={field.loading && !field.error}
+				placeholder={subject === 'to' ?
+					intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' }) :
+					intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
+				}
+			/>
 		);
 	}
 
@@ -136,7 +138,7 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	avatarName: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
@@ -161,7 +163,7 @@ AccountField.defaultProps = {
 	setVisibility: null,
 	avatarName: '',
 	showAdditionalAccountInfo: false,
-	additionalAccountInfo: '',
+	additionalAccountInfo: null,
 };
 
 export default injectIntl(AccountField);

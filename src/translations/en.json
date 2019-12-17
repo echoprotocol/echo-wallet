@@ -79,11 +79,7 @@
                 },
                 "ip_url_section": {
                     "title": "IP/URL",
-                    "text": "Register a new account through a running node.",
-                    "dropdown": {
-                        "title": "IP or URL",
-                        "placeholder": "Enter IP or URL"
-                    }
+                    "text": "Register a new account through a running node."
                 }
             },
             "have_acc_text": "Have an account?",
@@ -116,6 +112,8 @@
         "create_payment": {
             "title": "CREATE PAYMENT",
             "button_text": "Send",
+            "additional_info_id": "Account ID: ",
+            "additional_info_name": "Account Name: ",
             "from_input": {
                 "title": "FROM",
                 "placeholder": "Account Name"
@@ -187,7 +185,7 @@
             "title": "Frozen Funds",
             "total_sum_text": "Total Frozen Amount:",
             "button_text": "FREEZE",
-            "period_input_title": "PERIOD",
+            "period_input_title": "Period",
             "period_input_placeholder": "Choose period",
             "popup_header_text": "Frozen funds allow you to get bigger reward for participating in blocks creation.",
             "frozen_funds_list": {
@@ -442,14 +440,16 @@
         "back_button_text": "BACK",
         "add_account_button": "CREATE",
         "address_input": {
-            "title": "address",
-            "placeholder": "address"
+            "title": "address"
         },
         "name_input": {
-            "title": "name",
-            "placeholder": "name"
+            "title": "name"
         },
         "agree_switch_checkbox": "Switch to this Network upon creating"
+    },
+    "amount_input": {
+        "title": "Amount",
+        "available": "Available:"
     },
     "toasts": {
         "success": {
@@ -473,10 +473,6 @@
                 "add_custom_network_buttom": "Add custom Network"
             }
         }
-    },
-    "amount_input": {
-        "title": "Amount",
-        "available": "Available:"
     },
     "copied_text": "Copied",
     "modals": {},

@@ -142,7 +142,10 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAdditionalAccountInfo = (value) => async (dispatch, getState) => {
-	dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+	dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+		prefix: '',
+		value: '',
+	}));
 	if (!value) {
 		return;
 	}
@@ -150,27 +153,45 @@ export const setAdditionalAccountInfo = (value) => async (dispatch, getState) =>
 		case ADDRESS_SUBJECT_TYPE: {
 			const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
 			if (!accountId) {
-				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+					prefix: '',
+					value: '',
+				}));
 				return;
 			}
 			const account = await echo.api.getObject(accountId);
-			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+				prefix: 'wallet_page.create_payment.additional_info_name',
+				value: account.name,
+			}));
 			break;
 		}
 		case ACCOUNT_ID_SUBJECT_TYPE: {
-			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${value}`));
+			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+				prefix: 'wallet_page.create_payment.additional_info_name',
+				value,
+			}));
 			break;
 		}
 		case ACCOUNT_NAME_SUBJECT_TYPE: {
 			try {
 				const account = await echo.api.getAccountByName(value);
-				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+					prefix: 'wallet_page.create_payment.additional_info_id',
+					value: account.id,
+				}));
 			} catch (e) {
-				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+					prefix: '',
+					value: '',
+				}));
 			}
 			break;
 		}
-		default: dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
+		default: dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', {
+			prefix: '',
+			value: '',
+		}));
 	}
 };
 
@@ -1183,6 +1204,16 @@ export const createContract = () => async (dispatch, getState) => {
 		if (fee) {
 			dispatch(setValue(FORM_CREATE_CONTRACT_OPTIONS, 'fee', fee));
 		} else {
+			if (abi.value) {
+				const handledAbi = JSON.parse(abi.value);
+				const isConstructorExistAndPayable = handledAbi
+					.find(({ type, payable }) => type === 'constructor' && payable);
+				if (!isConstructorExistAndPayable && !new BN(options.value.amount).eq(0)) {
+					dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', 'Can\'t calculate fee. Looks like your contract has no payable constructor.'));
+					return null;
+				}
+			}
+
 			dispatch(setFormError(FORM_CREATE_CONTRACT_OPTIONS, 'amount', 'Can\'t calculate fee'));
 			return null;
 		}

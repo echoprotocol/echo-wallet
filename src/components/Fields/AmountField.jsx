@@ -226,7 +226,7 @@ class AmountField extends React.Component {
 			return null;
 		}
 		return (amountError || feeError) &&
-			<span className="icon-error-red value-status" />;
+			<span className="icon-error value-status" />;
 	}
 
 	renderCurrencyLabel(currency) {

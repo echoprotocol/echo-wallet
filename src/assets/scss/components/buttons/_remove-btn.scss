@@ -1,0 +1,24 @@
+.remove-btn {
+	min-height: 22px;
+	min-width: 22px;
+	color: rgba(#5C637D, .7);
+	padding: 0;
+	border-radius: 4px;
+	transition: background-color $speed, color $speed;
+	cursor: pointer;
+
+	&:hover {
+		color: #5C637D;
+	}
+
+	&:active {
+		background-color: #D7D9DB;
+		color: rgba(#5C637D, .5);
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}

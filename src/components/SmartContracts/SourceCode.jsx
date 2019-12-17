@@ -4,6 +4,9 @@ import AceEditor from 'react-ace';
 import classnames from 'classnames';
 import { Dropdown } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/webpack-resolver';
 
 import { FORM_CREATE_CONTRACT_SOURCE_CODE } from '../../constants/FormConstants';
 
@@ -151,16 +154,20 @@ class SourceCode extends React.Component {
 					<div className="editor-label">
 						<FormattedMessage id="smart_contract_page.create_contract_page.source_code.input.title" />
 					</div>
-					<button
-						onMouseEnter={() => { this.setState({ isAceError: true }); }}
-						onMouseLeave={() => { this.setState({ isAceError: false }); }}
-						className="ace-warning"
-					/>
+					{
+						form.get('code').error && (
+							<button
+								onMouseEnter={() => { this.setState({ isAceError: true }); }}
+								onMouseLeave={() => { this.setState({ isAceError: false }); }}
+								className="ace-warning"
+							/>
+						)
+					}
 					<AceEditor
 						className="editor"
 						width="100%"
 						height="384px"
-						mode="text"
+						mode="javascript"
 						name="editor"
 						theme="textmate"
 						enableLiveAutocompletion
@@ -173,24 +180,13 @@ class SourceCode extends React.Component {
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
-						annotations={form.get('editorWorker') && !form.get('compileLoading') ? [
-							{
-								row: 0,
-								type: 'error',
-								text: form.get('code').error,
-							},
-							{
-								row: 2,
-								type: 'error',
-								text: 'browser/Untitled1.sol:26:12: ParserError: Expected but got identifier function transferOwnership(address newOwner) public onlyOwner {',
-							},
-						] : null}
+						annotations={
+							form.get('editorWorker') && !form.get('compileLoading')
+								? form.get('annotations') : null
+						}
 					/>
 					{
-						isAceError &&
-							<div className="ace-error">
-								<FormattedMessage id="smart_contract_page.create_contract_page.source_code.no_contract_compile" />
-							</div>
+						isAceError && form.get('code').error && <div className="ace-error">{form.get('code').error}</div>
 					}
 
 				</div>
