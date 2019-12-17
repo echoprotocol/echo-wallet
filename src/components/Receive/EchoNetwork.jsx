@@ -55,7 +55,7 @@ class EchoNetwork extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
+		if (e.type !== 'click' && e.keyCode !== 13) {
 			return;
 		}
 

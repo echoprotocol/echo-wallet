@@ -28,7 +28,7 @@ class Network extends React.PureComponent {
 	}
 
 	onDropdownChange(e, value) {
-		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
+		if ((e.type !== 'click' && e.keyCode !== 13)) {
 			return;
 		}
 
@@ -96,7 +96,7 @@ class Network extends React.PureComponent {
 	}
 
 	openDropdown(e) {
-		if (e.target.className === 'play-node') {
+		if (e.target.className === 'action-node') {
 			return;
 		}
 
@@ -137,11 +137,14 @@ class Network extends React.PureComponent {
 
 		return (
 			<div
-				className="network-dropdown"
 				onFocus={(e) => this.openDropdown(e)}
 				onBlur={() => this.setState({ open: false })}
 				role="button"
 				tabIndex="0"
+				className={classnames('network-dropdown', {
+					disconnected,
+					warning,
+				})}
 			>
 				<div className="trigger" >
 					<span className="description">
@@ -174,10 +177,7 @@ class Network extends React.PureComponent {
 					upward
 					tabIndex="-1"
 					disabled={loading}
-					className={classnames('', {
-						disconnected,
-						warning,
-					})}
+
 				/>
 
 			</div>

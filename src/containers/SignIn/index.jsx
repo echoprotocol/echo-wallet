@@ -69,7 +69,7 @@ class SignIn extends React.Component {
 
 		return (
 
-			<Form className="main-form">
+			<form className="form main-form">
 				<div className="form-info">
 					{ isAddAccount ?
 						<button
@@ -85,7 +85,7 @@ class SignIn extends React.Component {
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
+					<div className={classnames('field error-wrap', { error: accountName.error })}>
 						<label htmlFor="AccountName">Account name</label>
 						<input
 							placeholder="Account Name"
@@ -99,7 +99,7 @@ class SignIn extends React.Component {
 								<span className="error-message">{accountName.error}</span>
 						}
 
-					</Form.Field>
+					</div>
 					<PasswordInput
 						inputLabel="WIF-key"
 						inputPlaceholder="WIF-key"
@@ -136,7 +136,7 @@ class SignIn extends React.Component {
 					}
 
 				</div>
-			</Form>
+			</form>
 		);
 	}
 
