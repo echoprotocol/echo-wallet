@@ -268,7 +268,13 @@ export const disableContract = (id) => (dispatch) => {
 	history.push(CONTRACT_LIST_PATH);
 
 	toastInfo(
-		`You have removed ${id} from watch list`,
+		[{
+			text: '',
+			postfix: 'toasts.info.remove_network.pt1',
+		}, {
+			text: id,
+			postfix: 'toasts.info.remove_network.pt2',
+		}],
 		() => dispatch(enableContract(id)),
 		() => {
 			const intervalId = setTimeout(() => dispatch(removeContract(id)), TIME_REMOVE_CONTRACT);

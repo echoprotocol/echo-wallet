@@ -17,7 +17,7 @@ const VerificationField = (props) => {
 		<div className={classnames('field error-wrap', { error: !!error })}>
 			{label &&
 				<label htmlFor={name}>
-					<FormattedMessage id={`wallet_page.create_payment.${label}_input.title`} />
+					{/* <FormattedMessage id={`wallet_page.create_payment.${label}_input.title`} /> */}
 					{additionalLabel}
 				</label>
 			}

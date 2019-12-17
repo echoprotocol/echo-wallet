@@ -3,6 +3,7 @@ import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { FormattedMessage } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_ACCEPT_INCOMING_CONNECTIONS } from '../../constants/ModalConstants';
@@ -29,44 +30,57 @@ class ModalInfoWallet extends React.Component {
 					/>
 					<div className="modal-header">
 						<h2 className="modal-header-title">
-							Do you want the application “Echo Wallet”<br />
-							to accept incoming network connections?
+							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.title_pt1" /> */}
+							<br />
+							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.title_pt2" /> */}
 						</h2>
 					</div>
 					<div className="accept-connections modal-body">
 						<h3 className="accept-connections-title">
-							Accept incoming network connections and <br />
-							<span className="bold">enjoy all the benefits of running local node *</span>
+							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.subtitle_pt1" /> */}
+							<br />
+							<span className="bold">
+								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.subtitle_pt2" /> */}
+							</span>
 						</h3>
 						<ul className="accept-connections-list">
 							<li>
 								<img src={icAccept} alt="" />
-								<span className="list-item-content">Become consensus participant</span>
-							</li>
-							<li>
-								<img src={icAccept} alt="" />
-								<span className="list-item-content">Earn block rewards</span>
-							</li>
-							<li>
-								<img src={icAccept} alt="" />
-								<span className="list-item-content">Generate new ECHO accounts</span>
+								<span className="list-item-content">
+									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt1" /> */}
+								</span>
 							</li>
 							<li>
 								<img src={icAccept} alt="" />
 								<span className="list-item-content">
-									Run on your PC locally and<br /> safeguard your connection
+									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt2" /> */}
+								</span>
+							</li>
+							<li>
+								<img src={icAccept} alt="" />
+								<span className="list-item-content">
+									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt3" /> */}
+								</span>
+							</li>
+							<li>
+								<img src={icAccept} alt="" />
+								<span className="list-item-content">
+									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt4_1" /> */}
+									<br />
+									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt4_2" /> */}
 								</span>
 							</li>
 						</ul>
 
 						<div className="accept-connections-hint">
-							* This setting can be changed in the Firewall pane of Security
-							& Privacy preferences anytime.
+							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.footer" /> */}
 						</div>
 						<div className="form-panel">
-							<button className="transparet-btn grey">Dismiss</button>
+							<button className="transparet-btn grey">
+								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.button_confirm_text" /> */}
+							</button>
 							<button autoFocus className="blue-btn">
-								CONFIRM
+								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.button_dismiss_text" /> */}
 							</button>
 						</div>
 					</div>

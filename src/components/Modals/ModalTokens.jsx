@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { setParamValue, closeModal } from '../../actions/ModalActions';
 import { addToken } from '../../actions/BalanceActions';
@@ -11,6 +12,7 @@ import { addToken } from '../../actions/BalanceActions';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { contractIdRegex } from '../../helpers/ValidateHelper';
+
 
 class ModalTokens extends React.Component {
 
@@ -33,6 +35,9 @@ class ModalTokens extends React.Component {
 	render() {
 		const { show, contractId, disabled } = this.props;
 
+		console.log(this.props.intl)
+		const t = this.props.intl.formatMessage({ id: 'global_loader.title' });
+		console.log(t)
 		return (
 			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
@@ -50,7 +55,7 @@ class ModalTokens extends React.Component {
 									<label htmlFor="tokens">Contract ID</label>
 									<input
 										type="text"
-										placeholder="Contract ID"
+										placeholder={t}
 										name="contractId"
 										className="ui input"
 										value={contractId.value}
@@ -85,13 +90,14 @@ ModalTokens.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	setParamValue: PropTypes.func.isRequired,
 	addToken: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalTokens.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TOKENS, 'show']),
 		disabled: state.modal.getIn([MODAL_TOKENS, 'loading']),
@@ -103,4 +109,4 @@ export default connect(
 		setParamValue: (param, value) => dispatch(setParamValue(MODAL_TOKENS, param, value)),
 		addToken: (value) => dispatch(addToken(value)),
 	}),
-)(ModalTokens);
+)(ModalTokens));

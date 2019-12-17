@@ -451,30 +451,134 @@
         "title": "Amount",
         "available": "Available:"
     },
-    "toasts": {
-        "success": {
-            "trx_sent_postfix": "transaction was sent",
-            "trx_complete_postfix": "transaction was completed"
-        },
-        "error": {
-            "trx_dont_complete_postfix": "transaction wasn't completed",
-            "trx_dont_comp_by_lose_connection": "transaction wasn't completed. Please, check your connection.",
-            "trx_error": "Transaction sending error",
-            "private_key_error": "Private key was not imported in Echo Desktop Wallet"
-        }
-    },
     "footer": {
         "about_wallet": "About wallet",
         "network_section": {
-            "title": "Network",
+            "title": "Network:",
+            "disconnected": "Disconnected:",
             "block": "Block",
             "choose_network_dropdown": {
-                "title": "CHOOSE NETWORK",
-                "add_custom_network_buttom": "Add custom Network"
+                "title": "Choose network",
+                "add_custom_network_buttom": "+ Add custom Network"
             }
+        },
+        "key_warning": {
+            "text": "Total weight of all the keys won&rsquo;t be enough to sign a transaction.",
+            "button_text": "Keys Parameters"
+        },
+        "connection_error": {
+            "text": "Check Your Connection",
+            "button_text": "Try again"
+        },
+        "local_node": {
+            "title": "Local Node",
+            "popup_info": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+        },
+        "remote_node": {
+            "title": "Remote Node",
+            "synchronization": "Network synchronization",
+            "popup_info": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
         }
     },
     "copied_text": "Copied",
-    "modals": {},
+    "toasts": {
+        "success": {
+            "trx_sent_postfix": " transaction was sent",
+            "trx_complete_postfix": " transaction was completed",
+            "network_was_added": " network added successfully!",
+            "token_was_added": "Token was successfully added",
+            "receive": {
+                "start": "You receive ",
+                "of": " of "
+            }
+        },
+        "errors": {
+            "trx_dont_complete_postfix": " transaction wasn't completed. ",
+            "trx_dont_comp_by_lose_connection": " transaction wasn't completed. Please, check your connection.",
+            "trx_error": "Transaction sending error",
+            "private_key_error": "Private key was not imported in Echo Desktop Wallet",
+            "token_invalid": "Invalid ERC20 token",
+            "token_already_exists": "Token already exists"
+        },
+        "info": {
+            "remove_network": {
+                "pt1": "You have removed ",
+                "pt2:": " from networks list"
+            },
+            "remove_id": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            },
+            "remove_name": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            }
+        }
+    },
+    "modals": {
+        "modal_accept_incoming_connection": {
+            "title_pt1": "Do you want the application “Echo Wallet”",
+            "title_pt2": "to accept incoming network connections?",
+            "subtitle_pt1": "Accept incoming network connections and ",
+            "subtitle_pt2": "enjoy all the benefits of running local node *",
+            "list_pt1": "Become consensus participant",
+            "list_pt2": "Earn block rewards",
+            "list_pt3": "Generate new ECHO accounts",
+            "list_pt4_1": "Run on your PC locally and",
+            "list_pt4_2": "safeguard your connection",
+            "footer": "* This setting can be changed in the Firewall pane of Security & Privacy preferences anytime.",
+            "button_confirm_text": "CONFIRM",
+            "button_dismiss_text": "Dismiss"
+        },
+        "modal_add_proposal_wif": {
+            "title": "Would you like to add other keys now?",
+            "text_pt1": "Your account settings require more than one key to sign a transaction. ",
+            "text_pt2": "You can add more keys now or later on the Backup and Permissions page.",
+            "later_button_text": "Do it later",
+            "confirm_button_text": "Proceed"
+        },
+        "modal_add_wif": {
+            "title": "Add WIF",
+            "public_key_input": {
+                "title": "Public Key",
+                "placeholder": "Public Key"
+            },
+            "wif_input": {
+                "title": "WIF (optional)",
+                "placeholder": "WIF",
+                "warnig": "Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "button_text": "Confirm"
+        },
+        "modal_backup": {
+            "title": "Backup",
+            "account_field": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "id_field": {
+                "title": "ID account",
+                "placeholder": "ID account"
+            },
+            "backup_data_field": {
+                "title": "Backup data",
+                "placeholder": "Backup data",
+                "warning": "Warning: Anyone who has access to your WIF can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "copy_button_text": "Copy Backup Data",
+            "save_button_text": "Save As .TXT",
+            "text_field": {
+                "account": "Account: ",
+                "public_key": "Public Key ",
+                "wif": "WIF "
+            }
+        },
+        "modal_blacklist": {
+            "title": "Blacklist",
+            "add_button_text": "Add Account",
+            "remove_button_text": "Remove"
+        },
+        "modal_change_parent_account": {}
+    },
     "errors": {}
 }

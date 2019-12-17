@@ -479,7 +479,10 @@ export const addNetwork = () => (dispatch, getState) => {
 
 	if (autoswitch.value) { dispatch(saveNetwork(network)); }
 
-	toastSuccess(`${network.name} network added successfully!`);
+	toastSuccess([{
+		text: network.name,
+		postfix: 'toasts.success.network_was_added',
+	}]);
 
 	history.goBack();
 };
@@ -521,7 +524,13 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	localStorage.setItem('custom_networks', JSON.stringify(customNetworks));
 
 	toastInfo(
-		`You have removed ${network.name} from networks list`,
+		[{
+			text: '',
+			postfix: 'toasts.info.remove_id.pt1',
+		}, {
+			text: network.name,
+			postfix: 'toasts.info.remove_id.pt2',
+		}],
 		() => dispatch(enableNetwork(network)),
 		() => { },
 	);

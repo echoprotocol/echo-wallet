@@ -275,7 +275,7 @@ class AmountField extends React.Component {
 						{
 							showAvailable && (
 								<li>
-									<FormattedMessage id="amount_input.available" />
+									{/* <FormattedMessage id="amount_input.available" /> */}
 									<span
 										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 										role="button"
@@ -294,9 +294,9 @@ class AmountField extends React.Component {
 				</label>
 				<Input
 					type="text"
-					placeholder={
-						<FormattedMessage id="amount_input.title" />
-					}
+					// placeholder={
+					// 	<FormattedMessage id="amount_input.title" />
+					// }
 					tabIndex="0"
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}

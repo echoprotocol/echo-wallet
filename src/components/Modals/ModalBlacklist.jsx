@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
 import FocusLock from 'react-focus-lock';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
@@ -33,11 +34,13 @@ class ModalBalcklist extends React.Component {
 
 	renderList() {
 		const {
-			contracts, contractId, owner, activeUser, accounts,
+			contracts, contractId, owner, activeUser, accounts, intl,
 		} = this.props;
 		if (!contracts.get(contractId)) {
 			return [];
 		}
+		// const removeBtnTxt = intl.formatMessage({ id: 'modals.modal_blacklist.remove_button_text' });
+
 		const blacklist = contracts.getIn([contractId, 'blacklist']);
 		return blacklist ? blacklist.map((el, i) => (
 			<TransactionScenario
@@ -51,7 +54,7 @@ class ModalBalcklist extends React.Component {
 							<div className="name">{accounts.getIn([el, 'name'])}</div>
 							{ owner === activeUser && <ActionBtn
 								icon="remove"
-								text="Remove"
+								// text={removeBtnTxt}
 								action={() => submit()}
 							/>}
 						</div>
@@ -74,7 +77,9 @@ class ModalBalcklist extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h2 className="modal-header-title">Blacklist</h2>
+						<h2 className="modal-header-title">
+							{/* <FormattedMessage id="modals.modal_blacklist.title" /> */}
+						</h2>
 					</div>
 					<div className="modal-body">
 						<div className="segments">
@@ -83,7 +88,9 @@ class ModalBalcklist extends React.Component {
 						<div className="form-panel">
 							{ owner === activeUser && <Button
 								className="main-btn"
-								content="Add account"
+								// content={
+								// 	<FormattedMessage id="modals.modal_blacklist.add_button_text" />
+								// }
 								onClick={(e) => this.onOpenAddModal(e)}
 							/>}
 						</div>
@@ -105,13 +112,14 @@ ModalBalcklist.propTypes = {
 	removeFromBlackList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalBalcklist.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
 		accounts: state.echojs.get(CACHE_MAPS.ACCOUNTS_BY_ID),
@@ -126,4 +134,4 @@ export default connect(
 		removeFromBlackList: (accId) =>
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_BLACKLIST)),
 	}),
-)(ModalBalcklist);
+)(ModalBalcklist));

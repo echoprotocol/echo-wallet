@@ -1250,7 +1250,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	const { value: operationId } = operations[operation];
 
 	if (!echo.isConnected) {
-		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
+		toastError([{
+			text: operations[operation].name,
+			postfix: 'toasts.errors.trx_dont_comp_by_lose_connection',
+		}]);
 		dispatch(closeModal(MODAL_DETAILS));
 		return;
 	}
@@ -1295,7 +1298,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			clearTimeout(permissionTableLoaderTimer);
 			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
-			toastSuccess(`${operations[operation].name} transaction was completed`);
+			toastSuccess([{
+				text: operations[operation].name,
+				postfix: 'toasts.success.trx_complete_postfix',
+			}]);
 			dispatch(contractSet('loading', false));
 			dispatch(toggleModalLoading(MODAL_DETAILS, false));
 			onSuccess();
@@ -1304,7 +1310,13 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			clearTimeout(permissionTableLoaderTimer);
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
-			toastError(`${operations[operation].name} transaction wasn't completed. ${message}`);
+			toastError([{
+				text: operations[operation].name,
+				postfix: 'toasts.errors.trx_dont_complete_postfix',
+			}, {
+				text: error.message,
+				postfix: '',
+			}]);
 			dispatch(contractSet('loading', false));
 			dispatch(setError(PERMISSION_TABLE, message));
 			dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
@@ -1312,10 +1324,19 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		});
 	} catch (error) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
-		toastError(`${operations[operation].name} transaction wasn't completed. ${error.message}`);
+		toastError([{
+			text: operations[operation].name,
+			postfix: 'toasts.errors.trx_dont_complete_postfix',
+		}, {
+			text: error.message,
+			postfix: '',
+		}]);
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
-	toastSuccess(`${operations[operation].name} transaction was sent`);
+	toastSuccess([{
+		text: operations[operation].name,
+		postfix: 'toasts.success.trx_sent_postfix',
+	}]);
 
 	switch (operationId) {
 		case operations.account_update.value:
