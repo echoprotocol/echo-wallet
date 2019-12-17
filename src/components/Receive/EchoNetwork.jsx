@@ -139,7 +139,20 @@ class EchoNetwork extends React.Component {
 		return new BN(amount.value).toString(10);
 	}
 
+	initDropdown() {
+		const { searchText } = this.state;
+		const addresses = this.props.accountAddresses.toJS();
+		const users = this.props.accountName;
+		const filteredAddresses = addresses.filter(({ address }) => address.match(searchText));
+		const filteredAccs = [users].filter((user) => user.match(searchText));
 
+		this.setState({
+			searchAddr: filteredAddresses,
+			searchAccs: filteredAccs,
+		});
+
+		this.setState({ open: true });
+	}
 	renderAccountHeader() {
 		const acconutHeaderTitle = <div className="title">Account</div>;
 
@@ -152,6 +165,7 @@ class EchoNetwork extends React.Component {
 		}];
 		return header;
 	}
+
 	renderAccountsList() {
 
 		const users = this.state.searchAccs;
@@ -177,7 +191,6 @@ class EchoNetwork extends React.Component {
 
 		return options;
 	}
-
 
 	renderAddressesHeader() {
 		const addressHeaderTitle = (
@@ -258,6 +271,7 @@ class EchoNetwork extends React.Component {
 		return [].concat(AccSection).concat(AdrSection).concat(this.renderGenerateAddressButton())
 			.filter((el) => el !== null);
 	}
+
 	render() {
 
 		const {
@@ -279,16 +293,21 @@ class EchoNetwork extends React.Component {
 				<div className="dropdown-wrap">
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
-						placeholder="Choose account or address"
+						placeholder="koko"
 						options={this.renderOptions()}
 						search={() => this.renderOptions()}
-						text={receiver || 'Choose account or address'}
 						searchQuery={searchText}
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
-						onFocus={() => this.setState({ open: true })}
+						onFocus={() => this.initDropdown()}
 						onBlur={() => this.setState({ open: false })}
 						open={open}
+						text={
+							receiver &&
+							<span className="placeholder">
+								Choose account or address
+							</span>
+						}
 					/>
 				</div>
 

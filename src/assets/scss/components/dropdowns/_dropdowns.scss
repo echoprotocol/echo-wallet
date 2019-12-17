@@ -182,7 +182,11 @@
 			font-weight: 400;
 
 			&:not(.filtered) {
-				color: rgba(#3B3B3B, 0.5);
+				color: rgba(#3B3B3B, 1);
+			}
+
+			.placeholder {
+				color: rgba(#3B3B3B, .5);
 			}
 		}
 
