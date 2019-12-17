@@ -1,4 +1,5 @@
 import echo from 'echojs-lib';
+import Services from '../services';
 
 export const getEthAddress = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -7,9 +8,11 @@ export const getEthAddress = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	await echo.api.getEthAddress(activeUserId);
+	await Services.getEcho().api.getEthAddress(activeUserId);
+	// await echo.api.getEthAddress(activeUserId);
 
-	await echo.api.getFullAccounts([activeUserId]);
+	await Services.getEcho().api.getFullAccounts([activeUserId]);
+	// await echo.api.getFullAccounts([activeUserId]);
 
 	return true;
 };

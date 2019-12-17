@@ -3,6 +3,7 @@ import echo, { validators } from 'echojs-lib';
 import * as wrapper from 'solc/wrapper';
 import BN from 'bignumber.js';
 
+import Services from '../services';
 import {
 	setFormError,
 	setValue,
@@ -69,7 +70,8 @@ export const set = (field, value) => (dispatch) => {
 };
 
 export const getContractBalances = async (contractsIds) => {
-	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
+	const balances = contractsIds.map((id) => Services.getEcho().api.getContractBalances(id));
+	// const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
 	const contractsBalances = await Promise.all(balances);
 
 	const usedAssets = contractsBalances
@@ -77,7 +79,8 @@ export const getContractBalances = async (contractsIds) => {
 		.map((b) => b.asset_id);
 	const uniqAssets = new Set([...usedAssets, ECHO_ASSET_ID]).toArray();
 
-	const requestedAssets = await echo.api.getAssets(uniqAssets);
+	const requestedAssets = await Services.getEcho().api.getAssets(uniqAssets);
+	// const requestedAssets = await echo.api.getAssets(uniqAssets);
 	const requestedAssetsMap = requestedAssets.reduce((map, a) => {
 		const asset = { id: a.id, symbol: a.symbol, precision: a.precision };
 		map[a.id] = asset;
@@ -168,7 +171,10 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	try {
-		const contract = await echo.api.getContract(id);
+
+
+		const contract = await Services.getEcho().api.getContract(id);
+		// const contract = await echo.api.getContract(id);
 
 		if (!contract) {
 			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
@@ -297,7 +303,9 @@ export const addContractByName = (
 ) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	const address = (await echo.api.getContractResult(contractResultId))[1].exec_res.new_address;
+	const address = (await Services.getEcho().api.getContractResult(contractResultId))[1]
+		.exec_res.new_address;
+	// const address = (await echo.api.getContractResult(contractResultId))[1].exec_res.new_address;
 
 	const id = `${CONTRACT_ID_PREFIX}.${getContractId(address)}`;
 
@@ -367,12 +375,18 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const queryResult = await echo.api.callContractNoChangingState(
+	const queryResult = await Services.getEcho().api.callContractNoChangingState(
 		contractId,
 		accountId,
 		{ amount: 0, asset_id: ECHO_ASSET_ID },
 		getMethod(method, args),
 	);
+	// const queryResult = await echo.api.callContractNoChangingState(
+	// 	contractId,
+	// 	accountId,
+	// 	{ amount: 0, asset_id: ECHO_ASSET_ID },
+	// 	getMethod(method, args),
+	// );
 
 	const constants = getState().contract.get('constants');
 	const newConstants = constants.toJS().map((constant) => {
@@ -425,12 +439,18 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
 
-		const constantValue = await echo.api.callContractNoChangingState(
+		const constantValue = await Services.getEcho().api.callContractNoChangingState(
 			id,
 			accountId,
 			{ amount: 0, asset_id: ECHO_ASSET_ID },
 			method,
 		);
+		// const constantValue = await echo.api.callContractNoChangingState(
+		// 	id,
+		// 	accountId,
+		// 	{ amount: 0, asset_id: ECHO_ASSET_ID },
+		// 	method,
+		// );
 		constant.constantValue = constantValue.substr(-64);
 		constant.showQueryResult = false;
 		return constant;
@@ -438,7 +458,8 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 
 	constants = await Promise.all(constants);
 
-	const [, { code: bytecode }] = await echo.api.getContract(id);
+	const [, { code: bytecode }] = await Services.getEcho().api.getContract(id);
+	// const [, { code: bytecode }] = await echo.api.getContract(id);
 
 	const { [id]: balances } = await getContractBalances([id]);
 
@@ -621,7 +642,8 @@ export const setContractFees = (form) => async (dispatch, getState) => {
  * @returns {Promise<Array<Asset>>}
  */
 export const getAssetsList = async (name) => {
-	const list = await echo.api.listAssets(name, 15);
+	const list = await Services.getEcho().api.listAssets(name, 15);
+	// const list = await echo.api.listAssets(name, 15);
 	return list;
 };
 
@@ -726,17 +748,24 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
  * @returns {Function}
  */
 export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
-	const contractOwner = (await echo.api.getObject(contractId)).owner;
+	const contractOwner = (await Services.getEcho().api.getObject(contractId)).owner;
+	// const contractOwner = (await echo.api.getObject(contractId)).owner;
 	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	const contract = await echo.api.getFullContract(contractId);
+	const contract = await Services.getEcho().api.getFullContract(contractId);
+	// const contract = await echo.api.getFullContract(contractId);
 	if (contract && contract.whitelist && contract.blacklist) {
-		await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
+		await Services.getEcho().api.getAccounts(contract.whitelist.concat(contract.blacklist));
+		// await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
 	}
-	await echo.subscriber.setContractSubscribe(
+	await Services.getEcho().subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,
 	);
+	// await echo.subscriber.setContractSubscribe(
+	// 	[contractId],
+	// 	subscribeCallback,
+	// );
 };
 
 /**
@@ -745,7 +774,10 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
  * @returns {Promise<void>}
  */
 export const updateGeneralContractInfo = async (contract) => {
-	await echo.api.getAccounts(contract.get('whitelist').concat(contract.get('blacklist')).toArray());
+	await Services.getEcho().api.getAccounts(contract.get('whitelist')
+		.concat(contract.get('blacklist')).toArray());
+	// await echo.api.getAccounts(contract.get('whitelist')
+	// .concat(contract.get('blacklist')).toArray());
 };
 
 /**
@@ -754,5 +786,6 @@ export const updateGeneralContractInfo = async (contract) => {
  */
 export const resetGeneralContractInfo = () => (dispatch, getState) => {
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	echo.subscriber.removeContractSubscribe(subscribeCallback);
+	Services.getEcho().subscriber.removeContractSubscribe(subscribeCallback);
+	// echo.subscriber.removeContractSubscribe(subscribeCallback);
 };

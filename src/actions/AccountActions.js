@@ -1,4 +1,5 @@
 import echo from 'echojs-lib';
+import Services from '../services';
 
 export const updateAccountAddresses = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -7,7 +8,8 @@ export const updateAccountAddresses = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	await echo.api.getAccountAddresses(activeUserId, 0, 100000);
+	await Services.getEcho().api.getAccountAddresses(activeUserId, 0, 100000);
+	// await echo.api.getAccountAddresses(activeUserId, 0, 100000);
 
 	return true;
 };
@@ -19,7 +21,8 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	await echo.api.getBtcAddress(activeUserId);
+	await Services.getEcho().api.getBtcAddress(activeUserId);
+	// await echo.api.getBtcAddress(activeUserId);
 
 	return true;
 };
@@ -30,6 +33,7 @@ export const getBtcAddress = () => async (dispatch, getState) => {
  * @returns {Promise<Array<[string, string]>>}
  */
 export const lookupAccountsList = async (name, limit = 15) => {
-	const list = await echo.api.lookupAccounts(name, limit);
+	const list = await Services.getEcho().api.lookupAccounts(name, limit);
+	// const list = await echo.api.lookupAccounts(name, limit);
 	return list;
 };

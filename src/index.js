@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
 
 import echo, { echoReducer } from 'echojs-lib';
+import Services from './services';
+
 
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 
