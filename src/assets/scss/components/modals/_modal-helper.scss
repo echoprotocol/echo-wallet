@@ -28,3 +28,10 @@
 	max-width: 500px;
 	margin: 13px auto 0;
 }
+
+@mixin info-text() {
+	font-size: 15px;
+	line-height: 22px;
+	text-align: center;
+	color: rgba(#3B3B3B, .8);
+}

@@ -445,6 +445,7 @@ export default {
 			value: 'value',
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_eth_approve_withdraw: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_APPROVE_WITHDRAW,
@@ -586,6 +587,7 @@ export default {
 			amount: 'value',
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_btc_aggregate: {
 		value: OPERATIONS_IDS.SIDECHAIN_BTC_AGGREGATE,
