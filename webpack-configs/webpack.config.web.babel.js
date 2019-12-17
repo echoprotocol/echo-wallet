@@ -157,6 +157,8 @@ const config = {
 		net: 'empty',
 		tls: 'empty',
 		module: 'empty',
+		__dirname: false,
+		__filename: false,
 	},
 };
 

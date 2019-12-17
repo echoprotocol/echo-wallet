@@ -85,7 +85,7 @@ export const setAccounts = () => (async () => {
 		});
 	});
 
-	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+	// Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
 });
 
@@ -433,6 +433,12 @@ export const isAccountAdded = (accountName, networkName) => {
 	return null;
 };
 
+export const incomingConnectionsRequest = () => (dispatch) => {
+	let isFirst = localStorage.getItem('isFirstLaunch');
+
+	isFirst = isFirst ? JSON.parse(isFirst) : true;
+};
+
 export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -452,6 +458,7 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(resetBalance());
 
 	dispatch(initAccount(accountName, networkName));
+	dispatch(incomingConnectionsRequest());
 };
 
 /**

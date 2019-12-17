@@ -241,7 +241,6 @@ function createWindow() {
 				// devnet: null,
 				// 'seed-node': 'node1.devnet.echo-dev.io:6310',
 			};
-			console.log(networkOptions);
 
 			switch (NETWORK_ID) {
 				case 'testnet':

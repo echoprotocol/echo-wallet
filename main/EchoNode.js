@@ -22,9 +22,8 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken) {
 
-		const execPath = joinPath(dirname(appRootDir.get()), 'echo-wallet/resources', getPlatform(), 'bin');
+		const execPath = joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
 
-		console.log(execPath);
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
