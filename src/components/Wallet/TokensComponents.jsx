@@ -26,6 +26,7 @@ class Tokens extends React.Component {
 	}
 
 	setAsset(symbol) {
+		this.props.setGlobalValue('activeCoinTypeTab', 0);
 		this.props.setAsset(symbol);
 	}
 
@@ -49,7 +50,7 @@ class Tokens extends React.Component {
 					})}
 				>
 					<span className="currency-symbol">{symbol}</span>
-					<span className="currency-amount">{formatAmount(balance, precision, '')}</span>
+					<span className={classnames('currency-amount', { short: balance.length > 18 })}>{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
 					className="remove-token"
@@ -95,6 +96,7 @@ Tokens.propTypes = {
 	tokens: PropTypes.object.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
+	setGlobalValue: PropTypes.func.isRequired,
 };
 
 export default Tokens;

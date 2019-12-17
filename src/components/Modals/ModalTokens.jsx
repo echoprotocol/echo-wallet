@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import FocusLock from 'react-focus-lock';
 
 import { setParamValue, closeModal } from '../../actions/ModalActions';
 import { addToken } from '../../actions/BalanceActions';
@@ -33,24 +34,19 @@ class ModalTokens extends React.Component {
 		const { show, contractId, disabled } = this.props;
 
 		return (
-			<Modal className="small" open={show} dimmer="inverted">
-				<div className="modal-content">
-
-					<span
+			<Modal className="modal-wrap" open={show}>
+				<FocusLock autoFocus={false}>
+					<button
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
 					/>
-					<div className="modal-header" />
+					<div className="modal-header">
+						<h2 className="modal-header-title">Add ERC20 token to watch list</h2>
+					</div>
 					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Add ERC20 token to watch list</h3>
-							</div>
+						<form className="main-form">
 							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: contractId.error })}>
+								<div className={classnames('field error-wrap', { error: contractId.error })}>
 									<label htmlFor="tokens">Contract ID</label>
 									<input
 										type="text"
@@ -62,7 +58,7 @@ class ModalTokens extends React.Component {
 										autoFocus
 									/>
 									<span className="error-message">{contractId.error}</span>
-								</Form.Field>
+								</div>
 							</div>
 							<div className="form-panel">
 								<Button
@@ -73,9 +69,9 @@ class ModalTokens extends React.Component {
 									content="Watch Token"
 								/>
 							</div>
-						</Form>
+						</form>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}

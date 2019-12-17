@@ -4,7 +4,6 @@
 	text-align: left;
 	background: #FFFFFF;
 	border: none;
-	box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2), 1px 3px 15px 2px rgba(0, 0, 0, 0.2);
 	transform-origin: 50% 25%;
 	flex: 0 0 auto;
 	border-radius: 4px;
@@ -28,31 +27,31 @@
 @media only screen and (max-width: 767px) {
   .modal {
     width: 95%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 768px) {
   .modal {
     width: 88%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 992px) {
   .modal {
     width: 850px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1200px) {
   .modal {
     width: 900px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1920px) {
   .modal {
     width: 950px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 
@@ -201,40 +200,35 @@
       Size
 ---------------*/
 
-.modal {
-  font-size: 1rem;
-}
-
-
 /* Mini Modal Width */
 @media only screen and (max-width: 767px) {
   .mini.modal {
     width: 95%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 768px) {
   .mini.modal {
     width: 35.2%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 992px) {
   .mini.modal {
     width: 340px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1200px) {
   .mini.modal {
     width: 360px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1920px) {
   .mini.modal {
     width: 380px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 
@@ -247,31 +241,31 @@
 @media only screen and (max-width: 767px) {
   .tiny.modal {
     width: 95%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 768px) {
   .tiny.modal {
     width: 52.8%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 992px) {
   .tiny.modal {
     width: 510px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1200px) {
   .tiny.modal {
     width: 540px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1920px) {
   .tiny.modal {
     width: 570px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 
@@ -284,19 +278,19 @@
 @media only screen and (max-width: 767px) {
   .small.modal {
     width: 95%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 768px) {
   .small.modal {
     width: 70.4%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 992px) {
   .small.modal {
     width: 650px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 
@@ -307,31 +301,31 @@
 @media only screen and (max-width: 767px) {
   .large.modal {
     width: 95%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 768px) {
   .large.modal {
     width: 88%;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 992px) {
   .large.modal {
     width: 1020px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1200px) {
   .large.modal {
     width: 1080px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 @media only screen and (min-width: 1920px) {
   .large.modal {
     width: 1140px;
-    margin: 0em 0em 0em 0em;
+    margin: 0;
   }
 }
 

@@ -681,6 +681,7 @@ export const disableToken = (name, contractId) => (dispatch) => {
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAsset = (asset, type) => (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.set({ field: 'activePaymentTypeTab', value: 0 }));
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 };

@@ -1,0 +1,69 @@
+.grey-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #A9ACB9;
+	background-color: #A9ACB9;
+
+	&:hover {
+		border: 1px solid #7A8095;
+		background-color: #7A8095;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#A9ACB9, .8);
+		background-color: rgba(#A9ACB9, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#A9ACB9, .5);
+		background-color: transparent;
+		color: rgba(#A9ACB9, .5);
+	}
+
+	// VARIANTS
+
+	&.inverse {
+		background-color: transparent;
+		color: rgba(#5C637D, .6);
+
+		&:hover {
+			border: 1px solid #7A8095;
+			background-color: #7A8095;
+			color: #fff;
+		}
+
+		&:active {
+			border: 1px solid rgba(#A9ACB9, .8);
+			background-color: rgba(#A9ACB9, .8);
+			color: rgba(#fff, .8);
+		}
+
+		&:disabled {
+			border: 1px solid rgba(#A9ACB9, .5);
+			background-color: transparent;
+			color: rgba(#A9ACB9, .5);
+		}
+	}
+
+	// SIZE
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}

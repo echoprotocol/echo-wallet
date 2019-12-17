@@ -1,9 +1,10 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import FocusLock from 'react-focus-lock';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 
@@ -48,49 +49,48 @@ class ModalCreateEchoAddress extends React.Component {
 			>
 				{
 					(submit) => (
-						<Modal className="create-address-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Create address name</h3>
-							</div>
-							<form className="modal-body">
-								<div className="info-text">
-									You can use several addresses referring to one account for different targets.
-									Please create address name for a new one.
+						<Modal className="create-address-modal" open={show}>
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h2 className="modal-header-title">Create address name</h2>
 								</div>
+								<form className="modal-body">
+									<div className="info-text">
+											You can use several addresses referring to one account for different targets.
+											Please create address name for a new one.
+									</div>
 
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="address">Address name</label>
-									<input
-										type="text"
-										placeholder="Address name"
-										name="address"
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-									{
-										false && <span className="error-message">some error</span>
-									}
-									<span className="warning-message">
-										Warning: Please note, address names are visible
-										for blockchain network participants.
-									</span>
-								</Form.Field>
-								<div className="form-panel">
-									<Button
-										type="submit"
-										className="main-btn countdown-wrap"
-										content="Generate address"
-										onClick={() => this.onGenerateEchoAdress(submit)}
-									/>
-								</div>
-							</form>
+									<div className={classnames('field error-wrap', { error: !!error })}>
+										<label htmlFor="address">Address name</label>
+										<input
+											type="text"
+											placeholder="Address name"
+											name="address"
+											onChange={(e) => this.onChange(e)}
+											autoFocus
+										/>
+										{
+											error && <span className="error-message">{error}</span>
+										}
+										<span className="warning-message">
+												Warning: Please note, address names are visible
+												for blockchain network participants.
+										</span>
+									</div>
+									<div className="form-panel">
+										<Button
+											type="submit"
+											className="main-btn"
+											onClick={() => this.onGenerateEchoAdress(submit)}
+											content="Generate address"
+										/>
+									</div>
+								</form>
+							</FocusLock>
 						</Modal>
 					)
 				}

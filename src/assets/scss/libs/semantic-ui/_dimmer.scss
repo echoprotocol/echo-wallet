@@ -27,78 +27,66 @@
 }
 
 /* Dimmer Content */
-.dimmer > .content {
-  -webkit-user-select: text;
-     -moz-user-select: text;
-      -ms-user-select: text;
-          user-select: text;
+.dimmer>.content {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
 }
 
 /* Loose Coupling */
-.segment > .dimmer {
-  min-height: 100vh;
-  border-radius: inherit !important;
+.segment>.dimmer {
+	min-height: 100vh;
+	border-radius: inherit !important;
 }
 
 /* Scrollbars */
 .dimmer:not(.inverted)::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+	background: rgba(255, 255, 255, 0.1);
 }
+
 .dimmer:not(.inverted)::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
+	background: rgba(255, 255, 255, 0.25);
 }
+
 .dimmer:not(.inverted)::-webkit-scrollbar-thumb:window-inactive {
-  background: rgba(255, 255, 255, 0.15);
+	background: rgba(255, 255, 255, 0.15);
 }
+
 .dimmer:not(.inverted)::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+	background: rgba(255, 255, 255, 0.35);
 }
-
-
-/*******************************
-            States
-*******************************/
-
 
 /* Animating */
 .animating.dimmable:not(body),
 .dimmed.dimmable:not(body) {
-  overflow: hidden;
+	overflow: hidden;
 }
 
 /* Animating / Active / Visible */
-.dimmed.dimmable > .animating.dimmer,
-.dimmed.dimmable > .visible.dimmer,
+.dimmed.dimmable>.animating.dimmer,
+.dimmed.dimmable>.visible.dimmer,
 .active.dimmer {
-//   display: -webkit-box;
-  opacity: 1;
+	//   display: -webkit-box;
+	opacity: 1;
 }
 
 /* Disabled */
 .disabled.dimmer {
-  width: 0 !important;
-  height: 0 !important;
+	width: 0 !important;
+	height: 0 !important;
 }
-
-
-/*******************************
-           Variations
-*******************************/
-
-
-/*--------------
-    Alignment
----------------*/
 
 [class*="top aligned"].dimmer {
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+	-webkit-box-pack: start;
+	-ms-flex-pack: start;
+	justify-content: flex-start;
 }
+
 [class*="bottom aligned"].dimmer {
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+	-webkit-box-pack: end;
+	-ms-flex-pack: end;
+	justify-content: flex-end;
 }
 
 /*--------------
@@ -106,56 +94,61 @@
 ---------------*/
 
 .page.dimmer {
-  position: fixed;
-  -webkit-transform-style: '';
-          transform-style: '';
-  -webkit-perspective: 2000px;
-          perspective: 2000px;
-  -webkit-transform-origin: center center;
-          transform-origin: center center;
+	position: fixed;
+	-webkit-transform-style: '';
+	transform-style: '';
+	-webkit-perspective: 2000px;
+	perspective: 2000px;
+	-webkit-transform-origin: center center;
+	transform-origin: center center;
 }
+
 body.animating.in.dimmable,
 body.dimmed.dimmable {
-  overflow: hidden;
+	overflow: hidden;
 }
-body.dimmable > .dimmer {
-  position: fixed;
+
+body.dimmable>.dimmer {
+	position: fixed;
 }
 
 /*--------------
     Blurring
 ---------------*/
 
-.blurring.dimmable > :not(.dimmer) {
-  -webkit-filter: blur(0px) grayscale(0);
-          filter: blur(0px) grayscale(0);
-  -webkit-transition: 800ms -webkit-filter ease;
-  transition: 800ms -webkit-filter ease;
-  transition: 800ms filter ease;
-  transition: 800ms filter ease, 800ms -webkit-filter ease;
+.blurring.dimmable> :not(.dimmer) {
+	-webkit-filter: blur(0px) grayscale(0);
+	filter: blur(0px) grayscale(0);
+	-webkit-transition: 800ms -webkit-filter ease;
+	transition: 800ms -webkit-filter ease;
+	transition: 800ms filter ease;
+	transition: 800ms filter ease, 800ms -webkit-filter ease;
 }
-.blurring.dimmed.dimmable > :not(.dimmer) {
-  -webkit-filter: blur(5px) grayscale(0.7);
-          filter: blur(5px) grayscale(0.7);
+
+.blurring.dimmed.dimmable> :not(.dimmer) {
+	-webkit-filter: blur(5px) grayscale(0.7);
+	filter: blur(5px) grayscale(0.7);
 }
 
 /* Dimmer Color */
-.blurring.dimmable > .dimmer {
-  background-color: rgba(0, 0, 0, 0.6);
+.blurring.dimmable>.dimmer {
+	background-color: rgba(0, 0, 0, 0.6);
 }
-.blurring.dimmable > .inverted.dimmer {
-  background-color: rgba(255, 255, 255, 0.6);
+
+.blurring.dimmable>.inverted.dimmer {
+	background-color: rgba(255, 255, 255, 0.6);
 }
 
 /*--------------
     Aligned
 ---------------*/
 
-.dimmer > .top.aligned.content > * {
-  vertical-align: top;
+.dimmer>.top.aligned.content>* {
+	vertical-align: top;
 }
-.dimmer > .bottom.aligned.content > * {
-  vertical-align: bottom;
+
+.dimmer>.bottom.aligned.content>* {
+	vertical-align: bottom;
 }
 
 /*--------------
@@ -163,11 +156,13 @@ body.dimmable > .dimmer {
 ---------------*/
 
 .inverted.dimmer {
-  background-color: rgba(255, 255, 255, 0.85);
+	background-color: rgba(255, 255, 255, 0.85);
 }
-.inverted.dimmer > .content {
-    display: contents;
+
+.inverted.dimmer>.content {
+	display: contents;
 }
-.inverted.dimmer > .content > * {
-  color: #33353F;
+
+.inverted.dimmer>.content>* {
+	color: #33353F;
 }

@@ -1,7 +1,7 @@
 * {
-    &:focus {
-       outline:none;
-    }
+	&:focus {
+		outline: none;
+	}
 }
 
 * {
@@ -17,13 +17,15 @@ body {
 	background-color: #fff;
 }
 
-body,ul,li {
-    margin:0;
-    padding:0;
+body,
+ul,
+li {
+	margin: 0;
+	padding: 0;
 }
 
 a {
-    text-decoration:none;
+	text-decoration: none;
 }
 
 button {
@@ -37,19 +39,20 @@ button {
 }
 
 li {
-    list-style-type:none;
+	list-style-type: none;
 }
 
-div,span {
-    &:focus {
-        outline: none;
-    }
+div,
+span {
+	&:focus {
+		outline: none;
+	}
 }
 
 [type="checkbox"],
 [type="radio"] {
 	box-sizing: border-box;
-  	padding: 0;
+	padding: 0;
 }
 
 button,
@@ -57,134 +60,142 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: sans-serif;
-  font-size: 100%;
-  margin: 0;
+	font-family: sans-serif;
+	font-size: 100%;
+	margin: 0;
 }
 
 .app-nav {
-    position: absolute;
-    z-index: 9999999;
-    right: 0px;
-    top: 0;
-    display: flex;
-    justify-content: flex-end;
-    background-color: $main-color;
-    width: 150px;
-    button {
-        background-color: transparent;
-        border: 0;
-        color: #fff;
-        font-family: 'icomoon';
-        src:  url('../fonts/iconmoon/icomoon.eot?h46e29');
-        src:  url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
-          url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
-          url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
-          url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
-        font-weight: normal;
-        font-style: normal;
-        font-size: .85em;
-        height: 30px;
-        width: 50px;
-        transition: background-color $speed;
+	position: absolute;
+	z-index: 9999999;
+	right: 0px;
+	top: 0;
+	display: flex;
+	justify-content: flex-end;
+	background-color: $main-color;
+	width: 150px;
 
-        &:hover {
-            background-color: #4258b5;
-        }
-        &.global-min {
-            &:before {
-                content: '\e913';
-            }
-        }
-        &.global-max {
-            font-size: 10px;
-            width: 40px;
-            &:before {
-                content: '\e926';
-            }
-        }
-        &.global-close {
-            &:before {
-                content: '\e911';
-            }
-        }
-    }
+	button {
+		background-color: transparent;
+		border: 0;
+		color: #fff;
+		font-family: 'icomoon';
+		src: url('../fonts/iconmoon/icomoon.eot?h46e29');
+		src: url('../fonts/iconmoon/icomoon.eot?h46e29#iefix') format('embedded-opentype'),
+			url('../fonts/iconmoon/icomoon.ttf?h46e29') format('truetype'),
+			url('../fonts/iconmoon/icomoon.woff?h46e29') format('woff'),
+			url('../fonts/iconmoon/icomoon.svg?h46e29#icomoon') format('svg');
+		font-weight: normal;
+		font-style: normal;
+		font-size: .85em;
+		height: 30px;
+		width: 50px;
+		transition: background-color $speed;
+
+		&:hover {
+			background-color: #4258b5;
+		}
+
+		&.global-min {
+			&:before {
+				content: '\e913';
+			}
+		}
+
+		&.global-max {
+			font-size: 10px;
+			width: 40px;
+
+			&:before {
+				content: '\e926';
+			}
+		}
+
+		&.global-close {
+			&:before {
+				content: '\e911';
+			}
+		}
+	}
 }
 
-.mobile body{
+.mobile body {
 	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.tablet body{
+.tablet body {
 	-webkit-overflow-scrolling: touch;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .ios input,
-.ios textarea{
+.ios textarea {
 	-webkit-appearance: none;
 	border-radius: 0;
 }
 
 .hidden {
-    display: none;
+	display: none;
 }
 
 .pointer {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .global-wrapper {
-    padding-top: 30px;
+	padding-top: 30px;
 }
 
 .wrapper {
 	display: flex;
 	min-height: calc(100vh - 30px);
 	flex-direction: column;
-}
 
-.content {
-	flex: 1;
+	&>.content {
+		flex: 1;
+	}
 }
 
 .link {
-    color: $main-color;
-    transition: color $speed;
+	color: $main-color;
+	transition: color $speed;
 	white-space: nowrap;
-	
-    &:hover {
-        color: $main-color;
-    }
-    &:focus {
-        text-decoration: underline;
-    }
-    &.main-link {
-        color: $main-color;
-    }
-    &.disabled {
-      pointer-events: none;
-    }
+
+	&:hover {
+		color: $main-color;
+	}
+
+	&:focus {
+		text-decoration: underline;
+	}
+
+	&.main-link {
+		color: $main-color;
+	}
+
+	&.disabled {
+		pointer-events: none;
+	}
 }
 
 .external-link {
-    color: #5267C6;
-    font-size: 13px;
-    display: inline-flex;
-    align-items: center;
-    height: 14px;
+	color: #5267C6;
+	font-size: 13px;
+	display: inline-flex;
+	align-items: center;
+	height: 14px;
 
-    img {
-        min-width: 14px;
-        width: 14px;
-        height: 14px;
-        margin-right: 5px;
-    }
+	img {
+		min-width: 14px;
+		width: 14px;
+		height: 14px;
+		margin-right: 5px;
+	}
 
-    span {
-        line-height: 0;
-    }
+	span {
+		line-height: 0;
+	}
 }
 
 .t-center {
@@ -194,18 +205,29 @@ textarea {
 // ANIMATIONS
 
 @keyframes rotating {
-    from {
-        -ms-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    to {
-        -ms-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
+	from {
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	to {
+		-ms-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }

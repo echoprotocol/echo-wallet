@@ -16,6 +16,7 @@ class SourceCode extends React.Component {
 		this.state = {
 			timeout: null,
 			isDropdownUpdward: false,
+			isAceError: false,
 		};
 	}
 
@@ -30,9 +31,9 @@ class SourceCode extends React.Component {
 	}
 
 	onEditorLoad(editor) {
-		editor.setOptions({
-			fontSize: '15px',
-		});
+
+		editor.renderer.setScrollMargin(16, 14);
+		editor.renderer.setPadding(22);
 	}
 
 	onChange(value) {
@@ -43,11 +44,16 @@ class SourceCode extends React.Component {
 
 		if (!value) {
 			this.props.resetCompiler();
+			this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', false);
 			return;
 		}
+
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', false);
+
 		if (form.get('code').value === value) {
 			return;
 		}
+
 
 		if (value) {
 			setTimeout(() => {
@@ -58,6 +64,9 @@ class SourceCode extends React.Component {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
+
+		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'editorWorker', true);
+
 
 		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		this.setState({
@@ -129,14 +138,27 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form } = this.props;
-		const { isDropdownUpdward } = this.state;
+		const { isDropdownUpdward, isAceError } = this.state;
+
 		return (
 			<React.Fragment>
-				<div className={classnames(['editor-wrap error-wrap',
-					{ error: !!form.get('code').error },
-					{ loading: form.get('compileLoading') }])}
+				<div className={classnames(
+					'editor-wrap',
+					{ loading: form.get('compileLoading') },
+					{ warning: form.get('editorWorker') && !form.get('compileLoading') },
+				)}
+
 				>
 					<div className="editor-label">CODE EDITOR</div>
+					{
+						form.get('code').error && (
+							<button
+								onMouseEnter={() => { this.setState({ isAceError: true }); }}
+								onMouseLeave={() => { this.setState({ isAceError: false }); }}
+								className="ace-warning"
+							/>
+						)
+					}
 					<AceEditor
 						className="editor"
 						width="100%"
@@ -150,14 +172,19 @@ class SourceCode extends React.Component {
 						style={{
 							borderRadius: '4px',
 							borderColor: '#DDDDDD',
+							fontSize: '15px',
 						}}
 						onChange={(value) => this.onChange(value)}
 						value={form.get('code').value}
-						setOptions={{
-							useWorker: false,
-						}}
+						annotations={
+							form.get('editorWorker') && !form.get('compileLoading')
+								? form.get('annotations') : null
+						}
 					/>
-					{form.get('code').error && <span className="error-message">{form.get('code').error}</span>}
+					{
+						isAceError && form.get('code').error && <div className="ace-error">{form.get('code').error}</div>
+					}
+
 				</div>
 				<div className="fields">
 					<div className="field">
@@ -189,6 +216,7 @@ class SourceCode extends React.Component {
 						/>
 					</div>
 				</div>
+
 			</React.Fragment>
 		);
 	}
