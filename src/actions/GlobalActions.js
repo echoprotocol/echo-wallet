@@ -61,7 +61,6 @@ export const setAccounts = () => (async () => {
 	const accounts =
 		await Promise.all(storageAccounts.map(({ name }) =>
 			Services.getEcho().remote.api.getAccountByName(name)));
-	console.log('accounts111', accounts);
 	await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, 'qwe123QWE123');
 
 	const chainToken = await userStorage.getChainToken();
@@ -78,7 +77,6 @@ export const setAccounts = () => (async () => {
 	}));
 
 	const accountsKeysResults = await Promise.all(keyPromises);
-	console.log('accountsKeysResults', accountsKeysResults);
 	const accountsKeys = [];
 
 	accountsKeysResults.forEach((accountKeysArr) => {
@@ -87,7 +85,6 @@ export const setAccounts = () => (async () => {
 		});
 	});
 
-	console.log('setOptions', accountsKeys, networkId, chainToken);
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
 });
