@@ -171,7 +171,6 @@ class SignUp extends React.Component {
 			location, loading, signupOptionsForm, accounts,
 		} = this.props;
 
-		// const { isParentDisabled } = this.state;
 		const { isAddAccount } = qs.parse(location.search);
 
 		const check = signupOptionsForm.get('optionType');
