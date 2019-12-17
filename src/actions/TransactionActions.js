@@ -642,33 +642,23 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 		return ADDRESS_SUBJECT_TYPE;
 
 	} else if (validators.isContractId(value)) {
-		console.log('11111111')
 		const contract = await echo.api.getContract(value);
-		console.log('2222222')
 
 		if (!contract) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid contract ID'));
 			return false;
 		}
-		console.log('333333')
 
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', CONTRACT_ID_SUBJECT_TYPE));
-		console.log('444444')
-
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
 			error: null,
 		}));
-		console.log('555555555555')
 
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
-		console.log('666666666')
 
 		await dispatch(setAdditionalAccountInfo(''));
-		console.log('77777777')
-
 		return CONTRACT_ID_SUBJECT_TYPE;
-		console.log('88888888')
 
 	} else if (validators.isAccountId(value)) {
 		const account = await echo.api.getObject(value);
@@ -684,7 +674,6 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
 		await dispatch(setAdditionalAccountInfo(value));
 	}
-	console.log('9999999')
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
 	return dispatch(checkAccount(value, 'to'));
