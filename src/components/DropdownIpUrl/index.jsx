@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { injectIntl } from 'react-intl';
 
 class DropdownIpUrl extends React.Component {
 
@@ -50,7 +49,7 @@ class DropdownIpUrl extends React.Component {
 	render() {
 		const { searchText } = this.state;
 
-		const { status, intl } = this.props;
+		const { status } = this.props;
 
 		const options = [
 			{
@@ -94,11 +93,10 @@ class DropdownIpUrl extends React.Component {
 
 DropdownIpUrl.propTypes = {
 	status: PropTypes.string,
-	intl: PropTypes.any.isRequired,
 };
 
 DropdownIpUrl.defaultProps = {
 	status: '',
 };
 
-export default injectIntl(DropdownIpUrl);
+export default DropdownIpUrl;

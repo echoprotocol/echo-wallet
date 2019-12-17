@@ -94,7 +94,6 @@ class AccountField extends React.Component {
 			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
-		console.log(additionalAccountInfo)
 		const additionalLabel = showAdditionalAccountInfo && !field.error &&
 			<div className="account-name">
 				{additionalAccountInfo.prefix &&
