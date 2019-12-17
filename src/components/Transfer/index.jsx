@@ -10,6 +10,7 @@ import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 import BytecodeField from '../Fields/BytecodeField';
 import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
+import { STABLE_COINS } from '../../constants/SidechainConstants';
 
 class Transfer extends React.Component {
 
@@ -40,14 +41,49 @@ class Transfer extends React.Component {
 		}
 	}
 
+	getAssets() {
+		const { assets, activeCoinTypeTab } = this.props;
+
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EBTC);
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EETH);
+		}
+
+		return assets;
+	}
+
+	getTokens() {
+		const { tokens, activeCoinTypeTab, subjectTransferType } = this.props;
+
+		if (subjectTransferType === CONTRACT_ID_SUBJECT_TYPE || activeCoinTypeTab) {
+			return new List([]);
+		}
+
+		return tokens;
+	}
+
+	getToPlaceholder() {
+		const { activeCoinTypeTab } = this.props;
+
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return 'BTC address';
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return 'ETH address';
+		}
+
+		return 'Account ID, Account Name, Contract ID or Address';
+	}
+
 	async subjectToSendSwitch(subject) {
 		const { amount, fee } = this.props;
-		const isValid = await this.props.subjectToSendSwitch(subject);
-		if (isValid && amount.value && !fee.amount) {
+		if (amount.value && !fee.amount) {
 			this.props.getTransferFee().then((resFee) => resFee && this.props.setValue('fee', resFee));
-		} else if (!isValid || !amount.value) {
+		} else if (!amount.value) {
 			this.switchFeeToDefaultValue();
 		}
+
+		return this.props.subjectToSendSwitch(subject);
 	}
 
 	switchFeeToDefaultValue() {
@@ -60,9 +96,8 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			from, to, currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
-			subjectTransferType, additionalAccountInfo, keyWeightWarn,
+			from, to, currency, additionalAccountInfo, keyWeightWarn,
+			fee, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 
@@ -93,6 +128,7 @@ class Transfer extends React.Component {
 									subject="to"
 									field={to}
 									avatarName={avatarName}
+									activeCoinTypeTab={this.props.activeCoinTypeTab}
 									autoFocus
 									subjectToSendSwitch={(value) => this.subjectToSendSwitch(value)}
 									setTransferFee={this.props.setTransferFee}
@@ -102,6 +138,7 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
+									placeholder={this.getToPlaceholder()}
 								/>
 								{
 									bytecodeVisible &&
@@ -115,8 +152,8 @@ class Transfer extends React.Component {
 									fees={fees}
 									form={FORM_TRANSFER}
 									fee={fee}
-									assets={assets}
-									tokens={subjectTransferType === CONTRACT_ID_SUBJECT_TYPE ? new List([]) : tokens}
+									assets={this.getAssets()}
+									tokens={this.getTokens()}
 									amount={amount}
 									currency={currency}
 									isAvailableBalance={isAvailableBalance}
@@ -129,6 +166,7 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setTransferFee={this.props.setTransferFee}
 									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
+									activeCoinTypeTab={this.props.activeCoinTypeTab}
 								/>
 								<div className="form-panel">
 									<Button
@@ -159,6 +197,7 @@ Transfer.propTypes = {
 	subjectTransferType: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	activeCoinTypeTab: PropTypes.any,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
@@ -186,6 +225,7 @@ Transfer.propTypes = {
 Transfer.defaultProps = {
 	currency: null,
 	isDisplaySidechainNotification: false,
+	activeCoinTypeTab: 0,
 	additionalAccountInfo: '',
 };
 

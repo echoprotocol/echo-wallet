@@ -3,6 +3,7 @@ import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
+import FocusLock from 'react-focus-lock';
 
 import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
@@ -67,29 +68,28 @@ class ModalBalcklist extends React.Component {
 
 		return (
 			<Modal className="whitelist-modal" open={show} dimmer="inverted">
-				<span
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
-				/>
-				<div className="modal-header">
-					<h3 className="modal-header-title">Blacklist</h3>
-				</div>
-				<div className="modal-body">
-					<div className="segments">
-						{this.renderList()}
+				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">Blacklist</h2>
 					</div>
-					<div className="form-panel">
-						{ owner === activeUser && <Button
-							className="main-btn"
-							content="Add account"
-							onClick={(e) => this.onOpenAddModal(e)}
-							disabled={keyWeightWarn}
-						/>}
+					<div className="modal-body">
+						<div className="segments">
+							{this.renderList()}
+						</div>
+						<div className="form-panel">
+							{ owner === activeUser && <Button
+								className="main-btn"
+								content="Add account"
+								onClick={(e) => this.onOpenAddModal(e)}
+								disabled={keyWeightWarn}
+							/>}
+						</div>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}

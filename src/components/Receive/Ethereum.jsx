@@ -71,11 +71,6 @@ class Ethereum extends React.Component {
 					showAvailable={false}
 					receive
 					labelText="amount"
-					warningMessage={
-						<span className="warning-message">
-							Send eETH to <span className="special">Original Blockchain</span> to get ETH or send it within ECHO Network.
-						</span>
-					}
 				/>
 				<QrCode link={qrText} />
 			</React.Fragment>

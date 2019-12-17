@@ -82,11 +82,6 @@ class Bitcoin extends React.Component {
 					assetDropdown={false}
 					showAvailable={false}
 					labelText="amount"
-					warningMessage={
-						<span className="warning-message">
-							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
-						</span>
-					}
 				/>
 				{
 					accountName && address && amount ?

@@ -1,0 +1,54 @@
+.confirm-transaction {
+	@include modal-wrap();
+
+	.modal-header {
+		@include modal-header();
+	}
+
+	.modal-header-title {
+		@include modal-header-title();
+	}
+
+	.modal-body {
+		@include modal-body();
+	}
+
+	.field-block-title {
+		display: flex;
+		justify-content: space-between;
+		min-height: 20px;
+		color: #adb1be;
+		font-size: 0.75857143em;
+		font-family: proxima;
+		font-weight: 600;
+		text-transform: uppercase;
+		margin: 0;
+	}
+
+	.field-block-edit {
+		line-height: 1.21428571em;
+		padding: 0.67857143em 14px;
+		font-size: 14px;
+		background-color: #fff;
+		border: 1px solid #dddddd;
+		color: rgba(0, 0, 0, 0.87);
+		border-radius: 4px;
+		background-color: rgba(233, 233, 237, 0.5);
+		transition: background-color 0.3s;
+
+		span::-webkit-selection {
+			background-color: rgba(100, 100, 100, 0.4);
+			color: rgba(0, 0, 0, 0.87);
+		}
+
+		span::-moz-selection {
+			background-color: rgba(100, 100, 100, 0.4);
+			color: rgba(0, 0, 0, 0.87);
+		}
+
+		span::selection {
+			background-color: rgba(100, 100, 100, 0.4);
+			color: rgba(0, 0, 0, 0.87);
+		}
+	}
+}

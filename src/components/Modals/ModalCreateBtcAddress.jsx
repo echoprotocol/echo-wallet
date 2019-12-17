@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 import { generateBtcAddress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
-import { isBackupAddress } from '../../helpers/ValidateHelper';
+import { isBackupAddress } from '../../helpers/SidechainHelper';
 
 class ModalCreateBtcAddress extends React.Component {
 
@@ -60,9 +60,9 @@ class ModalCreateBtcAddress extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Create BTC address</h3>
+									<h2 className="modal-header-title">Create BTC address</h2>
 								</div>
-								<Form className="modal-body">
+								<form className="modal-body">
 									<div className="info-text">
 											To create your new BTC Address, please,
 											provide your external backup BTC address.
@@ -70,7 +70,7 @@ class ModalCreateBtcAddress extends React.Component {
 											ECHO network during the first 24 hours after the transaction being made.
 									</div>
 
-									<Form.Field className={classnames('error-wrap', { error: !!error })}>
+									<div className={classnames('field error-wrap', { error: !!error })}>
 										<label htmlFor="address">Backup address</label>
 										<input
 											type="text"
@@ -83,9 +83,9 @@ class ModalCreateBtcAddress extends React.Component {
 											<span className="error-message">{error}</span>
 										}
 										<span className="warning-message">
-												Submit your backup BTC address above.
+											Submit your backup BTC address above.
 										</span>
-									</Form.Field>
+									</div>
 									<div className="form-panel">
 										<Button
 											className="main-btn countdown-wrap"
@@ -95,7 +95,7 @@ class ModalCreateBtcAddress extends React.Component {
 											}}
 										/>
 									</div>
-								</Form>
+								</form>
 							</FocusLock>
 						</Modal>)
 				}
