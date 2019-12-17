@@ -14,11 +14,7 @@
 	}
 
 	.info-text {
-		font-size: 15px;
-		font-weight: 500;
-		line-height: 22px;
-		color: rgba(#3B3B3B, .8);
-		text-align: center;
+		@include info-text();
 		padding: 0 10px;
 		margin-top: 6px;
 	}

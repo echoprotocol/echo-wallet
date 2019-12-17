@@ -1,52 +1,59 @@
 .#{$rt-namespace}__toast {
-    position: relative;
-    box-sizing: border-box;
-    margin-bottom: 1rem;
-    padding: 15px 15px;
-    border-radius: 1px;
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .1), 0 2px 15px 0 rgba(0, 0, 0, .05);
-    display: flex;
-    justify-content: space-between;
-    max-height: $rt-toast-max-height;
-    max-width: 450px;
-    overflow: hidden;
-    font-family: $rt-font-family;
-    border-radius: $angulars;
-    cursor: pointer;
-    direction: ltr;
-    &--rtl {
-        direction: rtl;
-    }
-    &--default {
-        background: $rt-color-default;
-        color: #aaa;
-    }
-    &--info {
-        background: $rt-color-info;
-    }
-    &--success {
-        background: $lbl-green
-    }
-    &--warning {
-        background: $rt-color-warning;
-    }
-    &--error {
-        background: $rt-color-error;
-    }
-    &-body {
-        margin: 0 40px 0 0;
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
+	position: relative;
+	box-sizing: border-box;
+	margin-bottom: 1rem;
+	padding: 15px 15px;
+	border-radius: 1px;
+	box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .1), 0 2px 15px 0 rgba(0, 0, 0, .05);
+	display: flex;
+	justify-content: space-between;
+	max-height: $rt-toast-max-height;
+	max-width: 450px;
+	overflow: hidden;
+	font-family: $rt-font-family;
+	border-radius: $angulars;
+	cursor: pointer;
+	direction: ltr;
 
-    }
+	&--rtl {
+		direction: rtl;
+	}
+
+	&--default {
+		background: $rt-color-default;
+		color: #aaa;
+	}
+
+	&--info {
+		background: $rt-color-info;
+	}
+
+	&--success {
+		background: $lbl-green
+	}
+
+	&--warning {
+		background: $rt-color-warning;
+	}
+
+	&--error {
+		background: $rt-color-error;
+	}
+
+	&-body {
+		margin: 0 14px 0 0;
+		flex: 1;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+	}
 }
 
 @media #{$rt-mobile} {
-  .#{$rt-namespace}__toast{
-    margin-bottom: 0;  
-  }
+	.#{$rt-namespace}__toast {
+		margin-bottom: 0;
+	}
 }
 
 // CUSTOM
@@ -54,16 +61,19 @@
 
 	.toast-icon {
 		margin-top: 2px;
-		& + .toast-text {
-            margin-left: 10px;
-        }
+
+		&+.toast-text {
+			margin-left: 10px;
+		}
 	}
+
 	.toast-text {
 		max-width: 320px;
 		display: block;
 		margin-right: auto;
 	}
-	.toast-text + .black-btn {
+
+	.toast-text+.black-btn {
 		margin-left: 20px;
 	}
 
