@@ -11,7 +11,11 @@ import {
 	AUTH_ROUTES,
 	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
-import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
+import {
+	MODAL_WIPE,
+	MODAL_LOGOUT,
+	MODAL_ACCEPT_INCOMING_CONNECTIONS,
+} from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import {
 	ECHO_ASSET_ID,
@@ -43,9 +47,21 @@ import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable, formPermissionKeys } from './TableActions';
 import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
-import { closeModal, setError } from './ModalActions';
+import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+
+export const incomingConnectionsRequest = () => (dispatch) => {
+	let isFirst = localStorage.getItem('isFirstLaunch');
+
+	isFirst = isFirst ? JSON.parse(isFirst) : true;
+
+	if (isFirst) {
+		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
+	}
+
+	localStorage.setItem('isFirstLaunch', JSON.stringify(false));
+};
 
 /**
  *  @method setAccounts
@@ -198,6 +214,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
 		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
+
+		dispatch(incomingConnectionsRequest());
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
@@ -443,12 +461,6 @@ export const isAccountAdded = (accountName, networkName) => {
 	}
 
 	return null;
-};
-
-export const incomingConnectionsRequest = () => (dispatch) => {
-	let isFirst = localStorage.getItem('isFirstLaunch');
-
-	isFirst = isFirst ? JSON.parse(isFirst) : true;
 };
 
 export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
-import ModalApprove from '../../components/Modals/ModalDetails';
 
 import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE } from '../../constants/ModalConstants';
 
@@ -33,12 +32,6 @@ class UnlockScenario extends React.Component {
 	}
 
 	async submit() {
-		const isValid = await this.props.handleTransaction();
-
-		if (!isValid) {
-			return;
-		}
-
 		this.props.openModal(MODAL_UNLOCK);
 	}
 
@@ -95,7 +88,6 @@ class UnlockScenario extends React.Component {
 }
 
 UnlockScenario.propTypes = {
-	handleTransaction: PropTypes.func.isRequired,
 	onUnlock: PropTypes.func,
 	onSuccess: PropTypes.func,
 	children: PropTypes.func.isRequired,
