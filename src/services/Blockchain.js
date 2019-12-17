@@ -9,7 +9,8 @@ import {
 	DISCONNECT_STATUS,
 	REMOTE_NODE,
 	LOCAL_NODE,
-	CONNECT_STATUS, REGISTRATION,
+	CONNECT_STATUS,
+	REGISTRATION,
 } from '../constants/GlobalConstants';
 import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/ChainConstants';
 
