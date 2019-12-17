@@ -228,27 +228,30 @@
 		}
 	}
 
-	&:not(.stable-coins) {
-		li {
+	li {
 
-			&.focused,
-			&:hover {
-				background-color: #5267C6;
+		&.focused,
+		&:hover {
+			background-color: #5267C6;
+			color: #fff;
+
+			.remove-token {
+				width: 44px;
+			}
+
+			.frozen-value,
+			.currency-symbol {
+				color: $yellow;
+			}
+
+			.balance-item,
+			.currency-amount {
 				color: #fff;
+			}
 
-				.remove-token {
-					width: 44px;
-				}
-
-				.frozen-value,
-				.currency-symbol {
-					color: $yellow;
-				}
-
-				.balance-item,
-				.currency-amount {
-					color: #fff;
-				}
+			.tag {
+				color: #fff;
+				border-color: rgba(#fff, .4);
 			}
 		}
 	}

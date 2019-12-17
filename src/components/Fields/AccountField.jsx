@@ -16,12 +16,36 @@ class AccountField extends React.Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.activeCoinTypeTab !== this.props.activeCoinTypeTab && this.props.field.value) {
+			this.checkInput(this.props.field.value);
+		}
+	}
+
 	onInput(value) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
-		value = value.toLowerCase().trim();
 
+		const trimedValue = value.trim();
+
+		this.checkInput(trimedValue);
+	}
+
+	getStatus(field) {
+
+		if (field.error) {
+			return 'error';
+		}
+
+		if (field.checked) {
+			return 'checked';
+		}
+
+		return null;
+	}
+
+	checkInput(value) {
 		this.props.setIn(this.props.subject, {
 			loading: true,
 			error: null,
@@ -34,7 +58,11 @@ class AccountField extends React.Component {
 				if (this.props.subject === 'to') {
 					const validValue =
 						await this.props.subjectToSendSwitch(this.props.field.value);
-					if (!validValue) return;
+
+					if (!validValue) {
+						this.props.setVisibility('bytecode', false);
+						return;
+					}
 
 					if (validValue === CONTRACT_ID_SUBJECT_TYPE) {
 						this.props.setVisibility('bytecode', true);
@@ -59,19 +87,6 @@ class AccountField extends React.Component {
 		});
 	}
 
-	getStatus(field) {
-
-		if (field.error) {
-			return 'error';
-		}
-
-		if (field.checked) {
-			return 'checked';
-		}
-
-		return null;
-	}
-
 	isAvatar() {
 		const { field, subject, avatarName } = this.props;
 
@@ -89,7 +104,7 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName,
+			field, autoFocus, subject,	disabled, avatarName, placeholder,
 			showAdditionalAccountInfo, additionalAccountInfo,
 		} = this.props;
 
@@ -116,9 +131,7 @@ class AccountField extends React.Component {
 				status={this.getStatus(field, disabled)}
 				error={field.error}
 				loading={field.loading && !field.error}
-				placeholder={subject === 'to' ?
-					'Account ID, Account Name, Contract ID or Address' :
-					'Account Name'}
+				placeholder={subject === 'to' ? placeholder : 'Account Name'}
 			/>
 		);
 	}
@@ -130,8 +143,10 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	additionalAccountInfo: PropTypes.string,
 	avatarName: PropTypes.string,
+	placeholder: PropTypes.string,
+	activeCoinTypeTab: PropTypes.any,
+	additionalAccountInfo: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,
@@ -142,7 +157,6 @@ AccountField.propTypes = {
 	setVisibility: PropTypes.func,
 	disabled: PropTypes.bool,
 	showAdditionalAccountInfo: PropTypes.bool,
-
 };
 
 AccountField.defaultProps = {
@@ -154,8 +168,10 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
+	activeCoinTypeTab: '',
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
+	placeholder: '',
 };
 
 export default AccountField;
