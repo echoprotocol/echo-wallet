@@ -35,7 +35,9 @@ class Ethereum extends React.Component {
 		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
 
-		const qrText = `ethereum:0x${address}?value=${value}`;
+		const addressWithPrefix = `0x${address}`;
+
+		const qrText = `ethereum:${addressWithPrefix}?value=${value}`;
 
 		return (
 			<React.Fragment>
@@ -48,11 +50,11 @@ class Ethereum extends React.Component {
 							placeholder="Public Key"
 							readOnly
 							name="public-key"
-							value={address}
+							value={addressWithPrefix}
 						/>
 						<ActionBtn
 							icon="icon-copy"
-							copy={address}
+							copy={addressWithPrefix}
 						/>
 					</div>
 				</Form.Field>

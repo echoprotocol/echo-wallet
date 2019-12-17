@@ -10,6 +10,7 @@ function IpUrlPanel(props) {
 	const {
 		loading,
 		signupOptionsForm,
+		setValue,
 		setFormValue,
 		remoteRegistrationAddresses,
 		validateAndSetIpOrUrl,
@@ -29,6 +30,7 @@ function IpUrlPanel(props) {
 					signupOptionsForm={signupOptionsForm}
 					remoteRegistrationAddresses={remoteRegistrationAddresses}
 					setFormValue={setFormValue}
+					setValue={setValue}
 					validateAndSetIpOrUrl={validateAndSetIpOrUrl}
 				/>
 				{
@@ -52,6 +54,7 @@ function IpUrlPanel(props) {
 IpUrlPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	saveRemoteAddress: PropTypes.func.isRequired,
 	hideSaveAddressTooltip: PropTypes.func.isRequired,
 	validateAndSetIpOrUrl: PropTypes.func.isRequired,

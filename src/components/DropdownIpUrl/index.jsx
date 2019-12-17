@@ -18,17 +18,32 @@ class DropdownIpUrl extends React.Component {
 		const { value } = e.target;
 		this.setIsOptionsEmpty(value);
 		this.validateAndSetIpOrUrl(value);
+		this.openDropdown();
 	}
 
 	onDropdownChange(e, value) {
 		this.setIsOptionsEmpty(value);
 		this.validateAndSetIpOrUrl(value);
+		this.closeDropdown();
+	}
+
+	onFocus(value) {
+		this.setIsOptionsEmpty(value);
+		this.openDropdown();
 	}
 
 	setIsOptionsEmpty(value) {
 		const options = this.props.remoteRegistrationAddresses;
 		const res = options.filter(({ address }) => address.match(value) && address !== value);
 		this.setState({ isDropdownEmpty: res.size === 0 });
+	}
+
+	openDropdown() {
+		this.props.setValue('showSavedAddressesDropdown', true);
+	}
+
+	closeDropdown() {
+		this.props.setValue('showSavedAddressesDropdown', false);
 	}
 
 	validateAndSetIpOrUrl(value) {
@@ -72,15 +87,17 @@ class DropdownIpUrl extends React.Component {
 		const { isDropdownEmpty } = this.state;
 
 		const ipOrUrl = signupOptionsForm.get('ipOrUrl');
+		const open = signupOptionsForm.get('showSavedAddressesDropdown');
 
 		return (
 			<React.Fragment>
 				<Dropdown
+					open={open}
 					floating
 					search={() => this.renderList()}
 					fluid
-					openOnFocus
 					selection
+					selectOnBlur={false}
 					disabled={loading}
 					className={classnames('ip-url-dropdown', { 'empty-search': isDropdownEmpty })}
 					searchQuery={ipOrUrl.value}
@@ -89,6 +106,8 @@ class DropdownIpUrl extends React.Component {
 					onChange={(e, { value }) => this.onDropdownChange(e, value)}
 					text={ipOrUrl.value}
 					options={this.renderList()}
+					onBlur={() => this.closeDropdown()}
+					onFocus={() => this.onFocus(ipOrUrl.value)}
 					noResultsMessage={null}
 				/>
 				{
@@ -105,6 +124,7 @@ DropdownIpUrl.propTypes = {
 	status: PropTypes.string.isRequired,
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
 	validateAndSetIpOrUrl: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
 	remoteRegistrationAddresses: PropTypes.object.isRequired,
