@@ -504,13 +504,10 @@ class Blockchain {
 	 */
 	setOptions(accounts = [], networkId, chainToken) {
 
-		console.log('dazaebalo1');
 		if (!ipcRenderer) {
-			console.log('dazaebalo2');
 			return false;
 		}
 
-		console.log('dazaebalo3', accounts, networkId, chainToken);
 		ipcRenderer.send('startNode', { accounts, networkId, chainToken });
 
 		return true;

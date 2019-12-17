@@ -21,11 +21,10 @@ class EchoNode {
 	 * @return {Promise.<*>}
 	 */
 	async start(params, accounts = [], chainToken) {
-		console.log('start111');
 
-		const execPath = process.env.NODE_ENV === 'production' ? joinPath(dirname(appRootDir.get()), 'bin') : joinPath(appRootDir.get(), 'resources', getPlatform(), 'bin');
+		const execPath = joinPath(dirname(appRootDir.get()), 'echo-wallet/resources', getPlatform(), 'bin');
 
-		console.log(1);
+		console.log(execPath);
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
@@ -40,7 +39,6 @@ class EchoNode {
 
 			});
 		});
-		console.log(2);
 
 		let bytes = null;
 
@@ -55,7 +53,6 @@ class EchoNode {
 				});
 			});
 
-			console.log(3);
 			await new Promise((resolve, reject) => {
 				fs.unlink(keyConfigPath, (err) => {
 					if (err) {
@@ -65,13 +62,11 @@ class EchoNode {
 					return resolve();
 				});
 			});
-			console.log(4);
 
 		}
 
 		await mkdirp(dirname(keyConfigPath));
 
-		console.log(5);
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
@@ -87,10 +82,8 @@ class EchoNode {
 			}
 		}
 
-		console.log(6);
 		const child = this.spawn(binPath, params, chainToken);
 
-		console.log(7);
 		this.child = child;
 
 		return child;
