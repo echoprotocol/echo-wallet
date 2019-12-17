@@ -3,6 +3,7 @@ import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
 import Avatar from '../Avatar';
@@ -81,7 +82,9 @@ class ModalDetails extends React.Component {
 	}
 
 	render() {
-		const { showOptions, show, disabled } = this.props;
+		const {
+			showOptions, show, disabled, intl,
+		} = this.props;
 
 		return (
 			<Modal className="confirm-transaction" open={show}>
@@ -91,7 +94,9 @@ class ModalDetails extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h2 className="modal-header-title">Confirm transaction</h2>
+						<h2 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_details.title' })}
+						</h2>
 					</div>
 					<div className="modal-body">
 						<form className="form main-form">
@@ -102,7 +107,7 @@ class ModalDetails extends React.Component {
 								<Button
 									className="main-btn"
 									onClick={() => this.onClose()}
-									content="Cancel"
+									content={intl.formatMessage({ id: 'modals.modal_details.close_button_text' })}
 								/>
 								<Button
 									autoFocus
@@ -110,7 +115,7 @@ class ModalDetails extends React.Component {
 									className="main-btn"
 									onClick={() => this.onConfirm()}
 									disabled={disabled}
-									content="Confirm"
+									content={intl.formatMessage({ id: 'modals.modal_details.confirm_button_text' })}
 								/>
 							</div>
 						</form>
@@ -129,6 +134,7 @@ ModalDetails.propTypes = {
 	operation: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	send: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalDetails.defaultProps = {
@@ -138,4 +144,4 @@ ModalDetails.defaultProps = {
 	operation: '',
 };
 
-export default ModalDetails;
+export default injectIntl(ModalDetails);

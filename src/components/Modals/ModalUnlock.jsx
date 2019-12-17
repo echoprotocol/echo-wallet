@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import FocusLock from 'react-focus-lock';
 import PasswordInput from '../PasswordInput';
 
@@ -35,7 +36,7 @@ class ModalUnlockWallet extends React.Component {
 
 	render() {
 		const {
-			show, error, disabled,
+			show, error, disabled, intl,
 		} = this.props;
 		const { password } = this.state;
 		return (
@@ -50,13 +51,15 @@ class ModalUnlockWallet extends React.Component {
 						<div className="modal-body">
 							<Form className="main-form">
 								<div className="form-info">
-									<h3>Unlock Wallet</h3>
+									<h3>
+										{intl.formatMessage({ id: 'modals.modal_unlock.title' })}
+									</h3>
 								</div>
 								<div className="field-wrap">
 									<PasswordInput
 										errorMessage={error}
-										inputLabel="Password"
-										inputPlaceholder="Password"
+										inputLabel={intl.formatMessage({ id: 'modals.modal_unlock.password_input.title' })}
+										inputPlaceholder={intl.formatMessage({ id: 'modals.modal_unlock.password_input.placeholder' })}
 										inputName="password"
 										value={password}
 										onChange={(e) => this.onChange(e)}
@@ -72,14 +75,14 @@ class ModalUnlockWallet extends React.Component {
 										onKeyPress={(e) => this.onForgot(e)}
 										tabIndex="0"
 									>
-											Forgot password?
+										{intl.formatMessage({ id: 'modals.modal_unlock.forgot_password_link' })}
 									</a>
 									<Button
 										type="submit"
 										className="main-btn"
 										onClick={(e) => this.onSuccess(e)}
 										disabled={disabled}
-										content="Unlock Wallet"
+										content={intl.formatMessage({ id: 'modals.modal_unlock.confirm_button_text' })}
 									/>
 								</div>
 							</Form>
@@ -100,6 +103,7 @@ ModalUnlockWallet.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalUnlockWallet.defaultProps = {
@@ -108,4 +112,4 @@ ModalUnlockWallet.defaultProps = {
 	error: null,
 };
 
-export default ModalUnlockWallet;
+export default injectIntl(ModalUnlockWallet);

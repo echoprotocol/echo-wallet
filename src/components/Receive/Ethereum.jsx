@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import BN from 'bignumber.js';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 
@@ -23,8 +23,7 @@ class Ethereum extends React.Component {
 	}
 
 	renderPayment() {
-
-		const { ethAddress, amount } = this.props;
+		const { ethAddress, amount, intl } = this.props;
 
 		const ethCurrency = {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
@@ -37,6 +36,16 @@ class Ethereum extends React.Component {
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
 
 		const qrText = `ethereum:0x${address}?value=${value}`;
+
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
 
 		return (
 			<React.Fragment>
@@ -75,7 +84,7 @@ class Ethereum extends React.Component {
 					assetDropdown={false}
 					showAvailable={false}
 					receive
-					labelText="amount"
+					texts={amountTexts}
 					warningMessage={
 						<span className="warning-message">
 							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt1" />
@@ -174,6 +183,7 @@ Ethereum.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default Ethereum;
+export default injectIntl(Ethereum);

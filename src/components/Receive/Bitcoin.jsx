@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
@@ -38,8 +38,18 @@ class Bitcoin extends React.Component {
 	renderPayment() {
 
 		const {
-			amount, accountName, btcAddress,
+			amount, accountName, btcAddress, intl,
 		} = this.props;
+
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
 
 		const address = btcAddress.getIn(['deposit_address', 'address']);
 
@@ -86,7 +96,7 @@ class Bitcoin extends React.Component {
 					setContractFees={() => {}}
 					assetDropdown={false}
 					showAvailable={false}
-					labelText="amount"
+					texts={amountTexts}
 					warningMessage={
 						<span className="warning-message">
 							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt1" />
@@ -174,6 +184,7 @@ Bitcoin.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
+	intl: PropTypes.any.isRequired,
 };
 
 Bitcoin.defaultProps = {
@@ -181,4 +192,4 @@ Bitcoin.defaultProps = {
 };
 
 
-export default Bitcoin;
+export default injectIntl(Bitcoin);

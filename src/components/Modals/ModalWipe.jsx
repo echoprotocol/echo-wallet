@@ -3,6 +3,7 @@ import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { MODAL_WIPE } from '../../constants/ModalConstants';
 
@@ -32,7 +33,7 @@ class ModalWipeWallet extends React.Component {
 
 	render() {
 		const {
-			show, loading,
+			show, loading, intl,
 		} = this.props;
 
 		const { checked } = this.state;
@@ -49,12 +50,12 @@ class ModalWipeWallet extends React.Component {
 						<div className="modal-body">
 							<div className="main-form">
 								<div className="form-info">
-									<h3>Your password cannot be restored</h3>
+									<h3>
+										{intl.formatMessage({ id: 'modals.modal_wipe.title' })}
+									</h3>
 								</div>
 								<div className="form-info-description">
-										You can clear your account data from Echo Desktop and set a new password.
-										If you do, you wil lose access to the accounts you’ve logged into.
-										You will need to log into them again, after you have set a new password.
+									{intl.formatMessage({ id: 'modals.modal_wipe.text' })}
 								</div>
 								<div className="check-list">
 									<div className="check">
@@ -66,8 +67,7 @@ class ModalWipeWallet extends React.Component {
 										/>
 										<label className="label" htmlFor="wipe-agree">
 											<span className="label-text">
-													I understand the Echo Desktop does not store backups of my account keys,
-													and I will lose access to them  by clearing my account data
+												{intl.formatMessage({ id: 'modals.modal_wipe.checkbox_text' })}
 											</span>
 										</label>
 									</div>
@@ -76,7 +76,7 @@ class ModalWipeWallet extends React.Component {
 									<Button
 										type="submit"
 										className="main-btn"
-										content="Clear data"
+										content={intl.formatMessage({ id: 'modals.modal_wipe.confirm_button_text' })}
 										onClick={this.props.wipe}
 										disabled={loading || !checked}
 									/>
@@ -96,6 +96,7 @@ ModalWipeWallet.propTypes = {
 	loading: PropTypes.bool,
 	wipe: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalWipeWallet.defaultProps = {
@@ -103,7 +104,7 @@ ModalWipeWallet.defaultProps = {
 	loading: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_WIPE, 'show']),
 		loading: state.modal.getIn([MODAL_WIPE, 'loading']),
@@ -112,4 +113,4 @@ export default connect(
 		wipe: () => dispatch(resetData()),
 		close: () => dispatch(closeModal(MODAL_WIPE)),
 	}),
-)(ModalWipeWallet);
+)(ModalWipeWallet));

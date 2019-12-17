@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -37,7 +38,7 @@ class ModalToBlacklist extends React.Component {
 
 	render() {
 		const {
-			show, error,
+			show, error, intl,
 		} = this.props;
 
 		return (
@@ -53,14 +54,18 @@ class ModalToBlacklist extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Add account to blacklist</h3>
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_to_blacklist.title' })}
+									</h3>
 								</div>
 								<div className="modal-body">
 									<Form.Field className={classnames('error-wrap', { error: !!error })}>
-										<label htmlFor="account-name">Account name</label>
+										<label htmlFor="account-name">
+											{intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.title' })}
+										</label>
 										<input
 											type="text"
-											placeholder="Account name"
+											placeholder={intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.placeholder' })}
 											name="account-name"
 											onChange={(e) => this.onInputChange(e)}
 											autoFocus
@@ -72,7 +77,7 @@ class ModalToBlacklist extends React.Component {
 									<div className="form-panel">
 										<Button
 											className="main-btn"
-											content="Confirm"
+											content={intl.formatMessage({ id: 'modals.modal_to_blacklist.confirm_button_text' })}
 											onClick={() => {
 												this.onAdd(submit);
 											}}
@@ -94,6 +99,7 @@ ModalToBlacklist.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	addToBlackList: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalToBlacklist.defaultProps = {
@@ -101,7 +107,7 @@ ModalToBlacklist.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TO_BLACKLIST, 'show']),
 		error: state.modal.getIn([MODAL_TO_BLACKLIST, 'error']),
@@ -112,4 +118,4 @@ export default connect(
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_BLACKLIST)),
 		setError: (value) => dispatch(setError(MODAL_TO_BLACKLIST, value)),
 	}),
-)(ModalToBlacklist);
+)(ModalToBlacklist));

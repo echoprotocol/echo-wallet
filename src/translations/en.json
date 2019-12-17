@@ -113,7 +113,7 @@
             "title": "CREATE PAYMENT",
             "button_text": "Send",
             "additional_info_id": "Account ID: ",
-            "additional_info_name": "Account Name: ",
+            "additional_info_name": "Account name: ",
             "from_input": {
                 "title": "FROM",
                 "placeholder": "Account Name"
@@ -352,7 +352,7 @@
                 "add_account_to_list_button_text": "Add account",
                 "empty_list_info": "List is empty",
                 "empty_list_info_2": "(List is empty)",
-                "lists_members_text": "members",
+                "lists_members_text": " members",
                 "bytecode_placeholder": "Bytecode",
                 "abi_placeholder": "ABI"
             },
@@ -447,10 +447,6 @@
         },
         "agree_switch_checkbox": "Switch to this Network upon creating"
     },
-    "amount_input": {
-        "title": "Amount",
-        "available": "Available:"
-    },
     "footer": {
         "about_wallet": "About wallet",
         "network_section": {
@@ -478,41 +474,6 @@
             "title": "Remote Node",
             "synchronization": "Network synchronization",
             "popup_info": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
-        }
-    },
-    "copied_text": "Copied",
-    "toasts": {
-        "success": {
-            "trx_sent_postfix": " transaction was sent",
-            "trx_complete_postfix": " transaction was completed",
-            "network_was_added": " network added successfully!",
-            "token_was_added": "Token was successfully added",
-            "receive": {
-                "start": "You receive ",
-                "of": " of "
-            }
-        },
-        "errors": {
-            "trx_dont_complete_postfix": " transaction wasn't completed. ",
-            "trx_dont_comp_by_lose_connection": " transaction wasn't completed. Please, check your connection.",
-            "trx_error": "Transaction sending error",
-            "private_key_error": "Private key was not imported in Echo Desktop Wallet",
-            "token_invalid": "Invalid ERC20 token",
-            "token_already_exists": "Token already exists"
-        },
-        "info": {
-            "remove_network": {
-                "pt1": "You have removed ",
-                "pt2:": " from networks list"
-            },
-            "remove_id": {
-                "pt1": "You have removed ",
-                "pt2:": " from watch list"
-            },
-            "remove_name": {
-                "pt1": "You have removed ",
-                "pt2:": " from watch list"
-            }
         }
     },
     "modals": {
@@ -578,7 +539,200 @@
             "add_button_text": "Add Account",
             "remove_button_text": "Remove"
         },
-        "modal_change_parent_account": {}
+        "modal_change_parent_account": {
+            "title": "Change delegate",
+            "current_acc": "Current Account",
+            "delegated_to_dropdown": {
+                "title": "Delegated to",
+                "placeholder": "Delegated to"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_choose_account": {
+            "title": "Choose account",
+            "account_subtitle": "Accounts",
+            "balance_subtitle": "Balance",
+            "confirm_button_text": "Continue",
+            "close_button_text": "Cancel"
+        },
+        "modal_confirm_editin_of_permissions": {
+            "title": "Please, confirm applying changes",
+            "warning_key_message": "If these changes are applied, you won't have enough keys to sign transactions. Do you want to proceed?",
+            "echorand_warning_message": "You removed your EchoRand Key and after submitting this action you will lose access to it.",
+            "confirm_button_text": "Proceed",
+            "close_button_text": "No"
+        },
+        "modal_create_btc_address": {
+            "title": "Create BTC address",
+            "text": "To create your new BTC Address, please, provide your external backup BTC address. Backup BTC address is needed to be able to withhold a sent transaction to ECHO network during the first 24 hours after the transaction being made.",
+            "backup_address_input": {
+                "title": "Backup address",
+                "placeholder": "Backup address"
+            },
+            "warning": "Submit your backup BTC address above.",
+            "generate_button_text": "Generate address"
+        },
+        "modal_create_echo_address": {
+            "title": "Create address name",
+            "text": "You can use several addresses referring to one account for different targets. Please create address name for a new one.",
+            "address_input": {
+                "title": "Address name",
+                "placeholder": "Address name"
+            },
+            "warning": "Warning: Please note, address names are visible for blockchain network participants.",
+            "generate_button_text": "Generate address"
+        },
+        "modal_details": {
+            "title": "Confirm transaction",
+            "confirm_button_text": "Confirm",
+            "close_button_text": "Cancel",
+            "options": {
+
+            }
+        },
+        "modal_edit_permissions": {
+            "title": "Edit Mode Warning",
+            "text": "Please, keep in mind that uncontrolled changes may lead to loosing access to the wallet or restricting your actions within it. Be careful with editing permissions and adding the accounts to manage the wallet, ensuring that you grant permissions only to the accounts you trust.",
+            "checkbox_text": "I have read and understood the possible consequences of editing",
+            "forgot_password_link": "Forgot password?",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            },
+            "button_text": {
+                "wait_mode": "READ PLEASE",
+                "ready_mode": "Go to edit mode"
+            }
+        },
+        "modal_erc20_to_watch_list": {
+            "title": "Do you want to add ERC20 token to watch list?",
+            "confirm_button_text": "Yes",
+            "close_button_text": "No"
+        },
+        "modal_info": {
+            "title": "Echo Desktop Wallet",
+            "version": "Version:",
+            "website": "Website:",
+            "link": "echo.org",
+            "privacy": "Privacy: ",
+            "pixelplex_rights": " PixelPlex. All Rights Reserved"
+        },
+        "modal_confirm_logout": {
+            "title": "Confirm logout",
+            "subtitle": "You will be signed out of your account.",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            },
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Confirm",
+            "close_button_text": "Cancel"
+        },
+        "modal_replenish": {
+            "title": "Replenish Fee Pool",
+            "confirm_button_text": "Send"
+        },
+        "modal_to_blacklist": {
+            "title": "Add account to blacklist",
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_tokens": {
+            "title": "Add ERC20 token to watch list",
+            "contract_id_input": {
+                "title": "Contract ID",
+                "placeholder": "Contract ID"
+            },
+            "confirm_button_text": "Watch Token"
+        },
+        "modal_to_whitelist": {
+            "title": "Add account to whitelist",
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_unlock": {
+            "title": "Unlock Wallet",
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Unlock Wallet",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            }
+        },
+        "modal_view_wif": {
+            "title": "View WIF",
+            "public_key_input": {
+                "title": "Public Key",
+                "placeholder": "Public Key"
+            },
+            "wif_input": {
+                "title": "WIF *",
+                "placeholder": "WIF",
+                "warning": "* Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "save_button_text": "Save As .TXT"
+        },
+        "modal_whitelist": {
+            "title": "Whitelist",
+            "add_button_text": "Add Account",
+            "remove_button_text": "Remove"
+        },
+        "modal_wipe": {
+            "title": "Your password cannot be restored",
+            "text": "You can clear your account data from Echo Desktop and set a new password. If you do, you wil lose access to the accounts you’ve logged into. You will need to log into them again, after you have set a new password.",
+            "checkbox_text": "I understand the Echo Desktop does not store backups of my account keys, and I will lose access to them  by clearing my account data",
+            "confirm_button_text": "Clear data"
+        }
     },
+    "toasts": {
+        "success": {
+            "trx_sent_postfix": " transaction was sent",
+            "trx_complete_postfix": " transaction was completed",
+            "network_was_added": " network added successfully!",
+            "token_was_added": "Token was successfully added",
+            "receive": {
+                "start": "You receive ",
+                "of": " of "
+            }
+        },
+        "errors": {
+            "trx_dont_complete_postfix": " transaction wasn't completed. ",
+            "trx_dont_comp_by_lose_connection": " transaction wasn't completed. Please, check your connection.",
+            "trx_error": "Transaction sending error",
+            "private_key_error": "Private key was not imported in Echo Desktop Wallet",
+            "token_invalid": "Invalid ERC20 token",
+            "token_already_exists": "Token already exists"
+        },
+        "info": {
+            "remove_network": {
+                "pt1": "You have removed ",
+                "pt2:": " from networks list"
+            },
+            "remove_id": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            },
+            "remove_name": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            }
+        }
+    },
+    "amount_input": {
+        "title": "Amount",
+        "placeholder": "Amount",
+        "available": "Available: ",
+        "no_result_message": "No results are found",
+        "warning_message_pt1": "Send eBTC to ",
+        "warning_message_pt2": "Original Blockchain",
+        "warning_message_pt3": " to get BTC or send it within ECHO Network."
+    },
+    "copied_text": "Copied",
     "errors": {}
 }

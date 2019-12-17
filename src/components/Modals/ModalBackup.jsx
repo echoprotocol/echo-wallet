@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import FocusLock from 'react-focus-lock';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import ActionBtn from '../ActionBtn';
 
@@ -19,17 +19,17 @@ class ModalBackup extends React.Component {
 	getActiveKeysString() {
 		const { keys, activeUser, intl } = this.props;
 
-		// const accountLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.account' });
-		// const pubKeyLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.public_key' });
-		// const WIFLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.wif' });
+		const accountLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.account' });
+		const pubKeyLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.public_key' });
+		const WIFLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.wif' });
 		const keysData = [];
-		keysData.push(`${"gkg"}${activeUser.get('name')}\n`);
+		keysData.push(`${accountLabel}${activeUser.get('name')}\n`);
 
 		keys.forEach((keyItem, keyIndex) => {
 
-			keysData.push(`${"hkl"}${keyIndex + 1}\n${keyItem.publicKey}`);
+			keysData.push(`${pubKeyLabel}${keyIndex + 1}\n${keyItem.publicKey}`);
 			if (keyItem.wif) {
-				keysData.push(`\n\n${"fyukfuk"}${keyIndex + 1}\n${keyItem.wif}`);
+				keysData.push(`\n\n${WIFLabel}${keyIndex + 1}\n${keyItem.wif}`);
 			}
 
 			if (keyIndex !== (keys.length - 1)) {
@@ -47,11 +47,16 @@ class ModalBackup extends React.Component {
 		const { activeUser, show, intl } = this.props;
 
 		const activeKeysString = this.getActiveKeysString();
-		// const accPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.account_field.placeholder' });
-		// const IDPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.id_field.placeholder' });
-		// const backupPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.placeholder' });
-		// const copyBtnTxt = intl.formatMessage({ id: 'modals.modal_backup.copy_button_text' });
-
+		const accLabel = intl.formatMessage({ id: 'modals.modal_backup.account_field.title' });
+		const accPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.account_field.placeholder' });
+		const IDLabel = intl.formatMessage({ id: 'modals.modal_backup.id_field.title' });
+		const IDPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.id_field.placeholder' });
+		const backupLabel = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.placeholder' });
+		const backupPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.placeholder' });
+		const backupWarning = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.warning' });
+		const copyBtnTxt = intl.formatMessage({ id: 'modals.modal_backup.copy_button_text' });
+		const saveBtnTxt = intl.formatMessage({ id: 'modals.modal_backup.save_button_text' });
+		const title = intl.formatMessage({ id: 'modals.modal_backup.title' });
 		return (
 			<Modal className="backup-modal" open={show}>
 				<FocusLock autoFocus={false}>
@@ -61,17 +66,17 @@ class ModalBackup extends React.Component {
 					/>
 					<div className="modal-header">
 						<h3 className="modal-header-title">
-							{/* <FormattedMessage id="modals.modal_backup.title" /> */}
+							{title}
 						</h3>
 					</div>
 					<div className="modal-body">
 						<Form.Field>
 							<label htmlFor="account-name">
-								{/* <FormattedMessage id="modals.modal_backup.account_field.title" /> */}
+								{accLabel}
 							</label>
 							<input
 								type="text"
-								// placeholder={accPlaceholder}
+								placeholder={accPlaceholder}
 								disabled
 								name="account-name"
 								value={activeUser.get('name')}
@@ -79,11 +84,11 @@ class ModalBackup extends React.Component {
 						</Form.Field>
 						<Form.Field>
 							<label htmlFor="id-account">
-								{/* <FormattedMessage id="modals.modal_backup.id_field.title" /> */}
+								{IDLabel}
 							</label>
 							<input
 								type="text"
-								// placeholder={IDPlaceholder}
+								placeholder={IDPlaceholder}
 								disabled
 								name="id-account"
 								value={activeUser.get('id')}
@@ -91,17 +96,17 @@ class ModalBackup extends React.Component {
 						</Form.Field>
 						<Form.Field>
 							<label htmlFor="backup-data">
-								{/* <FormattedMessage id="modals.modal_backup.backup_data_field.warning" /> */}
+								{backupLabel}
 							</label>
 							<textarea
 								type="text"
-								// placeholder={backupPlaceholder}
+								placeholder={backupPlaceholder}
 								name="backup-data"
 								value={activeKeysString}
 								readOnly
 							/>
 							<span className="warning-message">
-								{/* <FormattedMessage id="modals.modal_backup.backup_data_field.title" /> */}
+								{backupWarning}
 							</span>
 						</Form.Field>
 
@@ -109,16 +114,14 @@ class ModalBackup extends React.Component {
 							<ActionBtn
 								icon="icon-copy"
 								copy={activeKeysString}
-								// text={copyBtnTxt}
+								text={copyBtnTxt}
 							/>
 
 							<Button
 								type="submit"
 								className="main-btn"
 								onClick={() => this.onSave(activeKeysString)}
-								// content={
-								// 	<FormattedMessage id="modals.modal_backup.save_button_text" />
-								// }
+								content={saveBtnTxt}
 							/>
 						</div>
 					</div>

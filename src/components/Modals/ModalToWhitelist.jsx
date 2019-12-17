@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -35,7 +36,7 @@ class ModalToWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, error,
+			show, error, intl,
 		} = this.props;
 
 		return (
@@ -51,14 +52,18 @@ class ModalToWhitelist extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Add account to whitelist</h3>
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_to_whitelist.title' })}
+									</h3>
 								</div>
 								<div className="modal-body">
 									<Form.Field className={classnames('error-wrap', { error: !!error })}>
-										<label htmlFor="account-name">Account name</label>
+										<label htmlFor="account-name">
+											{intl.formatMessage({ id: 'modals.modal_to_whitelist.account_input.title' })}
+										</label>
 										<input
 											type="text"
-											placeholder="Account name"
+											placeholder={intl.formatMessage({ id: 'modals.modal_to_whitelist.account_input.placeholder' })}
 											name="account-name"
 											onChange={(e) => this.onInputChange(e)}
 											autoFocus
@@ -71,7 +76,7 @@ class ModalToWhitelist extends React.Component {
 										<Button
 											type="submit"
 											className="main-btn"
-											content="Confirm"
+											content={intl.formatMessage({ id: 'modals.modal_to_whitelist.confirm_button_text' })}
 											onClick={() => {
 												this.onAdd(submit);
 											}}
@@ -93,6 +98,7 @@ ModalToWhitelist.propTypes = {
 	error: PropTypes.string,
 	addToWhiteList: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalToWhitelist.defaultProps = {
@@ -100,7 +106,7 @@ ModalToWhitelist.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
 		error: state.modal.getIn([MODAL_TO_WHITELIST, 'error']),
@@ -111,4 +117,4 @@ export default connect(
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_WHITELIST)),
 		setError: (value) => dispatch(setError(MODAL_TO_WHITELIST, value)),
 	}),
-)(ModalToWhitelist);
+)(ModalToWhitelist));

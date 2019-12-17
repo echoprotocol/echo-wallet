@@ -33,11 +33,10 @@ class ModalTokens extends React.Component {
 	}
 
 	render() {
-		const { show, contractId, disabled } = this.props;
+		const {
+			show, contractId, disabled, intl,
+		} = this.props;
 
-		console.log(this.props.intl)
-		const t = this.props.intl.formatMessage({ id: 'global_loader.title' });
-		console.log(t)
 		return (
 			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
@@ -46,16 +45,20 @@ class ModalTokens extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h2 className="modal-header-title">Add ERC20 token to watch list</h2>
+						<h2 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_tokens.title' })}
+						</h2>
 					</div>
 					<div className="modal-body">
 						<form className="main-form">
 							<div className="field-wrap">
 								<div className={classnames('field error-wrap', { error: contractId.error })}>
-									<label htmlFor="tokens">Contract ID</label>
+									<label htmlFor="tokens">
+										{intl.formatMessage({ id: 'modals.modal_tokens.contract_id_input.title' })}
+									</label>
 									<input
 										type="text"
-										placeholder={t}
+										placeholder={intl.formatMessage({ id: 'modals.modal_tokens.contract_id_input.placeholder' })}
 										name="contractId"
 										className="ui input"
 										value={contractId.value}
@@ -71,7 +74,7 @@ class ModalTokens extends React.Component {
 									className="main-btn"
 									onClick={(e) => this.onClick(e)}
 									disabled={disabled}
-									content="Watch Token"
+									content={intl.formatMessage({ id: 'modals.modal_tokens.confirm_button_text' })}
 								/>
 							</div>
 						</form>

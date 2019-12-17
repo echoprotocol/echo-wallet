@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
 
 
 const VerificationField = (props) => {
@@ -17,7 +16,7 @@ const VerificationField = (props) => {
 		<div className={classnames('field error-wrap', { error: !!error })}>
 			{label &&
 				<label htmlFor={name}>
-					{/* <FormattedMessage id={`wallet_page.create_payment.${label}_input.title`} /> */}
+					{label}
 					{additionalLabel}
 				</label>
 			}

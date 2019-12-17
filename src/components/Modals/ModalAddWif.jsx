@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import PasswordInput from '../PasswordInput';
 
@@ -39,9 +39,9 @@ class ModalAddWIF extends React.Component {
 		const {
 			show, error, disabled, publicKey, intl,
 		} = this.props;
-		// const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
-		// const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
-		// const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
+		const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
+		const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
+		const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
 		const pubKeyPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.placeholder' });
 
 		return (
@@ -52,19 +52,18 @@ class ModalAddWIF extends React.Component {
 				/>
 				<div className="modal-header">
 					<h2 className="modal-header-title">
-						{/* <FormattedMessage id="modals.modal_add_wif.title" /> */}
+						{intl.formatMessage({ id: 'modals.modal_add_wif.title' })}
 					</h2>
 				</div>
 				<div className="modal-body">
 
 					<Form.Field className={classnames('error-wrap', { error: !!error })}>
 						<label htmlFor="public-key">
-							{/* <FormattedMessage id="modals.modal_add_wif.public_key_input.title" /> */}
+							{intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.title' })}
 						</label>
 						<input
 							type="text"
-							// placeholder={pubKeyPlaceholder}
-							placeholder="garfg"
+							placeholder={pubKeyPlaceholder}
 							disabled
 							name="public-key"
 							onChange={() => {}}
@@ -76,10 +75,10 @@ class ModalAddWIF extends React.Component {
 					</Form.Field>
 
 					<PasswordInput
-						inputLabel="dhkd"
-						inputPlaceholder="dhkd"
+						inputLabel={wifTitle}
+						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"
-						warningMessage="dhkd"
+						warningMessage={wifWarning}
 						errorMessage={error}
 						onChange={(e) => this.onChange(e)}
 						value={wif}
@@ -92,7 +91,7 @@ class ModalAddWIF extends React.Component {
 							className="main-btn"
 							onClick={() => this.saveWif()}
 							disabled={disabled}
-							content="Confirm"
+							content={intl.formatMessage({ id: 'modals.modal_add_wif.button_text' })}
 						/>
 					</div>
 				</div>

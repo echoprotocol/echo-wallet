@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import Avatar from '../../components/Avatar';
 
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
@@ -90,16 +89,16 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject, disabled, avatarName, intl,
-			showAdditionalAccountInfo, additionalAccountInfo,
+			field, autoFocus, subject, disabled, avatarName, placeholder, label,
+			showAdditionalAccountInfo, additionalAccountInfo, additionalAccountPrefix,
 		} = this.props;
 
 		const additionalLabel = showAdditionalAccountInfo && !field.error &&
 			<div className="account-name">
-				{additionalAccountInfo.prefix &&
+				{additionalAccountPrefix &&
 					<React.Fragment>
-						<FormattedMessage id={additionalAccountInfo.prefix} />
-						{additionalAccountInfo.value}
+						{additionalAccountPrefix}
+						{additionalAccountInfo}
 					</React.Fragment>
 				}
 			</div>;
@@ -111,7 +110,7 @@ class AccountField extends React.Component {
 
 		return (
 			<VerificationField
-				label={subject}
+				label={label}
 				additionalLabel={additionalLabel}
 				name={`account${subject}`}
 				onChange={(value) => this.onInput(value)}
@@ -122,10 +121,7 @@ class AccountField extends React.Component {
 				status={this.getStatus(field, disabled)}
 				error={field.error}
 				loading={field.loading && !field.error}
-				placeholder={subject === 'to' ?
-					intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' }) :
-					intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
-				}
+				placeholder={placeholder}
 			/>
 		);
 	}
@@ -137,8 +133,11 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	additionalAccountInfo: PropTypes.object,
+	additionalAccountInfo: PropTypes.string,
+	additionalAccountPrefix: PropTypes.string,
 	avatarName: PropTypes.string,
+	label: PropTypes.string,
+	placeholder: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,
@@ -149,7 +148,6 @@ AccountField.propTypes = {
 	setVisibility: PropTypes.func,
 	disabled: PropTypes.bool,
 	showAdditionalAccountInfo: PropTypes.bool,
-	intl: PropTypes.any.isRequired,
 };
 
 AccountField.defaultProps = {
@@ -161,8 +159,11 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
+	label: '',
+	placeholder: '',
 	showAdditionalAccountInfo: false,
-	additionalAccountInfo: null,
+	additionalAccountInfo: '',
+	additionalAccountPrefix: '',
 };
 
-export default injectIntl(AccountField);
+export default AccountField;

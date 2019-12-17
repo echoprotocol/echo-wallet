@@ -33,6 +33,16 @@ class AddContractComponent extends React.Component {
 		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_bytecode.placeholder' });
 		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_id.placeholder' });
 
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
+
 		return (
 			<TransactionScenario handleTransaction={() => this.props.callContract()}>
 				{
@@ -89,6 +99,7 @@ class AddContractComponent extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setDefaultAsset={this.props.setDefaultAsset}
 									setContractFees={this.props.setContractFees}
+									texts={amountTexts}
 								/>
 							</div>
 							<div className="form-panel">

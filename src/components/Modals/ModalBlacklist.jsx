@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
 import FocusLock from 'react-focus-lock';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
@@ -39,7 +39,7 @@ class ModalBalcklist extends React.Component {
 		if (!contracts.get(contractId)) {
 			return [];
 		}
-		// const removeBtnTxt = intl.formatMessage({ id: 'modals.modal_blacklist.remove_button_text' });
+		const removeBtnTxt = intl.formatMessage({ id: 'modals.modal_blacklist.remove_button_text' });
 
 		const blacklist = contracts.getIn([contractId, 'blacklist']);
 		return blacklist ? blacklist.map((el, i) => (
@@ -54,7 +54,7 @@ class ModalBalcklist extends React.Component {
 							<div className="name">{accounts.getIn([el, 'name'])}</div>
 							{ owner === activeUser && <ActionBtn
 								icon="remove"
-								// text={removeBtnTxt}
+								text={removeBtnTxt}
 								action={() => submit()}
 							/>}
 						</div>
@@ -66,7 +66,7 @@ class ModalBalcklist extends React.Component {
 
 	render() {
 		const {
-			show, owner, activeUser,
+			show, owner, activeUser, intl,
 		} = this.props;
 
 		return (
@@ -78,7 +78,7 @@ class ModalBalcklist extends React.Component {
 					/>
 					<div className="modal-header">
 						<h2 className="modal-header-title">
-							{/* <FormattedMessage id="modals.modal_blacklist.title" /> */}
+							{intl.formatMessage({ id: 'modals.modal_blacklist.title' })}
 						</h2>
 					</div>
 					<div className="modal-body">
@@ -88,6 +88,7 @@ class ModalBalcklist extends React.Component {
 						<div className="form-panel">
 							{ owner === activeUser && <Button
 								className="main-btn"
+								content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
 								// content={
 								// 	<FormattedMessage id="modals.modal_blacklist.add_button_text" />
 								// }

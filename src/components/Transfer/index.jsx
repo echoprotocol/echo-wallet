@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import { List } from 'immutable';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -61,12 +61,23 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			from, to, currency,
+			from, to, currency, intl,
 			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
 			subjectTransferType, additionalAccountInfo,
 		} = this.props;
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
 		const { bytecodeVisible } = this.state;
 
+		const additionalAccountPrefix = additionalAccountInfo.prefix ?
+			intl.formatMessage({ id: additionalAccountInfo.prefix }) : '';
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
@@ -85,11 +96,14 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
+									label={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })}
+									placeholder={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })}
 								/>
 
 								<AccountField
 									showAdditionalAccountInfo
-									additionalAccountInfo={additionalAccountInfo}
+									additionalAccountInfo={additionalAccountInfo.value}
+									additionalAccountPrefix={additionalAccountPrefix}
 									currency={currency}
 									subject="to"
 									field={to}
@@ -103,6 +117,8 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
+									label={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.title' })}
+									placeholder={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' })}
 								/>
 								{
 									bytecodeVisible &&
@@ -130,6 +146,7 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setTransferFee={this.props.setTransferFee}
 									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
+									texts={amountTexts}
 								/>
 								<div className="form-panel">
 									<Button
@@ -182,6 +199,7 @@ Transfer.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 Transfer.defaultProps = {
@@ -191,4 +209,4 @@ Transfer.defaultProps = {
 };
 
 
-export default Transfer;
+export default injectIntl(Transfer);

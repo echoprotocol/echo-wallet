@@ -96,6 +96,15 @@ class ContractBar extends React.Component {
 		} = this.props;
 		const assetsPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.supported_assets.popup_text' });
 		const amountPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.deploying_amount.popup_text' });
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
 		return (
 			<div className="contract-bar">
 				<h3 className="contract-bar-title">
@@ -204,6 +213,7 @@ class ContractBar extends React.Component {
 								setDefaultAsset={() => {
 									this.props.setDefaultAsset(FORM_CREATE_CONTRACT_OPTIONS);
 								}}
+								texts={amountTexts}
 							/>
 						</div>
 					</li>

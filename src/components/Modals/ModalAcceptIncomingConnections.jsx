@@ -3,7 +3,7 @@ import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_ACCEPT_INCOMING_CONNECTIONS } from '../../constants/ModalConstants';
@@ -17,7 +17,7 @@ class ModalInfoWallet extends React.Component {
 	}
 
 	render() {
-		const { show } = this.props;
+		const { show, intl } = this.props;
 		return (
 			<Modal
 				className="modal-wrap"
@@ -30,44 +30,44 @@ class ModalInfoWallet extends React.Component {
 					/>
 					<div className="modal-header">
 						<h2 className="modal-header-title">
-							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.title_pt1" /> */}
+							{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.title_pt1' })}
 							<br />
-							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.title_pt2" /> */}
+							{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.title_pt2' })}
 						</h2>
 					</div>
 					<div className="accept-connections modal-body">
 						<h3 className="accept-connections-title">
-							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.subtitle_pt1" /> */}
+							{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.subtitle_pt1' })}
 							<br />
 							<span className="bold">
-								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.subtitle_pt2" /> */}
+								{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.subtitle_pt2' })}
 							</span>
 						</h3>
 						<ul className="accept-connections-list">
 							<li>
 								<img src={icAccept} alt="" />
 								<span className="list-item-content">
-									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt1" /> */}
+									{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.list_pt1' })}
 								</span>
 							</li>
 							<li>
 								<img src={icAccept} alt="" />
 								<span className="list-item-content">
-									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt2" /> */}
+									{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.list_pt2' })}
 								</span>
 							</li>
 							<li>
 								<img src={icAccept} alt="" />
 								<span className="list-item-content">
-									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt3" /> */}
+									{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.list_pt3' })}
 								</span>
 							</li>
 							<li>
 								<img src={icAccept} alt="" />
 								<span className="list-item-content">
-									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt4_1" /> */}
+									{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.list_pt4_1' })}
 									<br />
-									{/* <FormattedMessage id="modals.modal_accept_incoming_connection.list_pt4_2" /> */}
+									{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.list_pt4_2' })}
 								</span>
 							</li>
 						</ul>
@@ -77,10 +77,10 @@ class ModalInfoWallet extends React.Component {
 						</div>
 						<div className="form-panel">
 							<button className="transparet-btn grey">
-								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.button_confirm_text" /> */}
+								{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.button_confirm_text' })}
 							</button>
 							<button autoFocus className="blue-btn">
-								{/* <FormattedMessage id="modals.modal_accept_incoming_connection.button_dismiss_text" /> */}
+								{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.button_dismiss_text' })}
 							</button>
 						</div>
 					</div>
@@ -94,6 +94,7 @@ class ModalInfoWallet extends React.Component {
 ModalInfoWallet.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalInfoWallet.defaultProps = {
@@ -101,12 +102,12 @@ ModalInfoWallet.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_ACCEPT_INCOMING_CONNECTIONS, 'show']),
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_ACCEPT_INCOMING_CONNECTIONS)),
 	}),
-)(ModalInfoWallet);
+)(ModalInfoWallet));
 

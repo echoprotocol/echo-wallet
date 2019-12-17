@@ -5,7 +5,6 @@ import { Form, Input, Dropdown, Popup } from 'semantic-ui-react';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 import { List } from 'immutable';
-import { FormattedMessage } from 'react-intl';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
@@ -240,7 +239,7 @@ class AmountField extends React.Component {
 			assets, amount, form,
 			fee, isAvailableBalance,
 			fees, assetDropdown,
-			labelText, showAvailable,
+			texts, showAvailable,
 			warningMessage,
 			isDisplaySidechainNotification,
 			autoFocus,
@@ -254,7 +253,7 @@ class AmountField extends React.Component {
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
-					{labelText}
+					{texts.label && texts.label}
 					<ul className="list-amount">
 						{fee && fee.value && amount.value &&
 							<li>
@@ -275,7 +274,7 @@ class AmountField extends React.Component {
 						{
 							showAvailable && (
 								<li>
-									{/* <FormattedMessage id="amount_input.available" /> */}
+									{texts.available}
 									<span
 										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 										role="button"
@@ -294,9 +293,7 @@ class AmountField extends React.Component {
 				</label>
 				<Input
 					type="text"
-					// placeholder={
-					// 	<FormattedMessage id="amount_input.title" />
-					// }
+					placeholder={texts.placeholder || 'Amount'}
 					tabIndex="0"
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
@@ -341,7 +338,7 @@ class AmountField extends React.Component {
 							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
 							options={this.renderList('assets').concat(this.renderList('tokens'))}
-							noResultsMessage="No results are found"
+							noResultsMessage={texts.noRes || 'No results are found'}
 							className="assets-tokens-dropdown"
 							onClose={() => this.clearSearchText()}
 						/> : this.renderCurrencyLabel(currency)
@@ -351,7 +348,11 @@ class AmountField extends React.Component {
 				{
 					(!amount.error || !fee.error) && isDisplaySidechainNotification ?
 						<span className="warning-message">
-							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+							{texts.warningMsgPt1}
+							<span className="special">
+								{texts.warningMsgPt2}
+							</span>
+							{texts.warningMsgPt3}
 						</span> : null
 				}
 
@@ -379,7 +380,7 @@ AmountField.propTypes = {
 	setContractFees: PropTypes.func,
 	getTransferFee: PropTypes.func,
 	assetDropdown: PropTypes.bool,
-	labelText: PropTypes.string,
+	texts: PropTypes.object,
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
 	warningMessage: PropTypes.node,
@@ -394,7 +395,6 @@ AmountField.defaultProps = {
 	assets: null,
 	tokens: new List([]),
 	assetDropdown: true,
-	labelText: 'Amount',
 	receive: false,
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),
@@ -402,6 +402,7 @@ AmountField.defaultProps = {
 	warningMessage: null,
 	isDisplaySidechainNotification: false,
 	autoFocus: false,
+	texts: {},
 };
 
 export default AmountField;

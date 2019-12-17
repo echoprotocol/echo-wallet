@@ -263,6 +263,17 @@ class EchoNetwork extends React.Component {
 		const {
 			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl,
 		} = this.props;
+
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
+
 		const { receiver, open, searchText } = this.state;
 		const receiverValue = this.getReceiver();
 		const dropdownPlaceholder =
@@ -315,6 +326,7 @@ class EchoNetwork extends React.Component {
 					setContractFees={this.props.setContractFees}
 					assetDropdown
 					receive
+					texts={amountTexts}
 				/>
 				{
 					receiverValue ? <QrCode link={link} /> : null

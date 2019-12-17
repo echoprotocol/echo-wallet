@@ -3,6 +3,7 @@ import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -129,7 +130,7 @@ class ModalChooseAccount extends React.Component {
 
 	render() {
 
-		const { show, accounts } = this.props;
+		const { show, accounts, intl } = this.props;
 		const { checkedAll } = this.state;
 		const { sortType, sortInc } = this.props.sort.toJS();
 
@@ -141,7 +142,9 @@ class ModalChooseAccount extends React.Component {
 						<div className="modal-body">
 							<Form className="main-form">
 								<div className="form-info">
-									<h3>Choose account</h3>
+									<h3>
+										{intl.formatMessage({ id: 'modals.modal_choose_account.title' })}
+									</h3>
 								</div>
 								<section className="accounts-list">
 									<div className="accounts-list-header">
@@ -157,7 +160,9 @@ class ModalChooseAccount extends React.Component {
 													className="label"
 													htmlFor="check-all"
 												>
-													<span className="label-text">Accounts</span>
+													<span className="label-text">
+														{intl.formatMessage({ id: 'modals.modal_choose_account.account_subtitle' })}
+													</span>
 												</label>
 											</div>
 
@@ -167,7 +172,9 @@ class ModalChooseAccount extends React.Component {
 											</button>
 										</div>
 										<div className="check-container">
-											<div className="txt">Balance</div>
+											<div className="txt">
+												{intl.formatMessage({ id: 'modals.modal_choose_account.balance_subtitle' })}
+											</div>
 											<button className="sort" onClick={() => this.onSort('balance')}>
 												{ this.renderSort(sortType, sortInc, 'balance') }
 											</button>
@@ -183,12 +190,16 @@ class ModalChooseAccount extends React.Component {
 									<Button
 										className="main-btn"
 										onClick={() => this.onClose()}
-										content="Cancel"
+										content={
+											intl.formatMessage({ id: 'modals.modal_choose_account.close_button_text' })
+										}
 									/>
 									<Button
 										className="main-btn"
 										onClick={() => this.onConfirm(accounts)}
-										content="Continue"
+										content={
+											intl.formatMessage({ id: 'modals.modal_choose_account.confirm_button_text' })
+										}
 									/>
 								</div>
 							</Form>
@@ -209,6 +220,7 @@ ModalChooseAccount.propTypes = {
 	toggleChecked: PropTypes.func.isRequired,
 	importAccounts: PropTypes.func.isRequired,
 	toggleSort: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalChooseAccount.defaultProps = {
@@ -216,4 +228,4 @@ ModalChooseAccount.defaultProps = {
 	accounts: [],
 };
 
-export default ModalChooseAccount;
+export default injectIntl(ModalChooseAccount);

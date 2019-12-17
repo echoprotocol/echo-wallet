@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { injectIntl } from 'react-intl';
 import { CACHE_MAPS } from 'echojs-lib';
 
 import { closeModal, openModal } from '../../actions/ModalActions';
@@ -32,7 +33,7 @@ class ModalWhitelist extends React.Component {
 
 	renderList() {
 		const {
-			contracts, owner, activeUser, contractId, accounts,
+			contracts, owner, activeUser, contractId, accounts, intl,
 		} = this.props;
 		if (!contracts.get(contractId)) {
 			return [];
@@ -50,7 +51,7 @@ class ModalWhitelist extends React.Component {
 							<div className="name">{accounts.getIn([el, 'name'])}</div>
 							{ owner === activeUser && <ActionBtn
 								icon="remove"
-								text="Remove"
+								text={intl.formatMessage({ id: 'modals.modal_whitelist.remove_button_text' })}
 								action={() => submit()}
 							/>}
 						</div>
@@ -62,7 +63,7 @@ class ModalWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, owner, activeUser,
+			show, owner, activeUser, intl,
 		} = this.props;
 
 		return (
@@ -72,7 +73,9 @@ class ModalWhitelist extends React.Component {
 					onClick={(e) => this.onClose(e)}
 				/>
 				<div className="modal-header">
-					<h3 className="modal-header-title">Whitelist</h3>
+					<h3 className="modal-header-title">
+						{intl.formatMessage({ id: 'modals.modal_whitelist.title' })}
+					</h3>
 				</div>
 				<div className="modal-body">
 					<div className="segments">
@@ -81,7 +84,7 @@ class ModalWhitelist extends React.Component {
 					<div className="form-panel">
 						{ owner === activeUser && <Button
 							className="main-btn"
-							content="Add account"
+							content={intl.formatMessage({ id: 'modals.modal_whitelist.add_button_text' })}
 							onClick={(e) => this.onOpenAddModal(e)}
 						/>}
 					</div>
@@ -102,13 +105,14 @@ ModalWhitelist.propTypes = {
 	removeFromWhiteList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalWhitelist.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
 		accounts: state.echojs.get(CACHE_MAPS.ACCOUNTS_BY_ID),
@@ -123,4 +127,4 @@ export default connect(
 		removeFromWhiteList: (accId) =>
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_WHITELIST)),
 	}),
-)(ModalWhitelist);
+)(ModalWhitelist));

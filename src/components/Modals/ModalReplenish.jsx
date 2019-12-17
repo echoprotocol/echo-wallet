@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
@@ -33,8 +34,18 @@ class ModalToWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl,
 		} = this.props;
+
+		const amountTexts = {
+			label: intl.formatMessage({ id: 'amount_input.title' }),
+			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
+			available: intl.formatMessage({ id: 'amount_input.available' }),
+			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
+			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
+			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
+			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+		};
 
 		return (
 			<TransactionScenario
@@ -49,7 +60,9 @@ class ModalToWhitelist extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Replenish Fee Pool</h3>
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_replenish.title' })}
+									</h3>
 								</div>
 								<div className="modal-body">
 									<Form className="main-form">
@@ -59,6 +72,12 @@ class ModalToWhitelist extends React.Component {
 												activeAccount ?
 													<AccountField
 														subject="from"
+														placeholder={
+															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
+														}
+														label={
+															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })
+														}
 														field={{
 															value: activeAccount.get('name'),
 															checked: true,
@@ -92,13 +111,14 @@ class ModalToWhitelist extends React.Component {
 												getTransferFee={this.props.getTransactionFee}
 												setContractFees={() => {}}
 												autoFocus
+												texts={amountTexts}
 											/>
 										</div>
 
 										<div className="form-panel">
 											<Button
 												className="main-btn"
-												content="Send"
+												content={intl.formatMessage({ id: 'modals.modal_replenish.confirm_button_text' })}
 												type="submit"
 												onClick={() => this.onSend(submit)}
 											/>
@@ -132,6 +152,7 @@ ModalToWhitelist.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
 	replenishContractPool: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalToWhitelist.defaultProps = {
@@ -140,7 +161,7 @@ ModalToWhitelist.defaultProps = {
 	currency: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		fees: state.fee.toArray() || [],
 		fee: state.form.getIn([FORM_REPLENISH, 'fee']),
@@ -162,4 +183,4 @@ export default connect(
 		getTransactionFee: (asset) => dispatch(getContractPoolBalanceFee(FORM_REPLENISH, asset)),
 		replenishContractPool: () => dispatch(replenishContractPool()),
 	}),
-)(ModalToWhitelist);
+)(ModalToWhitelist));
