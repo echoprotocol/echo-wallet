@@ -23,7 +23,8 @@ import Services from '../services';
  */
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
-		if (!echo.isConnected) return;
+		if (!Services.getEcho().isConnected) return;
+		// if (!echo.isConnected) return;
 
 		[, transaction.details] = await Services.getEcho().api.getContractResult(transaction.result);
 		// [, transaction.details] = await echo.api.getContractResult(transaction.result);
@@ -166,7 +167,8 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		result.subject = { value: resultId };
 
-		if (!echo.isConnected) {
+		if (!Services.getEcho().isConnected) {
+		// if (!echo.isConnected) {
 			return result;
 		}
 

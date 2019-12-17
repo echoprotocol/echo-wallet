@@ -3,9 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
 
-import echo, { echoReducer } from 'echojs-lib';
-import Services from './services';
-
+import { echoReducer } from 'echojs-lib';
 
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 
@@ -32,8 +30,6 @@ const store = createStore(
 		window.devToolsExtension ? window.devToolsExtension() : (f) => f,
 	),
 );
-
-echo.syncCacheWithStore(store);
 
 // Now you can dispatch navigation actions from anywhere!
 // store.dispatch(push('/foo'))

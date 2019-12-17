@@ -253,13 +253,15 @@ export const connection = () => async (dispatch) => {
 		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
 		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
 
-		await echo.connect(
-			network.url,
-			{
-				apis: constants.WS_CONSTANTS.CHAIN_APIS,
-				registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
-			},
-		);
+		await Services.getEcho().changeConnection(network.url);
+
+		// await echo.connect(
+		// 	network.url,
+		// 	{
+		// 		apis: constants.WS_CONSTANTS.CHAIN_APIS,
+		// 		registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
+		// 	},
+		// );
 
 		await Services.getEcho().api.getDynamicGlobalProperties(true);
 		// await echo.api.getDynamicGlobalProperties(true);
@@ -295,9 +297,10 @@ export const connection = () => async (dispatch) => {
  */
 export const disconnection = () => async (dispatch) => {
 
-	if (echo.isConnected) {
-		await echo.disconnect();
-	}
+	// if (Services.getEcho().isConnected) {
+	// if (echo.isConnected) {
+	// 	await echo.disconnect();
+	// }
 
 	echo.subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));

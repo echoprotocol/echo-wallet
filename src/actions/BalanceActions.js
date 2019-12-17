@@ -171,7 +171,8 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch) => 
 	 *  }
      */
 
-	if (!echo.isConnected) return;
+	if (!Services.getEcho().isConnected) return;
+	// if (!echo.isConnected) return;
 
 	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
@@ -205,7 +206,8 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	const tokens = getState().balance.get('tokens');
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	if (!tokens.size || !accountId || !echo.isConnected) return;
+	if (!tokens.size || !accountId || !Services.getEcho().isConnected) return;
+	// if (!tokens.size || !accountId || !echo.isConnected) return;
 	let balances = tokens.map(async (value) => {
 		const balance = await getTokenBalance(accountId, value.id);
 		return { ...value, balance };
@@ -535,7 +537,8 @@ export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
  */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	if (!accountId || !echo.isConnected) return;
+	if (!accountId || !Services.getEcho().isConnected) return;
+	// if (!accountId || !echo.isConnected) return;
 
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();

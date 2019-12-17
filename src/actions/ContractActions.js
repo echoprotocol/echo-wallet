@@ -815,14 +815,10 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
 		await Services.getEcho().api.getAccounts(contract.whitelist.concat(contract.blacklist));
 		// await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
 	}
-	await Services.getEcho().subscriber.setContractSubscribe(
+	await echo.subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,
 	);
-	// await echo.subscriber.setContractSubscribe(
-	// 	[contractId],
-	// 	subscribeCallback,
-	// );
 };
 
 /**

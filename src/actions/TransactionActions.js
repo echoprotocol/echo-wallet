@@ -154,12 +154,14 @@ export const setAdditionalAccountInfo = (value) => async (dispatch, getState) =>
 	}
 	switch (getState().form.getIn([FORM_TRANSFER, 'subjectTransferType'])) {
 		case ADDRESS_SUBJECT_TYPE: {
-			const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
+			const accountId = await Services.getEcho().api.getAccountByAddress(value.toLowerCase());
+			// const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
 			if (!accountId) {
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 				return;
 			}
-			const account = await echo.api.getObject(accountId);
+			const account = await Services.getEcho().api.getObject(accountId);
+			// const account = await echo.api.getObject(accountId);
 			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
 			break;
 		}
@@ -169,7 +171,8 @@ export const setAdditionalAccountInfo = (value) => async (dispatch, getState) =>
 		}
 		case ACCOUNT_NAME_SUBJECT_TYPE: {
 			try {
-				const account = await echo.api.getAccountByName(value);
+				const account = await Services.getEcho().api.getAccountByName(value);
+				// const account = await echo.api.getAccountByName(value);
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
 			} catch (e) {
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
@@ -359,7 +362,8 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 		case WITHDRAW_SUBJECT_TYPE: {
 			try {
 				const activeCoinTypeTab = getState().global.get('activeCoinTypeTab');
-				const fromAccount = await echo.api.getAccountByName(form.get('from').value);
+				const fromAccount = await Services.getEcho().api.getAccountByName(form.get('from').value);
+				// const fromAccount = await echo.api.getAccountByName(form.get('from').value);
 				const options = {
 					fee: {
 						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
@@ -1370,7 +1374,8 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	const { operation, options } = getState().transaction.toJS();
 	const { value: operationId } = operations[operation];
 
-	if (!echo.isConnected) {
+	if (!Services.getEcho().isConnected) {
+	// if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
 		return;
@@ -1395,7 +1400,8 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 
 
 	try {
-		const tr = echo.createTransaction();
+		const tr = Services.getEcho().api.createTransaction();
+		// const tr = echo.createTransaction();
 		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);

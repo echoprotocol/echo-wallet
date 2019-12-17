@@ -10,6 +10,7 @@ import {
 	REMOTE_NODE,
 	LOCAL_NODE,
 	CONNECT_STATUS,
+	REGISTRATION,
 } from '../constants/GlobalConstants';
 import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/ChainConstants';
 
@@ -392,6 +393,7 @@ class Blockchain {
 				'login',
 				// 'network_node',
 			],
+			registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
 		});
 
 		return instance;
