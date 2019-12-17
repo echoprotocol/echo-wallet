@@ -8,6 +8,7 @@ import { List } from 'immutable';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
+import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -240,15 +241,15 @@ class AmountField extends React.Component {
 			fee, isAvailableBalance,
 			fees, assetDropdown,
 			labelText, showAvailable,
-			warningMessage,
 			isDisplaySidechainNotification,
 			autoFocus,
+			activeCoinTypeTab,
 		} = this.props;
 
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
-			.includes(form) && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>
@@ -344,11 +345,10 @@ class AmountField extends React.Component {
 						/> : this.renderCurrencyLabel(currency)
 					}
 				</Input>
-				{ warningMessage }
 				{
-					(!amount.error || !fee.error) && isDisplaySidechainNotification ?
+					(!amount.error || !fee.error) && isDisplaySidechainNotification && activeCoinTypeTab ?
 						<span className="warning-message">
-							Send eBTC to <span className="special">Original Blockchain</span> to get BTC or send it within ECHO Network.
+							Send {SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo} to <span className="special">Original Blockchain</span> to get {SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].original} or send it within ECHO Network.
 						</span> : null
 				}
 
@@ -379,9 +379,9 @@ AmountField.propTypes = {
 	labelText: PropTypes.string,
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
-	warningMessage: PropTypes.node,
 	isDisplaySidechainNotification: PropTypes.bool,
 	autoFocus: PropTypes.bool,
+	activeCoinTypeTab: PropTypes.any,
 };
 
 
@@ -396,9 +396,9 @@ AmountField.defaultProps = {
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),
 	showAvailable: true,
-	warningMessage: null,
 	isDisplaySidechainNotification: false,
 	autoFocus: false,
+	activeCoinTypeTab: 0,
 };
 
 export default AmountField;

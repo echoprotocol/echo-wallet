@@ -46,6 +46,7 @@ import {
 	ACCOUNT_NAME_SUBJECT_TYPE,
 	ADDRESS_SUBJECT_TYPE,
 	CONTRACT_ID_SUBJECT_TYPE,
+	WITHDRAW_SUBJECT_TYPE,
 } from '../constants/TransferConstants';
 import {
 	SOURCE_CODE_MODE,
@@ -82,6 +83,8 @@ import { validateAccountExist } from '../api/WalletApi';
 import { getOperationFee } from '../api/TransactionApi';
 import TransactionReducer from '../reducers/TransactionReducer';
 import GlobalReducer from '../reducers/GlobalReducer';
+import { isBtcAddress, isEthAddress } from '../helpers/SidechainHelper';
+import { STABLE_COINS } from '../constants/SidechainConstants';
 
 /**
  * @method resetTransaction
@@ -274,6 +277,9 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 		if (!amountError) {
 			amountValue = new BN(amount).times(new BN(10).pow(currency.precision))
 				.toString(10);
+		} else {
+			dispatch(setFormError(FORM_TRANSFER, 'amount', amountError));
+			return false;
 		}
 	}
 
@@ -335,6 +341,39 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 				};
 
 				const fee = await dispatch(getTransactionFee(FORM_TRANSFER, 'transfer_to_address', options));
+
+				return {
+					value: fee ? fee.value : '',
+					asset: echoAsset,
+				};
+
+			} catch (error) {
+				return null;
+			}
+		}
+		case WITHDRAW_SUBJECT_TYPE: {
+			try {
+				const activeCoinTypeTab = getState().global.get('activeCoinTypeTab');
+				const fromAccount = await echo.api.getAccountByName(form.get('from').value);
+				const options = {
+					fee: {
+						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
+						amount: 0,
+					},
+					account: fromAccount.id,
+					value: amountValue || 0,
+				};
+
+				let operationType = '';
+				if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+					options.btc_addr = to;
+					operationType = 'sidechain_btc_withdraw';
+				} else {
+					options.eth_addr = to.replace('0x', '');
+					operationType = 'sidechain_eth_withdraw';
+				}
+
+				const fee = await dispatch(getTransactionFee(FORM_TRANSFER, operationType, options));
 
 				return {
 					value: fee ? fee.value : '',
@@ -546,8 +585,51 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 	return true;
 };
 
+export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
+	const activeCoinTypeTab = getState().global.get('activeCoinTypeTab');
 
-export const subjectToSendSwitch = (value) => async (dispatch) => {
+	if (activeCoinTypeTab) {
+		if (!value) {
+			dispatch(setIn(FORM_TRANSFER, 'to', { loading: false }));
+			return false;
+		}
+
+		switch (activeCoinTypeTab) {
+			case STABLE_COINS.EETH: {
+				if (!value.startsWith('0x')) {
+					dispatch(setFormError(FORM_TRANSFER, 'to', 'Ethereum address must starts with 0x'));
+					return false;
+				}
+
+				if (!isEthAddress(value)) {
+					dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid eth address'));
+					return false;
+				}
+				break;
+			}
+			case STABLE_COINS.EBTC: {
+				if (!isBtcAddress(value)) {
+					dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid btc address'));
+					return false;
+				}
+				break;
+			}
+			default: {
+				dispatch(setFormError(FORM_TRANSFER, 'to', 'Unexpected error'));
+				return false;
+			}
+		}
+
+		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', WITHDRAW_SUBJECT_TYPE));
+		dispatch(setIn(FORM_TRANSFER, 'to', {
+			checked: true,
+			error: null,
+		}));
+		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
+		await dispatch(setAdditionalAccountInfo(''));
+		return WITHDRAW_SUBJECT_TYPE;
+	}
+
 	if (validateAccountAddress(value)) {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ADDRESS_SUBJECT_TYPE));
 		dispatch(setIn(FORM_TRANSFER, 'to', {
@@ -556,25 +638,37 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 		}));
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
 
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 		return ADDRESS_SUBJECT_TYPE;
 
 	} else if (validators.isContractId(value)) {
-
+		console.log('11111111')
 		const contract = await echo.api.getContract(value);
+		console.log('2222222')
+
 		if (!contract) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid contract ID'));
 			return false;
 		}
+		console.log('333333')
+
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', CONTRACT_ID_SUBJECT_TYPE));
+		console.log('444444')
+
 		dispatch(setIn(FORM_TRANSFER, 'to', {
 			checked: true,
 			error: null,
 		}));
+		console.log('555555555555')
+
 		dispatch(setValue(FORM_TRANSFER, 'avatarName', ''));
-		dispatch(setAdditionalAccountInfo(''));
+		console.log('666666666')
+
+		await dispatch(setAdditionalAccountInfo(''));
+		console.log('77777777')
 
 		return CONTRACT_ID_SUBJECT_TYPE;
+		console.log('88888888')
 
 	} else if (validators.isAccountId(value)) {
 		const account = await echo.api.getObject(value);
@@ -585,11 +679,12 @@ export const subjectToSendSwitch = (value) => async (dispatch) => {
 		}
 		value = account.name;
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_ID_SUBJECT_TYPE));
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 	} else {
 		dispatch(setValue(FORM_TRANSFER, 'subjectTransferType', ACCOUNT_NAME_SUBJECT_TYPE));
-		dispatch(setAdditionalAccountInfo(value));
+		await dispatch(setAdditionalAccountInfo(value));
 	}
+	console.log('9999999')
 
 	dispatch(setValue(FORM_TRANSFER, 'avatarName', value));
 	return dispatch(checkAccount(value, 'to'));
@@ -870,6 +965,47 @@ export const transferSwitch = () => async (dispatch, getState) => {
 
 			dispatch(TransactionReducer.actions.setOperation({
 				operation: 'contract_call',
+				options,
+				showOptions,
+			}));
+
+			return true;
+		}
+		case WITHDRAW_SUBJECT_TYPE: {
+			const activeCoinTypeTab = getState().global.get('activeCoinTypeTab');
+			const options = {
+				fee: {
+					asset_id: form.fee.asset ? form.fee.asset.id : ECHO_ASSET_ID,
+					amount: fee.value || 0,
+				},
+				account: fromAccount.id,
+				value: new BN(amount).times(10 ** currency.precision).toString(10) || 0,
+				to: to.value.toLowerCase(),
+			};
+
+			const precision = new BN(10).pow(fee.asset.precision);
+			const showOptions = {
+				fee: `${new BN(fee.value).div(precision)
+					.toString(10) || 0} ${fee.asset.symbol}`,
+				account: fromAccount.name,
+				value: `${amount} ${currency.symbol}`,
+			};
+
+			let operationType = '';
+			if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+				options.btc_addr = to.value;
+				showOptions.btc_address = to.value;
+				operationType = 'sidechain_btc_withdraw';
+			} else {
+				options.eth_addr = to.value.replace('0x', '');
+				showOptions.eth_address = to.value;
+				operationType = 'sidechain_eth_withdraw';
+			}
+
+			dispatch(resetTransaction());
+
+			dispatch(TransactionReducer.actions.setOperation({
+				operation: operationType,
 				options,
 				showOptions,
 			}));
