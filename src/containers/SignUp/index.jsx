@@ -316,7 +316,8 @@ export default connect(
 		createAccount: (value, isAdd, isCustomWIF) =>
 			dispatch(createAccount(value, isAdd, isCustomWIF)),
 		createAccountTransaction: (sender, value) => dispatch(createAccountTransaction(sender, value)),
-		validateCreateAccount: (value, isAdd) => dispatch(validateCreateAccount(value, isAdd)),
+		validateCreateAccount: (value, isAdd, isCustomWIF) =>
+			dispatch(validateCreateAccount(value, isAdd, isCustomWIF)),
 		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),

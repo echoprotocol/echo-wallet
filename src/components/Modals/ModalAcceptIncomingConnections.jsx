@@ -9,7 +9,7 @@ import { closeModal } from '../../actions/ModalActions';
 import { MODAL_ACCEPT_INCOMING_CONNECTIONS } from '../../constants/ModalConstants';
 import icAccept from '../../assets/images/ic-accept.svg';
 
-class ModalInfoWallet extends React.Component {
+class ModalAcceptIncomingConnections extends React.Component {
 
 	onClose(e) {
 		e.preventDefault();
@@ -91,13 +91,13 @@ class ModalInfoWallet extends React.Component {
 
 }
 
-ModalInfoWallet.propTypes = {
+ModalAcceptIncomingConnections.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
 };
 
-ModalInfoWallet.defaultProps = {
+ModalAcceptIncomingConnections.defaultProps = {
 	show: false,
 };
 
@@ -109,5 +109,5 @@ export default injectIntl(connect(
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_ACCEPT_INCOMING_CONNECTIONS)),
 	}),
-)(ModalInfoWallet));
+)(ModalAcceptIncomingConnections));
 

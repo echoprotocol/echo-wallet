@@ -14,6 +14,10 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 
 class Wallet extends React.Component {
 
+	componentWillUnmount() {
+		this.props.setGlobalValue('activeCoinTypeTab', 0);
+	}
+
 	render() {
 		const {
 			assets, tokens, accountName, from, to, amount, currency, ethAddress,
@@ -70,6 +74,7 @@ class Wallet extends React.Component {
 							getTransferFee={this.props.getTransferFee}
 							setContractFees={this.props.setContractFees}
 							isDisplaySidechainNotification={isDisplaySidechainNotification}
+							activeCoinTypeTab={activeCoinTypeTab}
 						/>
 					</div>),
 			},
@@ -180,6 +185,7 @@ class Wallet extends React.Component {
 								this.props.setAsset(symbol, 'tokens');
 								this.props.setContractFees();
 							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 					</div>
 				</div>
@@ -215,7 +221,7 @@ Wallet.propTypes = {
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	activePaymentTypeTab: PropTypes.number.isRequired,
-	activeCoinTypeTab: PropTypes.number.isRequired,
+	activeCoinTypeTab: PropTypes.any.isRequired,
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,

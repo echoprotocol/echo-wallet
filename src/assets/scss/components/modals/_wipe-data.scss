@@ -1,12 +1,4 @@
 .wipe-data {
-	.main-form {
-		max-width: 468px;
-		margin: auto;
-	}
-
-	.form-info {
-		margin-bottom: 18px;
-	}
 
 	.form-info-description {
 		font-size: 15px;
@@ -24,7 +16,8 @@
 	}
 
 	.form-panel {
-		justify-content: flex-end;
-		margin: 30px 0 0;
+		.main-btn {
+			min-width: 160px;
+		}
 	}
 }

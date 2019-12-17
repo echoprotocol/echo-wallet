@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
 import { injectIntl } from 'react-intl';
 
-import { closeModal } from '../../actions/ModalActions';
+import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
@@ -24,6 +24,10 @@ class ModalToWhitelist extends React.Component {
 
 
 	onClose(e) {
+		this.props.setValue('amount', {
+			...this.props.amount,
+			value: '',
+		});
 		e.preventDefault();
 		this.props.closeModal();
 	}
@@ -32,9 +36,15 @@ class ModalToWhitelist extends React.Component {
 		submit();
 	}
 
+	onChangeFeePoolValue(val, cur, name) {
+		this.props.amountInput(val, cur, name);
+		if (val && this.props.error) {
+			this.props.setModalError('');
+		}
+	}
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl, error,
 		} = this.props;
 
 		const amountTexts = {
@@ -45,6 +55,8 @@ class ModalToWhitelist extends React.Component {
 			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
 			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
 			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
+			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
 		};
 
 		return (
@@ -100,10 +112,15 @@ class ModalToWhitelist extends React.Component {
 												form={FORM_REPLENISH}
 												fee={fee}
 												assets={assets}
-												amount={amount}
+												amount={{
+													...amount,
+													error,
+												}}
 												currency={currency}
 												isAvailableBalance={isAvailableBalance}
-												amountInput={this.props.amountInput}
+												amountInput={(val, cur, name) => {
+													this.onChangeFeePoolValue(val, cur, name);
+												}}
 												setFormError={this.props.setFormError}
 												setFormValue={this.props.setFormValue}
 												setValue={this.props.setValue}
@@ -138,6 +155,7 @@ class ModalToWhitelist extends React.Component {
 ModalToWhitelist.propTypes = {
 	activeAccount: PropTypes.object,
 	show: PropTypes.bool,
+	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
 	fees: PropTypes.array.isRequired,
 	fee: PropTypes.object.isRequired,
@@ -148,6 +166,7 @@ ModalToWhitelist.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
+	setModalError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
@@ -158,6 +177,7 @@ ModalToWhitelist.propTypes = {
 ModalToWhitelist.defaultProps = {
 	activeAccount: null,
 	show: false,
+	error: null,
 	currency: null,
 };
 
@@ -167,6 +187,7 @@ export default injectIntl(connect(
 		fee: state.form.getIn([FORM_REPLENISH, 'fee']),
 		activeAccount: state.global.get('activeUser'),
 		show: state.modal.getIn([MODAL_REPLENISH, 'show']),
+		error: state.modal.getIn([MODAL_REPLENISH, 'error']),
 		assets: state.form.getIn([FORM_REPLENISH, 'balance']).assets,
 		amount: state.form.getIn([FORM_REPLENISH, 'amount']),
 		currency: state.form.getIn([FORM_REPLENISH, 'currency']),
@@ -177,6 +198,7 @@ export default injectIntl(connect(
 		setValue: (field, value) => dispatch(setValue(FORM_REPLENISH, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_REPLENISH, field, value)),
 		setFormError: (field, error) => dispatch(setFormError(FORM_REPLENISH, field, error)),
+		setModalError: (err) => dispatch(setError(MODAL_REPLENISH, err)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_REPLENISH, value, currency, name)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_REPLENISH)),

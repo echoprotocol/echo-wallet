@@ -8,6 +8,7 @@ import { List } from 'immutable';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
 import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
+import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -240,15 +241,15 @@ class AmountField extends React.Component {
 			fee, isAvailableBalance,
 			fees, assetDropdown,
 			texts, showAvailable,
-			warningMessage,
 			isDisplaySidechainNotification,
 			autoFocus,
+			activeCoinTypeTab,
 		} = this.props;
 
 		const { searchText } = this.state;
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
-			.includes(form) && currency && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
 
 		return (
 			<Form.Field>
@@ -344,15 +345,18 @@ class AmountField extends React.Component {
 						/> : this.renderCurrencyLabel(currency)
 					}
 				</Input>
-				{ warningMessage }
 				{
-					(!amount.error || !fee.error) && isDisplaySidechainNotification ?
+					(!amount.error || !fee.error) && isDisplaySidechainNotification && activeCoinTypeTab ?
 						<span className="warning-message">
-							{texts.warningMsgPt1}
+							{texts.warning_message_pt1}
+							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo}
+							{texts.warning_message_pt2}
 							<span className="special">
-								{texts.warningMsgPt2}
+								{texts.warning_message_pt3}
 							</span>
-							{texts.warningMsgPt3}
+							{texts.warning_message_pt4}
+							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].original}
+							{texts.warning_message_pt5}
 						</span> : null
 				}
 
@@ -383,9 +387,9 @@ AmountField.propTypes = {
 	texts: PropTypes.object,
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
-	warningMessage: PropTypes.node,
 	isDisplaySidechainNotification: PropTypes.bool,
 	autoFocus: PropTypes.bool,
+	activeCoinTypeTab: PropTypes.any,
 };
 
 
@@ -399,10 +403,10 @@ AmountField.defaultProps = {
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),
 	showAvailable: true,
-	warningMessage: null,
 	isDisplaySidechainNotification: false,
 	autoFocus: false,
 	texts: {},
+	activeCoinTypeTab: 0,
 };
 
 export default AmountField;

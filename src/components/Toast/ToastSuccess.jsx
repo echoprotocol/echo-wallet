@@ -1,17 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-
-// const ToastSuccess = () => (
-// 	<React.Fragment>
-// 		<span className="toast-icon icon-checked-white" />
-// 		<span className="toast-text">Transaction has been send</span>
-// 	</React.Fragment>
-// );
-
-// export default ToastSuccess;
-
-
 const ToastSuccess = (text) => (
 	<React.Fragment>
 		<span className="toast-icon icon-checked-white" />

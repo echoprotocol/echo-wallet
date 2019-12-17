@@ -55,6 +55,8 @@ class TabCallContracts extends React.Component {
 			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
 			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
 			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
+			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
 		};
 
 		if (functionName) {

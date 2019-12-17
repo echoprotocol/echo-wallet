@@ -39,50 +39,47 @@ class ModalWipeWallet extends React.Component {
 		const { checked } = this.state;
 
 		return (
-			<Modal className="small wipe-data" open={show}>
+			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header" />
-						<div className="modal-body">
-							<div className="main-form">
-								<div className="form-info">
-									<h3>
-										{intl.formatMessage({ id: 'modals.modal_wipe.title' })}
-									</h3>
-								</div>
-								<div className="form-info-description">
-									{intl.formatMessage({ id: 'modals.modal_wipe.text' })}
-								</div>
-								<div className="check-list">
-									<div className="check">
-										<input
-											checked={checked}
-											onChange={() => this.toggleChecked()}
-											type="checkbox"
-											id="wipe-agree"
-										/>
-										<label className="label" htmlFor="wipe-agree">
-											<span className="label-text">
-												{intl.formatMessage({ id: 'modals.modal_wipe.checkbox_text' })}
-											</span>
-										</label>
-									</div>
-								</div>
-								<div className="form-panel">
-									<Button
-										type="submit"
-										className="main-btn"
-										content={intl.formatMessage({ id: 'modals.modal_wipe.confirm_button_text' })}
-										onClick={this.props.wipe}
-										disabled={loading || !checked}
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h3 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_wipe.title' })}
+						</h3>
+					</div>
+					<div className="wipe-data modal-body">
+						<form className="main-form">
+							<div className="form-info-description">
+								{intl.formatMessage({ id: 'modals.modal_wipe.text' })}
+							</div>
+							<div className="check-list">
+								<div className="check">
+									<input
+										checked={checked}
+										onChange={() => this.toggleChecked()}
+										type="checkbox"
+										id="wipe-agree"
 									/>
+									<label className="label" htmlFor="wipe-agree">
+										<span className="label-text">
+											{intl.formatMessage({ id: 'modals.modal_wipe.checkbox_text' })}
+										</span>
+									</label>
 								</div>
 							</div>
-						</div>
+							<div className="form-panel">
+								<Button
+									type="submit"
+									className="main-btn"
+									content={intl.formatMessage({ id: 'modals.modal_wipe.confirm_button_text' })}
+									onClick={this.props.wipe}
+									disabled={loading || !checked}
+								/>
+							</div>
+						</form>
 					</div>
 				</FocusLock>
 			</Modal>

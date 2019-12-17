@@ -11,6 +11,7 @@ import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
 import BytecodeField from '../Fields/BytecodeField';
 import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
+import { STABLE_COINS } from '../../constants/SidechainConstants';
 
 class Transfer extends React.Component {
 
@@ -41,14 +42,49 @@ class Transfer extends React.Component {
 		}
 	}
 
+	getAssets() {
+		const { assets, activeCoinTypeTab } = this.props;
+
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EBTC);
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return assets.filter((asset) => asset.symbol === STABLE_COINS.EETH);
+		}
+
+		return assets;
+	}
+
+	getTokens() {
+		const { tokens, activeCoinTypeTab, subjectTransferType } = this.props;
+
+		if (subjectTransferType === CONTRACT_ID_SUBJECT_TYPE || activeCoinTypeTab) {
+			return new List([]);
+		}
+
+		return tokens;
+	}
+
+	getToPlaceholder() {
+		const { activeCoinTypeTab } = this.props;
+
+		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
+			return 'wallet_page.create_payment.to_input.placeholder_v2';
+		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
+			return 'wallet_page.create_payment.to_input.placeholder_v3';
+		}
+
+		return 'wallet_page.create_payment.to_input.placeholder';
+	}
+
 	async subjectToSendSwitch(subject) {
 		const { amount, fee } = this.props;
-		const isValid = await this.props.subjectToSendSwitch(subject);
-		if (isValid && amount.value && !fee.amount) {
+		if (amount.value && !fee.amount) {
 			this.props.getTransferFee().then((resFee) => resFee && this.props.setValue('fee', resFee));
-		} else if (!isValid || !amount.value) {
+		} else if (!amount.value) {
 			this.switchFeeToDefaultValue();
 		}
+
+		return this.props.subjectToSendSwitch(subject);
 	}
 
 	switchFeeToDefaultValue() {
@@ -61,9 +97,8 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			from, to, currency, intl,
-			fee, assets, tokens, amount, isAvailableBalance, fees, bytecode, avatarName,
-			subjectTransferType, additionalAccountInfo,
+			from, to, currency, additionalAccountInfo, intl,
+			fee, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 		const amountTexts = {
 			label: intl.formatMessage({ id: 'amount_input.title' }),
@@ -73,6 +108,8 @@ class Transfer extends React.Component {
 			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
 			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
 			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
+			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
 		};
 		const { bytecodeVisible } = this.state;
 
@@ -108,6 +145,7 @@ class Transfer extends React.Component {
 									subject="to"
 									field={to}
 									avatarName={avatarName}
+									activeCoinTypeTab={this.props.activeCoinTypeTab}
 									autoFocus
 									subjectToSendSwitch={(value) => this.subjectToSendSwitch(value)}
 									setTransferFee={this.props.setTransferFee}
@@ -118,7 +156,7 @@ class Transfer extends React.Component {
 									setValue={this.props.setValue}
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
 									label={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.title' })}
-									placeholder={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.placeholder' })}
+									placeholder={intl.formatMessage({ id: this.getToPlaceholder() })}
 								/>
 								{
 									bytecodeVisible &&
@@ -132,8 +170,8 @@ class Transfer extends React.Component {
 									fees={fees}
 									form={FORM_TRANSFER}
 									fee={fee}
-									assets={assets}
-									tokens={subjectTransferType === CONTRACT_ID_SUBJECT_TYPE ? new List([]) : tokens}
+									assets={this.getAssets()}
+									tokens={this.getTokens()}
 									amount={amount}
 									currency={currency}
 									isAvailableBalance={isAvailableBalance}
@@ -147,6 +185,7 @@ class Transfer extends React.Component {
 									setTransferFee={this.props.setTransferFee}
 									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
 									texts={amountTexts}
+									activeCoinTypeTab={this.props.activeCoinTypeTab}
 								/>
 								<div className="form-panel">
 									<Button
@@ -178,6 +217,7 @@ Transfer.propTypes = {
 	subjectTransferType: PropTypes.string.isRequired,
 	bytecode: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
+	activeCoinTypeTab: PropTypes.any,
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
@@ -205,7 +245,8 @@ Transfer.propTypes = {
 Transfer.defaultProps = {
 	currency: null,
 	isDisplaySidechainNotification: false,
-	additionalAccountInfo: null,
+	additionalAccountInfo: '',
+	activeCoinTypeTab: 0,
 };
 
 

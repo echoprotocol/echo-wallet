@@ -55,7 +55,20 @@ class EchoNetwork extends React.Component {
 		return { addresses: nextProps.accountAddresses };
 	}
 
-	onClickItem(value) {
+	onDropdownChange(e, value) {
+		if ((e.type !== 'click' && e.keyCode !== 13) || e.target.id === 'btn-dlt') {
+			return;
+		}
+
+		if (value === 'generate-address') {
+			this.setState({
+				open: !this.state.open,
+				searchText: '',
+			});
+			this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+			return;
+		}
+
 		this.setState({
 			searchText: '',
 			receiver: value,
@@ -164,7 +177,6 @@ class EchoNetwork extends React.Component {
 				key: name,
 				text: name,
 				content,
-				onClick: () => this.onClickItem(name),
 			});
 		});
 
@@ -189,6 +201,7 @@ class EchoNetwork extends React.Component {
 		}];
 		return header;
 	}
+
 	renderAddressesList() {
 		const addresses = this.state.searchAddr;
 
@@ -224,12 +237,12 @@ class EchoNetwork extends React.Component {
 				key: index.toString(),
 				text: address,
 				content,
-				onClick: () => this.onClickItem(address),
 			});
 		});
 
 		return options.length && options;
 	}
+
 	renderGenerateAddressButton() {
 		const { intl } = this.props;
 		const btnValue = intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.button_text' });
@@ -272,6 +285,8 @@ class EchoNetwork extends React.Component {
 			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
 			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
 			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
+			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
+			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
 		};
 
 		const { receiver, open, searchText } = this.state;
@@ -301,8 +316,9 @@ class EchoNetwork extends React.Component {
 						search={() => this.renderOptions()}
 						text={receiver || 'Choose account or address'}
 						searchQuery={searchText}
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
-						onClick={() => { if (!open) { this.setState({ open: true }); } }}
+						onFocus={() => this.setState({ open: true })}
 						onBlur={() => this.setState({ open: false })}
 						open={open}
 					/>

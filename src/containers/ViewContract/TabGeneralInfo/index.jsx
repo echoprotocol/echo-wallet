@@ -24,7 +24,7 @@ import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 import { ECHO_ASSET_ID, ADDRESS_PREFIX } from '../../../constants/GlobalConstants';
 import { formatAmount } from '../../../helpers/FormatHelper';
 import { openModal } from '../../../actions/ModalActions';
-import { MODAL_REPLENISH } from '../../../constants/ModalConstants';
+import { MODAL_REPLENISH, MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST } from '../../../constants/ModalConstants';
 
 
 class TabGeneralInfo extends React.Component {
@@ -104,6 +104,17 @@ class TabGeneralInfo extends React.Component {
 		}
 
 		return { mainBalance: balances[0], otherBalances: balances.filter((__, i) => i !== 0) };
+	}
+
+	openChangeListModal(modal) {
+		const { contract } = this.props;
+		const contractPool = contract.getIn(['poolBalance', 'amount']);
+		if (!contractPool) {
+			this.props.openModal(MODAL_REPLENISH, {
+				error: 'Please, replenish Fee Pool Balance first',
+				contractId: this.props.match.params.id,
+			});
+		} else this.props.openModal(modal);
 	}
 
 	renderList(balances) {
@@ -234,7 +245,7 @@ class TabGeneralInfo extends React.Component {
 														<React.Fragment>
 															<button
 																className="link-btn"
-																onClick={this.props.openToWhitelistModal}
+																onClick={() => this.openChangeListModal(MODAL_TO_WHITELIST)}
 																disabled={loading}
 															>
 																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
@@ -272,7 +283,7 @@ class TabGeneralInfo extends React.Component {
 														<React.Fragment>
 															<button
 																className="link-btn"
-																onClick={this.props.openToBlacklistModal}
+																onClick={() => this.openChangeListModal(MODAL_TO_BLACKLIST)}
 																disabled={loading}
 															>
 																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
@@ -358,8 +369,6 @@ TabGeneralInfo.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
-	openToWhitelistModal: PropTypes.func.isRequired,
-	openToBlacklistModal: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
 };
 

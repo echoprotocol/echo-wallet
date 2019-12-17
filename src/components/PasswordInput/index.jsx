@@ -17,11 +17,12 @@ export default class PasswordInput extends React.PureComponent {
 	}
 
 	toggleShow(show) {
+		this.input.current.focus();
 		this.setState({
 			show: !show,
 		});
-		this.input.current.focus();
 	}
+
 
 	render() {
 
@@ -51,10 +52,12 @@ export default class PasswordInput extends React.PureComponent {
 						value={value}
 						autoFocus={autoFocus}
 						ref={this.input}
+						onFocus={(e) => { this.onFocus(e); }}
 					/>
 					<ActionBtn
+						actionByFocus
 						icon={show ? 'icon-e-show' : 'icon-e-hide'}
-						action={() => this.toggleShow(show)}
+						action={(e) => this.toggleShow(e, show)}
 					/>
 				</div>
 				<React.Fragment>

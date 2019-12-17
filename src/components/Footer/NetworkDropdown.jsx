@@ -25,6 +25,7 @@ class Network extends React.PureComponent {
 		this.state = {
 			open: false,
 		};
+
 	}
 
 	onDropdownChange(e, value) {
@@ -95,6 +96,15 @@ class Network extends React.PureComponent {
 		));
 	}
 
+	openDropdown(e) {
+		if (e.target.className === 'play-node') {
+			return;
+		}
+
+		const { open } = this.state;
+		if (!open) { this.setState({ open: true }); }
+	}
+
 	render() {
 		const { open } = this.state;
 		const {
@@ -130,50 +140,55 @@ class Network extends React.PureComponent {
 		});
 
 		return (
-			<Dropdown
-				open={open}
-				options={options}
-				onChange={(e, { value }) => this.onDropdownChange(e, value)}
-				direction="left"
-				icon={false}
-				selectOnBlur={false}
-				upward
-				disabled={loading}
-				onClick={() => { if (!open) { this.setState({ open: true }); } }}
-				onFocus={() => this.setState({ open: true })}
+			<div
+				className="network-dropdown"
+				onFocus={(e) => this.openDropdown(e)}
 				onBlur={() => this.setState({ open: false })}
-				className={classnames('network-dropdown', {
-					disconnected,
-					warning,
-				})}
-				trigger={
-					<div className="dropdown-trigger">
+				role="button"
+				tabIndex="0"
+			>
+				<div className="trigger" >
+					<span className="description">
+						{ disconnected ?
+							<FormattedMessage id="footer.network_section.title" /> :
+							<FormattedMessage id="footer.network_section.disconnected" />
+						}
+					</span>
+					<span className="status connected">
+						<div className="ellipsis">{network.name}</div>
+					</span>
 
-						<span className="description">
-							{ disconnected ?
-								<FormattedMessage id="footer.network_section.title" /> :
-								<FormattedMessage id="footer.network_section.disconnected" />
-							}
-						</span>
-						<span className="status connected">
-							<div className="ellipsis">{network.name}</div>
-						</span>
+					<ProgressBar
+						size={20}
+						value={64}
+						disconnected={disconnected}
+						warning={warning}
+					/>
 
-						<ProgressBar
-							size={20}
-							value={64}
-							disconnected={disconnected}
-							warning={warning}
-						/>
+					<span className="pipeline-block">
+						<FormattedMessage id="footer.network_section.block" />
+						<span>{this.props.lastBlock}</span>
+					</span>
+					<span className="icon dropdown" />
+				</div>
+				<Dropdown
+					open={open}
+					options={options}
+					onChange={(e, { value }) => this.onDropdownChange(e, value)}
+					direction="left"
+					icon={false}
+					selectOnBlur={false}
+					upward
+					tabIndex="-1"
+					disabled={loading}
+					className={classnames('', {
+						disconnected,
+						warning,
+					})}
+				/>
 
-						<span className="pipeline-block">
-							<FormattedMessage id="footer.network_section.block" />
-							<span>{this.props.lastBlock}</span>
-						</span>
-						<span className="icon dropdown" />
-					</div>
-				}
-			/>
+			</div>
+
 		);
 	}
 

@@ -16,12 +16,36 @@ class AccountField extends React.Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.activeCoinTypeTab !== this.props.activeCoinTypeTab && this.props.field.value) {
+			this.checkInput(this.props.field.value);
+		}
+	}
+
 	onInput(value) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
-		value = value.toLowerCase().trim();
 
+		const trimedValue = value.trim();
+
+		this.checkInput(trimedValue);
+	}
+
+	getStatus(field) {
+
+		if (field.error) {
+			return 'error';
+		}
+
+		if (field.checked) {
+			return 'checked';
+		}
+
+		return null;
+	}
+
+	checkInput(value) {
 		this.props.setIn(this.props.subject, {
 			loading: true,
 			error: null,
@@ -34,7 +58,11 @@ class AccountField extends React.Component {
 				if (this.props.subject === 'to') {
 					const validValue =
 						await this.props.subjectToSendSwitch(this.props.field.value);
-					if (!validValue) return;
+
+					if (!validValue) {
+						this.props.setVisibility('bytecode', false);
+						return;
+					}
 
 					if (validValue === CONTRACT_ID_SUBJECT_TYPE) {
 						this.props.setVisibility('bytecode', true);
@@ -57,19 +85,6 @@ class AccountField extends React.Component {
 				}
 			}, 300),
 		});
-	}
-
-	getStatus(field) {
-
-		if (field.error) {
-			return 'error';
-		}
-
-		if (field.checked) {
-			return 'checked';
-		}
-
-		return null;
 	}
 
 	isAvatar() {
@@ -133,11 +148,12 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
-	additionalAccountInfo: PropTypes.string,
 	additionalAccountPrefix: PropTypes.string,
 	avatarName: PropTypes.string,
 	label: PropTypes.string,
 	placeholder: PropTypes.string,
+	activeCoinTypeTab: PropTypes.any,
+	additionalAccountInfo: PropTypes.string,
 	checkAccount: PropTypes.func,
 	subjectToSendSwitch: PropTypes.func,
 	setTransferFee: PropTypes.func,
@@ -164,6 +180,7 @@ AccountField.defaultProps = {
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
 	additionalAccountPrefix: '',
+	activeCoinTypeTab: '',
 };
 
 export default AccountField;
