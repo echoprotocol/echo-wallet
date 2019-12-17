@@ -107,7 +107,7 @@ export const toFixed = (value, precision) => value.toFixed(precision).toString(1
  * @method formatAmount
  * @param {(String | Number)} amount
  * @param {Number} precision
- * @param {String} symbol
+ * @param {String?} symbol
  * @returns {String}
  */
 export const formatAmount = (amount, precision, symbol) => {

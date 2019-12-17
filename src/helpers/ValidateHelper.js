@@ -1,6 +1,5 @@
 import { validators, PublicKey, OPERATIONS_IDS } from 'echojs-lib';
 import BN from 'bignumber.js';
-import validate from 'bitcoin-address-validation';
 
 import {
 	ADDRESS_PREFIX,
@@ -10,7 +9,7 @@ import {
 	PUBLIC_KEY_LENGTH,
 	PUBLIC_KEY_LENGTH_43,
 } from '../constants/GlobalConstants';
-import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConsts';
+import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConstants';
 
 const reg = /^(([\da-fA-F]){2})*$/;
 
@@ -352,7 +351,7 @@ export const validateAmount = (value, { symbol, precision, balance }) => {
 	let amount = new BN(value);
 
 	if (amount.eq(0)) {
-		return null;
+		return `Amount should be more than 0 (${symbol} precision is ${precision} symbols)`;
 	}
 
 	if (!Math.floor(value * (10 ** precision))) {
@@ -557,25 +556,6 @@ export const checkAccessVersion = (version, minAccessVersion) => {
 	const [major, minor, patch] = [...version.split('.')].map((part) => parseInt(part, 10));
 	const [minMajor, minMinor, minPatch] = [...minAccessVersion.split('.')].map((part) => parseInt(part, 10));
 	return !(minMajor > major || minMinor > minor || minPatch > patch);
-};
-
-/**
- * @method isBackupAddress
- * @param {String} hex
- * @returns {boolean}
- */
-export const isBackupAddress = (hex) => {
-	try {
-		const validationData = validate(hex);
-
-		return validationData &&
-			!validationData.bech32 &&
-			!validationData.testnet &&
-			validationData.address &&
-			validationData.type === 'p2pkh';
-	} catch (e) {
-		return false;
-	}
 };
 
 export const getSidechainTrxAsset = (id) => {

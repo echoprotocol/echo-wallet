@@ -27,12 +27,14 @@ class actionBtn extends React.Component {
 		const { copied } = this.state;
 		const {
 			text, icon, action,
-			size, color,
+			size, color, actionByFocus,
 		} = this.props;
 
 		return (
 			<button
-				onClick={(e) => action(e)}
+				onClick={actionByFocus ? null : (e) => action(e)}
+				onFocus={actionByFocus ? (e) => action(e) : null}
+				type="button"
 				className={classnames(
 					'action-btn',
 					{ flat: !text },
@@ -83,6 +85,7 @@ actionBtn.propTypes = {
 	icon: PropTypes.string,
 	color: PropTypes.string,
 	size: PropTypes.string,
+	actionByFocus: PropTypes.bool,
 };
 
 actionBtn.defaultProps = {
@@ -92,6 +95,7 @@ actionBtn.defaultProps = {
 	icon: '',
 	color: '',
 	size: '',
+	actionByFocus: false,
 };
 
 

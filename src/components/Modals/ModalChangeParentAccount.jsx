@@ -112,17 +112,13 @@ class ModalChangeDelegate extends React.Component {
 			<Modal
 				className="change-parent-account-modal"
 				open={show}
-				dimmer="inverted"
 			>
-				<span
+				<button
 					className="icon-close"
 					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
 				/>
 				<div className="modal-header">
-					<h3 className="modal-header-title">Change delegate</h3>
+					<h2 className="modal-header-title">Change delegate</h2>
 				</div>
 				<div className="modal-body">
 					<div className="field-wrap">

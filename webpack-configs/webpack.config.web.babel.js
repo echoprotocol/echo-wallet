@@ -122,7 +122,7 @@ const config = {
 		new CleanWebpackPlugin(['build']),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
-		new CopyWebpackPlugin([{ from: 'src/assets/app_resources', to: '' }]),
+		new CopyWebpackPlugin([{ from: 'resources/icons', to: '' }]),
 		new webpack.DefinePlugin({
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
