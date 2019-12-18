@@ -40,8 +40,7 @@
 	}
 
 	.icon-info {
-		@include icon-info();
-		margin-right: 5px;
+		@include icon-info(4px, 0);
 	}
 
 	li:not(:last-child) {

@@ -193,14 +193,14 @@ class TabGeneralInfo extends React.Component {
 							</tr>
 							<tr>
 								<td className="key">
+									Fee Pool:
 									<Popup
 										trigger={<span className="icon-info" />}
-										content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+										content="Fee Pool information text will here!"
 										className="inner-tooltip"
 										position="bottom center"
 										style={{ width: 200 }}
 									/>
-									Fee Pool:
 								</td>
 								<td className="val">
 									<div className="val-wrap">
@@ -221,7 +221,16 @@ class TabGeneralInfo extends React.Component {
 								</td>
 							</tr>
 							<tr>
-								<td className="key">Whitelist:</td>
+								<td className="key">
+									Whitelist:
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="Whitelist information text will here!"
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
+								</td>
 								<td className="val">
 									{
 										(contract.get('whitelist') && contract.get('whitelist').size) ?
@@ -252,7 +261,16 @@ class TabGeneralInfo extends React.Component {
 								</td>
 							</tr>
 							<tr>
-								<td className="key">Blacklist:</td>
+								<td className="key">
+									Blacklist:
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="Whitelist information text will here!"
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
+								</td>
 								<td className="val">
 									{
 										(contract.get('blacklist') && contract.get('blacklist').size) ?
