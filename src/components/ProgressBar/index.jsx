@@ -14,9 +14,10 @@ import RadialSeparators from './RadialSeparators';
 
 export default class ProgressBar extends PureComponent {
 
-	onPlay(e) {
+	onNodeAction(e) {
 		e.preventDefault();
 	}
+
 	getTailColor(disconnected, warning) {
 
 		if (disconnected || warning) {
@@ -94,7 +95,11 @@ export default class ProgressBar extends PureComponent {
 
 	renderPlay() {
 		return (
-			<button tabIndex="-1" onClick={(e) => this.onPlay(e)} className="action-node">
+			<button
+				tabIndex="-1"
+				onClick={(e) => this.onNodeAction(e)}
+				className="action-node"
+			>
 				<img src={playNode} alt="play node synchronization" />
 			</button>
 
@@ -103,9 +108,20 @@ export default class ProgressBar extends PureComponent {
 
 	renderPause() {
 		return (
-			<button tabIndex="-1" onClick={(e) => this.onPause(e)} className="action-node">
-				<img src={pauseNode} alt="pause node synchronization" />
-			</button>
+			<React.Fragment>
+				<button
+					tabIndex="-1"
+					onClick={(e) => this.onNodeAction(e)}
+					className="action-node"
+				>
+					<img src={pauseNode} alt="pause node synchronization" />
+				</button>
+				<div className="percent">
+					32
+					<span className="symbol">%</span>
+				</div>
+			</React.Fragment>
+
 
 		);
 	}
