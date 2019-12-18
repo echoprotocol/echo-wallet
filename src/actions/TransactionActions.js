@@ -18,7 +18,6 @@ import {
 	FORM_SIGN_UP,
 	FORM_REPLENISH,
 	FORM_CHANGE_DELEGATE,
-	FORM_WHITELIST,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
