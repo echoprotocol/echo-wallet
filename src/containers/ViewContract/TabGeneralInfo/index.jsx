@@ -196,7 +196,7 @@ class TabGeneralInfo extends React.Component {
 									Fee Pool:
 									<Popup
 										trigger={<span className="icon-info" />}
-										content="Fee Pool information text will here!"
+										content="Fee Pool is a mechanism that allows to use contract calls at the expense of the pool balance that is replenished by anyone so that even zero-balance users can call a contract."
 										className="inner-tooltip"
 										position="bottom center"
 										style={{ width: 200 }}
@@ -225,7 +225,7 @@ class TabGeneralInfo extends React.Component {
 									Whitelist:
 									<Popup
 										trigger={<span className="icon-info" />}
-										content="Whitelist information text will here!"
+										content="Fee Pool Whitelist includes users who can spend Fee Pool."
 										className="inner-tooltip"
 										position="bottom center"
 										style={{ width: 200 }}
@@ -265,7 +265,7 @@ class TabGeneralInfo extends React.Component {
 									Blacklist:
 									<Popup
 										trigger={<span className="icon-info" />}
-										content="Whitelist information text will here!"
+										content="Fee Pool Blacklist is a list of users unallowed to spend Fee Pool."
 										className="inner-tooltip"
 										position="bottom center"
 										style={{ width: 200 }}
