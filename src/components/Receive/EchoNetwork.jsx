@@ -4,7 +4,6 @@ import { Dropdown } from 'semantic-ui-react';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
-import classnames from 'classnames';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -304,7 +303,7 @@ class EchoNetwork extends React.Component {
 				<p className="payment-description">
 					You can use several addresses referring to one account for different targets.
 				</p>
-				<div className="dropdown-wrap">
+				<div className="field recipient-dropdown-wrap">
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
 						placeholder="Choose account or address"
