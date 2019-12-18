@@ -52,7 +52,6 @@ export default class PasswordInput extends React.PureComponent {
 						value={value}
 						autoFocus={autoFocus}
 						ref={this.input}
-						onFocus={(e) => { this.onFocus(e); }}
 					/>
 					<ActionBtn
 						actionByFocus

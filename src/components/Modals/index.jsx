@@ -6,7 +6,6 @@ import ModalWipe from './ModalWipe';
 import ModalInfo from './ModalInfo';
 import ModalAddProposalWIF from './ModalAddProposalWIF';
 import ModalChangeParentAccount from './ModalChangeParentAccount';
-import ModalAcceptRunningNode from './ModalAcceptRunningNode';
 
 
 export default class ModalsComponent extends React.Component {
@@ -20,7 +19,6 @@ export default class ModalsComponent extends React.Component {
 				<ModalInfo />
 				<ModalAddProposalWIF />
 				<ModalChangeParentAccount />
-				<ModalAcceptRunningNode />
 			</React.Fragment>
 		);
 	}

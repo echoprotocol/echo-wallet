@@ -334,7 +334,7 @@ export default withRouter(connect(
 	(state) => {
 		const currentAccountId = state.global.getIn(['activeUser', 'id']);
 		const currentAccount = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccountId]);
-		const delegateId = currentAccount.getIn(['options', 'delegating_account']);
+		const delegateId = currentAccount ? currentAccount.getIn(['options', 'delegating_account']) : '';
 
 		return {
 			accountName: state.global.getIn(['activeUser', 'name']),

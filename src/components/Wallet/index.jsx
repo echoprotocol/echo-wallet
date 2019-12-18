@@ -11,8 +11,6 @@ import Receive from '../Receive';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
-import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
-
 class Wallet extends React.Component {
 
 	componentWillUnmount() {
@@ -129,7 +127,6 @@ class Wallet extends React.Component {
 
 		return (
 			<React.Fragment>
-				<ModalAcceptIncomingConnections />
 				<div className="page-wrap">
 					<div className="balance-wrap">
 						<div className="balance-title-row">

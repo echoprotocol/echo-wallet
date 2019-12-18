@@ -13,6 +13,7 @@ import { NETWORKS_PATH } from '../../constants/RouterConstants';
 
 import ProgressBar from '../ProgressBar';
 import RemoteNode from './RemoteNode';
+import { openModal } from '../../actions/ModalActions';
 // import LocalNode from './LocalNode';
 
 
@@ -86,7 +87,7 @@ class Network extends React.PureComponent {
 						{ i.name === 'testnet' &&
 							<div className="node-info">
 								{/* <LocalNode /> */}
-								<RemoteNode value={64} />
+								<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
 							</div>
 						}
 					</div>
@@ -96,7 +97,7 @@ class Network extends React.PureComponent {
 	}
 
 	openDropdown(e) {
-		if (e.target.className === 'play-node') {
+		if (e.target.className === 'action-node') {
 			return;
 		}
 
@@ -153,9 +154,11 @@ class Network extends React.PureComponent {
 
 					<ProgressBar
 						size={20}
-						value={64}
+						value={parseInt(this.props.localNodePercent, 10)}
 						disconnected={disconnected}
 						warning={warning}
+						openModal={this.props.openModal}
+						isNodeSyncing={this.props.isNodeSyncing}
 					/>
 
 					<span className="pipeline-block">
@@ -194,7 +197,10 @@ Network.propTypes = {
 	history: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 	lastBlock: PropTypes.any.isRequired,
+	localNodePercent: PropTypes.any.isRequired,
+	isNodeSyncing: PropTypes.bool.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
 };
@@ -209,10 +215,13 @@ export default withRouter(connect(
 	(state) => ({
 		network: state.global.get('network').toJS(),
 		networks: state.global.get('networks').toJS(),
+		localNodePercent: state.global.get('localNodePercent'),
+		isNodeSyncing: state.global.get('isNodeSyncing'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
 		deleteNetwork: (network) => dispatch(deleteNetwork(network)),
+		openModal: (value) => dispatch(openModal(value)),
 	}),
 )(Network));

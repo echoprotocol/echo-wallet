@@ -9,13 +9,23 @@ import {
 import playNode from '../../assets/images/play-node.svg';
 import pauseNode from '../../assets/images/pause-node.svg';
 
-
 import RadialSeparators from './RadialSeparators';
+
+import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
+import ModalAcceptRunningNode from '../Modals/ModalAcceptRunningNode';
+import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
+
+// import Services from '../../services';
 
 export default class ProgressBar extends PureComponent {
 
 	onPlay(e) {
 		e.preventDefault();
+		this.props.openModal(MODAL_ACCEPT_RUNNING_NODE);
+	}
+	onPause(e) {
+		e.preventDefault();
+		// Services.getEcho().stopNode();
 	}
 	getTailColor(disconnected, warning) {
 
@@ -33,7 +43,7 @@ export default class ProgressBar extends PureComponent {
 		return '#4B6CC3';
 	}
 
-	getSeporatorColor(disconnected, warning) {
+	getSeparatorColor(disconnected, warning) {
 
 		if (disconnected) {
 			return 'rgb(246, 92, 92)';
@@ -77,7 +87,7 @@ export default class ProgressBar extends PureComponent {
 						<RadialSeparators
 							count={10}
 							style={{
-								background: this.getSeporatorColor(disconnected, warning),
+								background: this.getSeparatorColor(disconnected, warning),
 								width: '1px',
 								height: '4px',
 							}}
@@ -111,17 +121,22 @@ export default class ProgressBar extends PureComponent {
 	}
 
 	render() {
-
+		const { isNodeSyncing } = this.props;
 
 		return (
-			<div className="progress-wrap">
-				{
-					// this.renderProgress()
-					// this.renderPlay()
-					this.renderPause()
-				}
+			<React.Fragment>
+				<ModalAcceptRunningNode />
+				<ModalAcceptIncomingConnections />
+				<div className="progress-wrap">
+					{
+						isNodeSyncing ? this.renderProgress() : this.renderPlay()
+						// this.renderProgress()
+						// this.renderPlay()
+						// this.renderPause()
+					}
 
-			</div>
+				</div>
+			</React.Fragment>
 		);
 	}
 
@@ -132,6 +147,8 @@ ProgressBar.propTypes = {
 	value: PropTypes.number,
 	disconnected: PropTypes.bool.isRequired,
 	warning: PropTypes.bool.isRequired,
+	openModal: PropTypes.func.isRequired,
+	isNodeSyncing: PropTypes.func.isRequired,
 };
 
 ProgressBar.defaultProps = {

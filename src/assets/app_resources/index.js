@@ -279,6 +279,10 @@ function createWindow() {
 
 		});
 
+		ipcMain.on('stopNode', async () => {
+			lastNode.stop();
+		});
+
 	});
 
 

@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo, { constants, Echo } from 'echojs-lib';
+import echo, { Echo } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -22,7 +22,6 @@ import {
 	NETWORKS,
 	USER_STORAGE_SCHEMES,
 	GLOBAL_ERROR_TIMEOUT,
-	REGISTRATION,
 	DEFAULT_NETWORK,
 } from '../constants/GlobalConstants';
 import { FORM_ADD_CUSTOM_NETWORK, FORM_PERMISSION_KEY, FORM_PASSWORD_CREATE } from '../constants/FormConstants';
@@ -50,6 +49,7 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import Listeners from '../services/Listeners';
 
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('isFirstLaunch');
@@ -66,7 +66,7 @@ export const incomingConnectionsRequest = () => (dispatch) => {
 /**
  *  @method setAccounts
  */
-export const setAccounts = () => (async () => {
+export const startLocalNode = (pass) => (async (dispatch) => {
 
 	const userStorage = Services.getUserStorage();
 	const networkId = await userStorage.getNetworkId();
@@ -77,7 +77,7 @@ export const setAccounts = () => (async () => {
 	const accounts =
 		await Promise.all(storageAccounts.map(({ name }) =>
 			Services.getEcho().remote.api.getAccountByName(name)));
-	await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, 'qwe123QWE123');
+	await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
 
 	const chainToken = await userStorage.getChainToken();
 
@@ -101,71 +101,10 @@ export const setAccounts = () => (async () => {
 		});
 	});
 
-	// Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
+	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 });
-
-/**
- *  @method initNetworks
- *
- * 	Set value to global reducer
- *
- * 	@param store
- */
-export const initNetworks = (store) => async (dispatch) => {
-	let current = localStorage.getItem('current_network');
-	if (!current) {
-		[current] = DEFAULT_NETWORK;
-		localStorage.setItem('current_network', JSON.stringify(current));
-	} else {
-		current = JSON.parse(current);
-	}
-
-	dispatch(GlobalReducer.actions.set({
-		field: 'network',
-		value: new Map(current),
-	}));
-
-	let networks = localStorage.getItem('custom_networks');
-	networks = networks ? JSON.parse(networks) : [];
-
-	dispatch(GlobalReducer.actions.set({
-		field: 'networks',
-		value: new List(networks),
-	}));
-
-	await Services.getUserStorage().setNetworkId(current.name);
-	await Services.getEcho().init(current.name, { store });
-
-	Services.getEcho().setOptions([], current.name);
-};
-
-/**
- *  @method initApp
- *
- * 	Initialization application
- *
- * 	@param {Object} store - redux store
- */
-export const initApp = (store) => async (dispatch) => {
-	// const listeners = new Listeners();
-	// listeners.initListeners(dispatch, getState);
-	//
-	// dispatch(setValue('loading', 'global.loading'));
-
-	try {
-		const userStorage = Services.getUserStorage();
-		await userStorage.init();
-
-		await dispatch(initNetworks(store));
-		await dispatch(setAccounts());
-	} catch (err) {
-		console.warn(err.message || err);
-	} finally {
-		dispatch(setValue('loading', ''));
-	}
-
-};
 
 /**
  * @method initAccount
@@ -188,7 +127,10 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
+		const echoInstance = Services.getEcho().getEchoInstance();
+		if (echoInstance) {
+			echoInstance.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
+		}
 
 		const { id, name, options } = await Services.getEcho().api.getAccountByName(accountName);
 
@@ -227,59 +169,18 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 };
 
 /**
- * @method setIsConnectedStatus
- *
- * @param {Boolean} isConnect
- * @returns {function(dispatch): undefined}
+ * @method initAfterConnection
+ * @param network
+ * @returns {Function}
  */
-export const setIsConnectedStatus = (isConnect) => (dispatch) => {
-	dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: isConnect }));
-};
-
-export const connection = () => async (dispatch) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-
-	if (ELECTRON && window.ipcRenderer) {
-		window.ipcRenderer.send('showWindow');
-	}
-
-	let network = localStorage.getItem('current_network');
-
-	if (!network) {
-		[network] = NETWORKS;
-		localStorage.setItem('current_network', JSON.stringify(network));
-	} else {
-		network = JSON.parse(network);
-	}
-
-	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(network) }));
-
-	let networks = localStorage.getItem('custom_networks');
-	networks = networks ? JSON.parse(networks) : [];
-
-	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+export const initAfterConnection = (network) => async (dispatch) => {
 
 	try {
 		const userStorage = Services.getUserStorage();
-		await userStorage.init();
-		await userStorage.setNetworkId(network.name);
 		const doesDBExist = await userStorage.doesDBExist();
 		if (!doesDBExist) {
 			history.push(CREATE_PASSWORD_PATH);
 		}
-
-		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
-		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
-
-		await Services.getEcho().changeConnection(network.url);
-
-		// await echo.connect(
-		// 	network.url,
-		// 	{
-		// 		apis: constants.WS_CONSTANTS.CHAIN_APIS,
-		// 		registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
-		// 	},
-		// );
 
 		await Services.getEcho().api.getDynamicGlobalProperties(true);
 		// await echo.api.getDynamicGlobalProperties(true);
@@ -310,16 +211,86 @@ export const connection = () => async (dispatch) => {
 };
 
 /**
+ *  @method initNetworks
+ *
+ * 	Set value to global reducer
+ *
+ * 	@param store
+ * 	@return network
+ */
+export const initNetworks = (store) => async (dispatch) => {
+	let current = localStorage.getItem('current_network');
+	if (!current) {
+		[current] = DEFAULT_NETWORK;
+		localStorage.setItem('current_network', JSON.stringify(current));
+	} else {
+		current = JSON.parse(current);
+	}
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'network',
+		value: new Map(current),
+	}));
+
+	let networks = localStorage.getItem('custom_networks');
+	networks = networks ? JSON.parse(networks) : [];
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
+
+	try {
+		await Services.getUserStorage().setNetworkId(current.name);
+		if (store) {
+			await Services.getEcho().init(current.name, { store });
+		} else {
+			await Services.getEcho().changeConnection(current.name);
+		}
+	} catch (err) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
+	}
+
+	return current;
+};
+
+/**
+ *  @method initApp
+ *
+ * 	Initialization application
+ *
+ * 	@param {Object?} store - redux store
+ */
+export const initApp = (store) => async (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
+	if (ELECTRON && window.ipcRenderer) {
+		window.ipcRenderer.send('showWindow');
+	}
+
+	const listeners = new Listeners();
+	listeners.initListeners(dispatch, getState);
+
+	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.init();
+
+		const network = await dispatch(initNetworks(store));
+		await dispatch(initAfterConnection(network));
+		// await dispatch(setAccounts());
+	} catch (err) {
+		console.warn(err.message || err);
+	} finally {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+	}
+
+};
+
+/**
  * @method disconnect
  * @returns {function(dispatch): Promise<undefined>}
  */
 export const disconnection = () => async (dispatch) => {
-
-	// if (Services.getEcho().isConnected) {
-	// if (echo.isConnected) {
-	// 	await echo.disconnect();
-	// }
-
 	echo.subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
@@ -568,7 +539,7 @@ export const saveNetwork = (network) => async (dispatch) => {
 	await dispatch(disconnection());
 
 	localStorage.setItem('current_network', JSON.stringify(network));
-	dispatch(connection());
+	await dispatch(initApp());
 
 	const userStorage = Services.getUserStorage();
 	await userStorage.setNetworkId(network.name);
@@ -674,7 +645,7 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	const currentNetwork = getState().global.get('network').toJS();
 	if (currentNetwork.name === network.name) {
 		localStorage.removeItem('current_network');
-		dispatch(connection());
+		dispatch(initApp());
 		return;
 	}
 

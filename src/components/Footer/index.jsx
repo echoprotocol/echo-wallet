@@ -7,7 +7,7 @@ import { CACHE_MAPS } from 'echojs-lib';
 
 import { version } from '../../../package.json';
 import NetworkDropdown from './NetworkDropdown';
-import { connection } from '../../actions/GlobalActions';
+import { initApp } from '../../actions/GlobalActions';
 import { openModal } from '../../actions/ModalActions';
 import { MODAL_INFO } from '../../constants/ModalConstants';
 import { PERMISSIONS_PATH } from '../../constants/RouterConstants';
@@ -145,6 +145,6 @@ export default withRouter(connect(
 	}),
 	(dispatch) => ({
 		openModal: () => dispatch(openModal(MODAL_INFO)),
-		connection: () => dispatch(connection()),
+		connection: () => dispatch(initApp()),
 	}),
 )(Footer));

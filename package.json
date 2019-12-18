@@ -14,14 +14,11 @@
     "start": "cross-env NODE_ENV=local node --trace-warnings -r @babel/register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack-configs/webpack.config.web.babel.js --mode development --progress --colors --history-api-fallback --hot --inline",
     "build-electron-tmp": " npm run build-main && npm run build-renderer",
     "build": "cross-env NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --display-error-details --colors --mode production",
-    "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors",
-    "build-renderer": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.renderer.babel.js --colors",
     "build-dev": "cross-env NODE_ENV=development webpack --config webpack-configs/webpack.config.web.babel.js  --progress --display-error-details --colors --mode production",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
     "package": "build -p never --linux deb",
     "package-win": "npm run build-electron && electron-builder build -p never --windows",
     "package-deb": "npm run build-electron && electron-builder build -p never --linux deb",
-    "package-mac": "npm run build-electron && electron-builder build -p never --mac dmg",
     "package-deb-with-download-build": "npm run download-linux-build && npm run package-deb",
     "package-mac-with-download-build": "npm run download-mac-build && npm run package-mac",
     "build-electron-debug": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --env.prod --env.electron --env.hash",
@@ -31,10 +28,12 @@
     "download-linux-build": "DOWNLOAD_ECHO_NODE_OS=linux node -r @babel/register ./scripts/DownloadBuild.js",
     "download-mac-build": "DOWNLOAD_ECHO_NODE_OS=mac node -r @babel/register ./scripts/DownloadBuild.js",
     "package-linux": "npm run prepackage && build -p never --linux deb",
+    "package-mac": "npm run prepackage && build -p never --mac dmg",
     "prepackage": "npm run build-electron",
     "build-electron": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --env.prod --env.electron --env.hash",
     "postbuild-electron": "npm run prepare-electron && npm run build-main",
-    "prepare-electron": "copyfiles -f src/assets/app_resources/preload.js build/electron/"
+    "prepare-electron": "copyfiles -f src/assets/app_resources/preload.js build/electron/",
+    "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors"
   },
   "dependencies": {
     "ace-builds": "^1.4.7",

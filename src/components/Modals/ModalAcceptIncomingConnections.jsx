@@ -8,6 +8,7 @@ import { closeModal } from '../../actions/ModalActions';
 import { MODAL_ACCEPT_INCOMING_CONNECTIONS } from '../../constants/ModalConstants';
 import icAccept from '../../assets/images/ic-accept.svg';
 import UnlockScenario from '../../containers/UnlockScenario';
+import { startLocalNode } from '../../actions/GlobalActions';
 
 class ModalAcceptIncomingConnections extends React.Component {
 
@@ -16,11 +17,16 @@ class ModalAcceptIncomingConnections extends React.Component {
 		this.props.close();
 	}
 
+	onAccept(pass) {
+		this.props.close();
+		this.props.startLocalNode(pass);
+	}
+
 	render() {
 		const { show } = this.props;
 		return (
 			<UnlockScenario
-				onUnlock={this.props.close}
+				onUnlock={(pass) => this.onAccept(pass)}
 			>
 				{
 					(submit) => (
@@ -82,7 +88,7 @@ class ModalAcceptIncomingConnections extends React.Component {
 										<button
 											autoFocus
 											className="blue-btn"
-											onClick={() => submit()}
+											onClick={() => submit('income')}
 										>
 											CONFIRM
 										</button>
@@ -101,6 +107,7 @@ class ModalAcceptIncomingConnections extends React.Component {
 ModalAcceptIncomingConnections.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
+	startLocalNode: PropTypes.func.isRequired,
 };
 
 ModalAcceptIncomingConnections.defaultProps = {
@@ -114,6 +121,7 @@ export default connect(
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_ACCEPT_INCOMING_CONNECTIONS)),
+		startLocalNode: (pass) => dispatch(startLocalNode(pass)),
 	}),
 )(ModalAcceptIncomingConnections);
 
