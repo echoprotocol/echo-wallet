@@ -128,7 +128,7 @@ class AccountField extends React.Component {
 				autoFocus={autoFocus}
 				icon={icon}
 				disabled={disabled}
-				status={this.getStatus(field, disabled)}
+				status={this.getStatus(field)}
 				error={field.error}
 				loading={field.loading && !field.error}
 				placeholder={subject === 'to' ? placeholder : 'Account Name'}
