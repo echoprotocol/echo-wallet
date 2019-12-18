@@ -53,7 +53,7 @@ import {
 	SUPPORTED_ASSET_CUSTOM,
 } from '../constants/ContractsConstants';
 
-import { closeModal, toggleLoading as toggleModalLoading, setError as setModalError } from './ModalActions';
+import { closeModal, toggleLoading as toggleModalLoading } from './ModalActions';
 import {
 	toggleLoading,
 	setFormError,
