@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
 
 import { closeModal } from '../../actions/ModalActions';
@@ -112,7 +111,7 @@ class ModalToWhitelist extends React.Component {
 								<div className="modal-header">
 									<h3 className="modal-header-title">Add account to whitelist</h3>
 								</div>
-								<Form className="form modal-body">
+								<Form className="modal-body">
 									<div className="field-wrap">
 										<VerificationField
 											label="Account Name"

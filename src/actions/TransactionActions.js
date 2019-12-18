@@ -2004,6 +2004,7 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		dispatch(setModalError(type, 'Account shouldn\'t be empty'));
 		return null;
 	}
+
 	if (!validators.isAccountId(accountId)) {
 		const account = await echo.api.getAccountByName(accountId);
 		if (!account) {
@@ -2016,6 +2017,7 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		}
 		accountId = account.id;
 	}
+
 	if ([MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST].includes(type)) {
 		const contracts = getState().echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID);
 		const contractId = getState().contract.get('id');
