@@ -48,23 +48,20 @@ export const lookupAccountsList = async (name, limit = 15) => {
  * @param {String} accountName
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-export const checkAccount = (form, accountId, subject) => async (dispatch) => {
+export const checkAccount = (form, account, subject) => async (dispatch) => {
 	try {
-		if (!accountId) return false;
+		if (!account) return false;
+		const accountError = await validateAccountExist(account, true);
 
-		const accountExist = await echo.api.getObject(accountId);
+		if (accountError) {
+			dispatch(setFormError(form, subject, accountError));
+			return false;
+		}
 
-		console.log('accountNameError: ', accountExist);
-
-		// if (accountExist) {
-		// 	dispatch(setFormError(form, subject, accountExist));
-		// 	return false;
-		// }
-
-		// dispatch(setIn(form, subject, {
-		// 	checked: true,
-		// 	error: null,
-		// }));
+		dispatch(setIn(form, subject, {
+			checked: true,
+			error: null,
+		}));
 
 
 	} catch (err) {
