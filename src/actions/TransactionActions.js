@@ -18,6 +18,7 @@ import {
 	FORM_SIGN_UP,
 	FORM_REPLENISH,
 	FORM_CHANGE_DELEGATE,
+	FORM_TO_WHITELIST,
 } from '../constants/FormConstants';
 
 import { COMMITTEE_TABLE, PERMISSION_TABLE } from '../constants/TableConstants';
@@ -1995,15 +1996,21 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 
 export const contractChangeWhiteAndBlackLists = (accountId, type) => async (dispatch, getState) => {
 
-	console.log('here', accountId);
-
 	if (!accountId) {
+		if (type === MODAL_TO_WHITELIST) {
+			dispatch(setFormError(FORM_TO_WHITELIST, 'account', 'Account shouldn\'t be empty'));
+			return null;
+		}
 		dispatch(setModalError(type, 'Account shouldn\'t be empty'));
 		return null;
 	}
 	if (!validators.isAccountId(accountId)) {
 		const account = await echo.api.getAccountByName(accountId);
 		if (!account) {
+			if (type === MODAL_TO_WHITELIST) {
+				dispatch(setFormError(FORM_TO_WHITELIST, 'account', 'Account is not found'));
+				return null;
+			}
 			dispatch(setModalError(type, 'Account is not found'));
 			return null;
 		}
@@ -2013,15 +2020,24 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 		const contracts = getState().echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID);
 		const contractId = getState().contract.get('id');
 		if (!contracts.get(contractId)) {
+			if (type === MODAL_TO_WHITELIST) {
+				dispatch(setFormError(FORM_TO_WHITELIST, 'account', 'Network error'));
+				return null;
+			}
 			dispatch(setModalError(type, 'Network error'));
 			return null;
 		}
 		const list = contracts.getIn([contractId, type === MODAL_TO_WHITELIST ? 'whitelist' : 'blacklist']);
 		if (list && list.some((el) => el === accountId)) {
+			if (type === MODAL_TO_WHITELIST) {
+				dispatch(setFormError(FORM_TO_WHITELIST, 'account', 'This address already exists'));
+				return null;
+			}
 			dispatch(setModalError(type, 'This address already exists'));
 			return null;
 		}
 	}
+
 	const op = {
 		add_to_whitelist: [],
 		add_to_blacklist: [],
@@ -2040,78 +2056,6 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 			break;
 		case MODAL_BLACKLIST:
 			op.remove_from_blacklist = [accountId];
-			break;
-		default: {
-			return null;
-		}
-	}
-	const operation = 'contract_whitelist';
-	const activeUserId = getState().global.getIn(['activeUser', 'id']);
-	const constractId = getState().contract.get('id');
-	try {
-		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
-		const options = {
-			fee: {
-				asset_id: feeAsset.id,
-			},
-			sender: activeUserId,
-			contract: constractId,
-			...op,
-		};
-
-		options.fee.amount = await getOperationFee(operation, options);
-		const precision = new BN(10).pow(feeAsset.precision);
-
-		const showOptions = {
-			sender: getState().global.getIn(['activeUser', 'name']),
-			contract: constractId,
-			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
-		};
-		dispatch(TransactionReducer.actions.setOperation({
-			operation,
-			options,
-			showOptions,
-		}));
-		return true;
-	} catch (err) {
-		dispatch(setModalError(type, formatError(err)));
-		return null;
-	}
-};
-
-export const contractToWhiteLists = (accountId, type) => async (dispatch, getState) => {
-
-	if (!validators.isAccountId(accountId)) {
-		const account = await echo.api.getAccountByName(accountId);
-		if (!account) {
-			dispatch(setModalError(type, 'Account is not found'));
-			return null;
-		}
-		accountId = account.id;
-	}
-
-	if ([MODAL_TO_WHITELIST].includes(type)) {
-		const contracts = getState().echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID);
-		const contractId = getState().contract.get('id');
-		if (!contracts.get(contractId)) {
-			dispatch(setModalError(type, 'Network error'));
-			return null;
-		}
-		const list = contracts.getIn([contractId, 'whitelist']);
-		if (list && list.some((el) => el === accountId)) {
-			dispatch(setModalError(type, 'This address already exists'));
-			return null;
-		}
-	}
-	const op = {
-		add_to_whitelist: [],
-		add_to_blacklist: [],
-		remove_from_whitelist: [],
-		remove_from_blacklist: [],
-	};
-	switch (type) {
-		case MODAL_TO_WHITELIST:
-			op.add_to_whitelist = [accountId];
 			break;
 		default: {
 			return null;
