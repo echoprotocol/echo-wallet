@@ -277,7 +277,6 @@ export const initApp = (store) => async (dispatch, getState) => {
 
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
-		// await dispatch(setAccounts());
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {
@@ -291,7 +290,7 @@ export const initApp = (store) => async (dispatch, getState) => {
  * @returns {function(dispatch): Promise<undefined>}
  */
 export const disconnection = () => async (dispatch) => {
-	echo.subscriber.reset();
+	Services.getEcho().getEchoInstance().subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
@@ -408,8 +407,8 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		history.push(SIGN_IN_PATH);
 		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
 
-		echo.subscriber.reset();
-		echo.cache.reset();
+		Services.getEcho().getEchoInstance().subscriber.reset();
+		Services.getEcho().getEchoInstance().cache.reset();
 	}
 
 	if (activeAccountName === accountName && accounts[0]) {
@@ -699,8 +698,8 @@ export const resetData = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		echo.subscriber.reset();
-		echo.cache.reset();
+		Services.getEcho().getEchoInstance().subscriber.reset();
+		Services.getEcho().getEchoInstance().cache.reset();
 
 		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());

@@ -138,7 +138,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-			return AuthApi.registerAccount(echo.api, accountName, pubKey);
+			return AuthApi.registerAccount(Services.getEcho().api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
@@ -407,7 +407,7 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 const getAccountsList = (accounts) => async (dispatch) => {
 
 	const asset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-	
+
 	// const asset = await echo.api.getObject(ECHO_ASSET_ID);
 
 	accounts = accounts.map(async (acc) => {

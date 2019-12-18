@@ -815,7 +815,7 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
 		await Services.getEcho().api.getAccounts(contract.whitelist.concat(contract.blacklist));
 		// await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
 	}
-	await echo.subscriber.setContractSubscribe(
+	await Services.getEcho().getEchoInstance().subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,
 	);

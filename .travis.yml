@@ -18,7 +18,7 @@ jobs:
     - stage: build
       name: "Build Linux App"
       env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.7.tar"
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.8.tar"
       if: tag IS present
       script:
         - rm -rf node_modules
@@ -52,7 +52,7 @@ jobs:
       os: osx
       name: "Build macOS App"
       env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-mac.0.13.7.tar"
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-mac.0.13.8.tar"
       if: tag IS present
       script:
         - rm -rf node_modules

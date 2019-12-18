@@ -119,7 +119,7 @@ const config = {
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(['build']),
+		new CleanWebpackPlugin(['../build']),
 		HTMLWebpackPluginConfig,
 		miniExtractSass,
 		new CopyWebpackPlugin([{ from: 'resources/icons', to: '' }]),

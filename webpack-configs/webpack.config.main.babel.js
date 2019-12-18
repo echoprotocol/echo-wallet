@@ -37,7 +37,7 @@ export default merge.smart(baseConfig, {
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(['build']),
+		new CleanWebpackPlugin(['../build']),
 		new BundleAnalyzerPlugin({
 			analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
