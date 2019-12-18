@@ -369,15 +369,16 @@ const isActiveKeysChanged = (permissionForm, permissionTable) => {
 	const formKeys = permissionForm.getIn([role, 'keys']);
 	const tableKeys = permissionTable.getIn([role, 'keys']);
 
-	const formKeysWithoutRemoved = formKeys.map((fk) => (fk.get('remove') ? null : {
-		key: fk.get('key').value,
-		weight: fk.get('weight').value,
-	})).filter((el) => el);
-	const formattedFormKeys = Object.values(formKeysWithoutRemoved.toJS());
-	if (formattedFormKeys.length !== tableKeys.size) {
+	const formKeysWithoutRemoved = formKeys
+		.filter((fk) => !fk.get('remove'))
+		.map((fk) => ({
+			key: fk.get('key').value,
+			weight: fk.get('weight').value,
+		}));
+	if (formKeysWithoutRemoved.size !== tableKeys.size) {
 		return true;
 	}
-	return formattedFormKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
+	return formKeysWithoutRemoved.some((keyForm) => (!tableKeys.some((keyTable) =>
 		keyTable.key === keyForm.key && new BN(keyTable.weight).eq(keyForm.weight))));
 };
 
