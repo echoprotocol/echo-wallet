@@ -23,9 +23,14 @@ import {
 	createAccount,
 	validateCreateAccount,
 	saveWIFAfterCreateAccount,
+	validateAndSetIpOrUrl,
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
 import { createAccountTransaction } from '../../actions/TransactionActions';
+import {
+	getRemoteAddressesForRegistration,
+	saveRemoteAddressForRegistration,
+} from '../../actions/GlobalActions';
 
 class SignUp extends React.Component {
 
@@ -43,6 +48,7 @@ class SignUp extends React.Component {
 
 	componentDidMount() {
 		this.props.generateWIF();
+		this.props.getRemoteAddresses();
 	}
 
 	componentWillUnmount() {
@@ -158,6 +164,12 @@ class SignUp extends React.Component {
 		return false;
 	}
 
+	hideSaveAddressTooltip() {
+		const set = this.props.setValue(FORM_SIGN_UP_OPTIONS);
+		set('showSaveAddressTooltip', false);
+	}
+
+
 	render() {
 		const {
 			location, loading, signupOptionsForm, accounts,
@@ -207,6 +219,10 @@ class SignUp extends React.Component {
 						signupOptionsForm={signupOptionsForm}
 						setFormValue={this.props.setFormValue(FORM_SIGN_UP_OPTIONS)}
 						setValue={this.props.setValue(FORM_SIGN_UP_OPTIONS)}
+						saveRemoteAddress={this.props.saveRemoteAddress}
+						remoteRegistrationAddresses={this.props.remoteRegistrationAddresses}
+						hideSaveAddressTooltip={() => this.hideSaveAddressTooltip()}
+						validateAndSetIpOrUrl={this.props.validateAndSetIpOrUrl}
 						accounts={accounts}
 					/>
 
@@ -285,7 +301,11 @@ SignUp.propTypes = {
 	validateCreateAccount: PropTypes.func.isRequired,
 	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
 	createAccountTransaction: PropTypes.func.isRequired,
+	getRemoteAddresses: PropTypes.func.isRequired,
+	saveRemoteAddress: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
 
@@ -307,6 +327,7 @@ export default connect(
 		signupOptionsForm: state.form.get(FORM_SIGN_UP_OPTIONS),
 		accounts: state.balance.get('preview').toJS(),
 		userPublicKey: state.form.getIn([FORM_SIGN_UP, 'userPublicKey']),
+		remoteRegistrationAddresses: state.global.get('remoteRegistrationAddresses'),
 		userWIF: state.form.getIn([FORM_SIGN_UP, 'userWIF']),
 	}),
 	(dispatch) => ({
@@ -317,9 +338,12 @@ export default connect(
 		validateCreateAccount: (value, isAdd, isCustomWIF) =>
 			dispatch(validateCreateAccount(value, isAdd, isCustomWIF)),
 		saveWIFAfterCreateAccount: (value) => dispatch(saveWIFAfterCreateAccount(value)),
+		getRemoteAddresses: () => dispatch(getRemoteAddressesForRegistration()),
+		saveRemoteAddress: () => dispatch(saveRemoteAddressForRegistration()),
 		setFormValue: (form) => (field, value) => dispatch(setFormValue(form, field, value)),
 		setValue: (form) => (field, value) => dispatch(setValue(form, field, value)),
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
+		validateAndSetIpOrUrl: (value) => dispatch(validateAndSetIpOrUrl(value)),
 		clearForm: (form) => dispatch(clearForm(form)),
 	}),
 )(SignUp);

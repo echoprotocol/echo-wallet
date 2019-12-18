@@ -25,6 +25,7 @@ import {
 	SIGN_UP_OPTIONS_TYPES,
 	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
+	CHECK_URI_ADDRESS_TYPES,
 	FORM_TO_WHITELIST,
 } from '../constants/FormConstants';
 
@@ -82,6 +83,9 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		ipOrUrlStatus: CHECK_URI_ADDRESS_TYPES.DEFAULT,
+		showSavedAddressesDropdown: false,
+		showSaveAddressTooltip: false,
 	}),
 	[FORM_UNLOCK_MODAL]: Map({
 		password: {

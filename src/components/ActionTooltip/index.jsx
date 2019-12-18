@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 
 
-function VerificationField(props) {
+function ActionTooltip(props) {
 
 	return (
 		<div className="action-tooltip">
@@ -13,12 +13,12 @@ function VerificationField(props) {
 				<div className="action-tooltip-panel">
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onDismiss(e.target.value)}
+						onClick={() => props.onDismiss()}
 						content="Dismiss"
 					/>
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onConfirm(e.target.value)}
+						onClick={() => props.onConfirm()}
 						content="Save"
 					/>
 				</div>
@@ -28,12 +28,12 @@ function VerificationField(props) {
 }
 
 
-VerificationField.propTypes = {
+ActionTooltip.propTypes = {
 	onConfirm: PropTypes.func.isRequired,
 	onDismiss: PropTypes.func.isRequired,
 };
 
-VerificationField.defaultProps = {
+ActionTooltip.defaultProps = {
 };
 
-export default VerificationField;
+export default ActionTooltip;
