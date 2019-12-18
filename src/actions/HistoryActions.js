@@ -24,12 +24,10 @@ import Services from '../services';
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
 		if (!Services.getEcho().isConnected) return;
-		// if (!echo.isConnected) return;
 
 		[, transaction.details] = await Services.getEcho().api.getContractResult(transaction.result);
-		// [, transaction.details] = await echo.api.getContractResult(transaction.result);
-		transaction.contract = (await Services.getEcho().api.getObject(transaction.result)).contracts_id;
-		// transaction.contract = (await echo.api.getObject(transaction.result)).contracts_id;
+		transaction.contract =
+			(await Services.getEcho().api.getObject(transaction.result)).contracts_id;
 	}
 
 	dispatch(setField('details', transaction));

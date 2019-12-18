@@ -428,8 +428,9 @@ export const getTransferFee = (form, asset) => async (dispatch, getState) => {
 
 	try {
 		const to = formOptions.get('to').value;
-		const toAccountId = validators.isAccountId(to) ? to : (await Services.getEcho().api.getAccountByName(to)).id;
-		// const toAccountId = validators.isAccountId(to) ? to : (await echo.api.getAccountByName(to)).id;
+		const toAccountId = validators.isAccountId(to)
+			? to
+			: (await Services.getEcho().api.getAccountByName(to)).id;
 		const fromAccountId = getState().global.getIn(['activeUser', 'id']);
 		let amountValue = 0;
 		const amount = formOptions.get('amount').value;
