@@ -1379,7 +1379,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	if (!echo.isConnected) {
 		toastError([{
 			text: '',
-			postfix: `operations.${operations[operation]}`,
+			postfix: `operations.${operation}`,
 		}, {
 			text: '',
 			postfix: 'toasts.errors.trx_dont_comp_by_lose_connection',
@@ -1430,7 +1430,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess([{
 				text: '',
-				postfix: `operations.${operations[operation]}`,
+				postfix: `operations.${operation}`,
 			}, {
 				text: '',
 				postfix: 'toasts.success.trx_complete_postfix',
@@ -1445,7 +1445,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			const { message } = error;
 			toastError([{
 				text: '',
-				postfix: `operations.${operations[operation]}`,
+				postfix: `operations.${operation}`,
 			}, {
 				text: '',
 				postfix: 'toasts.errors.trx_dont_complete_postfix',
@@ -1462,7 +1462,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		toastError([{
 			text: '',
-			postfix: `operations.${operations[operation]}`,
+			postfix: `operations.${operation}`,
 		}, {
 			text: '',
 			postfix: 'toasts.errors.trx_dont_complete_postfix',
@@ -1474,7 +1474,7 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	}
 	toastSuccess([{
 		text: '',
-		postfix: `operations.${operations[operation]}`,
+		postfix: `operations.${operation}`,
 	}, {
 		text: '',
 		postfix: 'toasts.success.trx_sent_postfix',

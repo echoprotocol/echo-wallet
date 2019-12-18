@@ -16,7 +16,9 @@ class ModalWhitelist extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			el: null,
+		};
 	}
 
 
@@ -31,7 +33,7 @@ class ModalWhitelist extends React.Component {
 		this.props.openAddModal();
 	}
 
-	renderList() {
+	renderList(submit) {
 		const {
 			contracts, owner, activeUser, contractId, accounts, intl,
 		} = this.props;
@@ -39,25 +41,20 @@ class ModalWhitelist extends React.Component {
 			return [];
 		}
 		const whitelist = contracts.getIn([contractId, 'whitelist']);
-		return whitelist ? whitelist.map((el, i) => (
-			<TransactionScenario
-				handleTransaction={() => this.props.removeFromWhiteList(el)}
-				key={i.toString()}
-			>
-				{
-					(submit) => (
-						<div className="segment">
-							<Avatar accountName={accounts.getIn([el, 'name'])} />
-							<div className="name">{accounts.getIn([el, 'name'])}</div>
-							{ owner === activeUser && <ActionBtn
-								icon="remove"
-								text={intl.formatMessage({ id: 'modals.modal_whitelist.remove_button_text' })}
-								action={() => submit()}
-							/>}
-						</div>
-					)
-				}
-			</TransactionScenario>
+		return whitelist ? whitelist.map((el) => (
+
+			<div className="segment">
+				<Avatar accountName={accounts.getIn([el, 'name'])} />
+				<div className="name">{accounts.getIn([el, 'name'])}</div>
+				{owner === activeUser && <ActionBtn
+					icon="remove"
+					text={intl.formatMessage({ id: 'modals.modal_whitelist.remove_button_text' })}
+					action={() => {
+						this.setState({ el }, () => submit());
+					}}
+				/>}
+			</div>
+
 		)).toArray() : [];
 	}
 
@@ -67,29 +64,36 @@ class ModalWhitelist extends React.Component {
 		} = this.props;
 
 		return (
-			<Modal className="whitelist-modal" open={show}>
-				<button
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-				/>
-				<div className="modal-header">
-					<h3 className="modal-header-title">
-						{intl.formatMessage({ id: 'modals.modal_whitelist.title' })}
-					</h3>
-				</div>
-				<div className="modal-body">
-					<div className="segments">
-						{this.renderList()}
-					</div>
-					<div className="form-panel">
-						{ owner === activeUser && <Button
-							className="main-btn"
-							content={intl.formatMessage({ id: 'modals.modal_whitelist.add_button_text' })}
-							onClick={(e) => this.onOpenAddModal(e)}
-						/>}
-					</div>
-				</div>
-			</Modal>
+			<TransactionScenario
+				handleTransaction={() => this.props.removeFromWhiteList(this.state.el)}
+			>
+				{
+					(submit) => (
+						<Modal className="whitelist-modal" open={show}>
+							<button
+								className="icon-close"
+								onClick={(e) => this.onClose(e)}
+							/>
+							<div className="modal-header">
+								<h3 className="modal-header-title">
+									{intl.formatMessage({ id: 'modals.modal_whitelist.title' })}
+								</h3>
+							</div>
+							<div className="modal-body">
+								<div className="segments">
+									{this.renderList(submit)}
+								</div>
+								<div className="form-panel">
+									{owner === activeUser && <Button
+										className="main-btn"
+										content={intl.formatMessage({ id: 'modals.modal_whitelist.add_button_text' })}
+										onClick={(e) => this.onOpenAddModal(e)}
+									/>}
+								</div>
+							</div>
+						</Modal>)
+				}
+			</TransactionScenario>
 		);
 	}
 

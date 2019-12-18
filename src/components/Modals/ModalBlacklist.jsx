@@ -17,7 +17,9 @@ class ModalBalcklist extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			el: null,
+		};
 	}
 
 
@@ -32,7 +34,7 @@ class ModalBalcklist extends React.Component {
 		this.props.openAddModal();
 	}
 
-	renderList() {
+	renderList(submit) {
 		const {
 			contracts, contractId, owner, activeUser, accounts, intl,
 		} = this.props;
@@ -42,25 +44,19 @@ class ModalBalcklist extends React.Component {
 		const removeBtnTxt = intl.formatMessage({ id: 'modals.modal_blacklist.remove_button_text' });
 
 		const blacklist = contracts.getIn([contractId, 'blacklist']);
-		return blacklist ? blacklist.map((el, i) => (
-			<TransactionScenario
-				handleTransaction={() => this.props.removeFromBlackList(el)}
-				key={i.toString()}
-			>
-				{
-					(submit) => (
-						<div className="segment">
-							<Avatar accountName={accounts.getIn([el, 'name'])} />
-							<div className="name">{accounts.getIn([el, 'name'])}</div>
-							{ owner === activeUser && <ActionBtn
-								icon="remove"
-								text={removeBtnTxt}
-								action={() => submit()}
-							/>}
-						</div>
-					)
-				}
-			</TransactionScenario>
+		return blacklist ? blacklist.map((el) => (
+			<div className="segment">
+				<Avatar accountName={accounts.getIn([el, 'name'])} />
+				<div className="name">{accounts.getIn([el, 'name'])}</div>
+				{owner === activeUser && <ActionBtn
+					icon="remove"
+					text={removeBtnTxt}
+					action={() => {
+						this.setState({ el }, () => submit());
+					}}
+				/>}
+			</div>
+
 		)).toArray() : [];
 	}
 
@@ -70,31 +66,38 @@ class ModalBalcklist extends React.Component {
 		} = this.props;
 
 		return (
-			<Modal className="whitelist-modal" open={show} dimmer="inverted">
-				<FocusLock autoFocus={false}>
-					<button
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-					/>
-					<div className="modal-header">
-						<h2 className="modal-header-title">
-							{intl.formatMessage({ id: 'modals.modal_blacklist.title' })}
-						</h2>
-					</div>
-					<div className="modal-body">
-						<div className="segments">
-							{this.renderList()}
-						</div>
-						<div className="form-panel">
-							{ owner === activeUser && <Button
-								className="main-btn"
-								content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
-								onClick={(e) => this.onOpenAddModal(e)}
-							/>}
-						</div>
-					</div>
-				</FocusLock>
-			</Modal>
+			<TransactionScenario
+				handleTransaction={() => this.props.removeFromBlackList(this.state.el)}
+			>
+				{
+					(submit) => (
+						<Modal className="whitelist-modal" open={show} dimmer="inverted">
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h2 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_blacklist.title' })}
+									</h2>
+								</div>
+								<div className="modal-body">
+									<div className="segments">
+										{this.renderList(submit)}
+									</div>
+									<div className="form-panel">
+										{owner === activeUser && <Button
+											className="main-btn"
+											content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
+											onClick={(e) => this.onOpenAddModal(e)}
+										/>}
+									</div>
+								</div>
+							</FocusLock>
+						</Modal>)
+				}
+			</TransactionScenario>
 		);
 	}
 

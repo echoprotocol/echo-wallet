@@ -26,7 +26,8 @@ class AddCustomNetwork extends React.Component {
 					onChange={(e) => this.onChange(e)}
 					autoFocus={isFocus}
 				/>
-				<span className="error-message">{intl.formatMessage({ id: error })}</span>
+				{ error &&
+				<span className="error-message">{intl.formatMessage({ id: error })}</span>}
 			</Form.Field>
 		);
 	}
