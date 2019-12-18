@@ -1,4 +1,4 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
 

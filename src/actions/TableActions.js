@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import Services from '../services';
 import { PERMISSION_TABLE } from '../constants/TableConstants';

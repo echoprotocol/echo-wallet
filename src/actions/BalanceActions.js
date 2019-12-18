@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import BN from 'bignumber.js';
-import echo, { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
+import { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
 
 import Services from '../services';
 import {
@@ -606,7 +606,6 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		const form = getState().form.getIn([FORM_TRANSFER]);
 
 		const stats = await Services.getEcho().api.getObject(accountFromTransfer.balances[form.get('currency').id]);
-		// const stats = await echo.api.getObject(accountFromTransfer.balances[form.get('currency').id]);
 		await dispatch(getAssetsBalances(accountFromTransfer.balances));
 		dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.balance }));
 		dispatch(setFormError(FORM_TRANSFER, 'amount', null));

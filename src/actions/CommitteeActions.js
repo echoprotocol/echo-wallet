@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { List } from 'immutable';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
 
 import Services from '../services';
 import { isCommitteeMemberId } from '../helpers/ValidateHelper';
@@ -29,7 +29,8 @@ export const fetchCommittee = () => async (dispatch) => {
 		let committeesObjects = await Services.getEcho().api.lookupCommitteeMemberAccounts('');
 		committeesObjects = committeesObjects.reduce((arr, obj) => arr.concat(obj[1]), []);
 
-		const requests = committeesObjects.map((committee) => Services.getEcho().api.getObject(committee));
+		const requests = committeesObjects.map((committee) =>
+			Services.getEcho().api.getObject(committee));
 		await Promise.all(requests);
 	} catch (err) {
 		dispatch(setValue(FORM_COMMITTEE, 'error', formatError(err)));

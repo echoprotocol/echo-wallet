@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo, { Echo } from 'echojs-lib';
+import { Echo } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 

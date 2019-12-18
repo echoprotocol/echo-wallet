@@ -1,4 +1,4 @@
-import echo, { constants, validators } from 'echojs-lib';
+import { constants, validators } from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
