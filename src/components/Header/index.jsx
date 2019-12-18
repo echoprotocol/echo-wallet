@@ -82,19 +82,19 @@ class Header extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (e.keyCode === 13) {
+
+		if (e.type === 'click' || e.keyCode === 13) {
 			switch (value) {
 				case 'current_account':
 					break;
-
 				case 'add-account':
+					this.onAddAccount(e);
 					break;
-
 				case 'logout':
 					break;
-
 				default:
 			}
+
 		}
 
 	}
@@ -160,6 +160,7 @@ class Header extends React.Component {
 					</div>
 				</button>
 				<button
+					tabIndex={-1}
 					className="logout-user-btn"
 					onClick={() => this.onRemoveAccount(name)}
 				/>
@@ -192,6 +193,7 @@ class Header extends React.Component {
 					<a
 						href=""
 						className="parent-link"
+						tabIndex="-1"
 						onClick={(e) => this.onChangeParentAccount(e)}
 					>
 						<FormattedMessage id="account_dropdown.change_delegate_button" />
@@ -274,7 +276,7 @@ class Header extends React.Component {
 		options = this.renderList().concat(options);
 
 		return (
-			<div className="header">
+			<header className="header">
 				{
 					this.renderLinkToParent()
 				}
@@ -314,7 +316,7 @@ class Header extends React.Component {
 
 					</div>
 				</div>
-			</div>
+			</header>
 		);
 	}
 

@@ -74,6 +74,7 @@ class AdditionalOptions extends React.Component {
 							<FormattedMessage id="sign_page.register_account_page.more_options_section.title" />
 						</span>
 					}
+					role="button"
 				/>
 				<CSSTransition
 					in={isMoreOptionsActive}

@@ -79,7 +79,11 @@ class FormComponent extends React.Component {
 						<label htmlFor="generatedWIF">
 							<FormattedMessage id="sign_page.register_account_page.default_settings_page.generated_wif_input.title" />
 						</label>
-						<button onClick={() => this.onToogleWifType()} className="link-btn">
+						<button
+							type="button"
+							onClick={() => this.onToogleWifType()}
+							className="link-btn"
+						>
 							<FormattedMessage id="sign_page.register_account_page.default_settings_page.text_to_custom_settings" />
 						</button>
 					</div>
