@@ -63,7 +63,6 @@ class EchoNetwork extends React.Component {
 
 			if (value === 'generate-address') {
 				this.setState({
-					open: !this.state.open,
 					searchText: '',
 				});
 				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
@@ -73,7 +72,6 @@ class EchoNetwork extends React.Component {
 			this.setState({
 				searchText: '',
 				receiver: value,
-				open: !this.state.open,
 			});
 		}
 
@@ -81,7 +79,7 @@ class EchoNetwork extends React.Component {
 
 	onChange(e, value) {
 
-		this.setState({ searchText: e.target.value });
+		this.setState({ searchText: e ? e.target.value : '' });
 		const addresses = this.props.accountAddresses.toJS();
 		const users = this.props.accountName;
 		if (this.state.timeout) {
@@ -156,7 +154,8 @@ class EchoNetwork extends React.Component {
 			searchAccs: filteredAccs,
 		});
 
-		this.setState({ open: true });
+		const { open } = this.state;
+		if (!open) { this.setState({ open: true }); }
 	}
 	renderAccountHeader() {
 		const acconutHeaderTitle = <div className="title">Account</div>;
@@ -306,9 +305,7 @@ class EchoNetwork extends React.Component {
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 						onFocus={() => this.initDropdown()}
-						onBlur={() => this.setState({
-							open: false,
-						})}
+						onClose={() => this.setState({ open: false })}
 						selectOnNavigation={false}
 						selectOnBlur={false}
 						open={open}

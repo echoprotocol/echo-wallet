@@ -89,6 +89,10 @@
 			}
 		}
 
+		.item {
+			user-select: none;
+		}
+
 		.item:not(.dropdown-header) {
 			transition: background-color $speed;
 
