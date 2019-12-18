@@ -171,7 +171,6 @@ class Network extends React.PureComponent {
 					open={open}
 					options={options}
 					onChange={(e, { value }) => this.onDropdownChange(e, value)}
-					direction="left"
 					icon={false}
 					selectOnBlur={false}
 					upward

@@ -83,12 +83,6 @@
 			}
 		}
 
-		&.selected {
-			input.search+.text {
-				color: rgba(#3B3B3B, 1);
-			}
-		}
-
 		.item {
 			user-select: none;
 		}
@@ -187,11 +181,11 @@
 
 		input.search+.text {
 			line-height: 36px;
-			padding: 0 1em;
+			padding: 0 14px;
 			font-size: 15px;
 			font-family: proxima;
 			font-weight: 400;
-			color: rgba(#3B3B3B, .5);
+			color: rgba(#3B3B3B, 1);
 		}
 
 		.dropdown-header {

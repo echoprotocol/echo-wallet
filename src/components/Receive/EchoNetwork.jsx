@@ -73,6 +73,15 @@ class EchoNetwork extends React.Component {
 				searchText: '',
 				receiver: value,
 			});
+
+			if (e.target.className === 'search') {
+
+				setTimeout(() => {
+					e.target.blur();
+				}, 0);
+			}
+
+
 		}
 
 	}
@@ -81,6 +90,7 @@ class EchoNetwork extends React.Component {
 
 		this.setState({ searchText: e ? e.target.value : '' });
 		const addresses = this.props.accountAddresses.toJS();
+
 		const users = this.props.accountName;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -243,7 +253,7 @@ class EchoNetwork extends React.Component {
 
 			return ({
 				className: 'address-item-wrap',
-				value: name,
+				value: address,
 				key: index.toString(),
 				text: address,
 				content,
@@ -297,7 +307,6 @@ class EchoNetwork extends React.Component {
 				<div className="dropdown-wrap">
 					<div className="dropdown-label">recipient Account OR address</div>
 					<Dropdown
-						className={classnames({ selected: !!receiver })}
 						placeholder="Choose account or address"
 						options={this.renderOptions()}
 						search={() => this.renderOptions()}
@@ -309,7 +318,7 @@ class EchoNetwork extends React.Component {
 						selectOnNavigation={false}
 						selectOnBlur={false}
 						open={open}
-						text={receiver || 'Choose account or address'}
+						text={(receiver || this.props.accountName) || 'Choose account or address'}
 					/>
 				</div>
 
