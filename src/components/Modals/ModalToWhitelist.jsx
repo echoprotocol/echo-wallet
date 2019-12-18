@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
 
-import { closeModal, setError } from '../../actions/ModalActions';
+import { closeModal } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 import { MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
 import { FORM_TO_WHITELIST } from '../../constants/FormConstants';
@@ -90,9 +90,7 @@ class ModalToWhitelist extends React.Component {
 	}
 
 	render() {
-		const {
-			show, error, account,
-		} = this.props;
+		const { show, account } = this.props;
 
 		const icon = this.isAvatar() &&
 			<div className="avatar-wrap">
@@ -124,7 +122,7 @@ class ModalToWhitelist extends React.Component {
 											autoFocus
 											icon={icon}
 											status={this.getStatus(account)}
-											error={error}
+											error={account.error}
 											loading={account.loading && !account.error}
 											placeholder="Account Name"
 										/>
@@ -154,7 +152,6 @@ ModalToWhitelist.propTypes = {
 	account: PropTypes.object.isRequired,
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
-	error: PropTypes.string,
 	addToWhiteList: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
@@ -162,14 +159,12 @@ ModalToWhitelist.propTypes = {
 
 ModalToWhitelist.defaultProps = {
 	show: false,
-	error: null,
 };
 
 export default connect(
 	(state) => ({
 		account: state.form.getIn([FORM_TO_WHITELIST, 'account']),
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
-		error: state.modal.getIn([MODAL_TO_WHITELIST, 'error']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_WHITELIST)),

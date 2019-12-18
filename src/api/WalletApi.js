@@ -39,6 +39,7 @@ export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 		})
 );
 
+
 /**
  * @method unlockWallet
  *
