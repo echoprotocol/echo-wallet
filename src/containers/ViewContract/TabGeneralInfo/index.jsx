@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { CACHE_MAPS } from 'echojs-lib';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -192,7 +192,16 @@ class TabGeneralInfo extends React.Component {
 								</td>
 							</tr>
 							<tr>
-								<td className="key">Fee Pool:</td>
+								<td className="key">
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
+									Fee Pool:
+								</td>
 								<td className="val">
 									<div className="val-wrap">
 										<div className="balance-wrap">
