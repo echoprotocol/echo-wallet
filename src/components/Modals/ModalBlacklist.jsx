@@ -89,9 +89,6 @@ class ModalBalcklist extends React.Component {
 							{ owner === activeUser && <Button
 								className="main-btn"
 								content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
-								// content={
-								// 	<FormattedMessage id="modals.modal_blacklist.add_button_text" />
-								// }
 								onClick={(e) => this.onOpenAddModal(e)}
 							/>}
 						</div>

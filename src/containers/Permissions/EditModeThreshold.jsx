@@ -44,7 +44,8 @@ class EditModeThreshold extends React.Component {
 						value={threshold.value || ''}
 						onChange={setThreshold}
 					/>
-					{threshold.error && <span className="error-message">{threshold.error}</span>}
+					{threshold.error &&
+					<span className="error-message">{intl.formatMessage({ id: threshold.error })}</span>}
 				</Form.Field>
 			</Form>
 		);

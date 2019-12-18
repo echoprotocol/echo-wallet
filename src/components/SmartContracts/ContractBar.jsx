@@ -165,7 +165,8 @@ class ContractBar extends React.Component {
 											noResultsMessage={searchText ? 'No results are found' : null}
 											onChange={(e, { value }) => this.onChangeAsset(value)}
 										/>
-										{form.get('supportedAsset').error && <span className="error-message">{form.get('supportedAsset').error}</span>}
+										{form.get('supportedAsset').error &&
+										<span className="error-message">{intl.formatMessage({ id: form.get('supportedAsset').error })}</span>}
 									</div>
 							}
 						</div>

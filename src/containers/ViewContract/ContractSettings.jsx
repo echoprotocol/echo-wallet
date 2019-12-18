@@ -135,7 +135,9 @@ class ContractSettings extends React.Component {
 	}
 
 	renderChangeName() {
-		const { newName, contractId, contractName } = this.props;
+		const {
+			newName, contractId, contractName, intl,
+		} = this.props;
 
 		return (
 
@@ -165,7 +167,8 @@ class ContractSettings extends React.Component {
 					/>
 				</Input>
 
-				<span className="error-message">{newName.error}</span>
+				{newName.error &&
+				<span className="error-message">{intl.formatMessage({ id: newName.error })}</span>}
 			</div>
 		);
 	}

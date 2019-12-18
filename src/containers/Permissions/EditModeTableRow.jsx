@@ -34,7 +34,8 @@ class EditModeTableRow extends React.Component {
 						value={subject.value}
 						onChange={setPublicKey}
 					/>
-					{subject.error && <span className="error-message">{subject.error}</span>}
+					{subject.error &&
+					<span className="error-message">{intl.formatMessage({ id: subject.error })}</span>}
 				</Form.Field>
 				<PasswordInput
 					errorMessage={wif.error}
@@ -58,7 +59,8 @@ class EditModeTableRow extends React.Component {
 					value={subject.value}
 					onChange={setAccount}
 				/>
-				{subject.error && <span className="error-message">{subject.error}</span>}
+				{subject.error &&
+				<span className="error-message">{intl.formatMessage({ id: subject.error })}</span>}
 			</Form.Field>
 		);
 	}
@@ -88,7 +90,8 @@ class EditModeTableRow extends React.Component {
 										value={weight.value}
 										onChange={setWeight}
 									/>
-									{weight.error && <span className="error-message">{weight.error}</span>}
+									{weight.error &&
+									<span className="error-message">{intl.formatMessage({ id: weight.error })}</span>}
 								</Form.Field>
 							)
 						}

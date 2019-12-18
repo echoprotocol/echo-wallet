@@ -211,7 +211,7 @@ class Permissions extends React.Component {
 				if (key && key.value) {
 					if (isPublicKey(key.value)) {
 						if (key.value !== publicKey) {
-							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+							newPrivateKeys[keyRole][field].error = 'errors.keys_errors.keys_dont_match_error';
 						} else {
 							this.props.setValue([keyRole, type, field, 'hasWif'], true);
 						}
@@ -250,7 +250,7 @@ class Permissions extends React.Component {
 				if (key) {
 					if (isPublicKey(key)) {
 						if (key !== publicKey) {
-							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+							newPrivateKeys[keyRole][field].error = 'errors.keys_errors.keys_dont_match_error';
 						} else {
 							this.props.setValue([keyRole, type, field, 'hasWif'], true);
 						}
@@ -261,7 +261,7 @@ class Permissions extends React.Component {
 			}
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
-			newPrivateKeys[keyRole][field].error = 'Invalide private key';
+			newPrivateKeys[keyRole][field].error = 'errors.keys_errors.invalid_priv_error';
 			this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			this.setState({ privateKeys: newPrivateKeys });
 		}

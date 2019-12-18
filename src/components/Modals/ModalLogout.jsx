@@ -80,7 +80,7 @@ class ModalLogout extends React.Component {
 								{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
 								<div className="field-wrap">
 									<PasswordInput
-										errorMessage={error}
+										errorMessage={error ? intl.formatMessage({ id: error }) : ''}
 										inputLabel={
 											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
 										}

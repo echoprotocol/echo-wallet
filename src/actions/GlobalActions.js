@@ -190,7 +190,7 @@ export const customNodeConnect = async (url, apis) => {
 		await tmpEcho.connect(url, { apis });
 		return tmpEcho;
 	} catch (e) {
-		return 'Node is not connected';
+		return 'errors.node_errors.not_connect_error';
 	}
 };
 
@@ -266,7 +266,7 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 	const correctPassword = await userStorage.isMasterPassword(password);
 
 	if (!correctPassword) {
-		dispatch(setError(MODAL_LOGOUT, 'Invalid password'));
+		dispatch(setError(MODAL_LOGOUT, 'errors.passowd_errors.invalid_password_error'));
 		return;
 	}
 
@@ -316,7 +316,7 @@ export const isAccountAdded = (accountName, networkName) => {
 	accounts = accounts ? JSON.parse(accounts) : [];
 
 	if (accounts.find(({ name }) => name === accountName)) {
-		return 'Account already added';
+		return 'errors.account_errors.account_already_added_error';
 	}
 
 	return null;
@@ -447,7 +447,7 @@ export const addNetwork = () => (dispatch, getState) => {
 	let nameError = validateNetworkName(network.name);
 
 	if (NETWORKS.concat(networks).find((i) => i.name === network.name)) {
-		nameError = `Network "${network.name}" already exists`;
+		nameError = 'errors.network_errors.network_already_exist_error';
 	}
 
 	if (nameError) {

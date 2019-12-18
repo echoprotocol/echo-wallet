@@ -80,7 +80,10 @@ class ModalCreateEchoAddress extends React.Component {
 											autoFocus
 										/>
 										{
-											error && <span className="error-message">{error}</span>
+											error ?
+												<span className="error-message">
+													{intl.formatMessage({ id: error })}
+												</span> : null
 										}
 										<span className="warning-message">
 											{intl.formatMessage({ id: 'modals.modal_create_echo_address.warning' })}

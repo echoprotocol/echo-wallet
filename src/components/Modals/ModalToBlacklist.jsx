@@ -71,7 +71,11 @@ class ModalToBlacklist extends React.Component {
 											autoFocus
 										/>
 										{
-											<span className="error-message">{error}</span>
+											<span className="error-message">
+												{
+													error ? intl.formatMessage({ id: error }) : null
+												}
+											</span>
 										}
 									</Form.Field>
 									<div className="form-panel">

@@ -73,7 +73,7 @@ class ModalAcceptIncomingConnections extends React.Component {
 						</ul>
 
 						<div className="accept-connections-hint">
-							{/* <FormattedMessage id="modals.modal_accept_incoming_connection.footer" /> */}
+							{intl.formatMessage({ id: 'modals.modal_accept_incoming_connection.footer' })}
 						</div>
 						<div className="form-panel">
 							<button className="transparet-btn grey">

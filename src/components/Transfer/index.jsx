@@ -124,6 +124,7 @@ class Transfer extends React.Component {
 									setValue={this.props.setValue}
 									label={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })}
 									placeholder={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })}
+									intl={intl}
 								/>
 
 								<AccountField
@@ -146,6 +147,8 @@ class Transfer extends React.Component {
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
 									label={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.title' })}
 									placeholder={intl.formatMessage({ id: this.getToPlaceholder() })}
+									intl={intl}
+
 								/>
 								{
 									bytecodeVisible &&

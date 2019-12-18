@@ -69,7 +69,8 @@ class ModalToWhitelist extends React.Component {
 											autoFocus
 										/>
 										{
-											<span className="error-message">{error}</span>
+											error &&
+											<span className="error-message">{intl.formatMessage({ id: error })}</span>
 										}
 									</Form.Field>
 									<div className="form-panel">

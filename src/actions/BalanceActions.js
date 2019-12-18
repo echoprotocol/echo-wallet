@@ -336,19 +336,19 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 	try {
 		if (!contractId) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.empty_contract_error'));
 			return;
 		}
 
 		if (!validators.isContractId(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
 		const contract = await echo.api.getContract(contractId);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
@@ -357,7 +357,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const isErc20Token = checkErc20Contract(code);
 
 		if (!isErc20Token) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -365,7 +365,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -377,7 +377,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}
 
 		if (tokens[accountId].includes(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Token already exists'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.token_already_exist_error'));
 			return;
 		}
 

@@ -171,7 +171,7 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		const contract = await echo.api.getContract(id);
 
 		if (!contract) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
@@ -184,12 +184,12 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		}
 
 		if (contracts[accountId][id]) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', `Contract "${name}" already exists`));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', 'errors.contract_errors.contract_name_exist_error'));
 			return;
 		}
 
 		if (Object.values(contracts[accountId]).map((i) => i.id).includes(id)) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${id} already exists`));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'errors.contract_errors.contract_id_exist_error'));
 			return;
 		}
 
@@ -588,15 +588,15 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
-			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+			dispatch(setValue(form, 'feeError', 'errors.fee_errors.cant_calculate_error'));
 		} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
 
 			const formData = getState().form.getIn([form]).toJS();
 			if (formData.amount.value && formData.id.value) {
-				dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+				dispatch(setValue(form, 'feeError', 'errors.fee_errors.cant_calculate_error'));
 			}
 		} else {
-			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
+			dispatch(setFormError(form, 'amount', 'errors.amount_errors.cant_calculate_fee_error'));
 		}
 	} else {
 		dispatch(setValue(form, 'feeError', null));
@@ -762,7 +762,7 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch(resetCompiler());
 		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
-		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'No Contract Compiled Yet'));
+		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'errors.contract_errors.no_compile_yet_error'));
 	}
 };
 

@@ -82,7 +82,11 @@ class ModalCreateBtcAddress extends React.Component {
 											autoFocus
 										/>
 										{
-											<span className="error-message">{error}</span>
+											<span className="error-message">
+												{
+													error ? intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' }) : null
+												}
+											</span>
 										}
 										<span className="warning-message">
 											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}

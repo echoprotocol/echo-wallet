@@ -92,6 +92,7 @@ class ModalToWhitelist extends React.Component {
 														setValue={() => {
 														}}
 														disabled
+														intl={intl}
 													/> : null
 											}
 
@@ -102,7 +103,7 @@ class ModalToWhitelist extends React.Component {
 												assets={assets}
 												amount={{
 													...amount,
-													error,
+													error: error ? intl.formatMessage({ id: error }) : '',
 												}}
 												currency={currency}
 												isAvailableBalance={isAvailableBalance}

@@ -186,7 +186,8 @@ class SourceCode extends React.Component {
 						}
 					/>
 					{
-						isAceError && form.get('code').error && <div className="ace-error">{form.get('code').error}</div>
+						isAceError && form.get('code').error &&
+						<div className="ace-error">{ intl.formatMessage({ id: form.get('code').error })}</div>
 					}
 
 				</div>

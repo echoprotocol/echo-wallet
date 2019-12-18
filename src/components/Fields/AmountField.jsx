@@ -322,7 +322,12 @@ class AmountField extends React.Component {
 					</div>
 					{
 						amount.error || fee.error ?
-							<span className="error-message">{amount.error || fee.error}</span> : null
+							<span className="error-message">
+								{
+									intl.formatMessage({ id: amount.error }) ||
+									intl.formatMessage({ id: fee.error })
+								}
+							</span> : null
 					}
 
 					{
@@ -349,8 +354,8 @@ class AmountField extends React.Component {
 					}
 				</Input>
 				{
-					intl.formatMessage && (!amount.error || !fee.error)
-					&& isDisplaySidechainNotification && activeCoinTypeTab ?
+					intl.formatMessage && isDisplaySidechainNotification
+					&& activeCoinTypeTab && (!amount.error || !fee.error) ?
 						<span className="warning-message">
 							{intl.formatMessage({ id: 'amount_input.warning_message_pt1' })}
 							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo}
@@ -361,7 +366,8 @@ class AmountField extends React.Component {
 							{intl.formatMessage({ id: 'amount_input.warning_message_pt4' })}
 							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].original}
 							{intl.formatMessage({ id: 'amount_input.warning_message_pt5' })}
-						</span> : null
+						</span>
+						: null
 				}
 
 

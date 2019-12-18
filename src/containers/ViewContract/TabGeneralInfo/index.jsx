@@ -111,7 +111,7 @@ class TabGeneralInfo extends React.Component {
 		const contractPool = contract.getIn(['poolBalance', 'amount']);
 		if (!contractPool) {
 			this.props.openModal(MODAL_REPLENISH, {
-				error: 'Please, replenish Fee Pool Balance first',
+				error: 'errors.contract_errors.zero_fee_pool_error',
 				contractId: this.props.match.params.id,
 			});
 		} else this.props.openModal(modal);

@@ -43,7 +43,7 @@ class FormComponent extends React.Component {
 					this.props.setFormError(this.props.userWIF, null);
 				}
 			} catch (err) {
-				this.props.setFormError('userWIF', 'Invalid WIF');
+				this.props.setFormError('userWIF', 'errors.keys_errors.invalid_wif_error');
 			}
 		}
 	}
@@ -58,10 +58,10 @@ class FormComponent extends React.Component {
 						this.props.setFormError(this.props.userPublicKey, null);
 					}
 				} else {
-					this.props.setFormError('userPublicKey', 'Invalide private key for current public key');
+					this.props.setFormError('userPublicKey', 'errors.keys_errors.keys_dont_match_error');
 				}
 			} catch (err) {
-				this.props.setFormError('userPublicKey', 'You have an invalid private key');
+				this.props.setFormError('userPublicKey', 'errors.keys_errors.user_invalid_priv_error');
 			}
 		}
 	}
@@ -108,7 +108,8 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					{confirmWIF.error && <span className="error-message">{confirmWIF.error}</span>}
+					{confirmWIF.error &&
+					<span className="error-message">{intl.formatMessage({ id: confirmWIF.error })}</span>}
 				</Form.Field>
 			</React.Fragment>
 		);
@@ -144,7 +145,7 @@ class FormComponent extends React.Component {
 							this.validateWIFAfterChange(e);
 						}}
 					/>
-					<span className="error-message">{userWIF.error}</span>
+					{userWIF.error && <span className="error-message">{intl.formatMessage({ id: userWIF.error })}</span>}
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">
@@ -160,7 +161,8 @@ class FormComponent extends React.Component {
 							this.validatePubAfterChange(e);
 						}}
 					/>
-					<span className="error-message">{userPublicKey.error}</span>
+					{userPublicKey.error &&
+					<span className="error-message">{intl.formatMessage({ id: userPublicKey.error })}</span>}
 				</Form.Field>
 			</React.Fragment>
 		);
@@ -186,7 +188,8 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					<span className="error-message">{accountName.error}</span>
+					{accountName.error &&
+					<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>}
 				</Form.Field>
 				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}
 

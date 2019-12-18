@@ -94,7 +94,11 @@ class Footer extends React.PureComponent {
 		const errored = (
 			<div className="footer disconnected">
 				<ul>
-					<li>{error}</li>
+					<li>
+						{
+							error ? <FormattedMessage id={error} /> : null
+						}
+					</li>
 					<li />
 				</ul>
 			</div>

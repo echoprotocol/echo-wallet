@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { contractQuery } from '../../../actions/ContractActions';
 
@@ -47,7 +47,7 @@ class LineComponent extends React.Component {
 	}
 
 	renderInput() {
-		const { constant, inputs } = this.props;
+		const { constant, inputs, intl } = this.props;
 
 		return (
 			<React.Fragment>
@@ -65,7 +65,8 @@ class LineComponent extends React.Component {
 									inputData={input}
 									onKeyDown={(e) => this.onKeyDown(e)}
 								/>
-								<span className="error-message">{errorValue}</span>
+								{errorValue &&
+								<span className="error-message">{intl.formatMessage({ id: errorValue })}</span>}
 							</Form.Field>
 						);
 					})
@@ -199,9 +200,10 @@ LineComponent.propTypes = {
 	contractId: PropTypes.string.isRequired,
 	contractQuery: PropTypes.func.isRequired,
 	defaultType: PropTypes.string.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		convertedConstants: state.converter.get('convertedConstants').toJS(),
 		contractId: state.contract.get('id'),
@@ -210,4 +212,4 @@ export default connect(
 	(dispatch) => ({
 		contractQuery: (method, args, contractId) => dispatch(contractQuery(method, args, contractId)),
 	}),
-)(LineComponent);
+)(LineComponent));

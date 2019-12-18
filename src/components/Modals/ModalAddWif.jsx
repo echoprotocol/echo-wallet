@@ -70,7 +70,10 @@ class ModalAddWIF extends React.Component {
 							value={publicKey}
 						/>
 						{
-							error && <span className="error-message">{error.message}</span>
+							error &&
+							<span className="error-message">
+								{intl.formatMessage({ id: error.message })}
+							</span>
 						}
 					</Form.Field>
 

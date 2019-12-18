@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Avatar from '../../components/Avatar';
 
@@ -73,7 +73,9 @@ class PartnerAccountPanel extends React.Component {
 
 	render() {
 		const { options } = this.state;
-		const { loading, signupOptionsForm, accounts } = this.props;
+		const {
+			loading, signupOptionsForm, accounts, intl,
+		} = this.props;
 
 		const registrarAccount = signupOptionsForm.get('registrarAccount');
 
@@ -108,7 +110,8 @@ class PartnerAccountPanel extends React.Component {
 								onChange={(e, { value }) => this.onChangeAccount(value)}
 							/>
 						</div>
-						{registrarAccount.error && <span className="error-message">{registrarAccount.error}</span>}
+						{registrarAccount.error &&
+						<span className="error-message">{intl.formatMessage({ id: registrarAccount.error })}</span>}
 					</div>
 				</div>
 			</React.Fragment>
@@ -130,6 +133,7 @@ PartnerAccountPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 	accounts: PropTypes.array,
 };
 
@@ -137,4 +141,4 @@ PartnerAccountPanel.defaultProps = {
 	accounts: [],
 };
 
-export default PartnerAccountPanel;
+export default injectIntl(PartnerAccountPanel);

@@ -45,7 +45,8 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-					{ bytecode.error && <span className="error-message">{bytecode.error}</span> }
+					{ bytecode.error &&
+					<span className="error-message">{intl.formatMessage({ id: bytecode.error })}</span> }
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
@@ -65,7 +66,8 @@ class Bytecode extends React.Component {
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-					{ abi.error && <span className="error-message">{abi.error}</span> }
+					{ abi.error &&
+					<span className="error-message">{intl.formatMessage({ id: abi.error })}</span> }
 				</Form.Field>
 				<div className={classnames('error-wrap', { error: !!name.error })}>
 					<div className="action-wrap">
@@ -78,7 +80,8 @@ class Bytecode extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					{ name.error && <span className="error-message">{name.error}</span> }
+					{ name.error &&
+					<span className="error-message">{intl.formatMessage({ id: name.error })}</span> }
 				</div>
 			</React.Fragment>
 		);

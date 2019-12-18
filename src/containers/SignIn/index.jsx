@@ -104,7 +104,7 @@ class SignIn extends React.Component {
 						/>
 						{
 							accountName.error &&
-								<span className="error-message">{accountName.error}</span>
+								<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>
 						}
 
 					</Form.Field>
@@ -112,7 +112,7 @@ class SignIn extends React.Component {
 						inputLabel={WIFTtitle}
 						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
-						errorMessage={wif.error}
+						errorMessage={intl.formatMessage({ id: wif.error })}
 						onChange={(e) => this.onChange(e)}
 						value={wif.value}
 					/>

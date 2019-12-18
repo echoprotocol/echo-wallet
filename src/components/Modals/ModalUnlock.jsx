@@ -57,7 +57,7 @@ class ModalUnlockWallet extends React.Component {
 								</div>
 								<div className="field-wrap">
 									<PasswordInput
-										errorMessage={error}
+										errorMessage={error ? intl.formatMessage({ id: error }) : ''}
 										inputLabel={intl.formatMessage({ id: 'modals.modal_unlock.password_input.title' })}
 										inputPlaceholder={intl.formatMessage({ id: 'modals.modal_unlock.password_input.placeholder' })}
 										inputName="password"

@@ -240,11 +240,11 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 
 	if (!key) {
 		error = true;
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_key_error'));
 	} else if (type === 'keys') {
 		if (!isPublicKey(key.value, 'ECHO')) {
 			error = true;
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_key_error'));
 		}
 	} else {
 		try {
@@ -252,11 +252,11 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 
 			if (!account) {
 				error = true;
-				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
+				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_account_error'));
 			}
 		} catch (e) {
 			error = true;
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_account_error'));
 		}
 	}
 
@@ -267,7 +267,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 	if ((!weight || !isWeight(weight.value)) && role === 'active') {
 		error = true;
 
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'Incorrect weight'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'errors.table_errors.incorrect_weight_error'));
 	}
 
 	return error;
@@ -276,7 +276,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 const validateThreshold = (permissionForm) => (dispatch) => {
 	const threshold = permissionForm.getIn(['active', 'threshold']).value;
 	if (!isThreshold(threshold)) {
-		dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], 'Invalid threshold'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], 'errors.table_errors.threshold_error'));
 		return false;
 	}
 	return true;

@@ -104,7 +104,7 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject, disabled, avatarName, placeholder, label,
+			field, autoFocus, subject, disabled, avatarName, placeholder, label, intl,
 			showAdditionalAccountInfo, additionalAccountInfo, additionalAccountPrefix,
 		} = this.props;
 
@@ -137,6 +137,7 @@ class AccountField extends React.Component {
 				error={field.error}
 				loading={field.loading && !field.error}
 				placeholder={placeholder}
+				intl={intl}
 			/>
 		);
 	}
@@ -151,6 +152,7 @@ AccountField.propTypes = {
 	additionalAccountPrefix: PropTypes.string,
 	avatarName: PropTypes.string,
 	label: PropTypes.string,
+	intl: PropTypes.string,
 	placeholder: PropTypes.string,
 	activeCoinTypeTab: PropTypes.any,
 	additionalAccountInfo: PropTypes.string,
@@ -181,6 +183,7 @@ AccountField.defaultProps = {
 	additionalAccountInfo: '',
 	additionalAccountPrefix: '',
 	activeCoinTypeTab: '',
+	intl: {},
 };
 
 export default AccountField;
