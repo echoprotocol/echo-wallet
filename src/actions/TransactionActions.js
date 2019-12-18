@@ -1376,7 +1376,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 
 	if (!echo.isConnected) {
 		toastError([{
-			text: operations[operation].name,
+			text: '',
+			postfix: `operations.${operations[operation]}`,
+		}, {
+			text: '',
 			postfix: 'toasts.errors.trx_dont_comp_by_lose_connection',
 		}]);
 		dispatch(closeModal(MODAL_DETAILS));
@@ -1424,7 +1427,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(toggleLoading(FORM_SIGN_UP, false));
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			toastSuccess([{
-				text: operations[operation].name,
+				text: '',
+				postfix: `operations.${operations[operation]}`,
+			}, {
+				text: '',
 				postfix: 'toasts.success.trx_complete_postfix',
 			}]);
 			dispatch(contractSet('loading', false));
@@ -1436,7 +1442,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 			dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value: false }));
 			const { message } = error;
 			toastError([{
-				text: operations[operation].name,
+				text: '',
+				postfix: `operations.${operations[operation]}`,
+			}, {
+				text: '',
 				postfix: 'toasts.errors.trx_dont_complete_postfix',
 			}, {
 				text: error.message,
@@ -1450,7 +1459,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	} catch (error) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 		toastError([{
-			text: operations[operation].name,
+			text: '',
+			postfix: `operations.${operations[operation]}`,
+		}, {
+			text: '',
 			postfix: 'toasts.errors.trx_dont_complete_postfix',
 		}, {
 			text: error.message,
@@ -1459,7 +1471,10 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 		dispatch(setTableValue(COMMITTEE_TABLE, 'disabledInput', false));
 	}
 	toastSuccess([{
-		text: operations[operation].name,
+		text: '',
+		postfix: `operations.${operations[operation]}`,
+	}, {
+		text: '',
 		postfix: 'toasts.success.trx_sent_postfix',
 	}]);
 
@@ -1893,7 +1908,7 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 			from: getState().global.getIn(['activeUser', 'name']),
 			account: getState().global.getIn(['activeUser', 'name']),
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
-			'Address name': label,
+			address_name: label,
 		};
 
 		dispatch(TransactionReducer.actions.setOperation({

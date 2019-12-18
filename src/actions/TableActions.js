@@ -628,25 +628,25 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			}
 
 			if (dataChanged.active.threshold) {
-				showOptions.activeThreshold = permissionData.active.threshold;
+				showOptions.active_threshold = permissionData.active.threshold;
 
 				transaction.active.weight_threshold = permissionData.active.threshold;
 			}
 
 			if (dataChanged.active.keys) {
-				showOptions.activeKeys = permissionData.active.keys;
+				showOptions.active_keys = permissionData.active.keys;
 
 				transaction.active.key_auths = permissionData.active.keys;
 			}
 
 			if (dataChanged.active.accounts) {
-				showOptions.activeAccounts = permissionData.active.accounts;
+				showOptions.active_accounts = permissionData.active.accounts;
 
 				transaction.active.account_auths = permissionData.active.accounts;
 			}
 
 			if (dataChanged.echoRand.key) {
-				showOptions.echoRandKey = permissionData.echoRand.key;
+				showOptions.echorand_key = permissionData.echoRand.key;
 
 				transaction.echorand_key = permissionData.echoRand.key;
 			}

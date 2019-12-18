@@ -589,8 +589,118 @@
             "title": "Confirm transaction",
             "confirm_button_text": "Confirm",
             "close_button_text": "Cancel",
-            "options": {
-                
+            "show_options": {
+                "operation_title": "operation",
+                "account_address_create": {
+                    "title": "Account address create",
+                    "from": "from",
+                    "account": "account",
+                    "fee": "fee",
+                    "address_name": "Address name"
+                },
+                "account_create": {
+                    "title": "Account create",
+                    "from": "from",
+                    "account": "account",
+                    "key": "key",
+                    "fee": "fee"
+                },
+                "account_update": {
+                    "title": "Account update",
+                    "account": "account",
+                    "votes": "votes",
+                    "proxy": "proxy",
+                    "canceled": "canceled",
+                    "fee": "fee",
+                    "active_threshold": "activeThreshold",
+                    "active_keys": "activeKeys",
+                    "active_accounts": "activeAccounts",
+                    "echorand_key": "echoRandKey",
+                    "wif": "wif",
+                    "from": "from",
+                    "delegate": "delegate"
+                },
+                "balance_freeze": {
+                    "title": "Balance freeze",
+                    "amount": "amount",
+                    "from": "from",
+                    "account": "account",
+                    "duration": "duration",
+                    "fee": "fee"
+                },
+                "contract_call": {
+                    "title": "Contract call",
+                    "fee": "fee",
+                    "from": "from",
+                    "to": "to",
+                    "to_contract": "To Contract",
+                    "amount": "amount",
+                    "code": "code",
+                    "value": "value"
+                },
+                "contract_create": {
+                    "title": "Contract create",
+                    "amount": "amount",
+                    "from": "from",
+                    "fee": "fee",
+                    "code": "code",
+                    "eth_accuracy": "ETH Accuracy",
+                    "supported_asset": "Supported Asset"
+                },
+                "contract_fund_pool": {
+                    "title": "Contract fund pool",
+                    "value": "value",
+                    "sender": "sender",
+                    "contract": "contract",
+                    "fee": "fee"
+                },
+                "contract_whitelist": {
+                    "title": "Contract whitelist",
+                    "sender": "sender",
+                    "contract": "contract",
+                    "fee": "fee"
+                },
+                "sidechain_btc_create_address": {
+                    "title": "Create BTC address",
+                    "from": "from",
+                    "account": "account",
+                    "backup_address": "backup address",
+                    "fee": "fee"
+                },
+                "sidechain_btc_withdraw": {
+                    "title": "BTC withdraw",
+                    "fee": "fee",
+                    "account": "account",
+                    "value": "value",
+                    "btc_address": "Sidechain BTC Withdraw"
+                },
+                "sidechain_eth_create_address": {
+                    "title": "Sidechain eth create address",
+                    "from": "from",
+                    "account": "account",
+                    "fee": "fee"
+                },
+                "sidechain_eth_withdraw": {
+                    "title": "Sidechain withdraw eth",
+                    "fee": "fee",
+                    "account": "account",
+                    "value": "value",
+                    "eth_address": "Sidechain ETH Withdraw"
+                },
+                "transfer": {
+                    "title": "Transfer",
+                    "fee": "fee",
+                    "from": "from",
+                    "to": "to",
+                    "amount": "amount"
+                },
+                "transfer_to_address": {
+                    "title": "Transfer to address",
+                    "fee": "fee",
+                    "from": "from",
+                    "to_address": "To Address",
+                    "amount": "amount"
+                }
             }
         },
         "modal_edit_permissions": {
@@ -739,5 +849,67 @@
         "warning_message_pt5": " or send it within ECHO Network."
     },
     "copied_text": "Copied",
+    "operations": {
+        "transfer": "Transfer",
+        "transfer_to_address": "Transfer to address",
+        "override_transfer": "Override transfer",
+        "account_create": "Create account",
+        "account_update": "Update account",
+        "account_whitelist": "Account whitelist",
+        "account_address_create": "Account address create",
+        "asset_create": "Create asset",
+        "asset_update": "Update asset",
+        "asset_update_bitasset": "Update SmartCoin",
+        "asset_update_feed_producers": "Update asset feed producers",
+        "asset_issue": "Issue asset",
+        "asset_reserve": "Burn asset",
+        "asset_fund_fee_pool": "Fund asset fee pool",
+        "asset_publish_feed": "Publish feed",
+        "asset_claim_fees": "Claim asset fees",
+        "proposal_create": "Create proposal",
+        "proposal_update": "Update proposal",
+        "proposal_delete": "Delete proposal",
+        "committee_member_create": "Create committee member",
+        "committee_member_update": "Update committee member",
+        "committee_member_update_global_parameters": "Global parameters update",
+        "committee_member_activate": "Committee member activate",
+        "committee_member_deactivate": "Committee member deactivate",
+        "committee_frozen_balance_deposit": "Committee frozen balance deposit",
+        "committee_frozen_balance_withdraw": "Committee frozen balance withdraw",
+        "vesting_balance_create": "Create vesting balance",
+        "vesting_balance_withdraw": "Withdraw vesting balance",
+        "balance_claim": "Claim balance",
+        "balance_freeze": "Balance freeze",
+        "balance_unfreeze": "Balance unfreeze",
+        "contract_create": "Contract create",
+        "contract_call": "Contract call",
+        "contract_internal_create": "Contract internal create",
+        "contract_internal_call": "Contract internal call",
+        "contract_selfdestruct": "Contract selfdestruct",
+        "contract_update": "Contract internal create",
+        "contract_fund_pool": "Contract fund pool",
+        "contract_whitelist": "Contract whitelist",
+        "sidechain_eth_create_address": "Sidechain eth create address",
+        "sidechain_eth_approve_address": "Sidechain eth approve address",
+        "sidechain_eth_deposit": "Sidechain deposit eth",
+        "sidechain_eth_withdraw": "Sidechain withdraw eth",
+        "sidechain_eth_approve_withdraw": "Sidechain eth approve withdraw",
+        "sidechain_eth_issue": "Sidechain eth issue",
+        "sidechain_eth_burn": "Sidechain eth burn",
+        "sidechain_erc20_register_token": "Register ERC20 token",
+        "sidechain_erc20_deposit_token": "Deposit ERC20 token",
+        "sidechain_erc20_withdraw_token": "Withdraw ERC20 token",
+        "sidechain_erc20_approve_token_withdraw": "Approve ERC20 token withdraw",
+        "sidechain_erc20_issue": "Issue ERC20 token",
+        "sidechain_erc20_burn": "Burn ERC20 token",
+        "sidechain_btc_create_address": "Create BTC address",
+        "sidechain_btc_create_intermediate_deposit": "Create Intermediate BTC deposit",
+        "sidechain_btc_intermediate_deposit": "Intermediate BTC deposit",
+        "sidechain_btc_deposit": "BTC deposit",
+        "sidechain_btc_withdraw": "BTC withdraw",
+        "sidechain_btc_aggregate": "Aggregate BTC",
+        "sidechain_btc_approve_aggregate": "Approve aggregate BTC",
+        "block_reward": "Block reward"
+    },
     "errors": {}
 }

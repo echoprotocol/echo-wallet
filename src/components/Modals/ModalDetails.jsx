@@ -25,6 +25,7 @@ class ModalDetails extends React.Component {
 	}
 
 	getInput(key, data) {
+		const { intl, operation } = this.props;
 		if (Array.isArray(data) && !data.length) {
 			return null;
 		}
@@ -32,15 +33,33 @@ class ModalDetails extends React.Component {
 		const isImageInput = ['from', 'to', 'sender'].includes(key);
 
 		return (
-			<div className="field" key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1').split('_').join(' ')}
-				</label>
-				<div className={classnames({ 'image-input': isImageInput })}>
-					{isImageInput && <Avatar accountName={data} />}
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
+			key === 'operation' ?
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: 'modals.modal_details.show_options.operation_title' })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input
+							type="text"
+							name="Fee"
+							disabled
+							className="ui input"
+							value={
+								intl.formatMessage({ id: `operations.${operation}` })
+							}
+						/>
+					</div>
+				</div> :
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: `modals.modal_details.show_options.${operation}.${key}` })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input type="text" name="Fee" disabled className="ui input" value={data} />
+					</div>
 				</div>
-			</div>
 		);
 	}
 
@@ -67,7 +86,6 @@ class ModalDetails extends React.Component {
 		const { operation, showOptions } = this.props;
 
 		const formatedOptions = getTransactionDetails(operation, showOptions.toJS());
-
 		return Object.entries(formatedOptions).map(([key, value]) => {
 			if (value.field === 'area') {
 				return this.getArea(key, value.data);
@@ -76,7 +94,6 @@ class ModalDetails extends React.Component {
 			if (['active', 'activeAccounts', 'activeKeys'].includes(key)) {
 				return this.getPermissions(key, value.data);
 			}
-
 			return this.getInput(key, value.data);
 		});
 	}
@@ -101,7 +118,7 @@ class ModalDetails extends React.Component {
 					<div className="modal-body">
 						<form className="form main-form">
 							<div className="field-wrap">
-								{ showOptions ? this.renderOptions() : null }
+								{showOptions ? this.renderOptions() : null}
 							</div>
 							<div className="form-panel">
 								<Button
