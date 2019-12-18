@@ -25,7 +25,8 @@ import {
 	SIGN_UP_OPTIONS_TYPES,
 	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
-	FORM_TO_WHITELIST,
+	FORM_WHITELIST,
+	FORM_BLACKLIST,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -346,7 +347,15 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
-	[FORM_TO_WHITELIST]: Map({
+	[FORM_WHITELIST]: Map({
+		account: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+	}),
+	[FORM_BLACKLIST]: Map({
 		account: {
 			value: '',
 			loading: false,
@@ -391,8 +400,10 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
 		[FORM_CHANGE_DELEGATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CHANGE_DELEGATE]),
-		[FORM_TO_WHITELIST]: _.cloneDeep(DEFAULT_FIELDS)
-			.merge(DEFAULT_FORM_FIELDS[FORM_TO_WHITELIST]),
+		[FORM_WHITELIST]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_WHITELIST]),
+		[FORM_BLACKLIST]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_BLACKLIST]),
 	}),
 	transformations: {
 		set: {

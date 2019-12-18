@@ -7,7 +7,7 @@ import FocusLock from 'react-focus-lock';
 import { closeModal } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 import { MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
-import { FORM_TO_WHITELIST } from '../../constants/FormConstants';
+import { FORM_WHITELIST } from '../../constants/FormConstants';
 import { setIn } from '../../actions/FormActions';
 
 
@@ -71,9 +71,7 @@ class ModalToWhitelist extends React.Component {
 
 		this.setState({
 			timeout: setTimeout(async () => {
-
 				await this.props.checkAccount(this.props.account.value, 'account');
-
 			}, 300),
 		});
 	}
@@ -162,14 +160,14 @@ ModalToWhitelist.defaultProps = {
 
 export default connect(
 	(state) => ({
-		account: state.form.getIn([FORM_TO_WHITELIST, 'account']),
+		account: state.form.getIn([FORM_WHITELIST, 'account']),
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_TO_WHITELIST)),
 		addToWhiteList: (accId) =>
-			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_WHITELIST)),
-		setIn: (field, param) => dispatch(setIn(FORM_TO_WHITELIST, field, param)),
-		checkAccount: (value, subject) => dispatch(checkAccount(FORM_TO_WHITELIST, value, subject)),
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_WHITELIST, FORM_WHITELIST, 'account')),
+		setIn: (field, param) => dispatch(setIn(FORM_WHITELIST, field, param)),
+		checkAccount: (value, subject) => dispatch(checkAccount(FORM_WHITELIST, value, subject)),
 	}),
 )(ModalToWhitelist);

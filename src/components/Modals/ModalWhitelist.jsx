@@ -8,6 +8,7 @@ import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_WHITELIST, MODAL_TO_WHITELIST } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
+import { FORM_WHITELIST } from '../../constants/FormConstants';
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 
@@ -121,6 +122,6 @@ export default connect(
 		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
 		closeModal: () => dispatch(closeModal(MODAL_WHITELIST)),
 		removeFromWhiteList: (accId) =>
-			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_WHITELIST)),
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_WHITELIST, FORM_WHITELIST, 'account')),
 	}),
 )(ModalWhitelist);
