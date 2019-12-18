@@ -120,7 +120,7 @@
 
 	.selection,
 	.selection:hover {
-		border: 1px solid #ff4848;
+		border: 1px solid $err-red;
 	}
 }
 
@@ -195,13 +195,6 @@
 	}
 }
 
-
-.selection.active.dropdown {
-	.menu {
-		border-color: $inut-color;
-	}
-}
-
 .selection {
 	&:focus {
 		border-color: $inut-color;
@@ -215,16 +208,28 @@
 	box-shadow: 0 2px 3px 0 $bd-gray;
 }
 
-.selection.active.dropdown {
+.selection.active {
 	&:hover {
 		&:not(.empty) {
 			border-color: $inut-color;
 		}
 	}
 
+	.menu {
+		border-color: $inut-color;
+	}
 }
 
-.selection.active.dropdown {
+.error {
+	.selection.active {
+		&:hover {
+			border-color: $err-red;
+		}
+	}
+
+}
+
+.selection.active {
 	&:hover .menu {
 		border-color: $inut-color;
 	}
