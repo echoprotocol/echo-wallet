@@ -27,6 +27,7 @@ import {
 	FORM_REPLENISH,
 	FORM_WHITELIST,
 	FORM_BLACKLIST,
+	CHECK_URI_ADDRESS_TYPES,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -83,6 +84,9 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		ipOrUrlStatus: CHECK_URI_ADDRESS_TYPES.DEFAULT,
+		showSavedAddressesDropdown: false,
+		showSaveAddressTooltip: false,
 	}),
 	[FORM_UNLOCK_MODAL]: Map({
 		password: {

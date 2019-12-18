@@ -9,94 +9,125 @@ class DropdownIpUrl extends React.Component {
 		super(props);
 
 		this.state = {
-			searchText: '',
+			isDropdownEmpty: true,
+			timeout: null,
 		};
 	}
 
 	onSearch(e) {
-		this.setState({ searchText: e.target.value });
+		const { value } = e.target;
+		this.setIsOptionsEmpty(value);
+		this.validateAndSetIpOrUrl(value);
+		this.openDropdown();
 	}
 
-	renderList(options) {
+	onDropdownChange(e, value) {
+		this.setIsOptionsEmpty(value);
+		this.validateAndSetIpOrUrl(value);
+		this.closeDropdown();
+	}
 
-		return options.map((i) => {
-			const content = (
-				<div className="dropdown-item">
-					<div className="dropdown-item-title">
-						{i.title}
-					</div>
-					<div className="dropdown-item-link">
-						<a
-							href={i.link}
-							target="_blank"
-							rel="noreferrer noopener"
-						>
-							{i.link}
-						</a>
-					</div>
-				</div>
-			);
-			return {
-				value: i.title,
-				key: i.link,
-				content,
-			};
+	onFocus(value) {
+		this.setIsOptionsEmpty(value);
+		this.openDropdown();
+	}
+
+	setIsOptionsEmpty(value) {
+		const options = this.props.remoteRegistrationAddresses;
+		const res = options.filter(({ address }) => address.match(value) && address !== value);
+		this.setState({ isDropdownEmpty: res.size === 0 });
+	}
+
+	openDropdown() {
+		this.props.setValue('showSavedAddressesDropdown', true);
+	}
+
+	closeDropdown() {
+		this.props.setValue('showSavedAddressesDropdown', false);
+	}
+
+	validateAndSetIpOrUrl(value) {
+		this.props.setFormValue('ipOrUrl', value);
+
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+
+		this.setState({
+			timeout: setTimeout(async () => {
+				this.props.validateAndSetIpOrUrl(value);
+			}, 600),
 		});
-
 	}
 
+	renderList() {
+		const { signupOptionsForm, remoteRegistrationAddresses } = this.props;
+		const ipOrUrl = signupOptionsForm.get('ipOrUrl');
+
+		return remoteRegistrationAddresses
+			.filter(({ address }) => address.match(ipOrUrl.value) && address !== ipOrUrl.value)
+			.map((i) => {
+				const content = (
+					<div className="dropdown-item">
+						<div className={classnames(i.type)} >
+							{i.address}
+						</div>
+					</div>
+				);
+				return {
+					value: i.address,
+					key: i.address,
+					content,
+				};
+			}).toArray();
+	}
 
 	render() {
-		const { searchText } = this.state;
+		const { status, loading, signupOptionsForm } = this.props;
+		const { isDropdownEmpty } = this.state;
 
-		const { status } = this.props;
+		const ipOrUrl = signupOptionsForm.get('ipOrUrl');
+		const open = signupOptionsForm.get('showSavedAddressesDropdown');
 
-		const options = [
-			{
-				title: '192.168.0.4',
-				link: 'http://savedurl.com/123451',
-			},
-			{
-				title: '192.168.0.2',
-				link: 'http://savedurl.com/123452',
-			},
-			{
-				title: '192.168.0.5',
-				link: 'http://savedurl.com/1s23451',
-			},
-		];
 		return (
-			<div className="ip-url-dropdown-wrap">
+			<React.Fragment>
 				<Dropdown
+					open={open}
 					floating
-					search
+					search={() => this.renderList()}
 					fluid
-					className="ip-url-dropdown"
-					searchQuery={searchText}
-					closeOnChange
+					selection
+					selectOnBlur={false}
+					disabled={loading}
+					className={classnames('ip-url-dropdown', { 'empty-search': isDropdownEmpty })}
+					searchQuery={ipOrUrl.value}
 					icon={false}
 					onSearchChange={(e) => this.onSearch(e)}
-					text={searchText}
-					selection
-					onBlur={() => {}}
-					options={this.renderList(options)}
+					onChange={(e, { value }) => this.onDropdownChange(e, value)}
+					text={ipOrUrl.value}
+					options={this.renderList()}
+					onBlur={() => this.closeDropdown()}
+					onFocus={() => this.onFocus(ipOrUrl.value)}
+					noResultsMessage={null}
 				/>
 				{
 					status &&
 						<span className={classnames('value-status', `icon-${status}`)} />
 				}
-			</div>
+			</React.Fragment>
 		);
 	}
 
 }
 
 DropdownIpUrl.propTypes = {
-	status: PropTypes.string,
-};
-
-DropdownIpUrl.defaultProps = {
-	status: '',
+	status: PropTypes.string.isRequired,
+	loading: PropTypes.bool.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
+	signupOptionsForm: PropTypes.object.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 };
 
 export default DropdownIpUrl;
