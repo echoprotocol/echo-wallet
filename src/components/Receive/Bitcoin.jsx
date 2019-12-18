@@ -41,18 +41,6 @@ class Bitcoin extends React.Component {
 			amount, accountName, btcAddress, intl,
 		} = this.props;
 
-		const amountTexts = {
-			label: intl.formatMessage({ id: 'amount_input.title' }),
-			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
-			available: intl.formatMessage({ id: 'amount_input.available' }),
-			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
-			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
-			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
-			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
-			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
-			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
-		};
-
 		const address = btcAddress.getIn(['deposit_address', 'address']);
 
 		return (
@@ -87,18 +75,17 @@ class Bitcoin extends React.Component {
 					amount={amount}
 					isAvailableBalance={false}
 					amountInput={this.props.amountInput}
-					setFormError={() => {}}
-					setFormValue={() => {}}
-					setValue={() => {}}
+					setFormError={() => { }}
+					setFormValue={() => { }}
+					setValue={() => { }}
 					currency={{
 						precision: 8, id: '', symbol: 'BTC', balance: 0,
 					}}
-					setDefaultAsset={() => {}}
+					setDefaultAsset={() => { }}
 					getTransferFee={() => Promise.resolve()}
-					setContractFees={() => {}}
+					setContractFees={() => { }}
 					assetDropdown={false}
 					showAvailable={false}
-					texts={amountTexts}
 					warningMessage={
 						<span className="warning-message">
 							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt1" />
@@ -108,6 +95,7 @@ class Bitcoin extends React.Component {
 							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt3" />
 						</span>
 					}
+					intl={intl}
 				/>
 				{
 					accountName && address && amount ?

@@ -185,6 +185,7 @@
         },
         "frozen_funds": {
             "title": "Frozen Funds",
+            "subtitle": "Freeze Funds",
             "total_sum_text": "Total Frozen Amount:",
             "button_text": "FREEZE",
             "period_input_title": "Period",
@@ -589,7 +590,7 @@
             "confirm_button_text": "Confirm",
             "close_button_text": "Cancel",
             "options": {
-
+                
             }
         },
         "modal_edit_permissions": {

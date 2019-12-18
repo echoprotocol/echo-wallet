@@ -100,17 +100,6 @@ class Transfer extends React.Component {
 			from, to, currency, additionalAccountInfo, intl,
 			fee, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
-		const amountTexts = {
-			label: intl.formatMessage({ id: 'amount_input.title' }),
-			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
-			available: intl.formatMessage({ id: 'amount_input.available' }),
-			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
-			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
-			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
-			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
-			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
-			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
-		};
 		const { bytecodeVisible } = this.state;
 
 		const additionalAccountPrefix = additionalAccountInfo.prefix ?
@@ -184,8 +173,8 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setTransferFee={this.props.setTransferFee}
 									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
-									texts={amountTexts}
 									activeCoinTypeTab={this.props.activeCoinTypeTab}
+									intl={intl}
 								/>
 								<div className="form-panel">
 									<Button

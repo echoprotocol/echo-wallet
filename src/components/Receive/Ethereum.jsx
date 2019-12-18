@@ -37,18 +37,6 @@ class Ethereum extends React.Component {
 
 		const qrText = `ethereum:0x${address}?value=${value}`;
 
-		const amountTexts = {
-			label: intl.formatMessage({ id: 'amount_input.title' }),
-			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
-			available: intl.formatMessage({ id: 'amount_input.available' }),
-			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
-			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
-			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
-			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
-			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
-			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
-		};
-
 		return (
 			<React.Fragment>
 				<p className="payment-description">
@@ -86,7 +74,6 @@ class Ethereum extends React.Component {
 					assetDropdown={false}
 					showAvailable={false}
 					receive
-					texts={amountTexts}
 					warningMessage={
 						<span className="warning-message">
 							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt1" />
@@ -96,6 +83,7 @@ class Ethereum extends React.Component {
 							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt3" />
 						</span>
 					}
+					intl={intl}
 				/>
 				<QrCode link={qrText} />
 			</React.Fragment>

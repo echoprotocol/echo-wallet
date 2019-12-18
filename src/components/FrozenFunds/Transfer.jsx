@@ -44,17 +44,6 @@ class Transfer extends React.Component {
 		let coefficient = '0.0';
 		const popupMsg = intl.formatMessage({ id: 'wallet_page.frozen_funds.frozen_funds_list.popup_text' });
 		const dropdownPlaceholder = intl.formatMessage({ id: 'wallet_page.frozen_funds.period_input_placeholder' });
-		const amountTexts = {
-			label: intl.formatMessage({ id: 'amount_input.title' }),
-			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
-			available: intl.formatMessage({ id: 'amount_input.available' }),
-			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
-			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
-			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
-			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
-			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
-			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
-		};
 		if (duration) {
 			({ coefficientText: coefficient } = FREEZE_BALANCE_PARAMS
 				.find((b) => b.duration === duration.value));
@@ -67,7 +56,9 @@ class Transfer extends React.Component {
 					(submit) => (
 						<form className="form main-form">
 							<div className="form-info">
-								<h3>Freeze Funds</h3>
+								<h3>
+									<FormattedMessage id="wallet_page.frozen_funds.subtitle" />
+								</h3>
 							</div>
 							<div className="field-wrap">
 								<AmountField
@@ -87,7 +78,7 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransactionFee}
 									setContractFees={() => { }}
 									assetDropdown={false}
-									texts={amountTexts}
+									intl={intl}
 								/>
 								<div className="field">
 									<label htmlFor="period">

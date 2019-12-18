@@ -47,18 +47,6 @@ class ModalToWhitelist extends React.Component {
 			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl, error,
 		} = this.props;
 
-		const amountTexts = {
-			label: intl.formatMessage({ id: 'amount_input.title' }),
-			placeholder: intl.formatMessage({ id: 'amount_input.placeholder' }),
-			available: intl.formatMessage({ id: 'amount_input.available' }),
-			noRes: intl.formatMessage({ id: 'amount_input.no_result_message' }),
-			warningMsgPt1: intl.formatMessage({ id: 'amount_input.warning_message_pt1' }),
-			warningMsgPt2: intl.formatMessage({ id: 'amount_input.warning_message_pt2' }),
-			warningMsgPt3: intl.formatMessage({ id: 'amount_input.warning_message_pt3' }),
-			warningMsgPt4: intl.formatMessage({ id: 'amount_input.warning_message_pt4' }),
-			warningMsgPt5: intl.formatMessage({ id: 'amount_input.warning_message_pt5' }),
-		};
-
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.replenishContractPool()}
@@ -126,9 +114,9 @@ class ModalToWhitelist extends React.Component {
 												setValue={this.props.setValue}
 												setDefaultAsset={this.props.setDefaultAsset}
 												getTransferFee={this.props.getTransactionFee}
-												setContractFees={() => {}}
+												setContractFees={() => { }}
 												autoFocus
-												texts={amountTexts}
+												intl={intl}
 											/>
 										</div>
 
