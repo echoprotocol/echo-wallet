@@ -1,37 +1,37 @@
 @mixin max-vw($width) {
-  @media (max-width: $width + 'px') {
-    @content;
-  }
+	@media (max-width: $width + 'px') {
+		@content;
+	}
 }
 
 @mixin min-vw($width) {
-  @media (min-width: $width + 'px') {
-    @content;
-  }
+	@media (min-width: $width + 'px') {
+		@content;
+	}
 }
 
 @mixin max-vh($height) {
-  @media (max-height: $height + 'px') {
-    @content;
-  }
+	@media (max-height: $height + 'px') {
+		@content;
+	}
 }
 
 @mixin min-vh($height) {
-  @media (min-height: $height + 'px') {
-    @content;
-  }
+	@media (min-height: $height + 'px') {
+		@content;
+	}
 }
 
 @mixin cut-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 @mixin on-focus($shadow-size) {
-    box-shadow:
-    0 0 0 $shadow-size rgba($inut-color, .2),
-    0 0 0 $shadow-size rgba($inut-color, .2);
+	box-shadow:
+		0 0 0 $shadow-size rgba($inut-color, .2),
+		0 0 0 $shadow-size rgba($inut-color, .2);
 }
 
 @mixin label {
@@ -41,4 +41,10 @@
 	font-weight: 600;
 	color: #AEB4C0;
 }
-  
+
+
+@mixin icon-info($mg-r: 0, $mg-l: 0) {
+	cursor: pointer;
+	font-size: 12px;
+	margin: 0 $mg-r 0 $mg-l;
+}

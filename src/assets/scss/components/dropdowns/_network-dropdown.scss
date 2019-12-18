@@ -301,6 +301,7 @@
 				}
 
 				.icon-info {
+					@include icon-info();
 					color: #FFF9B5;
 				}
 
@@ -466,6 +467,7 @@
 	}
 
 	.icon-info {
+		@include icon-info();
 		color: rgba(#5C637D, .5);
 	}
 
@@ -476,7 +478,7 @@
 		transition: color $speed;
 
 		&+.icon-info {
-			margin: 0 0 0 auto;
+			@include icon-info(0, auto);
 		}
 	}
 
