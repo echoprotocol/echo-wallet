@@ -18,7 +18,7 @@ import ContractSettings from './ContractSettings';
 import TabCallContracts from './CallContract/TabCallContracts';
 import TabContractProps from './Constants/TabContractProps';
 import TabGeneralInfo from './TabGeneralInfo';
-import { MODAL_TO_WHITELIST, MODAL_TO_BLACKLIST, MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
+import { MODAL_WHITELIST, MODAL_BLACKLIST } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
 
 class ViewContract extends React.Component {
@@ -49,8 +49,6 @@ class ViewContract extends React.Component {
 							activeUser={this.props.activeUser}
 							openWhitelistModal={this.props.openWhitelistModal}
 							openBlacklistModal={this.props.openBlacklistModal}
-							openToWhitelistModal={this.props.openToWhitelistModal}
-							openToBlacklistModal={this.props.openToBlacklistModal}
 						/>
 					</Tab.Pane>
 				),
@@ -98,8 +96,6 @@ ViewContract.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
-	openToWhitelistModal: PropTypes.func.isRequired,
-	openToBlacklistModal: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
 };
@@ -118,7 +114,5 @@ export default withRouter(connect(
 		getFullContract: (id) => dispatch(getFullContract(id)),
 		openWhitelistModal: () => dispatch(openModal(MODAL_WHITELIST)),
 		openBlacklistModal: () => dispatch(openModal(MODAL_BLACKLIST)),
-		openToWhitelistModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),
-		openToBlacklistModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 	}),
 )(ViewContract));

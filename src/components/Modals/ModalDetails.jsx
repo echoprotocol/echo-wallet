@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
@@ -19,7 +19,7 @@ class ModalDetails extends React.Component {
 
 	getArea(key, data) {
 		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
+			<div className="field comment" key={key} label={key} disabled control="textarea" value={data} />
 		);
 	}
 
@@ -31,7 +31,7 @@ class ModalDetails extends React.Component {
 		const isImageInput = ['from', 'to', 'sender'].includes(key);
 
 		return (
-			<Form.Field key={key} >
+			<div className="field" key={key} >
 				<label htmlFor="amount">
 					{key.replace(/([A-Z])/g, ' $1').split('_').join(' ')}
 				</label>
@@ -39,15 +39,15 @@ class ModalDetails extends React.Component {
 					{isImageInput && <Avatar accountName={data} />}
 					<input type="text" name="Fee" disabled className="ui input" value={data} />
 				</div>
-			</Form.Field>
+			</div>
 		);
 	}
 
 	getPermissions(key, data) {
 		return (
-			<Form.Field className="field-block" key={key}>
-				<p className="field-block_title">{key.replace(/([A-Z])/g, ' $1')}</p>
-				<div className="field-block_edit">
+			<div className="field field-block" key={key}>
+				<p className="field-block-title">{key.replace(/([A-Z])/g, ' $1')}</p>
+				<div className="field-block-edit">
 					{
 						data.map(([keyPermission, weight]) => (
 							<React.Fragment key={Math.random()}>
@@ -58,8 +58,7 @@ class ModalDetails extends React.Component {
 						))
 					}
 				</div>
-
-			</Form.Field>
+			</div>
 		);
 	}
 
@@ -85,39 +84,36 @@ class ModalDetails extends React.Component {
 		const { showOptions, show, disabled } = this.props;
 
 		return (
-			<Modal className="small confirm-transaction" open={show}>
+			<Modal className="confirm-transaction" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header" />
-						<div className="modal-body">
-							<Form className="main-form">
-								<div className="form-info">
-									<h3>Confirm transaction</h3>
-								</div>
-								<div className="field-wrap">
-									{ showOptions ? this.renderOptions() : null }
-								</div>
-								<div className="form-panel">
-									<Button
-										className="main-btn"
-										onClick={() => this.onClose()}
-										content="Cancel"
-									/>
-									<Button
-										autoFocus
-										type="submit"
-										className="main-btn"
-										onClick={() => this.onConfirm()}
-										disabled={disabled}
-										content="Confirm"
-									/>
-								</div>
-							</Form>
-						</div>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">Confirm transaction</h2>
+					</div>
+					<div className="modal-body">
+						<form className="form main-form">
+							<div className="field-wrap">
+								{ showOptions ? this.renderOptions() : null }
+							</div>
+							<div className="form-panel">
+								<Button
+									className="main-btn"
+									onClick={() => this.onClose()}
+									content="Cancel"
+								/>
+								<Button
+									autoFocus
+									type="submit"
+									className="main-btn"
+									onClick={() => this.onConfirm()}
+									disabled={disabled}
+									content="Confirm"
+								/>
+							</div>
+						</form>
 					</div>
 				</FocusLock>
 			</Modal>

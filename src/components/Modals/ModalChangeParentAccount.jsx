@@ -118,7 +118,7 @@ class ModalChangeDelegate extends React.Component {
 					onClick={(e) => this.onClose(e)}
 				/>
 				<div className="modal-header">
-					<h3 className="modal-header-title">Change delegate</h3>
+					<h2 className="modal-header-title">Change delegate</h2>
 				</div>
 				<div className="modal-body">
 					<div className="field-wrap">

@@ -81,6 +81,7 @@ class AdditionalOptions extends React.Component {
 					className="accordion-trigger"
 					onClick={(e) => this.toggleAcordion(e)}
 					icon="dropdown"
+					role="button"
 					content={<span className="content">More Options</span>}
 				/>
 				<CSSTransition

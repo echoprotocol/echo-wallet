@@ -624,7 +624,7 @@
 	display: flex;
 	align-items: center;
 	width: 25px;
-	z-index: 10;
+	z-index: 3;
 
 	&.icon-error {
 		color: $err-red;

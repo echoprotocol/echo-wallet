@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import ActionBtn from '../ActionBtn';
 
@@ -14,14 +13,25 @@ export default class PasswordInput extends React.PureComponent {
 		};
 
 		this.input = React.createRef();
+		this.setCursor = this.setCursor.bind(this);
 	}
 
-	toggleShow(show) {
+	setCursor() {
+		const { show } = this.state;
 		this.setState({
 			show: !show,
 		});
 		this.input.current.focus();
 	}
+
+	focus(e) {
+		e.target.addEventListener('click', this.setCursor, false);
+	}
+
+	blur(e) {
+		e.target.removeEventListener('click', this.setCursor, false);
+	}
+
 
 	render() {
 
@@ -38,7 +48,7 @@ export default class PasswordInput extends React.PureComponent {
 		} = this.props;
 
 		return (
-			<Form.Field className={classnames('input-password error-wrap', { error: !!errorMessage })}>
+			<div className={classnames('field input-password error-wrap', { error: !!errorMessage })}>
 				{
 					inputLabel && <label htmlFor="WIF">{ inputLabel }</label>
 				}
@@ -54,7 +64,8 @@ export default class PasswordInput extends React.PureComponent {
 					/>
 					<ActionBtn
 						icon={show ? 'icon-e-show' : 'icon-e-hide'}
-						action={() => this.toggleShow(show)}
+						focus={(e) => this.focus(e)}
+						blur={(e) => this.blur(e)}
 					/>
 				</div>
 				<React.Fragment>
@@ -64,7 +75,7 @@ export default class PasswordInput extends React.PureComponent {
 						<span className="warning-message">{ warningMessage }</span>
 					}
 				</React.Fragment>
-			</Form.Field>
+			</div>
 		);
 	}
 

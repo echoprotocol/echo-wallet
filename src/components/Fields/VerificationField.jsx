@@ -34,7 +34,7 @@ const VerificationField = (props) => {
 					autoFocus={autoFocus}
 				/>
 
-				{ !loading && !disabled &&
+				{ !disabled &&
 				<span className={classnames('value-status', `icon-${status}`)} />
 				}
 			</div>
@@ -50,7 +50,7 @@ VerificationField.propTypes = {
 	label: PropTypes.string,
 	name: PropTypes.string,
 	value: PropTypes.string,
-	status: PropTypes.string, // error or checked
+	status: PropTypes.string,
 	placeholder: PropTypes.string,
 	loading: PropTypes.bool,
 	error: PropTypes.string,
@@ -71,7 +71,7 @@ VerificationField.defaultProps = {
 	disabled: false,
 	autoFocus: false,
 	status: '',
-	additionalLabel: 'null',
+	additionalLabel: null,
 	icon: null,
 };
 

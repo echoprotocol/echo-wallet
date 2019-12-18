@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
@@ -56,15 +56,15 @@ class ModalCreateEchoAddress extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Create address name</h3>
+									<h2 className="modal-header-title">Create address name</h2>
 								</div>
-								<Form className="modal-body">
+								<form className="modal-body">
 									<div className="info-text">
 											You can use several addresses referring to one account for different targets.
 											Please create address name for a new one.
 									</div>
 
-									<Form.Field className={classnames('error-wrap', { error: !!error })}>
+									<div className={classnames('field error-wrap', { error: !!error })}>
 										<label htmlFor="address">Address name</label>
 										<input
 											type="text"
@@ -80,7 +80,7 @@ class ModalCreateEchoAddress extends React.Component {
 												Warning: Please note, address names are visible
 												for blockchain network participants.
 										</span>
-									</Form.Field>
+									</div>
 									<div className="form-panel">
 										<Button
 											type="submit"
@@ -89,7 +89,7 @@ class ModalCreateEchoAddress extends React.Component {
 											content="Generate address"
 										/>
 									</div>
-								</Form>
+								</form>
 							</FocusLock>
 						</Modal>
 					)

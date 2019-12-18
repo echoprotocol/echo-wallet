@@ -26,6 +26,7 @@ import {
 	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
 	CHECK_URI_ADDRESS_TYPES,
+	FORM_TO_WHITELIST,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -172,6 +173,7 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		compileLoading: false,
+		annotations: [],
 		editorWorker: false,
 	}),
 	[FORM_CREATE_CONTRACT_BYTECODE]: Map({
@@ -348,6 +350,14 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
+	[FORM_TO_WHITELIST]: Map({
+		account: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+	}),
 };
 
 export default createModule({
@@ -385,6 +395,8 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
 		[FORM_CHANGE_DELEGATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CHANGE_DELEGATE]),
+		[FORM_TO_WHITELIST]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_TO_WHITELIST]),
 	}),
 	transformations: {
 		set: {

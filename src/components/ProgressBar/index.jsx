@@ -6,9 +6,17 @@ import {
 	buildStyles,
 } from 'react-circular-progressbar';
 
+import playNode from '../../assets/images/play-node.svg';
+import pauseNode from '../../assets/images/pause-node.svg';
+
+
 import RadialSeparators from './RadialSeparators';
 
 export default class ProgressBar extends PureComponent {
+
+	onNodeAction(e) {
+		e.preventDefault();
+	}
 
 	getTailColor(disconnected, warning) {
 
@@ -39,13 +47,13 @@ export default class ProgressBar extends PureComponent {
 		return 'rgb(255, 255, 255)';
 	}
 
-	render() {
+	renderProgress() {
 		const {
 			size, value, disconnected, warning,
 		} = this.props;
 
 		return (
-			<div className="progress-wrap">
+			<React.Fragment>
 				<div
 					className="progress"
 					style={{
@@ -81,6 +89,54 @@ export default class ProgressBar extends PureComponent {
 					{value}
 					<span className="symbol">%</span>
 				</div>
+			</React.Fragment>
+		);
+	}
+
+	renderPlay() {
+		return (
+			<button
+				tabIndex="-1"
+				onClick={(e) => this.onNodeAction(e)}
+				className="action-node"
+			>
+				<img src={playNode} alt="play node synchronization" />
+			</button>
+
+		);
+	}
+
+	renderPause() {
+		return (
+			<React.Fragment>
+				<button
+					tabIndex="-1"
+					onClick={(e) => this.onNodeAction(e)}
+					className="action-node"
+				>
+					<img src={pauseNode} alt="pause node synchronization" />
+				</button>
+				<div className="percent">
+					32
+					<span className="symbol">%</span>
+				</div>
+			</React.Fragment>
+
+
+		);
+	}
+
+	render() {
+
+
+		return (
+			<div className="progress-wrap">
+				{
+					// this.renderProgress()
+					// this.renderPlay()
+					this.renderPause()
+				}
+
 			</div>
 		);
 	}

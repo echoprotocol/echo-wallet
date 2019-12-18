@@ -27,12 +27,15 @@ class actionBtn extends React.Component {
 		const { copied } = this.state;
 		const {
 			text, icon, action,
-			size, color,
+			size, color, focus,
+			blur,
 		} = this.props;
 
 		return (
 			<button
 				onClick={(e) => action(e)}
+				onFocus={(e) => focus(e)}
+				onBlur={(e) => blur(e)}
 				type="button"
 				className={classnames(
 					'action-btn',
@@ -79,6 +82,8 @@ class actionBtn extends React.Component {
 
 actionBtn.propTypes = {
 	action: PropTypes.func,
+	focus: PropTypes.func,
+	blur: PropTypes.func,
 	copy: PropTypes.string,
 	text: PropTypes.string,
 	icon: PropTypes.string,
@@ -88,6 +93,8 @@ actionBtn.propTypes = {
 
 actionBtn.defaultProps = {
 	action: () => {},
+	focus: () => {},
+	blur: () => {},
 	copy: '',
 	text: '',
 	icon: '',
