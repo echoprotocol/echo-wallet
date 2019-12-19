@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { lookupAccountsList } from '../../actions/AccountActions';
@@ -103,86 +104,97 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	render() {
-		const { show, currentAccountName, delegateObject } = this.props;
+		const {
+			show, currentAccountName, delegateObject, intl, keyWeightWarn,
+		} = this.props;
 		const { searchText, loading, options } = this.state;
 
 		const delegate = options.find(({ text }) => text === searchText);
+		const delegateTitle = intl.formatMessage({ id: 'modals.modal_change_parent_account.delegated_to_dropdown.title' });
+		const delegatePlaceholder = intl.formatMessage({ id: 'modals.modal_change_parent_account.delegated_to_dropdown.placeholder' });
 
 		return (
-			<Modal
-				className="change-parent-account-modal"
-				open={show}
+			<TransactionScenario
+				handleTransaction={() => this.props.changeDelegate(delegate && delegate.value)}
 			>
-				<button
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-				/>
-				<div className="modal-header">
-					<h2 className="modal-header-title">Change delegate</h2>
-				</div>
-				<div className="modal-body">
-					<div className="field-wrap">
-						<Form.Field>
-							<label htmlFor="current-account">Current Account</label>
-							<div className="image-input">
-								<Avatar accountName={currentAccountName} />
-								<input
-									type="text"
-									name="current-account"
-									disabled
-									className="ui input"
-									value={currentAccountName}
-								/>
-							</div>
-						</Form.Field>
-						<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
-
-							<div className="field">
-								<label htmlFor="parentAccount" className="field-label">Delegated to</label>
-								<div className="account-dropdown-wrap">
-									{
-										delegate ? <Avatar accountName={searchText} /> : <Avatar />
-									}
-									<Dropdown
-										className={classnames({ empty: !searchText || loading })}
-										options={(searchText && !loading) ? this.renderList(options) : []}
-										searchQuery={searchText}
-										search
-										selection
-										fluid
-										name="parentAccount"
-										text={searchText || 'Delegated to'}
-										onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
-										placeholder="Delegated to"
-										selectOnNavigation={false}
-										minCharacters={0}
-										noResultsMessage={searchText ? 'No results are found' : null}
-										onChange={(e, { value }) => this.onChangeAccount(value)}
-									/>
-								</div>
-								{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
-							</div>
-						</div>
-					</div>
-					<div className="form-panel">
-						<TransactionScenario
-							handleTransaction={() => this.props.changeDelegate(delegate && delegate.value)}
+				{
+					(submit) => (
+						<Modal
+							className="change-parent-account-modal"
+							open={show}
 						>
-							{
-								(submit) => (
-									<Button
-										type="submit"
-										className="main-btn"
-										content="Confirm"
-										onClick={submit}
-										disabled={loading || !delegate}
-									/>
-								)
-							}
-						</TransactionScenario>
-					</div>
-				</div>
-			</Modal>
+							<button
+								className="icon-close"
+								onClick={(e) => this.onClose(e)}
+							/>
+							<div className="modal-header">
+								<h2 className="modal-header-title">
+									{intl.formatMessage({ id: 'modals.modal_change_parent_account.title' })}
+								</h2>
+							</div>
+							<div className="modal-body">
+								<div className="field-wrap">
+									<Form.Field>
+										<label htmlFor="current-account">
+											{intl.formatMessage({ id: 'modals.modal_change_parent_account.current_acc' })}
+										</label>
+										<div className="image-input">
+											<Avatar accountName={currentAccountName} />
+											<input
+												type="text"
+												name="current-account"
+												disabled
+												className="ui input"
+												value={currentAccountName}
+											/>
+										</div>
+									</Form.Field>
+									<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
+
+										<div className="field">
+											<label htmlFor="parentAccount" className="field-label">{delegateTitle}</label>
+											<div className="account-dropdown-wrap">
+												{
+													delegate ? <Avatar accountName={searchText} /> : <Avatar />
+												}
+												<Dropdown
+													className={classnames({ empty: !searchText || loading })}
+													options={(searchText && !loading) ? this.renderList(options) : []}
+													searchQuery={searchText}
+													search
+													selection
+													fluid
+													name="parentAccount"
+													text={searchText || 'Delegated to'}
+													onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
+													placeholder={delegatePlaceholder}
+													selectOnNavigation={false}
+													minCharacters={0}
+													noResultsMessage={searchText ? 'No results are found' : null}
+													onChange={(e, { value }) => this.onChangeAccount(value)}
+												/>
+											</div>
+											{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
+										</div>
+									</div>
+								</div>
+								<div className="form-panel">
+
+									{
+										<Button
+											type="submit"
+											className="main-btn"
+											content={intl.formatMessage({ id: 'modals.modal_change_parent_account.confirm_button_text' })}
+											onClick={submit}
+											disabled={loading || !delegate || keyWeightWarn}
+										/>
+									}
+
+								</div>
+							</div>
+						</Modal>)
+				}
+			</TransactionScenario>
 		);
 	}
 
@@ -196,17 +208,20 @@ ModalChangeDelegate.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
 	delegateObject: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalChangeDelegate.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_CHANGE_PARENT_ACCOUNT, 'show']),
 		currentAccountName: state.global.getIn(['activeUser', 'name']),
 		delegateObject: state.form.getIn([FORM_CHANGE_DELEGATE, 'delegate']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		closeModal: (modal) => dispatch(closeModal(modal)),
@@ -214,4 +229,4 @@ export default connect(
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_CHANGE_DELEGATE, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_CHANGE_DELEGATE)),
 	}),
-)(ModalChangeDelegate);
+)(ModalChangeDelegate));

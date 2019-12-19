@@ -49,6 +49,7 @@ export default connect(
 		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
 		activePaymentTypeTab: state.global.get('activePaymentTypeTab'),
 		activeCoinTypeTab: state.global.get('activeCoinTypeTab'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

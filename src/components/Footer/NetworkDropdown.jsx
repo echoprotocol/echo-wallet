@@ -3,6 +3,7 @@ import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import classnames from 'classnames';
 import { NETWORKS } from '../../constants/GlobalConstants';
 
@@ -107,14 +108,15 @@ class Network extends React.PureComponent {
 	render() {
 		const { open } = this.state;
 		const {
-			networks, network, loading, disconnected, warning,
+			networks, network, loading, disconnected, warning, intl,
 		} = this.props;
+		const dropdownPlaceholder = intl.formatMessage({ id: 'footer.network_section.choose_network_dropdown.title' });
 		let options = [
 			{
 				value: 'Choose network',
 				key: 'choose-network',
 				className: 'item-header',
-				content: 'Choose network',
+				content: dropdownPlaceholder,
 				disabled: true,
 				onClick: (e) => e.preventDefault(),
 			},
@@ -131,7 +133,9 @@ class Network extends React.PureComponent {
 			selected: false,
 			content: (
 				<div className="network-link">
-					<span className="network-link-content">+ Add custom Network</span>
+					<span className="network-link-content">
+						<FormattedMessage id="footer.network_section.choose_network_dropdown.add_custom_network_buttom" />
+					</span>
 				</div>),
 		});
 
@@ -148,7 +152,10 @@ class Network extends React.PureComponent {
 			>
 				<div className="trigger" >
 					<span className="description">
-						{ disconnected ? 'Disconnected:' : 'Network:' }
+						{ disconnected ?
+							<FormattedMessage id="footer.network_section.title" /> :
+							<FormattedMessage id="footer.network_section.disconnected" />
+						}
 					</span>
 					<span className="status connected">
 						<div className="ellipsis">{network.name}</div>
@@ -162,7 +169,7 @@ class Network extends React.PureComponent {
 					/>
 
 					<span className="pipeline-block">
-								Block
+						<FormattedMessage id="footer.network_section.block" />
 						<span>{this.props.lastBlock}</span>
 					</span>
 					<span className="icon dropdown" />
@@ -194,6 +201,7 @@ Network.propTypes = {
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
 	lastBlock: PropTypes.any.isRequired,
+	intl: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
 };
@@ -204,7 +212,7 @@ Network.defaultProps = {
 	warning: false,
 };
 
-export default withRouter(connect(
+export default injectIntl(withRouter(connect(
 	(state) => ({
 		network: state.global.get('network').toJS(),
 		networks: state.global.get('networks').toJS(),
@@ -214,4 +222,4 @@ export default withRouter(connect(
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
 		deleteNetwork: (network) => dispatch(deleteNetwork(network)),
 	}),
-)(Network));
+)(Network)));

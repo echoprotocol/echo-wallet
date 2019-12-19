@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -85,7 +86,7 @@ class ModalToBlacklist extends React.Component {
 
 	render() {
 		const {
-			show, account,
+			show, account, intl,
 		} = this.props;
 
 		const icon = this.isAvatar() &&
@@ -106,12 +107,15 @@ class ModalToBlacklist extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Add account to blacklist</h3>
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_to_blacklist.title' })}
+									</h3>
 								</div>
 								<Form className="modal-body">
 									<div className="field-wrap">
 										<VerificationField
-											label="Account Name"
+											label={intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.title' })}
+
 											name="account-name"
 											onChange={(value) => this.onInputChange(value)}
 											value={account.value}
@@ -120,14 +124,15 @@ class ModalToBlacklist extends React.Component {
 											status={this.getStatus(account)}
 											error={account.error}
 											loading={account.loading && !account.error}
-											placeholder="Account Name"
+											placeholder={intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.placeholder' })}
 										/>
+
 									</div>
 
 									<div className="form-panel">
 										<Button
 											className="main-btn"
-											content="Confirm"
+											content={intl.formatMessage({ id: 'modals.modal_to_blacklist.confirm_button_text' })}
 											onClick={() => {
 												this.onAdd(submit);
 											}}
@@ -150,13 +155,14 @@ ModalToBlacklist.propTypes = {
 	addToBlackList: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalToBlacklist.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		account: state.form.getIn([FORM_BLACKLIST, 'account']),
 		show: state.modal.getIn([MODAL_TO_BLACKLIST, 'show']),
@@ -168,4 +174,4 @@ export default connect(
 		setIn: (field, param) => dispatch(setIn(FORM_BLACKLIST, field, param)),
 		checkAccount: (value, subject) => dispatch(checkAccount(FORM_BLACKLIST, value, subject)),
 	}),
-)(ModalToBlacklist);
+)(ModalToBlacklist));

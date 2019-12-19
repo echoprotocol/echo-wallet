@@ -1,0 +1,1077 @@
+{
+    "global_loader": {
+        "title": "Please wait",
+        "subtitle": "We’re loading all data..."
+    },
+    "create_password_page": {
+        "title": "Welcome to Echo",
+        "text": "Please, create password that will be used to unlock the app from this device. Echo Desktop Wallet does not store backups of the account password, so in case of losing your password you will need to reset it.",
+        "password_input_1": {
+            "title": "Password",
+            "placeholder": "Create password"
+        },
+        "password_input_2": {
+            "title": "Confirm password",
+            "placeholder": "Confirm password"
+        },
+        "repeat_error": "Passwords do not match",
+        "button_confirm_text": "Create password",
+        "button_loading_text": "Creating..."
+    },
+    "sign_page": {
+        "title": "Add Account",
+        "welcome_title": "Welcome to Echo",
+        "back_button_text": "BACK",
+        "add_account_button": "Add Account",
+        "login_button": "Login",
+        "create_account_button": "Create Account",
+        "account_button_loading": "Creating...",
+        "import_account_page": {
+            "name_input": {
+                "title": "Account name",
+                "placeholder": "Account Name"
+            },
+            "wif_input": {
+                "title": "WIF-key",
+                "placeholder": "WIF-key"
+            },
+            "dont_have_acc_text": "Don’t have an account?",
+            "dont_have_acc_link": "Sign Up"
+        },
+        "register_account_page": {
+            "default_settings_page": {
+                "text_to_custom_settings": "Or use your own WIF or Public Key",
+                "name_input": {
+                    "title": "Account name (public)",
+                    "placeholder": "Account Name"
+                },
+                "generated_wif_input": {
+                    "title": "Generated WIF"
+                },
+                "confirm_wif_input": {
+                    "title": "Confirm WIF",
+                    "placeholder": "Confirm WIF"
+                }
+            },
+            "custom_settings_page": {
+                "text_to_custom_settings": "Or generate WIF",
+                "text": "You can use your own WIF or Public Key:",
+                "name_input": {
+                    "title": "Account name (public)",
+                    "placeholder": "Account Name"
+                },
+                "wif_input": {
+                    "title": "WIF (optional)",
+                    "placeholder": "WIF"
+                },
+                "pub_key_input": {
+                    "title": "PUBLIC KEY",
+                    "placeholder": "Enter public key"
+                }
+            },
+            "checkboxes": {
+                "first": "I understand that I will lose access to my funds if I loose my WIF",
+                "second": "I understand no one can recover my WIF if I lose or forget it",
+                "third": "I have written down or otherwise stored my WIF"
+            },
+            "more_options_section": {
+                "title": "More Options",
+                "subtitle": "Register using:",
+                "default_settings_section": {
+                    "title": "Default settings",
+                    "text_pt1": "Register for free by public registrar.",
+                    "text_pt2": "Delegation to participate in the consensus will be granted to public registrar."
+                },
+                "parent_account_section": {
+                    "title": "Parent account",
+                    "text": "Register with an existing account. The selected account will be charged fee for account creation.",
+                    "dropdown": {
+                        "title": "Parent account name",
+                        "placeholder": "Parent account name"
+                    },
+                    "dont_have_acc_text_pt1": "You don't have an account.",
+                    "dont_have_acc_text_pt2": "You can generate a new account on your own. Log in your another wallet account beforehand to do so"
+                },
+                "ip_url_section": {
+                    "title": "IP/URL",
+                    "text": "Register a new account through a running node.",
+                    "popup": "You can save IP or URL to use it next time",
+                    "save": "Save",
+                    "dismiss": "Dismiss"
+                }
+            },
+            "have_acc_text": "Have an account?",
+            "have_acc_link": "Login"
+        }
+    },
+    "account_dropdown": {
+        "add_account_button": "ADD_ACCOUNT",
+        "delegated_to": "(delegated_to)",
+        "change_delegate_button": "Change"
+    },
+    "wallet_page": {
+        "title": "Wallet",
+        "balances": {
+            "title": "Balances",
+            "add_erc20_token_text": "Watch Tokens",
+            "stable_coins": {
+                "title": "Stable Coins",
+                "popup_info": "Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain.",
+                "deposit": "Deposit",
+                "withdrawal": "Withdrawal"
+            },
+            "assets": {
+                "title": "Assets"
+            },
+            "tokens": {
+                "title": "Tokens"
+            }
+        },
+        "create_payment": {
+            "title": "CREATE PAYMENT",
+            "button_text": "Send",
+            "additional_info_id": "Account ID: ",
+            "additional_info_name": "Account name: ",
+            "from_input": {
+                "title": "FROM",
+                "placeholder": "Account Name"
+            },
+            "to_input": {
+                "title": "TO",
+                "placeholder": "Account ID, Account Name or Address",
+                "placeholder_v2": "BTC address",
+                "placeholder_v3": "ETH address"
+            }
+        },
+        "receive_payment": {
+            "title": "RECEIVE PAYMENT",
+            "echo": {
+                "title": "ECHO NETWORK",
+                "description_part1": "Fill in payment information to get a unique QR code.",
+                "description_part2": "You can use several addresses referring to one account for different targets.",
+                "generate_address_dropdown": {
+                    "title": "RECIPIENT ACCOUNT OR ADDRESS",
+                    "button_text": "Generate new address",
+                    "placeholder": "Choose account or address",
+                    "acc_separator": "Account",
+                    "adr_separator": "Addresses"
+                }
+            },
+            "btc": {
+                "title": "BITCOIN",
+                "no_address_page": {
+                    "title_pt1": "You should generate address",
+                    "title_pt2": " to receive payment.",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "button_text": "GENERATE ADDRESS"
+                },
+                "wait_address_page": {
+                    "title_pt1": "Wait please, ",
+                    "title_pt2": "address is not ready yet",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                },
+                "complete_address_page": {
+                    "input_title": "ADDRESS",
+                    "info": "Fill in payment information to get a unique QR code.",
+                    "warning_message_pt1": "Send eBTC to ",
+                    "warning_message_pt2": "Original Blockchain",
+                    "warning_message_pt3": " to get BTC or send it within ECHO Network."
+                }
+            },
+            "eth": {
+                "title": "ETHEREUM",
+                "no_address_page": {
+                    "title_pt1": "You should generate address",
+                    "title_pt2": " to receive payment.",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "button_text": "GENERATE ADDRESS"
+                },
+                "wait_address_page": {
+                    "title_pt1": "Wait please, ",
+                    "title_pt2": "address is not ready yet",
+                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                },
+                "complete_address_page": {
+                    "input_title": "ADDRESS",
+                    "info": "Fill in payment information to get a unique QR code.",
+                    "warning_message_pt1": "Send eETH to ",
+                    "warning_message_pt2": "Original Blockchain",
+                    "warning_message_pt3": " to get ETH or send it within ECHO Network."
+                }
+            },
+            "qr_description": "QR code and link are generated automatically. You can copy it and send to someone for payment."
+        },
+        "frozen_funds": {
+            "title": "Frozen Funds",
+            "subtitle": "Freeze Funds",
+            "total_sum_text": "Total Frozen Amount:",
+            "button_text": "FREEZE",
+            "period_input_title": "Period",
+            "period_input_placeholder": "Choose period",
+            "popup_header_text": "Frozen funds allow you to get bigger reward for participating in blocks creation.",
+            "frozen_funds_list": {
+                "title": "Frozen amounts",
+                "empty_text_pt1": "You have not frozen ",
+                "empty_text_pt2": "any funds yet",
+                "description": "The sum you freeze will affect the reward for participating in blocks creation when re-calculated with the coefficient (the longer the period, the bigger reward you receive).",
+                "coefficient_text": "Coefficient",
+                "popup_text": "This is the coefficient that will be used to calculate the reward for participating in blocks creation.",
+                "frozen_until": "Frozen until"
+            }
+        }
+    },
+    "recent_activity_page": {
+        "loader_title": "History is loading...",
+        "no_actions": "You have no actions",
+        "load_actions": "Loading...",
+        "title": "Recent activity",
+        "table": {
+            "headers": {
+                "operation": "Operation",
+                "block": "Block",
+                "from": "From",
+                "subject": "Subject",
+                "value": "Value",
+                "fee": "Fee",
+                "time": "Time"
+            },
+            "transaction": {
+                "title": "Transaction",
+                "subtitle": "Transaction",
+                "link_text": "Open in explorer"
+            }
+        },
+        "transaction": {
+            "title": "Transaction:",
+            "keys": {
+                "topics": "Topics:",
+                "data": "Data:",
+                "method": "Method: 0x",
+                "contract_id": "Contract ID:",
+                "expected": "Excepted:",
+                "deposit": "Code deposit:",
+                "new_address": "New address:",
+                "bytecode": "Bytecode:",
+                "type": "Type:",
+                "block": "Block:",
+                "from": "From:",
+                "subject": "Subject:",
+                "amount": "Amount:",
+                "fee": "Fee:"
+            },
+            "explorer_link_text": "Open in explorer"
+        }
+    },
+    "smart_contract_page": {
+        "title": "Smart Contracts",
+        "empty_text": "Start watch contract or create a new one",
+        "watch_contract_button_text": "WATCH CONTRACT",
+        "create_contract_button_text": "CREATE CONTRACT",
+        "call_contract_button_text": "CALL CONTRACT",
+        "table": {
+            "contract_id": "Contract ID",
+            "watched_contract_name": "Watched Contract Name",
+            "contract_balance": "Contract Balance"
+        },
+        "watch_contract_page": {
+            "title": "Add contract to watch list",
+            "input_name": {
+                "title": "NAME",
+                "placeholder": "Name"
+            },
+            "input_id": {
+                "title": "ID",
+                "placeholder": "Contract ID"
+            },
+            "input_abi": {
+                "title": "ABI",
+                "placeholder": "Contract ABI"
+            },
+            "button_text": "WATCH CONTRACT"
+        },
+        "create_contract_page": {
+            "title": "Create Smart Contract",
+            "code_type_selectors": {
+                "source_code": "Source Code",
+                "bytecode": "Bytecode"
+            },
+            "source_code": {
+                "input": {
+                    "title": "CODE EDITOR"
+                },
+                "compile_version_text": "COMPILER VERSION",
+                "contract_complete_dropdown": {
+                    "title": "CONTRACT TO COMPLETE",
+                    "placeholder": "Select contract"
+                },
+                "no_contract_compile": "No Contract Compiled Yet"
+            },
+            "bytecode": {
+                "input_bytecode": {
+                    "title": "bytecode",
+                    "placeholder": "Bytecode",
+                    "optional": "(optional)"
+                },
+                "input_abi": {
+                    "title_pt1": "ABI",
+                    "title_pt2": "(If you insert ABI, contract will add to watchlist)",
+                    "title_pt3": "(optional)",
+                    "placeholder": "Contract ID"
+                },
+                "input_name": {
+                    "title": "CONTRACT NAME",
+                    "placeholder": "Contract Name"
+                }
+            },
+            "contract_deploy": {
+                "title": "Contract deploy parameters",
+                "eth_accuracy": {
+                    "title": "ETH Accuracy:",
+                    "popup_text": "The option allows to interpret ECHO assets as ETH. The amount will be automatically recalculated to the 1e18 precision.",
+                    "popup_link": "Read more",
+                    "on": "On",
+                    "off": "Off"
+                },
+                "supported_assets": {
+                    "title": "Supported assets:",
+                    "all": "All",
+                    "choose_asset": "Choose asset",
+                    "popup_text": "You can specify assets to be supported by your contract."
+                },
+                "deploying_amount": {
+                    "title": "Deploying amount:",
+                    "popup_text": "You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+                }
+            },
+            "button_text": "CREATE CONTRACT"
+        },
+        "call_contract_page": {
+            "title": "Call contract via ID",
+            "input_bytecode": {
+                "title": "BYTECODE",
+                "placeholder": "Bytecode"
+            },
+            "input_id": {
+                "title": "ID",
+                "placeholder": "Contract ID"
+            },
+            "button_text": "CALL CONTRACT"
+        },
+        "contract_info": {
+            "header": {
+                "contract_id_text": "Contract ID:",
+                "balance_text": "Balance:",
+                "name_text": "Name:",
+                "remove_button_text": "Remove"
+            },
+            "general_info_tab": {
+                "title": "GENERAL INFO",
+                "contract_balance": "Contract Balance:",
+                "fee_pool": "FEE POOL:",
+                "other_assets_text": "Other Assets Balance",
+                "replenish_button_text": "REPLENISH",
+                "whitelist": "Whitelist:",
+                "blacklist": "Blacklist:",
+                "bytecode": "Bytecode:",
+                "abi": "ABI:",
+                "copy_button_text": "Copy",
+                "add_account_to_list_button_text": "Add account",
+                "empty_list_info": "List is empty",
+                "empty_list_info_2": "(List is empty)",
+                "lists_members_text": " members",
+                "bytecode_placeholder": "Bytecode",
+                "abi_placeholder": "ABI"
+            },
+            "view_properties_tab": {
+                "title": "VIEW PROPERTIES",
+                "call_btn": "CALL"
+            },
+            "call_contract_tab": {
+                "title": "CALL CONTRACTS",
+                "form": {
+                    "select_method_field": "SELECT METHOD",
+                    "no_result_message": "No results are found",
+                    "spender_field": "SPENDER",
+                    "value_field": "VALUE",
+                    "fee_field": "FEE",
+                    "send_button_text": "SEND"
+                }
+            }
+        }
+    },
+    "backup_and_permissions_page": {
+        "title": "Backup and Permissions",
+        "subtitile": "Account ID:",
+        "threshold_popup": "You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction.",
+        "loader_applying_text": "Applying changes...",
+        "echorand_key_section": {
+            "title": "EchoRand Key",
+            "subtitile": "(for advanced users)",
+            "info": "EchoRand Key is used for participating in blocks generation and signing sidechain transactions by committee members.",
+            "link_to_docs_text": " Know more in Echo Docs"
+        },
+        "view_mode": {
+            "info": "Making a backup of your keys helps ensure you can always maintain access to your funds. Anyone having access to your keys will take full control of the funds, so we strongly recommend storing it offline in a secure place.",
+            "threshold": "threshold",
+            "pub_keys_and_accs_section": {
+                "title": "Public Keys and Accounts",
+                "weight": "Weight"
+            },
+            "wif_key_button": {
+                "view_wif_button": "VIEW WIF",
+                "add_wif_button": "ADD WIF"
+            },
+            "button_section": {
+                "edit_mode_button": "EDIT MODE",
+                "backup_button": "VIEW & BACKUP KEYS"
+            }
+        },
+        "edit_mode": {
+            "info": "The settings below allow you to specify the keys and / or accounts, whose signatures will be necessary to send a transaction from your account. Using threshold and weight you can separate access to an account between several keys and / or accounts.",
+            "public_key_field": {
+                "title": "Public key",
+                "placeholder": "Public key"
+            },
+            "echorand_field": {
+                "title": "EchoRand key",
+                "placeholder": "EchoRand key"
+            },
+            "wif_input": {
+                "title": "WIF (optional)",
+                "placeholder": "WIF (optional)"
+            },
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "weight_input": {
+                "title": "Weight",
+                "placeholder": "Weight"
+            },
+            "threshold": "threshold:",
+            "button_section": {
+                "save_button": "SAVE",
+                "cancel_button": "CANCEL"
+            },
+            "add_buttons_section": {
+                "add_acc_button": "ADD ACCOUNT",
+                "add_acc_tooltip": "Grant access for sending transactions to another account",
+                "add_pub_key_button": "ADD PUBLIC KEY",
+                "add_key_tooltip": "Add an additional key to sign transactions"
+            }
+        }
+    },
+    "add_connection_page": {
+        "title": "Add connection",
+        "back_button_text": "BACK",
+        "add_account_button": "CREATE",
+        "address_input": {
+            "title": "address"
+        },
+        "name_input": {
+            "title": "name"
+        },
+        "agree_switch_checkbox": "Switch to this Network upon creating"
+    },
+    "footer": {
+        "about_wallet": "About wallet",
+        "network_section": {
+            "title": "Network:",
+            "disconnected": "Disconnected:",
+            "block": "Block",
+            "choose_network_dropdown": {
+                "title": "Choose network",
+                "add_custom_network_buttom": "+ Add custom Network"
+            }
+        },
+        "key_warning": {
+            "text": "Total weight of all the keys won&rsquo;t be enough to sign a transaction.",
+            "button_text": "Keys Parameters"
+        },
+        "connection_error": {
+            "text": "Check Your Connection",
+            "button_text": "Try again"
+        },
+        "local_node": {
+            "title": "Local Node",
+            "popup_info": "Node running locally on your PC, should be synchronized with Remote Node and enables participation in consensus."
+        },
+        "remote_node": {
+            "title": "Remote Node",
+            "synchronization": "Network synchronization",
+            "popup_info": "Node accessibly remotely on the Web. Insufficient for participation in consensus."
+        }
+    },
+    "modals": {
+        "modal_accept_incoming_connection": {
+            "title_pt1": "Do you want the application “Echo Wallet”",
+            "title_pt2": "to accept incoming network connections?",
+            "subtitle_pt1": "Accept incoming network connections and ",
+            "subtitle_pt2": "enjoy all the benefits of running local node *",
+            "list_pt1": "Become consensus participant",
+            "list_pt2": "Earn block rewards",
+            "list_pt3": "Generate new ECHO accounts",
+            "list_pt4_1": "Run on your PC locally and",
+            "list_pt4_2": "safeguard your connection",
+            "footer": "* This setting can be changed in the Firewall pane of Security & Privacy preferences anytime.",
+            "button_confirm_text": "CONFIRM",
+            "button_dismiss_text": "Dismiss"
+        },
+        "modal_accept_running_node": {
+            "title": "Run local node",
+            "text_pt1": "You need to accept incoming network connections",
+            "text_pt2": "so as to run local node",
+            "button_confirm_text": "Accept",
+            "button_dismiss_text": "Dismiss"
+        },
+        "modal_add_proposal_wif": {
+            "title": "Would you like to add other keys now?",
+            "text_pt1": "Your account settings require more than one key to sign a transaction. ",
+            "text_pt2": "You can add more keys now or later on the Backup and Permissions page.",
+            "later_button_text": "Do it later",
+            "confirm_button_text": "Proceed"
+        },
+        "modal_add_wif": {
+            "title": "Add WIF",
+            "public_key_input": {
+                "title": "Public Key",
+                "placeholder": "Public Key"
+            },
+            "wif_input": {
+                "title": "WIF (optional)",
+                "placeholder": "WIF",
+                "warnig": "Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "button_text": "Confirm"
+        },
+        "modal_backup": {
+            "title": "Backup",
+            "account_field": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "id_field": {
+                "title": "ID account",
+                "placeholder": "ID account"
+            },
+            "backup_data_field": {
+                "title": "Backup data",
+                "placeholder": "Backup data",
+                "warning": "Warning: Anyone who has access to your WIF can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "copy_button_text": "Copy Backup Data",
+            "save_button_text": "Save As .TXT",
+            "text_field": {
+                "account": "Account: ",
+                "public_key": "Public Key ",
+                "wif": "WIF "
+            }
+        },
+        "modal_blacklist": {
+            "title": "Blacklist",
+            "add_button_text": "Add Account",
+            "remove_button_text": "Remove"
+        },
+        "modal_change_parent_account": {
+            "title": "Change delegate",
+            "current_acc": "Current Account",
+            "delegated_to_dropdown": {
+                "title": "Delegated to",
+                "placeholder": "Delegated to"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_choose_account": {
+            "title": "Choose account",
+            "account_subtitle": "Accounts",
+            "balance_subtitle": "Balance",
+            "confirm_button_text": "Continue",
+            "close_button_text": "Cancel"
+        },
+        "modal_confirm_editin_of_permissions": {
+            "title": "Please, confirm applying changes",
+            "warning_key_message": "If these changes are applied, you won't have enough keys to sign transactions. Do you want to proceed?",
+            "echorand_warning_message": "You removed your EchoRand Key and after submitting this action you will lose access to it.",
+            "confirm_button_text": "Proceed",
+            "close_button_text": "No"
+        },
+        "modal_create_btc_address": {
+            "title": "Create BTC address",
+            "text": "To create your new BTC Address, please, provide your external backup BTC address. Backup BTC address is needed to be able to withhold a sent transaction to ECHO network during the first 24 hours after the transaction being made.",
+            "backup_address_input": {
+                "title": "Backup address",
+                "placeholder": "Backup address"
+            },
+            "warning": "Submit your backup BTC address above.",
+            "generate_button_text": "Generate address"
+        },
+        "modal_create_echo_address": {
+            "title": "Create address name",
+            "text": "You can use several addresses referring to one account for different targets. Please create address name for a new one.",
+            "address_input": {
+                "title": "Address name",
+                "placeholder": "Address name"
+            },
+            "warning": "Warning: Please note, address names are visible for blockchain network participants.",
+            "generate_button_text": "Generate address"
+        },
+        "modal_details": {
+            "title": "Confirm transaction",
+            "confirm_button_text": "Confirm",
+            "close_button_text": "Cancel",
+            "show_options": {
+                "operation_title": "operation",
+                "account_address_create": {
+                    "from": "from",
+                    "account": "account",
+                    "fee": "fee",
+                    "address_name": "Address name"
+                },
+                "account_create": {
+                    "from": "from",
+                    "account": "account",
+                    "key": "key",
+                    "fee": "fee"
+                },
+                "account_update": {
+                    "account": "account",
+                    "votes": "votes",
+                    "proxy": "proxy",
+                    "canceled": "canceled",
+                    "fee": "fee",
+                    "active_threshold": "activeThreshold",
+                    "active_keys": "activeKeys",
+                    "active_accounts": "activeAccounts",
+                    "echorand_key": "echoRandKey",
+                    "wif": "wif",
+                    "from": "from",
+                    "delegate": "delegate"
+                },
+                "balance_freeze": {
+                    "amount": "amount",
+                    "from": "from",
+                    "account": "account",
+                    "duration": "duration",
+                    "fee": "fee"
+                },
+                "contract_call": {
+                    "fee": "fee",
+                    "from": "from",
+                    "to": "to",
+                    "to_contract": "To Contract",
+                    "amount": "amount",
+                    "code": "code",
+                    "value": "value"
+                },
+                "contract_create": {
+                    "amount": "amount",
+                    "from": "from",
+                    "fee": "fee",
+                    "code": "code",
+                    "eth_accuracy": "ETH Accuracy",
+                    "supported_asset": "Supported Asset"
+                },
+                "contract_fund_pool": {
+                    "value": "value",
+                    "sender": "sender",
+                    "contract": "contract",
+                    "fee": "fee"
+                },
+                "contract_whitelist": {
+                    "sender": "sender",
+                    "contract": "contract",
+                    "fee": "fee"
+                },
+                "sidechain_btc_create_address": {
+                    "from": "from",
+                    "account": "account",
+                    "backup_address": "backup address",
+                    "fee": "fee"
+                },
+                "sidechain_btc_withdraw": {
+                    "fee": "fee",
+                    "account": "account",
+                    "value": "value",
+                    "btc_address": "Sidechain BTC Withdraw"
+                },
+                "sidechain_eth_create_address": {
+                    "from": "from",
+                    "account": "account",
+                    "fee": "fee"
+                },
+                "sidechain_eth_withdraw": {
+                    "fee": "fee",
+                    "account": "account",
+                    "value": "value",
+                    "eth_address": "Sidechain ETH Withdraw"
+                },
+                "transfer": {
+                    "fee": "fee",
+                    "from": "from",
+                    "to": "to",
+                    "amount": "amount"
+                },
+                "transfer_to_address": {
+                    "fee": "fee",
+                    "from": "from",
+                    "to_address": "To Address",
+                    "amount": "amount"
+                }
+            }
+        },
+        "modal_edit_permissions": {
+            "title": "Edit Mode Warning",
+            "text": "Please, keep in mind that uncontrolled changes may lead to loosing access to the wallet or restricting your actions within it. Be careful with editing permissions and adding the accounts to manage the wallet, ensuring that you grant permissions only to the accounts you trust.",
+            "checkbox_text": "I have read and understood the possible consequences of editing",
+            "forgot_password_link": "Forgot password?",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            },
+            "button_text": {
+                "wait_mode": "READ PLEASE",
+                "ready_mode": "Go to edit mode"
+            }
+        },
+        "modal_erc20_to_watch_list": {
+            "title": "Do you want to add ERC20 token to watch list?",
+            "confirm_button_text": "Yes",
+            "close_button_text": "No"
+        },
+        "modal_info": {
+            "title": "Echo Desktop Wallet",
+            "version": "Version:",
+            "website": "Website:",
+            "link": "echo.org",
+            "privacy": "Privacy: ",
+            "pixelplex_rights": " PixelPlex. All Rights Reserved"
+        },
+        "modal_confirm_logout": {
+            "title": "Confirm logout",
+            "subtitle": "You will be signed out of your account.",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            },
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Confirm",
+            "close_button_text": "Cancel"
+        },
+        "modal_replenish": {
+            "title": "Replenish Fee Pool",
+            "confirm_button_text": "Send"
+        },
+        "modal_to_blacklist": {
+            "title": "Add account to blacklist",
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_tokens": {
+            "title": "Add ERC20 token to watch list",
+            "contract_id_input": {
+                "title": "Contract ID",
+                "placeholder": "Contract ID"
+            },
+            "confirm_button_text": "Watch Token"
+        },
+        "modal_to_whitelist": {
+            "title": "Add account to whitelist",
+            "account_input": {
+                "title": "Account name",
+                "placeholder": "Account name"
+            },
+            "confirm_button_text": "Confirm"
+        },
+        "modal_unlock": {
+            "title": "Unlock Wallet",
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Unlock Wallet",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            }
+        },
+        "modal_view_wif": {
+            "title": "View WIF",
+            "public_key_input": {
+                "title": "Public Key",
+                "placeholder": "Public Key"
+            },
+            "wif_input": {
+                "title": "WIF *",
+                "placeholder": "WIF",
+                "warning": "* Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+            },
+            "save_button_text": "Save As .TXT"
+        },
+        "modal_whitelist": {
+            "title": "Whitelist",
+            "add_button_text": "Add Account",
+            "remove_button_text": "Remove"
+        },
+        "modal_wipe": {
+            "title": "Your password cannot be restored",
+            "text": "You can clear your account data from Echo Desktop and set a new password. If you do, you wil lose access to the accounts you’ve logged into. You will need to log into them again, after you have set a new password.",
+            "checkbox_text": "I understand the Echo Desktop does not store backups of my account keys, and I will lose access to them  by clearing my account data",
+            "confirm_button_text": "Clear data"
+        }
+    },
+    "toasts": {
+        "success": {
+            "trx_sent_postfix": " transaction was sent",
+            "trx_complete_postfix": " transaction was completed",
+            "network_was_added": " network added successfully!",
+            "token_was_added": "Token was successfully added",
+            "receive": {
+                "start": "You receive ",
+                "of": " of "
+            }
+        },
+        "errors": {
+            "trx_dont_complete_postfix": " transaction wasn't completed. ",
+            "trx_dont_comp_by_lose_connection": " transaction wasn't completed. Please, check your connection.",
+            "trx_error": "Transaction sending error",
+            "private_key_error": "Private key was not imported in Echo Desktop Wallet",
+            "token_invalid": "Invalid ERC20 token",
+            "token_already_exists": "Token already exists"
+        },
+        "info": {
+            "remove_network": {
+                "pt1": "You have removed ",
+                "pt2:": " from networks list"
+            },
+            "remove_id": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            },
+            "remove_name": {
+                "pt1": "You have removed ",
+                "pt2:": " from watch list"
+            }
+        }
+    },
+    "amount_input": {
+        "title": "Amount",
+        "placeholder": "Amount",
+        "available": "Available: ",
+        "no_result_message": "No results are found",
+        "warning_message_pt1": "Send ",
+        "warning_message_pt2": "to ",
+        "warning_message_pt3": "Original Blockchain ",
+        "warning_message_pt4": "to get ",
+        "warning_message_pt5": " or send it within ECHO Network."
+    },
+    "button_component": {
+        "text": "Send",
+        "sending_text": "Sending..."
+    },
+    "copied_text": "Copied",
+    "operations": {
+        "transfer": "Transfer",
+        "transfer_to_address": "Transfer to address",
+        "override_transfer": "Override transfer",
+        "account_create": "Create account",
+        "account_update": "Update account",
+        "account_whitelist": "Account whitelist",
+        "account_address_create": "Account address create",
+        "asset_create": "Create asset",
+        "asset_update": "Update asset",
+        "asset_update_bitasset": "Update SmartCoin",
+        "asset_update_feed_producers": "Update asset feed producers",
+        "asset_issue": "Issue asset",
+        "asset_reserve": "Burn asset",
+        "asset_fund_fee_pool": "Fund asset fee pool",
+        "asset_publish_feed": "Publish feed",
+        "asset_claim_fees": "Claim asset fees",
+        "proposal_create": "Create proposal",
+        "proposal_update": "Update proposal",
+        "proposal_delete": "Delete proposal",
+        "committee_member_create": "Create committee member",
+        "committee_member_update": "Update committee member",
+        "committee_member_update_global_parameters": "Global parameters update",
+        "committee_member_activate": "Committee member activate",
+        "committee_member_deactivate": "Committee member deactivate",
+        "committee_frozen_balance_deposit": "Committee frozen balance deposit",
+        "committee_frozen_balance_withdraw": "Committee frozen balance withdraw",
+        "vesting_balance_create": "Create vesting balance",
+        "vesting_balance_withdraw": "Withdraw vesting balance",
+        "balance_claim": "Claim balance",
+        "balance_freeze": "Balance freeze",
+        "balance_unfreeze": "Balance unfreeze",
+        "contract_create": "Contract create",
+        "contract_call": "Contract call",
+        "contract_internal_create": "Contract internal create",
+        "contract_internal_call": "Contract internal call",
+        "contract_selfdestruct": "Contract selfdestruct",
+        "contract_update": "Contract internal create",
+        "contract_fund_pool": "Contract fund pool",
+        "contract_whitelist": "Contract whitelist",
+        "sidechain_eth_create_address": "Sidechain eth create address",
+        "sidechain_eth_approve_address": "Sidechain eth approve address",
+        "sidechain_eth_deposit": "Sidechain deposit eth",
+        "sidechain_eth_withdraw": "Sidechain withdraw eth",
+        "sidechain_eth_approve_withdraw": "Sidechain eth approve withdraw",
+        "sidechain_eth_issue": "Sidechain eth issue",
+        "sidechain_eth_burn": "Sidechain eth burn",
+        "sidechain_erc20_register_token": "Register ERC20 token",
+        "sidechain_erc20_deposit_token": "Deposit ERC20 token",
+        "sidechain_erc20_withdraw_token": "Withdraw ERC20 token",
+        "sidechain_erc20_approve_token_withdraw": "Approve ERC20 token withdraw",
+        "sidechain_erc20_issue": "Issue ERC20 token",
+        "sidechain_erc20_burn": "Burn ERC20 token",
+        "sidechain_btc_create_address": "Create BTC address",
+        "sidechain_btc_create_intermediate_deposit": "Create Intermediate BTC deposit",
+        "sidechain_btc_intermediate_deposit": "Intermediate BTC deposit",
+        "sidechain_btc_deposit": "BTC deposit",
+        "sidechain_btc_withdraw": "BTC withdraw",
+        "sidechain_btc_aggregate": "Aggregate BTC",
+        "sidechain_btc_approve_aggregate": "Approve aggregate BTC",
+        "block_reward": "Block reward"
+    },
+    "errors": {
+        "account_errors": {
+            "empty_field_error": "Input shouldn't be empty",
+            "empty_account_error": "Account name should not be empty",
+            "empty_account_error_v2": "Account shouldn't be empty",
+            "account_not_exsists_error": "Account not exist",
+            "account_not_found_error": "Account not found",
+            "account_dont_login_error": "Account isn't login",
+            "invalid_account_error": "Invalid account",
+            "account_creation_error": "Account creation error. Please, try again later",
+            "account_import_error": "Account importing error. Please, try again later",
+            "account_already_exisits_error": "Account already exists",
+            "account_already_added_error": "Account already added",
+            "unexpected_error": "Unexpected error",
+            "invalid_id_error": "Invalid account ID",
+            "delegate_not_found_error": "Delegate not found",
+            "already_delegate_error": "This account already your delegate",
+            "name_already_taken_error": "Account name is already taken",
+            "account_name_too_big_error": "Account name should be shorter then 63 symbols.",
+            "account_not_contain_req_symbols": "Account name should contain digit, number, dash or consist only of consonants",
+            "account_segment_beginning_error": "Each account segment should start with a latin letter.",
+            "account_segment_contains_error": "Each account segment should have only latin letters, digits, or dashes.",
+            "account_segment_dash_error": "Each account segment should have only one dash in a row.",
+            "account_segment_ending_error": "Each account segment should end with a latin letter or digit."
+        },
+        "address_errors": {
+            "empty_address_error": "Address should not be empty",
+            "address_already_exists_error": "This address already exists",
+            "invalid_address_format": "invalid address format",
+            "invalid_address_id": "invalid address id"
+        },
+        "amount_errors": {
+            "zero_amount_error": "Amount should be more than 0",
+            "zero_amount_error_v2": "Amount shouldn't be 0 value",
+            "negative_amount_error": "Amount should be positive number",
+            "incorrect_input_error": "Amount must contain only digits and dot",
+            "cant_calculate_fee_error": "Fee can't be calculated",
+            "insufficient_funds": "Insufficient funds for fee"
+        },
+        "contract_errors": {
+            "empty_contract_error": "Contract id should not be empty",
+            "invalid_id_error": "Invalid contract ID",
+            "invalid_token_error": "Invalid token contract",
+            "token_already_exist_error": "Token already exists",
+            "contract_name_exist_error": "This contract name already exists",
+            "contract_id_exist_error": "This contract ID already exists",
+            "empty_id_error": "Contract ID should not be empty",
+            "empty_name_error": "Contract name should not be empty",
+            "name_to_short_error": "Contract name must be 2 characters or more",
+            "name_to_large_error": "Contract name must be 16 characters or less",
+            "invalid_symbols_error": "Invalid symbols",
+            "no_compile_yet_error": "No Contract Compiled Yet",
+            "asset_not_selected_error": "Asset is not selected",
+            "assets_not_equal_error": "Amount asset should be equal to supported asset",
+            "fee_in_not_payable_error": "Can't calculate fee. Looks like your contract has no payable constructor.",
+            "cant_calculate_fee": "Can't calculate fee",
+            "empty_abi_error": "Contract ABI should not be empty",
+            "invalid_abi_error": "Invalid ABI",
+            "zero_fee_pool_error": "Please, replenish Fee Pool Balance first"
+        },
+        "contract_call_errors": {
+            "negative_input_error": "input is negative",
+            "less_min_value_error": "input is less than min value",
+            "greater_max_value": "is greater than max value",
+            "bytes_not_posititve_error": "bytes count is not positive",
+            "bytes_not_integer_error": "bytes count is not a integer",
+            "buffer_too_large_error": "buffer is too large",
+            "buffer_too_small_error": "buffer is too short"
+        },
+        "contract_code_errors": {
+            "empty_field_error": "field should be not empty",
+            "code_symbols_count_error": "code should include an even count of symbol"
+        },
+        "db_errors": {
+            "db_doesnt_exist": "DB doesn't exist"
+        },
+        "fee_errors": {
+            "cant_calculate_error": "Can't be calculated",
+            "insufficient_funds": "Insufficient funds for fee",
+            "pool_balance_less_amount_error": "Current fee pool balance is less than fee amount"
+        },
+        "keys_errors": {
+            "invalid_wif_error": "Invalid WIF",
+            "empty_wif_error": "WIF should not be empty",
+            "invalid_priv_error": "Invalid private key",
+            "user_invalid_priv_error": "You have an invalid private key",
+            "invalid_pub_error": "Invalid public key",
+            "keys_dont_match_error": "Invalide private key for current public key"
+        },
+        "network_errors": {
+            "network_already_exist_error": "Network already exists",
+            "empty_network_name": "Network name should not be empty",
+            "name_too_short_error": "Network name must be 2 characters or more",
+            "name_too_large_error": "Network name must be 32 characters or less",
+            "network_incorrect_symbols_error": "Network name should have only latin letters, numbers, dots, underscores and spaces",
+            "network_req_symbols_error": "Network address should be start with 'ws://' or 'wss://'"
+        },
+        "node_errors": {
+            "not_connect_error": "Node is not connected",
+            "api_not_available": "Api is not available",
+            "invalid_chacin_id_error": "Chain id is not correct. Check your network node"
+        },
+        "passowd_errors": {
+            "invalid_password_error": "Invalid password",
+            "empty_password_error": "Password should not be empty",
+            "password_length_error": "Password should have only latin letters from 6 to 32 characters",
+            "no_uppercase_error": "Password should have one latin uppercase letter",
+            "no_lowercase_error": "Password should have one latin lowercase letter",
+            "no_number_error": "Password should have one number"
+        },
+        "sidechain_errors": {
+            "incorrect_beginning_of_eth_address": "Ethereum address must starts with 0x",
+            "invalid_eth_address": "Invalid eth address",
+            "invalid_btc_address": "Invalid btc address",
+            "unexpected_error": "Unexpected error",
+            "not_synchronized_error": "Node is not synchronized",
+            "doesnt_have_registrar_error": "Node does not have registrar"
+        },
+        "sign_errors": {
+            "not_enough_threshold_error": "Threshold is greater than the sum of keys weight available in Echo Desktop"
+        },
+        "table_errors": {
+            "incorrect_key_error": "Incorrect key",
+            "incorrect_account_error": "Incorrect account",
+            "incorrect_weight_error": "Incorrect weight",
+            "threshold_error": "Invalid threshold"
+        },
+        "transaction_errors": {
+            "invalid_params_error": "Transaction params is invalid"
+        },
+        "validate_value_errors": {
+            "empty_value_error": "Value should not be empty",
+            "cant_validate_error": "value could not be validated",
+            "should_be_int": "value should be integer",
+            "should_be_uint": "value should be unsigned integer",
+            "should_be_in_8_steps": "various sizes should be in in steps of 8",
+            "should_be_string": "value should be a string",
+            "should_be_object_id": "value should be in object id format",
+            "should_be_boolean": "value should be a boolean",
+            "should_be_array": "value should be an array",
+            "should_be_hex": "value should be a hex string"
+        }
+    }
+}

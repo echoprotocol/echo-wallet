@@ -3,6 +3,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import PasswordInput from '../PasswordInput';
 
@@ -68,11 +69,13 @@ class ModalEditPermissions extends React.Component {
 
 	render() {
 		const {
-			show, error, disabled, password,
+			show, error, disabled, password, intl,
 		} = this.props;
 
 		const { agree, timerComplete } = this.state;
 
+		const btnWaitText = intl.formatMessage({ id: 'modals.modal_edit_permissions.button_text.wait_mode' });
+		const btnReadyText = intl.formatMessage({ id: 'modals.modal_edit_permissions.button_text.ready_mode' });
 		return (
 			<Modal className="edit-permissions-modal" open={show}>
 				<FocusLock autoFocus={false}>
@@ -81,31 +84,34 @@ class ModalEditPermissions extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h3 className="modal-header-title">Edit Mode Warning</h3>
+						<h3 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_edit_permissions.title' })}
+						</h3>
 					</div>
 					<Form className="modal-body">
 						<div className="info-text">
-							Please, keep in mind that uncontrolled changes may lead to
-							loosing access to the wallet or restricting your actions within it.
-							Be careful with editing permissions and adding the accounts to manage the wallet,
-							ensuring that you grant permissions only to the accounts you trust.
+							{intl.formatMessage({ id: 'modals.modal_edit_permissions.text' })}
 						</div>
 						<div className="check-list">
 							<div className="check">
 								<input type="checkbox" id="edit-mode-checkbox" onChange={(e) => this.onCheck(e)} />
 								<label className="label" htmlFor="edit-mode-checkbox">
-									<span className="label-text">I have read and understood the possible consequences of editing</span>
+									<span className="label-text">
+										{intl.formatMessage({ id: 'modals.modal_edit_permissions.checkbox_text' })}
+									</span>
 								</label>
 							</div>
 						</div>
-						<PasswordInput
-							errorMessage={error}
-							inputLabel="Password"
-							inputPlaceholder="Password"
-							inputName="password"
-							value={password}
-							onChange={(e) => this.onChange(e)}
-						/>
+						<div className="field-wrap">
+							<PasswordInput
+								errorMessage={error ? intl.formatMessage({ id: error }) : ''}
+								inputLabel={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.title' })}
+								inputPlaceholder={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.placeholder' })}
+								inputName="password"
+								value={password}
+								onChange={(e) => this.onChange(e)}
+							/>
+						</div>
 						<div className="form-panel">
 							<a
 								className="action-link"
@@ -114,7 +120,7 @@ class ModalEditPermissions extends React.Component {
 								onKeyPress={(e) => this.onForgot(e)}
 								tabIndex="0"
 							>
-								Forgot password?
+								{intl.formatMessage({ id: 'modals.modal_edit_permissions.forgot_password_link' })}
 							</a>
 							<Button
 								type="submit"
@@ -123,7 +129,7 @@ class ModalEditPermissions extends React.Component {
 								disabled={(disabled) || !(agree && timerComplete)}
 							>
 								{this.countdown(this.state.time)}
-								{(agree && timerComplete) ? 'Go to edit mode' : 'READ PLEASE'}
+								{(agree && timerComplete) ? btnReadyText : btnWaitText}
 							</Button>
 						</div>
 					</Form>
@@ -143,6 +149,7 @@ ModalEditPermissions.propTypes = {
 	unlock: PropTypes.func.isRequired,
 	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	warningTime: PropTypes.number,
 };
 
@@ -153,4 +160,4 @@ ModalEditPermissions.defaultProps = {
 	warningTime: 0,
 };
 
-export default ModalEditPermissions;
+export default injectIntl(ModalEditPermissions);

@@ -76,14 +76,14 @@ const customParentAccount = () => async (dispatch, getState) => {
 
 		const account = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'registrarAccount']);
 		if (!account.value) {
-			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Input shouldn\'t be empty'));
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'errors.account_errors.empty_field_error'));
 			return null;
 		}
 
 		const sender = await echo.api.getAccountByName(account.value);
 
 		if (!sender) {
-			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account not exist'));
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'errors.account_errors.account_not_exsists_error'));
 			return null;
 		}
 
@@ -91,13 +91,13 @@ const customParentAccount = () => async (dispatch, getState) => {
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 		if (!accounts.find(({ name }) => name === sender.name)) {
-			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Account isn\'t login'));
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'account_dont_login_error'));
 			return null;
 		}
 
 		return true;
 	} catch (_) {
-		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Invalid account'));
+		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'errors.account_errors.invalid_account_error'));
 		return null;
 	}
 };
@@ -145,7 +145,7 @@ const customNodeRegisterAccount = (accountName, pubKey) =>
 		const ipOrUrl = getState().form.getIn([FORM_SIGN_UP_OPTIONS, 'ipOrUrl']);
 
 		if (!ipOrUrl.value) {
-			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Input shouldn\'t be empty'));
+			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'errors.account_errors.empty_field_error'));
 			return false;
 		}
 
@@ -182,7 +182,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 			return dispatch(customNodeRegisterAccount(accountName, pubKey));
 		}
 		default:
-			dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'Unexpected error'));
+			dispatch(setFormError(FORM_SIGN_UP, 'accountName', 'errors.account_errors.unexpected_error'));
 			return false;
 	}
 };
@@ -220,11 +220,11 @@ export const validateCreateAccount = ({
 				PrivateKey.fromWif(generatedWIF.value).toPublicKey().toString();
 			} catch (e) {
 				isValidWif = false;
-				dispatch(setFormError(FORM_SIGN_UP, 'userWIF', 'Invalid WIF'));
+				dispatch(setFormError(FORM_SIGN_UP, 'userWIF', 'errors.keys_errors.invalid_wif_error'));
 			}
 		}
 		if (!isValidPub) {
-			dispatch(setFormError(FORM_SIGN_UP, 'userPublicKey', 'Invalid public key'));
+			dispatch(setFormError(FORM_SIGN_UP, 'userPublicKey', 'errors.keys_errors.invalid_pub_error'));
 			return null;
 		}
 		if (!isValidPub || !isValidWif) {
@@ -339,7 +339,7 @@ export const createAccount = ({
 
 		return true;
 	} catch (err) {
-		dispatch(setGlobalError(formatError(err) || 'Account creation error. Please, try again later'));
+		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_creation_error'));
 		return null;
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
@@ -402,7 +402,7 @@ export const authUser = ({
 		const key = unlockWallet(account, wif);
 
 		if (!key) {
-			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
 			return false;
 		}
 
@@ -429,7 +429,7 @@ export const authUser = ({
 		}
 		return false;
 	} catch (err) {
-		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
+		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));
 	} finally {
 		dispatch(toggleLoading(FORM_SIGN_IN, false));
 	}
@@ -443,7 +443,7 @@ export const authUser = ({
  * 	Forming an accounts list for choose accounts in modal
  *
  * 	@param {Object}
- * 	@@returns {function(dispatch): Promise<Object>}
+ * 	@returns {function(dispatch): Promise<Object>}
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
@@ -495,7 +495,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 		const key = getKeyFromWif(wif);
 
 		if (!key) {
-			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+			dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
 			return;
 		}
 
@@ -506,7 +506,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 
 			let [accountIDs] = await echo.api.getKeyReferences([active]);
 			if (!accountIDs.length) {
-				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
 				return;
 			}
 
@@ -523,7 +523,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 			}));
 
 			if (accountIDs.length === 0) {
-				dispatch(setGlobalError('Account already exists'));
+				dispatch(setGlobalError('errors.account_errors.account_already_exisits_error'));
 				return;
 			}
 
@@ -535,7 +535,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 			const account = await echo.api.getObject(accountIDs[0]);
 
 			if (accountName && account.name !== accountName) {
-				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'Invalid WIF'));
+				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
 				return;
 			}
 
@@ -548,7 +548,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 			return;
 
 		} catch (error) {
-			dispatch(setGlobalError(formatError(error) || 'Account importing error. Please, try again later'));
+			dispatch(setGlobalError(formatError(error) || 'errors.account_errors.account_import_error'));
 		}
 	};
 
@@ -594,7 +594,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 			const doesDBExist = await userStorage.doesDBExist();
 
 			if (!doesDBExist) {
-				dispatch(setError(modal, 'DB doesn\'t exist'));
+				dispatch(setError(modal, 'errors.db_errors.db_doesnt_exist'));
 				return;
 			}
 
@@ -602,7 +602,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 			const correctPassword = await userStorage.isMasterPassword(password);
 
 			if (!correctPassword) {
-				dispatch(setError(modal, 'Invalid password'));
+				dispatch(setError(modal, 'errors.passowd_errors.invalid_password_error'));
 				return;
 			}
 
@@ -629,7 +629,7 @@ export const asyncUnlock = (
 		const doesDBExist = await userStorage.doesDBExist();
 
 		if (!doesDBExist) {
-			dispatch(setError(modal, 'DB doesn\'t exist'));
+			dispatch(setError(modal, 'errors.db_errors.db_doesnt_exist'));
 			return;
 		}
 
@@ -637,7 +637,7 @@ export const asyncUnlock = (
 		const correctPassword = await userStorage.isMasterPassword(password);
 
 		if (!correctPassword) {
-			dispatch(setError(modal, 'Invalid password'));
+			dispatch(setError(modal, 'errors.passowd_errors.invalid_password_error'));
 			return;
 		}
 
@@ -689,14 +689,14 @@ export const saveWifToDb = (
 		const networkName = getState().global.getIn(['network', 'name']);
 		const userStorage = Services.getUserStorage();
 		if (!CryptoService.isWIF(wif)) {
-			dispatch(setError(modal, 'Invalid WIF'));
+			dispatch(setError(modal, 'errors.keys_errors.invalid_wif_error'));
 			return;
 		}
 
 		const privateKey = PrivateKey.fromWif(wif);
 
 		if (publicKey !== privateKey.toPublicKey().toPublicKeyString()) {
-			dispatch(setError(modal, 'Wrong WIF'));
+			dispatch(setError(modal, 'errors.keys_errors.invalid_wif_error'));
 			return;
 		}
 		await userStorage.addKey(Key.create(publicKey, wif, id, type), { password });
@@ -709,4 +709,11 @@ export const saveWifToDb = (
 	} finally {
 		dispatch(toggleModalLoading(modal, false));
 	}
+};
+
+export const checkParentKeys = (accName) => async (dispatch, getState) => {
+	const accountId = (await echo.api.getAccountByName(accName)).id;
+	const networkName = getState().global.getIn(['network', 'name']);
+	const isNotEnoughKeys = await dispatch(checkKeyWeightWarning(networkName, accountId));
+	dispatch(setFormValue(FORM_SIGN_UP_OPTIONS, 'registrarAccountKeyWarn', isNotEnoughKeys));
 };

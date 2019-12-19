@@ -3,6 +3,7 @@ import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
@@ -14,7 +15,7 @@ class ModalAcceptRunningNode extends React.Component {
 	}
 
 	render() {
-		const { show } = this.props;
+		const { show, intl } = this.props;
 		return (
 			<Modal
 				className="modal-wrap"
@@ -27,24 +28,27 @@ class ModalAcceptRunningNode extends React.Component {
 					/>
 					<div className="modal-header">
 						<h2 className="modal-header-title">
-							Run local node
+							{intl.formatMessage({ id: 'modals.modal_accept_running_node.title' })}
 						</h2>
 					</div>
 					<div className="modal-body accept-running-node">
 						<div className="info-text">
-							You need to accept incoming network connections<br />
-							so as to run local node
+							{intl.formatMessage({ id: 'modals.modal_accept_running_node.text_pt1' })}
+							<br />
+							{intl.formatMessage({ id: 'modals.modal_accept_running_node.text_pt2' })}
 						</div>
 						<form className="form-panel">
 							<button
 								className="main-btn"
 								onClick={(e) => this.onClose(e)}
-							>Dismiss
+							>
+								{intl.formatMessage({ id: 'modals.modal_accept_running_node.button_dismiss_text' })}
 							</button>
 							<button
 								className="main-btn"
 								onClick={(e) => this.onConfirm(e)}
-							>Accept
+							>
+								{intl.formatMessage({ id: 'modals.modal_accept_running_node.button_confirm_text' })}
 							</button>
 						</form>
 					</div>
@@ -58,6 +62,7 @@ class ModalAcceptRunningNode extends React.Component {
 ModalAcceptRunningNode.propTypes = {
 	show: PropTypes.bool,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalAcceptRunningNode.defaultProps = {
@@ -65,12 +70,12 @@ ModalAcceptRunningNode.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_ACCEPT_RUNNING_NODE, 'show']),
 	}),
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_ACCEPT_RUNNING_NODE)),
 	}),
-)(ModalAcceptRunningNode);
+)(ModalAcceptRunningNode));
 

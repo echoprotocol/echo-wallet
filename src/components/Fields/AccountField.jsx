@@ -104,13 +104,18 @@ class AccountField extends React.Component {
 
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName, placeholder,
-			showAdditionalAccountInfo, additionalAccountInfo,
+			field, autoFocus, subject, disabled, avatarName, placeholder, label, intl,
+			showAdditionalAccountInfo, additionalAccountInfo, additionalAccountPrefix,
 		} = this.props;
 
 		const additionalLabel = showAdditionalAccountInfo && !field.error &&
 			<div className="account-name">
-				{additionalAccountInfo}
+				{additionalAccountPrefix &&
+					<React.Fragment>
+						{additionalAccountPrefix}
+						{additionalAccountInfo}
+					</React.Fragment>
+				}
 			</div>;
 
 		const icon = this.isAvatar() &&
@@ -120,7 +125,7 @@ class AccountField extends React.Component {
 
 		return (
 			<VerificationField
-				label={subject}
+				label={label}
 				additionalLabel={additionalLabel}
 				name={`account${subject}`}
 				onChange={(value) => this.onInput(value)}
@@ -131,7 +136,8 @@ class AccountField extends React.Component {
 				status={this.getStatus(field)}
 				error={field.error}
 				loading={field.loading && !field.error}
-				placeholder={subject === 'to' ? placeholder : 'Account Name'}
+				placeholder={placeholder}
+				intl={intl}
 			/>
 		);
 	}
@@ -143,7 +149,10 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
+	additionalAccountPrefix: PropTypes.string,
 	avatarName: PropTypes.string,
+	label: PropTypes.string,
+	intl: PropTypes.string,
 	placeholder: PropTypes.string,
 	activeCoinTypeTab: PropTypes.any,
 	additionalAccountInfo: PropTypes.string,
@@ -168,10 +177,13 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
-	activeCoinTypeTab: '',
+	label: '',
+	placeholder: '',
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
-	placeholder: '',
+	additionalAccountPrefix: '',
+	activeCoinTypeTab: '',
+	intl: {},
 };
 
 export default AccountField;

@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { Button, Dropdown, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import ModalToWhitelist from '../../../components/Modals/ModalToWhitelist';
 import ModalToBlacklist from '../../../components/Modals/ModalToBlacklist';
@@ -110,7 +111,7 @@ class TabGeneralInfo extends React.Component {
 		const contractPool = contract.getIn(['poolBalance', 'amount']);
 		if (!contractPool) {
 			this.props.openModal(MODAL_REPLENISH, {
-				error: 'Please, replenish Fee Pool Balance first',
+				error: 'errors.contract_errors.zero_fee_pool_error',
 				contractId: this.props.match.params.id,
 			});
 		} else this.props.openModal(modal);
@@ -139,7 +140,9 @@ class TabGeneralInfo extends React.Component {
 	renderDropdownTrigger() {
 		return (
 			<div className="dropdown-trigger">
-				<div className="content">Other Assets Balance</div>
+				<div className="content">
+					<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.other_assets_text" />
+				</div>
 				<span className="icon dropdown" />
 			</div>
 		);
@@ -147,12 +150,16 @@ class TabGeneralInfo extends React.Component {
 
 
 	render() {
-		const { poolAsset } = this.props;
+		const { poolAsset, keyWeightWarn } = this.props;
 		const { open } = this.state;
 		const {
-			bytecode, abi, balances, contract, owner, activeUser, loading,
+			bytecode, abi, balances, contract, owner, activeUser, loading, intl,
 		} = this.props;
 		const { mainBalance, otherBalances } = this.showBalance(balances);
+		const BytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.contract_info.general_info_tab.bytecode_placeholder' });
+		const ABIPlaceholder = intl.formatMessage({ id: 'smart_contract_page.contract_info.general_info_tab.abi_placeholder' });
+		const copyBtnTxt = intl.formatMessage({ id: 'smart_contract_page.contract_info.general_info_tab.copy_button_text' });
+
 		if (!contract) {
 			return null;
 		}
@@ -166,7 +173,9 @@ class TabGeneralInfo extends React.Component {
 					<table className="table-key-value">
 						<tbody>
 							<tr>
-								<td className="key">Contract Balance:</td>
+								<td className="key">
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.contract_balance" />
+								</td>
 								<td className="val">
 									<div className="val-wrap">
 										<div className="balance-wrap">
@@ -193,7 +202,7 @@ class TabGeneralInfo extends React.Component {
 							</tr>
 							<tr>
 								<td className="key">
-									Fee Pool:
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.fee_pool" />
 									<Popup
 										trigger={<span className="icon-info" />}
 										content="Fee Pool is a mechanism that allows to use contract calls at the expense of the pool balance that is replenished by anyone so that even zero-balance users can call a contract."
@@ -211,18 +220,21 @@ class TabGeneralInfo extends React.Component {
 										<Button
 											className="main-btn"
 											size="small"
-											content="Replenish"
+											content={
+												<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.replenish_button_text" />
+											}
 											onClick={() => this.props.openModal(
 												MODAL_REPLENISH,
 												{ contractId: this.props.match.params.id },
 											)}
+											disabled={keyWeightWarn}
 										/>
 									</div>
 								</td>
 							</tr>
 							<tr>
 								<td className="key">
-									Whitelist:
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.whitelist" />
 									<Popup
 										trigger={<span className="icon-info" />}
 										content="Fee Pool Whitelist includes users who can spend Fee Pool."
@@ -239,7 +251,8 @@ class TabGeneralInfo extends React.Component {
 												onClick={this.props.openWhitelistModal}
 												disabled={loading}
 											>
-												{contract.get('whitelist').size} members
+												{contract.get('whitelist').size}
+												<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.lists_members_text" />
 											</button> :
 											<React.Fragment>
 												{
@@ -248,13 +261,17 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={() => this.openChangeListModal(MODAL_TO_WHITELIST)}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
-																Add account
+																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
 															</button>
-															<div className="val-hint">(List is empty)</div>
+															<div className="val-hint">
+																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.empty_list_info_2" />
+															</div>
 														</React.Fragment> :
-														<div className="val-hint">List is empty</div>
+														<div className="val-hint">
+															<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.empty_list_info" />
+														</div>
 												}
 											</React.Fragment>
 									}
@@ -262,7 +279,7 @@ class TabGeneralInfo extends React.Component {
 							</tr>
 							<tr>
 								<td className="key">
-									Blacklist:
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.blacklist" />
 									<Popup
 										trigger={<span className="icon-info" />}
 										content="Fee Pool Blacklist is a list of users unallowed to spend Fee Pool."
@@ -279,7 +296,8 @@ class TabGeneralInfo extends React.Component {
 												onClick={this.props.openBlacklistModal}
 												disabled={loading}
 											>
-												{contract.get('blacklist').size} members
+												{contract.get('blacklist').size}
+												<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.lists_members_text" />
 											</button> :
 											<React.Fragment>
 												{
@@ -288,25 +306,31 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={() => this.openChangeListModal(MODAL_TO_BLACKLIST)}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
-																Add account
+																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
 															</button>
-															<div className="val-hint">(List is empty)</div>
+															<div className="val-hint">
+																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.empty_list_info_2" />
+															</div>
 														</React.Fragment> :
-														<div className="val-hint">List is empty</div>
+														<div className="val-hint">
+															<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.empty_list_info" />
+														</div>
 												}
 											</React.Fragment>
 									}
 								</td>
 							</tr>
 							<tr>
-								<td className="key">Bytecode:</td>
+								<td className="key">
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.bytecode" />
+								</td>
 								<td className="val">
 									<div className="field">
 										<textarea
 											type="text"
-											placeholder="Bytecode"
+											placeholder={BytecodePlaceholder}
 											className="code"
 											value={bytecode}
 											readOnly
@@ -314,18 +338,20 @@ class TabGeneralInfo extends React.Component {
 										<ActionBtn
 											copy={bytecode}
 											icon="icon-copy"
-											text="Copy"
+											text={copyBtnTxt}
 										/>
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<td className="key">ABI:</td>
+								<td className="key">
+									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.abi" />
+								</td>
 								<td className="val">
 									<div className="field">
 										<textarea
 											type="text"
-											placeholder="Bytecode"
+											placeholder={ABIPlaceholder}
 											className="code"
 											value={abi}
 											readOnly
@@ -333,7 +359,7 @@ class TabGeneralInfo extends React.Component {
 										<ActionBtn
 											copy={abi}
 											icon="icon-copy"
-											text="Copy"
+											text={copyBtnTxt}
 										/>
 									</div>
 								</td>
@@ -365,6 +391,8 @@ TabGeneralInfo.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 TabGeneralInfo.defaultProps = {
@@ -372,7 +400,7 @@ TabGeneralInfo.defaultProps = {
 	poolAsset: null,
 };
 
-export default withRouter(connect(
+export default injectIntl(withRouter(connect(
 	(state, ownProps) => {
 		const contract = state.echojs.getIn([
 			CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID,
@@ -398,4 +426,4 @@ export default withRouter(connect(
 		formatAbi: (id) => dispatch(formatAbi(id)),
 		clearForm: (value) => dispatch(clearForm(value)),
 	}),
-)(TabGeneralInfo));
+)(TabGeneralInfo)));

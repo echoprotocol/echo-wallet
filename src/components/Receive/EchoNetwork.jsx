@@ -4,6 +4,7 @@ import { Dropdown } from 'semantic-ui-react';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -167,7 +168,11 @@ class EchoNetwork extends React.Component {
 		if (!open) { this.setState({ open: true }); }
 	}
 	renderAccountHeader() {
-		const acconutHeaderTitle = <div className="title">Account</div>;
+		const acconutHeaderTitle = (
+			<div className="title">
+				<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.acc_separator" />
+			</div>
+		);
 
 		const header = [{
 			className: 'dropdown-header',
@@ -207,7 +212,9 @@ class EchoNetwork extends React.Component {
 
 	renderAddressesHeader() {
 		const addressHeaderTitle = (
-			<div className="title">ADDRESSES</div>
+			<div className="title">
+				<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.adr_separator" />
+			</div>
 		);
 
 		const header = [{
@@ -263,11 +270,18 @@ class EchoNetwork extends React.Component {
 	}
 
 	renderGenerateAddressButton() {
+		const { intl } = this.props;
+		const btnValue = intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.button_text' });
 		const generateAddressItem = [{
 			className: 'generate-address',
 			value: 'generate-address',
 			key: 'generate-address',
-			content: 'Generate new address',
+			content: btnValue,
+			onClick: () => {
+				this.setState({ open: false });
+				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+			},
+			selected: false,
 			active: false,
 		}];
 		return generateAddressItem;
@@ -288,25 +302,33 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
+			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl,
 		} = this.props;
-		const { open, receiver, searchText } = this.state;
+
+
+		const { receiver, open, searchText } = this.state;
 		const receiverValue = this.getReceiver();
+		const dropdownPlaceholder =
+			intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.placeholder' });
 
 		const link = this.getQrData();
 
 		return (
 			<div className="payment-wrap">
-				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+				<p className="payment-description">
+					<FormattedMessage id="wallet_page.receive_payment.echo.description_part1" />
+				</p>
 				<ModalCreateEchoAddress />
 
 				<p className="payment-description">
-					You can use several addresses referring to one account for different targets.
+					<FormattedMessage id="wallet_page.receive_payment.echo.description_part2" />
 				</p>
 				<div className="field recipient-dropdown-wrap">
-					<div className="dropdown-label">recipient Account OR address</div>
+					<div className="dropdown-label">
+						<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
+					</div>
 					<Dropdown
-						placeholder="Choose account or address"
+						placeholder={dropdownPlaceholder}
 						options={this.renderOptions()}
 						search={() => this.renderOptions()}
 						searchQuery={searchText}
@@ -339,6 +361,7 @@ class EchoNetwork extends React.Component {
 					setContractFees={this.props.setContractFees}
 					assetDropdown
 					receive
+					intl={intl}
 				/>
 				{
 					receiverValue ? <QrCode link={link} /> : null
@@ -369,6 +392,7 @@ EchoNetwork.propTypes = {
 	setContractFees: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 EchoNetwork.defaultProps = {
@@ -376,4 +400,4 @@ EchoNetwork.defaultProps = {
 };
 
 
-export default EchoNetwork;
+export default injectIntl(EchoNetwork);

@@ -3,6 +3,7 @@ import { Table, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import history from '../../history';
 
@@ -131,19 +132,19 @@ class ContractList extends React.Component {
 						<Table.Row>
 							<Table.HeaderCell onClick={() => this.onSort('id')}>
 								<div className="sort-wrap">
-									Contract ID
+									<FormattedMessage id="smart_contract_page.table.contract_id" />
 									{this.renderSort(sortType, sortInc, 'id')}
 								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('name')}>
 								<div className="sort-wrap" >
-									Watched Contract Name
+									<FormattedMessage id="smart_contract_page.table.watched_contract_name" />
 									{this.renderSort(sortType, sortInc, 'name')}
 								</div>
 							</Table.HeaderCell>
 							<Table.HeaderCell onClick={() => this.onSort('balance')}>
 								<div className="sort-wrap">
-									Contract Balance
+									<FormattedMessage id="smart_contract_page.table.contract_balance" />
 									{this.renderSort(sortType, sortInc, 'balance')}
 								</div>
 							</Table.HeaderCell>
@@ -181,22 +182,30 @@ class ContractList extends React.Component {
 		return (
 			<div className="empty-contracts">
 				<div className="contract-navigator">
-					<h3>Start watch contract or create a new one</h3>
+					<h3>
+						<FormattedMessage id="smart_contract_page.empty_text" />
+					</h3>
 					<div className="btns">
 						<Button
-							content="watch contract"
+							content={
+								<FormattedMessage id="smart_contract_page.watch_contract_button_text" />
+							}
 							className="main-btn"
 							basic
 							onClick={(e) => this.onLink(ADD_CONTRACT_PATH, e)}
 						/>
 						<Button
-							content="create new contract"
+							content={
+								<FormattedMessage id="smart_contract_page.create_contract_button_text" />
+							}
 							className="main-btn"
 							basic
 							onClick={(e) => this.onLink(SMART_CONTRACTS_PATH, e)}
 						/>
 						<Button
-							content="call contract"
+							content={
+								<FormattedMessage id="smart_contract_page.call_contract_button_text" />
+							}
 							className="main-btn"
 							basic
 							onClick={(e) => this.onLink(CALL_CONTRACT_PATH, e)}

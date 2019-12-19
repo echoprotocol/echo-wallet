@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
@@ -32,7 +33,7 @@ class Receive extends React.Component {
 
 		const {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
-			getEthAddress, ethAddress, clearForm,
+			getEthAddress, ethAddress, clearForm, keyWeightWarn,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 			btcAddress, accountId,
 		} = this.props;
@@ -46,7 +47,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', 0);
 						e.target.blur();
 					}}
-					content="ECHO NETWORK"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.echo.title" />
+					}
 				/>,
 				render: () => (
 					<EchoNetwork
@@ -78,7 +81,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EBTC);
 						e.target.blur();
 					}}
-					content="Bitcoin"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.btc.title" />
+					}
 				/>,
 				render: () => (
 					<Bitcoin
@@ -93,6 +98,7 @@ class Receive extends React.Component {
 						openModal={(value) => this.props.openModal(value)}
 						getBtcAddress={this.props.getBtcAddress}
 						btcAddress={btcAddress}
+						keyWeightWarn={keyWeightWarn}
 					/>),
 			},
 			{
@@ -103,7 +109,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EETH);
 						e.target.blur();
 					}}
-					content="Ethereum"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.eth.title" />
+					}
 				/>,
 				render: () => (
 					<Ethereum
@@ -115,6 +123,7 @@ class Receive extends React.Component {
 						ethAddress={ethAddress}
 						fullCurrentAccount={fullCurrentAccount}
 						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
+						keyWeightWarn={keyWeightWarn}
 					/>
 				),
 			},
@@ -170,7 +179,8 @@ Receive.propTypes = {
 	btcAddress: PropTypes.object,
 	accountId: PropTypes.string.isRequired,
 	setGlobalValue: PropTypes.func.isRequired,
-	activeCoinTypeTab: PropTypes.any.isRequired,
+	activeCoinTypeTab: PropTypes.number.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Receive.defaultProps = {

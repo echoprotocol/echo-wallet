@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BN from 'bignumber.js';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import moment from 'moment';
 import { Popup } from 'semantic-ui-react';
 
@@ -9,7 +10,8 @@ import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 class Assets extends React.Component {
 
 	renderList() {
-		const { frozenFunds, coreAsset } = this.props;
+		const { frozenFunds, coreAsset, intl } = this.props;
+		const popupMsg = intl.formatMessage({ id: 'wallet_page.frozen_funds.frozen_funds_list.popup_text' });
 
 		frozenFunds.sort((a, b) => {
 			const { unfreeze_time: unfreezeTimeA } = a;
@@ -42,18 +44,22 @@ class Assets extends React.Component {
 							<span>Months</span>
 						</div>
 						<div className="frozen-coefficient">
-							<span>Coefficient: </span>
+							<span>
+								<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.coefficient_text" />
+							</span>
 							<span>{freezeParam.coefficientText}</span>
 							<Popup
 								trigger={<span className="inner-tooltip-trigger icon-info" />}
-								content="This is the coefficient that will be used to calculate the reward for participating in blocks creation."
+								content={popupMsg}
 								className="inner-tooltip"
 								style={{ width: 373 }}
 								inverted
 							/>
 						</div>
 						<div className="frozen-interval">
-							<span>Frozen until</span>
+							<span>
+								<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.frozen_until" />
+							</span>
 							<span>{momentDate}</span>
 						</div>
 					</div>
@@ -65,14 +71,20 @@ class Assets extends React.Component {
 	render() {
 		return this.props.frozenFunds.length ?
 			<React.Fragment>
-				<div className="currency-title">Frozen amounts</div>
+				<div className="currency-title">
+					<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.title" />
+				</div>
 				<ul className="currency-list">
 					{ this.renderList() }
 				</ul>
 			</React.Fragment> :
 			<div className="empty-frozen-funds">
 				<span className="icon-frozen-funds" />
-				<span>You have not frozen <br /> any funds yet</span>
+				<span>
+					<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.empty_text_pt1" />
+					<br />
+					<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.empty_text_pt2" />
+				</span>
 			</div>;
 	}
 
@@ -81,10 +93,11 @@ class Assets extends React.Component {
 Assets.propTypes = {
 	frozenFunds: PropTypes.array,
 	coreAsset: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 Assets.defaultProps = {
 	frozenFunds: [],
 };
 
-export default Assets;
+export default injectIntl(Assets);

@@ -1,8 +1,10 @@
 import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 import _ from 'lodash';
+import { EN_LOCALE } from '../constants/GlobalConstants';
 
 const DEFAULT_FIELDS = Map({
+	language: EN_LOCALE,
 	globalLoading: true,
 	globalError: null,
 	error: null,

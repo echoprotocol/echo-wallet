@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CACHE_MAPS } from 'echojs-lib';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
@@ -18,7 +19,9 @@ class ModalBalcklist extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			el: null,
+		};
 	}
 
 
@@ -33,65 +36,72 @@ class ModalBalcklist extends React.Component {
 		this.props.openAddModal();
 	}
 
-	renderList() {
+	renderList(submit) {
 		const {
-			contracts, contractId, owner, activeUser, accounts,
+			contracts, contractId, owner,
+			activeUser, accounts, intl,
 		} = this.props;
 		if (!contracts.get(contractId)) {
 			return [];
 		}
+		const removeBtnTxt = intl.formatMessage({ id: 'modals.modal_blacklist.remove_button_text' });
+
 		const blacklist = contracts.getIn([contractId, 'blacklist']);
-		return blacklist ? blacklist.map((el, i) => (
-			<TransactionScenario
-				handleTransaction={() => this.props.removeFromBlackList(el)}
-				key={i.toString()}
-			>
-				{
-					(submit) => (
-						<div className="segment">
-							<Avatar accountName={accounts.getIn([el, 'name'])} />
-							<div className="name">{accounts.getIn([el, 'name'])}</div>
-							{ owner === activeUser && <ActionBtn
-								icon="remove"
-								text="Remove"
-								action={() => submit()}
-							/>}
-						</div>
-					)
-				}
-			</TransactionScenario>
+		return blacklist ? blacklist.map((el) => (
+			<div className="segment">
+				<Avatar accountName={accounts.getIn([el, 'name'])} />
+				<div className="name">{accounts.getIn([el, 'name'])}</div>
+				{owner === activeUser && <ActionBtn
+					icon="remove"
+					text={removeBtnTxt}
+					action={() => {
+						this.setState({ el }, () => submit());
+					}}
+				/>}
+			</div>
+
 		)).toArray() : [];
 	}
 
 	render() {
 		const {
-			show, owner, activeUser,
+			show, owner, activeUser, intl, keyWeightWarn,
 		} = this.props;
 
 		return (
-			<Modal className="whitelist-modal" open={show} dimmer="inverted">
-				<FocusLock autoFocus={false}>
-					<button
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-					/>
-					<div className="modal-header">
-						<h2 className="modal-header-title">Blacklist</h2>
-					</div>
-					<div className="modal-body">
-						<div className="segments">
-							{this.renderList()}
-						</div>
-						<div className="form-panel">
-							{ owner === activeUser && <Button
-								className="main-btn"
-								content="Add account"
-								onClick={(e) => this.onOpenAddModal(e)}
-							/>}
-						</div>
-					</div>
-				</FocusLock>
-			</Modal>
+			<TransactionScenario
+				handleTransaction={() => this.props.removeFromBlackList(this.state.el)}
+			>
+				{
+					(submit) => (
+						<Modal className="whitelist-modal" open={show} dimmer="inverted">
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h2 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_blacklist.title' })}
+									</h2>
+								</div>
+								<div className="modal-body">
+									<div className="segments">
+										{this.renderList(submit)}
+									</div>
+									<div className="form-panel">
+										{owner === activeUser && <Button
+											className="main-btn"
+											content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
+											onClick={(e) => this.onOpenAddModal(e)}
+											disabled={keyWeightWarn}
+										/>}
+									</div>
+								</div>
+							</FocusLock>
+						</Modal>)
+				}
+			</TransactionScenario>
 		);
 	}
 
@@ -107,13 +117,15 @@ ModalBalcklist.propTypes = {
 	removeFromBlackList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalBalcklist.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		contracts: state.echojs.get(CACHE_MAPS.FULL_CONTRACTS_BY_CONTRACT_ID),
 		accounts: state.echojs.get(CACHE_MAPS.ACCOUNTS_BY_ID),
@@ -121,6 +133,7 @@ export default connect(
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
 		contractId: state.contract.get('id'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
@@ -128,4 +141,4 @@ export default connect(
 		removeFromBlackList: (accId) =>
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_BLACKLIST, FORM_BLACKLIST, 'account')),
 	}),
-)(ModalBalcklist);
+)(ModalBalcklist));

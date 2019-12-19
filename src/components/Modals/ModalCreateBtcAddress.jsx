@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
@@ -44,7 +45,7 @@ class ModalCreateBtcAddress extends React.Component {
 
 	render() {
 		const {
-			show, error,
+			show, error, intl,
 		} = this.props;
 
 		return (
@@ -60,36 +61,43 @@ class ModalCreateBtcAddress extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h2 className="modal-header-title">Create BTC address</h2>
+									<h2 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_create_btc_address.title' })}
+									</h2>
 								</div>
 								<form className="modal-body">
 									<div className="info-text">
-											To create your new BTC Address, please,
-											provide your external backup BTC address.
-											Backup BTC address is needed to be able to withhold a sent transaction to
-											ECHO network during the first 24 hours after the transaction being made.
+										{intl.formatMessage({ id: 'modals.modal_create_btc_address.text' })}
 									</div>
 
 									<div className={classnames('field error-wrap', { error: !!error })}>
-										<label htmlFor="address">Backup address</label>
+										<label htmlFor="address">
+											{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
+										</label>
 										<input
 											type="text"
-											placeholder="Backup address"
+											placeholder={intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.placeholder' })}
 											name="address"
 											onChange={(e) => this.onChange(e)}
 											autoFocus
 										/>
 										{
-											<span className="error-message">{error}</span>
+											<span className="error-message">
+												{
+													error ? intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' }) : null
+												}
+											</span>
 										}
 										<span className="warning-message">
-											Submit your backup BTC address above.
+											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
 										</span>
 									</div>
 									<div className="form-panel">
 										<Button
 											className="main-btn countdown-wrap"
-											content="Generate address"
+											content={
+												intl.formatMessage({ id: 'modals.modal_create_btc_address.generate_button_text' })
+											}
 											onClick={() => {
 												this.onGenerateBtcAddress(submit);
 											}}
@@ -111,6 +119,7 @@ ModalCreateBtcAddress.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	generateBtcAddress: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalCreateBtcAddress.defaultProps = {
@@ -118,7 +127,7 @@ ModalCreateBtcAddress.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_GENERATE_BTC_ADDRESS, 'show']),
 		error: state.modal.getIn([MODAL_GENERATE_BTC_ADDRESS, 'error']),
@@ -128,4 +137,4 @@ export default connect(
 		generateBtcAddress: (address) => dispatch(generateBtcAddress(address)),
 		setError: (value) => dispatch(setError(MODAL_GENERATE_BTC_ADDRESS, value)),
 	}),
-)(ModalCreateBtcAddress);
+)(ModalCreateBtcAddress));

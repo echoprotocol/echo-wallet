@@ -6,6 +6,7 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 import _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 import TransactionScenario from '../TransactionScenario';
@@ -23,6 +24,7 @@ import {
 	createAccount,
 	validateCreateAccount,
 	saveWIFAfterCreateAccount,
+	checkParentKeys,
 	validateAndSetIpOrUrl,
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
@@ -51,6 +53,12 @@ class SignUp extends React.Component {
 		this.props.getRemoteAddresses();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.signupOptionsForm.get('registrarAccount').value !==
+			this.props.signupOptionsForm.get('registrarAccount').value) {
+			this.props.checkParentKeys(this.props.signupOptionsForm.get('registrarAccount').value);
+		}
+	}
 	componentWillUnmount() {
 		this.props.clearForm(FORM_SIGN_UP);
 		this.props.clearForm(FORM_SIGN_UP_OPTIONS);
@@ -154,10 +162,11 @@ class SignUp extends React.Component {
 			accounts,
 			signupOptionsForm,
 		} = this.props;
+		const accountName = signupOptionsForm.get('registrarAccount').value;
 
 		if (this.isDisabledSubmit() ||
 			(!accounts.length) ||
-			(!signupOptionsForm.get('registrarAccount').value)) {
+			(!accountName)) {
 			return true;
 		}
 
@@ -192,12 +201,12 @@ class SignUp extends React.Component {
 									disabled={loading}
 								>
 									<span className="icon-back" />
-									back
+									<FormattedMessage id="sign_page.back_button_text" />
 								</button>
-								<h3>Add Account</h3>
+								<h3><FormattedMessage id="sign_page.title" /></h3>
 							</div> :
 							<div className="form-info">
-								<h3>Welcome to Echo</h3>
+								<h3><FormattedMessage id="sign_page.welcome_title" /></h3>
 							</div>
 					}
 					<FormComponent
@@ -232,11 +241,12 @@ class SignUp extends React.Component {
 					/>
 					<div className="form-panel">
 						<span className="sign-nav">
-						Have an account?
+							<FormattedMessage id="sign_page.register_account_page.have_acc_text" />
 							<Link
 								className={classnames('link', 'orange', { disabled: loading })}
 								to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
-							>Login
+							>
+								<FormattedMessage id="sign_page.register_account_page.have_acc_link" />
 							</Link>
 						</span>
 						{
@@ -251,7 +261,7 @@ class SignUp extends React.Component {
 											<ButtonComponent
 												loading={loading}
 												isAddAccount={isAddAccount}
-												disabled={this.isDisabledSubmitParent()}
+												disabled={this.isDisabledSubmitParent() || signupOptionsForm.get('registrarAccountKeyWarn').value}
 												submit={submit}
 											/>
 										)
@@ -301,6 +311,7 @@ SignUp.propTypes = {
 	validateCreateAccount: PropTypes.func.isRequired,
 	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
 	createAccountTransaction: PropTypes.func.isRequired,
+	checkParentKeys: PropTypes.func.isRequired,
 	getRemoteAddresses: PropTypes.func.isRequired,
 	saveRemoteAddress: PropTypes.func.isRequired,
 	validateAndSetIpOrUrl: PropTypes.func.isRequired,
@@ -345,5 +356,6 @@ export default connect(
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
 		validateAndSetIpOrUrl: (value) => dispatch(validateAndSetIpOrUrl(value)),
 		clearForm: (form) => dispatch(clearForm(form)),
+		checkParentKeys: (accName) => dispatch(checkParentKeys(accName)),
 	}),
 )(SignUp);
