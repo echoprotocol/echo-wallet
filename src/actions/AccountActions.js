@@ -63,7 +63,6 @@ export const checkAccount = (form, account, subject) => async (dispatch) => {
 			error: null,
 		}));
 
-
 	} catch (err) {
 		dispatch(setValue(form, 'error', formatError(err)));
 	} finally {

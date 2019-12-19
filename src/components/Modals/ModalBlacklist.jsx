@@ -10,6 +10,8 @@ import { closeModal, openModal } from '../../actions/ModalActions';
 import { MODAL_BLACKLIST, MODAL_TO_BLACKLIST } from '../../constants/ModalConstants';
 import Avatar from '../Avatar';
 import ActionBtn from '../../components/ActionBtn';
+import { FORM_BLACKLIST } from '../../constants/FormConstants';
+
 import { contractChangeWhiteAndBlackLists } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 
@@ -137,6 +139,6 @@ export default injectIntl(connect(
 		openAddModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),
 		closeModal: () => dispatch(closeModal(MODAL_BLACKLIST)),
 		removeFromBlackList: (accId) =>
-			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_BLACKLIST)),
+			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_BLACKLIST, FORM_BLACKLIST, 'account')),
 	}),
 )(ModalBalcklist));
