@@ -323,7 +323,7 @@ class EchoNetwork extends React.Component {
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.echo.description_part2" />
 				</p>
-				<div className="dropdown-wrap">
+				<div className="field recipient-dropdown-wrap">
 					<div className="dropdown-label">
 						<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
 					</div>
