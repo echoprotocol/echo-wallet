@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { injectIntl } from 'react-intl';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
-import { injectIntl } from 'react-intl';
 import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';

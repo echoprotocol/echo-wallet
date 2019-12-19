@@ -28,7 +28,8 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, intl, keyWeightWarn,
+			bytecode, id, fee, tokens, assets, amount,
+			currency, isAvailableBalance, fees, intl, keyWeightWarn,
 		} = this.props;
 		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_bytecode.placeholder' });
 		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_id.placeholder' });
@@ -60,9 +61,11 @@ class AddContractComponent extends React.Component {
 										autoFocus
 									/>
 									{
-										id.error && <span className="error-message">
-											{intl.formatMessage({ id: id.error })}
-										</span>
+										id.error && (
+											<span className="error-message">
+												{intl.formatMessage({ id: id.error })}
+											</span>
+										)
 									}
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
@@ -77,9 +80,11 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 									/>
 									{
-										bytecode.error && <span className="error-message">
-											{intl.formatMessage({ id: bytecode.error })}
-										</span>
+										bytecode.error && (
+											<span className="error-message">
+												{intl.formatMessage({ id: bytecode.error })}
+											</span>
+										)
 									}
 								</Form.Field>
 								<AmountField
