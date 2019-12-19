@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import ActionBtn from '../ActionBtn';
 
@@ -16,16 +17,19 @@ class ModalBackup extends React.Component {
 	}
 
 	getActiveKeysString() {
-		const { keys, activeUser } = this.props;
+		const { keys, activeUser, intl } = this.props;
 
+		const accountLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.account' });
+		const pubKeyLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.public_key' });
+		const WIFLabel = intl.formatMessage({ id: 'modals.modal_backup.text_field.wif' });
 		const keysData = [];
-		keysData.push(`Account: ${activeUser.get('name')}\n`);
+		keysData.push(`${accountLabel}${activeUser.get('name')}\n`);
 
 		keys.forEach((keyItem, keyIndex) => {
 
-			keysData.push(`Public Key ${keyIndex + 1}\n${keyItem.publicKey}`);
+			keysData.push(`${pubKeyLabel}${keyIndex + 1}\n${keyItem.publicKey}`);
 			if (keyItem.wif) {
-				keysData.push(`\n\nWIF ${keyIndex + 1}\n${keyItem.wif}`);
+				keysData.push(`\n\n${WIFLabel}${keyIndex + 1}\n${keyItem.wif}`);
 			}
 
 			if (keyIndex !== (keys.length - 1)) {
@@ -40,10 +44,19 @@ class ModalBackup extends React.Component {
 	}
 
 	render() {
-		const { activeUser, show } = this.props;
+		const { activeUser, show, intl } = this.props;
 
 		const activeKeysString = this.getActiveKeysString();
-
+		const accLabel = intl.formatMessage({ id: 'modals.modal_backup.account_field.title' });
+		const accPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.account_field.placeholder' });
+		const IDLabel = intl.formatMessage({ id: 'modals.modal_backup.id_field.title' });
+		const IDPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.id_field.placeholder' });
+		const backupLabel = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.placeholder' });
+		const backupPlaceholder = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.placeholder' });
+		const backupWarning = intl.formatMessage({ id: 'modals.modal_backup.backup_data_field.warning' });
+		const copyBtnTxt = intl.formatMessage({ id: 'modals.modal_backup.copy_button_text' });
+		const saveBtnTxt = intl.formatMessage({ id: 'modals.modal_backup.save_button_text' });
+		const title = intl.formatMessage({ id: 'modals.modal_backup.title' });
 		return (
 			<Modal className="backup-modal" open={show}>
 				<FocusLock autoFocus={false}>
@@ -52,41 +65,48 @@ class ModalBackup extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h3 className="modal-header-title">Backup</h3>
+						<h3 className="modal-header-title">
+							{title}
+						</h3>
 					</div>
 					<div className="modal-body">
 						<Form.Field>
-							<label htmlFor="account-name">Account name</label>
+							<label htmlFor="account-name">
+								{accLabel}
+							</label>
 							<input
 								type="text"
-								placeholder="Account name"
+								placeholder={accPlaceholder}
 								disabled
 								name="account-name"
 								value={activeUser.get('name')}
 							/>
 						</Form.Field>
 						<Form.Field>
-							<label htmlFor="id-account">ID account</label>
+							<label htmlFor="id-account">
+								{IDLabel}
+							</label>
 							<input
 								type="text"
-								placeholder="ID account"
+								placeholder={IDPlaceholder}
 								disabled
 								name="id-account"
 								value={activeUser.get('id')}
 							/>
 						</Form.Field>
 						<Form.Field>
-							<label htmlFor="backup-data">Backup data</label>
+							<label htmlFor="backup-data">
+								{backupLabel}
+							</label>
 							<textarea
 								type="text"
-								placeholder="Backup data"
+								placeholder={backupPlaceholder}
 								name="backup-data"
 								value={activeKeysString}
 								readOnly
 							/>
 							<span className="warning-message">
-									Warning: Anyone who has access to your WIF can steal all your Echo
-									assets and this key can never be recovered if you lose it.
+								{backupWarning}
 							</span>
 						</Form.Field>
 
@@ -94,14 +114,14 @@ class ModalBackup extends React.Component {
 							<ActionBtn
 								icon="icon-copy"
 								copy={activeKeysString}
-								text="Copy Backup Data"
+								text={copyBtnTxt}
 							/>
 
 							<Button
 								type="submit"
 								className="main-btn"
 								onClick={() => this.onSave(activeKeysString)}
-								content="Save As .TXT"
+								content={saveBtnTxt}
 							/>
 						</div>
 					</div>
@@ -117,6 +137,7 @@ ModalBackup.propTypes = {
 	close: PropTypes.func.isRequired,
 	activeUser: PropTypes.any,
 	saveAsTxt: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	keys: PropTypes.array,
 };
 
@@ -127,4 +148,4 @@ ModalBackup.defaultProps = {
 };
 
 
-export default ModalBackup;
+export default injectIntl(ModalBackup);

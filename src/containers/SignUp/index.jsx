@@ -6,6 +6,7 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 import _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 import TransactionScenario from '../TransactionScenario';
@@ -200,12 +201,12 @@ class SignUp extends React.Component {
 									disabled={loading}
 								>
 									<span className="icon-back" />
-									back
+									<FormattedMessage id="sign_page.back_button_text" />
 								</button>
-								<h3>Add Account</h3>
+								<h3><FormattedMessage id="sign_page.title" /></h3>
 							</div> :
 							<div className="form-info">
-								<h3>Welcome to Echo</h3>
+								<h3><FormattedMessage id="sign_page.welcome_title" /></h3>
 							</div>
 					}
 					<FormComponent
@@ -240,11 +241,12 @@ class SignUp extends React.Component {
 					/>
 					<div className="form-panel">
 						<span className="sign-nav">
-						Have an account?
+							<FormattedMessage id="sign_page.register_account_page.have_acc_text" />
 							<Link
 								className={classnames('link', 'orange', { disabled: loading })}
 								to={`${SIGN_IN_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
-							>Login
+							>
+								<FormattedMessage id="sign_page.register_account_page.have_acc_link" />
 							</Link>
 						</span>
 						{

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { scroller } from 'react-scroll';
 import { CACHE_MAPS } from 'echojs-lib';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Loading from '../../components/Loader/LoadingData';
 
@@ -63,11 +64,14 @@ class Activity extends React.Component {
 	}
 
 	renderEmpty(isConnect) {
+		const { intl } = this.props;
 		return (
 			<div className="msg-empty">
 				<h3>
 					{
-						isConnect ? 'You have no actions' : 'Loading...'
+						isConnect ?
+							intl.formatMessage({ id: 'recent_activity_page.no_actions' }) :
+							intl.formatMessage({ id: 'recent_activity_page.load_actions' })
 					}
 
 				</h3>
@@ -82,13 +86,13 @@ class Activity extends React.Component {
 			<Table className="table-activity">
 				<Table.Header>
 					<Table.Row>
-						<Table.HeaderCell>Operation</Table.HeaderCell>
-						<Table.HeaderCell>Block</Table.HeaderCell>
-						<Table.HeaderCell>From</Table.HeaderCell>
-						<Table.HeaderCell>Subject</Table.HeaderCell>
-						<Table.HeaderCell>Value</Table.HeaderCell>
-						<Table.HeaderCell>Fee</Table.HeaderCell>
-						<Table.HeaderCell>Time</Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.operation" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.block" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.from" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.subject" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.value" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.fee" /></Table.HeaderCell>
+						<Table.HeaderCell><FormattedMessage id="recent_activity_page.table.headers.time" /></Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body id="activityContainer">
@@ -107,10 +111,10 @@ class Activity extends React.Component {
 	}
 
 	render() {
-		const { loading, isConnect } = this.props;
+		const { loading, isConnect, intl } = this.props;
 
 		return loading && isConnect ?
-			<Loading text="History is loading..." /> :
+			<Loading text={intl.formatMessage({ id: 'recent_activity_page.loader_title' })} /> :
 			this.renderTable(isConnect);
 	}
 
@@ -120,6 +124,7 @@ Activity.propTypes = {
 	history: PropTypes.any,
 	loading: PropTypes.bool.isRequired,
 	isConnect: PropTypes.any,
+	intl: PropTypes.any.isRequired,
 	activeTransaction: PropTypes.string.isRequired,
 	formatHistory: PropTypes.func.isRequired,
 	viewTransaction: PropTypes.func.isRequired,
@@ -131,7 +136,7 @@ Activity.defaultProps = {
 	isConnect: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		const account = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId]);
@@ -148,4 +153,4 @@ export default connect(
 		viewTransaction: (value) => dispatch(viewTransaction(value)),
 		clearTable: () => dispatch(clearTable(HISTORY_TABLE)),
 	}),
-)(Activity);
+)(Activity));

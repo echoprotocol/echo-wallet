@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tab } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
@@ -37,7 +38,9 @@ class Wallet extends React.Component {
 						this.props.setGlobalValue('activePaymentTypeTab', 0);
 						e.target.blur();
 					}}
-					content="CREATE PAYMENT"
+					content={
+						<FormattedMessage id="wallet_page.create_payment.title" />
+					}
 				/>,
 				render: () => (
 					<div className="send-wrap">
@@ -84,7 +87,9 @@ class Wallet extends React.Component {
 						this.props.setGlobalValue('activePaymentTypeTab', 1);
 						e.target.blur();
 					}}
-					content="RECEIVE PAYMENT"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.title" />
+					}
 				/>,
 				render: () => (
 					<div className="send-wrap">
@@ -128,72 +133,74 @@ class Wallet extends React.Component {
 		];
 
 		return (
-			<React.Fragment>
-				<div className="page-wrap">
-					<div className="balance-wrap">
-						<div className="balance-title-row">
-							<div className="balance-title">Balances</div>
-							<Button
-								basic
-								onClick={() => this.props.openModal(MODAL_TOKENS)}
-								size="tiny"
-								content="Watch Tokens"
-								className="main-btn"
-							/>
+			<div className="page-wrap">
+				<div className="balance-wrap">
+					<div className="balance-title-row">
+						<div className="balance-title">
+							<FormattedMessage id="wallet_page.balances.title" />
 						</div>
-
-						<div className="balance-scroll">
-							<Assets
-								assets={echoAssets}
-								setAsset={(symbol) => {
-									this.props.setAsset(symbol, 'assets');
-									this.props.getTransferFee().then((res) => {
-										if (!res) {
-											return;
-										}
-										this.props.setFormValue('fee', res.value);
-									});
-								}}
-								setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
-								setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
-							/>
-							<StableCoins
-								assets={sidechainAssets}
-								setAsset={(symbol) => {
-									this.props.setAsset(symbol, 'assets');
-									this.props.getTransferFee().then((res) => {
-										if (!res) {
-											return;
-										}
-										this.props.setFormValue('fee', res.value);
-									});
-								}}
-								setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
-								activeCoinTypeTab={activeCoinTypeTab}
-								activePaymentTypeTab={activePaymentTypeTab}
-							/>
-							<Tokens
-								tokens={tokens}
-								removeToken={this.props.removeToken}
-								setAsset={(symbol) => {
-									this.props.setAsset(symbol, 'tokens');
-									this.props.setContractFees();
-								}}
-								setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
-							/>
-						</div>
+						<Button
+							basic
+							onClick={() => this.props.openModal(MODAL_TOKENS)}
+							size="tiny"
+							content={
+								<FormattedMessage id="wallet_page.balances.add_erc20_token_text" />
+							}
+							className="main-btn"
+						/>
 					</div>
-					<Tab
-						activeIndex={activePaymentTypeTab}
-						menu={{
-							tabular: false,
-							className: 'wallet-tab-menu',
-						}}
-						panes={externalTabs}
-					/>
 
+					<div className="balance-scroll">
+						<Assets
+							assets={echoAssets}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
+							setAssetActiveAccount={() => this.props.setAssetActiveAccount()}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+						/>
+						<StableCoins
+							assets={sidechainAssets}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+							activeCoinTypeTab={activeCoinTypeTab}
+							activePaymentTypeTab={activePaymentTypeTab}
+						/>
+						<Tokens
+							tokens={tokens}
+							removeToken={this.props.removeToken}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'tokens');
+								this.props.setContractFees();
+							}}
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+						/>
+					</div>
 				</div>
-			</React.Fragment>
+				<Tab
+					activeIndex={activePaymentTypeTab}
+					menu={{
+						tabular: false,
+						className: 'wallet-tab-menu',
+					}}
+					panes={externalTabs}
+				/>
+
+			</div>
 		);
 	}
 
@@ -220,7 +227,7 @@ Wallet.propTypes = {
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
@@ -257,7 +264,7 @@ Wallet.defaultProps = {
 	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
-	additionalAccountInfo: '',
+	additionalAccountInfo: null,
 };
 
 export default Wallet;

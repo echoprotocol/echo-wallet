@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button } from 'semantic-ui-react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { CACHE_MAPS, PrivateKey } from 'echojs-lib';
 
 import PrivateKeyScenario from '../PrivateKeyScenario';
@@ -20,19 +21,7 @@ import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '
 import { editWifs } from '../../actions/AuthActions';
 import {
 	FORM_PERMISSION_KEY,
-	FORM_PERMISSION_ACTIVE_TABLE_TITLE,
-	FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION,
-	FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT,
-	FORM_PERMISSION_ECHO_RAND_TABLE_TITLE,
-	FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION,
-	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT,
 	FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL,
-	FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT,
-	FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION,
-	ADD_ACCOUNT_BUTTON_TEXT,
-	ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT,
-	ADD_PUBLIC_KEY_BUTTON_TEXT,
-	ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT,
 	FORM_PERMISSION_MODE_EDIT,
 	FORM_PERMISSION_MODE_VIEW,
 } from '../../constants/FormConstants';
@@ -226,7 +215,7 @@ class Permissions extends React.Component {
 				if (key && key.value) {
 					if (isPublicKey(key.value)) {
 						if (key.value !== publicKey) {
-							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+							newPrivateKeys[keyRole][field].error = 'errors.keys_errors.keys_dont_match_error';
 						} else {
 							this.props.setValue([keyRole, type, field, 'hasWif'], true);
 						}
@@ -265,7 +254,7 @@ class Permissions extends React.Component {
 				if (key) {
 					if (isPublicKey(key)) {
 						if (key !== publicKey) {
-							newPrivateKeys[keyRole][field].error = 'Invalide private key for current public key';
+							newPrivateKeys[keyRole][field].error = 'errors.keys_errors.keys_dont_match_error';
 						} else {
 							this.props.setValue([keyRole, type, field, 'hasWif'], true);
 						}
@@ -276,7 +265,7 @@ class Permissions extends React.Component {
 			}
 			this.setState({ privateKeys: newPrivateKeys });
 		} catch (e) {
-			newPrivateKeys[keyRole][field].error = 'Invalide private key';
+			newPrivateKeys[keyRole][field].error = 'errors.keys_errors.invalid_priv_error';
 			this.props.setValue([keyRole, type, field, 'hasWif'], false);
 			this.setState({ privateKeys: newPrivateKeys });
 		}
@@ -332,7 +321,9 @@ class Permissions extends React.Component {
 									<Button
 										className="blue-btn"
 										size="medium"
-										content="Edit mode"
+										content={
+											<FormattedMessage id="backup_and_permissions_page.view_mode.button_section.edit_mode_button" />
+										}
 										onClick={getKeys}
 									/>
 								</React.Fragment>
@@ -347,7 +338,9 @@ class Permissions extends React.Component {
 								<Button
 									className="green-btn"
 									size="medium"
-									content="View & backup keys"
+									content={
+										<FormattedMessage id="backup_and_permissions_page.view_mode.button_section.backup_button" />
+									}
 									onClick={backup}
 								/>
 							)
@@ -366,7 +359,9 @@ class Permissions extends React.Component {
 					<Button
 						className="grey-btn inverse"
 						size="medium"
-						content="Cancel"
+						content={
+							<FormattedMessage id="backup_and_permissions_page.edit_mode.button_section.cancel_button" />
+						}
 						onClick={() => this.changeMode(FORM_PERMISSION_MODE_VIEW)}
 					/>
 					<WarningConfirmThresholdScenario
@@ -380,7 +375,9 @@ class Permissions extends React.Component {
 								<Button
 									className="blue-btn"
 									size="medium"
-									content="Save"
+									content={
+										<FormattedMessage id="backup_and_permissions_page.edit_mode.button_section.save_button" />
+									}
 									onClick={submit}
 									disabled={keyWeightWarn && !isOnlyWIFChanged}
 								/>
@@ -401,8 +398,16 @@ class Permissions extends React.Component {
 			set,
 			firstFetch,
 			account,
+			intl,
 		} = this.props;
 
+		const activeTableTitle = intl.formatMessage({ id: 'backup_and_permissions_page.view_mode.pub_keys_and_accs_section.title' });
+		const activeTableDescription = intl.formatMessage({ id: 'backup_and_permissions_page.view_mode.info' });
+		const activeTableTooltip = intl.formatMessage({ id: 'backup_and_permissions_page.threshold_popup' });
+		const echorandTableTitle = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.title' });
+		const echorandTableDescription = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.info' });
+		const echorandTableLink = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.link_to_docs_text' });
+		const echorandTableAdvanced = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.subtitile' });
 		const active = {
 			keys: permissionsKeys.active.keys.concat(permissionsKeys.active.accounts),
 			threshold: permissionsKeys.active.threshold,
@@ -421,9 +426,9 @@ class Permissions extends React.Component {
 						<React.Fragment>
 							<ViewModeTable
 								keyRole="active"
-								title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-								description={FORM_PERMISSION_ACTIVE_TABLE_DESCRIPTION}
-								tooltipText={FORM_PERMISSION_ACTIVE_TABLE_TOOLTIP_TEXT}
+								title={activeTableTitle}
+								description={activeTableDescription}
+								tooltipText={activeTableTooltip}
 								data={active}
 								keys={form}
 								set={set}
@@ -435,11 +440,11 @@ class Permissions extends React.Component {
 							/>
 							<ViewModeTable
 								keyRole="echoRand"
-								title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
-								description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
-								headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+								title={echorandTableTitle}
+								description={echorandTableDescription}
+								headerLinkText={echorandTableLink}
 								headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
-								advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+								advanced={echorandTableAdvanced}
 								data={echoRand}
 								keys={form}
 								set={set}
@@ -463,6 +468,7 @@ class Permissions extends React.Component {
 			form,
 			set,
 			firstFetch,
+			intl,
 		} = this.props;
 
 		const active = {
@@ -470,6 +476,17 @@ class Permissions extends React.Component {
 			threshold: permissionsKeys.active.threshold,
 		};
 
+		const editTableTitle = intl.formatMessage({ id: 'backup_and_permissions_page.view_mode.pub_keys_and_accs_section.title' });
+		const editTableDescription = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.info' });
+		const addAccBtnTxt = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.add_buttons_section.add_acc_button' });
+		const addAccBtnTltp = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.add_buttons_section.add_acc_tooltip' });
+		const addKeyBtnTxt = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.add_buttons_section.add_pub_key_button' });
+		const addKeyBtnTltp = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.add_buttons_section.add_key_tooltip' });
+		const echorandTableTitle = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.title' });
+		const echorandTableDescription = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.info' });
+		const echorandTableLink = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.link_to_docs_text' });
+		const echorandTableAdvanced = intl.formatMessage({ id: 'backup_and_permissions_page.echorand_key_section.subtitile' });
+	
 		const echoRand = {
 			keys: permissionsKeys.echoRand.keys,
 		};
@@ -477,12 +494,12 @@ class Permissions extends React.Component {
 			<React.Fragment>
 				<EditModeTable
 					keyRole="active"
-					title={FORM_PERMISSION_ACTIVE_TABLE_TITLE}
-					description={FORM_PERMISSION_EDIT_MODE_ACTIVE_TABLE_DESCRIPTION}
-					addAccountButtonText={ADD_ACCOUNT_BUTTON_TEXT}
-					addAccountButtonTooltipText={ADD_ACCOUNT_BUTTON_TOOLTIP_TEXT}
-					addPublicKeyButtonText={ADD_PUBLIC_KEY_BUTTON_TEXT}
-					addPublicKeyButtonTooltipText={ADD_PUBLIC_KEY_BUTTON_TOOLTIP_TEXT}
+					title={editTableTitle}
+					description={editTableDescription}
+					addAccountButtonText={addAccBtnTxt}
+					addAccountButtonTooltipText={addAccBtnTltp}
+					addPublicKeyButtonText={addKeyBtnTxt}
+					addPublicKeyButtonTooltipText={addKeyBtnTltp}
 					data={active}
 					keys={form}
 					privateKeys={this.state.privateKeys.active}
@@ -496,11 +513,11 @@ class Permissions extends React.Component {
 				/>
 				<EditModeTable
 					keyRole="echoRand"
-					title={FORM_PERMISSION_ECHO_RAND_TABLE_TITLE}
-					description={FORM_PERMISSION_ECHO_RAND_TABLE_DESCRIPTION}
-					headerLinkText={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_TEXT}
+					title={echorandTableTitle}
+					description={echorandTableDescription}
+					headerLinkText={echorandTableLink}
 					headerLinkUrl={FORM_PERMISSION_ECHO_RAND_TABLE_LINK_URL}
-					advanced={FORM_PERMISSION_ECHO_RAND_TABLE_ADVANCED_TEXT}
+					advanced={echorandTableAdvanced}
 					data={echoRand}
 					keys={form}
 					privateKeys={this.state.privateKeys.echoRand}
@@ -519,7 +536,9 @@ class Permissions extends React.Component {
 
 		return (
 			<div className="account-info">
-				<span className="account-info-type">Account ID:</span>
+				<span className="account-info-type">
+					<FormattedMessage id="backup_and_permissions_page.subtitile" />
+				</span>
 				<span className="account-info-value">{accountId}</span>
 			</div>
 		);
@@ -542,10 +561,11 @@ class Permissions extends React.Component {
 	}
 
 	render() {
-		const { showLoader } = this.props;
+		const { showLoader, intl } = this.props;
+		const loaderText = intl.formatMessage({ id: 'backup_and_permissions_page.loader_applying_text' });
 		return (
 			showLoader ?
-				<Loading text="Apllying changes..." /> :
+				<Loading text={loaderText} /> :
 				<div className="permissions-wrap">
 					<div className="sub-header">
 						{
@@ -585,6 +605,7 @@ Permissions.propTypes = {
 	editWifs: PropTypes.func.isRequired,
 	checkKeyWeightWarning: PropTypes.func.isRequired,
 	setWeightWarning: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	isOnlyWIFChanged: PropTypes.bool.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 	checkWIFChanged: PropTypes.func.isRequired,
@@ -594,7 +615,7 @@ Permissions.defaultProps = {
 	account: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => {
 		const accountId = state.global.getIn(['activeUser', 'id']);
 		return {
@@ -629,4 +650,4 @@ export default connect(
 		setWeightWarning: (keyWeightWarn) => dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn })),
 		checkWIFChanged: (privateKeys, basePrivateKeys) => dispatch(isOnlyWifChanged(privateKeys, basePrivateKeys)),
 	}),
-)(Permissions);
+)(Permissions));

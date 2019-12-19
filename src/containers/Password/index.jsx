@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { injectIntl } from 'react-intl';
 
 import { createDB } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/FormActions';
@@ -65,21 +66,21 @@ class Password extends React.Component {
 
 	render() {
 		const { repeatError, password, repeatPassword } = this.state;
-		const { loading, error } = this.props;
+		const { loading, error, intl } = this.props;
 
 		return (
 			<Form className="main-form pin-form">
 				<div className="form-info">
-					<h3>Welcome to Echo</h3>
+					<h3>{intl.formatMessage({ id: 'create_password_page.title' })}</h3>
 				</div>
-				<div className="form-info-description">Please, create password that will be used to unlock the app from this device. Echo Desktop Wallet does not store backups of the account password, so in case of losing your password you will need to reset it.</div>
+				<div className="form-info-description">{intl.formatMessage({ id: 'create_password_page.text' })}</div>
 				<div className="field-wrap">
 					<Form.Field className={classnames('error-wrap', { error })}>
-						<label htmlFor="password">Password</label>
+						<label htmlFor="password">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
 
 						<input
 							type="password"
-							placeholder="Create password"
+							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' })}
 							name="password"
 							className="ui input"
 							autoFocus
@@ -90,18 +91,18 @@ class Password extends React.Component {
 
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
-						<label htmlFor="repeatPassword">Confirm password</label>
+						<label htmlFor="repeatPassword">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
 
 						<input
 							type="password"
-							placeholder="Confirm password"
+							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_2.placeholder' })}
 							name="repeatPassword"
 							className="ui input"
 							autoFocus
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">Passwords do not match</span>
+						<span className="error-message">{intl.formatMessage({ id: 'create_password_page.repeat_error' })}</span>
 
 					</Form.Field>
 				</div>
@@ -109,7 +110,10 @@ class Password extends React.Component {
 					<Button
 						disabled={loading || !!error || !!repeatError || !password || !repeatPassword}
 						basic={!loading}
-						content={loading ? 'Creating...' : 'Create password'}
+						content={loading ?
+							intl.formatMessage({ id: 'create_password_page.button_loading_text' }) :
+							intl.formatMessage({ id: 'create_password_page.button_confirm_text' })
+						}
 						className={classnames('main-btn', { load: loading })}
 						onClick={() => this.onSubmit()}
 					/>
@@ -125,13 +129,14 @@ Password.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	createDB: PropTypes.func.isRequired,
 	clear: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 Password.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_PASSWORD_CREATE, 'loading']),
 		error: state.form.getIn([FORM_PASSWORD_CREATE, 'error']),
@@ -140,4 +145,4 @@ export default connect(
 		createDB: (password) => dispatch(createDB(password)),
 		clear: () => dispatch(setValue(FORM_PASSWORD_CREATE, 'error', null)),
 	}),
-)(Password);
+)(Password));

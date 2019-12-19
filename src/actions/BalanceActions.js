@@ -51,14 +51,32 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 		diff = diff.dividedBy(new BN(10).pow(nb.precision));
 
 		if (!oldBalance) {
-			return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
+			return toastSuccess([{
+				text: '',
+				postfix: 'toasts.success.receive.start',
+			}, {
+				text: `${diff.toString(10)} ${type}`,
+				postfix: 'toasts.success.receive.of',
+			}, {
+				text: nb.symbol,
+				postfix: '',
+			}]);
 		}
 
 		if (diff.lte(0)) {
 			return null;
 		}
 
-		return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
+		return toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.receive.start',
+		}, {
+			text: `${diff.toString(10)} ${type}`,
+			postfix: 'toasts.success.receive.of',
+		}, {
+			text: nb.symbol,
+			postfix: '',
+		}]);
 	});
 };
 
@@ -322,19 +340,19 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 	try {
 		if (!contractId) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.empty_contract_error'));
 			return;
 		}
 
 		if (!validators.isContractId(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
 		const contract = await Services.getEcho().api.getContract(contractId);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
@@ -343,7 +361,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const isErc20Token = checkErc20Contract(code);
 
 		if (!isErc20Token) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -351,7 +369,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -363,7 +381,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}
 
 		if (tokens[accountId].includes(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Token already exists'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.token_already_exist_error'));
 			return;
 		}
 
@@ -380,7 +398,10 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
-		toastSuccess('Token was successfully added');
+		toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.token_was_added',
+		}]);
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', formatError(err)));
 	} finally {
@@ -406,7 +427,10 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 
 		if (!symbol || !Number.isInteger(precision)) {
 			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-			toastError('Invalid ERC20 token');
+			toastError([{
+				text: '',
+				postfix: 'toasts.errors.token_invalid',
+			}]);
 			return;
 		}
 
@@ -419,7 +443,10 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 
 		if (tokens[accountId].includes(contractId)) {
 			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-			toastError('Token already exists');
+			toastError([{
+				text: '',
+				postfix: 'toasts.errors.token_already_exists',
+			}]);
 			return;
 		}
 
@@ -436,10 +463,16 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 		}));
 
 		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-		toastSuccess('Token was successfully added');
+		toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.token_was_added',
+		}]);
 	} catch (err) {
 		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-		toastError(formatError(err));
+		toastError([{
+			text: formatError(err),
+			postfix: '',
+		}]);
 	}
 };
 
@@ -647,7 +680,13 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
 	toastInfo(
-		`You have removed ${name} from watch list`,
+		[{
+			text: '',
+			postfix: 'toasts.info.remove_name.pt1',
+		}, {
+			text: name,
+			postfix: 'toasts.info.remove_name.pt2',
+		}],
 		() => dispatch(enableToken(contractId)),
 		() => {
 			const intervalId = setTimeout(() => dispatch(removeToken(contractId)), TIME_REMOVE_CONTRACT);

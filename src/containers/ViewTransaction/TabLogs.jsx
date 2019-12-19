@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 import Dropdown from '../../components/Dropdown';
 
@@ -11,7 +12,9 @@ class TabLogs extends React.Component {
 		return (
 			<React.Fragment key={key}>
 				<li key={`${item.data}topics`}>
-					<div className="col">Topics:</div>
+					<div className="col">
+						<FormattedMessage id="recent_activity_page.transaction.keys.topics" />
+					</div>
 					<div className="col">
 						{
 							item.log.map((topic, i) => {
@@ -38,7 +41,9 @@ class TabLogs extends React.Component {
 					</div>
 				</li>
 				<li key={`${item.data}data`}>
-					<div className="col data">Data:</div>
+					<div className="col data">
+						<FormattedMessage id="recent_activity_page.transaction.keys.data" />
+					</div>
 					<div className="col">
 						<div className="data-item">
 							<Dropdown

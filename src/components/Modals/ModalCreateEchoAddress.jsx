@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 
@@ -40,7 +41,7 @@ class ModalCreateEchoAddress extends React.Component {
 
 	render() {
 		const {
-			show, error, keyWeightWarn,
+			show, error, intl, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -56,29 +57,36 @@ class ModalCreateEchoAddress extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h2 className="modal-header-title">Create address name</h2>
+									<h2 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_create_echo_address.title' })}
+									</h2>
 								</div>
 								<form className="modal-body">
 									<div className="info-text">
-											You can use several addresses referring to one account for different targets.
-											Please create address name for a new one.
+										{intl.formatMessage({ id: 'modals.modal_create_echo_address.text' })}
 									</div>
 
 									<div className={classnames('field error-wrap', { error: !!error })}>
-										<label htmlFor="address">Address name</label>
+										<label htmlFor="address">
+											{intl.formatMessage({ id: 'modals.modal_create_echo_address.address_input.title' })}
+										</label>
 										<input
 											type="text"
-											placeholder="Address name"
+											placeholder={
+												intl.formatMessage({ id: 'modals.modal_create_echo_address.address_input.placeholder' })
+											}
 											name="address"
 											onChange={(e) => this.onChange(e)}
 											autoFocus
 										/>
 										{
-											error && <span className="error-message">{error}</span>
+											error ?
+												<span className="error-message">
+													{intl.formatMessage({ id: error })}
+												</span> : null
 										}
 										<span className="warning-message">
-												Warning: Please note, address names are visible
-												for blockchain network participants.
+											{intl.formatMessage({ id: 'modals.modal_create_echo_address.warning' })}
 										</span>
 									</div>
 									<div className="form-panel">
@@ -86,7 +94,7 @@ class ModalCreateEchoAddress extends React.Component {
 											type="submit"
 											className="main-btn"
 											onClick={() => this.onGenerateEchoAdress(submit)}
-											content="Generate address"
+											content={intl.formatMessage({ id: 'modals.modal_create_echo_address.generate_button_text' })}
 											disabled={keyWeightWarn}
 										/>
 									</div>
@@ -107,6 +115,7 @@ ModalCreateEchoAddress.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	generateEchoAddress: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
@@ -115,7 +124,7 @@ ModalCreateEchoAddress.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'show']),
 		error: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'error']),
@@ -126,4 +135,4 @@ export default connect(
 		generateEchoAddress: (label) => dispatch(generateEchoAddress(label)),
 		setError: (value) => dispatch(setError(MODAL_GENERATE_ECHO_ADDRESS, value)),
 	}),
-)(ModalCreateEchoAddress);
+)(ModalCreateEchoAddress));

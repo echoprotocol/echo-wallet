@@ -2,6 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { Popup, Dropdown, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import classnames from 'classnames';
 import AmountField from '../Fields/AmountField';
 import { ECHO_DOCS_LINK } from '../../constants/GlobalConstants';
@@ -72,9 +73,7 @@ class ContractBar extends React.Component {
 	renderAccuracyTrigger() {
 		return (
 			<div className="tooltip">
-				The option allows to interpret ECHO assets as ETH.
-				The amount will be automatically recalculated to the 1e18 precision.
-
+				<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_text" />
 				<a
 					href={ECHO_DOCS_LINK}
 					className="link"
@@ -82,7 +81,7 @@ class ContractBar extends React.Component {
 					rel="noopener noreferrer"
 					onClick={(e) => this.goToExternalLink(e, ECHO_DOCS_LINK)}
 				>
-					Read more
+					<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_link" />
 				</a>
 			</div>
 		);
@@ -93,11 +92,15 @@ class ContractBar extends React.Component {
 			searchText, options, loading,
 		} = this.state;
 		const {
-			assets, fees, form, keyWeightWarn,
+			assets, fees, form, intl, keyWeightWarn,
 		} = this.props;
+		const assetsPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.supported_assets.popup_text' });
+		const amountPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.deploying_amount.popup_text' });
 		return (
 			<div className="contract-bar">
-				<h3 className="contract-bar-title">Contract deploy parameters</h3>
+				<h3 className="contract-bar-title">
+					<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.title" />
+				</h3>
 				<ul className="params-list">
 					<li className="param-line">
 						<div className="param-key">
@@ -109,7 +112,7 @@ class ContractBar extends React.Component {
 								hoverable
 								style={{ width: 200 }}
 							/>
-							ETH Accuracy:
+							<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.title" />
 						</div>
 						<Toggle
 							onChange={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'ETHAccuracy', !form.get('ETHAccuracy'))}
@@ -119,24 +122,28 @@ class ContractBar extends React.Component {
 						<div className="param-key">
 							<Popup
 								trigger={<span className="icon-info" />}
-								content="You can specify assets to be supported by your contract."
+								content={assetsPopupInfo}
 								className="inner-tooltip"
 								position="bottom center"
 								style={{ width: 200 }}
 							/>
-							Supported assets:
+							<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.supported_assets.title" />
 						</div>
 						<div className="param-subline">
 							<div className="radio-list">
 								<Button
 									className={classnames('radio', { checked: form.get('supportedAssetRadio') === SUPPORTED_ASSET_ALL })}
 									onClick={() => this.onResetSupportedAsset()}
-									content="All"
+									content={
+										<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.supported_assets.all" />
+									}
 								/>
 								<Button
 									className={classnames('radio', { checked: form.get('supportedAssetRadio') === SUPPORTED_ASSET_CUSTOM })}
 									onClick={() => { this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'supportedAssetRadio', SUPPORTED_ASSET_CUSTOM); }}
-									content="Choose asset"
+									content={
+										<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.supported_assets.choose_asset" />
+									}
 								/>
 							</div>
 							{
@@ -158,7 +165,8 @@ class ContractBar extends React.Component {
 											noResultsMessage={searchText ? 'No results are found' : null}
 											onChange={(e, { value }) => this.onChangeAsset(value)}
 										/>
-										{form.get('supportedAsset').error && <span className="error-message">{form.get('supportedAsset').error}</span>}
+										{form.get('supportedAsset').error &&
+										<span className="error-message">{intl.formatMessage({ id: form.get('supportedAsset').error })}</span>}
 									</div>
 							}
 						</div>
@@ -167,12 +175,12 @@ class ContractBar extends React.Component {
 						<div className="param-key">
 							<Popup
 								trigger={<span className="icon-info" />}
-								content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+								content={amountPopupInfo}
 								className="inner-tooltip"
 								position="bottom center"
 								style={{ width: 200 }}
 							/>
-							Deploying amount:
+							<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.deploying_amount.title" />
 						</div>
 						<div className="field-wrap">
 							<AmountField
@@ -197,6 +205,7 @@ class ContractBar extends React.Component {
 								setDefaultAsset={() => {
 									this.props.setDefaultAsset(FORM_CREATE_CONTRACT_OPTIONS);
 								}}
+								intl={intl}
 							/>
 						</div>
 					</li>
@@ -207,7 +216,9 @@ class ContractBar extends React.Component {
 							<Button
 								type="button"
 								className="main-btn"
-								content="CREATE SMART CONTRACT"
+								content={
+									<FormattedMessage id="smart_contract_page.create_contract_page.button_text" />
+								}
 								onClick={submit}
 								disabled={form.get('compileLoading') || keyWeightWarn}
 							/>
@@ -231,8 +242,9 @@ ContractBar.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getAssetsList: PropTypes.func.isRequired,
 	createContract: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 
-export default ContractBar;
+export default injectIntl(ContractBar);

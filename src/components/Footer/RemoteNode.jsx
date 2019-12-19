@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Popup } from 'semantic-ui-react';
 
 import ProgressLine from '../ProgressLine';
 
 function RemoteNode(props) {
+	const popupText = props.intl.formatMessage({ id: 'footer.remote_node.popup_info' });
 	return (
 		<React.Fragment>
 			<div className="node-label">
 				<div className="node-title">
-					Remote Node
+					<FormattedMessage id="footer.remote_node.title" />
 				</div>
 				<div className="sync">
 					<div className="percent">
@@ -19,7 +21,7 @@ function RemoteNode(props) {
 					</div>
 					<Popup
 						trigger={<span className="icon-info" />}
-						content="You can specify the amount to be sent with contract creation. Leave blank if the constructor of your contract is not payable."
+						content={popupText}
 						className="inner-tooltip"
 						position="bottom center"
 						style={{ width: 200 }}
@@ -28,7 +30,7 @@ function RemoteNode(props) {
 			</div>
 			<div className="sync-progress">
 				<div className="sync-label">
-					{props.isNodePaused ? 'Sync is paused' : 'Network synchronization'}
+					{props.isNodePaused ? 'Sync is paused' : <FormattedMessage id="footer.remote_node.synchronization" />}
 				</div>
 				<ProgressLine value={props.value} />
 			</div>
@@ -39,6 +41,7 @@ function RemoteNode(props) {
 RemoteNode.propTypes = {
 	value: PropTypes.number,
 	isNodePaused: PropTypes.bool,
+	intl: PropTypes.any.isRequired,
 };
 
 RemoteNode.defaultProps = {
@@ -46,4 +49,4 @@ RemoteNode.defaultProps = {
 	isNodePaused: false,
 };
 
-export default RemoteNode;
+export default injectIntl(RemoteNode);

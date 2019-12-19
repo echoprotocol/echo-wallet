@@ -15,7 +15,7 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
  *  */
 export const amountInput = (form, value, currency, name) => (dispatch) => {
 	if (!value.match(/^[0-9]*[.,]?[0-9]*$/)) {
-		dispatch(setFormError(form, 'amount', 'Amount must contain only digits and dot'));
+		dispatch(setFormError(form, 'amount', 'errors.amount_errors.incorrect_input_error'));
 		return;
 	}
 
@@ -23,10 +23,11 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		dispatch(setFormError(
 			form,
 			'amount',
-			`Amount should be more than 0 (${currency.symbol} precision is ${currency.precision} symbols)`,
+			'errors.amount_errors.zero_amount_error',
 		));
 		return;
 	}
+
 
 	if (/\.|,/.test(value)) {
 		const [intPath, doublePath] = value.split(/\.|,/);

@@ -66,7 +66,7 @@ class AmountField extends React.Component {
 		this.setState({
 			timeout: setTimeout(() => {
 				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency
-				&& currency.id.startsWith(PREFIX_ASSET)) {
+					&& currency.id.startsWith(PREFIX_ASSET)) {
 					this.props.getTransferFee()
 						.then((fee) => fee && this.onFee(fee));
 				}
@@ -240,9 +240,9 @@ class AmountField extends React.Component {
 			assets, amount, form,
 			fee, isAvailableBalance,
 			fees, assetDropdown,
-			labelText, showAvailable,
+			showAvailable,
 			isDisplaySidechainNotification,
-			autoFocus,
+			autoFocus, intl,
 			activeCoinTypeTab,
 		} = this.props;
 
@@ -250,11 +250,10 @@ class AmountField extends React.Component {
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
 			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
-
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
-					{labelText}
+					{intl.formatMessage && intl.formatMessage({ id: 'amount_input.title' })}
 					<ul className="list-amount">
 						{fee && fee.value && amount.value &&
 							<li>
@@ -275,7 +274,7 @@ class AmountField extends React.Component {
 						{
 							showAvailable && (
 								<li>
-									Available:
+									{intl.formatMessage ? intl.formatMessage({ id: 'amount_input.available' }) : 'Available: '}
 									<span
 										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
 										role="button"
@@ -294,7 +293,7 @@ class AmountField extends React.Component {
 				</label>
 				<Input
 					type="text"
-					placeholder="Amount"
+					placeholder={intl.formatMessage ? intl.formatMessage({ id: 'amount_input.placeholder' }) : 'Amount'}
 					tabIndex="0"
 					action
 					className={classnames('amount-wrap action-wrap', { error: amount.error || fee.error }, { focused: this.state.amountFocus })}
@@ -323,7 +322,12 @@ class AmountField extends React.Component {
 					</div>
 					{
 						amount.error || fee.error ?
-							<span className="error-message">{amount.error || fee.error}</span> : null
+							<span className="error-message">
+								{
+									intl.formatMessage({ id: amount.error }) ||
+									intl.formatMessage({ id: fee.error })
+								}
+							</span> : null
 					}
 
 					{
@@ -339,17 +343,31 @@ class AmountField extends React.Component {
 							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
 							options={this.renderList('assets').concat(this.renderList('tokens'))}
-							noResultsMessage="No results are found"
+							noResultsMessage={
+								intl.formatMessage ?
+									intl.formatMessage({ id: 'amount_input.no_result_message' }) :
+									'No results are found'
+							}
 							className="assets-tokens-dropdown"
 							onClose={() => this.clearSearchText()}
 						/> : this.renderCurrencyLabel(currency)
 					}
 				</Input>
 				{
-					(!amount.error || !fee.error) && isDisplaySidechainNotification && activeCoinTypeTab ?
+					intl.formatMessage && isDisplaySidechainNotification
+					&& activeCoinTypeTab && (!amount.error || !fee.error) ?
 						<span className="warning-message">
-							Send {SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo} to <span className="special">Original Blockchain</span> to get {SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].original} or send it within ECHO Network.
-						</span> : null
+							{intl.formatMessage({ id: 'amount_input.warning_message_pt1' })}
+							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo}
+							{intl.formatMessage({ id: 'amount_input.warning_message_pt2' })}
+							<span className="special">
+								{intl.formatMessage({ id: 'amount_input.warning_message_pt3' })}
+							</span>
+							{intl.formatMessage({ id: 'amount_input.warning_message_pt4' })}
+							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].original}
+							{intl.formatMessage({ id: 'amount_input.warning_message_pt5' })}
+						</span>
+						: null
 				}
 
 
@@ -373,10 +391,10 @@ AmountField.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
+	intl: PropTypes.any,
 	setContractFees: PropTypes.func,
 	getTransferFee: PropTypes.func,
 	assetDropdown: PropTypes.bool,
-	labelText: PropTypes.string,
 	receive: PropTypes.bool,
 	showAvailable: PropTypes.bool,
 	isDisplaySidechainNotification: PropTypes.bool,
@@ -388,10 +406,10 @@ AmountField.propTypes = {
 AmountField.defaultProps = {
 	currency: null,
 	fee: {},
+	intl: {},
 	assets: null,
 	tokens: new List([]),
 	assetDropdown: true,
-	labelText: 'Amount',
 	receive: false,
 	setContractFees: () => Promise.resolve(),
 	getTransferFee: () => Promise.resolve(),

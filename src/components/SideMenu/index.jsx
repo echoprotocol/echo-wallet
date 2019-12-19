@@ -4,6 +4,7 @@ import { Menu, Sidebar, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
 
 import { toggleBar } from '../../actions/GlobalActions';
@@ -31,7 +32,9 @@ class SidebarMenu extends React.Component {
 					replace={INDEX_PATH === parsedLocation}
 				>
 					<span className="icon icon-menu-wallet" />
-					<span className="sidebar-nav-text">Wallet</span>
+					<span className="sidebar-nav-text">
+						<FormattedMessage id="wallet_page.title" />
+					</span>
 				</NavLink>
 			</li>
 		);
@@ -48,7 +51,9 @@ class SidebarMenu extends React.Component {
 					replace={ACTIVITY_PATH === parsedLocation}
 				>
 					<span className="icon icon-recent-activity" />
-					<span className="sidebar-nav-text">Recent Activity</span>
+					<span className="sidebar-nav-text">
+						<FormattedMessage id="recent_activity_page.title" />
+					</span>
 				</NavLink>
 			</li>
 		);
@@ -71,7 +76,9 @@ class SidebarMenu extends React.Component {
 					replace={CONTRACT_LIST_PATH === parsedLocation}
 				>
 					<span className="icon icon-contractSearch" />
-					<span className="sidebar-nav-text">Smart Contracts</span>
+					<span className="sidebar-nav-text">
+						<FormattedMessage id="smart_contract_page.title" />
+					</span>
 				</NavLink>
 			</li>
 		);
@@ -88,7 +95,9 @@ class SidebarMenu extends React.Component {
 					to={PERMISSIONS_PATH}
 				>
 					<span className="icon icon-permission" />
-					<span className="sidebar-nav-text">Backup and Permissions</span>
+					<span className="sidebar-nav-text">
+						<FormattedMessage id="backup_and_permissions_page.title" />
+					</span>
 				</NavLink>
 			</li>
 		);

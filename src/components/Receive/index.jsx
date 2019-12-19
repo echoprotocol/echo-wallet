@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 // import AccountField from '../Fields/AccountField';
 import EchoNetwork from './EchoNetwork';
@@ -46,7 +47,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', 0);
 						e.target.blur();
 					}}
-					content="ECHO NETWORK"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.echo.title" />
+					}
 				/>,
 				render: () => (
 					<EchoNetwork
@@ -78,7 +81,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EBTC);
 						e.target.blur();
 					}}
-					content="Bitcoin"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.btc.title" />
+					}
 				/>,
 				render: () => (
 					<Bitcoin
@@ -104,7 +109,9 @@ class Receive extends React.Component {
 						this.props.setGlobalValue('activeCoinTypeTab', STABLE_COINS.EETH);
 						e.target.blur();
 					}}
-					content="Ethereum"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.eth.title" />
+					}
 				/>,
 				render: () => (
 					<Ethereum

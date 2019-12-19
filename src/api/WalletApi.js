@@ -30,11 +30,11 @@ export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 	Services.getEcho().api.lookupAccounts(accountName, limit)
 		.then((result) => {
 			if (!result.find((i) => i[0] === accountName) && shouldExist) {
-				return 'Account is not found';
+				return 'errors.account_errors.account_not_found_error';
 			}
 
 			if (result.find((i) => i[0] === accountName) && !shouldExist) {
-				return 'Account name is already taken';
+				return 'errors.account_errors.name_already_taken_error';
 			}
 
 			return null;
@@ -84,18 +84,18 @@ const isRegistrar = async (echoInstance) => {
  */
 export const nodeRegisterValidate = async (echoInstance) => {
 	if (!echoInstance.isConnected) {
-		return 'Node is not connected';
+		return 'errors.node_errors.not_connect_error';
 	}
 
 	if (!echoInstance.api) {
-		return 'Api is not available';
+		return 'errors.node_errors.api_not_available';
 	}
 
 	const customNodeChainId = await echoInstance.api.getChainId();
 	const baseNodeChainId = await Services.getEcho().api.getChainId();
 
 	if (customNodeChainId !== baseNodeChainId) {
-		return 'Chain id is not correct. Check your network node';
+		return 'errors.node_errors.invalid_chacin_id_error';
 	}
 
 	const customNodeDynamic = await echoInstance.api.getDynamicGlobalProperties();
@@ -103,13 +103,13 @@ export const nodeRegisterValidate = async (echoInstance) => {
 	const diff = baseNodeDynamic.head_block_number - customNodeDynamic.head_block_number;
 
 	if (diff > CUSTOM_NODE_BLOCKS_MAX_DIFF) {
-		return 'Node is not synchronized';
+		return 'errors.node_errors.not_synchronized_error';
 	}
 
 	const accountId = await isRegistrar(echoInstance);
 
 	if (!accountId) {
-		return 'Node does not have registrar';
+		return 'errors.node_errors.doesnt_have_registrar_error';
 	}
 
 	return null;

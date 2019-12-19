@@ -35,7 +35,10 @@ class PrivateKeyScenario extends React.Component {
 		const key = await userStorage.getWIFByPublicKey(publicKey, { password });
 
 		if (!key) {
-			toastError('Private key was not imported in Echo Desktop Wallet');
+			toastError([{
+				text: '',
+				postfix: 'toasts.errors.private_key_error',
+			}]);
 			return;
 		}
 
