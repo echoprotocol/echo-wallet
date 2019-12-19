@@ -216,8 +216,17 @@ function createWindow() {
 				return;
 			}
 
+			const pauseNodeSync = () => {
+				mainWindow.webContents.send('pauseNodeSync');
+			};
+
 			lastNode = new EchoNode();
-			lastNode.start(data.networkOptions, data.accounts, data.chainToken).then(() => {
+			lastNode.start(
+				data.networkOptions,
+				data.accounts,
+				data.chainToken,
+				pauseNodeSync,
+			).then(() => {
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;
 				}

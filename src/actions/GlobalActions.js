@@ -52,7 +52,7 @@ import Services from '../services';
 import Listeners from '../services/Listeners';
 
 export const incomingConnectionsRequest = () => (dispatch) => {
-	let isFirst = localStorage.getItem('isFirstLaunch');
+	let isFirst = localStorage.getItem('is_first_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
 
@@ -60,7 +60,7 @@ export const incomingConnectionsRequest = () => (dispatch) => {
 		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
 	}
 
-	localStorage.setItem('isFirstLaunch', JSON.stringify(false));
+	localStorage.setItem('is_first_launch', JSON.stringify(false));
 };
 
 /**
@@ -77,7 +77,9 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 	const accounts =
 		await Promise.all(storageAccounts.map(({ name }) =>
 			Services.getEcho().remote.api.getAccountByName(name)));
-	await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
+	if (pass) {
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
+	}
 
 	const chainToken = await userStorage.getChainToken();
 
@@ -134,10 +136,6 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		const { id, name, options } = await Services.getEcho().api.getAccountByName(accountName);
 
-		// const { id, name, options } = await echo.api.getAccountByName(accountName);
-
-		// await echo.api.getFullAccounts([id, options.delegating_account]);
-
 		await Services.getEcho().api.getFullAccounts([id, options.delegating_account]);
 
 		const userStorage = Services.getUserStorage();
@@ -183,14 +181,12 @@ export const initAfterConnection = (network) => async (dispatch) => {
 		}
 
 		await Services.getEcho().api.getDynamicGlobalProperties(true);
-		// await echo.api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
 		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
-		// await echo.api.getObject(ECHO_ASSET_ID);
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);

@@ -61,6 +61,7 @@ class Network extends React.PureComponent {
 	getList(networks) {
 		// console.log('PLATFROM', PLATFROM);
 		const { name } = this.props.network;
+		const percent = parseInt(this.props.localNodePercent, 10);
 
 		return networks.map((i) => (
 			{
@@ -88,8 +89,8 @@ class Network extends React.PureComponent {
 						{ i.name === 'testnet' &&
 							<div className="node-info">
 								{
-									this.props.isNodeSyncing ? (
-										<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
+									percent < 100 ? (
+										<RemoteNode value={percent} />
 									) : (
 										<LocalNode />
 									)
@@ -116,6 +117,7 @@ class Network extends React.PureComponent {
 		const {
 			networks, network, loading, disconnected, warning,
 		} = this.props;
+		const percent = parseInt(this.props.localNodePercent, 10);
 		let options = [
 			{
 				value: 'Choose network',
@@ -154,18 +156,26 @@ class Network extends React.PureComponent {
 					<span className="description">
 						{ disconnected ? 'Disconnected:' : 'Network:' }
 					</span>
-					<span className="status connected">
-						<div className="ellipsis">{network.name}</div>
-					</span>
+					{percent < 100 ?
+						<React.Fragment>
+							<span className="status connected">
+								<div className="ellipsis">{network.name}</div>
+							</span>
 
-					<ProgressBar
-						size={20}
-						value={parseInt(this.props.localNodePercent, 10)}
-						disconnected={disconnected}
-						warning={warning}
-						openModal={this.props.openModal}
-						isNodeSyncing={this.props.isNodeSyncing}
-					/>
+							<ProgressBar
+								size={20}
+								value={percent}
+								disconnected={disconnected}
+								warning={warning}
+								openModal={this.props.openModal}
+								isNodeSyncing={this.props.isNodeSyncing}
+								isNodePaused={this.props.isNodePaused}
+							/>
+						</React.Fragment> :
+						<span className="status connected">
+							<div className="ellipsis">Local node</div>
+						</span>
+					}
 
 					<span className="pipeline-block">
 								Block
@@ -207,6 +217,7 @@ Network.propTypes = {
 	lastBlock: PropTypes.any.isRequired,
 	localNodePercent: PropTypes.any.isRequired,
 	isNodeSyncing: PropTypes.bool.isRequired,
+	isNodePaused: PropTypes.bool.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
 };
@@ -223,6 +234,7 @@ export default withRouter(connect(
 		networks: state.global.get('networks').toJS(),
 		localNodePercent: state.global.get('localNodePercent'),
 		isNodeSyncing: state.global.get('isNodeSyncing'),
+		isNodePaused: state.global.get('isNodePaused'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({

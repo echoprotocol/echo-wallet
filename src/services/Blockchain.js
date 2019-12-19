@@ -160,6 +160,10 @@ class Blockchain {
 
 					this.networkId = data.networkId;
 				});
+
+				ipcRenderer.on('pauseNodeSync', () => {
+					this.emitter.emit('setSyncOnPause', true);
+				});
 			}
 
 			await this.startCheckingRemote();

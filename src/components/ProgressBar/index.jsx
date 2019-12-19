@@ -15,17 +15,12 @@ import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
 import ModalAcceptRunningNode from '../Modals/ModalAcceptRunningNode';
 import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
 
-// import Services from '../../services';
 
 export default class ProgressBar extends PureComponent {
 
 	onPlay(e) {
 		e.preventDefault();
 		this.props.openModal(MODAL_ACCEPT_RUNNING_NODE);
-	}
-	onPause(e) {
-		e.preventDefault();
-		// Services.getEcho().stopNode();
 	}
 	getTailColor(disconnected, warning) {
 
@@ -113,29 +108,34 @@ export default class ProgressBar extends PureComponent {
 
 	renderPause() {
 		return (
-			<button tabIndex="-1" onClick={(e) => this.onPause(e)} className="action-node">
+			<button tabIndex="-1" onClick={(e) => this.onPlay(e)} className="action-node">
 				<img src={pauseNode} alt="pause node synchronization" />
 			</button>
 
 		);
 	}
 
-	render() {
-		const { isNodeSyncing } = this.props;
+	renderStatus() {
+		const { isNodeSyncing, isNodePaused } = this.props;
+		if (isNodePaused) {
+			return this.renderPause();
+		}
+		if (isNodeSyncing) {
+			return (
+				<div className="progress-wrap">
+					{this.renderProgress()}
+				</div>
+			);
+		}
+		return this.renderPlay();
+	}
 
+	render() {
 		return (
 			<React.Fragment>
 				<ModalAcceptRunningNode />
 				<ModalAcceptIncomingConnections />
-				{/* <div className="progress-wrap"> */}
-					{
-						isNodeSyncing ? this.renderProgress() : this.renderPlay()
-						// this.renderProgress()
-						// this.renderPlay()
-						// this.renderPause()
-					}
-
-				{/* </div> */}
+				{this.renderStatus()}
 			</React.Fragment>
 		);
 	}
@@ -149,6 +149,7 @@ ProgressBar.propTypes = {
 	warning: PropTypes.bool.isRequired,
 	openModal: PropTypes.func.isRequired,
 	isNodeSyncing: PropTypes.func.isRequired,
+	isNodePaused: PropTypes.func.isRequired,
 };
 
 ProgressBar.defaultProps = {

@@ -20,10 +20,12 @@ class Listeners {
 			}
 
 		};
+		this.setSyncOnPause = (value) => dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value }));
 
 		this.emitter.on('setIsConnected', this.setIsConnected);
 		this.emitter.on('setCurrentNode', this.setCurrentNode);
 		this.emitter.on('setLocalNodePercent', this.setLocalNodePercent);
+		this.emitter.on('setSyncOnPause', this.setSyncOnPause);
 
 	}
 

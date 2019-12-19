@@ -26,6 +26,7 @@ const DEFAULT_FIELDS = Map({
 	currentNode: '',
 	localNodePercent: 0,
 	isNodeSyncing: false,
+	isNodePaused: false,
 });
 
 export default createModule({
