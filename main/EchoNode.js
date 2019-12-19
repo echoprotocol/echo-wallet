@@ -20,9 +20,9 @@ class EchoNode {
 	 * @param {Array} accounts
 	 * @return {Promise.<*>}
 	 */
-	async start(params, accounts = [], chainToken) {
+	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		const execPath = process.env.NODE_ENV === 'production' ? joinPath(dirname(appRootDir.get()), 'bin') : joinPath(appRootDir.get(), 'resources', getPlatform(), 'bin');
+		const execPath = joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -81,7 +81,7 @@ class EchoNode {
 			}
 		}
 
-		const child = this.spawn(binPath, params, chainToken);
+		const child = this.spawn(binPath, params, chainToken, stopSyncing);
 
 		this.child = child;
 
@@ -149,9 +149,11 @@ class EchoNode {
 	 *
 	 * @param {String} binPath
 	 * @param {Object} opts
+	 * @param {Object} chainToken
+	 * @param {function} stopSyncing
 	 * @return {*}
 	 */
-	spawn(binPath, opts, chainToken) {
+	spawn(binPath, opts, chainToken, stopSyncing) {
 
 		const args = this.flags(opts);
 
@@ -201,6 +203,7 @@ class EchoNode {
 
 			child.once('error', () => {
 				child.started = false;
+				stopSyncing();
 				return reject();
 			});
 		});

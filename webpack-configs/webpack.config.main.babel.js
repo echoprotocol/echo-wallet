@@ -8,6 +8,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 import baseConfig from './webpack.config.base.babel';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
+import getPlatform from '../main/GetPlatform';
 
 CheckNodeEnv('production');
 export default merge.smart(baseConfig, {
@@ -37,7 +38,7 @@ export default merge.smart(baseConfig, {
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(['build']),
+		new CleanWebpackPlugin(['../build']),
 		new BundleAnalyzerPlugin({
 			analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
@@ -52,6 +53,29 @@ export default merge.smart(baseConfig, {
 			SOLC_LIST_URL: JSON.stringify(SOLC_LIST_URL),
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
+			NETWORKS: {
+				devnet: {
+					remote: {
+						name: JSON.stringify('Remote node'),
+						url: JSON.stringify('wss://devnet.echo-dev.io/ws'),
+					},
+					local: {
+						name: JSON.stringify('Local node'),
+						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
+					},
+				},
+				testnet: {
+					remote: {
+						name: JSON.stringify('Remote node'),
+						url: JSON.stringify('ws://testnet.echo-dev.io/ws'),
+					},
+					local: {
+						name: JSON.stringify('Local node'),
+						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
+					},
+				},
+			},
+			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 	],
 	node: {
@@ -59,5 +83,7 @@ export default merge.smart(baseConfig, {
 		net: 'empty',
 		tls: 'empty',
 		module: 'empty',
+		__dirname: false,
+		__filename: false,
 	},
 });

@@ -26,6 +26,10 @@ const DEFAULT_FIELDS = Map({
 	permissionLoading: false,
 	activePaymentTypeTab: 0,
 	activeCoinTypeTab: 0,
+	currentNode: '',
+	localNodePercent: 0,
+	isNodeSyncing: false,
+	isNodePaused: false,
 });
 
 export default createModule({

@@ -1,4 +1,4 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 import { List } from 'immutable';
 import random from 'crypto-random-string';
 
@@ -10,7 +10,7 @@ import {
 	setGlobalError,
 	saveWifToStorage,
 	updateStorage,
-	customNodeConnect,
+	customNodeConnect, startLocalNode,
 } from './GlobalActions';
 
 import {
@@ -80,7 +80,7 @@ const customParentAccount = () => async (dispatch, getState) => {
 			return null;
 		}
 
-		const sender = await echo.api.getAccountByName(account.value);
+		const sender = await Services.getEcho().api.getAccountByName(account.value);
 
 		if (!sender) {
 			dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'errors.account_errors.account_not_exsists_error'));
@@ -175,7 +175,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-			return AuthApi.registerAccount(echo.api, accountName, pubKey);
+			return AuthApi.registerAccount(Services.getEcho().api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
@@ -294,7 +294,8 @@ export const saveWIFAfterCreateAccount = ({
 		const network = getState().global.getIn(['network']).toJS();
 
 		const userStorage = Services.getUserStorage();
-		const account = await echo.api.getAccountByName(accountName);
+
+		const account = await Services.getEcho().api.getAccountByName(accountName);
 
 		if (!isWithoutWIFRegistr) {
 			await userStorage.addKey(Key.create(publicKey, generatedWIF, account.id, 'active'), { password });
@@ -306,6 +307,8 @@ export const saveWIFAfterCreateAccount = ({
 			network.name,
 			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
+
+		dispatch(startLocalNode());
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -397,7 +400,8 @@ export const authUser = ({
 		}
 
 		dispatch(toggleLoading(FORM_SIGN_IN, true));
-		const account = await echo.api.getAccountByName(accountName);
+
+		const account = await Services.getEcho().api.getAccountByName(accountName);
 
 		const key = unlockWallet(account, wif);
 
@@ -427,6 +431,8 @@ export const authUser = ({
 		if (hasWifWarning) {
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
+
+		dispatch(startLocalNode());
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));
@@ -447,7 +453,7 @@ export const authUser = ({
  */
 const getAccountsList = (accounts) => async (dispatch) => {
 
-	const asset = await echo.api.getObject(ECHO_ASSET_ID);
+	const asset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
 	accounts = accounts.map(async (acc) => {
 		const account = {
@@ -461,7 +467,8 @@ const getAccountsList = (accounts) => async (dispatch) => {
 		};
 
 		if (acc.balances && acc.balances[ECHO_ASSET_ID]) {
-			const stats = await echo.api.getObject(acc.balances[ECHO_ASSET_ID]);
+			const stats = await Services.getEcho().api.getObject(acc.balances[ECHO_ASSET_ID]);
+
 			account.balances.balance = stats.balance;
 		} else {
 			account.balances.balance = 0;
@@ -504,13 +511,14 @@ export const importAccount = ({ accountName, wif, password }) =>
 
 		try {
 
-			let [accountIDs] = await echo.api.getKeyReferences([active]);
+			let [accountIDs] = await Services.getEcho().api.getKeyReferences([active]);
+
 			if (!accountIDs.length) {
 				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
 				return;
 			}
 
-			const accounts = await echo.api.getFullAccounts(accountIDs);
+			const accounts = await Services.getEcho().api.getFullAccounts(accountIDs);
 
 			const publicKey = PrivateKey.fromWif(wif).toPublicKey().toString();
 			const storageKey = await Services.getUserStorage().getWIFByPublicKey(publicKey, { password });
@@ -532,7 +540,7 @@ export const importAccount = ({ accountName, wif, password }) =>
 				return;
 			}
 
-			const account = await echo.api.getObject(accountIDs[0]);
+			const account = await Services.getEcho().api.getObject(accountIDs[0]);
 
 			if (accountName && account.name !== accountName) {
 				dispatch(setFormError(FORM_SIGN_IN, 'wif', 'errors.keys_errors.invalid_wif_error'));
@@ -712,7 +720,7 @@ export const saveWifToDb = (
 };
 
 export const checkParentKeys = (accName) => async (dispatch, getState) => {
-	const accountId = (await echo.api.getAccountByName(accName)).id;
+	const accountId = (await Services.getEcho().api.getAccountByName(accName)).id;
 	const networkName = getState().global.getIn(['network', 'name']);
 	const isNotEnoughKeys = await dispatch(checkKeyWeightWarning(networkName, accountId));
 	dispatch(setFormValue(FORM_SIGN_UP_OPTIONS, 'registrarAccountKeyWarn', isNotEnoughKeys));

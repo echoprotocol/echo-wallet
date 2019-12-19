@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,13 +10,19 @@ import {
 import playNode from '../../assets/images/play-node.svg';
 import pauseNode from '../../assets/images/pause-node.svg';
 
-
 import RadialSeparators from './RadialSeparators';
+
+import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
+import ModalAcceptRunningNode from '../Modals/ModalAcceptRunningNode';
+import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
+import { isPlatformSupportNode } from '../../helpers/utils';
+
 
 export default class ProgressBar extends PureComponent {
 
 	onNodeAction(e) {
 		e.preventDefault();
+		this.props.openModal(MODAL_ACCEPT_RUNNING_NODE);
 	}
 
 	getTailColor(disconnected, warning) {
@@ -34,7 +41,7 @@ export default class ProgressBar extends PureComponent {
 		return '#4B6CC3';
 	}
 
-	getSeporatorColor(disconnected, warning) {
+	getSeparatorColor(disconnected, warning) {
 
 		if (disconnected) {
 			return 'rgb(246, 92, 92)';
@@ -78,7 +85,7 @@ export default class ProgressBar extends PureComponent {
 						<RadialSeparators
 							count={10}
 							style={{
-								background: this.getSeporatorColor(disconnected, warning),
+								background: this.getSeparatorColor(disconnected, warning),
 								width: '1px',
 								height: '4px',
 							}}
@@ -107,6 +114,7 @@ export default class ProgressBar extends PureComponent {
 	}
 
 	renderPause() {
+		const { value } = this.props;
 		return (
 			<React.Fragment>
 				<button
@@ -117,27 +125,37 @@ export default class ProgressBar extends PureComponent {
 					<img src={pauseNode} alt="pause node synchronization" />
 				</button>
 				<div className="percent">
-					32
+					{value}
 					<span className="symbol">%</span>
 				</div>
 			</React.Fragment>
-
-
 		);
 	}
 
+	renderStatus() {
+		const { isNodeSyncing, isNodePaused } = this.props;
+		if (isNodePaused) {
+			return this.renderPause();
+		}
+		if (isNodeSyncing) {
+			return this.renderProgress();
+		}
+		return this.renderPlay();
+	}
+
 	render() {
-
-
 		return (
-			<div className="progress-wrap">
+			<React.Fragment>
+				<ModalAcceptRunningNode />
+				{ isPlatformSupportNode() && <ModalAcceptIncomingConnections /> }
 				{
-					// this.renderProgress()
-					// this.renderPlay()
-					this.renderPause()
+					isPlatformSupportNode() && (
+						<div className="progress-wrap">
+							{this.renderStatus()}
+						</div>
+					)
 				}
-
-			</div>
+			</React.Fragment>
 		);
 	}
 
@@ -148,6 +166,9 @@ ProgressBar.propTypes = {
 	value: PropTypes.number,
 	disconnected: PropTypes.bool.isRequired,
 	warning: PropTypes.bool.isRequired,
+	openModal: PropTypes.func.isRequired,
+	isNodeSyncing: PropTypes.func.isRequired,
+	isNodePaused: PropTypes.func.isRequired,
 };
 
 ProgressBar.defaultProps = {

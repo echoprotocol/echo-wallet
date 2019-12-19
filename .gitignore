@@ -78,3 +78,4 @@ build/
 resources/mac/bin/*
 resources/linux/bin/*
 data
+dll/
