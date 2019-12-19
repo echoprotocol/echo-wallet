@@ -127,7 +127,7 @@ export default class ProgressBar extends PureComponent {
 			<React.Fragment>
 				<ModalAcceptRunningNode />
 				<ModalAcceptIncomingConnections />
-				<div className="progress-wrap">
+				{/* <div className="progress-wrap"> */}
 					{
 						isNodeSyncing ? this.renderProgress() : this.renderPlay()
 						// this.renderProgress()
@@ -135,7 +135,7 @@ export default class ProgressBar extends PureComponent {
 						// this.renderPause()
 					}
 
-				</div>
+				{/* </div> */}
 			</React.Fragment>
 		);
 	}

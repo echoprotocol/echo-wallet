@@ -14,7 +14,7 @@ import { NETWORKS_PATH } from '../../constants/RouterConstants';
 import ProgressBar from '../ProgressBar';
 import RemoteNode from './RemoteNode';
 import { openModal } from '../../actions/ModalActions';
-// import LocalNode from './LocalNode';
+import LocalNode from './LocalNode';
 
 
 class Network extends React.PureComponent {
@@ -86,8 +86,13 @@ class Network extends React.PureComponent {
 						</div>
 						{ i.name === 'testnet' &&
 							<div className="node-info">
-								{/* <LocalNode /> */}
-								<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
+								{
+									this.props.isNodeSyncing ? (
+										<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
+									) : (
+										<LocalNode />
+									)
+								}
 							</div>
 						}
 					</div>
