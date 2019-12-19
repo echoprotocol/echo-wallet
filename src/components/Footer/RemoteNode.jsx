@@ -28,7 +28,7 @@ function RemoteNode(props) {
 			</div>
 			<div className="sync-progress">
 				<div className="sync-label">
-					Network synchronization
+					{props.isNodePaused ? 'Sync is paused' : 'Network synchronization'}
 				</div>
 				<ProgressLine value={props.value} />
 			</div>
@@ -38,10 +38,12 @@ function RemoteNode(props) {
 
 RemoteNode.propTypes = {
 	value: PropTypes.number,
+	isNodePaused: PropTypes.bool,
 };
 
 RemoteNode.defaultProps = {
 	value: 0,
+	isNodePaused: false,
 };
 
 export default RemoteNode;

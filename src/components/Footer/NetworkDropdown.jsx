@@ -92,7 +92,7 @@ class Network extends React.PureComponent {
 								<div className="node-info">
 									{
 										percent < 100 ? (
-											<RemoteNode value={percent} />
+											<RemoteNode value={percent} isNodePaused={this.props.isNodePaused} />
 										) : (
 											<LocalNode />
 										)

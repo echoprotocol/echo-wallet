@@ -195,11 +195,9 @@ class EchoNode {
 					} else {
 						err = Error(`echo_node exited with code ${code}`);
 					}
-					stopSyncing();
 					return reject(err);
 				}
 
-				stopSyncing();
 				return resolve();
 			});
 
