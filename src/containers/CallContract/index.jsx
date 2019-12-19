@@ -27,7 +27,7 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees,
+			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -51,7 +51,9 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									<span className="error-message">{id.error}</span>
+									{
+										id.error && <span className="error-message">{id.error}</span>
+									}
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">Bytecode</label>
@@ -62,7 +64,9 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-									<span className="error-message">{bytecode.error}</span>
+									{
+										bytecode.error && <span className="error-message">{bytecode.error}</span>
+									}
 								</Form.Field>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
@@ -88,6 +92,7 @@ class AddContractComponent extends React.Component {
 									className="main-btn"
 									onClick={submit}
 									content="Call Contract"
+									disabled={keyWeightWarn}
 								/>
 							</div>
 						</Form>
@@ -118,6 +123,7 @@ AddContractComponent.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 AddContractComponent.defaultProps = {
@@ -139,6 +145,7 @@ export default connect(
 		fee: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'fee']),
 		currency: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'currency']),
 		isAvailableBalance: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'isAvailableBalance']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),

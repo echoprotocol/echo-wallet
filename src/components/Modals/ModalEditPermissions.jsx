@@ -1,6 +1,6 @@
 /* eslint-disable react/no-did-update-set-state */
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import FocusLock from 'react-focus-lock';
 
@@ -83,7 +83,7 @@ class ModalEditPermissions extends React.Component {
 					<div className="modal-header">
 						<h3 className="modal-header-title">Edit Mode Warning</h3>
 					</div>
-					<form className="modal-body">
+					<Form className="modal-body">
 						<div className="info-text">
 							Please, keep in mind that uncontrolled changes may lead to
 							loosing access to the wallet or restricting your actions within it.
@@ -126,7 +126,7 @@ class ModalEditPermissions extends React.Component {
 								{(agree && timerComplete) ? 'Go to edit mode' : 'READ PLEASE'}
 							</Button>
 						</div>
-					</form>
+					</Form>
 				</FocusLock>
 			</Modal>
 		);

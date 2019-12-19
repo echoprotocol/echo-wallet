@@ -1,5 +1,6 @@
 import { List } from 'immutable';
 import { CACHE_MAPS } from 'echojs-lib';
+import BN from 'bignumber.js';
 
 import Services from '../services';
 import { PERMISSION_TABLE } from '../constants/TableConstants';
@@ -345,7 +346,7 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 const isThresholdChanged = (permissionForm, permissionTable) => {
 	const role = 'active';
 	const threshold = permissionForm.getIn([role, 'threshold']);
-	return (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value);
+	return (threshold && !new BN(permissionTable.getIn([role, 'threshold'])).eq(threshold.value));
 };
 
 /**
@@ -370,14 +371,17 @@ const isActiveKeysChanged = (permissionForm, permissionTable) => {
 	const formKeys = permissionForm.getIn([role, 'keys']);
 	const tableKeys = permissionTable.getIn([role, 'keys']);
 
-	if (formKeys.size !== tableKeys.size) {
+	const formKeysWithoutRemoved = formKeys
+		.filter((fk) => !fk.get('remove'))
+		.map((fk) => ({
+			key: fk.get('key').value,
+			weight: fk.get('weight').value,
+		}));
+	if (formKeysWithoutRemoved.size !== tableKeys.size) {
 		return true;
 	}
-
-	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
-		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-		|| keyForm.get('remove')
-	));
+	return formKeysWithoutRemoved.some((keyForm) => (!tableKeys.some((keyTable) =>
+		keyTable.key === keyForm.key && new BN(keyTable.weight).eq(keyForm.weight))));
 };
 
 /**
@@ -607,7 +611,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			&& !dataChanged.active.threshold
 			&& !dataChanged.echoRand.key
 			&& (dataChanged.active.wif
-			|| dataChanged.echoRand.wif);
+				|| dataChanged.echoRand.wif);
 
 		if (
 			dataChanged.active.keys
@@ -690,3 +694,17 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 
 		return { validation: true, isWifChangingOnly };
 	};
+
+export const isOnlyWifChanged = (privateKeys, basePrivateKeys) => (dispatch, getState) => {
+	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
+	const permissionTable = getState().table.get(PERMISSION_TABLE);
+	const isActiveKeysChange = isActiveKeysChanged(permissionForm, permissionTable);
+	const isActiveAccountsChange = isActiveAccountsChanged(permissionForm, permissionTable);
+	const isThresholdChange = isThresholdChanged(permissionForm, permissionTable);
+	const isEchoRandKeysChange = isEchoRandKeysChanged(permissionForm, permissionTable);
+	const isActiveWifChange = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
+	const isEchoRandWifChange = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
+	const isOnlyWIFChanged = (isActiveWifChange || isEchoRandWifChange) &&
+		!(isActiveKeysChange || isActiveAccountsChange || isThresholdChange || isEchoRandKeysChange);
+	dispatch(setFormValue(FORM_PERMISSION_KEY, 'isOnlyWIFChanged', isOnlyWIFChanged));
+};

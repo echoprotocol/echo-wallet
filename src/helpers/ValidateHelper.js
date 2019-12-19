@@ -13,6 +13,21 @@ import { SIDECHAIN_ASSETS_DATA } from '../constants/SidechainConstants';
 
 const reg = /^(([\da-fA-F]){2})*$/;
 
+const protocolRegExpString = '((https|http|wss|ws):\\/\\/)?';
+const domainRegExpString = '(([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}'; // domain name
+const ipRegExpString = '(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])|' + // OR ip (v4) address
+'\\[(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\]'; // OR ip (v6) address
+
+const pathRegExpString = '(:([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?' + // port
+'(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+'(\\#[-a-z\\d_]*)?$'; // fragment locater
+
+const validateUrlMode = 'i';
+
+const ipRegExp = new RegExp(`^${protocolRegExpString}${ipRegExpString}${pathRegExpString}`, validateUrlMode);
+const domainRegExp = new RegExp(`^${protocolRegExpString}${domainRegExpString}${pathRegExpString}`, validateUrlMode);
+const urlRegex = new RegExp(`^(${protocolRegExpString}${domainRegExpString}|${ipRegExpString})${pathRegExpString}`, validateUrlMode);
+
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;
 const committeeMemberIdRegex = /^1\.5\.(0|[1-9]\d*)$/;
@@ -21,13 +36,11 @@ const accountAddressRegex = /^[a-fA-F0-9]{40}$/;
 /**
  * @method isAccountNameError
  * @param {String} value
- * @param {(null | Boolean)} allowShort
+ * @param {Boolean)} allowShort
+ * @param {Boolean)} allowExpensive
  * @returns {String}
  */
-const isAccountNameError = (value, allowShort) => {
-	if (allowShort == null) {
-		allowShort = false;
-	}
+const isAccountNameError = (value, allowExpensive = false) => {
 	let suffix = 'Account name should';
 	if (!value) {
 		return `${suffix} not be empty.`;
@@ -37,7 +50,7 @@ const isAccountNameError = (value, allowShort) => {
 		return `${suffix} be shorter then 63 symbols.`;
 	}
 
-	if (!(/[.\-0-9]/.test(value) || !value.match(/[aeiouy]/ig))) {
+	if (!allowExpensive && (!(/[.\-0-9]/.test(value) || !value.match(/[aeiouy]/ig)))) {
 		return `${suffix} contain digit, number, dash or consist only of consonants`;
 	}
 	if (/\./.test(value)) {
@@ -66,17 +79,16 @@ const isAccountNameError = (value, allowShort) => {
 
 /**
  * @method validateAccountName
- * @param {String} accountName
+ * @param {string} accountName
+ * @param {boolean} allowExpensive
  * @returns {(String | null)}
  */
-export const validateAccountName = (accountName) => {
+export const validateAccountName = (accountName, allowExpensive) => {
 	if (!accountName) { return 'Account name should not be empty'; }
 
-	if (isAccountNameError(accountName)) {
-		return isAccountNameError(accountName);
-	}
+	const accountNameError = isAccountNameError(accountName, allowExpensive);
 
-	return null;
+	return accountNameError || null;
 };
 
 /**
@@ -571,3 +583,6 @@ export const getSidechainTrxAsset = (id) => {
 	}
 };
 
+export const isUrlOrAddress = (v) => urlRegex.test(String(v));
+export const isIpAddress = (v) => ipRegExp.test(String(v));
+export const isDomainAddress = (v) => domainRegExp.test(String(v));

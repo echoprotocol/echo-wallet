@@ -1,26 +1,49 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import VerificationField from '../../components/Fields/VerificationField';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
+
 import DropdownIpUrl from '../../components/DropdownIpUrl';
+import ActionTooltip from '../../components/ActionTooltip';
 
-// import ActionTooltip from '../../components/ActionTooltip';
+function IpUrlPanel(props) {
 
-function IpUrlPanel() {
-
-	// const { loading, ipOrUrl } =  props;
-
+	const {
+		loading,
+		signupOptionsForm,
+		setValue,
+		setFormValue,
+		remoteRegistrationAddresses,
+		validateAndSetIpOrUrl,
+	} = props;
+	const ipOrUrl = signupOptionsForm.get('ipOrUrl');
 	return (
+
 		<React.Fragment>
 			<div className="register-info">
 				<p>Register a new account through a running node.</p>
 			</div>
-			<div className="field-wrap">
+			<div className={classnames('field error-wrap', { error: !!ipOrUrl.error })}>
 
 				<DropdownIpUrl
-					status="checked" // or error
+					status={signupOptionsForm.get('ipOrUrlStatus')}
+					loading={loading}
+					signupOptionsForm={signupOptionsForm}
+					remoteRegistrationAddresses={remoteRegistrationAddresses}
+					setFormValue={setFormValue}
+					setValue={setValue}
+					validateAndSetIpOrUrl={validateAndSetIpOrUrl}
 				/>
-				{/* <ActionTooltip /> */}
-
+				{
+					signupOptionsForm.get('showSaveAddressTooltip') && (
+						<ActionTooltip
+							onConfirm={props.saveRemoteAddress}
+							onDismiss={props.hideSaveAddressTooltip}
+						/>
+					)
+				}
+				{
+					ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span>
+				}
 			</div>
 		</React.Fragment>
 	);
@@ -29,9 +52,14 @@ function IpUrlPanel() {
 
 
 IpUrlPanel.propTypes = {
-	// loading: PropTypes.bool.isRequired,
-	// ipOrUrl: PropTypes.object.isRequired,
-	// setFormValue: PropTypes.func.isRequired,
+	loading: PropTypes.bool.isRequired,
+	setFormValue: PropTypes.func.isRequired,
+	setValue: PropTypes.func.isRequired,
+	saveRemoteAddress: PropTypes.func.isRequired,
+	hideSaveAddressTooltip: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
+	signupOptionsForm: PropTypes.object.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 };
 
 export default IpUrlPanel;

@@ -24,7 +24,8 @@ class Network {
      * @returns {Network}
      */
 	addKey(key) {
-		if (!this.keys.find(({ wif, type }) => wif === key.wif && type === key.type)) {
+		if (!this.keys.find(({ wif, type, accountId }) => wif === key.wif && type === key.type
+			&& accountId === key.accountId)) {
 			this.keys.push(key);
 		}
 		return this;
