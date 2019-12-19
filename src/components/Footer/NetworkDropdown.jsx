@@ -59,6 +59,7 @@ class Network extends React.PureComponent {
 	}
 
 	getList(networks) {
+		// console.log('PLATFROM', PLATFROM);
 		const { name } = this.props.network;
 
 		return networks.map((i) => (

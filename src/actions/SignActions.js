@@ -1,4 +1,4 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 
 import Services from '../services';
 

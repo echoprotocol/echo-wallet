@@ -1,4 +1,3 @@
-import echo from 'echojs-lib';
 import Services from '../services';
 
 export const updateAccountAddresses = () => async (dispatch, getState) => {
@@ -9,7 +8,6 @@ export const updateAccountAddresses = () => async (dispatch, getState) => {
 	}
 
 	await Services.getEcho().api.getAccountAddresses(activeUserId, 0, 100000);
-	// await echo.api.getAccountAddresses(activeUserId, 0, 100000);
 
 	return true;
 };
@@ -22,7 +20,6 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 	}
 
 	await Services.getEcho().api.getBtcAddress(activeUserId);
-	// await echo.api.getBtcAddress(activeUserId);
 
 	return true;
 };
@@ -34,6 +31,5 @@ export const getBtcAddress = () => async (dispatch, getState) => {
  */
 export const lookupAccountsList = async (name, limit = 15) => {
 	const list = await Services.getEcho().api.lookupAccounts(name, limit);
-	// const list = await echo.api.lookupAccounts(name, limit);
 	return list;
 };

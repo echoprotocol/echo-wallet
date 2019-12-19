@@ -1,4 +1,3 @@
-import echo from 'echojs-lib';
 import Services from '../services';
 
 export const getEthAddress = () => async (dispatch, getState) => {
@@ -9,10 +8,8 @@ export const getEthAddress = () => async (dispatch, getState) => {
 	}
 
 	await Services.getEcho().api.getEthAddress(activeUserId);
-	// await echo.api.getEthAddress(activeUserId);
 
 	await Services.getEcho().api.getFullAccounts([activeUserId]);
-	// await echo.api.getFullAccounts([activeUserId]);
 
 	return true;
 };

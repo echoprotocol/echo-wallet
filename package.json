@@ -89,6 +89,7 @@
     "solc": "^0.5.12",
     "terser-webpack-plugin": "^1.3.0",
     "uglifyjs-webpack-plugin": "^1.3.0",
+    "utf-8-validate": "^5.0.2",
     "utf8": "^3.0.0"
   },
   "devDependencies": {

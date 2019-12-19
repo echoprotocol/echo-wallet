@@ -23,8 +23,10 @@ class EchoNode {
 	async start(params, accounts = [], chainToken) {
 
 		const execPath = joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
+		console.log('execPath111', execPath);
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
+		console.log('binPath111', binPath);
 
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
 

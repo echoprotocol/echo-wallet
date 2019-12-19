@@ -1,4 +1,4 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 import { CUSTOM_NODE_BLOCKS_MAX_DIFF } from '../constants/GlobalConstants';
 
 import Services from '../services';

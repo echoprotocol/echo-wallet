@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 import BN from 'bignumber.js';
-import echo, { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
+import { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
 
 import Services from '../services';
 import {

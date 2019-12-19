@@ -52,6 +52,10 @@ export const setDefaultAsset = (form) => async (dispatch, getState) => {
 		return;
 	}
 
+	if (!Services.getEcho().api) {
+		return;
+	}
+
 	let defaultAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
 	const assets = getState().balance.get('assets');

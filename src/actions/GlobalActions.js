@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo, { Echo } from 'echojs-lib';
+import { Echo } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -221,7 +221,7 @@ export const initAfterConnection = (network) => async (dispatch) => {
 export const initNetworks = (store) => async (dispatch) => {
 	let current = localStorage.getItem('current_network');
 	if (!current) {
-		[current] = DEFAULT_NETWORK;
+		current = DEFAULT_NETWORK;
 		localStorage.setItem('current_network', JSON.stringify(current));
 	} else {
 		current = JSON.parse(current);

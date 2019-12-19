@@ -1,5 +1,4 @@
 import BN from 'bignumber.js';
-import echo from 'echojs-lib';
 
 import Services from '../services';
 

@@ -1,5 +1,5 @@
 import { Map, List, Set } from 'immutable';
-import echo, { validators } from 'echojs-lib';
+import { validators } from 'echojs-lib';
 import * as wrapper from 'solc/wrapper';
 import BN from 'bignumber.js';
 
