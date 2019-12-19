@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 class Toggle extends React.Component {
 
@@ -32,7 +33,9 @@ class Toggle extends React.Component {
 				{
 					label &&
 					<div className="toggle-label">
-						{checked ? 'On' : 'Off'}
+						{checked ?
+							<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.on" /> :
+							<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.off" />}
 					</div>
 				}
 			</div>

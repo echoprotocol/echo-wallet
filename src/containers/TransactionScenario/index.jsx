@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { injectIntl } from 'react-intl';
 
 import ModalUnlock from '../../components/Modals/ModalUnlock';
 import ModalApprove from '../../components/Modals/ModalDetails';
-
 import { MODAL_UNLOCK, MODAL_DETAILS, MODAL_WIPE } from '../../constants/ModalConstants';
 
 import { openModal, closeModal, setError } from '../../actions/ModalActions';
@@ -139,7 +139,7 @@ TransactionScenario.defaultProps = {
 	onSuccess: () => {},
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		operation: state.transaction.get('operation'),
 		showOptions: state.transaction.get('showOptions'),
@@ -154,4 +154,4 @@ export default connect(
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
 	}),
-)(TransactionScenario);
+)(TransactionScenario));

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Avatar from '../../components/Avatar';
 
@@ -72,7 +73,9 @@ class PartnerAccountPanel extends React.Component {
 
 	render() {
 		const { options } = this.state;
-		const { loading, signupOptionsForm, accounts } = this.props;
+		const {
+			loading, signupOptionsForm, accounts, intl,
+		} = this.props;
 
 		const registrarAccount = signupOptionsForm.get('registrarAccount');
 
@@ -80,13 +83,14 @@ class PartnerAccountPanel extends React.Component {
 			<React.Fragment>
 				<div className="register-info">
 					<p>
-						Register with an existing account.
-						The selected account will be charged fee for account creation.
+						<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.text" />
 					</p>
 				</div>
 				<div className={classnames('field-wrap error-wrap', { error: registrarAccount.error })}>
 					<div className="field ">
-						<label htmlFor="parentAccount" className="field-label">Parent account name</label>
+						<label htmlFor="parentAccount" className="field-label">
+							<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.dropdown.title" />
+						</label>
 						<div className="account-dropdown-wrap">
 							<Avatar accountName={registrarAccount.value} />
 							<Dropdown
@@ -98,22 +102,26 @@ class PartnerAccountPanel extends React.Component {
 								name="parentAccount"
 								text={registrarAccount.value || 'Parent account name'}
 								onSearchChange={(e, data) => this.accountSearchHandler(data)}
-								placeholder="Parent account"
+								placeholder={
+									<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.dropdown.placeholder" />
+								}
 								minCharacters={0}
 								noResultsMessage="No results are found"
 								onChange={(e, { value }) => this.onChangeAccount(value)}
 							/>
 						</div>
-						{registrarAccount.error && <span className="error-message">{registrarAccount.error}</span>}
+						{registrarAccount.error &&
+						<span className="error-message">{intl.formatMessage({ id: registrarAccount.error })}</span>}
 					</div>
 				</div>
 			</React.Fragment>
 		) : (
 			<div className="register-info">
-				<p>You don&apos;t have an account.</p>
 				<p>
-					You can generate a new account on your own.
-					Log in your another wallet account beforehand to do so
+					<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.dont_have_acc_text_pt1" />
+				</p>
+				<p>
+					<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.dont_have_acc_text_pt2" />
 				</p>
 			</div>
 		);
@@ -125,6 +133,7 @@ PartnerAccountPanel.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	signupOptionsForm: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 	accounts: PropTypes.array,
 };
 
@@ -132,4 +141,4 @@ PartnerAccountPanel.defaultProps = {
 	accounts: [],
 };
 
-export default PartnerAccountPanel;
+export default injectIntl(PartnerAccountPanel);

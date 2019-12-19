@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue, setValue } from '../../../actions/FormActions';
@@ -29,13 +30,17 @@ class TabCallContracts extends React.Component {
 	}
 
 	render() {
-		const { data, type, field } = this.props;
+		const {
+			data, type, field, intl,
+		} = this.props;
 		const formatedField = formatCallContractField(field);
-
+		const tag = formatedField.trim().toLowerCase().replace(' ', '_').concat('_field');
 		return (
 
 			<Form.Field className={classnames('error-wrap', { error: data.error })}>
-				<label htmlFor={formatedField}>{formatedField}</label>
+				<label htmlFor={formatedField}>
+					<FormattedMessage id={`smart_contract_page.contract_info.call_contract_tab.form.${tag}`} />
+				</label>
 
 				<input
 					placeholder={`${type.replace(/address/g, 'id')}`}
@@ -44,7 +49,7 @@ class TabCallContracts extends React.Component {
 					value={data.value}
 					onChange={(e) => this.onChange(e)}
 				/>
-				<span className="error-message">{data.error}</span>
+				{data.error && <span className="error-message">{intl.formatMessage({ id: data.error })}</span>}
 			</Form.Field>
 		);
 	}
@@ -58,9 +63,10 @@ TabCallContracts.propTypes = {
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state, ownProps) => {
 		const { field, type } = ownProps;
 		const data = state.form.getIn([FORM_CALL_CONTRACT, 'inputs', field]);
@@ -71,4 +77,4 @@ export default connect(
 		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
-)(TabCallContracts);
+)(TabCallContracts));

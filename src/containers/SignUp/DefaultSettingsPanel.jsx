@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 class DefaultSettingsPanel extends React.Component {
 
@@ -7,10 +8,10 @@ class DefaultSettingsPanel extends React.Component {
 		return (
 			<div className="register-info">
 				<p>
-					Register for free by public registrar.
+					<FormattedMessage id="sign_page.register_account_page.more_options_section.default_settings_section.text_pt1" />
 				</p>
 				<p>
-					Delegation to participate in the consensus will be granted to public registrar.
+					<FormattedMessage id="sign_page.register_account_page.more_options_section.default_settings_section.text_pt2" />
 				</p>
 			</div>
 		);

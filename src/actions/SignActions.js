@@ -51,7 +51,7 @@ const getSigners = async (account, keys, viewed = []) => {
 	}
 
 	if (weight < account.active.weight_threshold) {
-		throw new Error('Threshold is greater than the sum of keys weight available in Echo Desktop');
+		throw new Error('errors.sign_errors.not_enough_threshold_error');
 	}
 
 	return signers;

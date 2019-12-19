@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 
 import SelectMethod from './SelectMethod';
 import ButtonComponent from './ButtonComponent';
@@ -41,7 +42,7 @@ class TabCallContracts extends React.Component {
 
 	renderAmount(functionForm) {
 		const {
-			fee, tokens, amount, currency, assets, isAvailableBalance, fees,
+			fee, tokens, amount, currency, assets, isAvailableBalance, fees, intl,
 		} = this.props;
 		const payable = functionForm.get('payable');
 		const functionName = functionForm.get('functionName');
@@ -64,6 +65,7 @@ class TabCallContracts extends React.Component {
 					getTransferFee={this.props.getTransferFee}
 					setDefaultAsset={this.props.setDefaultAsset}
 					setContractFees={this.props.setContractFees}
+					intl={intl}
 				/>
 				:
 				<FeeField
@@ -121,6 +123,7 @@ TabCallContracts.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 TabCallContracts.defaultProps = {
@@ -128,7 +131,7 @@ TabCallContracts.defaultProps = {
 	fee: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		functionForm: state.form.get(FORM_CALL_CONTRACT),
 		functions: state.contract.get('functions'),
@@ -151,4 +154,4 @@ export default connect(
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_CALL_CONTRACT, value, currency, name)),
 	}),
-)(TabCallContracts);
+)(TabCallContracts));

@@ -3,6 +3,7 @@ import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
 import Avatar from '../Avatar';
@@ -24,6 +25,7 @@ class ModalDetails extends React.Component {
 	}
 
 	getInput(key, data) {
+		const { intl, operation } = this.props;
 		if (Array.isArray(data) && !data.length) {
 			return null;
 		}
@@ -31,15 +33,33 @@ class ModalDetails extends React.Component {
 		const isImageInput = ['from', 'to', 'sender'].includes(key);
 
 		return (
-			<div className="field" key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1').split('_').join(' ')}
-				</label>
-				<div className={classnames({ 'image-input': isImageInput })}>
-					{isImageInput && <Avatar accountName={data} />}
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
+			key === 'operation' ?
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: 'modals.modal_details.show_options.operation_title' })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input
+							type="text"
+							name="Fee"
+							disabled
+							className="ui input"
+							value={
+								intl.formatMessage({ id: `operations.${operation}` })
+							}
+						/>
+					</div>
+				</div> :
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: `modals.modal_details.show_options.${operation}.${key}` })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input type="text" name="Fee" disabled className="ui input" value={data} />
+					</div>
 				</div>
-			</div>
 		);
 	}
 
@@ -66,7 +86,6 @@ class ModalDetails extends React.Component {
 		const { operation, showOptions } = this.props;
 
 		const formatedOptions = getTransactionDetails(operation, showOptions.toJS());
-
 		return Object.entries(formatedOptions).map(([key, value]) => {
 			if (value.field === 'area') {
 				return this.getArea(key, value.data);
@@ -75,13 +94,14 @@ class ModalDetails extends React.Component {
 			if (['active', 'activeAccounts', 'activeKeys'].includes(key)) {
 				return this.getPermissions(key, value.data);
 			}
-
 			return this.getInput(key, value.data);
 		});
 	}
 
 	render() {
-		const { showOptions, show, disabled } = this.props;
+		const {
+			showOptions, show, disabled, intl,
+		} = this.props;
 
 		return (
 			<Modal className="confirm-transaction" open={show}>
@@ -91,18 +111,20 @@ class ModalDetails extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h2 className="modal-header-title">Confirm transaction</h2>
+						<h2 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_details.title' })}
+						</h2>
 					</div>
 					<div className="modal-body">
 						<form className="form main-form">
 							<div className="field-wrap">
-								{ showOptions ? this.renderOptions() : null }
+								{showOptions ? this.renderOptions() : null}
 							</div>
 							<div className="form-panel">
 								<Button
 									className="main-btn"
 									onClick={() => this.onClose()}
-									content="Cancel"
+									content={intl.formatMessage({ id: 'modals.modal_details.close_button_text' })}
 								/>
 								<Button
 									autoFocus
@@ -110,7 +132,7 @@ class ModalDetails extends React.Component {
 									className="main-btn"
 									onClick={() => this.onConfirm()}
 									disabled={disabled}
-									content="Confirm"
+									content={intl.formatMessage({ id: 'modals.modal_details.confirm_button_text' })}
 								/>
 							</div>
 						</form>
@@ -129,6 +151,7 @@ ModalDetails.propTypes = {
 	operation: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	send: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalDetails.defaultProps = {
@@ -138,4 +161,4 @@ ModalDetails.defaultProps = {
 	operation: '',
 };
 
-export default ModalDetails;
+export default injectIntl(ModalDetails);

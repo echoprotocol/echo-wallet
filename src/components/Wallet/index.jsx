@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tab } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
@@ -37,7 +38,9 @@ class Wallet extends React.Component {
 						this.props.setGlobalValue('activePaymentTypeTab', 0);
 						e.target.blur();
 					}}
-					content="CREATE PAYMENT"
+					content={
+						<FormattedMessage id="wallet_page.create_payment.title" />
+					}
 				/>,
 				render: () => (
 					<div className="send-wrap">
@@ -84,7 +87,9 @@ class Wallet extends React.Component {
 						this.props.setGlobalValue('activePaymentTypeTab', 1);
 						e.target.blur();
 					}}
-					content="RECEIVE PAYMENT"
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.title" />
+					}
 				/>,
 				render: () => (
 					<div className="send-wrap">
@@ -131,12 +136,16 @@ class Wallet extends React.Component {
 			<div className="page-wrap">
 				<div className="balance-wrap">
 					<div className="balance-title-row">
-						<div className="balance-title">Balances</div>
+						<div className="balance-title">
+							<FormattedMessage id="wallet_page.balances.title" />
+						</div>
 						<Button
 							basic
 							onClick={() => this.props.openModal(MODAL_TOKENS)}
 							size="tiny"
-							content="Watch Tokens"
+							content={
+								<FormattedMessage id="wallet_page.balances.add_erc20_token_text" />
+							}
 							className="main-btn"
 						/>
 					</div>
@@ -218,7 +227,7 @@ Wallet.propTypes = {
 	accountId: PropTypes.string.isRequired,
 	subjectTransferType: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	openModal: PropTypes.func.isRequired,
 	removeToken: PropTypes.func.isRequired,
 	setAsset: PropTypes.func.isRequired,
@@ -255,7 +264,7 @@ Wallet.defaultProps = {
 	sidechainAssets: null,
 	currency: null,
 	btcAddress: null,
-	additionalAccountInfo: '',
+	additionalAccountInfo: null,
 };
 
 export default Wallet;

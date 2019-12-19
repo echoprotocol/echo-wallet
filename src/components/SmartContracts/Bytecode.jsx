@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_CREATE_CONTRACT_BYTECODE } from '../../constants/FormConstants';
 
@@ -20,55 +21,67 @@ class Bytecode extends React.Component {
 	}
 
 	render() {
-		const { form } = this.props;
+		const { form, intl } = this.props;
 
 		const bytecode = form.get('bytecode');
 		const name = form.get('name');
 		const abi = form.get('abi');
+		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.bytecode.input_bytecode.placeholder' });
+		const ABIPlaceholder = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.bytecode.input_abi.placeholder' });
+		const namePlaceholder = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.bytecode.input_name.placeholder' });
 
 		return (
 			<React.Fragment>
 				<Form.Field className={classnames('error-wrap', { error: !!bytecode.error })}>
-					<label htmlFor="bytecode">Bytecode</label>
+					<label htmlFor="bytecode">
+						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_bytecode.title" />
+					</label>
 					<textarea
 						type="text"
-						placeholder="Bytecode"
+						placeholder={bytecodePlaceholder}
 						name="bytecode"
 						className="input"
 						value={bytecode.value}
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-					{ bytecode.error && <span className="error-message">{bytecode.error}</span> }
+					{ bytecode.error &&
+					<span className="error-message">{intl.formatMessage({ id: bytecode.error })}</span> }
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
-						ABI
-						<span className="label-info">(If you insert ABI, contract will add to watchlist)</span>
-						<span className="label-info right">(optional)</span>
+						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt1" />
+						<span className="label-info">
+							<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt2" />
+						</span>
+						<span className="label-info right">
+							<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt3" />
+						</span>
 					</label>
 					<textarea
 						type="text"
-						placeholder="ABI"
+						placeholder={ABIPlaceholder}
 						name="abi"
 						className="input"
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-					{ abi.error && <span className="error-message">{abi.error}</span> }
+					{ abi.error &&
+					<span className="error-message">{intl.formatMessage({ id: abi.error })}</span> }
 				</Form.Field>
 				<div className={classnames('error-wrap', { error: !!name.error })}>
 					<div className="action-wrap">
 						<Form.Field
 							label="Contract Name"
-							placeholder="Contract Name"
+							placeholder={namePlaceholder}
 							control="input"
 							name="name"
 							value={name.value}
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					{ name.error && <span className="error-message">{name.error}</span> }
+					{ name.error &&
+					<span className="error-message">{intl.formatMessage({ id: name.error })}</span> }
 				</div>
 			</React.Fragment>
 		);
@@ -79,7 +92,8 @@ class Bytecode extends React.Component {
 Bytecode.propTypes = {
 	form: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 };
 
-export default Bytecode;
+export default injectIntl(Bytecode);

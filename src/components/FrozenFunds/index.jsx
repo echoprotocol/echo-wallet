@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 import Assets from './AssetsComponent';
 import Transfer from './Transfer';
@@ -17,7 +18,9 @@ class FrozenFunds extends React.Component {
 			return (
 				<div className="sub-header">
 					<span className="icon-frozen-funds" />
-					<span>Total Frozen Amount:</span>
+					<span>
+						<FormattedMessage id="wallet_page.frozen_funds.total_sum_text" />
+					</span>
 					<div className="balance">
 						<span>{totalFrozenFunds}</span>
 						<span>ECHO</span>
@@ -41,9 +44,7 @@ class FrozenFunds extends React.Component {
 				<div className="page-wrap frozen">
 					<div className="balance-wrap">
 						<div className="frozen-about">
-							The sum you freeze will affect the reward for participating
-							in blocks creation when re-calculated with the coefficient
-							(the longer the period, the bigger reward you receive).
+							<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.description" />
 						</div>
 						<div className="balance-scroll">
 							<Assets

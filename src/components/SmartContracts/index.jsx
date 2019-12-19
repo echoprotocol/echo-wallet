@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Button, Form } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 import { SOURCE_CODE_MODE, BYTECODE_MODE } from '../../constants/ContractsConstants';
 
@@ -41,18 +42,24 @@ class SmartContracts extends React.Component {
 		return (
 			<Form className="page-wrap">
 				<div className="create-contract">
-					<h2 className="create-contract-title">Create Smart Contract</h2>
+					<h2 className="create-contract-title">
+						<FormattedMessage id="smart_contract_page.create_contract_page.title" />
+					</h2>
 					<div className="radio-list">
 						<Button
 							className={classnames('radio', { checked: formOptions.get('contractMode') === SOURCE_CODE_MODE })}
 							onClick={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'contractMode', SOURCE_CODE_MODE)}
-							content="Source code"
+							content={
+								<FormattedMessage id="smart_contract_page.create_contract_page.code_type_selectors.source_code" />
+							}
 							disabled={formSourceCode.get('compileLoading')}
 						/>
 						<Button
 							className={classnames('radio', { checked: formOptions.get('contractMode') === BYTECODE_MODE })}
 							onClick={() => this.props.setValue(FORM_CREATE_CONTRACT_OPTIONS, 'contractMode', BYTECODE_MODE)}
-							content="Bytecode"
+							content={
+								<FormattedMessage id="smart_contract_page.create_contract_page.code_type_selectors.bytecode" />
+							}
 							disabled={formSourceCode.get('compileLoading')}
 						/>
 					</div>

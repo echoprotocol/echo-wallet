@@ -71,6 +71,7 @@
     "react-dom": "^16.5.2",
     "react-focus-lock": "^2.2.1",
     "react-hot-loader": "^4.3.10",
+    "react-intl": "^3.9.1",
     "react-lottie": "^1.2.3",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
