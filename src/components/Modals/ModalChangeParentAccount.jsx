@@ -118,34 +118,6 @@ class ModalChangeDelegate extends React.Component {
 			<TransactionScenario
 				handleTransaction={() => this.props.changeDelegate(delegate && delegate.value)}
 			>
-<<<<<<< HEAD
-				<button
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-				/>
-				<div className="modal-header">
-					<h2 className="modal-header-title">Change delegate</h2>
-				</div>
-				<Form className="modal-body">
-					<div className="field-wrap">
-						<div className="field">
-							<label htmlFor="current-account">Current Account</label>
-							<div className="image-input">
-								<Avatar accountName={currentAccountName} />
-								<input
-									type="text"
-									name="current-account"
-									disabled
-									className="ui input"
-									value={currentAccountName}
-								/>
-							</div>
-						</div>
-						<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
-							<div className="field">
-								<label htmlFor="parentAccount" className="field-label">Delegated to</label>
-								<div className="account-dropdown-wrap">
-=======
 				{
 					(submit) => (
 						<Modal
@@ -161,7 +133,7 @@ class ModalChangeDelegate extends React.Component {
 									{intl.formatMessage({ id: 'modals.modal_change_parent_account.title' })}
 								</h2>
 							</div>
-							<div className="modal-body">
+							<Form className="modal-body">
 								<div className="field-wrap">
 									<Form.Field>
 										<label htmlFor="current-account">
@@ -203,13 +175,15 @@ class ModalChangeDelegate extends React.Component {
 													onChange={(e, { value }) => this.onChangeAccount(value)}
 												/>
 											</div>
-											{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
+											<ErrorMessage
+												show={!!delegateObject.error}
+												value={delegateObject.error}
+											/>
 										</div>
 									</div>
 								</div>
 								<div className="form-panel">
 
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									{
 										<Button
 											type="submit"
@@ -221,39 +195,10 @@ class ModalChangeDelegate extends React.Component {
 									}
 
 								</div>
-<<<<<<< HEAD
-								<ErrorMessage
-									show={!!delegateObject.error}
-									value={delegateObject.error}
-								/>
-							</div>
-						</div>
-					</div>
-					<div className="form-panel">
-						<TransactionScenario
-							handleTransaction={() => this.props.changeDelegate(delegate && delegate.value)}
-						>
-							{
-								(submit) => (
-									<Button
-										type="submit"
-										className="main-btn"
-										content="Confirm"
-										onClick={submit}
-										disabled={loading || !delegate}
-									/>
-								)
-							}
-						</TransactionScenario>
-					</div>
-				</Form>
-			</Modal>
-=======
-							</div>
+							</Form>
 						</Modal>)
 				}
 			</TransactionScenario>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 		);
 	}
 

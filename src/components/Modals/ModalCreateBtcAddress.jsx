@@ -82,20 +82,10 @@ class ModalCreateBtcAddress extends React.Component {
 											onChange={(e) => this.onChange(e)}
 											autoFocus
 										/>
-<<<<<<< HEAD
 										<ErrorMessage
 											show={!!error}
-											value={error}
+											value={error && intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
 										/>
-=======
-										{
-											<span className="error-message">
-												{
-													error ? intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' }) : null
-												}
-											</span>
-										}
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 										<span className="warning-message">
 											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
 										</span>

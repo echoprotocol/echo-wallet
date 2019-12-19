@@ -85,13 +85,8 @@ class SignIn extends React.Component {
 							disabled={loading}
 						>
 							<span className="icon-back" />
-<<<<<<< HEAD
-							back
-						</button>
-=======
 							<FormattedMessage id="sign_page.back_button_text" />
-						</button> : null
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
+						</button>
 					}
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>

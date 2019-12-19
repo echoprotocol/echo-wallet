@@ -79,15 +79,10 @@ class EditModeTableRow extends React.Component {
 						{this.renderType(type)}
 						{
 							keyRole === 'active' && (
-<<<<<<< HEAD
-								<div className={classnames('field error-wrap weight-field', { error: weight.error })}>
-									<label htmlFor="weight">Weight</label>
-=======
 								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
 									<label htmlFor="weight">
 										<FormattedMessage id="backup_and_permissions_page.edit_mode.weight_input.title" />
 									</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									<input
 										type="text"
 										placeholder={weightPlaceholder}
@@ -96,17 +91,11 @@ class EditModeTableRow extends React.Component {
 										value={weight.value}
 										onChange={setWeight}
 									/>
-<<<<<<< HEAD
 									<ErrorMessage
 										show={!!weight.error}
-										value={weight.error}
+										value={intl.formatMessage({ id: weight.error })}
 									/>
-								</div>
-=======
-									{weight.error &&
-									<span className="error-message">{intl.formatMessage({ id: weight.error })}</span>}
 								</Form.Field>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 							)
 						}
 					</div>

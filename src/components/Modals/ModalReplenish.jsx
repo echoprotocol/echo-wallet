@@ -45,11 +45,7 @@ class ModalToWhitelist extends React.Component {
 
 	render() {
 		const {
-<<<<<<< HEAD
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees,
-=======
 			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl, error,
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 		} = this.props;
 
 		return (
@@ -69,82 +65,51 @@ class ModalToWhitelist extends React.Component {
 										{intl.formatMessage({ id: 'modals.modal_replenish.title' })}
 									</h3>
 								</div>
-<<<<<<< HEAD
 								<Form className="main-form modal-body">
 									<div className="field-wrap">
 
 										{
-											activeAccount &&
-											<AccountField
-												subject="from"
-												field={{
-													value: activeAccount.get('name'),
-													checked: true,
-												}}
-												avatarName={activeAccount.get('name')}
-												setIn={() => {
-												}}
-												getTransferFee={() => {
-=======
-								<div className="modal-body">
-									<Form className="main-form">
-										<div className="field-wrap">
+											activeAccount ?
+												<AccountField
+													subject="from"
+													avatarName={activeAccount.get('name')}
+													setIn={() => { }}
+													getTransferFee={() => {}}
+													setContractFees={() => {}}
+													setValue={() => {}}
+													disabled
+													intl={intl}
+													placeholder={
+														intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
+													}
+													label={
+														intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })
+													}
+													field={{
+														value: activeAccount.get('name'),
+														checked: true,
+													}}
+												/> : null
+										}
 
-											{
-												activeAccount ?
-													<AccountField
-														subject="from"
-														placeholder={
-															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
-														}
-														label={
-															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })
-														}
-														field={{
-															value: activeAccount.get('name'),
-															checked: true,
-														}}
-														avatarName={activeAccount.get('name')}
-														setIn={() => {
-														}}
-														getTransferFee={() => {
-														}}
-														setContractFees={() => {
-														}}
-														setValue={() => {
-														}}
-														disabled
-														intl={intl}
-													/> : null
-											}
-
-											<AmountField
-												fees={fees}
-												form={FORM_REPLENISH}
-												fee={fee}
-												assets={assets}
-												amount={{
-													...amount,
-													error: error ? intl.formatMessage({ id: error }) : '',
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
-												}}
-												setContractFees={() => {
-												}}
-<<<<<<< HEAD
-												setValue={() => {
-												}}
-												disabled
-=======
-												setFormError={this.props.setFormError}
-												setFormValue={this.props.setFormValue}
-												setValue={this.props.setValue}
-												setDefaultAsset={this.props.setDefaultAsset}
-												getTransferFee={this.props.getTransactionFee}
-												setContractFees={() => { }}
-												autoFocus
-												intl={intl}
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
-											/>
+										<AmountField
+											fees={fees}
+											form={FORM_REPLENISH}
+											fee={fee}
+											assets={assets}
+											amount={{
+												...amount,
+												error: error ? intl.formatMessage({ id: error }) : '',
+											}}
+											setContractFees={() => {}}
+											setFormError={this.props.setFormError}
+											setFormValue={this.props.setFormValue}
+											setValue={this.props.setValue}
+											setDefaultAsset={this.props.setDefaultAsset}
+											getTransferFee={this.props.getTransactionFee}
+											autoFocus
+											intl={intl}
+										/>
 										}
 										<AmountField
 											fees={fees}
@@ -166,28 +131,15 @@ class ModalToWhitelist extends React.Component {
 										/>
 									</div>
 
-<<<<<<< HEAD
 									<div className="form-panel">
 										<Button
 											className="main-btn"
-											content="Send"
+											content={intl.formatMessage({ id: 'modals.modal_replenish.confirm_button_text' })}
 											type="submit"
 											onClick={() => this.onSend(submit)}
 										/>
 									</div>
 								</Form>
-=======
-										<div className="form-panel">
-											<Button
-												className="main-btn"
-												content={intl.formatMessage({ id: 'modals.modal_replenish.confirm_button_text' })}
-												type="submit"
-												onClick={() => this.onSend(submit)}
-											/>
-										</div>
-									</Form>
-								</div>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 							</FocusLock>
 						</Modal>
 					)

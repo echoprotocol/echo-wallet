@@ -67,7 +67,6 @@ class ModalLogout extends React.Component {
 		return (
 			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
-<<<<<<< HEAD
 					<button
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
@@ -76,69 +75,26 @@ class ModalLogout extends React.Component {
 						<h2 className="modal-header-title">
 							Confirm logout
 						</h2>
-=======
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-body">
-							<Form className="main-form">
-								<div className="form-info">
-									<h3>{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}</h3>
-								</div>
-								{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
-								<div className="field-wrap">
-									<PasswordInput
-										errorMessage={error ? intl.formatMessage({ id: error }) : ''}
-										inputLabel={
-											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
-										}
-										inputPlaceholder={
-											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.placeholder' })
-										}
-										inputName="password"
-										value={password}
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-								</div>
-								<div className="form-panel">
-									<a
-										className="action-link"
-										role="button"
-										onClick={(e) => this.onForgot(e)}
-										onKeyPress={(e) => this.onForgot(e)}
-										tabIndex="0"
-									>
-										{intl.formatMessage({ id: 'modals.modal_confirm_logout.forgot_password_link' })}
-									</a>
-									<Button
-										className="main-btn"
-										type="button"
-										onClick={() => this.onClose()}
-										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.close_button_text' })}
-									/>
-									<Button
-										type="submit"
-										className="main-btn"
-										onClick={() => this.onConfirm()}
-										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.confirm_button_text' })}
-									/>
-								</div>
-							</Form>
-						</div>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					</div>
-					<Form className="main-form modal-body">
-						<div className="info-text">
-							You will be signed out of your account.
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<Form className="main-form">
+
+						<div className="form-info">
+							<h3>{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}</h3>
 						</div>
+						{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
 						<div className="field-wrap">
 							<PasswordInput
-								errorMessage={error}
-								inputLabel="Password"
-								inputPlaceholder="Password"
+								errorMessage={error ? intl.formatMessage({ id: error }) : ''}
+								inputLabel={
+									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
+								}
+								inputPlaceholder={
+									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.placeholder' })
+								}
 								inputName="password"
 								value={password}
 								onChange={(e) => this.onChange(e)}
@@ -153,19 +109,19 @@ class ModalLogout extends React.Component {
 								onKeyPress={(e) => this.onForgot(e)}
 								tabIndex="0"
 							>
-								Forgot password?
+								{intl.formatMessage({ id: 'modals.modal_confirm_logout.forgot_password_link' })}
 							</a>
 							<Button
 								className="main-btn"
 								type="button"
 								onClick={() => this.onClose()}
-								content="Cancel"
+								content={intl.formatMessage({ id: 'modals.modal_confirm_logout.close_button_text' })}
 							/>
 							<Button
 								type="submit"
 								className="main-btn"
 								onClick={() => this.onConfirm()}
-								content="Confirm"
+								content={intl.formatMessage({ id: 'modals.modal_confirm_logout.confirm_button_text' })}
 							/>
 						</div>
 					</Form>

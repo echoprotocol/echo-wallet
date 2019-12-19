@@ -54,15 +54,10 @@ class AddContractComponent extends React.Component {
 					</h3>
 				</div>
 				<div className="field-wrap">
-<<<<<<< HEAD
-					<div className={classnames('field error-wrap', { error: name.error })}>
-						<label htmlFor="name">Name</label>
-=======
 					<Form.Field className={classnames('error-wrap', { error: name.error })}>
 						<label htmlFor="name">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_name.title" />
 						</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<input
 							type="text"
 							placeholder={namePlaceholder}
@@ -71,25 +66,15 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-<<<<<<< HEAD
 						<ErrorMessage
 							show={!!name.error}
-							value={name.error}
+							value={intl.formatMessage({ id: name.error })}
 						/>
-					</div>
-					<div className={classnames('field error-wrap', { error: id.error })}>
-						<label htmlFor="id">ID</label>
-=======
-						{
-							name.error &&
-								<span className="error-message">{intl.formatMessage({ id: name.error })}</span>
-						}
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_id.title" />
 						</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<input
 							type="text"
 							placeholder={IDPlaceholder}
@@ -97,26 +82,15 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-<<<<<<< HEAD
 						<ErrorMessage
 							show={!!id.error}
 							value={id.error}
 						/>
-					</div>
-					<div className={classnames('field error-wrap', { error: abi.error })}>
-						<label htmlFor="abi">ABI</label>
-=======
-						{
-							id.error &&
-								<span className="error-message">{id.error}</span>
-						}
-
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_abi.title" />
 						</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<textarea
 							type="text"
 							placeholder={ABIPlaceholder}
@@ -124,19 +98,11 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-<<<<<<< HEAD
 						<ErrorMessage
 							show={!!abi.error}
-							value={abi.error}
+							value={intl.formatMessage({ id: abi.error })}
 						/>
-					</div>
-=======
-						{
-							abi.error &&
-								<span className="error-message">{intl.formatMessage({ id: abi.error })}</span>
-						}
 					</Form.Field>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					<div className="form-panel">
 						<Button
 							basic

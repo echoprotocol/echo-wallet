@@ -76,14 +76,9 @@ class Password extends React.Component {
 				</div>
 				<div className="form-info-description">{intl.formatMessage({ id: 'create_password_page.text' })}</div>
 				<div className="field-wrap">
-<<<<<<< HEAD
-					<div className={classnames('field error-wrap', { error })}>
-						<label htmlFor="password">Password</label>
-=======
 					<Form.Field className={classnames('error-wrap', { error })}>
 						<label htmlFor="password">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
 
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<input
 							type="password"
 							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' })}
@@ -93,21 +88,13 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-<<<<<<< HEAD
 						<ErrorMessage
 							show={!!error}
 							value={error}
 						/>
-					</div>
-					<div className={classnames('field error-wrap', { error: repeatError })}>
-						<label htmlFor="repeatPassword">Confirm password</label>
-=======
-						<span className="error-message">{error}</span>
-
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
 						<label htmlFor="repeatPassword">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 
 						<input
 							type="password"
@@ -118,16 +105,12 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-<<<<<<< HEAD
 						<ErrorMessage
 							show={!!repeatError}
-							value="Passwords do not match"
+							value={intl.formatMessage({ id: 'create_password_page.repeat_error' })}
 						/>
-=======
-						<span className="error-message">{intl.formatMessage({ id: 'create_password_page.repeat_error' })}</span>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 
-					</div>
+					</Form.Field>
 				</div>
 				<div className="form-panel">
 					<Button

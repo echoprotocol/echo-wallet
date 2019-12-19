@@ -33,15 +33,10 @@ class Bytecode extends React.Component {
 
 		return (
 			<React.Fragment>
-<<<<<<< HEAD
-				<div className={classnames('field error-wrap', { error: !!bytecode.error })}>
-					<label htmlFor="bytecode">Bytecode</label>
-=======
 				<Form.Field className={classnames('error-wrap', { error: !!bytecode.error })}>
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_bytecode.title" />
 					</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					<textarea
 						type="text"
 						placeholder={bytecodePlaceholder}
@@ -51,19 +46,12 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-<<<<<<< HEAD
 					<ErrorMessage
 						show={!!bytecode.error}
 						value={bytecode.error}
 					/>
-				</div>
-				<div className={classnames('field error-wrap', { error: !!abi.error })}>
-=======
-					{ bytecode.error &&
-					<span className="error-message">{intl.formatMessage({ id: bytecode.error })}</span> }
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt1" />
 						<span className="label-info">
@@ -81,19 +69,13 @@ class Bytecode extends React.Component {
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-<<<<<<< HEAD
 					<ErrorMessage
 						show={!!abi.error}
-						value={abi.error}
+						value={intl.formatMessage({ id: abi.error })}
 					/>
-				</div>
-				<div className={classnames('field error-wrap', { error: !!name.error })}>
-=======
-					{ abi.error &&
-					<span className="error-message">{intl.formatMessage({ id: abi.error })}</span> }
+
 				</Form.Field>
 				<div className={classnames('error-wrap', { error: !!name.error })}>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					<div className="action-wrap">
 						<Form.Field
 							label="Contract Name"
@@ -104,15 +86,10 @@ class Bytecode extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-<<<<<<< HEAD
 					<ErrorMessage
 						show={!!name.error}
-						value={name.error}
+						value={intl.formatMessage({ id: name.error })}
 					/>
-=======
-					{ name.error &&
-					<span className="error-message">{intl.formatMessage({ id: name.error })}</span> }
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 				</div>
 			</React.Fragment>
 		);

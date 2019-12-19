@@ -47,15 +47,10 @@ class AddContractComponent extends React.Component {
 								</h3>
 							</div>
 							<div className="field-wrap">
-<<<<<<< HEAD
-								<div className={classnames('field error-wrap', { error: id.error })}>
-									<label htmlFor="id">ID</label>
-=======
 								<Form.Field className={classnames('error-wrap', { error: id.error })}>
 									<label htmlFor="id">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_id.title" />
 									</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									<input
 										type="text"
 										placeholder={IDPlaceholder}
@@ -66,28 +61,15 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-<<<<<<< HEAD
 									<ErrorMessage
 										show={!!id.error}
-										value={id.error}
+										value={intl.formatMessage({ id: id.error })}
 									/>
-								</div>
-								<div className={classnames('field error-wrap', { error: bytecode.error })}>
-									<label htmlFor="bytecode">Bytecode</label>
-=======
-									{
-										id.error && (
-											<span className="error-message">
-												{intl.formatMessage({ id: id.error })}
-											</span>
-										)
-									}
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_bytecode.title" />
 									</label>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									<textarea
 										placeholder={bytecodePlaceholder}
 										name="bytecode"
@@ -95,22 +77,11 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-<<<<<<< HEAD
 									<ErrorMessage
 										show={!!bytecode.error}
-										value={bytecode.error}
+										value={intl.formatMessage({ id: bytecode.error })}
 									/>
-								</div>
-=======
-									{
-										bytecode.error && (
-											<span className="error-message">
-												{intl.formatMessage({ id: bytecode.error })}
-											</span>
-										)
-									}
 								</Form.Field>
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
 									fee={fee}

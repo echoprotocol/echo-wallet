@@ -66,17 +66,11 @@ class ModalTokens extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-<<<<<<< HEAD
+
 									<ErrorMessage
 										show={!!contractId.error}
-										value={contractId.error}
+										value={intl.formatMessage({ id: contractId.error })}
 									/>
-=======
-									{
-										contractId.error &&
-										<span className="error-message">{intl.formatMessage({ id: contractId.error })}</span>
-									}
->>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 								</div>
 							</div>
 							<div className="form-panel">
