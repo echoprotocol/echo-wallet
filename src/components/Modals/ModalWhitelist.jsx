@@ -62,7 +62,7 @@ class ModalWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, owner, activeUser,
+			show, owner, activeUser, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -83,6 +83,7 @@ class ModalWhitelist extends React.Component {
 							className="main-btn"
 							content="Add account"
 							onClick={(e) => this.onOpenAddModal(e)}
+							disabled={keyWeightWarn}
 						/>}
 					</div>
 				</div>
@@ -102,6 +103,7 @@ ModalWhitelist.propTypes = {
 	removeFromWhiteList: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalWhitelist.defaultProps = {
@@ -116,6 +118,7 @@ export default connect(
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
 		contractId: state.contract.get('id'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),

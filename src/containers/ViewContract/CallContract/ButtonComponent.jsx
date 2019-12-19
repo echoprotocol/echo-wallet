@@ -22,6 +22,7 @@ class ButtonComponent extends React.Component {
 	renderSubmit() {
 		if (!this.props.functionName) return null;
 
+		const { keyWeightWarn } = this.props;
 		return (
 			<TransactionScenario handleTransaction={() => this.props.callContract()}>
 				{
@@ -33,6 +34,7 @@ class ButtonComponent extends React.Component {
 								className="main-btn"
 								onClick={submit}
 								content="Send"
+								disabled={keyWeightWarn}
 							/>
 						</div>
 					)
@@ -53,6 +55,7 @@ ButtonComponent.propTypes = {
 	callContract: PropTypes.func.isRequired,
 	loading: PropTypes.bool,
 	functionName: PropTypes.string.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ButtonComponent.defaultProps = {
@@ -63,6 +66,7 @@ export default connect(
 	(state) => ({
 		loading: state.form.getIn([FORM_CALL_CONTRACT, 'loading']),
 		functionName: state.form.getIn([FORM_CALL_CONTRACT, 'functionName']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		callContract: () => dispatch(callContract()),

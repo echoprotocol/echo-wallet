@@ -94,7 +94,7 @@ class Bitcoin extends React.Component {
 	}
 
 	renderGenerateAdressProcess() {
-		const { btcAddress } = this.props;
+		const { btcAddress, keyWeightWarn } = this.props;
 
 		if (btcAddress && btcAddress.size && !btcAddress.getIn(['is_relevant'])) {
 			return (
@@ -123,6 +123,7 @@ class Bitcoin extends React.Component {
 				<Button
 					className="main-btn"
 					content="Generate address"
+					disabled={keyWeightWarn}
 					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
@@ -156,6 +157,7 @@ Bitcoin.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Bitcoin.defaultProps = {

@@ -23,6 +23,7 @@ import {
 	createAccount,
 	validateCreateAccount,
 	saveWIFAfterCreateAccount,
+	checkParentKeys,
 	validateAndSetIpOrUrl,
 } from '../../actions/AuthActions';
 import { setFormValue, setValue, clearForm, setFormError } from '../../actions/FormActions';
@@ -51,6 +52,12 @@ class SignUp extends React.Component {
 		this.props.getRemoteAddresses();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.signupOptionsForm.get('registrarAccount').value !==
+			this.props.signupOptionsForm.get('registrarAccount').value) {
+			this.props.checkParentKeys(this.props.signupOptionsForm.get('registrarAccount').value);
+		}
+	}
 	componentWillUnmount() {
 		this.props.clearForm(FORM_SIGN_UP);
 		this.props.clearForm(FORM_SIGN_UP_OPTIONS);
@@ -154,10 +161,11 @@ class SignUp extends React.Component {
 			accounts,
 			signupOptionsForm,
 		} = this.props;
+		const accountName = signupOptionsForm.get('registrarAccount').value;
 
 		if (this.isDisabledSubmit() ||
 			(!accounts.length) ||
-			(!signupOptionsForm.get('registrarAccount').value)) {
+			(!accountName)) {
 			return true;
 		}
 
@@ -251,7 +259,7 @@ class SignUp extends React.Component {
 											<ButtonComponent
 												loading={loading}
 												isAddAccount={isAddAccount}
-												disabled={this.isDisabledSubmitParent()}
+												disabled={this.isDisabledSubmitParent() || signupOptionsForm.get('registrarAccountKeyWarn').value}
 												submit={submit}
 											/>
 										)
@@ -301,6 +309,7 @@ SignUp.propTypes = {
 	validateCreateAccount: PropTypes.func.isRequired,
 	saveWIFAfterCreateAccount: PropTypes.func.isRequired,
 	createAccountTransaction: PropTypes.func.isRequired,
+	checkParentKeys: PropTypes.func.isRequired,
 	getRemoteAddresses: PropTypes.func.isRequired,
 	saveRemoteAddress: PropTypes.func.isRequired,
 	validateAndSetIpOrUrl: PropTypes.func.isRequired,
@@ -345,5 +354,6 @@ export default connect(
 		setFormError: (field, value) => dispatch(setFormError(FORM_SIGN_UP, field, value)),
 		validateAndSetIpOrUrl: (value) => dispatch(validateAndSetIpOrUrl(value)),
 		clearForm: (form) => dispatch(clearForm(form)),
+		checkParentKeys: (accName) => dispatch(checkParentKeys(accName)),
 	}),
 )(SignUp);

@@ -27,7 +27,7 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees,
+			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -92,6 +92,7 @@ class AddContractComponent extends React.Component {
 									className="main-btn"
 									onClick={submit}
 									content="Call Contract"
+									disabled={keyWeightWarn}
 								/>
 							</div>
 						</Form>
@@ -122,6 +123,7 @@ AddContractComponent.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 AddContractComponent.defaultProps = {
@@ -143,6 +145,7 @@ export default connect(
 		fee: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'fee']),
 		currency: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'currency']),
 		isAvailableBalance: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'isAvailableBalance']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),

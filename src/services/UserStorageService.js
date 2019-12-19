@@ -259,6 +259,22 @@ class UserStorageService {
 	}
 
 	/**
+	 * @method getPossibleWIFs
+	 *
+	 * @param {String} publicKey
+	 * @param {Object?} params
+	 * @return {Promise.<Array<Key>>}
+	 */
+	async getAllPossibleWIFs(publicKey, params) {
+		this.checkNetwork();
+		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
+		const networkId = this.getNetworkId();
+		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
+
+		return network.getAllKeys().filter((key) => publicKey === key.publicKey);
+	}
+
+	/**
 	 * @method isWIFAdded
 	 * @param {String} wif
 	 * @param {String} accountId

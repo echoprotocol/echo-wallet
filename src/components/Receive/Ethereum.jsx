@@ -80,7 +80,7 @@ class Ethereum extends React.Component {
 	}
 
 	renderGenerateAddressProcess() {
-		const { generateEthAddress } = this.props;
+		const { generateEthAddress, keyWeightWarn } = this.props;
 
 		return (
 			<React.Fragment>
@@ -100,6 +100,7 @@ class Ethereum extends React.Component {
 								className="main-btn"
 								content="Generate address"
 								onClick={submit}
+								disabled={keyWeightWarn}
 							/>
 						)
 					}
@@ -158,6 +159,7 @@ Ethereum.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 export default Ethereum;
