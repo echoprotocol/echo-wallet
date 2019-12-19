@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import AuthorizationScenario from '../AuthorizationScenario';
 
@@ -61,11 +62,16 @@ class SignIn extends React.Component {
 
 	renderSignIn(submit) {
 		const {
-			accountName, wif, loading, location,
+			accountName, wif, loading, location, intl,
 		} = this.props;
 
 		const { isAddAccount } = qs.parse(location.search);
-
+		const accPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.name_input.placeholder' });
+		const WIFPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.placeholder' });
+		const WIFTtitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
+		const addMsg = intl.formatMessage({ id: 'sign_page.add_account_button' });
+		const loginMsg = intl.formatMessage({ id: 'sign_page.login_button' });
+		const loadingMsg = intl.formatMessage({ id: 'sign_page.account_button_loading' });
 
 		return (
 
@@ -79,16 +85,23 @@ class SignIn extends React.Component {
 							disabled={loading}
 						>
 							<span className="icon-back" />
+<<<<<<< HEAD
 							back
 						</button>
+=======
+							<FormattedMessage id="sign_page.back_button_text" />
+						</button> : null
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					}
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>
 				<div className="field-wrap">
 					<div className={classnames('field error-wrap', { error: accountName.error })}>
-						<label htmlFor="AccountName">Account name</label>
+						<label htmlFor="AccountName">
+							<FormattedMessage id="sign_page.import_account_page.name_input.title" />
+						</label>
 						<input
-							placeholder="Account Name"
+							placeholder={accPlaceholder}
 							name="accountName"
 							value={accountName.value}
 							onChange={(e) => this.onChange(e, true)}
@@ -96,26 +109,27 @@ class SignIn extends React.Component {
 						/>
 						{
 							accountName.error &&
-								<span className="error-message">{accountName.error}</span>
+								<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>
 						}
 
 					</div>
 					<PasswordInput
-						inputLabel="WIF-key"
-						inputPlaceholder="WIF-key"
+						inputLabel={WIFTtitle}
+						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
-						errorMessage={wif.error}
+						errorMessage={wif.error && intl.formatMessage({ id: wif.error })}
 						onChange={(e) => this.onChange(e)}
 						value={wif.value}
 					/>
 				</div>
 				<div className="form-panel">
 					<span className="sign-nav">
-						Don’t have an account?
+						<FormattedMessage id="sign_page.import_account_page.dont_have_acc_text" />
 						<Link
 							className={classnames('link', 'main-link', { disabled: loading })}
 							to={`${SIGN_UP_PATH}${isAddAccount ? '?isAddAccount=true' : ''}`}
-						>Sign Up
+						>
+							<FormattedMessage id="sign_page.import_account_page.dont_have_acc_link" />
 						</Link>
 					</span>
 					{
@@ -123,7 +137,7 @@ class SignIn extends React.Component {
 							<Button
 								type="submit"
 								className="load main-btn"
-								content="Loading..."
+								content={loadingMsg}
 							/> :
 							<Button
 								basic
@@ -131,7 +145,7 @@ class SignIn extends React.Component {
 								disabled={this.isDisabledSubmit()}
 								onClick={submit}
 								className={classnames('main-btn', { disabled: this.isDisabledSubmit() })}
-								content={isAddAccount ? 'Add Account' : 'Login'}
+								content={isAddAccount ? addMsg : loginMsg}
 							/>
 					}
 
@@ -166,13 +180,14 @@ SignIn.propTypes = {
 	importAccount: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	clearForm: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 SignIn.defaultProps = {
 	loading: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		accountName: state.form.getIn([FORM_SIGN_IN, 'accountName']),
 		wif: state.form.getIn([FORM_SIGN_IN, 'wif']),
@@ -183,4 +198,4 @@ export default connect(
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_SIGN_IN, field, value)),
 		clearForm: () => dispatch(clearForm(FORM_SIGN_IN)),
 	}),
-)(SignIn);
+)(SignIn));

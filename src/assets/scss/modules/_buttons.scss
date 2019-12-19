@@ -1,0 +1,486 @@
+$stripe-color: rgba(255, 255, 255, .7);
+$stripe-width: 10px;
+
+@keyframes loading-stripes {
+	0% {
+		background-position: 0px
+	}
+
+	100% {
+		background-position: $stripe-width
+	}
+}
+
+@mixin btn($fz: 12px) {
+	position: relative;
+	font-size: $fz;
+	font-family: proxima;
+	font-weight: 600;
+	text-transform: uppercase;
+	border-radius: 4px;
+	height: 38px;
+	line-height: 38px;
+	min-width: 120px;
+	padding: 0 15px;
+	white-space: nowrap;
+	transition:
+		background-color $speed,
+		color $speed,
+		border-color $speed;
+}
+
+.link-btn {
+	font-size: 12px;
+	font-family: proxima;
+	font-weight: 600;
+	transition: color $speed;
+	color: $main-color;
+	position: relative;
+
+	&:before {
+		content: "";
+		display: block;
+		position: absolute;
+		right: -4px;
+		left: -4px;
+		bottom: 0px;
+		top: -2px;
+		border-radius: 4px;
+		z-index: 3;
+	}
+
+	&:active {
+		color: rgba($main-color, .7);
+	}
+
+	&:focus:not(:active):before {
+		@include on-focus(2px);
+	}
+
+	&:disabled {
+		color: rgba($main-color, 0.4);
+	}
+}
+
+.load {
+	position: relative;
+
+	&:after {
+		position: absolute;
+		bottom: -2px;
+		right: 0;
+		left: 0;
+		height: 4px;
+		content: "";
+		display: block;
+		background-image: linear-gradient(-45deg, $stripe-color 25%,
+				transparent 25%,
+				transparent 50%,
+				$stripe-color 50%,
+				$stripe-color 75%,
+				transparent 75%,
+				transparent);
+		background-size: $stripe-width $stripe-width;
+		animation: loading-stripes .4s linear infinite;
+	}
+}
+
+
+
+.main-btn {
+	@include btn();
+	color: $main-color;
+	border: 1px solid $main-color;
+	background-color: transparent;
+
+	&:hover {
+		color: #fff;
+		background-color: $main-color;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba($main-color, .8);
+		background-color: rgba($main-color, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .5);
+		background-color: transparent;
+		color: rgba($main-color, .5);
+	}
+
+	// SIZE
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.small {
+		line-height: 25px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.light {
+		border: 1px solid rgba($main-color, .2);
+	}
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-color;
+	}
+
+	.main-btn-popup {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+
+	&.countdown-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.countdown {
+			margin-right: 5px;
+		}
+	}
+
+	&.fluid {
+		min-width: 100%;
+	}
+
+}
+
+.blue-btn {
+	@include btn();
+	color: #fff;
+	border: 1px solid $main-color;
+	background-color: $main-color;
+
+	&:hover {
+		border: 1px solid #3E51A3;
+		background-color: #3E51A3;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba($main-color, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .5);
+		background-color: transparent;
+		color: rgba($main-color, .5);
+	}
+
+	// SIZE
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-color;
+	}
+}
+
+.black-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #515459;
+	background-color: #515459;
+
+	&:hover {
+		border: 1px solid #73777E;
+		background-color: #73777E;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#515459, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#515459, .5);
+		background-color: rgba(#515459, .5);
+		color: rgba($main-color, .5);
+	}
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+.green-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #62C69B;
+	background-color: #62C69B;
+
+	&:hover {
+		border: 1px solid rgb(105, 175, 145);
+		background-color: rgb(105, 175, 145);
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#62C69B, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#62C69B, .5);
+		background-color: transparent;
+		color: rgba(#62C69B, .5);
+	}
+
+	// SIZE
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+.grey-btn {
+	@include btn();
+
+	color: #fff;
+	border: 1px solid #A9ACB9;
+	background-color: #A9ACB9;
+
+	&:hover {
+		border: 1px solid #7A8095;
+		background-color: #7A8095;
+		color: #fff;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba(#A9ACB9, .8);
+		background-color: rgba(#A9ACB9, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba(#A9ACB9, .5);
+		background-color: transparent;
+		color: rgba(#A9ACB9, .5);
+	}
+
+	// VARIANTS
+
+	&.inverse {
+		background-color: transparent;
+		color: rgba(#5C637D, .6);
+
+		&:hover {
+			border: 1px solid #7A8095;
+			background-color: #7A8095;
+			color: #fff;
+		}
+
+		&:active {
+			border: 1px solid rgba(#A9ACB9, .8);
+			background-color: rgba(#A9ACB9, .8);
+			color: rgba(#fff, .8);
+		}
+
+		&:disabled {
+			border: 1px solid rgba(#A9ACB9, .5);
+			background-color: transparent;
+			color: rgba(#A9ACB9, .5);
+		}
+	}
+
+	// SIZE
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+}
+
+
+
+
+
+
+
+.dropdown-copy-btn {
+	color: $main-color;
+	padding: 0 2px;
+	transition: color $speed;
+	margin: 0 -3px;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
+
+.copy-btn {
+	color: $main-color;
+	padding: 4px;
+	margin: -4px;
+	transition: color $speed;
+	display: flex;
+	align-items: center;
+	user-select: none;
+	border-radius: 4px;
+	transition: color $speed;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+
+	&:active {
+		color: rgba($main-color, .7);
+	}
+
+	.text {
+		font-family: proxima;
+		font-weight: 600;
+		font-size: 14px;
+		margin-left: 6px;
+	}
+}
+
+.version-btn {
+	font-family: proxima;
+	background-color: transparent;
+	padding: 0;
+	padding-right: 5px;
+	color: #4D66CD;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.3px;
+	border: 0;
+	cursor: pointer;
+}
+
+
+.btn-lock {
+	background-color: transparent;
+	border: 0;
+	color: rgba(#5D637B, 0.5);
+	font-size: 20px;
+	padding: 0;
+}
+
+.remove-btn {
+	min-height: 22px;
+	min-width: 22px;
+	color: rgba(#5C637D, .7);
+	padding: 0;
+	border-radius: 4px;
+	transition: background-color $speed, color $speed;
+	cursor: pointer;
+
+	&:hover {
+		color: #5C637D;
+	}
+
+	&:active {
+		background-color: #D7D9DB;
+		color: rgba(#5C637D, .5);
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+
+}
+
+.btn-list {
+	padding: 20px;
+
+	.button {
+		margin: 0 10px 0 0;
+	}
+}

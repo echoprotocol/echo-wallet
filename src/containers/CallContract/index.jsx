@@ -3,6 +3,7 @@ import { Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import TransactionScenario from '../TransactionScenario';
 import AmountField from '../../components/Fields/AmountField';
@@ -28,8 +29,12 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees,
+			bytecode, id, fee, tokens, assets, amount,
+			currency, isAvailableBalance, fees, intl, keyWeightWarn,
 		} = this.props;
+		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_bytecode.placeholder' });
+		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_id.placeholder' });
+
 
 		return (
 			<TransactionScenario handleTransaction={() => this.props.callContract()}>
@@ -37,14 +42,23 @@ class AddContractComponent extends React.Component {
 					(submit) => (
 						<Form className="main-form">
 							<div className="form-info">
-								<h3>Call contract via ID</h3>
+								<h3>
+									<FormattedMessage id="smart_contract_page.call_contract_page.title" />
+								</h3>
 							</div>
 							<div className="field-wrap">
+<<<<<<< HEAD
 								<div className={classnames('field error-wrap', { error: id.error })}>
 									<label htmlFor="id">ID</label>
+=======
+								<Form.Field className={classnames('error-wrap', { error: id.error })}>
+									<label htmlFor="id">
+										<FormattedMessage id="smart_contract_page.call_contract_page.input_id.title" />
+									</label>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									<input
 										type="text"
-										placeholder="Contract ID"
+										placeholder={IDPlaceholder}
 										name="id"
 										autoComplete="off"
 										className="ui input"
@@ -52,6 +66,7 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
+<<<<<<< HEAD
 									<ErrorMessage
 										show={!!id.error}
 										value={id.error}
@@ -59,18 +74,43 @@ class AddContractComponent extends React.Component {
 								</div>
 								<div className={classnames('field error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">Bytecode</label>
+=======
+									{
+										id.error && (
+											<span className="error-message">
+												{intl.formatMessage({ id: id.error })}
+											</span>
+										)
+									}
+								</Form.Field>
+								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+									<label htmlFor="bytecode">
+										<FormattedMessage id="smart_contract_page.call_contract_page.input_bytecode.title" />
+									</label>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 									<textarea
-										placeholder="Bytecode"
+										placeholder={bytecodePlaceholder}
 										name="bytecode"
 										className="ui input"
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
+<<<<<<< HEAD
 									<ErrorMessage
 										show={!!bytecode.error}
 										value={bytecode.error}
 									/>
 								</div>
+=======
+									{
+										bytecode.error && (
+											<span className="error-message">
+												{intl.formatMessage({ id: bytecode.error })}
+											</span>
+										)
+									}
+								</Form.Field>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
 									fee={fee}
@@ -87,6 +127,7 @@ class AddContractComponent extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setDefaultAsset={this.props.setDefaultAsset}
 									setContractFees={this.props.setContractFees}
+									intl={intl}
 								/>
 							</div>
 							<div className="form-panel">
@@ -94,7 +135,10 @@ class AddContractComponent extends React.Component {
 									type="button"
 									className="main-btn"
 									onClick={submit}
-									content="Call Contract"
+									content={
+										<FormattedMessage id="smart_contract_page.call_contract_page.button_text" />
+									}
+									disabled={keyWeightWarn}
 								/>
 							</div>
 						</Form>
@@ -125,6 +169,8 @@ AddContractComponent.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 AddContractComponent.defaultProps = {
@@ -135,7 +181,7 @@ AddContractComponent.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		fees: state.fee.toArray() || [],
 		id: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'id']),
@@ -146,6 +192,7 @@ export default connect(
 		fee: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'fee']),
 		currency: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'currency']),
 		isAvailableBalance: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'isAvailableBalance']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),
@@ -159,4 +206,4 @@ export default connect(
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 		getTransferFee: () => dispatch(setContractFees(FORM_CALL_CONTRACT_VIA_ID)),
 	}),
-)(AddContractComponent);
+)(AddContractComponent));

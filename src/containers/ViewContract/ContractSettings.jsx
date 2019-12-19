@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { updateContractName, disableContract } from '../../actions/ContractActions';
 import { setFormValue, setValue, setFormError } from '../../actions/FormActions';
@@ -135,7 +136,9 @@ class ContractSettings extends React.Component {
 	}
 
 	renderChangeName() {
-		const { newName, contractId, contractName } = this.props;
+		const {
+			newName, contractId, contractName, intl,
+		} = this.props;
 
 		return (
 
@@ -164,17 +167,24 @@ class ContractSettings extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 				</Input>
+<<<<<<< HEAD
 				<ErrorMessage
 					show={!!newName.error}
 					value={newName.error}
 				/>
+=======
+
+				{newName.error &&
+				<span className="error-message">{intl.formatMessage({ id: newName.error })}</span>}
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 			</div>
 		);
 	}
 
 	render() {
-		const { contractId, balances } = this.props;
+		const { contractId, balances, intl } = this.props;
 
+		const btnText = intl.formatMessage({ id: 'smart_contract_page.contract_info.header.remove_button_text' });
 		const balanceToShow = this.showBalance(balances);
 
 		return (
@@ -182,13 +192,17 @@ class ContractSettings extends React.Component {
 				<div className="control-wrap">
 					<ul className="control-panel">
 						<li className="id-panel">
-							<span className="label">Contract ID:</span>
+							<span className="label">
+								<FormattedMessage id="smart_contract_page.contract_info.header.contract_id_text" />
+							</span>
 							<span className="value">
 								{contractId}
 							</span>
 						</li>
 						<li className="balance-panel">
-							<span className="label">Balance:</span>
+							<span className="label">
+								<FormattedMessage id="smart_contract_page.contract_info.header.balance_text" />
+							</span>
 							<span className="value">
 								<div className="balance-wrap">
 									<div className="balance">{balanceToShow.amount}</div>
@@ -197,14 +211,16 @@ class ContractSettings extends React.Component {
 							</span>
 						</li>
 						<li className="name-panel">
-							<span className="label">Name:</span>
+							<span className="label">
+								<FormattedMessage id="smart_contract_page.contract_info.header.name_text" />
+							</span>
 							{!this.state.isEditName ? this.renderName() : this.renderChangeName()}
 						</li>
 						<li className="action-panel">
 							<ActionBtn
 								action={() => this.removeContract(contractId)}
 								icon="remove"
-								text="Remove"
+								text={btnText}
 							/>
 						</li>
 					</ul>
@@ -226,9 +242,10 @@ ContractSettings.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	balances: PropTypes.array.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default withRouter(connect(
+export default injectIntl(withRouter(connect(
 	(state) => ({
 		newName: state.form.getIn([FORM_VIEW_CONTRACT, 'newName']),
 		balances: state.contract.get('balances'),
@@ -242,4 +259,4 @@ export default withRouter(connect(
 		setValue: (field, value) => dispatch(setValue(FORM_VIEW_CONTRACT, field, value)),
 		setFormError: (field, value) => dispatch(setFormError(FORM_VIEW_CONTRACT, field, value)),
 	}),
-)(ContractSettings));
+)(ContractSettings)));

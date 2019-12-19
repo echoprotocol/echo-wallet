@@ -1,4 +1,8 @@
 import React from 'react';
+// import PropTypes from 'prop-types';
+// import VerificationField from '../../components/Fields/VerificationField';
+import { FormattedMessage } from 'react-intl';
+
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -20,7 +24,7 @@ function IpUrlPanel(props) {
 
 		<React.Fragment>
 			<div className="register-info">
-				<p>Register a new account through a running node.</p>
+				<p><FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.text" /></p>
 			</div>
 			<div className={classnames('field error-wrap', { error: !!ipOrUrl.error })}>
 

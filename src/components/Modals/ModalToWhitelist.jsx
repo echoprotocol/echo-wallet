@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import TransactionScenario from '../../containers/TransactionScenario';
@@ -89,7 +90,7 @@ class ModalToWhitelist extends React.Component {
 	}
 
 	render() {
-		const { show, account } = this.props;
+		const { show, account, intl } = this.props;
 
 		const icon = this.isAvatar() &&
 			<div className="avatar-wrap">
@@ -109,12 +110,14 @@ class ModalToWhitelist extends React.Component {
 									onClick={(e) => this.onClose(e)}
 								/>
 								<div className="modal-header">
-									<h3 className="modal-header-title">Add account to whitelist</h3>
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_to_whitelist.title' })}
+									</h3>
 								</div>
 								<Form className="modal-body">
 									<div className="field-wrap">
 										<VerificationField
-											label="Account Name"
+											label={intl.formatMessage({ id: 'modals.modal_to_whitelist.account_input.title' })}
 											name="account-name"
 											onChange={(value) => this.onInputChange(value)}
 											value={account.value}
@@ -123,14 +126,14 @@ class ModalToWhitelist extends React.Component {
 											status={this.getStatus(account)}
 											error={account.error}
 											loading={account.loading && !account.error}
-											placeholder="Account Name"
+											placeholder={intl.formatMessage({ id: 'modals.modal_to_whitelist.account_input.placeholder' })}
 										/>
 									</div>
 									<div className="form-panel">
 										<Button
 											type="submit"
 											className="main-btn"
-											content="Confirm"
+											content={intl.formatMessage({ id: 'modals.modal_to_whitelist.confirm_button_text' })}
 											onClick={() => {
 												this.onAdd(submit);
 											}}
@@ -152,6 +155,7 @@ ModalToWhitelist.propTypes = {
 	show: PropTypes.bool,
 	closeModal: PropTypes.func.isRequired,
 	addToWhiteList: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 };
@@ -160,7 +164,7 @@ ModalToWhitelist.defaultProps = {
 	show: false,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		account: state.form.getIn([FORM_TO_WHITELIST, 'account']),
 		show: state.modal.getIn([MODAL_TO_WHITELIST, 'show']),
@@ -172,4 +176,4 @@ export default connect(
 		setIn: (field, param) => dispatch(setIn(FORM_TO_WHITELIST, field, param)),
 		checkAccount: (value, subject) => dispatch(checkAccount(FORM_TO_WHITELIST, value, subject)),
 	}),
-)(ModalToWhitelist);
+)(ModalToWhitelist));

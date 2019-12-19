@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
@@ -22,7 +23,7 @@ class ModalViewWIF extends React.Component {
 	}
 
 	render() {
-		const { show, keys } = this.props;
+		const { show, keys, intl } = this.props;
 
 		return (
 			<Modal className="view-wif-modal" open={show}>
@@ -32,16 +33,20 @@ class ModalViewWIF extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<div className="modal-header">
-						<h3 className="modal-header-title">View WIF</h3>
+						<h3 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_view_wif.title' })}
+						</h3>
 					</div>
 					<div className="modal-body">
 
 						<Form.Field>
-							<label htmlFor="public-key">Public Key</label>
+							<label htmlFor="public-key">
+								{intl.formatMessage({ id: 'modals.modal_view_wif.public_key_input.title' })}
+							</label>
 							<div className="ui action input">
 								<input
 									type="text"
-									placeholder="Public Key"
+									placeholder={intl.formatMessage({ id: 'modals.modal_view_wif.public_key_input.placeholder' })}
 									disabled
 									name="public-key"
 									value={keys.publicKey}
@@ -54,11 +59,13 @@ class ModalViewWIF extends React.Component {
 						</Form.Field>
 
 						<Form.Field>
-							<label htmlFor="public-key">WIF *</label>
+							<label htmlFor="public-key">
+								{intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.title' })}
+							</label>
 							<div className="ui action input">
 								<input
 									type="text"
-									placeholder="WIF"
+									placeholder={intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.placeholder' })}
 									disabled
 									name="wif"
 									value={keys.wif}
@@ -69,8 +76,7 @@ class ModalViewWIF extends React.Component {
 								/>
 							</div>
 							<span className="warning-message">
-									* Warning: Anyone who has this key can steal all your Echo
-									assets and this key can never be recovered if you lose it.
+								{intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.warning' })}
 							</span>
 						</Form.Field>
 
@@ -79,7 +85,7 @@ class ModalViewWIF extends React.Component {
 								type="submit"
 								className="main-btn"
 								onClick={() => this.onSave()}
-								content="Save As .TXT"
+								content={intl.formatMessage({ id: 'modals.modal_view_wif.save_button_text' })}
 							/>
 						</div>
 					</div>
@@ -95,6 +101,7 @@ ModalViewWIF.propTypes = {
 	activeUserName: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	saveAsTxt: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	keys: PropTypes.object,
 };
 
@@ -105,7 +112,7 @@ ModalViewWIF.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
 		activeUserName: state.global.getIn(['activeUser', 'name']),
@@ -113,4 +120,4 @@ export default connect(
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
 	}),
-)(ModalViewWIF);
+)(ModalViewWIF));

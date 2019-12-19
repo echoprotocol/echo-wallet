@@ -3,6 +3,7 @@ import { Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_ADD_CONTRACT } from '../../constants/FormConstants';
 
@@ -38,24 +39,39 @@ class AddContractComponent extends React.Component {
 	}
 
 	render() {
-		const { name, id, abi } = this.props;
+		const {
+			name, id, abi, intl,
+		} = this.props;
 
+		const namePlaceholder = intl.formatMessage({ id: 'smart_contract_page.watch_contract_page.input_name.placeholder' });
+		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.watch_contract_page.input_id.placeholder' });
+		const ABIPlaceholder = intl.formatMessage({ id: 'smart_contract_page.watch_contract_page.input_abi.placeholder' });
 		return (
 			<Form className="main-form">
 				<div className="form-info">
-					<h3>Add contract to watch list</h3>
+					<h3>
+						<FormattedMessage id="smart_contract_page.watch_contract_page.title" />
+					</h3>
 				</div>
 				<div className="field-wrap">
+<<<<<<< HEAD
 					<div className={classnames('field error-wrap', { error: name.error })}>
 						<label htmlFor="name">Name</label>
+=======
+					<Form.Field className={classnames('error-wrap', { error: name.error })}>
+						<label htmlFor="name">
+							<FormattedMessage id="smart_contract_page.watch_contract_page.input_name.title" />
+						</label>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<input
 							type="text"
-							placeholder="Name"
+							placeholder={namePlaceholder}
 							name="name"
 							value={name.value}
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
+<<<<<<< HEAD
 						<ErrorMessage
 							show={!!name.error}
 							value={name.error}
@@ -63,13 +79,25 @@ class AddContractComponent extends React.Component {
 					</div>
 					<div className={classnames('field error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
+=======
+						{
+							name.error &&
+								<span className="error-message">{intl.formatMessage({ id: name.error })}</span>
+						}
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: id.error })}>
+						<label htmlFor="id">
+							<FormattedMessage id="smart_contract_page.watch_contract_page.input_id.title" />
+						</label>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<input
 							type="text"
-							placeholder="Contract ID"
+							placeholder={IDPlaceholder}
 							name="id"
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
+<<<<<<< HEAD
 						<ErrorMessage
 							show={!!id.error}
 							value={id.error}
@@ -77,24 +105,46 @@ class AddContractComponent extends React.Component {
 					</div>
 					<div className={classnames('field error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">ABI</label>
+=======
+						{
+							id.error &&
+								<span className="error-message">{id.error}</span>
+						}
+
+					</Form.Field>
+					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
+						<label htmlFor="abi">
+							<FormattedMessage id="smart_contract_page.watch_contract_page.input_abi.title" />
+						</label>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 						<textarea
 							type="text"
-							placeholder="Contract ABI"
+							placeholder={ABIPlaceholder}
 							name="abi"
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
+<<<<<<< HEAD
 						<ErrorMessage
 							show={!!abi.error}
 							value={abi.error}
 						/>
 					</div>
+=======
+						{
+							abi.error &&
+								<span className="error-message">{intl.formatMessage({ id: abi.error })}</span>
+						}
+					</Form.Field>
+>>>>>>> 6dc49ee730c0c6d5b3138917d3d8597d3b3fa34f
 					<div className="form-panel">
 						<Button
 							basic
 							type="button"
 							className="main-btn"
-							content="Watch Contract"
+							content={
+								<FormattedMessage id="smart_contract_page.watch_contract_page.button_text" />
+							}
 							onClick={(e) => this.onClick(e)}
 						/>
 					</div>
@@ -112,10 +162,11 @@ AddContractComponent.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	addContract: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		name: state.form.getIn([FORM_ADD_CONTRACT, 'name']),
 		id: state.form.getIn([FORM_ADD_CONTRACT, 'id']),
@@ -127,4 +178,4 @@ export default connect(
 		setFormValue: (param, value) => dispatch(setFormValue(FORM_ADD_CONTRACT, param, value)),
 		addContract: (name, id, abi) => dispatch(addContract(name, id, abi)),
 	}),
-)(AddContractComponent);
+)(AddContractComponent));

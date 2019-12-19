@@ -18,7 +18,7 @@ const getSigners = async (account, keys, viewed = []) => {
 
 	account.active.key_auths.forEach(([k, w]) => {
 		const keyIndex = keys
-			.findIndex(({ publicKey }) => (publicKey === k));
+			.findIndex(({ publicKey, accountId }) => (publicKey === k && accountId === account.id));
 
 		if (keyIndex !== -1 && weight < account.active.weight_threshold) {
 			weight += w;
@@ -51,7 +51,7 @@ const getSigners = async (account, keys, viewed = []) => {
 	}
 
 	if (weight < account.active.weight_threshold) {
-		throw new Error('Threshold is greater than the sum of keys weight available in Echo Desktop');
+		throw new Error('errors.sign_errors.not_enough_threshold_error');
 	}
 
 	return signers;
@@ -77,8 +77,9 @@ export const signTransaction = async (accountId, tr, password) => {
 
 	const publicKeys = await echo.api.getPotentialSignatures(transaction);
 
-	const keys = await Promise
-		.all(publicKeys.map((k) => Services.getUserStorage().getWIFByPublicKey(k, { password })));
+	const keys = (await Promise
+		.all(publicKeys.map((k) => Services.getUserStorage().getAllPossibleWIFs(k, { password }))))
+		.reduce((acc, val) => [...acc, ...val], []);
 
 	const signers = await getSigners(signer, keys.filter((k) => k));
 	signers.map((s) => tr.addSigner(s));

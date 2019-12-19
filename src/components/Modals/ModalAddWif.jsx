@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { injectIntl } from 'react-intl';
 
 import PasswordInput from '../PasswordInput';
 import ErrorMessage from '../ErrorMessage';
@@ -37,8 +38,12 @@ class ModalAddWIF extends React.Component {
 	render() {
 		const { wif } = this.state;
 		const {
-			show, error, disabled, publicKey,
+			show, error, disabled, publicKey, intl,
 		} = this.props;
+		const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
+		const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
+		const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
+		const pubKeyPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.placeholder' });
 
 		return (
 			<Modal className="add-wif-modal" open={show}>
@@ -47,15 +52,19 @@ class ModalAddWIF extends React.Component {
 					onClick={(e) => this.onClose(e)}
 				/>
 				<div className="modal-header">
-					<h2 className="modal-header-title">Add WIF</h2>
+					<h2 className="modal-header-title">
+						{intl.formatMessage({ id: 'modals.modal_add_wif.title' })}
+					</h2>
 				</div>
 				<div className="modal-body">
 
 					<Form.Field className={classnames('error-wrap', { error: !!error })}>
-						<label htmlFor="public-key">Public Key</label>
+						<label htmlFor="public-key">
+							{intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.title' })}
+						</label>
 						<input
 							type="text"
-							placeholder="Public Key"
+							placeholder={pubKeyPlaceholder}
 							disabled
 							name="public-key"
 							onChange={() => {}}
@@ -63,15 +72,15 @@ class ModalAddWIF extends React.Component {
 						/>
 						<ErrorMessage
 							show={!!error}
-							value={error && error.message}
+							value={intl.formatMessage({ id: error.message })}
 						/>
 					</Form.Field>
 
 					<PasswordInput
-						inputLabel="WIF (optional)"
-						inputPlaceholder="WIF"
+						inputLabel={wifTitle}
+						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"
-						warningMessage="Warning: Anyone who has this key can steal all your Echo assets and this key can never be recovered if you lose it."
+						warningMessage={wifWarning}
 						errorMessage={error}
 						onChange={(e) => this.onChange(e)}
 						value={wif}
@@ -84,7 +93,7 @@ class ModalAddWIF extends React.Component {
 							className="main-btn"
 							onClick={() => this.saveWif()}
 							disabled={disabled}
-							content="Confirm"
+							content={intl.formatMessage({ id: 'modals.modal_add_wif.button_text' })}
 						/>
 					</div>
 				</div>
@@ -110,6 +119,7 @@ ModalAddWIF.propTypes = {
 	error: PropTypes.string,
 	saveWif: PropTypes.func.isRequired,
 	publicKey: PropTypes.string.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalAddWIF.defaultProps = {
@@ -118,4 +128,4 @@ ModalAddWIF.defaultProps = {
 	error: null,
 };
 
-export default ModalAddWIF;
+export default injectIntl(ModalAddWIF);

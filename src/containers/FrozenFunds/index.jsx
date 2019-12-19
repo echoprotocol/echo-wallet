@@ -33,6 +33,7 @@ export default connect(
 		frozenFunds: state.balance.get('frozenFunds').toJS(),
 		totalFrozenFunds: state.balance.get('totalFrozenFunds'),
 		coreAsset: state.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, ECHO_ASSET_ID]).toJS(),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

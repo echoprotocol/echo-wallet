@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Dropdown, Button, Popup, Form } from 'semantic-ui-react';
 
@@ -37,10 +38,12 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			currency,
-			fee, assets, tokens, amount, isAvailableBalance, fees, duration,
+			currency, intl, keyWeightWarn, fee, assets,
+			tokens, amount, isAvailableBalance, fees, duration,
 		} = this.props;
 		let coefficient = '0.0';
+		const popupMsg = intl.formatMessage({ id: 'wallet_page.frozen_funds.frozen_funds_list.popup_text' });
+		const dropdownPlaceholder = intl.formatMessage({ id: 'wallet_page.frozen_funds.period_input_placeholder' });
 		if (duration) {
 			({ coefficientText: coefficient } = FREEZE_BALANCE_PARAMS
 				.find((b) => b.duration === duration.value));
@@ -53,7 +56,9 @@ class Transfer extends React.Component {
 					(submit) => (
 						<Form className="form main-form">
 							<div className="form-info">
-								<h3>Freeze Funds</h3>
+								<h3>
+									<FormattedMessage id="wallet_page.frozen_funds.subtitle" />
+								</h3>
 							</div>
 							<div className="field-wrap">
 								<AmountField
@@ -73,13 +78,15 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransactionFee}
 									setContractFees={() => { }}
 									assetDropdown={false}
-									labelText="Amount"
+									intl={intl}
 								/>
 								<div className="field">
-									<label htmlFor="period">Period</label>
+									<label htmlFor="period">
+										<FormattedMessage id="wallet_page.frozen_funds.period_input_title" />
+									</label>
 									<Dropdown
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										placeholder="Choose period"
+										placeholder={dropdownPlaceholder}
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
@@ -90,12 +97,14 @@ class Transfer extends React.Component {
 										<React.Fragment>
 											<div className="coefficient-value">
 
-												<span>Coefficient:</span>
+												<span>
+													<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.coefficient_text" />
+												</span>
 												<span>{coefficient}</span>
 
 												<Popup
 													trigger={<span className="inner-tooltip-trigger icon-info" />}
-													content="This is the coefficient that will be used to calculate the reward for participating in blocks creation."
+													content={popupMsg}
 													className="inner-tooltip"
 													style={{ width: 336, marginBottom: 20 }}
 													inverted
@@ -106,9 +115,11 @@ class Transfer extends React.Component {
 									<Button
 										type="submit"
 										className="main-btn"
-										content="Freeze"
+										content={
+											<FormattedMessage id="wallet_page.frozen_funds.button_text" />
+										}
 										onClick={submit}
-										disabled={!duration.isSelected}
+										disabled={!duration.isSelected || keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -141,6 +152,8 @@ Transfer.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
 	setAssets: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {
@@ -148,4 +161,4 @@ Transfer.defaultProps = {
 };
 
 
-export default Transfer;
+export default injectIntl(Transfer);

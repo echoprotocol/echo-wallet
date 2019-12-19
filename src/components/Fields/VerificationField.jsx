@@ -11,7 +11,7 @@ const VerificationField = (props) => {
 		status, disabled, name,
 		label, placeholder,
 		additionalLabel, autoFocus,
-		icon,
+		icon, intl,
 	} = props;
 
 	return (
@@ -47,8 +47,8 @@ const VerificationField = (props) => {
 				}
 			</div>
 			<ErrorMessage
-				show={!!error}
-				value={error}
+				show={!!error && intl.formatMessage}
+				value={intl.formatMessage({ id: error })}
 			/>
 		</div>
 	);
@@ -68,6 +68,7 @@ VerificationField.propTypes = {
 	autoFocus: PropTypes.bool,
 	additionalLabel: PropTypes.node,
 	icon: PropTypes.node,
+	intl: PropTypes.any,
 
 };
 
@@ -83,6 +84,7 @@ VerificationField.defaultProps = {
 	status: '',
 	additionalLabel: null,
 	icon: null,
+	intl: {},
 };
 
 export default VerificationField;

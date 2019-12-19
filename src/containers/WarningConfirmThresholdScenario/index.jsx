@@ -123,8 +123,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		for (const key in echoRand.keys) {
 			if (!echoRand.keys[key].hasWif.value) {
 				this.setState({ echoRandMessage:
-					'You removed your EchoRand Key and after
-					submitting this action you will lose access to it.',
+					'modals.modal_confirm_editin_of_permissions.echorand_warning_message',
 				});
 			}
 		}
@@ -135,7 +134,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			return;
 		} else if (nextTreshold.gt(enoughNextThreshold)) {
 			this.setState({
-				warningMessage: 'If these changes are applied, you won\'t have enough keys to sign transactions. Do you want to proceed?',
+				warningMessage: 'modals.modal_confirm_editin_of_permissions.warning_key_message',
 			});
 		}
 		if (this.state.warningMessage || this.state.echoRandMessage) {

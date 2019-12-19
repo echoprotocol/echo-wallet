@@ -51,10 +51,10 @@ const to64HexString = (v, type, mode = 256) => {
 		case 'address': {
 			const sourceAddress = v || '1.2.0';
 			if (!validators.isAccountId(sourceAddress) && !validators.isContractId(sourceAddress)) {
-				throw new Error('invalid address format');
+				throw new Error('errors.address_errors.invalid_address_format');
 			}
 			const preRes = new BigNumber(sourceAddress.split('.')[2]).toString(16);
-			if (preRes.length > 38) throw new Error('invalid address id');
+			if (preRes.length > 38) throw new Error('errors.address_errors.invalid_address_id');
 			const isContract = sourceAddress.split('.')[1] === constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT;
 			return [
 				new Array(25).fill(null).map(() => 0).join(''),
@@ -140,9 +140,9 @@ export const getMethod = (method, args) => {
 
 		if (type.search('uint') !== -1) {
 			const input = new BigNumber(arg);
-			if (input.isNegative()) throw new Error('input is negative');
-			if (!input.isInteger()) throw new Error('input is less than min value');
-			if (input.gte(new BigNumber(2).pow(256))) throw new Error('is greater than max value');
+			if (input.isNegative()) throw new Error('errors.contract_call_errors.negative_input_error');
+			if (!input.isInteger()) throw new Error('errors.contract_call_errors.less_min_value_error');
+			if (input.gte(new BigNumber(2).pow(256))) throw new Error('errors.contract_call_errors.greater_max_value');
 			const preRes = input.toString(16);
 			const comprehension = (count, map) => new Array(count).fill(null)
 				.map((_, index) => map(index));
@@ -172,8 +172,8 @@ export const getMethod = (method, args) => {
 			const comprehension = (count, map) => new Array(count).fill(null)
 				.map((_, index) => map(index));
 			const bytesCount = 32;
-			if (bytesCount <= 0) throw new Error('bytes count is not positive');
-			if (!Number.isSafeInteger(bytesCount)) throw new Error('bytes count is not a integer');
+			if (bytesCount <= 0) throw new Error('errors.contract_call_errors.bytes_not_posititve_error');
+			if (!Number.isSafeInteger(bytesCount)) throw new Error('errors.contract_call_errors.bytes_not_integer_error');
 			let input = arg;
 			if (!input) return comprehension(bytesCount, () => 0).join('');
 			if (typeof input === 'string') {
@@ -181,10 +181,10 @@ export const getMethod = (method, args) => {
 				else input = Buffer.from(input);
 			}
 			if (input.length !== bytesCount) {
-				if (input.length > bytesCount) throw new Error('buffer is too large');
+				if (input.length > bytesCount) throw new Error('errors.contract_call_errors.buffer_too_large_error');
 				const arr = Array.from(input);
 				const align = 'left';
-				if (align === 'none') throw new Error('buffer is too short');
+				if (align === 'none') throw new Error('errors.contract_call_errors.buffer_too_small_error');
 				if (align === 'left') input = Buffer.from([...arr, ...comprehension(bytesCount - arr.length, () => 0)]);
 				else input = Buffer.from([...comprehension(bytesCount - arr.length, () => 0), ...arr]);
 			}

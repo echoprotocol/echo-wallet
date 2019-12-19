@@ -16,44 +16,44 @@ import {
 export const HEADER_TITLE = [
 	{
 		path: INDEX_PATH,
-		title: 'Wallet',
+		title: 'wallet_page.title',
 	},
 	{
 		path: ACTIVITY_PATH,
-		title: 'Recent Activity',
+		title: 'recent_activity_page.title',
 	},
 	{
 		path: SMART_CONTRACTS_PATH,
-		title: 'Smart Contracts',
+		title: 'smart_contract_page.title',
 	},
 	{
 		path: CALL_CONTRACT_PATH,
-		title: 'Smart Contracts',
+		title: 'smart_contract_page.title',
 	},
 	{
 		path: CONTRACT_LIST_PATH,
-		title: 'Smart Contracts',
+		title: 'smart_contract_page.title',
 	},
 	{
 		path: VIEW_CONTRACT_PATH,
-		title: 'Smart Contracts',
+		title: 'smart_contract_page.title',
 	},
 	{
 		path: ADD_CONTRACT_PATH,
-		title: 'Smart Contracts',
+		title: 'smart_contract_page.title',
 	},
 	{
 		path: VIEW_TRANSACTION_PATH,
-		title: 'Transaction',
+		title: 'recent_activity_page.table.transaction.title',
 	},
 	{
 		path: PERMISSIONS_PATH,
-		title: 'Backup and Permissions',
+		title: 'backup_and_permissions_page.title',
 	},
 
 	{
 		path: FROZEN_FUNDS_PATH,
-		title: 'Frozen Funds',
+		title: 'wallet_page.frozen_funds.title',
 	},
 ];
 
@@ -186,4 +186,5 @@ export const SIDECHAIN_ASSETS_SYMBOLS = {
 	2: 'eETH',
 };
 
+export const EN_LOCALE = 'en';
 export const TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS = 30000;

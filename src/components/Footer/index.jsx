@@ -4,6 +4,7 @@ import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { CACHE_MAPS } from 'echojs-lib';
+import { FormattedMessage } from 'react-intl';
 
 import { version } from '../../../package.json';
 import NetworkDropdown from './NetworkDropdown';
@@ -33,7 +34,9 @@ class Footer extends React.PureComponent {
 			<div className="footer">
 				<ul>
 					<li>
-						<button className="version-btn" onClick={() => { this.openModal(); }}>About wallet</button>
+						<button className="version-btn" onClick={() => { this.openModal(); }}>
+							<FormattedMessage id="footer.about_wallet" />
+						</button>
 						Echo {version}
 					</li>
 					<li>
@@ -47,13 +50,14 @@ class Footer extends React.PureComponent {
 			<div className="footer warning">
 				<ul>
 					<li>
-						Total weight of all the keys won&rsquo;t be enough to sign a transaction.
+						<FormattedMessage id="footer.key_warning.text" />
 						<Button
 							type="submit"
 							size="medium"
 							className="black-btn"
 							onClick={() => this.toPermissions()}
-						>Keys Parameters
+						>
+							<FormattedMessage id="footer.key_warning.button_text" />
 						</Button>
 					</li>
 					<li>
@@ -67,13 +71,14 @@ class Footer extends React.PureComponent {
 			<div className="footer disconnected">
 				<ul>
 					<li>
-                        Check Your Connection
+						<FormattedMessage id="footer.connection_error.text" />
 						<Button
 							type="submit"
 							size="medium"
 							className="black-btn"
 							onClick={() => this.onReconnect()}
-						>Try again
+						>
+							<FormattedMessage id="footer.connection_error.button_text" />
 						</Button>
 					</li>
 					<li>
@@ -89,7 +94,11 @@ class Footer extends React.PureComponent {
 		const errored = (
 			<div className="footer disconnected">
 				<ul>
-					<li>{error}</li>
+					<li>
+						{
+							error ? <FormattedMessage id={error} /> : null
+						}
+					</li>
 					<li />
 				</ul>
 			</div>
