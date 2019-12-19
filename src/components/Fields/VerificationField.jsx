@@ -39,8 +39,10 @@ const VerificationField = (props) => {
 				}
 			</div>
 
-			{ !!error && intl.formatMessage &&
-			<span className="error-message">{intl.formatMessage({ id: error })}</span> }
+			{
+				!!error && intl.formatMessage &&
+				<span className="error-message">{intl.formatMessage({ id: error })}</span>
+			}
 		</div>
 	);
 };
