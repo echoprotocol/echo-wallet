@@ -2063,7 +2063,7 @@ export const contractChangeWhiteAndBlackLists
 		if (!validators.isAccountId(accountId)) {
 			const account = await echo.api.getAccountByName(accountId);
 			if (!account) {
-				dispatch(setFormError(form, formField, 'Account is not found'));
+				dispatch(setFormError(form, formField, 'errors.account_errors.account_not_found_error'));
 				return null;
 			}
 			accountId = account.id;

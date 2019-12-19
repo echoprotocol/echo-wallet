@@ -31,7 +31,6 @@ class ModalToBlacklist extends React.Component {
 	}
 
 	onInputChange(value) {
-
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
@@ -115,9 +114,8 @@ class ModalToBlacklist extends React.Component {
 									<div className="field-wrap">
 										<VerificationField
 											label={intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.title' })}
-
 											name="account-name"
-											onChange={(value) => this.onInputChange(value)}
+											onChange={(value) => this.onInputChange(value, account)}
 											value={account.value}
 											autoFocus
 											icon={icon}
@@ -125,6 +123,7 @@ class ModalToBlacklist extends React.Component {
 											error={account.error}
 											loading={account.loading && !account.error}
 											placeholder={intl.formatMessage({ id: 'modals.modal_to_blacklist.account_input.placeholder' })}
+											intl={intl}
 										/>
 
 									</div>

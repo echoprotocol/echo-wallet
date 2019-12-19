@@ -40,7 +40,6 @@ class ModalToWhitelist extends React.Component {
 
 		const trimedValue = value.trim();
 
-
 		this.checkInput(trimedValue);
 	}
 
@@ -125,6 +124,7 @@ class ModalToWhitelist extends React.Component {
 											error={account.error}
 											loading={account.loading && !account.error}
 											placeholder={intl.formatMessage({ id: 'modals.modal_to_whitelist.account_input.placeholder' })}
+											intl={intl}
 										/>
 									</div>
 									<div className="form-panel">
