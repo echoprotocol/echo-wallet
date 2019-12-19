@@ -63,7 +63,8 @@ class AddContractComponent extends React.Component {
 									/>
 									<ErrorMessage
 										show={!!id.error}
-										value={intl.formatMessage({ id: id.error })}
+										value={id.error}
+										intl={intl}
 									/>
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
@@ -79,7 +80,8 @@ class AddContractComponent extends React.Component {
 									/>
 									<ErrorMessage
 										show={!!bytecode.error}
-										value={intl.formatMessage({ id: bytecode.error })}
+										value={bytecode.error}
+										intl={intl}
 									/>
 								</Form.Field>
 								<AmountField

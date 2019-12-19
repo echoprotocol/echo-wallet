@@ -93,7 +93,8 @@ class EditModeTableRow extends React.Component {
 									/>
 									<ErrorMessage
 										show={!!weight.error}
-										value={intl.formatMessage({ id: weight.error })}
+										value={weight.error}
+										intl={intl}
 									/>
 								</Form.Field>
 							)

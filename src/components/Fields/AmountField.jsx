@@ -324,10 +324,8 @@ class AmountField extends React.Component {
 
 					<ErrorMessage
 						show={amount.error || fee.error}
-						value={
-							intl.formatMessage({ id: amount.error }) ||
-							intl.formatMessage({ id: fee.error })
-						}
+						value={amount.error || fee.error}
+						intl={intl}
 					/>
 
 					{

@@ -72,7 +72,8 @@ class ModalAddWIF extends React.Component {
 						/>
 						<ErrorMessage
 							show={!!error}
-							value={intl.formatMessage({ id: error.message })}
+							value={error.message}
+							intl={intl}
 						/>
 					</Form.Field>
 

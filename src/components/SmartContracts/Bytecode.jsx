@@ -71,7 +71,8 @@ class Bytecode extends React.Component {
 					/>
 					<ErrorMessage
 						show={!!abi.error}
-						value={intl.formatMessage({ id: abi.error })}
+						value={abi.error}
+						intl={intl}
 					/>
 
 				</Form.Field>
@@ -88,7 +89,8 @@ class Bytecode extends React.Component {
 					</div>
 					<ErrorMessage
 						show={!!name.error}
-						value={intl.formatMessage({ id: name.error })}
+						value={name.error}
+						intl={intl}
 					/>
 				</div>
 			</React.Fragment>

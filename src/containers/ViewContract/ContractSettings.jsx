@@ -169,7 +169,8 @@ class ContractSettings extends React.Component {
 				</Input>
 				<ErrorMessage
 					show={!!newName.error}
-					value={intl.formatMessage({ id: newName.error })}
+					value={newName.error}
+					intl={intl}
 				/>
 			</div>
 		);

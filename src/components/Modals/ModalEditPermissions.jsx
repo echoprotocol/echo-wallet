@@ -102,7 +102,6 @@ class ModalEditPermissions extends React.Component {
 								</label>
 							</div>
 						</div>
-
 						<div className="field-wrap">
 							<PasswordInput
 								errorMessage={error ? intl.formatMessage({ id: error }) : ''}

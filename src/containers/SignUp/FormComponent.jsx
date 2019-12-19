@@ -152,7 +152,8 @@ class FormComponent extends React.Component {
 					/>
 					<ErrorMessage
 						show={!!userWIF.error}
-						value={intl.formatMessage({ id: userWIF.error })}
+						value={userWIF.error}
+						intl={intl}
 					/>
 				</div>
 				<div className={classnames('field error-wrap', { error: userPublicKey.error })}>
@@ -171,7 +172,8 @@ class FormComponent extends React.Component {
 					/>
 					<ErrorMessage
 						show={!!userPublicKey.error}
-						value={intl.formatMessage({ id: userPublicKey.error })}
+						value={userPublicKey.error}
+						intl={intl}
 					/>
 				</div>
 			</React.Fragment>
@@ -200,7 +202,8 @@ class FormComponent extends React.Component {
 					/>
 					<ErrorMessage
 						show={!!accountName.error}
-						value={intl.formatMessage({ id: accountName.error })}
+						value={accountName.error}
+						intl={intl}
 					/>
 				</div>
 				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}

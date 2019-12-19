@@ -84,7 +84,8 @@ class ModalCreateBtcAddress extends React.Component {
 										/>
 										<ErrorMessage
 											show={!!error}
-											value={error && intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
+											value="modals.modal_create_btc_address.warning"
+											intl={intl}
 										/>
 										<span className="warning-message">
 											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}

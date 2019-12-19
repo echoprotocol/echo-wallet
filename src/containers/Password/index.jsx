@@ -107,7 +107,8 @@ class Password extends React.Component {
 						/>
 						<ErrorMessage
 							show={!!repeatError}
-							value={intl.formatMessage({ id: 'create_password_page.repeat_error' })}
+							value="create_password_page.repeat_error"
+							intl={intl}
 						/>
 
 					</Form.Field>

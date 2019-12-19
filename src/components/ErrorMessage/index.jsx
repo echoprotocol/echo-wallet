@@ -21,7 +21,7 @@ class ErrorMessage extends React.Component {
 	}
 
 	render() {
-		const { value, show } = this.props;
+		const { value, show, intl } = this.props;
 		if (!context) {
 			context = value;
 		}
@@ -36,7 +36,12 @@ class ErrorMessage extends React.Component {
 					onExit={() => this.clearContext()}
 				>
 					<span className="error-message">
-						{context}
+						{
+							intl ?
+								intl.formatMessage({ id: context }) :
+								context
+						}
+
 					</span>
 				</CSSTransition>
 			</React.Fragment>
@@ -49,12 +54,14 @@ class ErrorMessage extends React.Component {
 ErrorMessage.propTypes = {
 	value: PropTypes.string,
 	show: PropTypes.bool,
+	intl: PropTypes.any,
 
 };
 
 ErrorMessage.defaultProps = {
 	value: '',
 	show: false,
+	intl: null,
 };
 
 export default ErrorMessage;

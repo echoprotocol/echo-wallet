@@ -44,7 +44,8 @@ class BytecodeField extends React.Component {
 				</div>
 				<ErrorMessage
 					show={!!field.error}
-					value={intl.formatMessage({ id: field.error })}
+					value={field.error}
+					intl={intl}
 				/>
 
 			</div>

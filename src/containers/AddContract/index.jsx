@@ -68,7 +68,8 @@ class AddContractComponent extends React.Component {
 						/>
 						<ErrorMessage
 							show={!!name.error}
-							value={intl.formatMessage({ id: name.error })}
+							value={name.error}
+							intl={intl}
 						/>
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
@@ -100,7 +101,8 @@ class AddContractComponent extends React.Component {
 						/>
 						<ErrorMessage
 							show={!!abi.error}
-							value={intl.formatMessage({ id: abi.error })}
+							value={abi.error}
+							intl={intl}
 						/>
 					</Form.Field>
 					<div className="form-panel">
