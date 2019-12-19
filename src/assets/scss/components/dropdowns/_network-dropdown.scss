@@ -53,6 +53,7 @@
 		transition: background-color $speed;
 		border-left: 1px solid rgb(212, 212, 212);
 		user-select: none;
+		cursor: pointer;
 
 		&:hover {
 			background-color: #f7f7f7;
@@ -93,7 +94,7 @@
 	}
 
 	&.warning {
-		&:after {
+		&:before {
 			background-color: rgb(238, 133, 28);
 		}
 

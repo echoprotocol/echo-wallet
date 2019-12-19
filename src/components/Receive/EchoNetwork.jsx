@@ -281,7 +281,6 @@ class EchoNetwork extends React.Component {
 				this.setState({ open: false });
 				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
 			},
-			selected: false,
 			active: false,
 		}];
 		return generateAddressItem;
