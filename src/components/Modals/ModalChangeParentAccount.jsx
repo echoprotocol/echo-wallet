@@ -103,7 +103,7 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	render() {
-		const { show, currentAccountName, delegateObject } = this.props;
+		const { show, currentAccountName, delegateObject, keyWeightWarn } = this.props;
 		const { searchText, loading, options } = this.state;
 
 		const delegate = options.find(({ text }) => text === searchText);
@@ -175,7 +175,7 @@ class ModalChangeDelegate extends React.Component {
 										className="main-btn"
 										content="Confirm"
 										onClick={submit}
-										disabled={loading || !delegate}
+										disabled={loading || !delegate || keyWeightWarn}
 									/>
 								)
 							}
@@ -196,6 +196,7 @@ ModalChangeDelegate.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	currentAccountName: PropTypes.string.isRequired,
 	delegateObject: PropTypes.object.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalChangeDelegate.defaultProps = {
@@ -207,6 +208,7 @@ export default connect(
 		show: state.modal.getIn([MODAL_CHANGE_PARENT_ACCOUNT, 'show']),
 		currentAccountName: state.global.getIn(['activeUser', 'name']),
 		delegateObject: state.form.getIn([FORM_CHANGE_DELEGATE, 'delegate']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		closeModal: (modal) => dispatch(closeModal(modal)),
