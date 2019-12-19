@@ -1,4 +1,3 @@
-// import echo from 'echojs-lib';
 import operations from '../constants/Operations';
 import Services from '../services';
 
@@ -13,7 +12,6 @@ export const getOperationFee = async (type, options) => {
 	const { value: operationId } = operations[type];
 	const [result] = await Services.getEcho()
 		.api.getRequiredFees([[operationId, options]], options.asset_id);
-	// const [result] = await echo.api.getRequiredFees([[operationId, options]], options.asset_id);
 
 	switch (operationId) {
 		case operations.transfer.value: return result.amount;

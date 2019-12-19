@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,6 +15,7 @@ import RadialSeparators from './RadialSeparators';
 import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
 import ModalAcceptRunningNode from '../Modals/ModalAcceptRunningNode';
 import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
+import { isPlatformSupportNode } from '../../helpers/utils';
 
 
 export default class ProgressBar extends PureComponent {
@@ -121,11 +123,7 @@ export default class ProgressBar extends PureComponent {
 			return this.renderPause();
 		}
 		if (isNodeSyncing) {
-			return (
-				<div className="progress-wrap">
-					{this.renderProgress()}
-				</div>
-			);
+			return this.renderProgress();
 		}
 		return this.renderPlay();
 	}
@@ -134,8 +132,14 @@ export default class ProgressBar extends PureComponent {
 		return (
 			<React.Fragment>
 				<ModalAcceptRunningNode />
-				<ModalAcceptIncomingConnections />
-				{this.renderStatus()}
+				{ isPlatformSupportNode() && <ModalAcceptIncomingConnections /> }
+				{
+					isPlatformSupportNode() && (
+						<div className="progress-wrap">
+							{this.renderStatus()}
+						</div>
+					)
+				}
 			</React.Fragment>
 		);
 	}

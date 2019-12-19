@@ -109,7 +109,6 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	if (!accountId) return;
 
 	const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
-	// const [account] = await echo.api.getFullAccounts([accountId]);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -122,7 +121,6 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	let target = account.active.account_auths.map(async (a) => {
 
 		const { name } = await Services.getEcho().api.getObject(a[0]);
-		// const { name } = await echo.api.getObject(a[0]);
 		return {
 			key: name, weight: a[1], role: 'active', type: 'accounts', hasWif: false,
 		};
@@ -252,7 +250,6 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 	} else {
 		try {
 			account = await Services.getEcho().api.getAccountByName(key.value);
-			// account = await echo.api.getAccountByName(key.value);
 
 			if (!account) {
 				error = true;
@@ -330,7 +327,6 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 
 		const accountInfo = new Promise(async (res) => {
 			const account = await Services.getEcho().api.getAccountByName(value.get('key').value);
-			// const account = await echo.api.getAccountByName(value.get('key').value);
 			return res([account.id, weightInt]);
 		});
 		result.push(accountInfo);
@@ -594,9 +590,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		}
 
 		await Services.getEcho().api.getGlobalProperties(true);
-		// await echo.api.getGlobalProperties(true);
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 		const transaction = {
 			account: currentAccount.get('id'),

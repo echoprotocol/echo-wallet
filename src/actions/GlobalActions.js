@@ -380,7 +380,6 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 
 	const account = await Services.getEcho().api.getAccountByName(accountName);
 
-	// const account = await echo.api.getAccountByName(accountName);
 	await userStorage.removeKeys(
 		account.active.key_auths.map(([k]) => k),
 		{ password, accountId: account.id },
