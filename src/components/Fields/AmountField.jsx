@@ -13,6 +13,7 @@ import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import FeeField from './FeeField';
+import ErrorMessage from '../ErrorMessage';
 
 class AmountField extends React.Component {
 
@@ -321,10 +322,11 @@ class AmountField extends React.Component {
 							this.renderErrorStaus(assetDropdown, amount.error, fee.error)
 						}
 					</div>
-					{
-						amount.error || fee.error ?
-							<span className="error-message">{amount.error || fee.error}</span> : null
-					}
+
+					<ErrorMessage
+						show={amount.error || fee.error}
+						value={amount.error || fee.error}
+					/>
 
 					{
 						assetDropdown ? <Dropdown

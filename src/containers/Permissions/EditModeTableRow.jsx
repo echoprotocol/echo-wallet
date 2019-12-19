@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import PasswordInput from './../../components/PasswordInput';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class EditModeTableRow extends React.Component {
 
@@ -63,7 +64,7 @@ class EditModeTableRow extends React.Component {
 						{this.renderType(type)}
 						{
 							keyRole === 'active' && (
-								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
+								<div className={classnames('field error-wrap weight-field', { error: weight.error })}>
 									<label htmlFor="weight">Weight</label>
 									<input
 										type="text"
@@ -73,8 +74,11 @@ class EditModeTableRow extends React.Component {
 										value={weight.value}
 										onChange={setWeight}
 									/>
-									{weight.error && <span className="error-message">{weight.error}</span>}
-								</Form.Field>
+									<ErrorMessage
+										show={!!weight.error}
+										value={weight.error}
+									/>
+								</div>
 							)
 						}
 					</div>

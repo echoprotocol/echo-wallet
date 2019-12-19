@@ -9,6 +9,7 @@ import { setValue } from '../../actions/FormActions';
 
 import { KEY_CODE_ENTER } from '../../constants/GlobalConstants';
 import { FORM_PASSWORD_CREATE } from '../../constants/FormConstants';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class Password extends React.Component {
 
@@ -74,9 +75,8 @@ class Password extends React.Component {
 				</div>
 				<div className="form-info-description">Please, create password that will be used to unlock the app from this device. Echo Desktop Wallet does not store backups of the account password, so in case of losing your password you will need to reset it.</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error })}>
+					<div className={classnames('field error-wrap', { error })}>
 						<label htmlFor="password">Password</label>
-
 						<input
 							type="password"
 							placeholder="Create password"
@@ -86,10 +86,12 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">{error}</span>
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
+						<ErrorMessage
+							show={!!error}
+							value={error}
+						/>
+					</div>
+					<div className={classnames('field error-wrap', { error: repeatError })}>
 						<label htmlFor="repeatPassword">Confirm password</label>
 
 						<input
@@ -101,9 +103,12 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">Passwords do not match</span>
+						<ErrorMessage
+							show={!!repeatError}
+							value="Passwords do not match"
+						/>
 
-					</Form.Field>
+					</div>
 				</div>
 				<div className="form-panel">
 					<Button

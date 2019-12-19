@@ -13,6 +13,7 @@ import { setFormValue, clearForm, setFormError, setValue } from '../../actions/F
 import { callContractViaId } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class AddContractComponent extends React.Component {
 
@@ -39,7 +40,7 @@ class AddContractComponent extends React.Component {
 								<h3>Call contract via ID</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: id.error })}>
+								<div className={classnames('field error-wrap', { error: id.error })}>
 									<label htmlFor="id">ID</label>
 									<input
 										type="text"
@@ -51,11 +52,12 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									{
-										id.error && <span className="error-message">{id.error}</span>
-									}
-								</Form.Field>
-								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+									<ErrorMessage
+										show={!!id.error}
+										value={id.error}
+									/>
+								</div>
+								<div className={classnames('field error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">Bytecode</label>
 									<textarea
 										placeholder="Bytecode"
@@ -64,10 +66,11 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-									{
-										bytecode.error && <span className="error-message">{bytecode.error}</span>
-									}
-								</Form.Field>
+									<ErrorMessage
+										show={!!bytecode.error}
+										value={bytecode.error}
+									/>
+								</div>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
 									fee={fee}

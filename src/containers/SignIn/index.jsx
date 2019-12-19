@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 
@@ -69,9 +69,9 @@ class SignIn extends React.Component {
 
 		return (
 
-			<form className="form main-form">
+			<Form className="main-form">
 				<div className="form-info">
-					{ isAddAccount ?
+					{ isAddAccount &&
 						<button
 							type="button"
 							className="back-link"
@@ -80,7 +80,7 @@ class SignIn extends React.Component {
 						>
 							<span className="icon-back" />
 							back
-						</button> : null
+						</button>
 					}
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>
@@ -136,7 +136,7 @@ class SignIn extends React.Component {
 					}
 
 				</div>
-			</form>
+			</Form>
 		);
 	}
 

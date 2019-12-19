@@ -4,6 +4,7 @@ import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 
 import { FORM_CREATE_CONTRACT_BYTECODE } from '../../constants/FormConstants';
+import ErrorMessage from '../ErrorMessage';
 
 class Bytecode extends React.Component {
 
@@ -28,7 +29,7 @@ class Bytecode extends React.Component {
 
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: !!bytecode.error })}>
+				<div className={classnames('field error-wrap', { error: !!bytecode.error })}>
 					<label htmlFor="bytecode">Bytecode</label>
 					<textarea
 						type="text"
@@ -39,9 +40,12 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-					{ bytecode.error && <span className="error-message">{bytecode.error}</span> }
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
+					<ErrorMessage
+						show={!!bytecode.error}
+						value={bytecode.error}
+					/>
+				</div>
+				<div className={classnames('field error-wrap', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
 						ABI
 						<span className="label-info">(If you insert ABI, contract will add to watchlist)</span>
@@ -55,9 +59,12 @@ class Bytecode extends React.Component {
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-					{ abi.error && <span className="error-message">{abi.error}</span> }
-				</Form.Field>
-				<div className={classnames('error-wrap', { error: !!name.error })}>
+					<ErrorMessage
+						show={!!abi.error}
+						value={abi.error}
+					/>
+				</div>
+				<div className={classnames('field error-wrap', { error: !!name.error })}>
 					<div className="action-wrap">
 						<Form.Field
 							label="Contract Name"
@@ -68,7 +75,10 @@ class Bytecode extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					{ name.error && <span className="error-message">{name.error}</span> }
+					<ErrorMessage
+						show={!!name.error}
+						value={name.error}
+					/>
 				</div>
 			</React.Fragment>
 		);

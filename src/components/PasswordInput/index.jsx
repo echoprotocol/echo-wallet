@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ActionBtn from '../ActionBtn';
+import ErrorMessage from '../ErrorMessage';
 
 export default class PasswordInput extends React.PureComponent {
 
@@ -69,7 +70,10 @@ export default class PasswordInput extends React.PureComponent {
 					/>
 				</div>
 				<React.Fragment>
-					{errorMessage && <span className="error-message">{ errorMessage }</span>}
+					<ErrorMessage
+						show={!!errorMessage}
+						value={errorMessage}
+					/>
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>

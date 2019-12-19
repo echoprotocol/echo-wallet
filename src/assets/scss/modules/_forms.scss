@@ -3,12 +3,8 @@
 	max-width: 100%;
 }
 
-.form .field {
+.form .field:not(:last-child) {
 	margin: 0 0 24px;
-}
-
-.form .field:last-child {
-	margin-bottom: 0;
 }
 
 .form select {
@@ -32,6 +28,7 @@
 
 .form .field .input {
 	width: 100%;
+	z-index: 2;
 }
 
 .form .field .input input {
@@ -315,10 +312,8 @@
 		}
 	}
 
-	&.ui.form {
-		textarea {
-			resize: none;
-		}
+	textarea {
+		resize: none;
 	}
 
 	.action-wrap {
@@ -349,9 +344,9 @@
 					border-color: $err-red;
 				}
 
-				.error-message {
-					top: 99%;
-				}
+				// .error-message {
+				// 	top: 99%;
+				// }
 			}
 
 			input {
@@ -387,37 +382,10 @@
 	.field-wrap {
 		.field {
 			.input {
-				&.focused {
-					.assets-tokens-dropdown {
-						border-color: $border-hover;
-						position: relative;
-
-						&:before {
-							top: -5px;
-							bottom: -5px;
-							right: -5px;
-							left: 0;
-							position: absolute;
-							display: block;
-							content: "";
-							border: 4px solid #f1f1f1;
-							border-left: 0;
-							border-radius: 0.5rem;
-							border-top-left-radius: 0;
-							border-bottom-left-radius: 0;
-						}
-					}
-				}
 
 				&.error {
-					.assets-tokens-dropdown {
-						border-left: 0;
-					}
-
-					.assets-tokens-dropdown,
 					.amount {
 						border-color: $err-red;
-
 					}
 				}
 
@@ -499,9 +467,9 @@
 	.error {
 		position: relative;
 
-		.error-message {
-			display: flex;
-		}
+		// .error-message {
+		// 	display: flex;
+		// }
 
 		.input {
 			&:focus {
@@ -583,14 +551,12 @@
 }
 
 
-.error-wrap {
+// .error-wrap {
+.field {
 	position: relative;
 	margin-bottom: 25px;
 
 	&.error {
-		.error-message {
-			display: block;
-		}
 
 		input,
 		textarea {
@@ -599,21 +565,7 @@
 	}
 }
 
-.error-message {
-	display: none;
-	position: absolute;
-	right: 0;
-	margin-right: 3px;
-	background-color: $err-red;
-	padding: 0 5px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	font-size: 12px;
-	color: $white;
-	animation: fadeIn .3s;
-	line-height: 1.1;
-	z-index: 5;
-}
+
 
 .value-status {
 	position: absolute;

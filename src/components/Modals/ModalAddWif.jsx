@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import PasswordInput from '../PasswordInput';
+import ErrorMessage from '../ErrorMessage';
 
 
 class ModalAddWIF extends React.Component {
@@ -60,9 +61,10 @@ class ModalAddWIF extends React.Component {
 							onChange={() => {}}
 							value={publicKey}
 						/>
-						{
-							error && <span className="error-message">{error.message}</span>
-						}
+						<ErrorMessage
+							show={!!error}
+							value={error && error.message}
+						/>
 					</Form.Field>
 
 					<PasswordInput

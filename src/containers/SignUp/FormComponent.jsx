@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { PrivateKey } from 'echojs-lib';
 import ActionBtn from '../../components/ActionBtn';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class FormComponent extends React.Component {
 
@@ -69,7 +69,7 @@ class FormComponent extends React.Component {
 		const { generatedWIF, confirmWIF, loading } = this.props;
 		return (
 			<React.Fragment>
-				<Form.Field>
+				<div className="field">
 					<div className="label-wrap">
 						<label htmlFor="generatedWIF">Generated WIF</label>
 						<button
@@ -92,8 +92,8 @@ class FormComponent extends React.Component {
 							copy={generatedWIF.value}
 						/>
 					</div>
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>
+				</div>
+				<div className={classnames('field error-wrap', { error: confirmWIF.error })}>
 					<label htmlFor="confirmWIF">Confirm WIF</label>
 					<input
 						name="confirmWIF"
@@ -102,8 +102,11 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					{ confirmWIF.error && <span className="error-message">{confirmWIF.error}</span> }
-				</Form.Field>
+					<ErrorMessage
+						show={!!confirmWIF.error}
+						value={confirmWIF.error}
+					/>
+				</div>
 			</React.Fragment>
 		);
 	}
@@ -112,7 +115,7 @@ class FormComponent extends React.Component {
 		const { loading, userPublicKey, userWIF } = this.props;
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: userWIF.error })}>
+				<div className={classnames('field error-wrap', { error: userWIF.error })}>
 					<h3 className="field-title">You can use your own WIF or Public Key:</h3>
 					<div className="label-wrap">
 						<label htmlFor="userWIF">WIF (optional)</label>
@@ -128,9 +131,12 @@ class FormComponent extends React.Component {
 							this.validateWIFAfterChange(e);
 						}}
 					/>
-					<span className="error-message">{userWIF.error}</span>
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: userPublicKey.error })}>
+					<ErrorMessage
+						show={!!userWIF.error}
+						value={userWIF.error}
+					/>
+				</div>
+				<div className={classnames('field error-wrap', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">PUBLIC KEY</label>
 					<input
 						name="userPublicKey"
@@ -142,8 +148,11 @@ class FormComponent extends React.Component {
 							this.validatePubAfterChange(e);
 						}}
 					/>
-					<span className="error-message">{userPublicKey.error}</span>
-				</Form.Field>
+					<ErrorMessage
+						show={!!userPublicKey.error}
+						value={userPublicKey.error}
+					/>
+				</div>
 			</React.Fragment>
 		);
 	}
@@ -152,7 +161,7 @@ class FormComponent extends React.Component {
 		const { accountName, loading, isCustomWIF } = this.props;
 		return (
 			<div className="field-wrap">
-				<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
+				<div className={classnames('error-wrap', { error: accountName.error })}>
 					<label htmlFor="accountName">Account name (public)</label>
 					<input
 						name="accountName"
@@ -162,8 +171,11 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					<span className="error-message">{accountName.error}</span>
-				</Form.Field>
+					<ErrorMessage
+						show={!!accountName.error}
+						value={accountName.error}
+					/>
+				</div>
 				{ isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF() }
 
 			</div>

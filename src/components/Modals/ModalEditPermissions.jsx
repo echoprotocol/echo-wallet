@@ -98,14 +98,16 @@ class ModalEditPermissions extends React.Component {
 								</label>
 							</div>
 						</div>
-						<PasswordInput
-							errorMessage={error}
-							inputLabel="Password"
-							inputPlaceholder="Password"
-							inputName="password"
-							value={password}
-							onChange={(e) => this.onChange(e)}
-						/>
+						<div className="field-wrap">
+							<PasswordInput
+								errorMessage={error}
+								inputLabel="Password"
+								inputPlaceholder="Password"
+								inputName="password"
+								value={password}
+								onChange={(e) => this.onChange(e)}
+							/>
+						</div>
 						<div className="form-panel">
 							<a
 								className="action-link"

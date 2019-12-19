@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
+import ErrorMessage from '../ErrorMessage';
 
 class BytecodeField extends React.Component {
 
@@ -21,7 +21,7 @@ class BytecodeField extends React.Component {
 		} = this.props;
 
 		return (
-			<Form.Field className={classnames('error-wrap', { error: field.error })}>
+			<div className={classnames('field error-wrap', { error: field.error })}>
 
 				<label htmlFor="bytecode">
 					bytecode
@@ -37,9 +37,12 @@ class BytecodeField extends React.Component {
 					/>
 					{ field.error && <span className="icon-error value-status" /> }
 				</div>
-				<span className="error-message">{field.error}</span>
+				<ErrorMessage
+					show={!!field.error}
+					value={field.error}
+				/>
 
-			</Form.Field>
+			</div>
 		);
 	}
 

@@ -13,6 +13,7 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 import { MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { FORM_CHANGE_DELEGATE } from '../../constants/FormConstants';
 import Avatar from '../Avatar';
+import ErrorMessage from '../../components/ErrorMessage';
 
 import TransactionScenario from '../../containers/TransactionScenario';
 
@@ -120,9 +121,9 @@ class ModalChangeDelegate extends React.Component {
 				<div className="modal-header">
 					<h2 className="modal-header-title">Change delegate</h2>
 				</div>
-				<div className="modal-body">
+				<Form className="modal-body">
 					<div className="field-wrap">
-						<Form.Field>
+						<div className="field">
 							<label htmlFor="current-account">Current Account</label>
 							<div className="image-input">
 								<Avatar accountName={currentAccountName} />
@@ -134,9 +135,8 @@ class ModalChangeDelegate extends React.Component {
 									value={currentAccountName}
 								/>
 							</div>
-						</Form.Field>
+						</div>
 						<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
-
 							<div className="field">
 								<label htmlFor="parentAccount" className="field-label">Delegated to</label>
 								<div className="account-dropdown-wrap">
@@ -160,7 +160,10 @@ class ModalChangeDelegate extends React.Component {
 										onChange={(e, { value }) => this.onChangeAccount(value)}
 									/>
 								</div>
-								{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
+								<ErrorMessage
+									show={!!delegateObject.error}
+									value={delegateObject.error}
+								/>
 							</div>
 						</div>
 					</div>
@@ -181,7 +184,7 @@ class ModalChangeDelegate extends React.Component {
 							}
 						</TransactionScenario>
 					</div>
-				</div>
+				</Form>
 			</Modal>
 		);
 	}

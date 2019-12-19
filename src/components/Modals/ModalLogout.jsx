@@ -64,56 +64,56 @@ class ModalLogout extends React.Component {
 		const { password } = this.state;
 
 		return (
-			<Modal className="small" open={show}>
+			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-body">
-							<Form className="main-form">
-								<div className="form-info">
-									<h3>Confirm logout</h3>
-								</div>
-									You will be signed out of your account.
-								<div className="field-wrap">
-									<PasswordInput
-										errorMessage={error}
-										inputLabel="Password"
-										inputPlaceholder="Password"
-										inputName="password"
-										value={password}
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-								</div>
-								<div className="form-panel">
-									<a
-										className="action-link"
-										role="button"
-										onClick={(e) => this.onForgot(e)}
-										onKeyPress={(e) => this.onForgot(e)}
-										tabIndex="0"
-									>
-									Forgot password?
-									</a>
-									<Button
-										className="main-btn"
-										type="button"
-										onClick={() => this.onClose()}
-										content="Cancel"
-									/>
-									<Button
-										type="submit"
-										className="main-btn"
-										onClick={() => this.onConfirm()}
-										content="Confirm"
-									/>
-								</div>
-							</Form>
-						</div>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">
+							Confirm logout
+						</h2>
 					</div>
+					<Form className="main-form modal-body">
+						<div className="info-text">
+							You will be signed out of your account.
+						</div>
+						<div className="field-wrap">
+							<PasswordInput
+								errorMessage={error}
+								inputLabel="Password"
+								inputPlaceholder="Password"
+								inputName="password"
+								value={password}
+								onChange={(e) => this.onChange(e)}
+								autoFocus
+							/>
+						</div>
+						<div className="form-panel">
+							<a
+								className="action-link"
+								role="button"
+								onClick={(e) => this.onForgot(e)}
+								onKeyPress={(e) => this.onForgot(e)}
+								tabIndex="0"
+							>
+								Forgot password?
+							</a>
+							<Button
+								className="main-btn"
+								type="button"
+								onClick={() => this.onClose()}
+								content="Cancel"
+							/>
+							<Button
+								type="submit"
+								className="main-btn"
+								onClick={() => this.onConfirm()}
+								content="Confirm"
+							/>
+						</div>
+					</Form>
 				</FocusLock>
 			</Modal>
 		);

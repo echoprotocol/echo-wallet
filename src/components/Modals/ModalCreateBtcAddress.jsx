@@ -11,6 +11,7 @@ import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 import { generateBtcAddress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 import { isBackupAddress } from '../../helpers/SidechainHelper';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class ModalCreateBtcAddress extends React.Component {
 
@@ -79,9 +80,10 @@ class ModalCreateBtcAddress extends React.Component {
 											onChange={(e) => this.onChange(e)}
 											autoFocus
 										/>
-										{
-											<span className="error-message">{error}</span>
-										}
+										<ErrorMessage
+											show={!!error}
+											value={error}
+										/>
 										<span className="warning-message">
 											Submit your backup BTC address above.
 										</span>

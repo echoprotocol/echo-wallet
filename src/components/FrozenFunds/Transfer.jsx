@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Dropdown, Button, Popup } from 'semantic-ui-react';
+import { Dropdown, Button, Popup, Form } from 'semantic-ui-react';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
 import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
@@ -51,7 +51,7 @@ class Transfer extends React.Component {
 			>
 				{
 					(submit) => (
-						<form className="form main-form">
+						<Form className="form main-form">
 							<div className="form-info">
 								<h3>Freeze Funds</h3>
 							</div>
@@ -112,7 +112,7 @@ class Transfer extends React.Component {
 									/>
 								</div>
 							</div>
-						</form>
+						</Form>
 					)
 				}
 			</TransactionScenario>

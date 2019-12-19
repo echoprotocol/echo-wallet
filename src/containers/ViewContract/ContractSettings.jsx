@@ -12,6 +12,7 @@ import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 import { ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 import { validateContractName } from '../../helpers/ValidateHelper';
 import ActionBtn from '../../components/ActionBtn';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class ContractSettings extends React.Component {
 
@@ -163,8 +164,10 @@ class ContractSettings extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 				</Input>
-
-				<span className="error-message">{newName.error}</span>
+				<ErrorMessage
+					show={!!newName.error}
+					value={newName.error}
+				/>
 			</div>
 		);
 	}

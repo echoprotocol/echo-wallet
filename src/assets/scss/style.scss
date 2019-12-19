@@ -32,6 +32,8 @@
 @import "components/table-key-value";
 @import "components/action-tooltip";
 @import "components/copy-label";
+@import "components/error-message";
+
 @import "components/dropdowns/dropdowns";
 @import "components/dropdowns/fee-dropdown";
 @import "components/dropdowns/network-dropdown";
@@ -42,7 +44,6 @@
 @import "components/dropdowns/user-dropdown";
 @import "components/dropdowns/ip-url-dropdown";
 @import "components/dropdowns/recipient-dropdown-wrap";
-
 
 @import "components/modals/modal-helper";
 @import "components/modals/modals";
@@ -75,6 +76,7 @@
 @import "components/buttons/remove-btn";
 @import "components/buttons/version-btn";
 @import "components/buttons/btn-lock";
+
 
 @import "modules/all";
 @import "pages/all";

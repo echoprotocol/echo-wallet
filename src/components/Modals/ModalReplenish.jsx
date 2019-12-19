@@ -41,9 +41,10 @@ class ModalToWhitelist extends React.Component {
 			this.props.setModalError('');
 		}
 	}
+
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, error,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees,
 		} = this.props;
 
 		return (
@@ -61,64 +62,58 @@ class ModalToWhitelist extends React.Component {
 								<div className="modal-header">
 									<h3 className="modal-header-title">Replenish Fee Pool</h3>
 								</div>
-								<div className="modal-body">
-									<Form className="main-form">
-										<div className="field-wrap">
+								<Form className="main-form modal-body">
+									<div className="field-wrap">
 
-											{
-												activeAccount ?
-													<AccountField
-														subject="from"
-														field={{
-															value: activeAccount.get('name'),
-															checked: true,
-														}}
-														avatarName={activeAccount.get('name')}
-														setIn={() => {
-														}}
-														getTransferFee={() => {
-														}}
-														setContractFees={() => {
-														}}
-														setValue={() => {
-														}}
-														disabled
-													/> : null
-											}
-
-											<AmountField
-												fees={fees}
-												form={FORM_REPLENISH}
-												fee={fee}
-												assets={assets}
-												amount={{
-													...amount,
-													error,
+										{
+											activeAccount &&
+											<AccountField
+												subject="from"
+												field={{
+													value: activeAccount.get('name'),
+													checked: true,
 												}}
-												currency={currency}
-												isAvailableBalance={isAvailableBalance}
-												amountInput={(val, cur, name) => {
-													this.onChangeFeePoolValue(val, cur, name);
+												avatarName={activeAccount.get('name')}
+												setIn={() => {
 												}}
-												setFormError={this.props.setFormError}
-												setFormValue={this.props.setFormValue}
-												setValue={this.props.setValue}
-												setDefaultAsset={this.props.setDefaultAsset}
-												getTransferFee={this.props.getTransactionFee}
-												setContractFees={() => {}}
+												getTransferFee={() => {
+												}}
+												setContractFees={() => {
+												}}
+												setValue={() => {
+												}}
+												disabled
 											/>
-										</div>
+										}
+										<AmountField
+											fees={fees}
+											form={FORM_REPLENISH}
+											fee={fee}
+											assets={assets}
+											amount={{ ...amount }}
+											currency={currency}
+											isAvailableBalance={isAvailableBalance}
+											amountInput={(val, cur, name) => {
+												this.onChangeFeePoolValue(val, cur, name);
+											}}
+											setFormError={this.props.setFormError}
+											setFormValue={this.props.setFormValue}
+											setValue={this.props.setValue}
+											setDefaultAsset={this.props.setDefaultAsset}
+											getTransferFee={this.props.getTransactionFee}
+											setContractFees={() => {}}
+										/>
+									</div>
 
-										<div className="form-panel">
-											<Button
-												className="main-btn"
-												content="Send"
-												type="submit"
-												onClick={() => this.onSend(submit)}
-											/>
-										</div>
-									</Form>
-								</div>
+									<div className="form-panel">
+										<Button
+											className="main-btn"
+											content="Send"
+											type="submit"
+											onClick={() => this.onSend(submit)}
+										/>
+									</div>
+								</Form>
 							</FocusLock>
 						</Modal>
 					)

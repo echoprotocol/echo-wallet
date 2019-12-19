@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -11,6 +11,7 @@ import { addToken } from '../../actions/BalanceActions';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { contractIdRegex } from '../../helpers/ValidateHelper';
+import ErrorMessage from '../ErrorMessage';
 
 class ModalTokens extends React.Component {
 
@@ -44,7 +45,7 @@ class ModalTokens extends React.Component {
 						<h2 className="modal-header-title">Add ERC20 token to watch list</h2>
 					</div>
 					<div className="modal-body">
-						<form className="main-form">
+						<Form className="main-form">
 							<div className="field-wrap">
 								<div className={classnames('field error-wrap', { error: contractId.error })}>
 									<label htmlFor="tokens">Contract ID</label>
@@ -57,7 +58,10 @@ class ModalTokens extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									<span className="error-message">{contractId.error}</span>
+									<ErrorMessage
+										show={!!contractId.error}
+										value={contractId.error}
+									/>
 								</div>
 							</div>
 							<div className="form-panel">
@@ -69,7 +73,7 @@ class ModalTokens extends React.Component {
 									content="Watch Token"
 								/>
 							</div>
-						</form>
+						</Form>
 					</div>
 				</FocusLock>
 			</Modal>

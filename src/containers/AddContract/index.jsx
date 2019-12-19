@@ -10,6 +10,7 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
 import { version } from '../../../package.json';
 import { contractIdRegex } from '../../helpers/ValidateHelper';
+import ErrorMessage from '../../components/ErrorMessage';
 
 
 class AddContractComponent extends React.Component {
@@ -45,7 +46,7 @@ class AddContractComponent extends React.Component {
 					<h3>Add contract to watch list</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: name.error })}>
+					<div className={classnames('field error-wrap', { error: name.error })}>
 						<label htmlFor="name">Name</label>
 						<input
 							type="text"
@@ -55,12 +56,12 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						{
-							name.error &&
-								<span className="error-message">{name.error}</span>
-						}
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: id.error })}>
+						<ErrorMessage
+							show={!!name.error}
+							value={name.error}
+						/>
+					</div>
+					<div className={classnames('field error-wrap', { error: id.error })}>
 						<label htmlFor="id">ID</label>
 						<input
 							type="text"
@@ -69,13 +70,12 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{
-							id.error &&
-								<span className="error-message">{id.error}</span>
-						}
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
+						<ErrorMessage
+							show={!!id.error}
+							value={id.error}
+						/>
+					</div>
+					<div className={classnames('field error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">ABI</label>
 						<textarea
 							type="text"
@@ -84,11 +84,11 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{
-							abi.error &&
-								<span className="error-message">{abi.error}</span>
-						}
-					</Form.Field>
+						<ErrorMessage
+							show={!!abi.error}
+							value={abi.error}
+						/>
+					</div>
 					<div className="form-panel">
 						<Button
 							basic
