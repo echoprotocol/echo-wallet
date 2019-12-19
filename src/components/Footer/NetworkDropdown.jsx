@@ -88,7 +88,7 @@ class Network extends React.PureComponent {
 							}
 						</div>
 						{
-							(i.name === 'testnet' && isPlatformSupportNode()) && (
+							(i.name === 'testnet' && isPlatformSupportNode() && this.props.isNodeSyncing) && (
 								<div className="node-info">
 									{
 										percent < 100 ? (
