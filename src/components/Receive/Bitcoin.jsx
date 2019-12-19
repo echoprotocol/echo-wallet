@@ -107,8 +107,8 @@ class Bitcoin extends React.Component {
 		);
 	}
 
-	renderGenerateaddressProcess() {
-		const { btcAddress } = this.props;
+	renderGenerateAddressProcess() {
+		const { btcAddress, keyWeightWarn } = this.props;
 
 		if (btcAddress && btcAddress.size && !btcAddress.getIn(['is_relevant'])) {
 			return (
@@ -141,6 +141,7 @@ class Bitcoin extends React.Component {
 					content={
 						<FormattedMessage id="wallet_page.receive_payment.btc.no_address_page.button_text" />
 					}
+					disabled={keyWeightWarn}
 					onClick={() => this.props.openModal(MODAL_GENERATE_BTC_ADDRESS)}
 				/>
 			</React.Fragment>
@@ -156,7 +157,7 @@ class Bitcoin extends React.Component {
 			<div className="payment-wrap" >
 				{
 					btcAddressData && btcAddressData.address && btcAddressData.account === accountId ?
-						this.renderPayment() : this.renderGenerateaddressProcess()
+						this.renderPayment() : this.renderGenerateAddressProcess()
 				}
 			</div>
 		);
@@ -175,6 +176,7 @@ Bitcoin.propTypes = {
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Bitcoin.defaultProps = {

@@ -92,7 +92,7 @@ class ContractBar extends React.Component {
 			searchText, options, loading,
 		} = this.state;
 		const {
-			assets, fees, form, intl,
+			assets, fees, form, intl, keyWeightWarn,
 		} = this.props;
 		const assetsPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.supported_assets.popup_text' });
 		const amountPopupInfo = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.deploying_amount.popup_text' });
@@ -220,7 +220,7 @@ class ContractBar extends React.Component {
 									<FormattedMessage id="smart_contract_page.create_contract_page.button_text" />
 								}
 								onClick={submit}
-								disabled={form.get('compileLoading')}
+								disabled={form.get('compileLoading') || keyWeightWarn}
 							/>
 						)
 					}
@@ -243,6 +243,7 @@ ContractBar.propTypes = {
 	getAssetsList: PropTypes.func.isRequired,
 	createContract: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 

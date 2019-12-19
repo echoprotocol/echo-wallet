@@ -35,7 +35,9 @@ class Ethereum extends React.Component {
 		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
 
-		const qrText = `ethereum:0x${address}?value=${value}`;
+		const addressWithPrefix = `0x${address}`;
+
+		const qrText = `ethereum:${addressWithPrefix}?value=${value}`;
 
 		return (
 			<React.Fragment>
@@ -52,11 +54,11 @@ class Ethereum extends React.Component {
 							placeholder="Public Key"
 							readOnly
 							name="public-key"
-							value={address}
+							value={addressWithPrefix}
 						/>
 						<ActionBtn
 							icon="icon-copy"
-							copy={address}
+							copy={addressWithPrefix}
 						/>
 					</div>
 				</Form.Field>
@@ -91,7 +93,7 @@ class Ethereum extends React.Component {
 	}
 
 	renderGenerateAddressProcess() {
-		const { generateEthAddress } = this.props;
+		const { generateEthAddress, keyWeightWarn } = this.props;
 
 		return (
 			<React.Fragment>
@@ -114,6 +116,7 @@ class Ethereum extends React.Component {
 									<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.button_text" />
 								}
 								onClick={submit}
+								disabled={keyWeightWarn}
 							/>
 						)
 					}
@@ -174,6 +177,7 @@ Ethereum.propTypes = {
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 export default injectIntl(Ethereum);

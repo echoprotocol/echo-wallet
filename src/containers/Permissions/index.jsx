@@ -15,7 +15,7 @@ import EditModeTable from './EditModeTable';
 import Loading from '../../components/Loader/LoadingData';
 
 import { isPublicKey } from '../../helpers/ValidateHelper';
-import { formPermissionKeys, clear, permissionTransaction, isChanged } from '../../actions/TableActions';
+import { formPermissionKeys, clear, permissionTransaction, isChanged, isOnlyWifChanged } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import { clearForm, setInFormValue, setValue, setInFormError, removeKey } from '../../actions/FormActions';
 import { editWifs } from '../../actions/AuthActions';
@@ -52,9 +52,13 @@ class Permissions extends React.Component {
 
 	async componentDidUpdate(prevProps) {
 		if (_.isEqual(prevProps, this.props)) {
+			if (!_.isEqual(this.state.basePrivateKeys, this.state.privateKeys)) {
+				this.props.checkWIFChanged(this.state.privateKeys, this.state.basePrivateKeys);
+			}
 			return;
 		}
 
+		this.props.checkWIFChanged(this.state.privateKeys, this.state.basePrivateKeys);
 		const { accountName: prevAccountName, form: prevForm, permissionsKeys: prevPermissionsKeys } = prevProps;
 		const { accountName, form, permissionsKeys, networkName, accountId } = this.props;
 		const prevAccount = prevProps.account.toJS();
@@ -93,9 +97,9 @@ class Permissions extends React.Component {
 	}
 
 	async saveWifs(password) {
-        const { form } = this.props;
-        const { privateKeys, basePrivateKeys } = this.state;
-        const account = this.props.account.toJS();
+		const { form } = this.props;
+		const { privateKeys, basePrivateKeys } = this.state;
+		const account = this.props.account.toJS();
 
 		let activePrivateKeysEntries = Object.entries(privateKeys.active);
 		let echoRandPrivateKeysEntries = Object.entries(privateKeys.echoRand);
@@ -103,8 +107,8 @@ class Permissions extends React.Component {
 		const activeBasePrivateKeysEntries = Object.entries(basePrivateKeys.active);
 		const echoRandBasePrivateKeysEntries = Object.entries(basePrivateKeys.echoRand);
 
-        const newActiveWifs = activePrivateKeysEntries
-            .map(([index, wif]) => {
+		const newActiveWifs = activePrivateKeysEntries
+			.map(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
 
 				if (wif && wif.error) {
@@ -158,23 +162,23 @@ class Permissions extends React.Component {
 
 				return null;
 			})
-            .filter((activeKeyItem) => activeKeyItem);
+			.filter((activeKeyItem) => activeKeyItem);
 
-        const newEchoRandWifs = echoRandPrivateKeysEntries
+		const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);
-				
+
 				return publicKey && publicKey.value && wif && wif.value && !wif.error
 			})
-            .map(([index, wif]) => {
-                const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
-                return { publicKey, wif: wif.value, type: 'echoRand' };
-            })
+			.map(([index, wif]) => {
+				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']).value;
+				return { publicKey, wif: wif.value, type: 'echoRand' };
+			})
 
-        const wifs = [...newActiveWifs, ...newEchoRandWifs];
+		const wifs = [...newActiveWifs, ...newEchoRandWifs];
 		await this.props.editWifs(wifs, account, password);
 		this.clear();
-    }
+	}
 
 	componentWillUnmount() {
 		this.props.clear();
@@ -348,6 +352,7 @@ class Permissions extends React.Component {
 	}
 
 	renderEditPanel() {
+		const { isOnlyWIFChanged, keyWeightWarn } = this.props;
 		return (
 			<div className="sub-header-panel">
 				<div className="edit-panel-wrap">
@@ -374,6 +379,7 @@ class Permissions extends React.Component {
 										<FormattedMessage id="backup_and_permissions_page.edit_mode.button_section.save_button" />
 									}
 									onClick={submit}
+									disabled={keyWeightWarn && !isOnlyWIFChanged}
 								/>
 							)
 						}
@@ -559,20 +565,20 @@ class Permissions extends React.Component {
 		const loaderText = intl.formatMessage({ id: 'backup_and_permissions_page.loader_applying_text' });
 		return (
 			showLoader ?
-			<Loading text={loaderText} /> :
-			<div className="permissions-wrap">
-				<div className="sub-header">
+				<Loading text={loaderText} /> :
+				<div className="permissions-wrap">
+					<div className="sub-header">
+						{
+							this.renderAccountInfo()
+						}
+						{
+							this.renderPanel()
+						}
+					</div>
 					{
-						this.renderAccountInfo()
-					}
-					{
-						this.renderPanel()
+						this.renderTable()
 					}
 				</div>
-				{
-					this.renderTable()
-				}
-			</div>
 		);
 	}
 
@@ -600,6 +606,9 @@ Permissions.propTypes = {
 	checkKeyWeightWarning: PropTypes.func.isRequired,
 	setWeightWarning: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	isOnlyWIFChanged: PropTypes.bool.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
+	checkWIFChanged: PropTypes.func.isRequired,
 };
 
 Permissions.defaultProps = {
@@ -620,6 +629,8 @@ export default injectIntl(connect(
 			isChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isChanged']),
 			fullAccount: state.global.getIn(['activeUser']),
 			showLoader: state.global.get('permissionLoading'),
+			isOnlyWIFChanged: state.form.getIn([FORM_PERMISSION_KEY, 'isOnlyWIFChanged']),
+			keyWeightWarn: state.global.get('keyWeightWarn'),
 		};
 	},
 	(dispatch) => ({
@@ -637,5 +648,6 @@ export default injectIntl(connect(
 		checkKeyWeightWarning: (networkName, accountId) =>
 			dispatch(checkKeyWeightWarning(networkName, accountId)),
 		setWeightWarning: (keyWeightWarn) => dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn })),
+		checkWIFChanged: (privateKeys, basePrivateKeys) => dispatch(isOnlyWifChanged(privateKeys, basePrivateKeys)),
 	}),
 )(Permissions));

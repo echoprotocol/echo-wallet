@@ -33,7 +33,7 @@ class Receive extends React.Component {
 
 		const {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
-			getEthAddress, ethAddress, clearForm,
+			getEthAddress, ethAddress, clearForm, keyWeightWarn,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
 			btcAddress, accountId,
 		} = this.props;
@@ -98,6 +98,7 @@ class Receive extends React.Component {
 						openModal={(value) => this.props.openModal(value)}
 						getBtcAddress={this.props.getBtcAddress}
 						btcAddress={btcAddress}
+						keyWeightWarn={keyWeightWarn}
 					/>),
 			},
 			{
@@ -122,6 +123,7 @@ class Receive extends React.Component {
 						ethAddress={ethAddress}
 						fullCurrentAccount={fullCurrentAccount}
 						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
+						keyWeightWarn={keyWeightWarn}
 					/>
 				),
 			},
@@ -177,7 +179,8 @@ Receive.propTypes = {
 	btcAddress: PropTypes.object,
 	accountId: PropTypes.string.isRequired,
 	setGlobalValue: PropTypes.func.isRequired,
-	activeCoinTypeTab: PropTypes.any.isRequired,
+	activeCoinTypeTab: PropTypes.number.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Receive.defaultProps = {

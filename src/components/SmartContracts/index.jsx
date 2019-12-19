@@ -91,6 +91,7 @@ class SmartContracts extends React.Component {
 					setDefaultAsset={this.props.setDefaultAsset}
 					getAssetsList={this.props.getAssetsList}
 					createContract={this.props.createContract}
+					keyWeightWarn={this.props.keyWeightWarn}
 				/>
 			</Form>
 		);
@@ -116,6 +117,7 @@ SmartContracts.propTypes = {
 	contractCompilerInit: PropTypes.func.isRequired,
 	changeContractCompiler: PropTypes.func.isRequired,
 	resetCompiler: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 

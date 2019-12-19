@@ -1,19 +1,26 @@
 .contract-type-dropdown {
 	display: flex;
 	align-items: center;
-	padding: 5px 14px;
+	padding: 5px 17px 5px 6px;
 	transition: border-color .3s;
 	align-self: flex-start;
-	height: 30px;
-	min-width: 100px;
-	max-width: 100px;
+	height: 24px;
+	min-width: 80px;
+	max-width: 80px;
+
+	// .dropdown.icon {
+	// 	right: 5px;
+	// }
+
+	&>.text {
+		font-size: 14px;
+	}
 
 	.menu {
 
 		.item {
 			margin: auto;
-			padding-bottom: 7px;
-			padding-top: 7px;
+			padding: 5px 6px;
 
 			&.disabled {
 				&.header {
@@ -21,7 +28,8 @@
 				}
 			}
 		}
-		& > .item:not(.disabled):hover {
+
+		&>.item:not(.disabled):hover {
 			background-color: rgba(0, 0, 0, 0.05);
 			color: rgba(0, 0, 0, 0.95);
 			z-index: 13;

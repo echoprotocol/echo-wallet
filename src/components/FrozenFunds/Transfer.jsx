@@ -38,8 +38,8 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			currency, intl,
-			fee, assets, tokens, amount, isAvailableBalance, fees, duration,
+			currency, intl, keyWeightWarn, fee, assets,
+			tokens, amount, isAvailableBalance, fees, duration,
 		} = this.props;
 		let coefficient = '0.0';
 		const popupMsg = intl.formatMessage({ id: 'wallet_page.frozen_funds.frozen_funds_list.popup_text' });
@@ -119,7 +119,7 @@ class Transfer extends React.Component {
 											<FormattedMessage id="wallet_page.frozen_funds.button_text" />
 										}
 										onClick={submit}
-										disabled={!duration.isSelected}
+										disabled={!duration.isSelected || keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -153,6 +153,7 @@ Transfer.propTypes = {
 	getTransactionFee: PropTypes.func.isRequired,
 	setAssets: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {

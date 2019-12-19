@@ -40,6 +40,7 @@ class ViewContract extends React.Component {
 	}
 
 	render() {
+		const { keyWeightWarn } = this.props;
 		const panes = [
 			{
 				menuItem: <Button
@@ -57,6 +58,7 @@ class ViewContract extends React.Component {
 							activeUser={this.props.activeUser}
 							openWhitelistModal={this.props.openWhitelistModal}
 							openBlacklistModal={this.props.openBlacklistModal}
+							keyWeightWarn={keyWeightWarn}
 						/>
 					</Tab.Pane>
 				),
@@ -87,7 +89,9 @@ class ViewContract extends React.Component {
 				/>,
 				render: () => (
 					<Tab.Pane className="scroll-fix">
-						<TabCallContracts />
+						<TabCallContracts
+							keyWeightWarn={keyWeightWarn}
+						/>
 					</Tab.Pane>
 				),
 			},
@@ -120,12 +124,14 @@ ViewContract.propTypes = {
 	openBlacklistModal: PropTypes.func.isRequired,
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 export default withRouter(connect(
 	(state) => ({
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		clearForm: (value) => dispatch(clearForm(value)),

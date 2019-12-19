@@ -27,7 +27,15 @@ class AdditionalOptions extends React.Component {
 
 	renderPanel() {
 		const {
-			loading, signupOptionsForm, setFormValue, accounts,
+			loading,
+			signupOptionsForm,
+			setFormValue,
+			accounts,
+			setValue,
+			saveRemoteAddress,
+			hideSaveAddressTooltip,
+			remoteRegistrationAddresses,
+			validateAndSetIpOrUrl,
 		} = this.props;
 		const checked = signupOptionsForm.get('optionType');
 
@@ -46,9 +54,14 @@ class AdditionalOptions extends React.Component {
 			case SIGN_UP_OPTIONS_TYPES.IP_URL:
 				return (
 					<IpUrlPanel
-						ipOrUrl={signupOptionsForm.get('ipOrUrl')}
+						signupOptionsForm={signupOptionsForm}
+						remoteRegistrationAddresses={remoteRegistrationAddresses}
 						loading={loading}
 						setFormValue={setFormValue}
+						setValue={setValue}
+						saveRemoteAddress={saveRemoteAddress}
+						hideSaveAddressTooltip={hideSaveAddressTooltip}
+						validateAndSetIpOrUrl={validateAndSetIpOrUrl}
 					/>
 				);
 			default:
@@ -133,6 +146,10 @@ AdditionalOptions.propTypes = {
 	signupOptionsForm: PropTypes.object.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
+	saveRemoteAddress: PropTypes.func.isRequired,
+	hideSaveAddressTooltip: PropTypes.func.isRequired,
+	validateAndSetIpOrUrl: PropTypes.func.isRequired,
+	remoteRegistrationAddresses: PropTypes.object.isRequired,
 	accounts: PropTypes.array.isRequired,
 };
 

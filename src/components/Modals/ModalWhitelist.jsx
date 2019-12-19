@@ -60,7 +60,7 @@ class ModalWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, owner, activeUser, intl,
+			show, owner, activeUser, intl, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -88,6 +88,7 @@ class ModalWhitelist extends React.Component {
 										className="main-btn"
 										content={intl.formatMessage({ id: 'modals.modal_whitelist.add_button_text' })}
 										onClick={(e) => this.onOpenAddModal(e)}
+										disabled={keyWeightWarn}
 									/>}
 								</div>
 							</div>
@@ -110,6 +111,7 @@ ModalWhitelist.propTypes = {
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalWhitelist.defaultProps = {
@@ -124,6 +126,7 @@ export default injectIntl(connect(
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
 		contractId: state.contract.get('id'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_WHITELIST)),

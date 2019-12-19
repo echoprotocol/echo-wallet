@@ -28,7 +28,7 @@ class AddContractComponent extends React.Component {
 
 	render() {
 		const {
-			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, intl,
+			bytecode, id, fee, tokens, assets, amount, currency, isAvailableBalance, fees, intl, keyWeightWarn,
 		} = this.props;
 		const bytecodePlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_bytecode.placeholder' });
 		const IDPlaceholder = intl.formatMessage({ id: 'smart_contract_page.call_contract_page.input_id.placeholder' });
@@ -59,7 +59,11 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									<span className="error-message">{intl.formatMessage({ id: id.error })}</span>
+									{
+										id.error && <span className="error-message">
+											{intl.formatMessage({ id: id.error })}
+										</span>
+									}
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">
@@ -72,7 +76,11 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-									<span className="error-message">{intl.formatMessage({ id: bytecode.error })}</span>
+									{
+										bytecode.error && <span className="error-message">
+											{intl.formatMessage({ id: bytecode.error })}
+										</span>
+									}
 								</Form.Field>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
@@ -101,6 +109,7 @@ class AddContractComponent extends React.Component {
 									content={
 										<FormattedMessage id="smart_contract_page.call_contract_page.button_text" />
 									}
+									disabled={keyWeightWarn}
 								/>
 							</div>
 						</Form>
@@ -132,6 +141,7 @@ AddContractComponent.propTypes = {
 	setContractFees: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 AddContractComponent.defaultProps = {
@@ -153,6 +163,7 @@ export default injectIntl(connect(
 		fee: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'fee']),
 		currency: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'currency']),
 		isAvailableBalance: state.form.getIn([FORM_CALL_CONTRACT_VIA_ID, 'isAvailableBalance']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		clearForm: () => dispatch(clearForm(FORM_CALL_CONTRACT_VIA_ID)),

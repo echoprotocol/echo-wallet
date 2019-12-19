@@ -36,7 +36,8 @@ class ModalBalcklist extends React.Component {
 
 	renderList(submit) {
 		const {
-			contracts, contractId, owner, activeUser, accounts, intl,
+			contracts, contractId, owner,
+			activeUser, accounts, intl,
 		} = this.props;
 		if (!contracts.get(contractId)) {
 			return [];
@@ -62,7 +63,7 @@ class ModalBalcklist extends React.Component {
 
 	render() {
 		const {
-			show, owner, activeUser, intl,
+			show, owner, activeUser, intl, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -91,6 +92,7 @@ class ModalBalcklist extends React.Component {
 											className="main-btn"
 											content={intl.formatMessage({ id: 'modals.modal_blacklist.add_button_text' })}
 											onClick={(e) => this.onOpenAddModal(e)}
+											disabled={keyWeightWarn}
 										/>}
 									</div>
 								</div>
@@ -114,6 +116,7 @@ ModalBalcklist.propTypes = {
 	owner: PropTypes.string.isRequired,
 	activeUser: PropTypes.string.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalBalcklist.defaultProps = {
@@ -128,6 +131,7 @@ export default injectIntl(connect(
 		owner: state.contract.get('owner'),
 		activeUser: state.global.getIn(['activeUser', 'id']),
 		contractId: state.contract.get('id'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		openAddModal: () => dispatch(openModal(MODAL_TO_BLACKLIST)),

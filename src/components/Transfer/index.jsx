@@ -97,7 +97,7 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			from, to, currency, additionalAccountInfo, intl,
+			from, to, currency, additionalAccountInfo, intl, keyWeightWarn,
 			fee, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
@@ -188,6 +188,7 @@ class Transfer extends React.Component {
 											<FormattedMessage id="wallet_page.create_payment.button_text" />
 										}
 										onClick={submit}
+										disabled={keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -232,6 +233,7 @@ Transfer.propTypes = {
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {

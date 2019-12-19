@@ -74,6 +74,7 @@ class FrozenFunds extends React.Component {
 							setFormValue={this.props.setFormValue}
 							getTransactionFee={this.props.getTransactionFee}
 							setAssets={this.props.setAssets}
+							keyWeightWarn={this.props.keyWeightWarn}
 						/>
 					</div>
 				</div>
@@ -106,6 +107,7 @@ FrozenFunds.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
 	setAssets: PropTypes.func.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 FrozenFunds.defaultProps = {

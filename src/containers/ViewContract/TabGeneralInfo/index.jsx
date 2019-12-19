@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { CACHE_MAPS } from 'echojs-lib';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 import _ from 'lodash';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -150,7 +150,7 @@ class TabGeneralInfo extends React.Component {
 
 
 	render() {
-		const { poolAsset } = this.props;
+		const { poolAsset, keyWeightWarn } = this.props;
 		const { open } = this.state;
 		const {
 			bytecode, abi, balances, contract, owner, activeUser, loading, intl,
@@ -203,6 +203,13 @@ class TabGeneralInfo extends React.Component {
 							<tr>
 								<td className="key">
 									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.fee_pool" />
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="Fee Pool is a mechanism that allows to use contract calls at the expense of the pool balance that is replenished by anyone so that even zero-balance users can call a contract."
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
 								</td>
 								<td className="val">
 									<div className="val-wrap">
@@ -220,6 +227,7 @@ class TabGeneralInfo extends React.Component {
 												MODAL_REPLENISH,
 												{ contractId: this.props.match.params.id },
 											)}
+											disabled={keyWeightWarn}
 										/>
 									</div>
 								</td>
@@ -227,6 +235,13 @@ class TabGeneralInfo extends React.Component {
 							<tr>
 								<td className="key">
 									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.whitelist" />
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="Fee Pool Whitelist includes users who can spend Fee Pool."
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
 								</td>
 								<td className="val">
 									{
@@ -246,7 +261,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={() => this.openChangeListModal(MODAL_TO_WHITELIST)}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
 																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
 															</button>
@@ -265,6 +280,13 @@ class TabGeneralInfo extends React.Component {
 							<tr>
 								<td className="key">
 									<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.blacklist" />
+									<Popup
+										trigger={<span className="icon-info" />}
+										content="Fee Pool Blacklist is a list of users unallowed to spend Fee Pool."
+										className="inner-tooltip"
+										position="bottom center"
+										style={{ width: 200 }}
+									/>
 								</td>
 								<td className="val">
 									{
@@ -284,7 +306,7 @@ class TabGeneralInfo extends React.Component {
 															<button
 																className="link-btn"
 																onClick={() => this.openChangeListModal(MODAL_TO_BLACKLIST)}
-																disabled={loading}
+																disabled={loading || keyWeightWarn}
 															>
 																<FormattedMessage id="smart_contract_page.contract_info.general_info_tab.add_account_to_list_button_text" />
 															</button>
@@ -370,6 +392,7 @@ TabGeneralInfo.propTypes = {
 	openWhitelistModal: PropTypes.func.isRequired,
 	openBlacklistModal: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 TabGeneralInfo.defaultProps = {

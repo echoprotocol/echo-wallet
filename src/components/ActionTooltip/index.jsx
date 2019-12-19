@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from 'semantic-ui-react';
 
 
-function VerificationField(props) {
+function ActionTooltip(props) {
 
+	const confirmContent = props.intl.formatMessage({ id: 'sign_page.register_account_page.more_options_section.ip_url_section.save' });
+	const dismissContent = props.intl.formatMessage({ id: 'sign_page.register_account_page.more_options_section.ip_url_section.dismiss' });
 	return (
 		<div className="action-tooltip">
 			<div className="action-tooltip-wrap">
@@ -16,13 +18,13 @@ function VerificationField(props) {
 				<div className="action-tooltip-panel">
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onDismiss(e.target.value)}
-						content="sign_page.register_account_page.more_options_section.ip_url_section.dismiss"
+						onClick={() => props.onDismiss()}
+						content={dismissContent}
 					/>
 					<Button
 						className="main-btn small"
-						onClick={(e) => props.onConfirm(e.target.value)}
-						content="sign_page.register_account_page.more_options_section.ip_url_section.save"
+						onClick={() => props.onConfirm()}
+						content={confirmContent}
 					/>
 				</div>
 			</div>
@@ -31,12 +33,10 @@ function VerificationField(props) {
 }
 
 
-VerificationField.propTypes = {
+ActionTooltip.propTypes = {
 	onConfirm: PropTypes.func.isRequired,
 	onDismiss: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-VerificationField.defaultProps = {
-};
-
-export default VerificationField;
+export default injectIntl(ActionTooltip);

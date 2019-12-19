@@ -13,13 +13,13 @@
 		vertical-align: baseline;
 		line-height: 40px;
 	}
-	
+
 	.val {
 		width: 100%;
 		font-size: 14px;
 		vertical-align: text-top;
 	}
-	
+
 	.val-wrap {
 		display: flex;
 		align-items: center;
@@ -28,7 +28,7 @@
 	.val-hint {
 		color: #3B3B3B;
 		display: inline-block;
-		margin: 0 0 0 7px;	
+		margin: 0 0 0 7px;
 	}
 
 	.link-btn {
@@ -47,12 +47,12 @@
 		}
 	}
 
-	.balance-wrap + button {
+	.balance-wrap+button {
 		margin: 0 0 0 20px;
 		width: 100px;
 	}
 
-	.balance-wrap + .assets-balance-dropdown {
+	.balance-wrap+.assets-balance-dropdown {
 		margin: 0 0 0 12px;
 	}
 
@@ -65,10 +65,13 @@
 		flex-direction: column;
 		padding: 12px 0 0;
 	}
-	
+
 	.action-btn {
 		margin: 4px 0 0 auto;
 	}
-	
-                    
+
+	.icon-info {
+		@include icon-info(0, 4px);
+	}
+
 }

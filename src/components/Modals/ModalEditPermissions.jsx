@@ -1,6 +1,6 @@
 /* eslint-disable react/no-did-update-set-state */
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import FocusLock from 'react-focus-lock';
 import { injectIntl } from 'react-intl';
@@ -88,7 +88,7 @@ class ModalEditPermissions extends React.Component {
 							{intl.formatMessage({ id: 'modals.modal_edit_permissions.title' })}
 						</h3>
 					</div>
-					<form className="modal-body">
+					<Form className="modal-body">
 						<div className="info-text">
 							{intl.formatMessage({ id: 'modals.modal_edit_permissions.text' })}
 						</div>
@@ -130,7 +130,7 @@ class ModalEditPermissions extends React.Component {
 								{(agree && timerComplete) ? btnReadyText : btnWaitText}
 							</Button>
 						</div>
-					</form>
+					</Form>
 				</FocusLock>
 			</Modal>
 		);

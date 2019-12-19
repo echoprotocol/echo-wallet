@@ -112,7 +112,7 @@ class SignIn extends React.Component {
 						inputLabel={WIFTtitle}
 						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
-						errorMessage={intl.formatMessage({ id: wif.error })}
+						errorMessage={wif.error && intl.formatMessage({ id: wif.error })}
 						onChange={(e) => this.onChange(e)}
 						value={wif.value}
 					/>
