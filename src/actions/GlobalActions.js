@@ -83,9 +83,7 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
 	}
 
-	console.log('WOAH');
 	const chainToken = await userStorage.getChainToken();
-	console.log('ww11', chainToken);
 
 	const keyPromises = accounts.map((account) => new Promise(async (resolve) => {
 
@@ -110,6 +108,7 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
+	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
 });
 
 /**
