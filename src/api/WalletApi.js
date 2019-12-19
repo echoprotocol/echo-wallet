@@ -28,7 +28,7 @@ export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 	echo.api.lookupAccounts(accountName, limit)
 		.then((result) => {
 			if (!result.find((i) => i[0] === accountName) && shouldExist) {
-				return 'Account not found';
+				return 'Account is not found';
 			}
 
 			if (result.find((i) => i[0] === accountName) && !shouldExist) {
@@ -38,6 +38,7 @@ export const validateAccountExist = (accountName, shouldExist, limit = 50) => (
 			return null;
 		})
 );
+
 
 /**
  * @method unlockWallet

@@ -72,7 +72,12 @@ class FormComponent extends React.Component {
 				<Form.Field>
 					<div className="label-wrap">
 						<label htmlFor="generatedWIF">Generated WIF</label>
-						<button onClick={() => this.onToogleWifType()} className="link-btn">Or use your own WIF or Public Key</button>
+						<button
+							type="button"
+							onClick={() => this.onToogleWifType()}
+							className="link-btn"
+						>Or use your own WIF or Public Key
+						</button>
 					</div>
 					<div className="action input">
 						<input

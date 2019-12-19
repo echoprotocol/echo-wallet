@@ -19,11 +19,24 @@ export const FORM_BTC_RECEIVE = 'btc_receive';
 export const FORM_ETH_RECEIVE = 'eth_receive';
 export const FORM_SIGN_UP_OPTIONS = 'sign_up_options';
 export const FORM_CHANGE_DELEGATE = 'change_delegate';
+export const FORM_TO_WHITELIST = 'to_whitelist';
+
 
 export const SIGN_UP_OPTIONS_TYPES = {
 	DEFAULT: 'default',
 	PARENT: 'parent',
 	IP_URL: 'ip-url',
+};
+
+export const URI_TYPES = {
+	IP: 'ip',
+	URL: 'url',
+};
+
+export const CHECK_URI_ADDRESS_TYPES = {
+	DEFAULT: 'default',
+	CHECKED: 'checked',
+	ERROR: 'error',
 };
 
 export const FORM_SIGN_UP_CHECKBOX_1 = 'I understand that I will lose access to my funds if I loose my WIF';

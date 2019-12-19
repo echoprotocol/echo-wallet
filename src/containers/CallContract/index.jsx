@@ -51,7 +51,9 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									<span className="error-message">{id.error}</span>
+									{
+										id.error && <span className="error-message">{id.error}</span>
+									}
 								</Form.Field>
 								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
 									<label htmlFor="bytecode">Bytecode</label>
@@ -62,7 +64,9 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-									<span className="error-message">{bytecode.error}</span>
+									{
+										bytecode.error && <span className="error-message">{bytecode.error}</span>
+									}
 								</Form.Field>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}

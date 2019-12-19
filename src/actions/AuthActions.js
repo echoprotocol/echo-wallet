@@ -25,6 +25,7 @@ import {
 	FORM_SIGN_IN,
 	SIGN_UP_OPTIONS_TYPES,
 	FORM_SIGN_UP_OPTIONS,
+	CHECK_URI_ADDRESS_TYPES,
 } from '../constants/FormConstants';
 import { MODAL_UNLOCK, MODAL_CHOOSE_ACCOUNT, MODAL_ADD_WIF, PROPOSAL_ADD_WIF } from '../constants/ModalConstants';
 import {
@@ -34,7 +35,13 @@ import {
 } from '../constants/GlobalConstants';
 
 import { formatError } from '../helpers/FormatHelper';
-import { validateAccountName, validateWIF, isPublicKey } from '../helpers/ValidateHelper';
+
+import {
+	validateAccountName,
+	validateWIF,
+	isPublicKey,
+	isUrlOrAddress,
+} from '../helpers/ValidateHelper';
 
 import {
 	validateAccountExist,
@@ -93,6 +100,38 @@ const customParentAccount = () => async (dispatch, getState) => {
 		dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'registrarAccount', 'Invalid account'));
 		return null;
 	}
+};
+
+/**
+ *
+ * @param {string} ipOrUrl
+ * @returns {Function}
+ */
+export const validateAndSetIpOrUrl = (ipOrUrl) => async (dispatch, getState) => {
+
+	const addresses = getState().global.get('remoteRegistrationAddresses');
+
+	const isAddressAlreadyExist = addresses.find((a) => a.address === ipOrUrl);
+
+	if (!ipOrUrl) {
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'ipOrUrlStatus', CHECK_URI_ADDRESS_TYPES.DEFAULT));
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', false));
+		return;
+	}
+
+	if (isUrlOrAddress(ipOrUrl)) {
+		dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'ipOrUrlStatus', CHECK_URI_ADDRESS_TYPES.CHECKED));
+
+		if (!isAddressAlreadyExist) {
+			dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', true));
+		}
+
+		return;
+	}
+
+	dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Invalid address format'));
+	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'ipOrUrlStatus', CHECK_URI_ADDRESS_TYPES.ERROR));
+	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', false));
 };
 
 /**
@@ -157,7 +196,12 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 export const validateCreateAccount = ({
 	accountName, generatedWIF, confirmWIF,
 }, isAddAccount, isCustomSettings) => async (dispatch, getState) => {
-	let accountNameError = validateAccountName(accountName);
+
+	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
+
+	const allowExpensive = options.get('optionType') === SIGN_UP_OPTIONS_TYPES.PARENT;
+
+	let accountNameError = validateAccountName(accountName, allowExpensive);
 
 	if (accountNameError) {
 		dispatch(setFormError(FORM_SIGN_UP, 'accountName', accountNameError));
@@ -316,8 +360,13 @@ export const createAccount = ({
  * @param {Object} param0
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-export const authUser = ({ accountName, wif, password }) => async (dispatch, getState) => {
-	let accountNameError = validateAccountName(accountName);
+export const authUser = ({
+	accountName,
+	wif,
+	password,
+	allowExpensive,
+}) => async (dispatch, getState) => {
+	let accountNameError = validateAccountName(accountName, allowExpensive);
 	const wifError = validateWIF(wif);
 
 	if (accountNameError) {
@@ -490,7 +539,12 @@ export const importAccount = ({ accountName, wif, password }) =>
 				return;
 			}
 
-			dispatch(authUser({ accountName: account.name, wif, password }));
+			dispatch(authUser({
+				accountName: account.name,
+				wif,
+				password,
+				allowExpensive: true,
+			}));
 			return;
 
 		} catch (error) {
@@ -512,7 +566,12 @@ export const importSelectedAccounts = (password, accounts) => async (dispatch, g
 
 	accounts.forEach((account) => {
 		if (account.checked) {
-			dispatch(authUser({ accountName: account.name, wif, password }));
+			dispatch(authUser({
+				accountName: account.name,
+				wif,
+				password,
+				allowExpensive: true,
+			}));
 		}
 	});
 
