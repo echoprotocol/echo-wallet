@@ -49,7 +49,7 @@ const additionalFields = async (options, operation) => {
 		return null;
 	}
 	const { precision, symbol } = await Services.getEcho().api.getObject(assetId);
-	// const { precision, symbol } = await echo.api.getObject(assetId);
+
 	return {
 		..._.get(operation, options.value),
 		precision,
@@ -67,7 +67,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
 	const block = await Services.getEcho().api.getBlock(data.block_num);
-	// const block = await echo.api.getBlock(data.block_num);
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
 
 	const result = {
@@ -80,7 +79,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.fee) {
 		const feeAsset = await Services.getEcho().api.getObject(operation.fee.asset_id);
-		// const feeAsset = await echo.api.getObject(operation.fee.asset_id);
 		result.fee = {
 			amount: operation.fee.amount,
 			precision: feeAsset.precision,
@@ -90,7 +88,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.from) {
 		const request = _.get(operation, options.from);
 		const response = await Services.getEcho().api.getObject(request);
-		// const response = await echo.api.getObject(request);
 		result.from = { value: response.name, id: response.id };
 	}
 
@@ -99,7 +96,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 			const request = _.get(operation, options.subject[0]);
 			if (validators.isObjectId(request)) {
 				const response = await Services.getEcho().api.getObject(request);
-				// const response = await echo.api.getObject(request);
 				result.subject = {
 					value: response[options.subject[1]],
 					id: response.id,
@@ -121,7 +117,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.value) {
 		if (validators.isUInt64(operation.amount)) {
 			const coreAsset = await Services.getEcho().api.getObject(constants.CORE_ASSET_ID);
-			// const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
 			result.value = {
 				precision: coreAsset.precision,
 				asset_id: coreAsset.id,
@@ -151,7 +146,6 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	if (options.asset) {
 		const request = _.get(operation, options.asset);
 		const response = await Services.getEcho().api.getObject(request);
-		// const response = await echo.api.getObject(request);
 		result.value = {
 			...result.value,
 			precision: response.precision,
@@ -166,12 +160,10 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		result.subject = { value: resultId };
 
 		if (!Services.getEcho().isConnected) {
-		// if (!echo.isConnected) {
 			return result;
 		}
 
 		const contractResult = await Services.getEcho().api.getContractResult(resultId);
-		// const contractResult = await echo.api.getContractResult(resultId);
 
 		const [contractResultType, contractResultData] = contractResult;
 

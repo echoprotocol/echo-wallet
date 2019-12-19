@@ -120,7 +120,6 @@ const getTransactionFee = (form, type, options) => async (dispatch, getState) =>
 		const precision = getState()
 			.echojs.getIn([CACHE_MAPS.ASSET_BY_ASSET_ID, constants.ECHO_ASSET_ID]).get('precision');
 		const feeAsset = await Services.getEcho().api.getObject(fee.asset_id);
-		// const feeAsset = await echo.api.getObject(fee.asset_id);
 		let amount = await getOperationFee(type, options);
 		if (feeAsset.id !== constants.ECHO_ASSET_ID) {
 			const price = new BN(feeAsset.options.core_exchange_rate.quote.amount)
@@ -155,13 +154,11 @@ export const setAdditionalAccountInfo = (value) => async (dispatch, getState) =>
 	switch (getState().form.getIn([FORM_TRANSFER, 'subjectTransferType'])) {
 		case ADDRESS_SUBJECT_TYPE: {
 			const accountId = await Services.getEcho().api.getAccountByAddress(value.toLowerCase());
-			// const accountId = await echo.api.getAccountByAddress(value.toLowerCase());
 			if (!accountId) {
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
 				return;
 			}
 			const account = await Services.getEcho().api.getObject(accountId);
-			// const account = await echo.api.getObject(accountId);
 			dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account name: ${account.name}`));
 			break;
 		}
@@ -172,7 +169,6 @@ export const setAdditionalAccountInfo = (value) => async (dispatch, getState) =>
 		case ACCOUNT_NAME_SUBJECT_TYPE: {
 			try {
 				const account = await Services.getEcho().api.getAccountByName(value);
-				// const account = await echo.api.getAccountByName(value);
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', `Account ID: ${account.id}`));
 			} catch (e) {
 				dispatch(setValue(FORM_TRANSFER, 'additionalAccountInfo', ''));
@@ -292,7 +288,6 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 	if (!currency || !currency.precision) return null;
 
 	const echoAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-	// const echoAsset = await echo.api.getObject(ECHO_ASSET_ID);
 	switch (form.get('subjectTransferType')) {
 		case CONTRACT_ID_SUBJECT_TYPE: {
 			let bytecodeValue = '';
@@ -334,7 +329,6 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 		case ADDRESS_SUBJECT_TYPE: {
 			try {
 				const fromAccount = await Services.getEcho().api.getAccountByName(form.get('from').value);
-				// const fromAccount = await echo.api.getAccountByName(form.get('from').value);
 				const options = {
 					fee: {
 						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
@@ -363,7 +357,6 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 			try {
 				const activeCoinTypeTab = getState().global.get('activeCoinTypeTab');
 				const fromAccount = await Services.getEcho().api.getAccountByName(form.get('from').value);
-				// const fromAccount = await echo.api.getAccountByName(form.get('from').value);
 				const options = {
 					fee: {
 						asset_id: assetId || form.getIn(['fee', 'asset', 'id']) || ECHO_ASSET_ID,
@@ -558,9 +551,7 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 			dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 		} else {
 			const { id } = await Services.getEcho().api.getAccountByName(accountName);
-			// const { id } = await echo.api.getAccountByName(accountName);
 			const [account] = await Services.getEcho().api.getFullAccounts([id]);
-			// const [account] = await echo.api.getFullAccounts([id]);
 			const assets = account.balances;
 			balances = await dispatch(getBalanceFromAssets(assets));
 			([defaultAsset] = balances);
@@ -569,7 +560,6 @@ export const checkAccount = (accountName, subject) => async (dispatch, getState)
 
 		if (!defaultAsset) {
 			defaultAsset = await Services.getEcho().api.getObject(constants.ECHO_ASSET_ID);
-			// defaultAsset = await echo.api.getObject(constants.ECHO_ASSET_ID);
 
 			defaultAsset = {
 				balance: 0,
@@ -658,7 +648,6 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 	} else if (validators.isContractId(value)) {
 
 		const contract = await Services.getEcho().api.getContract(value);
-		// const contract = await echo.api.getContract(value);
 		if (!contract) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid contract ID'));
 			return false;
@@ -678,7 +667,6 @@ export const subjectToSendSwitch = (value) => async (dispatch, getState) => {
 	} else if (validators.isAccountId(value)) {
 
 		const account = await Services.getEcho().api.getObject(value);
-		// const account = await echo.api.getObject(value);
 		if (!account) {
 			dispatch(setFormError(FORM_TRANSFER, 'to', 'Invalid account ID'));
 			return false;
@@ -755,12 +743,9 @@ export const transfer = (form) => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 	const fromAccount = await Services.getEcho().api.getAccountByName(from.value);
-	// const fromAccount = await echo.api.getAccountByName(from.value);
 	const toAccount = validators.isAccountId(to.value)
 		? await Services.getEcho().api.getObject(to.value)
-		// ? await echo.api.getObject(to.value)
 		: await Services.getEcho().api.getAccountByName(to.value);
-		// : await echo.api.getAccountByName(to.value);
 
 	let options = {};
 
@@ -824,7 +809,6 @@ export const transferSwitch = () => async (dispatch, getState) => {
 	} = form;
 	if (form.subjectTransferType === ADDRESS_SUBJECT_TYPE && validators.isContractId(currency.id)) {
 		form.to.value = await Services.getEcho().api.getAccountByAddress(to.value.toLowerCase());
-		// form.to.value = await echo.api.getAccountByAddress(to.value.toLowerCase());
 		return dispatch(transfer(form));
 	}
 
@@ -900,7 +884,6 @@ export const transferSwitch = () => async (dispatch, getState) => {
 
 	dispatch(toggleLoading(FORM_TRANSFER, true));
 	const fromAccount = await Services.getEcho().api.getAccountByName(from.value);
-	// const fromAccount = await echo.api.getAccountByName(from.value);
 
 	switch (form.subjectTransferType) {
 		case ADDRESS_SUBJECT_TYPE: {
@@ -1289,7 +1272,6 @@ export const createContract = () => async (dispatch, getState) => {
 		let supportedAssetId = '';
 		if (supportedAsset.value) {
 			const assets = await Services.getEcho().api.lookupAssetSymbols([supportedAsset.value]);
-			// const assets = await echo.api.lookupAssetSymbols([supportedAsset.value]);
 			const asset = assets.find((a) => a.symbol === supportedAsset.value);
 			supportedAssetId = asset.id;
 		}
@@ -1376,7 +1358,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	const { value: operationId } = operations[operation];
 
 	if (!Services.getEcho().isConnected) {
-	// if (!echo.isConnected) {
 		toastError(`${operations[operation].name} transaction wasn't completed. Please, check your connection.`);
 		dispatch(closeModal(MODAL_DETAILS));
 		return;
@@ -1402,7 +1383,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 
 	try {
 		const tr = Services.getEcho().api.createTransaction();
-		// const tr = echo.createTransaction();
 		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
@@ -1537,7 +1517,6 @@ export const callContract = () => async (dispatch, getState) => {
 		}
 		amountValue = amount.value * (10 ** currency.precision);
 	}
-	// const privateKey = getState().keychain.getIn([pubKey, 'privateKey']);
 	const bytecode = getMethod(targetFunction, args);
 
 	const options = {
@@ -1782,7 +1761,6 @@ export const generateBtcAddress = (address) => async (dispatch, getState) => {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 		const operation = 'sidechain_btc_create_address';
 
@@ -1821,7 +1799,6 @@ export const generateEthAddress = () => async (dispatch, getState) => {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 		const options = {
 			fee: {
@@ -1859,7 +1836,6 @@ export const generateEchoAddress = (label) => async (dispatch, getState) => {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 
 		const options = {
 			fee: {
@@ -1905,16 +1881,11 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 		const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 		const [delegate] = await Services.getEcho().api.getFullAccounts([delegateId]);
-		// const [delegate] = await echo.api.getFullAccounts([delegateId]);
 
 		const [
 			feeAsset,
 			activeUser,
 		] = await Services.getEcho().api.getObjects([ECHO_ASSET_ID, activeUserId]);
-		// const [
-		// 	feeAsset,
-		// 	activeUser,
-		// ] = await echo.api.getObjects([ECHO_ASSET_ID, activeUserId]);
 
 		if (!delegate) {
 			dispatch(setFormError(FORM_CHANGE_DELEGATE, 'delegate', 'Delegate not found'));
@@ -1974,7 +1945,6 @@ export const changeDelegate = (delegateId) => async (dispatch, getState) => {
 export const createAccountTransaction = (fromAccount, { name, publicKey }) => async (dispatch) => {
 	try {
 		const sender = await Services.getEcho().api.getAccountByName(fromAccount);
-		// const sender = await echo.api.getAccountByName(fromAccount);
 
 		if (!sender) {
 			return null;
@@ -1983,7 +1953,6 @@ export const createAccountTransaction = (fromAccount, { name, publicKey }) => as
 		const { id: senderId } = sender;
 
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 		const options = {
 			fee: {
 				asset_id: feeAsset.id,
@@ -2034,7 +2003,6 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 	}
 	if (!validators.isAccountId(accountId)) {
 		const account = await Services.getEcho().api.getAccountByName(accountId);
-		// const account = await echo.api.getAccountByName(accountId);
 		if (!account) {
 			dispatch(setModalError(type, 'Account is not found'));
 			return null;
@@ -2082,7 +2050,6 @@ export const contractChangeWhiteAndBlackLists = (accountId, type) => async (disp
 	const constractId = getState().contract.get('id');
 	try {
 		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-		// const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
 		const options = {
 			fee: {
 				asset_id: feeAsset.id,

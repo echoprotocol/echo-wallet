@@ -13,7 +13,7 @@ const {
 	SOLC_BIN_URL,
 } = require('config');
 
-// const getPlatform = require('../main/GetPlatform');
+const { default: getPlatform } = require('../main/GetPlatform');
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
@@ -152,7 +152,7 @@ const config = {
 					},
 				},
 			},
-			// PLATFORM: JSON.stringify(getPlatform()),
+			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 	],
 	node: {

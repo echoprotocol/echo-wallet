@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
@@ -10,6 +11,7 @@ import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
+import { isPlatformSupportNode } from '../../helpers/utils';
 
 import ProgressBar from '../ProgressBar';
 import RemoteNode from './RemoteNode';
@@ -59,7 +61,6 @@ class Network extends React.PureComponent {
 	}
 
 	getList(networks) {
-		// console.log('PLATFROM', PLATFROM);
 		const { name } = this.props.network;
 
 		return networks.map((i) => (
@@ -85,16 +86,18 @@ class Network extends React.PureComponent {
 							/>
 							}
 						</div>
-						{ i.name === 'testnet' &&
-							<div className="node-info">
-								{
-									this.props.isNodeSyncing ? (
-										<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
-									) : (
-										<LocalNode />
-									)
-								}
-							</div>
+						{
+							(i.name === 'testnet' && isPlatformSupportNode()) && (
+								<div className="node-info">
+									{
+										this.props.isNodeSyncing ? (
+											<RemoteNode value={parseInt(this.props.localNodePercent, 10)} />
+										) : (
+											<LocalNode />
+										)
+									}
+								</div>
+							)
 						}
 					</div>
 				),
