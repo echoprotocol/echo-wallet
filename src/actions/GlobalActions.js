@@ -64,7 +64,9 @@ export const incomingConnectionsRequest = () => (dispatch) => {
 };
 
 /**
- *  @method setAccounts
+ * @method startLocalNode
+ * @param pass
+ * @returns {Function}
  */
 export const startLocalNode = (pass) => (async (dispatch) => {
 
@@ -81,7 +83,9 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
 	}
 
+	console.log('WOAH');
 	const chainToken = await userStorage.getChainToken();
+	console.log('ww11', chainToken);
 
 	const keyPromises = accounts.map((account) => new Promise(async (resolve) => {
 
@@ -411,6 +415,8 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 	} else {
 		dispatch(getPreviewBalances(networkName));
 	}
+
+	dispatch(startLocalNode());
 };
 
 /**

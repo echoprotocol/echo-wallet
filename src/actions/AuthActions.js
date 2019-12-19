@@ -10,7 +10,7 @@ import {
 	setGlobalError,
 	saveWifToStorage,
 	updateStorage,
-	customNodeConnect,
+	customNodeConnect, startLocalNode,
 } from './GlobalActions';
 
 import {
@@ -263,6 +263,8 @@ export const saveWIFAfterCreateAccount = ({
 			network.name,
 			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
+
+		dispatch(startLocalNode());
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -380,6 +382,8 @@ export const authUser = ({ accountName, wif, password }) => async (dispatch, get
 		if (hasWifWarning) {
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
+
+		dispatch(startLocalNode());
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'Account importing error. Please, try again later'));
