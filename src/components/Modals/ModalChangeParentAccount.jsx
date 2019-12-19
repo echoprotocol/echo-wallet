@@ -103,7 +103,9 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	render() {
-		const { show, currentAccountName, delegateObject, keyWeightWarn } = this.props;
+		const {
+			show, currentAccountName, delegateObject, keyWeightWarn,
+		} = this.props;
 		const { searchText, loading, options } = this.state;
 
 		const delegate = options.find(({ text }) => text === searchText);
