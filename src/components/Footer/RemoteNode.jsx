@@ -30,7 +30,7 @@ function RemoteNode(props) {
 			</div>
 			<div className="sync-progress">
 				<div className="sync-label">
-					<FormattedMessage id="footer.remote_node.synchronization" />
+					{props.isNodePaused ? 'Sync is paused' : <FormattedMessage id="footer.remote_node.synchronization" />}
 				</div>
 				<ProgressLine value={props.value} />
 			</div>
@@ -40,11 +40,13 @@ function RemoteNode(props) {
 
 RemoteNode.propTypes = {
 	value: PropTypes.number,
+	isNodePaused: PropTypes.bool,
 	intl: PropTypes.any.isRequired,
 };
 
 RemoteNode.defaultProps = {
 	value: 0,
+	isNodePaused: false,
 };
 
 export default injectIntl(RemoteNode);

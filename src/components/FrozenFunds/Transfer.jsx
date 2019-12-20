@@ -54,7 +54,7 @@ class Transfer extends React.Component {
 			>
 				{
 					(submit) => (
-						<Form className="form main-form">
+						<Form className="main-form">
 							<div className="form-info">
 								<h3>
 									<FormattedMessage id="wallet_page.frozen_funds.subtitle" />

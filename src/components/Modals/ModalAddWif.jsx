@@ -41,7 +41,7 @@ class ModalAddWIF extends React.Component {
 		const {
 			show, error, disabled, publicKey, intl,
 		} = this.props;
-		console.log('hoho', this.props.error);
+
 		const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
 		const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
 		const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
@@ -73,11 +73,11 @@ class ModalAddWIF extends React.Component {
 							value={publicKey}
 						/>
 
-						{/* <ErrorMessage
+						<ErrorMessage
 							show={!!error}
-							value={error.message}
+							value={error ? error.message : ''}
 							intl={intl}
-						/> */}
+						/>
 					</Form.Field>
 
 					<PasswordInput
@@ -89,6 +89,7 @@ class ModalAddWIF extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						value={wif}
 						autoFocus
+						intl={intl}
 					/>
 
 					<div className="form-panel">

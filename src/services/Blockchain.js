@@ -10,16 +10,14 @@ import {
 	REMOTE_NODE,
 	LOCAL_NODE,
 	CONNECT_STATUS,
+	REGISTRATION,
 } from '../constants/GlobalConstants';
 import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/ChainConstants';
 
 let ipcRenderer;
 
 try {
-	/* eslint-disable global-require */
-	// eslint-disable-next-line import/no-extraneous-dependencies
-	const electron = require('electron');
-	({ ipcRenderer } = electron);
+	({ ipcRenderer } = window);
 } catch (e) {
 	console.log('Err electron import');
 }
@@ -110,8 +108,6 @@ class Blockchain {
 				this.startCheckingLocalNode();
 			}
 
-		} else {
-			this.emitter.emit('setIsConnected', this.isConnected);
 		}
 
 		this.notifyLocalNodePercent();
@@ -163,6 +159,10 @@ class Blockchain {
 					}
 
 					this.networkId = data.networkId;
+				});
+
+				ipcRenderer.on('pauseNodeSync', () => {
+					this.emitter.emit('setSyncOnPause', true);
 				});
 			}
 
@@ -230,6 +230,8 @@ class Blockchain {
 
 		this.switching = true;
 		this._copyCacheToLocal();
+		this.local.subscriber._clearSubscribers();
+		this.local.subscriber.subscribers = this.remote.subscriber.subscribers;
 
 		if (this.remote) {
 			this.remote.cache.removeRedux();
@@ -262,6 +264,8 @@ class Blockchain {
 		this.switching = true;
 
 		this._copyCacheToRemote();
+		this.remote.subscriber._clearSubscribers();
+		this.remote.subscriber.subscribers = this.local.subscriber.subscribers;
 
 		if (this.local) {
 			this.local.cache.removeRedux();
@@ -395,6 +399,7 @@ class Blockchain {
 				'login',
 				// 'network_node',
 			],
+			registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
 		});
 
 		return instance;
@@ -409,11 +414,13 @@ class Blockchain {
 		// this.local.cache.setStore(this.store);
 
 		this.local.subscriber.setStatusSubscribe(DISCONNECT_STATUS, () => {
+			this.emitter.emit('setIsConnected', false);
 			this.isLocalConnected = false;
 			this.checkSwitching();
 		});
 
 		this.local.subscriber.setStatusSubscribe(CONNECT_STATUS, () => {
+			this.emitter.emit('setIsConnected', true);
 			this.isLocalConnected = true;
 			this.checkSwitching();
 		});
@@ -440,11 +447,13 @@ class Blockchain {
 		this._overrideApi(this.remote);
 
 		this.remote.subscriber.setStatusSubscribe(DISCONNECT_STATUS, () => {
+			this.emitter.emit('setIsConnected', false);
 			this.isRemoteConnected = false;
 			this.checkSwitching();
 		});
 
 		this.remote.subscriber.setStatusSubscribe(CONNECT_STATUS, () => {
+			this.emitter.emit('setIsConnected', true);
 			this.isRemoteConnected = true;
 			this.checkSwitching();
 		});
@@ -517,11 +526,21 @@ class Blockchain {
 	}
 
 	/**
+	 * @method stopNode
+	 */
+	stopNode() {
+		ipcRenderer.send('stopNode');
+	}
+
+	/**
 	*
 	* @param network
 	* @returns {Promise<void>}
 	*/
 	async changeConnection(network) {
+		if (this.remote) {
+			this.remote.disconnect();
+		}
 		try {
 
 			this.setNetworkGroup(network);
@@ -539,6 +558,14 @@ class Blockchain {
 		} catch (e) {
 			console.error('change connection error', e);
 		}
+	}
+
+	/**
+	 * @method getEchoInstance
+	 * @returns {*}
+	 */
+	getEchoInstance() {
+		return this[this.current];
 	}
 
 }

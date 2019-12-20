@@ -44,7 +44,7 @@ export default class PasswordInput extends React.PureComponent {
 			inputPlaceholder,
 			inputName,
 			onChange,
-			value,
+			value, intl,
 			autoFocus,
 		} = this.props;
 
@@ -70,10 +70,11 @@ export default class PasswordInput extends React.PureComponent {
 					/>
 				</div>
 				<React.Fragment>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!errorMessage}
 						value={errorMessage}
-					/> */}
+						intl={intl}
+					/>
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>
@@ -94,6 +95,7 @@ PasswordInput.propTypes = {
 	onChange: PropTypes.func,
 	value: PropTypes.string,
 	autoFocus: PropTypes.bool,
+	intl: PropTypes.any,
 };
 
 PasswordInput.defaultProps = {
@@ -105,4 +107,5 @@ PasswordInput.defaultProps = {
 	value: '',
 	onChange: () => {},
 	autoFocus: false,
+	intl: {},
 };

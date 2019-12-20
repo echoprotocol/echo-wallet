@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import echo, { constants, Echo } from 'echojs-lib';
+import { Echo } from 'echojs-lib';
 
 import GlobalReducer from '../reducers/GlobalReducer';
 
@@ -11,16 +11,19 @@ import {
 	AUTH_ROUTES,
 	CREATE_PASSWORD_PATH,
 } from '../constants/RouterConstants';
-import { MODAL_WIPE, MODAL_LOGOUT } from '../constants/ModalConstants';
-import { HISTORY_TABLE } from '../constants/TableConstants';
-import { ECHO_ASSET_ID, NETWORKS, USER_STORAGE_SCHEMES, GLOBAL_ERROR_TIMEOUT, REGISTRATION } from '../constants/GlobalConstants';
 import {
-	FORM_ADD_CUSTOM_NETWORK,
-	FORM_PERMISSION_KEY,
-	FORM_PASSWORD_CREATE,
-	FORM_SIGN_UP_OPTIONS,
-	URI_TYPES,
-} from '../constants/FormConstants';
+	MODAL_WIPE,
+	MODAL_LOGOUT,
+	MODAL_ACCEPT_INCOMING_CONNECTIONS,
+} from '../constants/ModalConstants';
+import { HISTORY_TABLE } from '../constants/TableConstants';
+import {
+	ECHO_ASSET_ID,
+	NETWORKS,
+	USER_STORAGE_SCHEMES,
+	GLOBAL_ERROR_TIMEOUT,
+	DEFAULT_NETWORK,
+} from '../constants/GlobalConstants';
 
 
 import {
@@ -44,9 +47,77 @@ import { initSorts } from './SortActions';
 import { loadContracts } from './ContractActions';
 import { clearTable, formPermissionKeys } from './TableActions';
 import { setFormError, clearForm, toggleLoading, setValue } from './FormActions';
-import { closeModal, setError } from './ModalActions';
+import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import Listeners from '../services/Listeners';
+import {
+	FORM_ADD_CUSTOM_NETWORK,
+	FORM_PASSWORD_CREATE,
+	FORM_PERMISSION_KEY,
+	FORM_SIGN_UP_OPTIONS,
+	URI_TYPES,
+} from '../constants/FormConstants';
+
+export const incomingConnectionsRequest = () => (dispatch) => {
+	let isFirst = localStorage.getItem('is_first_launch');
+
+	isFirst = isFirst ? JSON.parse(isFirst) : true;
+
+	if (isFirst) {
+		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
+	}
+
+	localStorage.setItem('is_first_launch', JSON.stringify(false));
+};
+
+/**
+ * @method startLocalNode
+ * @param pass
+ * @returns {Function}
+ */
+export const startLocalNode = (pass) => (async (dispatch) => {
+
+	const userStorage = Services.getUserStorage();
+	const networkId = await userStorage.getNetworkId();
+
+	let storageAccounts = localStorage.getItem(`accounts_${networkId}`);
+	storageAccounts = storageAccounts ? JSON.parse(storageAccounts) : [];
+
+	const accounts =
+		await Promise.all(storageAccounts.map(({ name }) =>
+			Services.getEcho().remote.api.getAccountByName(name)));
+	if (pass) {
+		await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
+	}
+
+	const chainToken = await userStorage.getChainToken();
+
+	const keyPromises = accounts.map((account) => new Promise(async (resolve) => {
+
+		const keys = await userStorage.getAllWIFKeysForAccount(account.id);
+
+		return resolve(keys.map((key) => ({
+			id: account.id,
+			key: key.wif,
+		})));
+
+	}));
+
+	const accountsKeysResults = await Promise.all(keyPromises);
+	const accountsKeys = [];
+
+	accountsKeysResults.forEach((accountKeysArr) => {
+		accountKeysArr.forEach((accountKey) => {
+			accountsKeys.push(accountKey);
+		});
+	});
+
+	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+
+	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
+	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
+});
 
 /**
  * @method initAccount
@@ -69,10 +140,15 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 
 		localStorage.setItem(`accounts_${networkName}`, JSON.stringify(accounts));
 
-		echo.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
-		const { id, name, options } = await echo.api.getAccountByName(accountName);
+		const echoInstance = Services.getEcho().getEchoInstance();
+		if (echoInstance) {
+			echoInstance.subscriber.setGlobalSubscribe((obj) => dispatch(handleSubscriber(obj)));
+		}
 
-		await echo.api.getFullAccounts([id, options.delegating_account]);
+		const { id, name, options } = await Services.getEcho().api.getAccountByName(accountName);
+
+		await Services.getEcho().api.getFullAccounts([id, options.delegating_account]);
+
 		const userStorage = Services.getUserStorage();
 		const doesDBExist = await userStorage.doesDBExist();
 
@@ -90,6 +166,8 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
 		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
+		dispatch(incomingConnectionsRequest());
+
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
 	} finally {
@@ -100,63 +178,26 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 };
 
 /**
- * @method setIsConnectedStatus
- *
- * @param {Boolean} isConnect
- * @returns {function(dispatch): undefined}
+ * @method initAfterConnection
+ * @param network
+ * @returns {Function}
  */
-export const setIsConnectedStatus = (isConnect) => (dispatch) => {
-	dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: isConnect }));
-};
-
-export const connection = () => async (dispatch) => {
-	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
-
-	if (ELECTRON && window.ipcRenderer) {
-		window.ipcRenderer.send('showWindow');
-	}
-
-	let network = localStorage.getItem('current_network');
-
-	if (!network) {
-		[network] = NETWORKS;
-		localStorage.setItem('current_network', JSON.stringify(network));
-	} else {
-		network = JSON.parse(network);
-	}
-
-	dispatch(GlobalReducer.actions.set({ field: 'network', value: new Map(network) }));
-
-	let networks = localStorage.getItem('custom_networks');
-	networks = networks ? JSON.parse(networks) : [];
-
-	dispatch(GlobalReducer.actions.set({ field: 'networks', value: new List(networks) }));
+export const initAfterConnection = (network) => async (dispatch) => {
 
 	try {
 		const userStorage = Services.getUserStorage();
-		await userStorage.init();
-		await userStorage.setNetworkId(network.name);
 		const doesDBExist = await userStorage.doesDBExist();
 		if (!doesDBExist) {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
-		echo.subscriber.setStatusSubscribe('connect', () => dispatch(setIsConnectedStatus(true)));
-		echo.subscriber.setStatusSubscribe('disconnect', () => dispatch(setIsConnectedStatus(false)));
-
-		await echo.connect(
-			network.url,
-			{
-				apis: constants.WS_CONSTANTS.CHAIN_APIS,
-				registration: { batch: REGISTRATION.BATCH, timeout: REGISTRATION.TIMEOUT },
-			},
-		);
-		await echo.api.getDynamicGlobalProperties(true);
+		await Services.getEcho().api.getDynamicGlobalProperties(true);
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
-		await echo.api.getObject(ECHO_ASSET_ID);
+		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
@@ -177,16 +218,86 @@ export const connection = () => async (dispatch) => {
 };
 
 /**
+ *  @method initNetworks
+ *
+ * 	Set value to global reducer
+ *
+ * 	@param store
+ * 	@return network
+ */
+export const initNetworks = (store) => async (dispatch) => {
+	let current = localStorage.getItem('current_network');
+	if (!current) {
+		current = DEFAULT_NETWORK;
+		localStorage.setItem('current_network', JSON.stringify(current));
+	} else {
+		current = JSON.parse(current);
+	}
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'network',
+		value: new Map(current),
+	}));
+
+	let networks = localStorage.getItem('custom_networks');
+	networks = networks ? JSON.parse(networks) : [];
+
+	dispatch(GlobalReducer.actions.set({
+		field: 'networks',
+		value: new List(networks),
+	}));
+
+	try {
+		await Services.getUserStorage().setNetworkId(current.name);
+		if (store) {
+			await Services.getEcho().init(current.name, { store });
+		} else {
+			await Services.getEcho().changeConnection(current.name);
+		}
+	} catch (err) {
+		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
+	}
+
+	return current;
+};
+
+/**
+ *  @method initApp
+ *
+ * 	Initialization application
+ *
+ * 	@param {Object?} store - redux store
+ */
+export const initApp = (store) => async (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
+
+	if (ELECTRON && window.ipcRenderer) {
+		window.ipcRenderer.send('showWindow');
+	}
+
+	const listeners = new Listeners();
+	listeners.initListeners(dispatch, getState);
+
+	try {
+		const userStorage = Services.getUserStorage();
+		await userStorage.init();
+
+		const network = await dispatch(initNetworks(store));
+		await dispatch(initAfterConnection(network));
+	} catch (err) {
+		console.warn(err.message || err);
+	} finally {
+		dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: false }));
+	}
+
+};
+
+/**
  * @method disconnect
  * @returns {function(dispatch): Promise<undefined>}
  */
 export const disconnection = () => async (dispatch) => {
-
-	if (echo.isConnected) {
-		await echo.disconnect();
-	}
-
-	echo.subscriber.reset();
+	Services.getEcho().getEchoInstance().subscriber.reset();
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());
@@ -278,7 +389,8 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		return;
 	}
 
-	const account = await echo.api.getAccountByName(accountName);
+	const account = await Services.getEcho().api.getAccountByName(accountName);
+
 	await userStorage.removeKeys(
 		account.active.key_auths.map(([k]) => k),
 		{ password, accountId: account.id },
@@ -301,8 +413,8 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		history.push(SIGN_IN_PATH);
 		process.nextTick(() => dispatch(GlobalReducer.actions.logout()));
 
-		echo.subscriber.reset();
-		echo.cache.reset();
+		Services.getEcho().getEchoInstance().subscriber.reset();
+		Services.getEcho().getEchoInstance().cache.reset();
 	}
 
 	if (activeAccountName === accountName && accounts[0]) {
@@ -310,6 +422,8 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 	} else {
 		dispatch(getPreviewBalances(networkName));
 	}
+
+	dispatch(startLocalNode());
 };
 
 /**
@@ -349,6 +463,7 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(resetBalance());
 
 	dispatch(initAccount(accountName, networkName));
+	dispatch(incomingConnectionsRequest());
 };
 
 /**
@@ -431,7 +546,7 @@ export const saveNetwork = (network) => async (dispatch) => {
 	await dispatch(disconnection());
 
 	localStorage.setItem('current_network', JSON.stringify(network));
-	dispatch(connection());
+	await dispatch(initApp());
 
 	const userStorage = Services.getUserStorage();
 	await userStorage.setNetworkId(network.name);
@@ -546,7 +661,7 @@ export const deleteNetwork = (network) => (dispatch, getState) => {
 	const currentNetwork = getState().global.get('network').toJS();
 	if (currentNetwork.name === network.name) {
 		localStorage.removeItem('current_network');
-		dispatch(connection());
+		dispatch(initApp());
 		return;
 	}
 
@@ -600,8 +715,8 @@ export const resetData = () => async (dispatch) => {
 	dispatch(GlobalReducer.actions.setGlobalLoading({ globalLoading: true }));
 
 	try {
-		echo.subscriber.reset();
-		echo.cache.reset();
+		Services.getEcho().getEchoInstance().subscriber.reset();
+		Services.getEcho().getEchoInstance().cache.reset();
 
 		dispatch(clearTable(HISTORY_TABLE));
 		dispatch(resetBalance());

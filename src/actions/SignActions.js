@@ -1,4 +1,4 @@
-import echo, { PrivateKey } from 'echojs-lib';
+import { PrivateKey } from 'echojs-lib';
 
 import Services from '../services';
 
@@ -37,8 +37,9 @@ const getSigners = async (account, keys, viewed = []) => {
 
 		if (!viewed.includes(id)) {
 			try {
-				/* eslint-disable no-await-in-loop */
-				const [signer] = await echo.api.getFullAccounts([id]);
+				// eslint-disable-next-line no-await-in-loop
+				const [signer] = await Services.getEcho().api.getFullAccounts([id]);
+				// eslint-disable-next-line no-await-in-loop
 				const accountSigners = await getSigners(signer, keys, viewed);
 				signers = signers.concat(accountSigners);
 				weight += w;
@@ -65,7 +66,7 @@ const getSigners = async (account, keys, viewed = []) => {
  * @returns {Promise<>undefined}
  */
 export const signTransaction = async (accountId, tr, password) => {
-	const signer = await echo.api.getObject(accountId);
+	const signer = await Services.getEcho().api.getObject(accountId);
 
 	const transaction = {
 		ref_block_num: 0,
@@ -75,7 +76,7 @@ export const signTransaction = async (accountId, tr, password) => {
 		extensions: [],
 	};
 
-	const publicKeys = await echo.api.getPotentialSignatures(transaction);
+	const publicKeys = await Services.getEcho().api.getPotentialSignatures(transaction);
 
 	const keys = (await Promise
 		.all(publicKeys.map((k) => Services.getUserStorage().getAllPossibleWIFs(k, { password }))))

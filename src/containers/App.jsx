@@ -5,7 +5,7 @@ import { Sidebar } from 'semantic-ui-react';
 import { withRouter, matchPath } from 'react-router';
 import { IntlProvider } from 'react-intl';
 
-import { connection, toggleBar } from '../actions/GlobalActions';
+import { toggleBar } from '../actions/GlobalActions';
 
 import Modals from '../components/Modals';
 import Loading from '../components/Loading/index';
@@ -25,10 +25,6 @@ import {
 import TranslateHelper from '../helpers/TranslateHelper';
 
 class App extends React.Component {
-
-	componentDidMount() {
-		this.props.connection();
-	}
 
 	componentWillReceiveProps(nextProps) {
 		const { location, accountId, networkName } = this.props;
@@ -137,7 +133,6 @@ App.propTypes = {
 	networkName: PropTypes.string.isRequired,
 	children: PropTypes.element.isRequired,
 	visibleBar: PropTypes.bool.isRequired,
-	connection: PropTypes.func.isRequired,
 	hideBar: PropTypes.func.isRequired,
 };
 
@@ -157,7 +152,6 @@ export default withRouter(connect(
 		disconnected: !state.global.get('isConnected'),
 	}),
 	(dispatch) => ({
-		connection: () => dispatch(connection()),
 		hideBar: () => dispatch(toggleBar(true)),
 	}),
 )(App));

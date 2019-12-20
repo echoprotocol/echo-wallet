@@ -88,7 +88,7 @@ class ModalLogout extends React.Component {
 						{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
 						<div className="field-wrap">
 							<PasswordInput
-								errorMessage={error ? intl.formatMessage({ id: error }) : ''}
+								errorMessage={error}
 								inputLabel={
 									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
 								}
@@ -99,6 +99,7 @@ class ModalLogout extends React.Component {
 								value={password}
 								onChange={(e) => this.onChange(e)}
 								autoFocus
+								intl={intl}
 							/>
 						</div>
 						<div className="form-panel">

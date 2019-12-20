@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
@@ -61,7 +61,7 @@ class ModalCreateEchoAddress extends React.Component {
 										{intl.formatMessage({ id: 'modals.modal_create_echo_address.title' })}
 									</h2>
 								</div>
-								<form className="modal-body">
+								<Form className="modal-body">
 									<div className="info-text">
 										{intl.formatMessage({ id: 'modals.modal_create_echo_address.text' })}
 									</div>
@@ -98,7 +98,7 @@ class ModalCreateEchoAddress extends React.Component {
 											disabled={keyWeightWarn}
 										/>
 									</div>
-								</form>
+								</Form>
 							</FocusLock>
 						</Modal>
 					)

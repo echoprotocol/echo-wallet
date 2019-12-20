@@ -1,4 +1,4 @@
-import echo, { constants, validators } from 'echojs-lib';
+import { constants, validators } from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
@@ -13,6 +13,7 @@ import { setField } from './TransactionActions';
 import history from '../history';
 import { CONTRACT_ID_PREFIX } from '../constants/GlobalConstants';
 import { getSidechainTrxAsset } from '../helpers/ValidateHelper';
+import Services from '../services';
 
 /**
  * @method viewTransaction
@@ -22,10 +23,11 @@ import { getSidechainTrxAsset } from '../helpers/ValidateHelper';
  */
 export const viewTransaction = (transaction) => async (dispatch) => {
 	if ([operations.contract_create.name, operations.contract_call.name].includes(transaction.name)) {
-		if (!echo.isConnected) return;
+		if (!Services.getEcho().isConnected) return;
 
-		[, transaction.details] = await echo.api.getContractResult(transaction.result);
-		transaction.contract = (await echo.api.getObject(transaction.result)).contracts_id;
+		[, transaction.details] = await Services.getEcho().api.getContractResult(transaction.result);
+		transaction.contract =
+			(await Services.getEcho().api.getObject(transaction.result)).contracts_id;
 	}
 
 	dispatch(setField('details', transaction));
@@ -46,7 +48,8 @@ const additionalFields = async (options, operation) => {
 	if (!validators.isObjectId(assetId)) {
 		return null;
 	}
-	const { precision, symbol } = await echo.api.getObject(assetId);
+	const { precision, symbol } = await Services.getEcho().api.getObject(assetId);
+
 	return {
 		..._.get(operation, options.value),
 		precision,
@@ -63,7 +66,7 @@ const additionalFields = async (options, operation) => {
 const formatOperation = (data) => async (dispatch, getState) => {
 	const accountName = getState().global.getIn(['activeUser', 'name']);
 	const [type, operation] = data.op;
-	const block = await echo.api.getBlock(data.block_num);
+	const block = await Services.getEcho().api.getBlock(data.block_num);
 	const { name, options } = Object.values(operations).find((i) => i.value === type);
 
 	const result = {
@@ -75,7 +78,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	};
 
 	if (options.fee) {
-		const feeAsset = await echo.api.getObject(operation.fee.asset_id);
+		const feeAsset = await Services.getEcho().api.getObject(operation.fee.asset_id);
 		result.fee = {
 			amount: operation.fee.amount,
 			precision: feeAsset.precision,
@@ -84,7 +87,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 	}
 	if (options.from) {
 		const request = _.get(operation, options.from);
-		const response = await echo.api.getObject(request);
+		const response = await Services.getEcho().api.getObject(request);
 		result.from = { value: response.name, id: response.id };
 	}
 
@@ -92,7 +95,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		if (options.subject[1]) {
 			const request = _.get(operation, options.subject[0]);
 			if (validators.isObjectId(request)) {
-				const response = await echo.api.getObject(request);
+				const response = await Services.getEcho().api.getObject(request);
 				result.subject = {
 					value: response[options.subject[1]],
 					id: response.id,
@@ -113,7 +116,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.value) {
 		if (validators.isUInt64(operation.amount)) {
-			const coreAsset = await echo.api.getObject(constants.CORE_ASSET_ID);
+			const coreAsset = await Services.getEcho().api.getObject(constants.CORE_ASSET_ID);
 			result.value = {
 				precision: coreAsset.precision,
 				asset_id: coreAsset.id,
@@ -142,7 +145,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 	if (options.asset) {
 		const request = _.get(operation, options.asset);
-		const response = await echo.api.getObject(request);
+		const response = await Services.getEcho().api.getObject(request);
 		result.value = {
 			...result.value,
 			precision: response.precision,
@@ -156,11 +159,11 @@ const formatOperation = (data) => async (dispatch, getState) => {
 
 		result.subject = { value: resultId };
 
-		if (!echo.isConnected) {
+		if (!Services.getEcho().isConnected) {
 			return result;
 		}
 
-		const contractResult = await echo.api.getContractResult(resultId);
+		const contractResult = await Services.getEcho().api.getContractResult(resultId);
 
 		const [contractResultType, contractResultData] = contractResult;
 

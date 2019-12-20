@@ -46,10 +46,11 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!bytecode.error}
 						value={bytecode.error}
-					/> */}
+						intl={intl}
+					/>
 				</Form.Field>
 				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
@@ -69,11 +70,11 @@ class Bytecode extends React.Component {
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!abi.error}
 						value={abi.error}
 						intl={intl}
-					/> */}
+					/>
 
 				</Form.Field>
 				<div className={classnames('error-wrap', { error: !!name.error })}>
@@ -87,11 +88,11 @@ class Bytecode extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!name.error}
 						value={name.error}
 						intl={intl}
-					/> */}
+					/>
 				</div>
 			</React.Fragment>
 		);

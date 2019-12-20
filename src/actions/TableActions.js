@@ -1,7 +1,8 @@
 import { List } from 'immutable';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
 import BN from 'bignumber.js';
 
+import Services from '../services';
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import TableReducer from '../reducers/TableReducer';
@@ -14,6 +15,7 @@ import { setInFormError, setInFormValue, setValue as setFormValue } from './Form
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 import { getOperationFee } from '../api/TransactionApi';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { startLocalNode } from './GlobalActions';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -108,7 +110,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	if (!accountId) return;
 
-	const [account] = await echo.api.getFullAccounts([accountId]);
+	const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -120,7 +122,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
 
-		const { name } = await echo.api.getObject(a[0]);
+		const { name } = await Services.getEcho().api.getObject(a[0]);
 		return {
 			key: name, weight: a[1], role: 'active', type: 'accounts', hasWif: false,
 		};
@@ -249,7 +251,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 		}
 	} else {
 		try {
-			account = await echo.api.getAccountByName(key.value);
+			account = await Services.getEcho().api.getAccountByName(key.value);
 
 			if (!account) {
 				error = true;
@@ -326,7 +328,7 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 		}
 
 		const accountInfo = new Promise(async (res) => {
-			const account = await echo.api.getAccountByName(value.get('key').value);
+			const account = await Services.getEcho().api.getAccountByName(value.get('key').value);
 			return res([account.id, weightInt]);
 		});
 		result.push(accountInfo);
@@ -592,8 +594,8 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			return { validation: false, isWifChangingOnly: false };
 		}
 
-		await echo.api.getGlobalProperties(true);
-		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+		await Services.getEcho().api.getGlobalProperties(true);
+		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
 		const transaction = {
 			account: currentAccount.get('id'),
@@ -676,6 +678,10 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			};
 
 			showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
+		}
+
+		if (dataChanged.active.wif || dataChanged.echoRand.wif) {
+			dispatch(startLocalNode());
 		}
 
 		dispatch(resetTransaction());

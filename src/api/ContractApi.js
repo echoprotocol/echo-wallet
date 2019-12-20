@@ -1,5 +1,6 @@
 import BN from 'bignumber.js';
-import echo from 'echojs-lib';
+
+import Services from '../services';
 
 import { getMethod } from '../helpers/ContractHelper';
 import { toInt, toUtf8 } from '../helpers/FormatHelper';
@@ -15,7 +16,7 @@ import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
 export const getTokenBalance = async (accountId, contractId) => {
 	const method = { name: 'balanceOf', inputs: [{ type: 'address' }] };
 	const args = [accountId];
-	const result = await echo.api.callContractNoChangingState(
+	const result = await Services.getEcho().api.callContractNoChangingState(
 		contractId,
 		accountId,
 		{ amount: 0, asset_id: ECHO_ASSET_ID },
@@ -34,7 +35,7 @@ export const getTokenBalance = async (accountId, contractId) => {
  */
 export const getTokenSymbol = async (accountId, contractId) => {
 	const method = { name: 'symbol', inputs: [] };
-	const result = await echo.api.callContractNoChangingState(
+	const result = await Services.getEcho().api.callContractNoChangingState(
 		contractId,
 		accountId,
 		{ amount: 0, asset_id: ECHO_ASSET_ID },
@@ -53,7 +54,7 @@ export const getTokenSymbol = async (accountId, contractId) => {
  */
 export const getTokenPrecision = async (accountId, contractId) => {
 	const method = { name: 'decimals', inputs: [] };
-	const result = await echo.api.callContractNoChangingState(
+	const result = await Services.getEcho().api.callContractNoChangingState(
 		contractId,
 		accountId,
 		{ amount: 0, asset_id: ECHO_ASSET_ID },

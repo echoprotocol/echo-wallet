@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
@@ -11,10 +12,12 @@ import { FORM_SIGN_UP } from '../../constants/FormConstants';
 
 import { saveNetwork, deleteNetwork } from '../../actions/GlobalActions';
 import { NETWORKS_PATH } from '../../constants/RouterConstants';
+import { isPlatformSupportNode } from '../../helpers/utils';
 
 import ProgressBar from '../ProgressBar';
 import RemoteNode from './RemoteNode';
-// import LocalNode from './LocalNode';
+import { openModal } from '../../actions/ModalActions';
+import LocalNode from './LocalNode';
 
 
 class Network extends React.PureComponent {
@@ -60,6 +63,7 @@ class Network extends React.PureComponent {
 
 	getList(networks) {
 		const { name } = this.props.network;
+		const percent = parseInt(this.props.localNodePercent, 10);
 
 		return networks.map((i) => (
 			{
@@ -84,11 +88,18 @@ class Network extends React.PureComponent {
 							/>
 							}
 						</div>
-						{ i.name === 'testnet' &&
-							<div className="node-info">
-								{/* <LocalNode /> */}
-								<RemoteNode value={64} />
-							</div>
+						{
+							(i.name === 'testnet' && isPlatformSupportNode() && this.props.isNodeSyncing) && (
+								<div className="node-info">
+									{
+										percent < 100 ? (
+											<RemoteNode value={percent} isNodePaused={this.props.isNodePaused} />
+										) : (
+											<LocalNode />
+										)
+									}
+								</div>
+							)
 						}
 					</div>
 				),
@@ -110,6 +121,7 @@ class Network extends React.PureComponent {
 		const {
 			networks, network, loading, disconnected, warning, intl,
 		} = this.props;
+		const percent = parseInt(this.props.localNodePercent, 10);
 		const dropdownPlaceholder = intl.formatMessage({ id: 'footer.network_section.choose_network_dropdown.title' });
 		let options = [
 			{
@@ -157,16 +169,26 @@ class Network extends React.PureComponent {
 							<FormattedMessage id="footer.network_section.disconnected" />
 						}
 					</span>
-					<span className="status connected">
-						<div className="ellipsis">{network.name}</div>
-					</span>
+					{percent < 100 ?
+						<React.Fragment>
+							<span className="status connected">
+								<div className="ellipsis">{network.name}</div>
+							</span>
 
-					<ProgressBar
-						size={20}
-						value={64}
-						disconnected={disconnected}
-						warning={warning}
-					/>
+							<ProgressBar
+								size={20}
+								value={percent}
+								disconnected={disconnected}
+								warning={warning}
+								openModal={this.props.openModal}
+								isNodeSyncing={this.props.isNodeSyncing}
+								isNodePaused={this.props.isNodePaused}
+							/>
+						</React.Fragment> :
+						<span className="status connected">
+							<div className="ellipsis">Local node</div>
+						</span>
+					}
 
 					<span className="pipeline-block">
 						<FormattedMessage id="footer.network_section.block" />
@@ -200,7 +222,11 @@ Network.propTypes = {
 	history: PropTypes.object.isRequired,
 	saveNetwork: PropTypes.func.isRequired,
 	deleteNetwork: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
 	lastBlock: PropTypes.any.isRequired,
+	localNodePercent: PropTypes.any.isRequired,
+	isNodeSyncing: PropTypes.bool.isRequired,
+	isNodePaused: PropTypes.bool.isRequired,
 	intl: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
@@ -216,10 +242,14 @@ export default injectIntl(withRouter(connect(
 	(state) => ({
 		network: state.global.get('network').toJS(),
 		networks: state.global.get('networks').toJS(),
+		localNodePercent: state.global.get('localNodePercent'),
+		isNodeSyncing: state.global.get('isNodeSyncing'),
+		isNodePaused: state.global.get('isNodePaused'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
 		deleteNetwork: (network) => dispatch(deleteNetwork(network)),
+		openModal: (value) => dispatch(openModal(value)),
 	}),
 )(Network)));

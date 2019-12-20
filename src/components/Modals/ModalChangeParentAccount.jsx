@@ -178,6 +178,7 @@ class ModalChangeDelegate extends React.Component {
 											<ErrorMessage
 												show={!!delegateObject.error}
 												value={delegateObject.error}
+												intl={intl}
 											/>
 										</div>
 									</div>
