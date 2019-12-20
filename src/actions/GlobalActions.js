@@ -446,6 +446,7 @@ export const isAccountAdded = (accountName, networkName) => {
 
 export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
+
 	accounts = accounts ? JSON.parse(accounts) : [];
 
 	const addedKeys = addedWifsToPubKeys.reduce((acc, key) => {
