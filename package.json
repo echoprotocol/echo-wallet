@@ -168,6 +168,22 @@
   "build": {
     "productName": "Echo Wallet",
     "appId": "org.echo",
+    "extraFiles": [
+      {
+        "from": "resources/${os}/bin",
+        "to": "resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/icons",
+        "to": "resources/icons",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "*.js",
       "build",
@@ -176,7 +192,7 @@
       "build/electron/index.js.map"
     ],
     "directories": {
-      "buildResources": "src/assets/app_resources",
+      "buildResources": "resources/icons",
       "output": "build/binaries"
     },
     "dmg": {
