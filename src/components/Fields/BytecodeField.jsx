@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import ErrorMessage from '../ErrorMessage';
 import { injectIntl } from 'react-intl';
+import ErrorMessage from '../ErrorMessage';
 
 class BytecodeField extends React.Component {
 

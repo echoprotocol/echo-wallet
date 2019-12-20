@@ -167,11 +167,11 @@ class ContractSettings extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 				</Input>
-				<ErrorMessage
+				{/* <ErrorMessage
 					show={!!newName.error}
 					value={newName.error}
 					intl={intl}
-				/>
+				/> */}
 			</div>
 		);
 	}

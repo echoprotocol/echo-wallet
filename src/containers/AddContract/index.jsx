@@ -66,11 +66,11 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						<ErrorMessage
+						{/* <ErrorMessage
 							show={!!name.error}
 							value={name.error}
 							intl={intl}
-						/>
+						/> */}
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: id.error })}>
 						<label htmlFor="id">
@@ -83,10 +83,10 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<ErrorMessage
+						{/* <ErrorMessage
 							show={!!id.error}
 							value={id.error}
-						/>
+						/> */}
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
 						<label htmlFor="abi">
@@ -99,11 +99,11 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						<ErrorMessage
+						{/* <ErrorMessage
 							show={!!abi.error}
 							value={abi.error}
 							intl={intl}
-						/>
+						/> */}
 					</Form.Field>
 					<div className="form-panel">
 						<Button

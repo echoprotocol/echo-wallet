@@ -35,11 +35,13 @@ class ModalAddWIF extends React.Component {
 		this.props.saveWif(wif);
 	}
 
+
 	render() {
 		const { wif } = this.state;
 		const {
 			show, error, disabled, publicKey, intl,
 		} = this.props;
+		console.log('hoho', this.props.error);
 		const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
 		const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
 		const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
@@ -70,11 +72,12 @@ class ModalAddWIF extends React.Component {
 							onChange={() => {}}
 							value={publicKey}
 						/>
-						<ErrorMessage
+
+						{/* <ErrorMessage
 							show={!!error}
 							value={error.message}
 							intl={intl}
-						/>
+						/> */}
 					</Form.Field>
 
 					<PasswordInput
@@ -103,15 +106,6 @@ class ModalAddWIF extends React.Component {
 	}
 
 }
-
-ModalAddWIF.propTypes = {
-	show: PropTypes.bool,
-	close: PropTypes.func.isRequired,
-};
-
-ModalAddWIF.defaultProps = {
-	show: false,
-};
 
 ModalAddWIF.propTypes = {
 	show: PropTypes.bool,

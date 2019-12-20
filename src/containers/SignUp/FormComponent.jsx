@@ -150,11 +150,11 @@ class FormComponent extends React.Component {
 							this.validateWIFAfterChange(e);
 						}}
 					/>
-					<ErrorMessage
+					{/* <ErrorMessage
 						show={!!userWIF.error}
 						value={userWIF.error}
 						intl={intl}
-					/>
+					/> */}
 				</div>
 				<div className={classnames('field error-wrap', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">
@@ -170,11 +170,11 @@ class FormComponent extends React.Component {
 							this.validatePubAfterChange(e);
 						}}
 					/>
-					<ErrorMessage
+					{/* <ErrorMessage
 						show={!!userPublicKey.error}
 						value={userPublicKey.error}
 						intl={intl}
-					/>
+					/> */}
 				</div>
 			</React.Fragment>
 		);
@@ -200,11 +200,11 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					<ErrorMessage
+					{/* <ErrorMessage
 						show={!!accountName.error}
 						value={accountName.error}
 						intl={intl}
-					/>
+					/> */}
 				</div>
 				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}
 			</div>

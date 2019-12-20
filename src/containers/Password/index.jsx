@@ -88,10 +88,10 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<ErrorMessage
+						{/* <ErrorMessage
 							show={!!error}
 							value={error}
-						/>
+						/> */}
 					</Form.Field>
 					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
 						<label htmlFor="repeatPassword">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
@@ -105,11 +105,11 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<ErrorMessage
+						{/* <ErrorMessage
 							show={!!repeatError}
 							value="create_password_page.repeat_error"
 							intl={intl}
-						/>
+						/> */}
 
 					</Form.Field>
 				</div>

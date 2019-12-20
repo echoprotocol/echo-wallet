@@ -13,7 +13,6 @@ const VerificationField = (props) => {
 		additionalLabel, autoFocus,
 		icon, intl,
 	} = props;
-	console.log('error: ', error);
 
 	return (
 		<div className={classnames('field error-wrap', { error: !!error })}>
@@ -47,7 +46,6 @@ const VerificationField = (props) => {
 				<span className={classnames('value-status', `icon-${status}`)} />
 				}
 			</div>
-
 			<ErrorMessage
 				show={!!error && intl.formatMessage}
 				value={error}

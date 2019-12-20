@@ -70,10 +70,10 @@ export default class PasswordInput extends React.PureComponent {
 					/>
 				</div>
 				<React.Fragment>
-					<ErrorMessage
+					{/* <ErrorMessage
 						show={!!errorMessage}
 						value={errorMessage}
-					/>
+					/> */}
 					{
 						warningMessage &&
 						<span className="warning-message">{ warningMessage }</span>
