@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CSSTransition } from 'react-transition-group';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
