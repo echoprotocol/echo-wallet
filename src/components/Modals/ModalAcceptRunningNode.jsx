@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'semantic-ui-react';
+import { Modal, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
@@ -49,7 +49,7 @@ class ModalAcceptRunningNode extends React.Component {
 										<br />
 										{intl.formatMessage({ id: 'modals.modal_accept_running_node.text_pt2' })}
 									</div>
-									<form className="form-panel">
+									<Form className="form-panel">
 										<button
 											className="main-btn"
 											onClick={(e) => this.onClose(e)}
@@ -62,7 +62,7 @@ class ModalAcceptRunningNode extends React.Component {
 										>
 											{intl.formatMessage({ id: 'modals.modal_accept_running_node.button_confirm_text' })}
 										</button>
-									</form>
+									</Form>
 								</div>
 							</FocusLock>
 						</Modal>

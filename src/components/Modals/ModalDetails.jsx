@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import FocusLock from 'react-focus-lock';
@@ -116,7 +116,7 @@ class ModalDetails extends React.Component {
 						</h2>
 					</div>
 					<div className="modal-body">
-						<form className="form main-form">
+						<Form className="main-form">
 							<div className="field-wrap">
 								{showOptions ? this.renderOptions() : null}
 							</div>
@@ -135,7 +135,7 @@ class ModalDetails extends React.Component {
 									content={intl.formatMessage({ id: 'modals.modal_details.confirm_button_text' })}
 								/>
 							</div>
-						</form>
+						</Form>
 					</div>
 				</FocusLock>
 			</Modal>

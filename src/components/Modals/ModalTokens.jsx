@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -50,7 +50,7 @@ class ModalTokens extends React.Component {
 						</h2>
 					</div>
 					<div className="modal-body">
-						<form className="main-form">
+						<Form className="main-form">
 							<div className="field-wrap">
 								<div className={classnames('field error-wrap', { error: contractId.error })}>
 									<label htmlFor="tokens">
@@ -80,7 +80,7 @@ class ModalTokens extends React.Component {
 									content={intl.formatMessage({ id: 'modals.modal_tokens.confirm_button_text' })}
 								/>
 							</div>
-						</form>
+						</Form>
 					</div>
 				</FocusLock>
 			</Modal>

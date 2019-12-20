@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
@@ -51,7 +51,7 @@ class ModalWipeWallet extends React.Component {
 						</h3>
 					</div>
 					<div className="wipe-data modal-body">
-						<form className="main-form">
+						<Form className="main-form">
 							<div className="form-info-description">
 								{intl.formatMessage({ id: 'modals.modal_wipe.text' })}
 							</div>
@@ -79,7 +79,7 @@ class ModalWipeWallet extends React.Component {
 									disabled={loading || !checked}
 								/>
 							</div>
-						</form>
+						</Form>
 					</div>
 				</FocusLock>
 			</Modal>

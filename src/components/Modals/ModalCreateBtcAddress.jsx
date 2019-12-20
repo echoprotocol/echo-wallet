@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
@@ -65,7 +65,7 @@ class ModalCreateBtcAddress extends React.Component {
 										{intl.formatMessage({ id: 'modals.modal_create_btc_address.title' })}
 									</h2>
 								</div>
-								<form className="modal-body">
+								<Form className="modal-body">
 									<div className="info-text">
 										{intl.formatMessage({ id: 'modals.modal_create_btc_address.text' })}
 									</div>
@@ -103,7 +103,7 @@ class ModalCreateBtcAddress extends React.Component {
 											}}
 										/>
 									</div>
-								</form>
+								</Form>
 							</FocusLock>
 						</Modal>)
 				}
