@@ -187,12 +187,14 @@ function createWindow() {
 		let prevNetwork;
 
 		function removeFolderAndRetrySyncNode(dataDir) {
+			console.log('removeBEFORE', removeBeforeStart, dataDir);
 			return new Promise((resolve) => {
 				previousPublicKeys = [];
 				lastNode = null;
 
 				if (removeBeforeStart) {
 					removeBeforeStart = false;
+					console.log('DELETE');
 					return rimraf(dataDir, () => resolve());
 				}
 
@@ -227,10 +229,12 @@ function createWindow() {
 				data.chainToken,
 				pauseNodeSync,
 			).then(() => {
+				console.log('poshelnahui1');
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;
 				}
-			}).catch(() => {
+			}).catch((error) => {
+				console.log('poshelnahui2', error);
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;
 				}
@@ -250,6 +254,7 @@ function createWindow() {
 				// devnet: null,
 				// 'seed-node': 'node1.devnet.echo-dev.io:6310',
 			};
+			console.log('DATADIRRRRRRRRRRRRRRRRR', networkOptions['data-dir']);
 
 			switch (NETWORK_ID) {
 				case 'testnet':
@@ -274,6 +279,7 @@ function createWindow() {
 				previousPublicKeys.length !== receivedPublicKeys.length ||
 				xor(receivedPublicKeys, previousPublicKeys).length
 			) {
+				console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
 				subject.next({
 					lastNode,
 					networkOptions,

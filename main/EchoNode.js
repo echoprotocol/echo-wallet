@@ -22,7 +22,7 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		const execPath = joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
+		const execPath = joinPath(process.cwd(), 'resources', 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -64,14 +64,23 @@ class EchoNode {
 
 		}
 
-		await mkdirp(dirname(keyConfigPath));
+		console.log('AAAA');
+		try {
+			await mkdirp(dirname(keyConfigPath));
+		} catch (e) {
+			console.log('ETOGAVNO', e);
+		} finally {
+			console.log('GAVNONOVAYAJIZN');
+		}
+		console.log('BBBB');
 
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
 			if (bytes !== fileHex) {
 				await new Promise((resolve, reject) => {
-					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), (err) => {
+					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), { flag: 'w+' }, (err) => {
+						console.log('GAVNO', err);
 						if (err) {
 							return reject(err);
 						}
