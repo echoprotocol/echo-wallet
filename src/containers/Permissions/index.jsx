@@ -110,7 +110,6 @@ class Permissions extends React.Component {
 		const newActiveWifs = activePrivateKeysEntries
 			.map(([index, wif]) => {
 				const publicKey = form.getIn(['active', 'keys', index, 'key']);
-
 				if (wif && wif.error) {
 					return null;
 				}
@@ -163,7 +162,6 @@ class Permissions extends React.Component {
 				return null;
 			})
 			.filter((activeKeyItem) => activeKeyItem);
-
 		const newEchoRandWifs = echoRandPrivateKeysEntries
 			.filter(([index, wif]) => {
 				const publicKey = form.getIn(['echoRand', 'keys', index, 'key']);

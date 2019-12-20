@@ -511,11 +511,14 @@ export const getAvailableWifStatusesFromStorage = (accountName, networkName) => 
 export const updateStorage = (accountName, networkName, keys) => (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
+	console.log('accounts', JSON.stringify(accounts))
 
 	for (let accountKey = 0; accountKey < accounts.length; accountKey += 1) {
 		const currentAccount = accounts[accountKey];
 		if (currentAccount.name === accountName) {
 			currentAccount.addedKeys = {};
+			console.log('currentAccount', JSON.stringify(currentAccount))
+			console.log('keys', JSON.stringify(keys))
 			keys.forEach((key) => {
 				const { publicKey, type } = key;
 
@@ -525,6 +528,7 @@ export const updateStorage = (accountName, networkName, keys) => (dispatch) => {
 
 				currentAccount.addedKeys[publicKey][type] = true;
 			});
+			console.log('currentAccount2', JSON.stringify(currentAccount))
 			break;
 		}
 	}

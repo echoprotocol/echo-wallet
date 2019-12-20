@@ -30,7 +30,6 @@ class ModalAddWIF extends React.Component {
 
 	saveWif() {
 		const { wif } = this.state;
-
 		this.props.saveWif(wif);
 	}
 
@@ -72,7 +71,7 @@ class ModalAddWIF extends React.Component {
 						{
 							error &&
 							<span className="error-message">
-								{intl.formatMessage({ id: error.message })}
+								{intl.formatMessage({ id: error })}
 							</span>
 						}
 					</Form.Field>
@@ -82,7 +81,7 @@ class ModalAddWIF extends React.Component {
 						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"
 						warningMessage={wifWarning}
-						errorMessage={error}
+						errorMessage={error ? intl.formatMessage({ id: error }) : null}
 						onChange={(e) => this.onChange(e)}
 						value={wif}
 						autoFocus
