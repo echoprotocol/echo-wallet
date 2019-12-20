@@ -30,6 +30,7 @@ class ModalAddWIF extends React.Component {
 
 	saveWif() {
 		const { wif } = this.state;
+
 		this.props.saveWif(wif);
 	}
 
