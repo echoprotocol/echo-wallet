@@ -83,7 +83,7 @@ class Password extends React.Component {
 							type="password"
 							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' })}
 							name="password"
-							className="ui input"
+							className="input"
 							autoFocus
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
