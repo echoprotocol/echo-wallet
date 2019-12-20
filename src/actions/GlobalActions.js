@@ -61,6 +61,7 @@ import {
 
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('is_first_launch');
+	let isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
 
