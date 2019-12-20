@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import qs from 'query-string';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -75,7 +75,7 @@ class SignIn extends React.Component {
 
 		return (
 
-			<form className="form main-form">
+			<Form className="main-form">
 				<div className="form-info">
 					{ isAddAccount ?
 						<button
@@ -145,7 +145,7 @@ class SignIn extends React.Component {
 					}
 
 				</div>
-			</form>
+			</Form>
 		);
 	}
 

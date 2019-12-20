@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import { Dropdown, Button, Popup } from 'semantic-ui-react';
+import { Dropdown, Button, Popup, Form } from 'semantic-ui-react';
 
 import { FORM_FREEZE } from '../../constants/FormConstants';
 import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
@@ -54,7 +54,7 @@ class Transfer extends React.Component {
 			>
 				{
 					(submit) => (
-						<form className="form main-form">
+						<Form className="main-form">
 							<div className="form-info">
 								<h3>
 									<FormattedMessage id="wallet_page.frozen_funds.subtitle" />
@@ -123,7 +123,7 @@ class Transfer extends React.Component {
 									/>
 								</div>
 							</div>
-						</form>
+						</Form>
 					)
 				}
 			</TransactionScenario>
