@@ -5,6 +5,7 @@ import ManualSchemeService from './schemes/ManualSchemeService';
 import AutoSchemeService from './schemes/AutoSchemeService';
 import Network from '../logic-components/db/models/network';
 import Key from '../logic-components/db/models/key';
+import CryptoService from './CryptoService';
 
 const storageService = new StorageService(new Storage(DB_NAME, STORE));
 const manualSchemeService = new ManualSchemeService(storageService);
@@ -259,6 +260,22 @@ class UserStorageService {
 	}
 
 	/**
+	 * @method getPossibleWIFs
+	 *
+	 * @param {String} publicKey
+	 * @param {Object?} params
+	 * @return {Promise.<Array<Key>>}
+	 */
+	async getAllPossibleWIFs(publicKey, params) {
+		this.checkNetwork();
+		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
+		const networkId = this.getNetworkId();
+		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
+
+		return network.getAllKeys().filter((key) => publicKey === key.publicKey);
+	}
+
+	/**
 	 * @method isWIFAdded
 	 * @param {String} wif
 	 * @param {String} accountId
@@ -310,20 +327,50 @@ class UserStorageService {
 
 		if (!decryptedData.data.networks) {
 			decryptedData.data.networks = {};
-			network = Network.create([]);
+			network = Network.create([], { token: this.getRandomToken() });
 		} else if (!decryptedData.data.networks[networkId]) {
-			network = Network.create([]);
+			network = Network.create([], { token: this.getRandomToken() });
 		} else {
 			const rawNetwork = decryptedData.data.networks[networkId];
 			network = Network
-				.create(rawNetwork.keys.map((key) =>
-					Key.create(key.publicKey, key.wif, key.accountId, key.type)));
+				.create(
+					rawNetwork.keys.map((key) =>
+						Key.create(key.publicKey, key.wif, key.accountId, key.type)),
+					{ token: this.getRandomToken() },
+				);
 		}
 
 		decryptedData.data.networks[networkId] = network;
 
 		return network;
 
+	}
+
+	/**
+	 * @method getRandomToken
+	 * @returns {string}
+	 */
+	getRandomToken() {
+		return CryptoService.randomBytes(256).toString('hex');
+	}
+
+	/**
+	 * @method getChainToken
+	 * @param params
+	 * @returns {Promise<*>}
+	 */
+	async getChainToken(params) {
+		if (!this.scheme) {
+			this.setScheme(USER_STORAGE_SCHEMES.MANUAL);
+		}
+		this.checkNetwork();
+
+		const decryptedData = await this.getCurrentScheme().getDecryptedData(params);
+
+		const networkId = this.getNetworkId();
+		const network = await this.getNetworkFromDecryptedData(networkId, decryptedData);
+
+		return network.getChainToken();
 	}
 
 }

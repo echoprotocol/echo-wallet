@@ -25,6 +25,9 @@ import {
 	SIGN_UP_OPTIONS_TYPES,
 	FORM_CHANGE_DELEGATE,
 	FORM_REPLENISH,
+	FORM_WHITELIST,
+	FORM_BLACKLIST,
+	CHECK_URI_ADDRESS_TYPES,
 } from '../constants/FormConstants';
 
 import { FREEZE_BALANCE_PARAMS } from '../constants/GlobalConstants';
@@ -73,6 +76,10 @@ const DEFAULT_FORM_FIELDS = {
 	[FORM_SIGN_UP_OPTIONS]: Map({
 		isMoreOptionsActive: false,
 		optionType: SIGN_UP_OPTIONS_TYPES.DEFAULT,
+		registrarAccountKeyWarn: {
+			value: false,
+			error: null,
+		},
 		registrarAccount: {
 			value: '',
 			error: null,
@@ -81,6 +88,9 @@ const DEFAULT_FORM_FIELDS = {
 			value: '',
 			error: null,
 		},
+		ipOrUrlStatus: CHECK_URI_ADDRESS_TYPES.DEFAULT,
+		showSavedAddressesDropdown: false,
+		showSaveAddressTooltip: false,
 	}),
 	[FORM_UNLOCK_MODAL]: Map({
 		password: {
@@ -117,7 +127,10 @@ const DEFAULT_FORM_FIELDS = {
 		balance: {
 			assets: new List([]),
 		},
-		additionalAccountInfo: '',
+		additionalAccountInfo: {
+			prefix: '',
+			value: '',
+		},
 		isAvailableBalance: false,
 		subjectTransferType: '',
 		avatarName: '',
@@ -168,6 +181,8 @@ const DEFAULT_FORM_FIELDS = {
 			error: null,
 		},
 		compileLoading: false,
+		annotations: [],
+		editorWorker: false,
 	}),
 	[FORM_CREATE_CONTRACT_BYTECODE]: Map({
 		bytecode: {
@@ -285,6 +300,7 @@ const DEFAULT_FORM_FIELDS = {
 		}),
 		firstFetch: false,
 		isChanged: false,
+		isOnlyWIFChanged: false,
 		isEditMode: false,
 	}),
 	[FORM_COMMITTEE]: new Map({
@@ -343,6 +359,22 @@ const DEFAULT_FORM_FIELDS = {
 		},
 		isAvailableBalance: false,
 	}),
+	[FORM_WHITELIST]: Map({
+		account: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+	}),
+	[FORM_BLACKLIST]: Map({
+		account: {
+			value: '',
+			loading: false,
+			error: null,
+			checked: false,
+		},
+	}),
 };
 
 export default createModule({
@@ -380,6 +412,10 @@ export default createModule({
 			.merge(DEFAULT_FORM_FIELDS[FORM_SIGN_UP_OPTIONS]),
 		[FORM_CHANGE_DELEGATE]: _.cloneDeep(DEFAULT_FIELDS)
 			.merge(DEFAULT_FORM_FIELDS[FORM_CHANGE_DELEGATE]),
+		[FORM_WHITELIST]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_WHITELIST]),
+		[FORM_BLACKLIST]: _.cloneDeep(DEFAULT_FIELDS)
+			.merge(DEFAULT_FORM_FIELDS[FORM_BLACKLIST]),
 	}),
 	transformations: {
 		set: {

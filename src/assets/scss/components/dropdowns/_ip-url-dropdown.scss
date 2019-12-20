@@ -1,0 +1,50 @@
+.ip-url-dropdown {
+
+	&.empty-search {
+		
+		.visible.transition {
+			display: none;
+		}
+	}
+
+	.menu {
+		padding: 4px 0 5px;
+		max-width: 245px;
+		min-width: auto;
+		right: 0;
+		left: auto;
+		top: calc(100% + 6px);
+		border-radius: 0;
+		border-top-width: 1px;
+
+		&>.item {
+			padding: 0;
+		}
+	}
+
+
+	.dropdown-item {
+		padding: 0 0 0 17px;
+		width: 100%;
+	}
+
+	.ip {
+		min-height: 39px;
+		border-bottom: 1px solid #E5E6EB;
+		font-size: 13px;
+		display: flex;
+		align-items: center;
+		line-height: 17px;
+		font-weight: 600;
+	}
+
+	.url {
+		display: flex;
+		align-items: center;
+		min-height: 40px;
+		font-size: 13px;
+		line-height: 17px;
+		font-weight: 600;
+		color: #4D66CD;
+	}
+}

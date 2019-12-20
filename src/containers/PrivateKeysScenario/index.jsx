@@ -42,7 +42,8 @@ class PrivateKeysScenario extends React.Component {
 	}
 
 	async fetchWIFs(password) {
-		const { activeUserId } = this.props;
+		const { permissionsKeys, activeUserId } = this.props;
+		const { active: { keys: publicKeys } } = permissionsKeys.toJS();
 
 		if (!activeUserId) {
 			return;
@@ -50,7 +51,13 @@ class PrivateKeysScenario extends React.Component {
 
 		const userStorage = Services.getUserStorage();
 
-		const keys = await userStorage.getAllWIFKeysForAccount(activeUserId, { password });
+		const activeUserKeys = await Promise.all(publicKeys.map(async (keyItem) => {
+			const wif = await userStorage.getWIFByPublicKey(keyItem.key, { password });
+
+			return wif;
+		}));
+
+		const keys = activeUserKeys.filter((k) => k);
 
 		this.props.onKeys(keys);
 	}
@@ -108,6 +115,7 @@ class PrivateKeysScenario extends React.Component {
 PrivateKeysScenario.propTypes = {
 	children: PropTypes.func.isRequired,
 	activeUserId: PropTypes.string,
+	permissionsKeys: PropTypes.object,
 	[MODAL_UNLOCK_PERMISSION]: PropTypes.object.isRequired,
 	openModal: PropTypes.func.isRequired,
 	closeModal: PropTypes.func.isRequired,
@@ -118,6 +126,7 @@ PrivateKeysScenario.propTypes = {
 
 PrivateKeysScenario.defaultProps = {
 	activeUserId: null,
+	permissionsKeys: {},
 };
 
 export default connect(

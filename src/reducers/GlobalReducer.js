@@ -1,8 +1,10 @@
 import { createModule } from 'redux-modules';
 import { Map, List } from 'immutable';
 import _ from 'lodash';
+import { EN_LOCALE } from '../constants/GlobalConstants';
 
 const DEFAULT_FIELDS = Map({
+	language: EN_LOCALE,
 	globalLoading: true,
 	globalError: null,
 	error: null,
@@ -18,11 +20,16 @@ const DEFAULT_FIELDS = Map({
 		url: '',
 	}),
 	networks: new List([]),
+	remoteRegistrationAddresses: new List([]),
 	inited: false,
 	isConnected: false,
 	permissionLoading: false,
 	activePaymentTypeTab: 0,
 	activeCoinTypeTab: 0,
+	currentNode: '',
+	localNodePercent: 0,
+	isNodeSyncing: false,
+	isNodePaused: false,
 });
 
 export default createModule({

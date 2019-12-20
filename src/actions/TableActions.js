@@ -1,6 +1,8 @@
 import { List } from 'immutable';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
+import BN from 'bignumber.js';
 
+import Services from '../services';
 import { PERMISSION_TABLE } from '../constants/TableConstants';
 
 import TableReducer from '../reducers/TableReducer';
@@ -13,6 +15,7 @@ import { setInFormError, setInFormValue, setValue as setFormValue } from './Form
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 import { getOperationFee } from '../api/TransactionApi';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
+import { startLocalNode } from './GlobalActions';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
@@ -107,7 +110,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 
 	if (!accountId) return;
 
-	const [account] = await echo.api.getFullAccounts([accountId]);
+	const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 
@@ -119,7 +122,7 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	// save active accounts
 	let target = account.active.account_auths.map(async (a) => {
 
-		const { name } = await echo.api.getObject(a[0]);
+		const { name } = await Services.getEcho().api.getObject(a[0]);
 		return {
 			key: name, weight: a[1], role: 'active', type: 'accounts', hasWif: false,
 		};
@@ -240,23 +243,23 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 
 	if (!key) {
 		error = true;
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_key_error'));
 	} else if (type === 'keys') {
 		if (!isPublicKey(key.value, 'ECHO')) {
 			error = true;
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect key'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_key_error'));
 		}
 	} else {
 		try {
-			account = await echo.api.getAccountByName(key.value);
+			account = await Services.getEcho().api.getAccountByName(key.value);
 
 			if (!account) {
 				error = true;
-				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
+				dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_account_error'));
 			}
 		} catch (e) {
 			error = true;
-			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'Incorrect account'));
+			dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'key'], 'errors.table_errors.incorrect_account_error'));
 		}
 	}
 
@@ -267,7 +270,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 	if ((!weight || !isWeight(weight.value)) && role === 'active') {
 		error = true;
 
-		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'Incorrect weight'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, [role, type, tableKey, 'weight'], 'errors.table_errors.incorrect_weight_error'));
 	}
 
 	return error;
@@ -276,7 +279,7 @@ export const validateKey = (role, tableKey, type, key, weight) => async (dispatc
 const validateThreshold = (permissionForm) => (dispatch) => {
 	const threshold = permissionForm.getIn(['active', 'threshold']).value;
 	if (!isThreshold(threshold)) {
-		dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], 'Invalid threshold'));
+		dispatch(setInFormError(FORM_PERMISSION_KEY, ['active', 'threshold'], 'errors.table_errors.threshold_error'));
 		return false;
 	}
 	return true;
@@ -325,7 +328,7 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 		}
 
 		const accountInfo = new Promise(async (res) => {
-			const account = await echo.api.getAccountByName(value.get('key').value);
+			const account = await Services.getEcho().api.getAccountByName(value.get('key').value);
 			return res([account.id, weightInt]);
 		});
 		result.push(accountInfo);
@@ -343,7 +346,7 @@ const addActiveAccountsToBufferObject = async (permissionForm) => {
 const isThresholdChanged = (permissionForm, permissionTable) => {
 	const role = 'active';
 	const threshold = permissionForm.getIn([role, 'threshold']);
-	return (threshold && permissionTable.getIn([role, 'threshold']) !== threshold.value);
+	return (threshold && !new BN(permissionTable.getIn([role, 'threshold'])).eq(threshold.value));
 };
 
 /**
@@ -368,14 +371,17 @@ const isActiveKeysChanged = (permissionForm, permissionTable) => {
 	const formKeys = permissionForm.getIn([role, 'keys']);
 	const tableKeys = permissionTable.getIn([role, 'keys']);
 
-	if (formKeys.size !== tableKeys.size) {
+	const formKeysWithoutRemoved = formKeys
+		.filter((fk) => !fk.get('remove'))
+		.map((fk) => ({
+			key: fk.get('key').value,
+			weight: fk.get('weight').value,
+		}));
+	if (formKeysWithoutRemoved.size !== tableKeys.size) {
 		return true;
 	}
-
-	return formKeys.some((keyForm) => (!tableKeys.some((keyTable) =>
-		keyTable.key === keyForm.get('key').value && keyTable.weight === keyForm.get('weight').value)
-		|| keyForm.get('remove')
-	));
+	return formKeysWithoutRemoved.some((keyForm) => (!tableKeys.some((keyTable) =>
+		keyTable.key === keyForm.key && new BN(keyTable.weight).eq(keyForm.weight))));
 };
 
 /**
@@ -588,8 +594,8 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			return { validation: false, isWifChangingOnly: false };
 		}
 
-		await echo.api.getGlobalProperties(true);
-		const feeAsset = await echo.api.getObject(ECHO_ASSET_ID);
+		await Services.getEcho().api.getGlobalProperties(true);
+		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
 		const transaction = {
 			account: currentAccount.get('id'),
@@ -605,7 +611,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			&& !dataChanged.active.threshold
 			&& !dataChanged.echoRand.key
 			&& (dataChanged.active.wif
-			|| dataChanged.echoRand.wif);
+				|| dataChanged.echoRand.wif);
 
 		if (
 			dataChanged.active.keys
@@ -628,25 +634,25 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			}
 
 			if (dataChanged.active.threshold) {
-				showOptions.activeThreshold = permissionData.active.threshold;
+				showOptions.active_threshold = permissionData.active.threshold;
 
 				transaction.active.weight_threshold = permissionData.active.threshold;
 			}
 
 			if (dataChanged.active.keys) {
-				showOptions.activeKeys = permissionData.active.keys;
+				showOptions.active_keys = permissionData.active.keys;
 
 				transaction.active.key_auths = permissionData.active.keys;
 			}
 
 			if (dataChanged.active.accounts) {
-				showOptions.activeAccounts = permissionData.active.accounts;
+				showOptions.active_accounts = permissionData.active.accounts;
 
 				transaction.active.account_auths = permissionData.active.accounts;
 			}
 
 			if (dataChanged.echoRand.key) {
-				showOptions.echoRandKey = permissionData.echoRand.key;
+				showOptions.echorand_key = permissionData.echoRand.key;
 
 				transaction.echorand_key = permissionData.echoRand.key;
 			}
@@ -674,6 +680,10 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
 		}
 
+		if (dataChanged.active.wif || dataChanged.echoRand.wif) {
+			dispatch(startLocalNode());
+		}
+
 		dispatch(resetTransaction());
 
 		dispatch(TransactionReducer.actions.setOperation({
@@ -684,3 +694,17 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 
 		return { validation: true, isWifChangingOnly };
 	};
+
+export const isOnlyWifChanged = (privateKeys, basePrivateKeys) => (dispatch, getState) => {
+	const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
+	const permissionTable = getState().table.get(PERMISSION_TABLE);
+	const isActiveKeysChange = isActiveKeysChanged(permissionForm, permissionTable);
+	const isActiveAccountsChange = isActiveAccountsChanged(permissionForm, permissionTable);
+	const isThresholdChange = isThresholdChanged(permissionForm, permissionTable);
+	const isEchoRandKeysChange = isEchoRandKeysChanged(permissionForm, permissionTable);
+	const isActiveWifChange = isActiveWifChanged(privateKeys, basePrivateKeys, permissionForm);
+	const isEchoRandWifChange = isEchoRandWifChanged(privateKeys, basePrivateKeys, permissionForm);
+	const isOnlyWIFChanged = (isActiveWifChange || isEchoRandWifChange) &&
+		!(isActiveKeysChange || isActiveAccountsChange || isThresholdChange || isEchoRandKeysChange);
+	dispatch(setFormValue(FORM_PERMISSION_KEY, 'isOnlyWIFChanged', isOnlyWIFChanged));
+};

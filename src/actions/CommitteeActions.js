@@ -1,7 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 import { List } from 'immutable';
-import echo, { CACHE_MAPS } from 'echojs-lib';
+import { CACHE_MAPS } from 'echojs-lib';
 
+import Services from '../services';
 import { isCommitteeMemberId } from '../helpers/ValidateHelper';
 import { COMMITTEE_TABLE } from '../constants/TableConstants';
 import { setValue } from './TableActions';
@@ -25,10 +26,11 @@ export const fetchCommittee = () => async (dispatch) => {
 	try {
 		dispatch(toggleLoading(FORM_COMMITTEE, true));
 
-		let committeesObjects = await echo.api.lookupCommitteeMemberAccounts('');
+		let committeesObjects = await Services.getEcho().api.lookupCommitteeMemberAccounts('');
 		committeesObjects = committeesObjects.reduce((arr, obj) => arr.concat(obj[1]), []);
 
-		const requests = committeesObjects.map((committee) => echo.api.getObject(committee));
+		const requests = committeesObjects.map((committee) =>
+			Services.getEcho().api.getObject(committee));
 		await Promise.all(requests);
 	} catch (err) {
 		dispatch(setValue(FORM_COMMITTEE, 'error', formatError(err)));
@@ -44,7 +46,7 @@ export const fetchCommittee = () => async (dispatch) => {
 export const formatProxy = () => async (dispatch, getState) => {
 	const account = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, getState().global.getIn(['activeUser', 'id'])]);
 	const votingAccount = account ? account.getIn(['options', 'voting_account']) : '';
-	const proxyAccount = await echo.api.getObject(votingAccount);
+	const proxyAccount = await Services.getEcho().api.getObject(votingAccount);
 
 	if (votingAccount && votingAccount === ECHO_PROXY_TO_SELF_ACCOUNT) {
 		dispatch(setFormValue(FORM_COMMITTEE, 'account', ''));
@@ -76,14 +78,15 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 	const stateObjects = getState().echojs.getIn([CACHE_MAPS.OBJECTS_BY_ID]);
 	const committeeStateObjects = stateObjects.filter((obj) => isCommitteeMemberId(obj.get('id')));
 
-	const activeCommitteeMembers = (await echo.api.getGlobalProperties()).active_committee_members;
+	const activeCommitteeMembers = (await Services.getEcho().api.getGlobalProperties())
+		.active_committee_members;
 
 	const activeCommittees = activeCommitteeMembers.map(async (idCommittee) => {
 		if (!committeeStateObjects.get(idCommittee)) {
 			return null;
 		}
 
-		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
+		const { name } = (await Services.getEcho().api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
 			name,
@@ -99,7 +102,7 @@ export const formatCommitteeTable = () => async (dispatch, getState) => {
 		.filter((id) => !activeCommitteeMembers.includes(id));
 	const backupCommittees = backupIds.map(async (idCommittee) => {
 
-		const { name } = (await echo.api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
+		const { name } = (await Services.getEcho().api.getObject(committeeStateObjects.getIn([idCommittee, 'committee_member_account'])));
 
 		return {
 			name,
@@ -158,7 +161,7 @@ export const onChangeProxy = (account) => async (dispatch, getState) => {
 
 	if (accountExist) {
 
-		const votingAccountId = (await echo.api.getObject(account)).id;
+		const votingAccountId = (await Services.getEcho().api.getObject(account)).id;
 		if (getState().global.getIn(['activeUser', 'id']) === votingAccountId) {
 			dispatch(setValue(COMMITTEE_TABLE, 'locked', false));
 		}

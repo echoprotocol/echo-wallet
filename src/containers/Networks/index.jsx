@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Form, Button } from 'semantic-ui-react';
+import { FormattedMessage } from 'react-intl';
 
 import { FORM_ADD_CUSTOM_NETWORK } from '../../constants/FormConstants';
 
@@ -49,9 +50,9 @@ class Networks extends React.Component {
 					<div className="form-info">
 						<button className="back-link" onClick={() => this.goBack()}>
 							<span className="icon-back" />
-							back
+							<FormattedMessage id="add_connection_page.back_button_text" />
 						</button>
-						<h3>Add connection</h3>
+						<h3><FormattedMessage id="add_connection_page.title" /></h3>
 					</div>
 					<div className="field-wrap">
 						<AddCustomNetwork
@@ -61,7 +62,7 @@ class Networks extends React.Component {
 						/>
 					</div>
 					<div className="form-panel">
-						<div className="check" style={{ marginRight: '75px' }}>
+						<div className="check">
 							<input
 								type="checkbox"
 								id="addToNetworks"
@@ -69,14 +70,18 @@ class Networks extends React.Component {
 								onChange={(e) => this.onToggleSwitch(e)}
 							/>
 							<label className="label" htmlFor="addToNetworks">
-								<span className="label-text">Switch to this Network upon creating</span>
+								<span className="label-text">
+									<FormattedMessage id="add_connection_page.agree_switch_checkbox" />
+								</span>
 							</label>
 						</div>
 						<Button
 							basic
 							type="submit"
 							className="main-btn"
-							content="Create"
+							content={
+								<FormattedMessage id="add_connection_page.add_account_button" />
+							}
 							onClick={(e) => this.onAddNetwork(e)}
 							disabled={!isFormValid}
 						/>

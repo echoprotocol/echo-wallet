@@ -1,0 +1,41 @@
+.dropdown-copy-btn {
+	color: $main-color;
+	padding: 0 2px;
+	transition: color $speed;
+	margin: 0 -3px;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+}
+
+.copy-btn {
+	color: $main-color;
+	padding: 4px;
+	margin: -4px;
+	transition: color $speed;
+	display: flex;
+	align-items: center;
+	user-select: none;
+	border-radius: 4px;
+	transition: color $speed;
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(2px);
+		}
+	}
+
+	&:active {
+		color: rgba($main-color, .7);
+	}
+
+	.text {
+		font-family: proxima;
+		font-weight: 600;
+		font-size: 14px;
+		margin-left: 6px;
+	}
+}

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { getTransactionDetails } from '../../helpers/FormatHelper';
-
 import Avatar from '../Avatar';
 
 class ModalDetails extends React.Component {
@@ -19,11 +20,12 @@ class ModalDetails extends React.Component {
 
 	getArea(key, data) {
 		return (
-			<Form.Field className="comment" key={key} label={key} disabled control="textarea" value={data} />
+			<div className="field comment" key={key} label={key} disabled control="textarea" value={data} />
 		);
 	}
 
 	getInput(key, data) {
+		const { intl, operation } = this.props;
 		if (Array.isArray(data) && !data.length) {
 			return null;
 		}
@@ -31,23 +33,41 @@ class ModalDetails extends React.Component {
 		const isImageInput = ['from', 'to', 'sender'].includes(key);
 
 		return (
-			<Form.Field key={key} >
-				<label htmlFor="amount">
-					{key.replace(/([A-Z])/g, ' $1').split('_').join(' ')}
-				</label>
-				<div className={classnames({ 'image-input': isImageInput })}>
-					{isImageInput && <Avatar accountName={data} />}
-					<input type="text" name="Fee" disabled className="ui input" value={data} />
+			key === 'operation' ?
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: 'modals.modal_details.show_options.operation_title' })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input
+							type="text"
+							name="Fee"
+							disabled
+							className="ui input"
+							value={
+								intl.formatMessage({ id: `operations.${operation}` })
+							}
+						/>
+					</div>
+				</div> :
+				<div className="field" key={key} >
+					<label htmlFor="amount">
+						{intl.formatMessage({ id: `modals.modal_details.show_options.${operation}.${key}` })}
+					</label>
+					<div className={classnames({ 'image-input': isImageInput })}>
+						{isImageInput && <Avatar accountName={data} />}
+						<input type="text" name="Fee" disabled className="ui input" value={data} />
+					</div>
 				</div>
-			</Form.Field>
 		);
 	}
 
 	getPermissions(key, data) {
 		return (
-			<Form.Field className="field-block" key={key}>
-				<p className="field-block_title">{key.replace(/([A-Z])/g, ' $1')}</p>
-				<div className="field-block_edit">
+			<div className="field field-block" key={key}>
+				<p className="field-block-title">{key.replace(/([A-Z])/g, ' $1')}</p>
+				<div className="field-block-edit">
 					{
 						data.map(([keyPermission, weight]) => (
 							<React.Fragment key={Math.random()}>
@@ -58,8 +78,7 @@ class ModalDetails extends React.Component {
 						))
 					}
 				</div>
-
-			</Form.Field>
+			</div>
 		);
 	}
 
@@ -67,7 +86,6 @@ class ModalDetails extends React.Component {
 		const { operation, showOptions } = this.props;
 
 		const formatedOptions = getTransactionDetails(operation, showOptions.toJS());
-
 		return Object.entries(formatedOptions).map(([key, value]) => {
 			if (value.field === 'area') {
 				return this.getArea(key, value.data);
@@ -76,50 +94,50 @@ class ModalDetails extends React.Component {
 			if (['active', 'activeAccounts', 'activeKeys'].includes(key)) {
 				return this.getPermissions(key, value.data);
 			}
-
 			return this.getInput(key, value.data);
 		});
 	}
 
 	render() {
-		const { showOptions, show, disabled } = this.props;
+		const {
+			showOptions, show, disabled, intl,
+		} = this.props;
 
 		return (
-			<Modal className="small confirm-transaction" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<span
+			<Modal className="confirm-transaction" open={show}>
+				<FocusLock autoFocus={false}>
+					<button
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
 					/>
-					<div className="modal-header" />
+					<div className="modal-header">
+						<h2 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_details.title' })}
+						</h2>
+					</div>
 					<div className="modal-body">
 						<Form className="main-form">
-							<div className="form-info">
-								<h3>Confirm transaction</h3>
-							</div>
 							<div className="field-wrap">
-								{ showOptions ? this.renderOptions() : null }
+								{showOptions ? this.renderOptions() : null}
 							</div>
 							<div className="form-panel">
 								<Button
 									className="main-btn"
 									onClick={() => this.onClose()}
-									content="Cancel"
+									content={intl.formatMessage({ id: 'modals.modal_details.close_button_text' })}
 								/>
 								<Button
+									autoFocus
 									type="submit"
 									className="main-btn"
 									onClick={() => this.onConfirm()}
 									disabled={disabled}
-									content="Confirm"
+									content={intl.formatMessage({ id: 'modals.modal_details.confirm_button_text' })}
 								/>
 							</div>
 						</Form>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}
@@ -133,6 +151,7 @@ ModalDetails.propTypes = {
 	operation: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	send: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalDetails.defaultProps = {
@@ -142,4 +161,4 @@ ModalDetails.defaultProps = {
 	operation: '',
 };
 
-export default ModalDetails;
+export default injectIntl(ModalDetails);

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 class ThresholdRow extends React.Component {
 
@@ -9,7 +10,9 @@ class ThresholdRow extends React.Component {
 
 		return (
 			<React.Fragment>
-				<span className="threshold"> threshold </span>
+				<span className="threshold">
+					<FormattedMessage id="backup_and_permissions_page.view_mode.threshold" />
+				</span>
 				<span className="threshold-value">{defaultThreshold}</span>
 			</React.Fragment>
 		);

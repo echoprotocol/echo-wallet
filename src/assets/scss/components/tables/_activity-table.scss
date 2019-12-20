@@ -1,0 +1,230 @@
+.table-activity {
+
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	height: calc(100vh - 120px);
+	overflow-y: overlay;
+	overflow-x: hidden;
+
+	@media (min-width: 840px) {
+		overflow-y: overlay;
+		overflow-x: hidden;
+	}
+
+	border: 0;
+	border-radius: 0;
+
+	thead {
+		width: 100%;
+		background-color: #fff;
+
+		line-height: 8px;
+
+		@media (min-width: 840px) {
+			overflow-y: overlay;
+			position: fixed;
+			overflow-x: hidden;
+
+		}
+
+		@media (min-width: 1200px) {}
+
+		th {
+			background: 0;
+			color: $gray;
+			padding: 0.92857143em 5px;
+			opacity: 0.5;
+			color: #5c637d;
+			font-family: proxima;
+			font-weight: 600;
+			font-size: 12px;
+
+			@media (min-width: 840px) and (max-width: 1200px) {
+				&:last-child {
+					position: relative;
+
+					&:after {
+						width: 100px;
+						height: 1px;
+						background-color: #e9e9ed;
+						content: '';
+						display: block;
+						position: absolute;
+						bottom: -1px;
+						right: -50px;
+					}
+				}
+			}
+		}
+	}
+
+	// WIDTH OF CELLS
+
+	th,
+	td {
+		min-width: 11vw;
+		padding: 0.82857143em 5px;
+
+		@media (max-width: 980px) {
+			font-size: .9em;
+		}
+
+		@media (max-width: 1200px) {
+			font-size: .95em;
+		}
+
+		&:first-child {
+			min-width: calc(21vw - 30px);
+			padding-left: 18px;
+
+			@media (max-width: 1200px) {
+				min-width: calc(23vw - 30px);
+			}
+		}
+
+		&:nth-child(2) {
+			@media (max-width: 980px) {
+				min-width: 12vw;
+			}
+		}
+
+		&:nth-child(2),
+		&:nth-child(3),
+		&:nth-child(4) {
+			.ellips {
+				max-width: 12vw;
+			}
+
+			min-width: 13vw;
+
+			@media (max-width: 1200px) {
+				min-width: 11vw;
+
+				.ellips {
+					max-width: 10vw;
+				}
+			}
+		}
+
+
+		&:nth-child(5) {
+			min-width: calc(18vw - 30px);
+
+			.ellips {
+				max-width: 14vw;
+			}
+
+			@media (max-width: 1200px) {
+				min-width: calc(18vw - 15px);
+				max-width: calc(18vw - 15px);
+				text-align: right;
+
+				.ellips {
+					margin-left: auto;
+					max-width: 13vw;
+				}
+			}
+		}
+
+		&:nth-child(6) {
+			max-width: 11vw;
+
+			@media (max-width: 1200px) {
+				text-align: right;
+				max-width: 13vw;
+				min-width: 13vw;
+			}
+		}
+
+		&:last-child {
+			text-align: right;
+			padding-right: 20px;
+
+			@media (max-width: 1200px) {
+				letter-spacing: -.2px;
+			}
+		}
+	}
+
+	tbody {
+		overflow-x: hidden;
+		overflow-y: overlay;
+		margin-top: 31px;
+
+		tr {
+			transition: background-color .3s;
+			height: 52px;
+			line-height: 1;
+
+			&:nth-child(2n) {
+				background-color: #fafafa;
+
+				&:hover {
+					background-color: $main-color;
+				}
+			}
+
+			&:hover {
+				background-color: $main-color;
+
+				.label-operation {
+					border-right: 1px solid #fff;
+					border-top: 1px solid #fff;
+					border-bottom: 1px solid #fff;
+				}
+
+				td {
+
+					&:nth-child(2),
+					&:nth-child(3),
+					&:nth-child(4) {
+						color: $yellow;
+					}
+
+					&:nth-child(5),
+					&:nth-child(6) {
+						color: #fff;
+					}
+
+					&:last-child,
+					.success,
+					.fall {
+						color: #fff;
+					}
+
+				}
+			}
+
+			td {
+				border-top: 0;
+				transition: color .3s;
+
+				.success,
+				.fall {
+					transition: color .3s;
+				}
+
+				&:nth-child(2),
+				&:nth-child(3),
+				&:nth-child(4) {
+					color: $main-color;
+				}
+
+				&:nth-child(5),
+				&:nth-child(6) {
+					color: $gray-dark;
+				}
+
+				&:last-child {
+					color: $gray;
+
+					span {
+						display: block;
+						line-height: 15px;
+					}
+				}
+			}
+		}
+	}
+}

@@ -20,10 +20,13 @@ $stripe-width: 10px;
 	border-radius: 4px;
 	height: 38px;
 	line-height: 38px;
-	transition: background-color $speed, color $speed, border-color $speed;
 	min-width: 120px;
 	padding: 0 15px;
 	white-space: nowrap;
+	transition:
+		background-color $speed,
+		color $speed,
+		border-color $speed;
 }
 
 .link-btn {
@@ -52,6 +55,10 @@ $stripe-width: 10px;
 
 	&:focus:not(:active):before {
 		@include on-focus(2px);
+	}
+
+	&:disabled {
+		color: rgba($main-color, 0.4);
 	}
 }
 
@@ -385,6 +392,7 @@ $stripe-width: 10px;
 	padding: 0 2px;
 	transition: color $speed;
 	margin: 0 -3px;
+
 	&:not(:active) {
 		&:focus {
 			@include on-focus(2px);

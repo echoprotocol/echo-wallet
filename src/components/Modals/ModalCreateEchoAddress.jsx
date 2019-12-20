@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal, setError } from '../../actions/ModalActions';
 
@@ -39,7 +41,7 @@ class ModalCreateEchoAddress extends React.Component {
 
 	render() {
 		const {
-			show, error,
+			show, error, intl, keyWeightWarn,
 		} = this.props;
 
 		return (
@@ -48,49 +50,56 @@ class ModalCreateEchoAddress extends React.Component {
 			>
 				{
 					(submit) => (
-						<Modal className="create-address-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Create address name</h3>
-							</div>
-							<form className="modal-body">
-								<div className="info-text">
-									You can use several addresses referring to one account for different targets.
-									Please create address name for a new one.
+						<Modal className="create-address-modal" open={show}>
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h2 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_create_echo_address.title' })}
+									</h2>
 								</div>
+								<Form className="modal-body">
+									<div className="info-text">
+										{intl.formatMessage({ id: 'modals.modal_create_echo_address.text' })}
+									</div>
 
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="address">Address name</label>
-									<input
-										type="text"
-										placeholder="Address name"
-										name="address"
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-									{
-										false && <span className="error-message">some error</span>
-									}
-									<span className="warning-message">
-										Warning: Please note, address names are visible
-										for blockchain network participants.
-									</span>
-								</Form.Field>
-								<div className="form-panel">
-									<Button
-										type="submit"
-										className="main-btn countdown-wrap"
-										content="Generate address"
-										onClick={() => this.onGenerateEchoAdress(submit)}
-									/>
-								</div>
-							</form>
+									<div className={classnames('field error-wrap', { error: !!error })}>
+										<label htmlFor="address">
+											{intl.formatMessage({ id: 'modals.modal_create_echo_address.address_input.title' })}
+										</label>
+										<input
+											type="text"
+											placeholder={
+												intl.formatMessage({ id: 'modals.modal_create_echo_address.address_input.placeholder' })
+											}
+											name="address"
+											onChange={(e) => this.onChange(e)}
+											autoFocus
+										/>
+										{
+											error ?
+												<span className="error-message">
+													{intl.formatMessage({ id: error })}
+												</span> : null
+										}
+										<span className="warning-message">
+											{intl.formatMessage({ id: 'modals.modal_create_echo_address.warning' })}
+										</span>
+									</div>
+									<div className="form-panel">
+										<Button
+											type="submit"
+											className="main-btn"
+											onClick={() => this.onGenerateEchoAdress(submit)}
+											content={intl.formatMessage({ id: 'modals.modal_create_echo_address.generate_button_text' })}
+											disabled={keyWeightWarn}
+										/>
+									</div>
+								</Form>
+							</FocusLock>
 						</Modal>
 					)
 				}
@@ -106,6 +115,8 @@ ModalCreateEchoAddress.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	generateEchoAddress: PropTypes.func.isRequired,
 	setError: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 ModalCreateEchoAddress.defaultProps = {
@@ -113,14 +124,15 @@ ModalCreateEchoAddress.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'show']),
 		error: state.modal.getIn([MODAL_GENERATE_ECHO_ADDRESS, 'error']),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		closeModal: () => dispatch(closeModal(MODAL_GENERATE_ECHO_ADDRESS)),
 		generateEchoAddress: (label) => dispatch(generateEchoAddress(label)),
 		setError: (value) => dispatch(setError(MODAL_GENERATE_ECHO_ADDRESS, value)),
 	}),
-)(ModalCreateEchoAddress);
+)(ModalCreateEchoAddress));

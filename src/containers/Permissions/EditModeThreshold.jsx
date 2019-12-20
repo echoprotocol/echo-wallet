@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 class EditModeThreshold extends React.Component {
 
@@ -20,19 +21,22 @@ class EditModeThreshold extends React.Component {
 	}
 
 	render() {
-		const { threshold, setThreshold } = this.props;
+		const { threshold, setThreshold, intl } = this.props;
+		const popupText = intl.formatMessage({ id: 'backup_and_permissions_page.threshold_popup' });
 
 		return (
 			<Form className="edit-threshold">
 				<Form.Field className={classnames({ error: threshold.error })}>
 					<Popup
 						trigger={<span className="inner-tooltip-trigger icon-info" />}
-						content="You can split authority to sign a transaction by setting threshold. Total weight of all the keys in the wallet must be equal or more than threshold to sign a transaction."
+						content={popupText}
 						className="inner-tooltip"
 						position="bottom center"
 						style={{ width: 420 }}
 					/>
-					<span className="threshold">threshold: </span>
+					<span className="threshold">
+						<FormattedMessage id="backup_and_permissions_page.edit_mode.threshold" />
+					</span>
 					<input
 						type="text"
 						name="threshold"
@@ -40,7 +44,8 @@ class EditModeThreshold extends React.Component {
 						value={threshold.value || ''}
 						onChange={setThreshold}
 					/>
-					{threshold.error && <span className="error-message">{threshold.error}</span>}
+					{threshold.error &&
+					<span className="error-message">{intl.formatMessage({ id: threshold.error })}</span>}
 				</Form.Field>
 			</Form>
 		);
@@ -52,6 +57,7 @@ EditModeThreshold.propTypes = {
 	threshold: PropTypes.object,
 	defaultThreshold: PropTypes.number,
 	setThreshold: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 EditModeThreshold.defaultProps = {
@@ -59,4 +65,4 @@ EditModeThreshold.defaultProps = {
 	defaultThreshold: 1,
 };
 
-export default EditModeThreshold;
+export default injectIntl(EditModeThreshold);

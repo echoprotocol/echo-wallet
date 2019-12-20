@@ -1,7 +1,8 @@
 import { List } from 'immutable';
 import BN from 'bignumber.js';
-import echo, { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
+import { CACHE_MAPS, validators, OPERATIONS_IDS } from 'echojs-lib';
 
+import Services from '../services';
 import {
 	getTokenPrecision,
 	getTokenBalance,
@@ -50,14 +51,32 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 		diff = diff.dividedBy(new BN(10).pow(nb.precision));
 
 		if (!oldBalance) {
-			return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
+			return toastSuccess([{
+				text: '',
+				postfix: 'toasts.success.receive.start',
+			}, {
+				text: `${diff.toString(10)} ${type}`,
+				postfix: 'toasts.success.receive.of',
+			}, {
+				text: nb.symbol,
+				postfix: '',
+			}]);
 		}
 
 		if (diff.lte(0)) {
 			return null;
 		}
 
-		return toastSuccess(`You receive ${diff.toString(10)} ${type} of ${nb.symbol}`);
+		return toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.receive.start',
+		}, {
+			text: `${diff.toString(10)} ${type}`,
+			postfix: 'toasts.success.receive.of',
+		}, {
+			text: nb.symbol,
+			postfix: '',
+		}]);
 	});
 };
 
@@ -70,7 +89,8 @@ const diffBalanceChecker = (type, balances) => (dispatch, getState) => {
 export const getBalanceFromAssets = (assets) => async () => {
 	let balances = [];
 	if (!Object.keys(assets).length) {
-		const defaultAsset = await echo.api.getObject(ECHO_ASSET_ID);
+
+		const defaultAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 		balances.push({
 			balance: 0,
 			id: defaultAsset.id,
@@ -80,8 +100,8 @@ export const getBalanceFromAssets = (assets) => async () => {
 	} else {
 		balances = Object.entries(assets).map(async (asset) => {
 
-			const stats = await echo.api.getObject(asset[1]);
-			asset = await echo.api.getObject(asset[0]);
+			const stats = await Services.getEcho().api.getObject(asset[1]);
+			asset = await Services.getEcho().api.getObject(asset[0]);
 			return { balance: stats.balance, ...asset };
 		});
 
@@ -101,7 +121,8 @@ export const getBalanceFromAssets = (assets) => async () => {
 export const getAssetsBalances = (assets, update = false) => async (dispatch, getState) => {
 	if (!assets) {
 		const accountId = getState().global.getIn(['activeUser', 'id']);
-		const [account] = await echo.api.getFullAccounts([accountId]);
+
+		const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
 
 		assets = account.balances;
 	}
@@ -164,7 +185,7 @@ export const getTokenBalances = (accountId, networkName) => async (dispatch) => 
 	 *  }
      */
 
-	if (!echo.isConnected) return;
+	if (!Services.getEcho().isConnected) return;
 
 	let tokens = localStorage.getItem(`tokens_${networkName}`);
 	tokens = tokens ? JSON.parse(tokens) : {};
@@ -198,7 +219,7 @@ export const updateTokenBalances = () => async (dispatch, getState) => {
 	const tokens = getState().balance.get('tokens');
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	if (!tokens.size || !accountId || !echo.isConnected) return;
+	if (!tokens.size || !accountId || !Services.getEcho().isConnected) return;
 	let balances = tokens.map(async (value) => {
 		const balance = await getTokenBalance(accountId, value.id);
 		return { ...value, balance };
@@ -224,14 +245,14 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
 	accounts = accounts ? JSON.parse(accounts) : [];
 
-	const coreAsset = await echo.api.getObject(ECHO_ASSET_ID);
+	const coreAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
-	const accountPromises = accounts.map(({ name }) => echo.api.getAccountByName(name));
+	const accountPromises = accounts.map(({ name }) => Services.getEcho().api.getAccountByName(name));
 	const fetchedAccounts = await Promise.all(accountPromises);
 
 	const accountIds = fetchedAccounts.map(({ id }) => id);
 
-	const fullAccounts = await echo.api.getFullAccounts(accountIds);
+	const fullAccounts = await Services.getEcho().api.getFullAccounts(accountIds);
 
 	const balances = fullAccounts.map(async (account) => {
 
@@ -247,7 +268,7 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
 
 		if (account && account.balances && account.balances[ECHO_ASSET_ID]) {
 
-			const stats = await echo.api.getObject(account.balances[ECHO_ASSET_ID]);
+			const stats = await Services.getEcho().api.getObject(account.balances[ECHO_ASSET_ID]);
 			preview.balance.amount = stats.balance || 0;
 			preview.balance.id = account.balances[ECHO_ASSET_ID];
 		}
@@ -265,7 +286,8 @@ export const getPreviewBalances = (networkName) => async (dispatch) => {
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const getFrozenBalances = (accountId) => async (dispatch, getState) => {
-	const frozenFunds = await echo.api.getFrozenBalances(accountId);
+
+	const frozenFunds = await Services.getEcho().api.getFrozenBalances(accountId);
 
 	dispatch(BalanceReducer.actions.set({
 		field: 'frozenFunds',
@@ -294,7 +316,7 @@ export const initBalances = (accountId, networkName) => async (dispatch) => {
 
 	await dispatch(getTokenBalances(accountId, networkName));
 
-	const [account] = await echo.api.getFullAccounts([accountId]);
+	const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
 
 	await dispatch(getAssetsBalances(account.balances));
 
@@ -318,19 +340,19 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 
 	try {
 		if (!contractId) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Contract id should not be empty'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.empty_contract_error'));
 			return;
 		}
 
 		if (!validators.isContractId(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
-		const contract = await echo.api.getContract(contractId);
+		const contract = await Services.getEcho().api.getContract(contractId);
 
 		if (!contract) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid contract id'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
@@ -339,7 +361,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const isErc20Token = checkErc20Contract(code);
 
 		if (!isErc20Token) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -347,7 +369,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const precision = await getTokenPrecision(accountId, contractId);
 
 		if (!symbol || !Number.isInteger(precision)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Invalid token contract'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
 			return;
 		}
 
@@ -359,7 +381,7 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}
 
 		if (tokens[accountId].includes(contractId)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'Token already exists'));
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.token_already_exist_error'));
 			return;
 		}
 
@@ -376,7 +398,10 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		}));
 
 		dispatch(closeModal(MODAL_TOKENS));
-		toastSuccess('Token was successfully added');
+		toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.token_was_added',
+		}]);
 	} catch (err) {
 		dispatch(setError(MODAL_TOKENS, 'error', formatError(err)));
 	} finally {
@@ -402,7 +427,10 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 
 		if (!symbol || !Number.isInteger(precision)) {
 			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-			toastError('Invalid ERC20 token');
+			toastError([{
+				text: '',
+				postfix: 'toasts.errors.token_invalid',
+			}]);
 			return;
 		}
 
@@ -415,7 +443,10 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 
 		if (tokens[accountId].includes(contractId)) {
 			dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-			toastError('Token already exists');
+			toastError([{
+				text: '',
+				postfix: 'toasts.errors.token_already_exists',
+			}]);
 			return;
 		}
 
@@ -432,10 +463,16 @@ export const watchContractAsToken = (contractId) => async (dispatch, getState) =
 		}));
 
 		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-		toastSuccess('Token was successfully added');
+		toastSuccess([{
+			text: '',
+			postfix: 'toasts.success.token_was_added',
+		}]);
 	} catch (err) {
 		dispatch(closeModal(MODAL_ERC20_TO_WATCH_LIST));
-		toastError(formatError(err));
+		toastError([{
+			text: formatError(err),
+			postfix: '',
+		}]);
 	}
 };
 
@@ -455,12 +492,13 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 	if (!formName) {
 		return undefined;
 	}
-	const account = await echo.api.getAccountByName(formName);
+
+	const account = await Services.getEcho().api.getAccountByName(formName);
 	if (!account) {
 		return undefined;
 	}
 
-	const [fullAccount] = await echo.api.getFullAccounts([account.id]);
+	const [fullAccount] = await Services.getEcho().api.getFullAccounts([account.id]);
 
 	if (!fullAccount) {
 		return undefined;
@@ -517,7 +555,7 @@ export const checkKeyWeightWarning = (networkName, accountId, threshold) =>
  */
 export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getState) => {
 	const accountId = getState().global.getIn(['activeUser', 'id']);
-	if (!accountId || !echo.isConnected) return;
+	if (!accountId || !Services.getEcho().isConnected) return;
 
 	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
 	const tokens = getState().balance.get('tokens').toJS();
@@ -583,7 +621,8 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 
 	if (isCurrentTransferBalanceUpdated) {
 		const form = getState().form.getIn([FORM_TRANSFER]);
-		const stats = await echo.api.getObject(accountFromTransfer.balances[form.get('currency').id]);
+
+		const stats = await Services.getEcho().api.getObject(accountFromTransfer.balances[form.get('currency').id]);
 		await dispatch(getAssetsBalances(accountFromTransfer.balances));
 		dispatch(setValue(FORM_TRANSFER, 'currency', { ...form.get('currency'), balance: stats.balance }));
 		dispatch(setFormError(FORM_TRANSFER, 'amount', null));
@@ -641,7 +680,13 @@ export const disableToken = (name, contractId) => (dispatch) => {
 	dispatch(BalanceReducer.actions.update({ field: 'tokens', param: contractId, value: { disabled: true } }));
 
 	toastInfo(
-		`You have removed ${name} from watch list`,
+		[{
+			text: '',
+			postfix: 'toasts.info.remove_name.pt1',
+		}, {
+			text: name,
+			postfix: 'toasts.info.remove_name.pt2',
+		}],
 		() => dispatch(enableToken(contractId)),
 		() => {
 			const intervalId = setTimeout(() => dispatch(removeToken(contractId)), TIME_REMOVE_CONTRACT);
@@ -661,6 +706,7 @@ export const disableToken = (name, contractId) => (dispatch) => {
  * @returns {function(dispatch, getState): Promise<undefined>}
  */
 export const setAsset = (asset, type) => (dispatch, getState) => {
+	dispatch(GlobalReducer.actions.set({ field: 'activePaymentTypeTab', value: 0 }));
 	const currency = getState().form.getIn([FORM_TRANSFER, 'currency']);
 	dispatch(setValue(FORM_TRANSFER, 'currency', { ...currency, ...asset, type }));
 };

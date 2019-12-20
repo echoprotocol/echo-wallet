@@ -1,503 +1,230 @@
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    height: 50px;
-    padding: 0 24px 0 17px;
-    background-color: rgb(247, 247, 247);
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	height: 50px;
+	padding: 0 24px 0 17px;
 
-    &-global {
-        -webkit-app-region: drag;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: $main-color;
-        color: #fff;
-        height: 30px;
-        padding: 0 18px;
-        position: absolute;
-        z-index: 9999998;
-        right: 150px;
-        left: 0;
-        top: 0;
+	&:before {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 50px;
+		display: block;
+		min-width: 308px;
+		background-color: rgb(247, 247, 247);
+		right: 0;
+		z-index: 10;
+	}
 
-    }
+	.page-title,
+	.frozenfunds,
+	.nav-link,
+	.icon-back,
+	.user-dropdown>.text,
+	.user-dropdown>.dropdown.icon {
+		z-index: 11;
+	}
 
-    .icon-back {
-        line-height: 15px;
-        padding: 2px 3px 0 0;
-        color: rgba(#c4c5ca, 1);
-        margin: 0 10px 0 0;
-        transition: color .3s;
-        display: block;
-        background-color: transparent;
-        border: 0;
-        cursor: pointer;
+	.icon-back {
+		line-height: 15px;
+		padding: 2px 3px 0 0;
+		color: rgba(#c4c5ca, 1);
+		margin: 0 10px 0 0;
+		transition: color .3s;
+		display: block;
+		background-color: transparent;
+		border: 0;
+		cursor: pointer;
 
-        &:focus {
-            border-radius: 4px;
-            @include on-focus(4px);
-        }
+		&:focus {
+			border-radius: 4px;
+			@include on-focus(4px);
+		}
 
-        &:focus,
-        &:hover {
-            color: rgba(#6d7178, 1);
-        }
+		&:focus,
+		&:hover {
+			color: rgba(#6d7178, 1);
+		}
 
-        &:active {
-            box-shadow: none;
-        }
+		&:active {
+			box-shadow: none;
+		}
 
-        &.sub+.page-title {
-            font-size: 16px;
-        }
-    }
+		&.sub+.page-title {
+			font-size: 16px;
+		}
+	}
 
-    .page-title {
-        color: $text-dark;
-        font-size: 20px;
+	.page-title {
+		color: $text-dark;
+		font-size: 20px;
 		font-family: proxima;
 		font-weight: 600;
-        line-height: 26.4px;
-        margin-right: auto;
-    }
+		line-height: 26.4px;
+		margin-right: auto;
+	}
 
-    .show-sidebar-btn {
-        color: $text-dark;
-        cursor: pointer;
-        transition: color .3s;
-        display: block;
-        margin-right: 20px;
+	.show-sidebar-btn {
+		color: $text-dark;
+		cursor: pointer;
+		transition: color .3s;
+		display: block;
+		margin-right: 20px;
 
-        .icon-menu {
-            line-height: 19px;
-        }
-    }
+		.icon-menu {
+			line-height: 19px;
+		}
+	}
 
-    .panel-right {
-        margin-left: 0;
-        display: flex;
-        align-items: center;
-    }
+	.panel-right {
+		margin-left: 0;
+		display: flex;
+		align-items: center;
+	}
 
-    .dropdown {
-        line-height: normal;
-    }
+	.dropdown {
+		line-height: normal;
+	}
+}
 
-    .frozenfunds {
-        position: relative;
-        min-width: 146px;
-        height: 100%;
-        border-left: 1px solid #e9e9ed;
-        border-right: 1px solid #e9e9ed;
-        text-align: right;
+.frozenfunds {
+	position: relative;
+	min-width: 146px;
+	height: 100%;
+	border-left: 1px solid #e9e9ed;
+	border-right: 1px solid #e9e9ed;
+	text-align: right;
 
-        a,
-        button {
-            margin-left: auto;
-            width: 100%;
-            height: 100%;
-            padding: 10px 0 12px 0;
-            background-color: transparent;
-            border: 0;
-            text-align: right;
+	a,
+	button {
+		margin-left: auto;
+		width: 100%;
+		height: 100%;
+		padding: 10px 0 12px 0;
+		background-color: transparent;
+		border: 0;
+		text-align: right;
 
-            &:hover {
-                background-color: #f2f2f2;
-                cursor: pointer;
+		&:hover {
+			background-color: #f2f2f2;
+			cursor: pointer;
 
-                &+.inner-tooltip {
-                    display: block;
-                    animation: inner-tooltip .2s ease forwards;
-                }
-            }
+			&+.inner-tooltip {
+				display: block;
+				animation: inner-tooltip .2s ease forwards;
+			}
+		}
 
-            &:focus {
-                box-shadow: 2px 0 0 0 rgba(186, 188, 203, 0.4), -2px 0 0 0 rgba(186, 188, 203, 0.4);
-                background-color: #f2f2f2;
-            }
+		&:focus {
+			box-shadow: 2px 0 0 0 rgba(186, 188, 203, 0.4), -2px 0 0 0 rgba(186, 188, 203, 0.4);
+			background-color: #f2f2f2;
+		}
 
-            &:active {
-                opacity: 0.4;
-                background-color: #f2f2f2;
-                cursor: default;
-            }
-        }
+		&:active {
+			opacity: 0.4;
+			background-color: #f2f2f2;
+			cursor: default;
+		}
+	}
 
-        .inner-info {
-            display: block;
-            color: rgba(#5c637d, 0.5);
-            font-family: proxima;
-            font-size: 14px;
-            line-height: 17px;
-            font-weight: 400;
-            padding-right: 43px;
-            padding-left: 22px;
+	.inner-info {
+		display: block;
+		color: rgba(#5c637d, 0.5);
+		font-family: proxima;
+		font-size: 14px;
+		line-height: 17px;
+		font-weight: 400;
+		padding-right: 43px;
+		padding-left: 22px;
 
-            .balance {
-                span {
-                    color: rgba(#5c637d, 0.9);
-                    font-weight: 300;
-                    text-transform: uppercase;
+		.balance {
+			span {
+				color: rgba(#5c637d, 0.9);
+				font-weight: 300;
+				text-transform: uppercase;
 
-                    &:first-child {
-                        font-family: proxima;
-                        font-weight: 600;
-                        padding-right: 3px;
-                    }
-                }
-            }
-        }
+				&:first-child {
+					font-family: proxima;
+					font-weight: 600;
+					padding-right: 3px;
+				}
+			}
+		}
+	}
 
-        .icon-frozen-funds {
-            position: absolute;
-            font-size: 19px;
-            right: 19px;
-            top: 15px;
+	.icon-frozen-funds {
+		position: absolute;
+		font-size: 19px;
+		right: 19px;
+		top: 15px;
 
-            &:before {
-                color: #4d66cd;
-                opacity: 1;
-            }
-        }
+		&:before {
+			color: #4d66cd;
+			opacity: 1;
+		}
+	}
 
-        .inner-tooltip {
-            position: absolute;
-            top: 45px;
-            display: none;
-            z-index: 100;
-            margin: 0;
-            width: 255px;
-        }
-    }
+	.inner-tooltip {
+		position: absolute;
+		top: 45px;
+		display: none;
+		z-index: 100;
+		margin: 0;
+		width: 255px;
+	}
+}
+
+.header-global {
+	-webkit-app-region: drag;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: $main-color;
+	color: #fff;
+	height: 30px;
+	padding: 0 18px;
+	position: absolute;
+	z-index: 9999998;
+	right: 150px;
+	left: 0;
+	top: 0;
+
 }
 
 .user-section {
-    margin-top: 3px;
-    margin-left: 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+	margin-top: 3px;
+	margin-left: 22px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
 
-    .dropdown {
-		display: flex;
-		padding: 0 14px 0 0;
-		&.visible {
-			.dropdown.icon {
-				right: 0;
-			}
-		}
-		.dropdown.icon {
-			right: -6px;
-		}
-        .menu {
-            right: -12px;
-            margin-top: 2px;
-            left: auto;
-            min-width: 344px;
-            border-radius: 0;
-            overflow: hidden;
-
-            .balance {
-                margin-left: 10px;
-            }
-
-            & > .item {
-                padding: 0;
-                color: #6d7178;
-                font-size: 13px;
-
-                &:not(.add-account) {
-                    transition: background-color $speed;
-
-                    &:hover {
-                        background-color: $main-color;
-
-                        .name {
-                            color: #fff;
-						}
-						
-						.parent-label {
-							color: rgba(#fff, .5);
-						}
-
-                        .balance {
-                            color: #fff;
-                        }
-
-                        .logout-user-btn {
-                            color: transparent;
-                            width: auto;
-                            padding: 0 20px 0 0;
-						}
-						.parent-link {
-							color: #FFF9B5;
-						}
-						.divider {
-							background-color: rgba(#E5E6EB, 0.1);
-						}
-					}
-					
-                }
-
-                .avatar-wrap {
-                    border: 1px solid transparent;
-                    border-radius: 4px;
-                    overflow: hidden;
-                    transition: border $speed;
-                }
-
-                .user-base-info {
-                    margin: 0 auto 0 9px;
-                    text-align: left;
-                    font-family: $font-family;
-				}
-				.parent-link {
-					color: #4D66CD;
-					transition: color $speed;
-					font-family: proxima;
-					font-weight: 600;
-					font-size: 13px;
-				}
-				.name-wrap {
-					display: flex;
-					align-items: center;
-				}
-
-				.parent-label {
-					color: rgba(#5C637D, .5);
-					transition: color $speed;
-					font-size: 13px;
-					font-weight: 400;
-					margin: -3px 5px 0 5px;
-				}
-                .name {
-                    @include cut-text;
-                    color: $main-color;
-                    max-width: 130px;
-                    color: #3B3B3B;
-                    transition: color $speed;
-                    line-height: 16px;
-					font-family: proxima;
-					font-weight: 600;
-                    font-size: 13px;
-                }
-
-                .id {
-                    color: rgba(#3B3B3B, .6);
-                    transition: color $speed;
-                    line-height: 13px;
-					font-family: proxima;
-					font-weight: 600;
-                    font-size: 13px;
-                    font-weight: 400;
-                }
-
-                &:hover {
-                    .id {
-                        color: rgba(#fff, .6);
-                    }
-
-                    .avatar-wrap {
-                        border: 1px solid rgba(#fff, .1);
-                    }
-                }
-
-                &.selected {
-                    background-color: transparent;
-
-                    &:hover {
-                        .name {
-                            color: #fff;
-                        }
-
-                        .balance {
-                            color: #fff;
-							font-family: proxima;
-							font-weight: 600;
-
-                        }
-
-                    }
-                }
-
-                &.active {
-                    background-color: #f8f8f8;
-                }
-
-                &.add-account {
-                    text-transform: uppercase;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-top: 1px solid $bd-gray;
-                    height: 39px;
-                    z-index: 2;
-					font-family: proxima;
-					font-weight: 600;
-                    font-size: .9rem;
-                    color: rgb(211, 212, 214);
-                    transition: color $speed, background-color $speed;
-
-                    &.selected {
-                        color: $border-hover;
-                        background-color: transparent;
-
-                        .text {
-                            position: relative;
-
-                            &:before {
-                                @include on-focus(2px);
-                                position: absolute;
-                                content: '';
-                                display: block;
-                                right: -3px;
-                                left: -3px;
-                                top: -3px;
-                                bottom: -1px;
-                                border-radius: $angulars;
-                            }
-                        }
-                    }
-
-                    &:hover {
-						color: #fff;
-						background-color: $main-color;
-                    }
-
-                    &:focus {
-                        color: $border-hover;
-                    }
-
-                    &:before {
-                        font-family: 'icomoon';
-                        speak: none;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-variant: normal;
-                        text-transform: none;
-                        line-height: 1px;
-                        /* Better Font Rendering =========== */
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: grayscale;
-                        font-size: 1.3em;
-                        content: "\e900";
-						margin-right: 7px;
-						display: block;
-                    }
-                }
-
-                .user-item,
-                .user-panel {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .user-item {
-                    background-color: transparent;
-                    width: 100%;
-                    border: 0;
-                    cursor: pointer;
-                    color: $black;
-                    transition: background-color $speed, color $speed;
-                    padding: 7px 18px 7px 16px;
-				}
-				.parent-user-wrap,
-				.user-item-wrap {
-					display: flex;
-					width: 100%;
-				}
-				.parent-user-wrap {
-					flex-direction: column;
-				}
-				.divider {
-					height: 1px;
-					width: 100%;
-					background-color: #E5E6EB;
-					margin: 0 0 0 17px;
-					transition: background-color $speed;
-				}
-
-                .logout-user-btn {
-                    overflow: hidden;
-                    width: 0;
-                    padding: 0;
-                    font-family: 'icomoon';
-                    speak: none;
-                    font-style: normal;
-                    font-weight: normal;
-                    font-variant: normal;
-                    text-transform: none;
-                    line-height: 1;
-                    cursor: pointer;
-                    /* Better Font Rendering =========== */
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    background-color: transparent;
-                    border: 0;
-                    transition:
-                        width $speed,
-                        padding $speed;
-
-                    &:before {
-                        content: "\e923";
-                        font-size: 18px;
-                        color: #fff;
-                        transition: color $speed;
-                    }
-
-                    &:hover {
-                        &:before {
-                            color: $yellow;
-                        }
-                    }
-                }
-
-                .user-panel {
-                    padding: 0;
-
-                }
-            }
-        }
-
-        & > .text {
-			@include cut-text;
-            color: $main-color;
-			font-family: proxima;
-			font-weight: 600;
-            max-width: 296px;
-			user-select: none;
-        }
-
-    }
-
-    .balance {
-        transition: color $speed;
-        color: #5D637B;
+	.balance {
+		transition: color $speed;
+		color: #5D637B;
 		position: relative;
 		font-weight: 300;
 
-        span {
-            &:nth-child(1) {
+		span {
+			&:nth-child(1) {
 				font-family: proxima;
 				font-weight: 600;
-                margin-right: 3px;
-            }
-        }
-    }
+				margin-right: 3px;
+			}
+		}
+	}
 }
 
 .asset-tooltip {
-    position: absolute;
-    margin-bottom: 10px;
-    margin-left: -20px;
-    padding: 5px 10px;
-    color: #3b3b3b;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 18px;
-    border-radius: 4px;
-    border: 1px solid rgba(59, 59, 59, 0.4);
-    background: #fff6d2;
+	position: absolute;
+	margin-bottom: 10px;
+	margin-left: -20px;
+	padding: 5px 10px;
+	color: #3b3b3b;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 18px;
+	border-radius: 4px;
+	border: 1px solid rgba(59, 59, 59, 0.4);
+	background: #fff6d2;
 }

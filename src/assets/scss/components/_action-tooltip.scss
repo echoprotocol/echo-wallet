@@ -1,0 +1,66 @@
+.action-tooltip {
+	z-index: 99;
+	position: absolute;
+	right: 0;
+	top: calc(100% + 15px);
+
+	.action-tooltip-wrap {
+		background-color: #fff;
+		width: 272px;
+		padding: 18px 14px 19px;
+		box-shadow: 0 3px 7px rgba(#000, 0.1);
+		position: relative;
+		border: 1px solid #E5E6EB;
+	}
+
+	.action-tooltip-header {
+		color: #3B3B3B;
+		font-weight: 600;
+		font-size: 13px;
+	}
+
+	.action-tooltip-panel {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		margin: 30px 0 0;
+		justify-content: center;
+
+
+		button {
+			min-width: 94px;
+		}
+
+		button:not(:last-child) {
+			margin: 0 10px 0 0;
+		}
+	}
+
+	&:before,
+	.arrow {
+		display: block;
+		position: absolute;
+		right: 0;
+		left: 0;
+		margin: auto;
+	}
+
+	&:before {
+		content: "";
+		background-color: #fff;
+		height: 19px;
+		width: 30px;
+		top: 1px;
+		z-index: 1;
+	}
+
+	.arrow {
+		background-color: #fff;
+		transform: rotate(45deg);
+		width: 20px;
+		height: 20px;
+		top: -6px;
+		box-shadow: -1px -1px 0 0 #E5E6EB;
+	}
+
+}

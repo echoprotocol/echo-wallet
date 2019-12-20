@@ -1,56 +1,44 @@
 .edit-permissions-modal {
-	max-width: 600px;
-	flex-direction: column;
-	padding: 31px 0 47px;
-	
+	@include modal-wrap();
+
 	.modal-header {
-		display: flex;
-		align-items: center;
-		max-width: 500px;
-		margin: 0 auto;
-		min-height: 34px;
-		position: relative;
+		@include modal-header();
 	}
 
 	.modal-header-title {
-		color: #3B3B3B;
-		font-size: 20px;
-		font-weight: 600;
-		margin: 0;
+		@include modal-header-title();
 	}
 
 	.modal-body {
-		max-width: 500px;
-		margin: 0 auto;
+		@include modal-body();
 	}
 
 	.info-text {
-		font-size: 15px;
-		font-weight: 500;
-		line-height: 22px;
-		color: rgba(#3B3B3B, .8);
-		text-align: center;
+		@include info-text();
 		padding: 0 10px;
 		margin-top: 6px;
 	}
 
 	.check-list {
 		margin: 26px 14px 0;
+
 		.label {
 			font-family: proxima;
 			font-weight: 600;
 		}
 	}
 
-	.field {
+	.form .field {
 		margin-top: 35px;
-		& > label {
+
+		&>label {
 			min-height: 18px;
 		}
 	}
 
 	.form-panel {
 		justify-content: space-between;
+
 		.main-btn {
 			min-width: 160px;
 		}

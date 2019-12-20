@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Dropdown } from 'semantic-ui-react';
 import { Map } from 'immutable';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { NavLink } from 'react-router-dom';
 import { CACHE_MAPS } from 'echojs-lib';
@@ -81,19 +82,19 @@ class Header extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (e.keyCode === 13) {
+
+		if (e.type === 'click' || e.keyCode === 13) {
 			switch (value) {
 				case 'current_account':
 					break;
-
 				case 'add-account':
+					this.onAddAccount(e);
 					break;
-
 				case 'logout':
 					break;
-
 				default:
 			}
+
 		}
 
 	}
@@ -159,6 +160,7 @@ class Header extends React.Component {
 					</div>
 				</button>
 				<button
+					tabIndex={-1}
 					className="logout-user-btn"
 					onClick={() => this.onRemoveAccount(name)}
 				/>
@@ -182,15 +184,19 @@ class Header extends React.Component {
 					<div className="user-base-info">
 						<div className="name-wrap">
 							<div className="name">{delegate.get('name')}</div>
-							<div className="parent-label">(delegated to)</div>
+							<div className="parent-label">
+								<FormattedMessage id="account_dropdown.delegated_to" />
+							</div>
 						</div>
 						<div className="id">{delegate.get('id')}</div>
 					</div>
 					<a
 						href=""
 						className="parent-link"
+						tabIndex="-1"
 						onClick={(e) => this.onChangeParentAccount(e)}
-					> Change
+					>
+						<FormattedMessage id="account_dropdown.change_delegate_button" />
 					</a>
 				</button>
 
@@ -233,12 +239,14 @@ class Header extends React.Component {
 							<span>{totalFrozenFunds}</span>
 							<span>ECHO</span>
 						</div>
-						<span>Frozen funds</span>
+						<span>
+							<FormattedMessage id="wallet_page.frozen_funds.title" />
+						</span>
 					</div>
 					<span className="icon-frozen-funds" />
 				</NavLink>
 				<div className="inner-tooltip">
-					Frozen funds allow you to get bigger reward for participating in blocks creation.
+					<FormattedMessage id="wallet_page.frozen_funds.popup_header_text" />
 				</div>
 			</div>
 		);
@@ -246,20 +254,21 @@ class Header extends React.Component {
 
 	render() {
 		const {
-			location, accountName, assets,
+			location, accountName, assets, intl,
 		} = this.props;
 
 		const parsedLocation = `/${location.pathname.split('/')[1]}`;
 		const asset = assets.find((i) => i.symbol === 'ECHO');
 		const balance = asset ? formatAmount(asset.balance, asset.precision) : '0';
 		const symbol = asset ? asset.symbol : 'ECHO';
+		const addAcText = intl.formatMessage({ id: 'account_dropdown.add_account_button' });
 
 		let options = [
 			{
 				value: 'add-account',
 				key: 'add-account',
 				className: 'add-account',
-				content: 'Add account',
+				content: addAcText,
 				onClick: (e) => this.onAddAccount(e),
 			},
 		];
@@ -267,12 +276,14 @@ class Header extends React.Component {
 		options = this.renderList().concat(options);
 
 		return (
-			<div className="header">
+			<header className="header">
 				{
 					this.renderLinkToParent()
 				}
 
-				<div className="page-title">{this.getTitle()}</div>
+				<div className="page-title">
+					{this.getTitle() && <FormattedMessage id={this.getTitle()} />}
+				</div>
 				{
 					this.props.location.pathname === INDEX_PATH ?
 						this.renderLinkToFrozenFunds() : null
@@ -296,6 +307,7 @@ class Header extends React.Component {
 							</span>
 						</NavLink>
 						<Dropdown
+							className="user-dropdown"
 							options={options}
 							text={accountName}
 							selectOnBlur={false}
@@ -304,7 +316,7 @@ class Header extends React.Component {
 
 					</div>
 				</div>
-			</div>
+			</header>
 		);
 	}
 
@@ -323,17 +335,18 @@ Header.propTypes = {
 	initAccount: PropTypes.func.isRequired,
 	setValue: PropTypes.func.isRequired,
 	delegate: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 Header.defaultProps = {
 	transactionData: null,
 };
 
-export default withRouter(connect(
+export default injectIntl(withRouter(connect(
 	(state) => {
 		const currentAccountId = state.global.getIn(['activeUser', 'id']);
 		const currentAccount = state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccountId]);
-		const delegateId = currentAccount.getIn(['options', 'delegating_account']);
+		const delegateId = currentAccount ? currentAccount.getIn(['options', 'delegating_account']) : '';
 
 		return {
 			accountName: state.global.getIn(['activeUser', 'name']),
@@ -351,4 +364,4 @@ export default withRouter(connect(
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
 	}),
-)(Header));
+)(Header)));

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Modal, Button } from 'semantic-ui-react';
+import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { MODAL_WIPE } from '../../constants/ModalConstants';
 
@@ -31,34 +33,40 @@ class ModalWipeWallet extends React.Component {
 
 	render() {
 		const {
-			show, loading,
+			show, loading, intl,
 		} = this.props;
 
 		const { checked } = this.state;
 
 		return (
-			<Modal className="small wipe-data" open={show} dimmer="inverted">
-				<div className="modal-content">
-
-					<span
+			<Modal className="modal-wrap" open={show}>
+				<FocusLock autoFocus={false}>
+					<button
 						className="icon-close"
 						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
 					/>
-					<div className="modal-header" />
-					<div className="modal-body">
-						<div className="main-form">
-							<div className="form-info">
-								<h3>Your password cannot be restored</h3>
+					<div className="modal-header">
+						<h3 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_wipe.title' })}
+						</h3>
+					</div>
+					<div className="wipe-data modal-body">
+						<Form className="main-form">
+							<div className="form-info-description">
+								{intl.formatMessage({ id: 'modals.modal_wipe.text' })}
 							</div>
-							<div className="form-info-description">You can clear your account data from Echo Desktop and set a new password. If you do, you wil lose access to the accounts you’ve logged into. You will need to log into them again, after you have set a new password.</div>
 							<div className="check-list">
 								<div className="check">
-									<input checked={checked} onChange={() => this.toggleChecked()} type="checkbox" id="wipe-agree" />
+									<input
+										checked={checked}
+										onChange={() => this.toggleChecked()}
+										type="checkbox"
+										id="wipe-agree"
+									/>
 									<label className="label" htmlFor="wipe-agree">
-										<span className="label-text">I understand the Echo Desktop does not store backups of my account keys, and I will lose access to them  by clearing my account data</span>
+										<span className="label-text">
+											{intl.formatMessage({ id: 'modals.modal_wipe.checkbox_text' })}
+										</span>
 									</label>
 								</div>
 							</div>
@@ -66,14 +74,14 @@ class ModalWipeWallet extends React.Component {
 								<Button
 									type="submit"
 									className="main-btn"
-									content="Clear data"
+									content={intl.formatMessage({ id: 'modals.modal_wipe.confirm_button_text' })}
 									onClick={this.props.wipe}
 									disabled={loading || !checked}
 								/>
 							</div>
-						</div>
+						</Form>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}
@@ -83,25 +91,23 @@ class ModalWipeWallet extends React.Component {
 ModalWipeWallet.propTypes = {
 	show: PropTypes.bool,
 	loading: PropTypes.bool,
-	// error: PropTypes.string,
 	wipe: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalWipeWallet.defaultProps = {
 	show: false,
 	loading: false,
-	// error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_WIPE, 'show']),
 		loading: state.modal.getIn([MODAL_WIPE, 'loading']),
-		error: state.modal.getIn([MODAL_WIPE, 'error']),
 	}),
 	(dispatch) => ({
 		wipe: () => dispatch(resetData()),
 		close: () => dispatch(closeModal(MODAL_WIPE)),
 	}),
-)(ModalWipeWallet);
+)(ModalWipeWallet));

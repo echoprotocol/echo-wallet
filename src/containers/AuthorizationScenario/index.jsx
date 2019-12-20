@@ -19,6 +19,8 @@ class AuthorizationScenario extends React.Component {
 
 		this.DEFAULT_STATE = {
 			password: '',
+			unlock: false,
+			unlockLoading: false,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -33,7 +35,7 @@ class AuthorizationScenario extends React.Component {
 	}
 
 	submit() {
-		this.props.openModal(MODAL_UNLOCK);
+		this.setState({ unlock: true });
 	}
 
 	change(value) {
@@ -47,17 +49,20 @@ class AuthorizationScenario extends React.Component {
 	unlock() {
 		const { password } = this.state;
 
-		this.props.unlock(password, this.props.authorize);
+		this.setState({ unlockLoading: true });
+		this.props.unlock(password, this.props.authorize)
+			.then(() => this.setState({ unlock: false }))
+			.finally(() => this.setState({ unlockLoading: false }));
 	}
 
-	close(modal) {
+	close() {
 		this.clear();
-		this.props.closeModal(modal);
+		this.setState({ unlock: false });
 	}
 
 	forgot() {
 		this.clear();
-		this.props.closeModal(MODAL_UNLOCK);
+		this.setState({ unlock: false });
 		this.props.openModal(MODAL_WIPE);
 	}
 
@@ -79,14 +84,14 @@ class AuthorizationScenario extends React.Component {
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalUnlock
-					show={modalUnlock.get('show')}
-					disabled={modalUnlock.get('loading')}
+					show={this.state.unlock}
+					disabled={this.state.unlockLoading}
 					password={password}
 					error={modalUnlock.get('error')}
 					change={(value) => this.change(value)}
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
-					close={() => this.close(MODAL_UNLOCK)}
+					close={() => this.close()}
 				/>
 				<ModalChooseAccount
 					show={modalChooseAccount.get('show')}

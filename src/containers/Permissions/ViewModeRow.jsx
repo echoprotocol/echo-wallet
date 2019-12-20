@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import { Button } from 'semantic-ui-react';
 
 class ViewModeRow extends Component {
@@ -17,14 +18,18 @@ class ViewModeRow extends Component {
 			<Button
 				className="main-btn light"
 				size="medium"
-				content="View WIF"
+				content={
+					<FormattedMessage id="backup_and_permissions_page.view_mode.wif_key_button.view_wif_button" />
+				}
 				onClick={() => showWif(subject.value)}
 			/>
 		) : (
 			<Button
 				className="blue-btn"
 				size="medium"
-				content="Add WIF"
+				content={
+					<FormattedMessage id="backup_and_permissions_page.view_mode.wif_key_button.add_wif_button" />
+				}
 				onClick={() => addWif(subject.value)}
 			/>
 		);
@@ -39,7 +44,9 @@ class ViewModeRow extends Component {
 
 		return (
 			<div className="list-item-weight">
-				<span className="weight">Weight:</span>
+				<span className="weight">
+					<FormattedMessage id="backup_and_permissions_page.view_mode.pub_keys_and_accs_section.weight" />
+				</span>
 				<span className="value">{weight.value}</span>
 			</div>
 		);

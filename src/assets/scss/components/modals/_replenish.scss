@@ -1,36 +1,28 @@
 .replenish-modal {
-	max-width: 600px;
-	flex-direction: column;
-	padding: 38px 0 47px;
-	
+	@include modal-wrap();
+
 	.modal-header {
-		align-items: center;
-		max-width: 500px;
-		margin: 0 auto;
+		@include modal-header();
 		text-align: center;
 	}
 
 	.modal-header-title {
-		color: #3B3B3B;
-		font-size: 20px;
-		font-weight: 600;
-		margin: 0;
+		@include modal-header-title();
 	}
 
 	.modal-body {
-		width: 100%;
-		max-width: 500px;
-		margin: 21px auto 0;
+		@include modal-body();
 	}
 
 	.field {
-		& > label {
+		&>label {
 			min-height: 18px;
 		}
 	}
 
 	.form-panel {
 		margin: 30px 0 0;
+
 		.main-btn {
 			min-width: 120px;
 			width: 120px;
