@@ -115,6 +115,7 @@ class TabOverview extends React.Component {
 									copy={bytecode}
 									icon="copy"
 									text="Copy"
+									labelText={intl.formatMessage({ id: 'copied_text' })}
 								/>
 							</div>
 						</li>

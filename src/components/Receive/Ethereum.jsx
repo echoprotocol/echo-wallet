@@ -59,6 +59,7 @@ class Ethereum extends React.Component {
 						<ActionBtn
 							icon="icon-copy"
 							copy={addressWithPrefix}
+							labelText={intl.formatMessage({ id: 'copied_text' })}
 						/>
 					</div>
 				</Form.Field>

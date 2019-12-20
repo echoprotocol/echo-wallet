@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from 'qrcode.react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import ActionBtn from '../ActionBtn';
 
 class QrCode extends React.PureComponent {
@@ -14,7 +14,7 @@ class QrCode extends React.PureComponent {
 	}
 
 	render() {
-		const { link } = this.props;
+		const { link, intl } = this.props;
 
 		return (
 			<div className="qr-section">
@@ -38,6 +38,7 @@ class QrCode extends React.PureComponent {
 						<ActionBtn
 							copy={link}
 							icon="icon-icopy-tiny"
+							labelText={intl.formatMessage({ id: 'copied_text' })}
 						/>
 					</div>
 					<div className="qr-description">
@@ -52,10 +53,11 @@ class QrCode extends React.PureComponent {
 
 QrCode.propTypes = {
 	link: PropTypes.string,
+	intl: PropTypes.any.isRequired,
 };
 
 QrCode.defaultProps = {
 	link: '',
 };
 
-export default QrCode;
+export default injectIntl(QrCode);

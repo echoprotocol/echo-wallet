@@ -98,6 +98,7 @@ class FormComponent extends React.Component {
 						<ActionBtn
 							icon="icon-copy"
 							copy={generatedWIF.value}
+							labelText={intl.formatMessage({ id: 'copied_text' })}
 						/>
 					</div>
 				</Form.Field>

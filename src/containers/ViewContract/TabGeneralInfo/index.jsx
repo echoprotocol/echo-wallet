@@ -339,6 +339,7 @@ class TabGeneralInfo extends React.Component {
 											copy={bytecode}
 											icon="icon-copy"
 											text={copyBtnTxt}
+											labelText={intl.formatMessage({ id: 'copied_text' })}
 										/>
 									</div>
 								</td>
@@ -360,6 +361,7 @@ class TabGeneralInfo extends React.Component {
 											copy={abi}
 											icon="icon-copy"
 											text={copyBtnTxt}
+											labelText={intl.formatMessage({ id: 'copied_text' })}
 										/>
 									</div>
 								</td>
