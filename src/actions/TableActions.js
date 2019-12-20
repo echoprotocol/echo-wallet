@@ -113,7 +113,6 @@ export const formPermissionKeys = () => async (dispatch, getState) => {
 	const [account] = await Services.getEcho().api.getFullAccounts([accountId]);
 
 	let accounts = localStorage.getItem(`accounts_${networkName}`);
-	console.log('accounts', accounts)
 
 	accounts = accounts ? JSON.parse(accounts) : [];
 
