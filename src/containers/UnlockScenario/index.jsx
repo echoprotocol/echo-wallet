@@ -49,6 +49,7 @@ class UnlockScenario extends React.Component {
 
 		this.props.unlock(password, () => {
 			this.props.closeModal(this.state.modalType);
+			console.log(password);
 			this.props.onUnlock(password);
 			this.clear();
 		});

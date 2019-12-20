@@ -432,7 +432,7 @@ export const authUser = ({
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 
-		dispatch(startLocalNode());
+		// dispatch(startLocalNode());
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));

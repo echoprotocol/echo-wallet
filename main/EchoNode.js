@@ -28,6 +28,7 @@ class EchoNode {
 
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
 
+		console.log(1);
 		const fileExists = await new Promise((resolve) => {
 			fs.stat(keyConfigPath, (err) => {
 				if (err) {
@@ -39,6 +40,7 @@ class EchoNode {
 			});
 		});
 
+		console.log(2);
 		let bytes = null;
 
 		if (fileExists) {
@@ -52,6 +54,7 @@ class EchoNode {
 				});
 			});
 
+			console.log(3);
 			await new Promise((resolve, reject) => {
 				fs.unlink(keyConfigPath, (err) => {
 					if (err) {
@@ -64,23 +67,18 @@ class EchoNode {
 
 		}
 
-		console.log('AAAA');
-		try {
-			await mkdirp(dirname(keyConfigPath));
-		} catch (e) {
-			console.log('ETOGAVNO', e);
-		} finally {
-			console.log('GAVNONOVAYAJIZN');
-		}
-		console.log('BBBB');
+		console.log(4);
+		await mkdirp(dirname(keyConfigPath));
 
+		console.log(5);
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
+			console.log(6);
 			if (bytes !== fileHex) {
 				await new Promise((resolve, reject) => {
-					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), { flag: 'w+' }, (err) => {
-						console.log('GAVNO', err);
+					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), (err) => {
+						console.log('TUT1111', err);
 						if (err) {
 							return reject(err);
 						}
@@ -89,9 +87,12 @@ class EchoNode {
 				});
 			}
 		}
+		console.log(7);
 
+		params['data-dir'] = `"${params['data-dir']}"`;
 		const child = this.spawn(binPath, params, chainToken, stopSyncing);
 
+		console.log(8);
 		this.child = child;
 
 		return child;

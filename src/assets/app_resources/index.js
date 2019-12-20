@@ -187,14 +187,12 @@ function createWindow() {
 		let prevNetwork;
 
 		function removeFolderAndRetrySyncNode(dataDir) {
-			console.log('removeBEFORE', removeBeforeStart, dataDir);
 			return new Promise((resolve) => {
 				previousPublicKeys = [];
 				lastNode = null;
 
 				if (removeBeforeStart) {
 					removeBeforeStart = false;
-					console.log('DELETE');
 					return rimraf(dataDir, () => resolve());
 				}
 
@@ -229,12 +227,10 @@ function createWindow() {
 				data.chainToken,
 				pauseNodeSync,
 			).then(() => {
-				console.log('poshelnahui1');
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;
 				}
-			}).catch((error) => {
-				console.log('poshelnahui2', error);
+			}).catch(() => {
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;
 				}
@@ -247,14 +243,13 @@ function createWindow() {
 			const chainToken = args && args.chainToken ? args.chainToken : null;
 
 			const networkOptions = {
-				'data-dir': `"${app.getPath('userData')}/${DATA_DIR}/${NETWORK_ID}"`.replace(/(\s+)/g, '%20'),
+				'data-dir': `${app.getPath('userData')}/${DATA_DIR}/${NETWORK_ID}`.replace(/(\s+)/g, '%20'),
 				'rpc-endpoint': `127.0.0.1:${port}`,
 				// testnet: null,
 				// 'replay-blockchain': null,
 				// devnet: null,
 				// 'seed-node': 'node1.devnet.echo-dev.io:6310',
 			};
-			console.log('DATADIRRRRRRRRRRRRRRRRR', networkOptions['data-dir']);
 
 			switch (NETWORK_ID) {
 				case 'testnet':
@@ -279,7 +274,6 @@ function createWindow() {
 				previousPublicKeys.length !== receivedPublicKeys.length ||
 				xor(receivedPublicKeys, previousPublicKeys).length
 			) {
-				console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
 				subject.next({
 					lastNode,
 					networkOptions,

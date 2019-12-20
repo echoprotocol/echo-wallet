@@ -55,8 +55,9 @@ class AuthorizationScenario extends React.Component {
 				if (!err) {
 					this.setState({ unlock: false });
 				}
+				this.setState({ unlockLoading: false });
 			})
-			.finally(() => this.setState({ unlockLoading: false }));
+			.catch(() => this.setState({ unlockLoading: false }));
 	}
 
 	close() {
