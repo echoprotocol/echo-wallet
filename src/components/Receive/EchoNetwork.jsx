@@ -4,6 +4,7 @@ import { Dropdown } from 'semantic-ui-react';
 import { List } from 'immutable';
 import { validators } from 'echojs-lib';
 import BN from 'bignumber.js';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
@@ -24,13 +25,24 @@ class EchoNetwork extends React.Component {
 		this.state = {
 			addresses: new List([]),
 			receiver: '',
+			searchText: '',
 			open: false,
+			timeout: null,
+			searchAddr: [],
+			searchAccs: [],
 		};
 	}
 
 
 	componentDidMount() {
 		this.props.updateAccountAddresses();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.accountAddresses !== prevProps.accountAddresses ||
+			this.props.accountName !== prevProps.accountName) {
+			this.onChange(null, this.state.searchText);
+		}
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -43,15 +55,56 @@ class EchoNetwork extends React.Component {
 		return { addresses: nextProps.accountAddresses };
 	}
 
-	onClickItem(value) {
-		this.setState({
-			receiver: value,
-			open: !this.state.open,
-		});
+	onDropdownChange(e, value) {
+		if (value === 'address-header' || value === 'accounts-header') {
+			return;
+		}
+		if (e.type === 'click' || e.keyCode === 13) {
+
+			if (value === 'generate-address') {
+				this.setState({
+					searchText: '',
+				});
+				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+				return;
+			}
+
+			this.setState({
+				searchText: '',
+				receiver: value,
+			});
+
+			if (e.target.className === 'search') {
+
+				setTimeout(() => {
+					e.target.blur();
+				}, 0);
+			}
+
+
+		}
+
 	}
 
 	onChange(e, value) {
-		this.setState({ receiver: value });
+
+		this.setState({ searchText: e ? e.target.value : '' });
+		const addresses = this.props.accountAddresses.toJS();
+
+		const users = this.props.accountName;
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+		this.setState({
+			timeout: setTimeout(() => {
+				const filteredAddresses = addresses.filter(({ address }) => address.match(value));
+				const filteredAccs = [users].filter((user) => user.match(value));
+				this.setState({
+					searchAddr: filteredAddresses,
+					searchAccs: filteredAccs,
+				});
+			}, 300),
+		});
 	}
 
 	getReceiver() {
@@ -99,11 +152,27 @@ class EchoNetwork extends React.Component {
 		return new BN(amount.value).toString(10);
 	}
 
-	renderAccountsList() {
+	initDropdown() {
+		const { searchText } = this.state;
+		const addresses = this.props.accountAddresses.toJS();
+		const users = this.props.accountName;
+		const filteredAddresses = addresses.filter(({ address }) => address.match(searchText));
+		const filteredAccs = [users].filter((user) => user.match(searchText));
 
-		const users = [{ name: this.props.accountName }];
+		this.setState({
+			searchAddr: filteredAddresses,
+			searchAccs: filteredAccs,
+		});
 
-		const acconutHeaderTitle = <div className="title">Account</div>;
+		const { open } = this.state;
+		if (!open) { this.setState({ open: true }); }
+	}
+	renderAccountHeader() {
+		const acconutHeaderTitle = (
+			<div className="title">
+				<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.acc_separator" />
+			</div>
+		);
 
 		const header = [{
 			className: 'dropdown-header',
@@ -112,10 +181,14 @@ class EchoNetwork extends React.Component {
 			content: acconutHeaderTitle,
 			disabled: true,
 		}];
+		return header;
+	}
 
-		const options = users.map(({
-			name,
-		}) => {
+	renderAccountsList() {
+
+		const users = this.state.searchAccs;
+
+		const options = users.map((name) => {
 			const content = (
 				<React.Fragment>
 					<div className="avatar-wrap">
@@ -127,29 +200,21 @@ class EchoNetwork extends React.Component {
 
 			return ({
 				className: 'user-item',
-				value: name,
 				key: name,
+				value: name,
 				text: name,
 				content,
-				onClick: () => this.onClickItem(name),
 			});
 		});
 
-		return header.concat(options);
+		return options;
 	}
 
-
-	renderAddressesList() {
-		const { addresses } = this.state;
-
-
-		const users = addresses.map((a) => ({
-			name: a.get('label'),
-			address: a.get('address'),
-		})).toArray();
-
+	renderAddressesHeader() {
 		const addressHeaderTitle = (
-			<div className="title">ADDRESSES</div>
+			<div className="title">
+				<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.adr_separator" />
+			</div>
 		);
 
 		const header = [{
@@ -160,15 +225,18 @@ class EchoNetwork extends React.Component {
 			onClick: (e) => e.stopPropagation(),
 			disabled: true,
 		}];
+		return header;
+	}
 
-		const generateAddressItem = [{
-			className: 'generate-address',
-			value: 'generate-address',
-			key: 'generate-address',
-			content: 'Generate new address',
-			onClick: () => this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS),
-			selected: false,
-		}];
+	renderAddressesList() {
+		const addresses = this.state.searchAddr;
+
+
+		const users = addresses.map((a) => ({
+			name: a.label,
+			address: a.address,
+		}));
+
 
 		const options = users.map(({
 			name, address,
@@ -191,49 +259,87 @@ class EchoNetwork extends React.Component {
 
 			return ({
 				className: 'address-item-wrap',
-				value: name,
+				value: address,
 				key: index.toString(),
 				text: address,
 				content,
-				onClick: () => this.onClickItem(address),
 			});
 		});
 
-		return !options.length ?
-			generateAddressItem :
-			header.concat(options).concat(generateAddressItem);
+		return options.length && options;
+	}
+
+	renderGenerateAddressButton() {
+		const { intl } = this.props;
+		const btnValue = intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.button_text' });
+		const generateAddressItem = [{
+			className: 'generate-address',
+			value: 'generate-address',
+			key: 'generate-address',
+			content: btnValue,
+			onClick: () => {
+				this.setState({ open: false });
+				this.props.openModal(MODAL_GENERATE_ECHO_ADDRESS);
+			},
+			selected: false,
+			active: false,
+		}];
+		return generateAddressItem;
+	}
+
+	renderOptions() {
+		const { searchAddr, searchAccs } = this.state;
+		const renderAccSection = searchAccs.length;
+		const renderAdrSection = searchAddr.length;
+		const AccSection = renderAccSection ?
+			this.renderAccountHeader().concat(this.renderAccountsList(searchAccs)) : [];
+		const AdrSection = renderAdrSection ?
+			this.renderAddressesHeader().concat(this.renderAddressesList(searchAddr)) : [];
+		return [].concat(AccSection).concat(AdrSection).concat(this.renderGenerateAddressButton())
+			.filter((el) => el !== null);
 	}
 
 	render() {
 
 		const {
-			currency, fee, assets, tokens, amount, isAvailableBalance, fees,
+			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl,
 		} = this.props;
-		const { receiver, open } = this.state;
+
+
+		const { receiver, open, searchText } = this.state;
 		const receiverValue = this.getReceiver();
+		const dropdownPlaceholder =
+			intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.placeholder' });
 
 		const link = this.getQrData();
 
 		return (
 			<div className="payment-wrap">
-				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+				<p className="payment-description">
+					<FormattedMessage id="wallet_page.receive_payment.echo.description_part1" />
+				</p>
 				<ModalCreateEchoAddress />
 
 				<p className="payment-description">
-					You can use several addresses referring to one account for different targets.
+					<FormattedMessage id="wallet_page.receive_payment.echo.description_part2" />
 				</p>
-				<div className="dropdown-wrap">
-					<div className="dropdown-label">recipient Account OR address</div>
+				<div className="field recipient-dropdown-wrap">
+					<div className="dropdown-label">
+						<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
+					</div>
 					<Dropdown
-						placeholder="Choose account or address"
-						options={this.renderAccountsList().concat(this.renderAddressesList())}
-						search
-						text="Choose account or address"
-						searchQuery={receiver}
+						placeholder={dropdownPlaceholder}
+						options={this.renderOptions()}
+						search={() => this.renderOptions()}
+						searchQuery={searchText}
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
-						onClick={() => { if (!open) { this.setState({ open: true }); } }}
-						onBlur={() => this.setState({ open: false })}
+						onFocus={() => this.initDropdown()}
+						onClose={() => this.setState({ open: false })}
+						selectOnNavigation={false}
+						selectOnBlur={false}
 						open={open}
+						text={(receiver || this.props.accountName) || 'Choose account or address'}
 					/>
 				</div>
 
@@ -255,6 +361,7 @@ class EchoNetwork extends React.Component {
 					setContractFees={this.props.setContractFees}
 					assetDropdown
 					receive
+					intl={intl}
 				/>
 				{
 					receiverValue ? <QrCode link={link} /> : null
@@ -285,6 +392,7 @@ EchoNetwork.propTypes = {
 	setContractFees: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 EchoNetwork.defaultProps = {
@@ -292,4 +400,4 @@ EchoNetwork.defaultProps = {
 };
 
 
-export default EchoNetwork;
+export default injectIntl(EchoNetwork);

@@ -4,6 +4,7 @@ import { TIME_TOAST_ANIMATION } from '../constants/GlobalConstants';
 
 import ToastInfo from '../components/Toast/ToastInfo';
 import ToastSuccess from '../components/Toast/ToastSuccess';
+import ToastError from '../components/Toast/ToastError';
 
 /**
  * @method toastSuccess
@@ -40,7 +41,7 @@ export const toastInfo = (text, onUndo, onOpen) => {
  * @returns {undefined}
  */
 export const toastError = (text) => {
-	toast.error(text, {
+	toast.error(ToastError(text), {
 		autoClose: TIME_TOAST_ANIMATION,
 		position: 'bottom-right',
 		pauseOnHover: true,

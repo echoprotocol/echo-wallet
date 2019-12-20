@@ -143,6 +143,10 @@
 	font-size: 18px;
 	text-align: right;
 	min-width: 35%;
+
+	&.short {
+		font-size: 16px;
+	}
 }
 
 .balance-item {
@@ -174,6 +178,10 @@
 
 	.frozen-interval {
 		width: 60%;
+	}
+
+	.currency-amount {
+		max-width: 195px;
 	}
 }
 

@@ -14,16 +14,17 @@
 }
 
 .mini {
-	padding: 3px 4px 4px;
 	.copy-label-content {
 		font-size: 12px;
 	}
 }
+
 .popup {
 	[class*="animate-copy-label"] {
 		margin: 0 0 0 9px;
 	}
 }
+
 .copy-label-content {
 	border-radius: 4px;
 	color: #5C637D;
@@ -51,5 +52,5 @@
 .animate-copy-label-exit-active {
 	top: -60px;
 	opacity: 0;
-	transition:	opacity $speed, top $speed;
+	transition: opacity $speed, top $speed;
 }

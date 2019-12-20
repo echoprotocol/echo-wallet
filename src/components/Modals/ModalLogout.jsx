@@ -2,12 +2,14 @@ import React from 'react';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
+import { injectIntl } from 'react-intl';
+import FocusLock from 'react-focus-lock';
 
 import { closeModal, openModal, setError } from '../../actions/ModalActions';
 
 import { MODAL_LOGOUT, MODAL_WIPE } from '../../constants/ModalConstants';
 import { removeAccount } from '../../actions/GlobalActions';
+import PasswordInput from '../PasswordInput';
 
 
 class ModalLogout extends React.Component {
@@ -59,65 +61,65 @@ class ModalLogout extends React.Component {
 	}
 
 	render() {
-		const { show, error } = this.props;
+		const { show, error, intl } = this.props;
 		const { password } = this.state;
 
 		return (
-			<Modal className="small" open={show} dimmer="inverted">
-				<div className="modal-content">
-					<span
-						className="icon-close"
-						onClick={(e) => this.onClose(e)}
-						onKeyDown={(e) => this.onClose(e)}
-						role="button"
-						tabIndex="0"
-					/>
-					<div className="modal-body">
-						<Form className="main-form">
-							<div className="form-info">
-								<h3>Confirm logout</h3>
-							</div>
-							You will be signed out of your account.
-							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: !!error })}>
-									<label htmlFor="Password">Password</label>
-									<input
-										type="password"
-										placeholder="Password"
-										name="password"
-										className="ui input"
+			<Modal className="small" open={show}>
+				<FocusLock autoFocus={false}>
+					<div className="modal-content">
+						<button
+							className="icon-close"
+							onClick={(e) => this.onClose(e)}
+						/>
+						<div className="modal-body">
+							<Form className="main-form">
+								<div className="form-info">
+									<h3>{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}</h3>
+								</div>
+								{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
+								<div className="field-wrap">
+									<PasswordInput
+										errorMessage={error ? intl.formatMessage({ id: error }) : ''}
+										inputLabel={
+											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
+										}
+										inputPlaceholder={
+											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.placeholder' })
+										}
+										inputName="password"
 										value={password}
 										onChange={(e) => this.onChange(e)}
 										autoFocus
 									/>
-									<span className="error-message">{error}</span>
-								</Form.Field>
-							</div>
-							<div className="form-panel">
-								<a
-									className="action-link"
-									role="button"
-									onClick={(e) => this.onForgot(e)}
-									onKeyPress={(e) => this.onForgot(e)}
-									tabIndex="0"
-								>
-									Forgot password?
-								</a>
-								<Button
-									className="main-btn"
-									onClick={() => this.onClose()}
-									content="Cancel"
-								/>
-								<Button
-									type="submit"
-									className="main-btn"
-									onClick={() => this.onConfirm()}
-									content="Confirm"
-								/>
-							</div>
-						</Form>
+								</div>
+								<div className="form-panel">
+									<a
+										className="action-link"
+										role="button"
+										onClick={(e) => this.onForgot(e)}
+										onKeyPress={(e) => this.onForgot(e)}
+										tabIndex="0"
+									>
+										{intl.formatMessage({ id: 'modals.modal_confirm_logout.forgot_password_link' })}
+									</a>
+									<Button
+										className="main-btn"
+										type="button"
+										onClick={() => this.onClose()}
+										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.close_button_text' })}
+									/>
+									<Button
+										type="submit"
+										className="main-btn"
+										onClick={() => this.onConfirm()}
+										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.confirm_button_text' })}
+									/>
+								</div>
+							</Form>
+						</div>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}
@@ -132,6 +134,7 @@ ModalLogout.propTypes = {
 	closeModal: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	clear: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalLogout.defaultProps = {
@@ -139,7 +142,7 @@ ModalLogout.defaultProps = {
 	error: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_LOGOUT, 'show']),
 		error: state.modal.getIn([MODAL_LOGOUT, 'error']),
@@ -151,4 +154,4 @@ export default connect(
 		openModal: (modal) => dispatch(openModal(modal)),
 		clear: () => dispatch(setError(MODAL_LOGOUT, null)),
 	}),
-)(ModalLogout);
+)(ModalLogout));

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -50,7 +51,7 @@ class Tokens extends React.Component {
 					})}
 				>
 					<span className="currency-symbol">{symbol}</span>
-					<span className="currency-amount">{formatAmount(balance, precision, '')}</span>
+					<span className={classnames('currency-amount', { short: balance.length > 18 })}>{formatAmount(balance, precision, '')}</span>
 				</button>
 				<button
 					className="remove-token"
@@ -68,7 +69,9 @@ class Tokens extends React.Component {
 	renderList() {
 		return (
 			<React.Fragment>
-				<h3 className="currency-title">Tokens</h3>
+				<h3 className="currency-title">
+					<FormattedMessage id="wallet_page.balances.tokens.title" />
+				</h3>
 				<ul className="currency-list">
 					{
 						this.props.tokens.map((t) => this.renderRow(t))

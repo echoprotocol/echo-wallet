@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 class ModalConfirmEditingOfPermissions extends React.Component {
 
@@ -12,38 +14,62 @@ class ModalConfirmEditingOfPermissions extends React.Component {
 	}
 	render() {
 		const {
-			show, warningMessage, echoRandMessage,
+			show, warningMessage, echoRandMessage, intl,
 		} = this.props;
 		return (
-			<Modal className="small unclock-size" open={show} dimmer="inverted">
-				<div className="modal-content add-key">
-					<div className="modal-header">Please, confirm applying changes</div>
-					<div className="modal-body">
-						<div className="info-text">
-							{
-								warningMessage && <span>{warningMessage}</span>
-							}
-							{
-								echoRandMessage && warningMessage && <br />
-							}
-							{
-								echoRandMessage && <span>{echoRandMessage}</span>
-							}
+			<Modal className="small" open={show}>
+				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={() => this.onClose()}
+					/>
+					<div className="modal-content add-key">
+						<div className="modal-header">
+							<h2 className="modal-header-title">
+								{intl.formatMessage({ id: 'modals.modal_confirm_editin_of_permissions.title' })}
+							</h2>
 						</div>
-						<div className="form-panel">
-							<Button
-								className="main-btn"
-								onClick={(e) => this.onClose(e)}
-								content="No"
-							/>
-							<Button
-								className="main-btn"
-								onClick={(e) => this.onConfirm(e)}
-								content="Proceed"
-							/>
+						<div className="modal-body">
+							<div className="info-text">
+								{
+									warningMessage &&
+									<span>
+										{
+											intl.formatMessage({ id: warningMessage })
+										}
+									</span>
+								}
+								{
+									echoRandMessage && warningMessage && <br />
+								}
+								{
+									echoRandMessage &&
+									<span>
+										{
+											intl.formatMessage({ id: echoRandMessage })
+										}
+									</span>
+								}
+							</div>
+							<div className="form-panel">
+								<Button
+									className="main-btn"
+									onClick={() => this.onClose()}
+									content={
+										intl.formatMessage({ id: 'modals.modal_confirm_editin_of_permissions.close_button_text' })
+									}
+								/>
+								<Button
+									className="main-btn"
+									onClick={() => this.onConfirm()}
+									content={
+										intl.formatMessage({ id: 'modals.modal_confirm_editin_of_permissions.confirm_button_text' })
+									}
+								/>
+							</div>
 						</div>
 					</div>
-				</div>
+				</FocusLock>
 			</Modal>
 		);
 	}
@@ -57,6 +83,7 @@ ModalConfirmEditingOfPermissions.propTypes = {
 	close: PropTypes.func.isRequired,
 	warningMessage: PropTypes.string,
 	echoRandMessage: PropTypes.string,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalConfirmEditingOfPermissions.defaultProps = {
@@ -65,4 +92,4 @@ ModalConfirmEditingOfPermissions.defaultProps = {
 	echoRandMessage: '',
 };
 
-export default ModalConfirmEditingOfPermissions;
+export default injectIntl(ModalConfirmEditingOfPermissions);

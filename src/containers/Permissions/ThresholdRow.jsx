@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 
 import { setInFormValue } from '../../actions/FormActions';
 
@@ -37,7 +38,9 @@ class ThresholdRow extends React.Component {
 				<Form.Field
 					className={classnames({ error: threshold.error })}
 				>
-					<p className="i-title">THRESHOLD</p>
+					<p className="i-title">
+						<FormattedMessage id="backup_and_permissions_page.view_mode.threshold" />
+					</p>
 					<input
 						type="text"
 						placeholder="Enter threshold"

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
 import classnames from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
+
 
 import { formatAmount } from '../../helpers/FormatHelper';
 import { KEY_CODE_ENTER } from '../../constants/GlobalConstants';
@@ -41,6 +43,7 @@ class StableCoins extends React.Component {
 	}
 
 	selectAsset(symbol) {
+		this.props.setGlobalValue('activePaymentTypeTab', 0);
 		this.props.setGlobalValue('activeCoinTypeTab', 0);
 		this.props.setAsset(symbol);
 	}
@@ -73,6 +76,9 @@ class StableCoins extends React.Component {
 										className={classnames('tag', {
 											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
 										})}
+										content={
+											<FormattedMessage id="wallet_page.balances.stable_coins.deposit" />
+										}
 									>Deposit
 									</a>
 									<a
@@ -84,6 +90,9 @@ class StableCoins extends React.Component {
 										className={classnames('tag', {
 											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
 										})}
+										content={
+											<FormattedMessage id="wallet_page.balances.stable_coins.withdrawal" />
+										}
 										disabled={!asset.notEmpty}
 									>Withdrawal
 									</a>
@@ -98,13 +107,15 @@ class StableCoins extends React.Component {
 	}
 
 	render() {
+		const { intl } = this.props;
+		const popupMsg = intl.formatMessage({ id: 'wallet_page.balances.stable_coins.popup_info' });
 		return (
 			<React.Fragment>
 				<h3 className="currency-title">
-					Stable Coins
+					<FormattedMessage id="wallet_page.balances.stable_coins.title" />
 					<Popup
 						trigger={<span className="inner-tooltip-trigger icon-info" />}
-						content="Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain."
+						content={popupMsg}
 						className="inner-tooltip"
 						style={{ width: 373 }}
 						inverted
@@ -125,6 +136,7 @@ StableCoins.propTypes = {
 	activePaymentTypeTab: PropTypes.number.isRequired,
 	activeCoinTypeTab: PropTypes.any.isRequired,
 	assets: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
-export default StableCoins;
+export default injectIntl(StableCoins);

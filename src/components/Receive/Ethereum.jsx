@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import BN from 'bignumber.js';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 
@@ -22,8 +23,7 @@ class Ethereum extends React.Component {
 	}
 
 	renderPayment() {
-
-		const { ethAddress, amount } = this.props;
+		const { ethAddress, amount, intl } = this.props;
 
 		const ethCurrency = {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
@@ -35,24 +35,30 @@ class Ethereum extends React.Component {
 		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
 
-		const qrText = `ethereum:0x${address}?value=${value}`;
+		const addressWithPrefix = `0x${address}`;
+
+		const qrText = `ethereum:${addressWithPrefix}?value=${value}`;
 
 		return (
 			<React.Fragment>
-				<p className="payment-description">Fill in payment information to get a unique QR code.</p>
+				<p className="payment-description">
+					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.info" />
+				</p>
 				<Form.Field>
-					<label htmlFor="public-key">address</label>
+					<label htmlFor="public-key">
+						<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
+					</label>
 					<div className="ui action input">
 						<input
 							type="text"
 							placeholder="Public Key"
 							readOnly
 							name="public-key"
-							value={address}
+							value={addressWithPrefix}
 						/>
 						<ActionBtn
 							icon="icon-copy"
-							copy={address}
+							copy={addressWithPrefix}
 						/>
 					</div>
 				</Form.Field>
@@ -70,7 +76,16 @@ class Ethereum extends React.Component {
 					assetDropdown={false}
 					showAvailable={false}
 					receive
-					labelText="amount"
+					warningMessage={
+						<span className="warning-message">
+							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt1" />
+							<span className="special">
+								<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt2" />
+							</span>
+							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt3" />
+						</span>
+					}
+					intl={intl}
 				/>
 				<QrCode link={qrText} />
 			</React.Fragment>
@@ -78,16 +93,17 @@ class Ethereum extends React.Component {
 	}
 
 	renderGenerateAddressProcess() {
-		const { generateEthAddress } = this.props;
+		const { generateEthAddress, keyWeightWarn } = this.props;
 
 		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
-					You should generate address<br /> to receive payment.
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt1" />
+					<br />
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt2" />
 				</h2>
 				<p className="payment-description t-center">
-					Please, allow some time for address generation as it may take up to one hour.
-					It will appear on this page when generated.
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.description" />
 				</p>
 				<TransactionScenario
 					handleTransaction={() => generateEthAddress()}
@@ -96,8 +112,11 @@ class Ethereum extends React.Component {
 						(submit) => (
 							<Button
 								className="main-btn"
-								content="Generate address"
+								content={
+									<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.button_text" />
+								}
 								onClick={submit}
+								disabled={keyWeightWarn}
 							/>
 						)
 					}
@@ -110,11 +129,12 @@ class Ethereum extends React.Component {
 		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
-					Wait please, <br /> address is not ready yet
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt1" />
+					<br />
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt2" />
 				</h2>
 				<p className="payment-description t-center">
-					Please, allow some time for address generation as it may take up to one hour.
-					It will appear on this page when generated.
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.description" />
 				</p>
 			</React.Fragment>
 		);
@@ -156,6 +176,8 @@ Ethereum.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
-export default Ethereum;
+export default injectIntl(Ethereum);

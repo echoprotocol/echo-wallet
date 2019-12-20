@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dropdown, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { formatCallContractField } from '../../../helpers/FormatHelper';
@@ -72,9 +73,13 @@ class SelectMethod extends React.Component {
 	render() {
 		const functionName = formatCallContractField(this.props.functionName);
 		const { searchText } = this.state;
+		const { intl } = this.props;
+		const onResMsg = intl.formatMessage({ id: 'smart_contract_page.contract_info.call_contract_tab.form.no_result_message' });
 		return (
 			<Form.Field>
-				<label htmlFor="Method">Select method</label>
+				<label htmlFor="Method">
+					<FormattedMessage id="smart_contract_page.contract_info.call_contract_tab.form.select_method_field" />
+				</label>
 				<Dropdown
 					search
 					onChange={(e, { value }) => this.onDropdownChange(e, value)}
@@ -83,7 +88,7 @@ class SelectMethod extends React.Component {
 					text={functionName}
 					selection
 					options={this.state.options}
-					noResultsMessage="No results are found"
+					noResultsMessage={onResMsg}
 					onClose={(e) => this.onCloseDropdown(e)}
 				/>
 			</Form.Field>
@@ -98,13 +103,14 @@ SelectMethod.propTypes = {
 	functionName: PropTypes.string.isRequired,
 	setFunction: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 SelectMethod.defaultProps = {
 	functions: [],
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		functions: state.contract.get('functions'),
 		functionName: state.form.getIn([FORM_CALL_CONTRACT, 'functionName']),
@@ -113,4 +119,4 @@ export default connect(
 		setFunction: (value) => dispatch(setFunction(value)),
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
-)(SelectMethod);
+)(SelectMethod));

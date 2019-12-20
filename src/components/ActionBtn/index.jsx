@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
+import { FormattedMessage } from 'react-intl';
+
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
@@ -27,12 +29,16 @@ class actionBtn extends React.Component {
 		const { copied } = this.state;
 		const {
 			text, icon, action,
-			size, color,
+			size, color, focus,
+			blur,
 		} = this.props;
 
 		return (
 			<button
 				onClick={(e) => action(e)}
+				onFocus={(e) => focus(e)}
+				onBlur={(e) => blur(e)}
+				type="button"
 				className={classnames(
 					'action-btn',
 					{ flat: !text },
@@ -52,7 +58,7 @@ class actionBtn extends React.Component {
 				>
 					<span className="copy-label-wrap">
 						<span className="copy-label-content">
-							copied
+							<FormattedMessage id="copied_text" />
 						</span>
 					</span>
 				</CSSTransition>
@@ -78,6 +84,8 @@ class actionBtn extends React.Component {
 
 actionBtn.propTypes = {
 	action: PropTypes.func,
+	focus: PropTypes.func,
+	blur: PropTypes.func,
 	copy: PropTypes.string,
 	text: PropTypes.string,
 	icon: PropTypes.string,
@@ -87,6 +95,8 @@ actionBtn.propTypes = {
 
 actionBtn.defaultProps = {
 	action: () => {},
+	focus: () => {},
+	blur: () => {},
 	copy: '',
 	text: '',
 	icon: '',

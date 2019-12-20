@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input } from 'semantic-ui-react';
-import classnames from 'classnames';
 import Avatar from '../../components/Avatar';
 
 import { PREFIX_ASSET } from '../../constants/GlobalConstants';
 import { CONTRACT_ID_SUBJECT_TYPE } from '../../constants/TransferConstants';
+import VerificationField from './VerificationField';
 
 class AccountField extends React.Component {
 
@@ -23,14 +22,27 @@ class AccountField extends React.Component {
 		}
 	}
 
-	onInput(e) {
+	onInput(value) {
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
 
-		const value = e.target.value.trim();
+		const trimedValue = value.trim();
 
-		this.checkInput(value);
+		this.checkInput(trimedValue);
+	}
+
+	getStatus(field) {
+
+		if (field.error) {
+			return 'error';
+		}
+
+		if (field.checked) {
+			return 'checked';
+		}
+
+		return null;
 	}
 
 	checkInput(value) {
@@ -46,7 +58,11 @@ class AccountField extends React.Component {
 				if (this.props.subject === 'to') {
 					const validValue =
 						await this.props.subjectToSendSwitch(this.props.field.value);
-					if (!validValue) return;
+
+					if (!validValue) {
+						this.props.setVisibility('bytecode', false);
+						return;
+					}
 
 					if (validValue === CONTRACT_ID_SUBJECT_TYPE) {
 						this.props.setVisibility('bytecode', true);
@@ -85,52 +101,44 @@ class AccountField extends React.Component {
 		return false;
 	}
 
+
 	render() {
 		const {
-			field, autoFocus, subject,	disabled, avatarName, placeholder,
-			showAdditionalAccountInfo, additionalAccountInfo,
+			field, autoFocus, subject, disabled, avatarName, placeholder, label, intl,
+			showAdditionalAccountInfo, additionalAccountInfo, additionalAccountPrefix,
 		} = this.props;
 
+		const additionalLabel = showAdditionalAccountInfo && !field.error &&
+			<div className="account-name">
+				{additionalAccountPrefix &&
+					<React.Fragment>
+						{additionalAccountPrefix}
+						{additionalAccountInfo}
+					</React.Fragment>
+				}
+			</div>;
+
+		const icon = this.isAvatar() &&
+			<div className="avatar-wrap">
+				<Avatar accountName={avatarName || field.value} />
+			</div>;
+
 		return (
-			<Form.Field className={classnames('error-wrap', { error: field.error })}>
-
-				<label htmlFor={`account${subject}`}>
-					{subject}
-					{
-						showAdditionalAccountInfo && !field.error &&
-						<div className="account-name">
-							{additionalAccountInfo}
-						</div>
-					}
-				</label>
-				<Input
-					type="text"
-					placeholder={subject === 'to' ? placeholder : 'Account Name'}
-					icon={this.isAvatar()}
-					className={classnames('action-wrap', { loading: field.loading && !field.error })}
-					autoFocus={autoFocus}
-					disabled={disabled}
-				>
-					{
-						this.isAvatar() &&
-						<div className="avatar-wrap">
-							<Avatar accountName={avatarName || field.value} />
-						</div>
-					}
-					<input
-						name={`account${subject}`}
-						value={field.value}
-						autoComplete="off"
-						onInput={(e) => this.onInput(e)}
-					/>
-					{ field.checked && !field.error && !disabled &&
-						<span className={classnames('icon-checked value-status', { success: field.checked })} />
-					}
-					{ field.error ? <span className="icon-error-red value-status" /> : null }
-				</Input>
-				<span className="error-message">{field.error}</span>
-
-			</Form.Field>
+			<VerificationField
+				label={label}
+				additionalLabel={additionalLabel}
+				name={`account${subject}`}
+				onChange={(value) => this.onInput(value)}
+				value={field.value}
+				autoFocus={autoFocus}
+				icon={icon}
+				disabled={disabled}
+				status={this.getStatus(field)}
+				error={field.error}
+				loading={field.loading && !field.error}
+				placeholder={placeholder}
+				intl={intl}
+			/>
 		);
 	}
 
@@ -141,7 +149,10 @@ AccountField.propTypes = {
 	currency: PropTypes.object,
 	subject: PropTypes.any.isRequired,
 	field: PropTypes.any.isRequired,
+	additionalAccountPrefix: PropTypes.string,
 	avatarName: PropTypes.string,
+	label: PropTypes.string,
+	intl: PropTypes.string,
 	placeholder: PropTypes.string,
 	activeCoinTypeTab: PropTypes.any,
 	additionalAccountInfo: PropTypes.string,
@@ -166,10 +177,13 @@ AccountField.defaultProps = {
 	setTransferFee: null,
 	setVisibility: null,
 	avatarName: '',
-	activeCoinTypeTab: '',
+	label: '',
+	placeholder: '',
 	showAdditionalAccountInfo: false,
 	additionalAccountInfo: '',
-	placeholder: '',
+	additionalAccountPrefix: '',
+	activeCoinTypeTab: '',
+	intl: {},
 };
 
 export default AccountField;

@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
 import { closeModal } from '../../actions/ModalActions';
 import { MODAL_VIEW_WIF } from '../../constants/ModalConstants';
@@ -21,69 +23,73 @@ class ModalViewWIF extends React.Component {
 	}
 
 	render() {
-		const { show, keys } = this.props;
+		const { show, keys, intl } = this.props;
 
 		return (
-			<Modal className="view-wif-modal" open={show} dimmer="inverted">
-				<span
-					className="icon-close"
-					onClick={(e) => this.onClose(e)}
-					onKeyDown={(e) => this.onClose(e)}
-					role="button"
-					tabIndex="0"
-				/>
-				<div className="modal-header">
-					<h3 className="modal-header-title">View WIF</h3>
-				</div>
-				<div className="modal-body">
-
-					<Form.Field>
-						<label htmlFor="public-key">Public Key</label>
-						<div className="ui action input">
-							<input
-								type="text"
-								placeholder="Public Key"
-								disabled
-								name="public-key"
-								value={keys.publicKey}
-							/>
-							<ActionBtn
-								icon="icon-copy"
-								copy={keys.publicKey}
-							/>
-						</div>
-					</Form.Field>
-
-					<Form.Field>
-						<label htmlFor="public-key">WIF *</label>
-						<div className="ui action input">
-							<input
-								type="text"
-								placeholder="WIF"
-								disabled
-								name="wif"
-								value={keys.wif}
-							/>
-							<ActionBtn
-								icon="icon-copy"
-								copy={keys.wif}
-							/>
-						</div>
-						<span className="warning-message">
-							* Warning: Anyone who has this key can steal all your Echo
-							assets and this key can never be recovered if you lose it.
-						</span>
-					</Form.Field>
-
-					<div className="form-panel">
-						<Button
-							type="submit"
-							className="main-btn"
-							onClick={() => this.onSave()}
-							content="Save As .TXT"
-						/>
+			<Modal className="view-wif-modal" open={show}>
+				<FocusLock autoFocus={false}>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h3 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_view_wif.title' })}
+						</h3>
 					</div>
-				</div>
+					<div className="modal-body">
+
+						<Form.Field>
+							<label htmlFor="public-key">
+								{intl.formatMessage({ id: 'modals.modal_view_wif.public_key_input.title' })}
+							</label>
+							<div className="ui action input">
+								<input
+									type="text"
+									placeholder={intl.formatMessage({ id: 'modals.modal_view_wif.public_key_input.placeholder' })}
+									disabled
+									name="public-key"
+									value={keys.publicKey}
+								/>
+								<ActionBtn
+									icon="icon-copy"
+									copy={keys.publicKey}
+								/>
+							</div>
+						</Form.Field>
+
+						<Form.Field>
+							<label htmlFor="public-key">
+								{intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.title' })}
+							</label>
+							<div className="ui action input">
+								<input
+									type="text"
+									placeholder={intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.placeholder' })}
+									disabled
+									name="wif"
+									value={keys.wif}
+								/>
+								<ActionBtn
+									icon="icon-copy"
+									copy={keys.wif}
+								/>
+							</div>
+							<span className="warning-message">
+								{intl.formatMessage({ id: 'modals.modal_view_wif.wif_input.warning' })}
+							</span>
+						</Form.Field>
+
+						<div className="form-panel">
+							<Button
+								type="submit"
+								className="main-btn"
+								onClick={() => this.onSave()}
+								content={intl.formatMessage({ id: 'modals.modal_view_wif.save_button_text' })}
+							/>
+						</div>
+					</div>
+				</FocusLock>
 			</Modal>
 		);
 	}
@@ -95,6 +101,7 @@ ModalViewWIF.propTypes = {
 	activeUserName: PropTypes.string,
 	close: PropTypes.func.isRequired,
 	saveAsTxt: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 	keys: PropTypes.object,
 };
 
@@ -105,7 +112,7 @@ ModalViewWIF.defaultProps = {
 };
 
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		show: state.modal.getIn([MODAL_VIEW_WIF, 'show']),
 		activeUserName: state.global.getIn(['activeUser', 'name']),
@@ -113,4 +120,4 @@ export default connect(
 	(dispatch) => ({
 		close: () => dispatch(closeModal(MODAL_VIEW_WIF)),
 	}),
-)(ModalViewWIF);
+)(ModalViewWIF));

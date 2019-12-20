@@ -26,6 +26,7 @@ export default connect(
 		formOptions: state.form.get(FORM_CREATE_CONTRACT_OPTIONS),
 		fees: state.fee.toArray() || [],
 		assets: state.balance.get('assets'),
+		keyWeightWarn: state.global.get('keyWeightWarn'),
 	}),
 	(dispatch) => ({
 		setValue: (form, field, value) => dispatch(setValue(form, field, value)),

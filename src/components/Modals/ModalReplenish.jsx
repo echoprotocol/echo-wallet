@@ -2,8 +2,10 @@ import React from 'react';
 import { Modal, Button, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeModal, setError } from '../../actions/ModalActions';
+import FocusLock from 'react-focus-lock';
+import { injectIntl } from 'react-intl';
 
+import { closeModal, setError } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
@@ -31,7 +33,6 @@ class ModalToWhitelist extends React.Component {
 	}
 
 	onSend(submit) {
-		// this.props.closeModal();
 		submit();
 	}
 
@@ -43,7 +44,7 @@ class ModalToWhitelist extends React.Component {
 	}
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, error,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl, error,
 		} = this.props;
 
 		return (
@@ -53,76 +54,84 @@ class ModalToWhitelist extends React.Component {
 				{
 					(submit) => (
 						<Modal className="replenish-modal" open={show} dimmer="inverted">
-							<span
-								className="icon-close"
-								onClick={(e) => this.onClose(e)}
-								onKeyDown={(e) => this.onClose(e)}
-								role="button"
-								tabIndex="0"
-							/>
-							<div className="modal-header">
-								<h3 className="modal-header-title">Replenish Fee Pool</h3>
-							</div>
-							<div className="modal-body">
-								<Form className="main-form">
-									<div className="field-wrap">
+							<FocusLock autoFocus={false}>
+								<button
+									className="icon-close"
+									onClick={(e) => this.onClose(e)}
+								/>
+								<div className="modal-header">
+									<h3 className="modal-header-title">
+										{intl.formatMessage({ id: 'modals.modal_replenish.title' })}
+									</h3>
+								</div>
+								<div className="modal-body">
+									<Form className="main-form">
+										<div className="field-wrap">
 
-										{
-											activeAccount ?
-												<AccountField
-													subject="from"
-													field={{
-														value: activeAccount.get('name'),
-														checked: true,
-													}}
-													avatarName={activeAccount.get('name')}
-													setIn={() => {
-													}}
-													getTransferFee={() => {
-													}}
-													setContractFees={() => {
-													}}
-													setValue={() => {
-													}}
-													disabled
-												/> : null
-										}
+											{
+												activeAccount ?
+													<AccountField
+														subject="from"
+														placeholder={
+															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })
+														}
+														label={
+															intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })
+														}
+														field={{
+															value: activeAccount.get('name'),
+															checked: true,
+														}}
+														avatarName={activeAccount.get('name')}
+														setIn={() => {
+														}}
+														getTransferFee={() => {
+														}}
+														setContractFees={() => {
+														}}
+														setValue={() => {
+														}}
+														disabled
+														intl={intl}
+													/> : null
+											}
 
-										<AmountField
-											fees={fees}
-											form={FORM_REPLENISH}
-											fee={fee}
-											assets={assets}
-											amount={{
-												...amount,
-												error,
-											}}
-											currency={currency}
-											isAvailableBalance={isAvailableBalance}
-											amountInput={(val, cur, name) => {
-												this.onChangeFeePoolValue(val, cur, name);
-											}}
-											setFormError={this.props.setFormError}
-											setFormValue={this.props.setFormValue}
-											setValue={this.props.setValue}
-											setDefaultAsset={this.props.setDefaultAsset}
-											getTransferFee={this.props.getTransactionFee}
-											setContractFees={() => {
-											}}
-										/>
-									</div>
+											<AmountField
+												fees={fees}
+												form={FORM_REPLENISH}
+												fee={fee}
+												assets={assets}
+												amount={{
+													...amount,
+													error: error ? intl.formatMessage({ id: error }) : '',
+												}}
+												currency={currency}
+												isAvailableBalance={isAvailableBalance}
+												amountInput={(val, cur, name) => {
+													this.onChangeFeePoolValue(val, cur, name);
+												}}
+												setFormError={this.props.setFormError}
+												setFormValue={this.props.setFormValue}
+												setValue={this.props.setValue}
+												setDefaultAsset={this.props.setDefaultAsset}
+												getTransferFee={this.props.getTransactionFee}
+												setContractFees={() => { }}
+												autoFocus
+												intl={intl}
+											/>
+										</div>
 
-									<div className="form-panel">
-										<Button
-											className="main-btn"
-											content="Send"
-											type="submit"
-											onClick={() => this.onSend(submit)}
-											onKeyDown={() => this.onSend(submit)}
-										/>
-									</div>
-								</Form>
-							</div>
+										<div className="form-panel">
+											<Button
+												className="main-btn"
+												content={intl.formatMessage({ id: 'modals.modal_replenish.confirm_button_text' })}
+												type="submit"
+												onClick={() => this.onSend(submit)}
+											/>
+										</div>
+									</Form>
+								</div>
+							</FocusLock>
 						</Modal>
 					)
 				}
@@ -151,6 +160,7 @@ ModalToWhitelist.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
 	replenishContractPool: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 ModalToWhitelist.defaultProps = {
@@ -160,7 +170,7 @@ ModalToWhitelist.defaultProps = {
 	currency: null,
 };
 
-export default connect(
+export default injectIntl(connect(
 	(state) => ({
 		fees: state.fee.toArray() || [],
 		fee: state.form.getIn([FORM_REPLENISH, 'fee']),
@@ -184,4 +194,4 @@ export default connect(
 		getTransactionFee: (asset) => dispatch(getContractPoolBalanceFee(FORM_REPLENISH, asset)),
 		replenishContractPool: () => dispatch(replenishContractPool()),
 	}),
-)(ModalToWhitelist);
+)(ModalToWhitelist));

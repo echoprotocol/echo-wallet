@@ -5,7 +5,7 @@
 	min-height: calc(100vh - 120px);
 	padding: 32px 30px 52px;
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 }
 
 .contract-bar-title {
@@ -29,6 +29,7 @@
 
 .params-list {
 	margin: 0 0 auto;
+
 	.param-key {
 		display: flex;
 		align-items: center;
@@ -37,10 +38,9 @@
 		font-family: proxima;
 		font-weight: 600;
 	}
+
 	.icon-info {
-		cursor: pointer;
-		font-size: 12px;
-		margin-right: 5px;
+		@include icon-info(4px, 0);
 	}
 
 	li:not(:last-child) {
@@ -51,16 +51,17 @@
 		margin-bottom: 29px;
 	}
 
-	.radio-list + .error-wrap {
+	.radio-list+.error-wrap {
 		margin: 16px 0 0;
 	}
+
 	.field-wrap {
 		margin: 20px 0 0 0;
 		padding: 0 0 0 16px;
 	}
 }
 
-.params-list + .main-btn {
+.params-list+.main-btn {
 	margin: 40px 0 0;
 
 }

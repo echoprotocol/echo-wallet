@@ -1,0 +1,84 @@
+.main-btn {
+	@include btn();
+	color: $main-color;
+	border: 1px solid $main-color;
+	background-color: transparent;
+
+	&:hover {
+		color: #fff;
+		background-color: $main-color;
+	}
+
+	&:not(:active) {
+		&:focus {
+			@include on-focus(4px);
+		}
+	}
+
+	&:active {
+		border: 1px solid rgba($main-color, .8);
+		background-color: rgba($main-color, .8);
+		color: rgba(#fff, .8);
+	}
+
+	&:disabled {
+		border: 1px solid rgba($main-color, .5);
+		background-color: transparent;
+		color: rgba($main-color, .5);
+	}
+
+	// SIZE
+
+	&.tiny {
+		line-height: 20px;
+		height: 20px;
+		min-width: auto;
+	}
+
+	&.small {
+		line-height: 25px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	&.medium {
+		line-height: 24px;
+		height: 24px;
+		min-width: auto;
+	}
+
+	// VARIANTS
+
+	&.light {
+		border: 1px solid rgba($main-color, .2);
+	}
+
+	&.load {
+		color: #fff;
+		background-color: #fff;
+		background-color: $main-color;
+	}
+
+	.main-btn-popup {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+
+	&.countdown-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.countdown {
+			margin-right: 5px;
+		}
+	}
+
+	&.fluid {
+		min-width: 100%;
+	}
+
+}

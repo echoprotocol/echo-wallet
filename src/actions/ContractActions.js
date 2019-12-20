@@ -1,8 +1,9 @@
 import { Map, List, Set } from 'immutable';
-import echo, { validators } from 'echojs-lib';
+import { validators } from 'echojs-lib';
 import * as wrapper from 'solc/wrapper';
 import BN from 'bignumber.js';
 
+import Services from '../services';
 import {
 	setFormError,
 	setValue,
@@ -69,7 +70,7 @@ export const set = (field, value) => (dispatch) => {
 };
 
 export const getContractBalances = async (contractsIds) => {
-	const balances = contractsIds.map((id) => echo.api.getContractBalances(id));
+	const balances = contractsIds.map((id) => Services.getEcho().api.getContractBalances(id));
 	const contractsBalances = await Promise.all(balances);
 
 	const usedAssets = contractsBalances
@@ -77,7 +78,7 @@ export const getContractBalances = async (contractsIds) => {
 		.map((b) => b.asset_id);
 	const uniqAssets = new Set([...usedAssets, ECHO_ASSET_ID]).toArray();
 
-	const requestedAssets = await echo.api.getAssets(uniqAssets);
+	const requestedAssets = await Services.getEcho().api.getAssets(uniqAssets);
 	const requestedAssetsMap = requestedAssets.reduce((map, a) => {
 		const asset = { id: a.id, symbol: a.symbol, precision: a.precision };
 		map[a.id] = asset;
@@ -168,10 +169,12 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	try {
-		const contract = await echo.api.getContract(id);
+
+
+		const contract = await Services.getEcho().api.getContract(id);
 
 		if (!contract) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'Invalid contract ID'));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'errors.contract_errors.invalid_id_error'));
 			return;
 		}
 
@@ -184,12 +187,12 @@ export const addContract = (name, id, abi) => async (dispatch, getState) => {
 		}
 
 		if (contracts[accountId][id]) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', `Contract "${name}" already exists`));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'name', 'errors.contract_errors.contract_name_exist_error'));
 			return;
 		}
 
 		if (Object.values(contracts[accountId]).map((i) => i.id).includes(id)) {
-			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', `Contract ${id} already exists`));
+			dispatch(setFormError(FORM_ADD_CONTRACT, 'id', 'errors.contract_errors.contract_id_exist_error'));
 			return;
 		}
 
@@ -268,7 +271,13 @@ export const disableContract = (id) => (dispatch) => {
 	history.push(CONTRACT_LIST_PATH);
 
 	toastInfo(
-		`You have removed ${id} from watch list`,
+		[{
+			text: '',
+			postfix: 'toasts.info.remove_network.pt1',
+		}, {
+			text: id,
+			postfix: 'toasts.info.remove_network.pt2',
+		}],
 		() => dispatch(enableContract(id)),
 		() => {
 			const intervalId = setTimeout(() => dispatch(removeContract(id)), TIME_REMOVE_CONTRACT);
@@ -297,7 +306,8 @@ export const addContractByName = (
 ) => async (dispatch, getState) => {
 	const networkName = getState().global.getIn(['network', 'name']);
 
-	const address = (await echo.api.getContractResult(contractResultId))[1].exec_res.new_address;
+	const address = (await Services.getEcho().api.getContractResult(contractResultId))[1]
+		.exec_res.new_address;
 
 	const id = `${CONTRACT_ID_PREFIX}.${getContractId(address)}`;
 
@@ -367,7 +377,7 @@ export const contractQuery = (method, args, contractId) => async (dispatch, getS
 
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 
-	const queryResult = await echo.api.callContractNoChangingState(
+	const queryResult = await Services.getEcho().api.callContractNoChangingState(
 		contractId,
 		accountId,
 		{ amount: 0, asset_id: ECHO_ASSET_ID },
@@ -425,12 +435,13 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 	constants = constants.map(async (constant) => {
 		const method = getMethodId(constant);
 
-		const constantValue = await echo.api.callContractNoChangingState(
+		const constantValue = await Services.getEcho().api.callContractNoChangingState(
 			id,
 			accountId,
 			{ amount: 0, asset_id: ECHO_ASSET_ID },
 			method,
 		);
+
 		constant.constantValue = constantValue.substr(-64);
 		constant.showQueryResult = false;
 		return constant;
@@ -438,7 +449,7 @@ export const formatAbi = (id) => async (dispatch, getState) => {
 
 	constants = await Promise.all(constants);
 
-	const [, { code: bytecode }] = await echo.api.getContract(id);
+	const [, { code: bytecode }] = await Services.getEcho().api.getContract(id);
 
 	const { [id]: balances } = await getContractBalances([id]);
 
@@ -582,15 +593,15 @@ export const setContractFees = (form) => async (dispatch, getState) => {
 
 	if (fees.some((value) => value === null)) {
 		if (form === FORM_CALL_CONTRACT) {
-			dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+			dispatch(setValue(form, 'feeError', 'errors.fee_errors.cant_calculate_error'));
 		} else if (form === FORM_CALL_CONTRACT_VIA_ID) {
 
 			const formData = getState().form.getIn([form]).toJS();
 			if (formData.amount.value && formData.id.value) {
-				dispatch(setValue(form, 'feeError', 'Can\'t be calculated'));
+				dispatch(setValue(form, 'feeError', 'errors.fee_errors.cant_calculate_error'));
 			}
 		} else {
-			dispatch(setFormError(form, 'amount', 'Fee can\'t be calculated'));
+			dispatch(setFormError(form, 'amount', 'errors.amount_errors.cant_calculate_fee_error'));
 		}
 	} else {
 		dispatch(setValue(form, 'feeError', null));
@@ -621,7 +632,7 @@ export const setContractFees = (form) => async (dispatch, getState) => {
  * @returns {Promise<Array<Asset>>}
  */
 export const getAssetsList = async (name) => {
-	const list = await echo.api.listAssets(name, 15);
+	const list = await Services.getEcho().api.listAssets(name, 15);
 	return list;
 };
 
@@ -655,6 +666,53 @@ export const resetCompiler = () => (dispatch) => {
 	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', ''));
 	dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', ''));
 	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', new Map({})));
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', []));
+};
+
+/**
+ *
+ * @param {Object} error
+ * @param {String} filename
+ * @returns {Object|null}
+ */
+const parseSolidityError = (error, filename) => {
+	if (
+		!error ||
+		!validators.isObject(error) ||
+		!error.formattedMessage ||
+		!error.message ||
+		!error.severity
+	) {
+		return null;
+	}
+
+	if (!error.formattedMessage.startsWith(filename)) {
+		return null;
+	}
+
+	const [, row] = error.formattedMessage.split(':');
+
+	return { row: parseInt(row, 10) - 1, type: error.severity, text: error.message };
+};
+
+/**
+ *
+ * @param {Object} output
+ * @param {String} filename
+ * @returns {Array<Object>}
+ */
+const getCompilationErrors = (output, filename) => {
+	if (!output.errors) {
+		return [];
+	}
+
+	const errors = output.errors.reduce((res, e) => {
+		const handledError = parseSolidityError(e, filename);
+
+		return handledError ? [handledError, ...res] : res;
+	}, []);
+
+	return errors;
 };
 
 /**
@@ -665,7 +723,8 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 	const filename = 'test.sol';
 	const code = getState().form.getIn([FORM_CREATE_CONTRACT_SOURCE_CODE, 'code']);
 	dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', ''));
-
+	dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', []));
+	let errors = [];
 	try {
 		const input = {
 			language: 'Solidity',
@@ -685,21 +744,30 @@ export const contractCodeCompile = () => async (dispatch, getState) => {
 
 		const solc = wrapper(window.Module);
 		const output = JSON.parse(solc.compile(JSON.stringify(input)));
+		errors = getCompilationErrors(output, filename);
+
+		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
 		let contracts = new Map({});
 		contracts = contracts.withMutations((contractsMap) => {
 			Object.entries(output.contracts[filename]).forEach(([name, contract]) => {
+				if (!contract.evm.bytecode.object) {
+					return;
+				}
 				contractsMap.setIn([name, 'abi'], JSON.stringify(contract.abi));
 				contractsMap.setIn([name, 'bytecode'], contract.evm.bytecode.object);
+				contractsMap.setIn([name, 'name'], name);
 			});
 		});
 
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', JSON.stringify(Object.values(output.contracts[filename])[0].abi)));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', Object.values(output.contracts[filename])[0].evm.bytecode.object));
-		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', Object.keys(output.contracts[filename])[0]));
+		const firstContract = contracts.first();
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'abi', firstContract.get('abi')));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'bytecode', firstContract.get('bytecode')));
+		dispatch(setFormValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'name', firstContract.get('name')));
 		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'contracts', contracts));
 	} catch (err) {
 		dispatch(resetCompiler());
-		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'Invalid contract code'));
+		dispatch(setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'annotations', errors));
+		dispatch(setFormError(FORM_CREATE_CONTRACT_SOURCE_CODE, 'code', 'errors.contract_errors.no_compile_yet_error'));
 	}
 };
 
@@ -726,14 +794,14 @@ export const changeContractCompiler = (version) => async (dispatch, getState) =>
  * @returns {Function}
  */
 export const initGeneralContractInfo = (contractId) => async (dispatch, getState) => {
-	const contractOwner = (await echo.api.getObject(contractId)).owner;
+	const contractOwner = (await Services.getEcho().api.getObject(contractId)).owner;
 	dispatch(ContractReducer.actions.set({ field: 'owner', value: contractOwner }));
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	const contract = await echo.api.getFullContract(contractId);
+	const contract = await Services.getEcho().api.getFullContract(contractId);
 	if (contract && contract.whitelist && contract.blacklist) {
-		await echo.api.getAccounts(contract.whitelist.concat(contract.blacklist));
+		await Services.getEcho().api.getAccounts(contract.whitelist.concat(contract.blacklist));
 	}
-	await echo.subscriber.setContractSubscribe(
+	await Services.getEcho().getEchoInstance().subscriber.setContractSubscribe(
 		[contractId],
 		subscribeCallback,
 	);
@@ -745,7 +813,8 @@ export const initGeneralContractInfo = (contractId) => async (dispatch, getState
  * @returns {Promise<void>}
  */
 export const updateGeneralContractInfo = async (contract) => {
-	await echo.api.getAccounts(contract.get('whitelist').concat(contract.get('blacklist')).toArray());
+	await Services.getEcho().api.getAccounts(contract.get('whitelist')
+		.concat(contract.get('blacklist')).toArray());
 };
 
 /**
@@ -754,5 +823,5 @@ export const updateGeneralContractInfo = async (contract) => {
  */
 export const resetGeneralContractInfo = () => (dispatch, getState) => {
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	echo.subscriber.removeContractSubscribe(subscribeCallback);
+	Services.getEcho().subscriber.removeContractSubscribe(subscribeCallback);
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import { List } from 'immutable';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -67,22 +68,23 @@ class Transfer extends React.Component {
 		const { activeCoinTypeTab } = this.props;
 
 		if (activeCoinTypeTab === STABLE_COINS.EBTC) {
-			return 'BTC address';
+			return 'wallet_page.create_payment.to_input.placeholder_v2';
 		} else if (activeCoinTypeTab === STABLE_COINS.EETH) {
-			return 'ETH address';
+			return 'wallet_page.create_payment.to_input.placeholder_v3';
 		}
 
-		return 'Account ID, Account Name, Contract ID or Address';
+		return 'wallet_page.create_payment.to_input.placeholder';
 	}
 
 	async subjectToSendSwitch(subject) {
 		const { amount, fee } = this.props;
-		const isValid = await this.props.subjectToSendSwitch(subject);
-		if (isValid && amount.value && !fee.amount) {
+		if (amount.value && !fee.amount) {
 			this.props.getTransferFee().then((resFee) => resFee && this.props.setValue('fee', resFee));
-		} else if (!isValid || !amount.value) {
+		} else if (!amount.value) {
 			this.switchFeeToDefaultValue();
 		}
+
+		return this.props.subjectToSendSwitch(subject);
 	}
 
 	switchFeeToDefaultValue() {
@@ -95,11 +97,13 @@ class Transfer extends React.Component {
 
 	render() {
 		const {
-			from, to, currency,
-			fee, amount, isAvailableBalance, fees, bytecode, avatarName, additionalAccountInfo,
+			from, to, currency, additionalAccountInfo, intl, keyWeightWarn,
+			fee, amount, isAvailableBalance, fees, bytecode, avatarName,
 		} = this.props;
 		const { bytecodeVisible } = this.state;
 
+		const additionalAccountPrefix = additionalAccountInfo.prefix ?
+			intl.formatMessage({ id: additionalAccountInfo.prefix }) : '';
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.transfer()}
@@ -118,11 +122,15 @@ class Transfer extends React.Component {
 									getTransferFee={this.props.getTransferFee}
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
+									label={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.title' })}
+									placeholder={intl.formatMessage({ id: 'wallet_page.create_payment.from_input.placeholder' })}
+									intl={intl}
 								/>
 
 								<AccountField
 									showAdditionalAccountInfo
-									additionalAccountInfo={additionalAccountInfo}
+									additionalAccountInfo={additionalAccountInfo.value}
+									additionalAccountPrefix={additionalAccountPrefix}
 									currency={currency}
 									subject="to"
 									field={to}
@@ -137,7 +145,10 @@ class Transfer extends React.Component {
 									setContractFees={this.props.setContractFees}
 									setValue={this.props.setValue}
 									setVisibility={(field, isVisible) => this.setVisibility(field, isVisible)}
-									placeholder={this.getToPlaceholder()}
+									label={intl.formatMessage({ id: 'wallet_page.create_payment.to_input.title' })}
+									placeholder={intl.formatMessage({ id: this.getToPlaceholder() })}
+									intl={intl}
+
 								/>
 								{
 									bytecodeVisible &&
@@ -166,14 +177,18 @@ class Transfer extends React.Component {
 									setTransferFee={this.props.setTransferFee}
 									isDisplaySidechainNotification={this.props.isDisplaySidechainNotification}
 									activeCoinTypeTab={this.props.activeCoinTypeTab}
+									intl={intl}
 								/>
 								<div className="form-panel">
 									<Button
 										basic
 										type="submit"
 										className="main-btn"
-										content="Send"
+										content={
+											<FormattedMessage id="wallet_page.create_payment.button_text" />
+										}
 										onClick={submit}
+										disabled={keyWeightWarn}
 									/>
 								</div>
 							</div>
@@ -199,7 +214,7 @@ Transfer.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	transfer: PropTypes.func.isRequired,
 	resetTransaction: PropTypes.func.isRequired,
-	additionalAccountInfo: PropTypes.string,
+	additionalAccountInfo: PropTypes.object,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	subjectToSendSwitch: PropTypes.func.isRequired,
@@ -217,14 +232,16 @@ Transfer.propTypes = {
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransferFee: PropTypes.func.isRequired,
 	setContractFees: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
 Transfer.defaultProps = {
 	currency: null,
 	isDisplaySidechainNotification: false,
-	activeCoinTypeTab: 0,
 	additionalAccountInfo: '',
+	activeCoinTypeTab: 0,
 };
 
 
-export default Transfer;
+export default injectIntl(Transfer);
