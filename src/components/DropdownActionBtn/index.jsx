@@ -35,7 +35,7 @@ class DropdownActionBtn extends React.Component {
 	render() {
 		const {
 			copy, show, size,
-			icon, text,
+			icon, text, labelText,
 		} = this.props;
 		const { copied, copiedAnimation } = this.state;
 
@@ -68,7 +68,7 @@ class DropdownActionBtn extends React.Component {
 					>
 						<span className="copy-label-wrap">
 							<span className="copy-label-content">
-								<FormattedMessage id="copied_text" />
+								{labelText && labelText}
 							</span>
 						</span>
 					</CSSTransition>
@@ -86,6 +86,7 @@ DropdownActionBtn.propTypes = {
 	copy: PropTypes.string,
 	icon: PropTypes.string,
 	text: PropTypes.string,
+	labelText: PropTypes.string,
 	size: PropTypes.string,
 };
 
@@ -94,6 +95,7 @@ DropdownActionBtn.defaultProps = {
 	copy: '',
 	icon: '',
 	text: '',
+	labelText: '',
 	size: '',
 };
 
