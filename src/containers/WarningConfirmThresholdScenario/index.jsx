@@ -202,7 +202,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 		this.props.openModal(MODAL_WIPE);
 	}
 
-	c() {
+	confirmEditWarning() {
 		this.setState({ modalUnlockShow: true });
 		this.setState({ modalConfirmShow: false });
 	}
@@ -217,7 +217,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 				{this.props.children(this.submit.bind(this))}
 				<ModalConfirmEditingOfPermissions
 					show={this.state.modalConfirmShow}
-					confirm={() => this.c()}
+					confirm={() => this.confirmEditWarning()}
 					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
 					warningMessage={this.state.warningMessage}
 					echoRandMessage={this.state.echoRandMessage}
