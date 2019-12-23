@@ -23,7 +23,7 @@ class EchoNode {
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
 		console.log(process.env.NODE_ENV);
-		const execPath = process.env.NODE_ENV === 'production' ? joinPath(process.cwd(), 'resources', 'bin') : joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
+		const execPath = joinPath(dirname(appRootDir.get()), '..', 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -83,20 +83,6 @@ class EchoNode {
 			});
 		});
 		console.log('existsSync11es1', fs.existsSync(dirname(keyConfigPath)));
-		// if (!fs.existsSync(dirname(keyConfigPath))) {
-		// 	console.log('UUUUUUUUUUSUKA');
-		// 	await new Promise((resolve, reject) => {
-		// 		console.log('UUUUUUUUUUSUKA22222');
-		// 		fs.mkdir(dirname(keyConfigPath), { recursive: true }, (err) => {
-		// 			console.log('TUT322', err);
-		// 			if (err) {
-		// 				return reject(err);
-		// 			}
-		// 			return resolve();
-		// 		});
-		// 	});
-		// }
-		console.log('existsSync11es2', fs.existsSync(dirname(keyConfigPath)));
 
 		console.log(5);
 		if (chainToken && chainToken.token) {
@@ -242,9 +228,9 @@ class EchoNode {
 				return resolve();
 			});
 
-			child.once('error', () => {
+			child.once('error', (err) => {
 				child.started = false;
-				stopSyncing();
+				stopSyncing(err);
 				return reject();
 			});
 		});
