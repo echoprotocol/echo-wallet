@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
-import BN from 'bignumber.js';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
@@ -22,6 +22,21 @@ class Ethereum extends React.Component {
 		this.props.clearForm();
 	}
 
+	getQrData() {
+		const {
+			amount, ethAddress,
+		} = this.props;
+		const address = ethAddress.get('eth_addr');
+		if (!address) {
+			return '';
+		}
+		// const addressWithPrefix = `0x${address}`;
+		const ethLink = `ethereum:${address}`;
+		const link = `${BRIDGE_RECEIVE_URL}${ethLink}/asset-1/${amount.value || null}/widget`;
+
+		return link;
+	}
+
 	renderPayment() {
 		const { ethAddress, amount, intl } = this.props;
 
@@ -30,14 +45,9 @@ class Ethereum extends React.Component {
 		};
 		const address = ethAddress.get('eth_addr');
 
-		const tmpValue = new BN(amount.value || 0);
-
-		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
-			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
-
 		const addressWithPrefix = `0x${address}`;
 
-		const qrText = `ethereum:${addressWithPrefix}?value=${value}`;
+		const qrText = this.getQrData();
 
 		return (
 			<React.Fragment>
