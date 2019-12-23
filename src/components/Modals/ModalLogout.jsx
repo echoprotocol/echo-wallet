@@ -73,7 +73,7 @@ class ModalLogout extends React.Component {
 					/>
 					<div className="modal-header">
 						<h2 className="modal-header-title">
-							Confirm logout
+							{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}
 						</h2>
 					</div>
 					<button
@@ -81,13 +81,14 @@ class ModalLogout extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 					<Form className="main-form">
-
-						<div className="form-info">
-							<h3>{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}</h3>
+						<div className="info-text">
+							{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
 						</div>
-						{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
+
 						<div className="field-wrap">
 							<PasswordInput
+								key="modal-logout-password"
+								unique="unique-modal-logout-password"
 								errorMessage={error}
 								inputLabel={
 									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })

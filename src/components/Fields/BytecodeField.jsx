@@ -23,7 +23,7 @@ class BytecodeField extends React.Component {
 		} = this.props;
 
 		return (
-			<div className={classnames('field error-wrap', { error: field.error })}>
+			<div className={classnames('field', { error: field.error })}>
 
 				<label htmlFor="bytecode">
 					{intl.formatMessage({ id: 'smart_contract_page.create_contract_page.bytecode.title' })}

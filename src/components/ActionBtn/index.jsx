@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
-class actionBtn extends React.Component {
+class ActionBtn extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -82,7 +82,7 @@ class actionBtn extends React.Component {
 
 }
 
-actionBtn.propTypes = {
+ActionBtn.propTypes = {
 	action: PropTypes.func,
 	focus: PropTypes.func,
 	blur: PropTypes.func,
@@ -93,7 +93,7 @@ actionBtn.propTypes = {
 	size: PropTypes.string,
 };
 
-actionBtn.defaultProps = {
+ActionBtn.defaultProps = {
 	action: () => {},
 	focus: () => {},
 	blur: () => {},
@@ -105,4 +105,4 @@ actionBtn.defaultProps = {
 };
 
 
-export default actionBtn;
+export default ActionBtn;

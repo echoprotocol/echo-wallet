@@ -10,7 +10,6 @@ import ErrorMessage from '../ErrorMessage';
 
 class ModalAddWIF extends React.Component {
 
-
 	constructor(props) {
 		super(props);
 
@@ -60,7 +59,7 @@ class ModalAddWIF extends React.Component {
 				</div>
 				<div className="modal-body">
 
-					<Form.Field className={classnames('error-wrap', { error: !!error })}>
+					<div className={classnames('field', { error: !!error })}>
 						<label htmlFor="public-key">
 							{intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.title' })}
 						</label>
@@ -72,15 +71,16 @@ class ModalAddWIF extends React.Component {
 							onChange={() => {}}
 							value={publicKey}
 						/>
-
 						<ErrorMessage
 							show={!!error}
 							value={error ? error.message : ''}
 							intl={intl}
 						/>
-					</Form.Field>
+					</div>
 
 					<PasswordInput
+						key="modal-new-wif"
+						unique="unique-modal-new-wif"
 						inputLabel={wifTitle}
 						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"

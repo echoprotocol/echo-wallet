@@ -26,28 +26,33 @@ function IpUrlPanel(props) {
 			<div className="register-info">
 				<p><FormattedMessage id="sign_page.register_account_page.more_options_section.ip_url_section.text" /></p>
 			</div>
-			<div className={classnames('field error-wrap', { error: !!ipOrUrl.error })}>
-
-				<DropdownIpUrl
-					status={signupOptionsForm.get('ipOrUrlStatus')}
-					loading={loading}
-					signupOptionsForm={signupOptionsForm}
-					remoteRegistrationAddresses={remoteRegistrationAddresses}
-					setFormValue={setFormValue}
-					setValue={setValue}
-					validateAndSetIpOrUrl={validateAndSetIpOrUrl}
-				/>
-				{
-					signupOptionsForm.get('showSaveAddressTooltip') && (
-						<ActionTooltip
-							onConfirm={props.saveRemoteAddress}
-							onDismiss={props.hideSaveAddressTooltip}
+			<div className="field-wrap">
+				<div className={classnames('field', { error: !!ipOrUrl.error })}>
+					<label htmlFor="idUrlDropdown">Ip or Url</label>
+					<div className="action-wrap">
+						<DropdownIpUrl
+							name="idUrlDropdown"
+							status={signupOptionsForm.get('ipOrUrlStatus')}
+							loading={loading}
+							signupOptionsForm={signupOptionsForm}
+							remoteRegistrationAddresses={remoteRegistrationAddresses}
+							setFormValue={setFormValue}
+							setValue={setValue}
+							validateAndSetIpOrUrl={validateAndSetIpOrUrl}
 						/>
-					)
-				}
-				{
-					ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span>
-				}
+						{
+							signupOptionsForm.get('showSaveAddressTooltip') && (
+								<ActionTooltip
+									onConfirm={props.saveRemoteAddress}
+									onDismiss={props.hideSaveAddressTooltip}
+								/>
+							)
+						}
+						{
+							ipOrUrl.error && <span className="error-message">{ipOrUrl.error}</span>
+						}
+					</div>
+				</div>
 			</div>
 		</React.Fragment>
 	);

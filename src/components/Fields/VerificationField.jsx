@@ -15,7 +15,7 @@ const VerificationField = (props) => {
 	} = props;
 
 	return (
-		<div className={classnames('field error-wrap', { error: !!error })}>
+		<div className={classnames('field', { error: !!error })}>
 			{label &&
 				<label htmlFor={name}>
 					{label}
@@ -47,7 +47,7 @@ const VerificationField = (props) => {
 				}
 			</div>
 			<ErrorMessage
-				show={!!error && intl.formatMessage}
+				show={!!error}
 				value={error}
 				intl={intl}
 			/>

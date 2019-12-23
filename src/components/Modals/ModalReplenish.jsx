@@ -110,7 +110,7 @@ class ModalToWhitelist extends React.Component {
 											autoFocus
 											intl={intl}
 										/>
-										}
+
 										<AmountField
 											fees={fees}
 											form={FORM_REPLENISH}

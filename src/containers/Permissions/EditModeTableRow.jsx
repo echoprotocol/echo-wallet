@@ -25,7 +25,7 @@ class EditModeTableRow extends React.Component {
 		const WIFplaceholder = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.wif_input.placeholder' });
 		return type === 'keys' ? (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: subject.error })}>
+				<div className={classnames('field error-wrap', { error: subject.error })}>
 					<label htmlFor="PublicKey">{label}</label>
 					<input
 						type="text"
@@ -35,10 +35,15 @@ class EditModeTableRow extends React.Component {
 						value={subject.value}
 						onChange={setPublicKey}
 					/>
-					{subject.error &&
-					<span className="error-message">{intl.formatMessage({ id: subject.error })}</span>}
-				</Form.Field>
+					<ErrorMessage
+						show={!!subject.error}
+						value={subject.error}
+						intl={intl}
+					/>
+				</div>
 				<PasswordInput
+					key="edit-wif"
+					unique="unique-edit-wif"
 					errorMessage={wif.error}
 					inputLabel={WIFlabel}
 					inputPlaceholder={WIFplaceholder}
@@ -49,7 +54,7 @@ class EditModeTableRow extends React.Component {
 
 			</React.Fragment>
 		) : (
-			<Form.Field className={classnames('error-wrap', { error: subject.error })}>
+			<div className={classnames('field error-wrap', { error: subject.error })}>
 				<label htmlFor="AccountName">
 					<FormattedMessage id="backup_and_permissions_page.edit_mode.account_input.title" />
 				</label>
@@ -60,9 +65,12 @@ class EditModeTableRow extends React.Component {
 					value={subject.value}
 					onChange={setAccount}
 				/>
-				{subject.error &&
-				<span className="error-message">{intl.formatMessage({ id: subject.error })}</span>}
-			</Form.Field>
+				<ErrorMessage
+					show={!!subject.error}
+					value={subject.error}
+					intl={intl}
+				/>
+			</div>
 		);
 	}
 
@@ -91,11 +99,11 @@ class EditModeTableRow extends React.Component {
 										value={weight.value}
 										onChange={setWeight}
 									/>
-									{/* <ErrorMessage
+									<ErrorMessage
 										show={!!weight.error}
 										value={weight.error}
 										intl={intl}
-									/> */}
+									/>
 								</Form.Field>
 							)
 						}

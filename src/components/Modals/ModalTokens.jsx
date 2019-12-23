@@ -53,7 +53,7 @@ class ModalTokens extends React.Component {
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="field-wrap">
-								<div className={classnames('field error-wrap', { error: contractId.error })}>
+								<div className={classnames('field', { error: contractId.error })}>
 									<label htmlFor="tokens">
 										{intl.formatMessage({ id: 'modals.modal_tokens.contract_id_input.title' })}
 									</label>

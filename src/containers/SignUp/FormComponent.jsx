@@ -91,7 +91,7 @@ class FormComponent extends React.Component {
 					<div className="action input">
 						<input
 							name="generatedWIF"
-							className="ui input"
+							className="input"
 							placeholder="Genereted WIF"
 							value={generatedWIF.value}
 							readOnly
@@ -102,7 +102,7 @@ class FormComponent extends React.Component {
 						/>
 					</div>
 				</div>
-				<div className={classnames('field error-wrap', { error: confirmWIF.error })}>
+				<div className={classnames('field', { error: confirmWIF.error })}>
 					<label htmlFor="confirmWIF">
 						<FormattedMessage id="sign_page.register_account_page.default_settings_page.confirm_wif_input.title" />
 					</label>
@@ -113,8 +113,11 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					{confirmWIF.error &&
-					<span className="error-message">{intl.formatMessage({ id: confirmWIF.error })}</span>}
+					<ErrorMessage
+						show={!!confirmWIF.error}
+						value={confirmWIF.error}
+						intl={intl}
+					/>
 				</div>
 			</React.Fragment>
 		);
@@ -128,7 +131,7 @@ class FormComponent extends React.Component {
 		const pubKeyPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.custom_settings_page.pub_key_input.placeholder' });
 		return (
 			<React.Fragment>
-				<div className={classnames('field error-wrap', { error: userWIF.error })}>
+				<div className={classnames('field', { error: userWIF.error })}>
 					<h3 className="field-title">
 						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.text" />
 					</h3>
@@ -150,13 +153,13 @@ class FormComponent extends React.Component {
 							this.validateWIFAfterChange(e);
 						}}
 					/>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!userWIF.error}
 						value={userWIF.error}
 						intl={intl}
-					/> */}
+					/>
 				</div>
-				<div className={classnames('field error-wrap', { error: userPublicKey.error })}>
+				<div className={classnames('field', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">
 						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.pub_key_input.title" />
 					</label>
@@ -170,11 +173,11 @@ class FormComponent extends React.Component {
 							this.validatePubAfterChange(e);
 						}}
 					/>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!userPublicKey.error}
 						value={userPublicKey.error}
 						intl={intl}
-					/> */}
+					/>
 				</div>
 			</React.Fragment>
 		);
@@ -188,7 +191,7 @@ class FormComponent extends React.Component {
 
 		return (
 			<div className="field-wrap">
-				<div className={classnames('field error-wrap', { error: accountName.error })}>
+				<div className={classnames('field', { error: accountName.error })}>
 					<label htmlFor="accountName">
 						<FormattedMessage id="sign_page.register_account_page.default_settings_page.name_input.title" />
 					</label>
@@ -200,11 +203,11 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					{/* <ErrorMessage
+					<ErrorMessage
 						show={!!accountName.error}
 						value={accountName.error}
 						intl={intl}
-					/> */}
+					/>
 				</div>
 				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}
 			</div>

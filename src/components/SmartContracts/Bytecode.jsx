@@ -33,7 +33,7 @@ class Bytecode extends React.Component {
 
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: !!bytecode.error })}>
+				<div className={classnames('field', { error: !!bytecode.error })}>
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_bytecode.title" />
 					</label>
@@ -51,8 +51,8 @@ class Bytecode extends React.Component {
 						value={bytecode.error}
 						intl={intl}
 					/>
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
+				</div>
+				<div className={classnames('field', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt1" />
 						<span className="label-info">
@@ -75,9 +75,8 @@ class Bytecode extends React.Component {
 						value={abi.error}
 						intl={intl}
 					/>
-
-				</Form.Field>
-				<div className={classnames('error-wrap', { error: !!name.error })}>
+				</div>
+				<div className={classnames('field', { error: !!name.error })}>
 					<div className="action-wrap">
 						<Form.Field
 							label="Contract Name"

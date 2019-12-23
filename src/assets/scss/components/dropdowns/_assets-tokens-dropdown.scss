@@ -118,6 +118,10 @@
 			}
 		}
 	}
+
+	.message {
+		font-size: 13px;
+	}
 }
 
 .focused {
@@ -143,7 +147,7 @@
 }
 
 .error {
-	.assets-tokens-dropdown {
+	.selection.assets-tokens-dropdown {
 		border-left: 0;
 	}
 

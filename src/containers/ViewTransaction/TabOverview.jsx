@@ -112,6 +112,7 @@ class TabOverview extends React.Component {
 									{this.renderBytecode()}
 								</div>
 								<ActionBtn
+									key={bytecode}
 									copy={bytecode}
 									icon="copy"
 									text="Copy"

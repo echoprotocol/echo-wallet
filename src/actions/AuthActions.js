@@ -233,7 +233,7 @@ export const validateCreateAccount = ({
 	} else {
 		let confirmWIFError = validateWIF(confirmWIF);
 		if (generatedWIF !== confirmWIF) {
-			confirmWIFError = 'WIFs do not match';
+			confirmWIFError = 'errors.keys_errors.wif_dont_match_error';
 		}
 		if (confirmWIFError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));

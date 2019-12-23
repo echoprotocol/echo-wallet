@@ -4,46 +4,25 @@ import { CSSTransition } from 'react-transition-group';
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
-let context = '';
 
 class ErrorMessage extends React.Component {
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.value) {
-			context = prevProps.value;
-		}
-	}
-
-	clearContext() {
-		setTimeout(() => {
-			context = '';
-		}, CSS_TRANSITION_SPEED / 5);
-	}
-
 	render() {
-		const { value, show, intl } = this.props;
-
-		if (!context) {
-			context = value;
-		}
+		const { value, intl } = this.props;
 
 		return (
-			<React.Fragment>
-				<CSSTransition
-					in={show}
-					timeout={CSS_TRANSITION_SPEED / 5}
-					classNames="error-message"
-					unmountOnExit
-					onExit={() => this.clearContext()}
-				>
-					<span className="error-message">
-						{
-							context && intl.formatMessage({ id: context })
-						}
-
-					</span>
-				</CSSTransition>
-			</React.Fragment>
+			<CSSTransition
+				in={!!value}
+				timeout={CSS_TRANSITION_SPEED / 4}
+				classNames="error-message"
+				unmountOnExit
+			>
+				<span className="error-message">
+					{
+						value && intl.formatMessage({ id: value })
+					}
+				</span>
+			</CSSTransition>
 		);
 	}
 
@@ -52,14 +31,12 @@ class ErrorMessage extends React.Component {
 
 ErrorMessage.propTypes = {
 	value: PropTypes.string,
-	show: PropTypes.bool,
 	intl: PropTypes.any,
 
 };
 
 ErrorMessage.defaultProps = {
 	value: '',
-	show: false,
 	intl: null,
 };
 

@@ -71,7 +71,7 @@ class ModalCreateBtcAddress extends React.Component {
 										{intl.formatMessage({ id: 'modals.modal_create_btc_address.text' })}
 									</div>
 
-									<div className={classnames('field error-wrap', { error: !!error })}>
+									<div className={classnames('field', { error: !!error })}>
 										<label htmlFor="address">
 											{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
 										</label>
