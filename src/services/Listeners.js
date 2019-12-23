@@ -21,7 +21,7 @@ class Listeners {
 
 		};
 		this.setSyncOnPause = (value) => {
-			console.log(value);
+			console.warn(value);
 			// dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value });
 		};
 

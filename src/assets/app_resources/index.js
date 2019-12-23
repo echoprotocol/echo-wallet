@@ -191,10 +191,8 @@ function createWindow() {
 				previousPublicKeys = [];
 				lastNode = null;
 
-				console.log('removeBeforeStart1', removeBeforeStart);
 				if (removeBeforeStart) {
 					removeBeforeStart = false;
-					console.log('removeBeforeStart2');
 					return rimraf(dataDir, () => resolve());
 				}
 
@@ -219,7 +217,7 @@ function createWindow() {
 			}
 
 			const pauseNodeSync = (value) => {
-				mainWindow.webContents.send('pauseNodeSync', { message: value });
+				mainWindow.webContents.send('pauseNodeSync', { error: value });
 			};
 
 			lastNode = new EchoNode();

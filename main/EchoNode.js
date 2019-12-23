@@ -4,7 +4,6 @@ import _spawn from 'cross-spawn';
 import mkdirp from 'mkdirp';
 import fs from 'fs';
 
-import getPlatform from './GetPlatform';
 import NodeFileEncryptor from '../src/services/node.file.encryptor';
 
 class EchoNode {
@@ -22,14 +21,12 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		console.log(process.env.NODE_ENV);
 		const execPath = joinPath(dirname(appRootDir.get()), '..', 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
 
-		console.log(1);
 		const fileExists = await new Promise((resolve) => {
 			fs.stat(keyConfigPath, (err) => {
 				if (err) {
@@ -41,7 +38,6 @@ class EchoNode {
 			});
 		});
 
-		console.log(2);
 		let bytes = null;
 
 		if (fileExists) {
@@ -55,7 +51,6 @@ class EchoNode {
 				});
 			});
 
-			console.log(3);
 			await new Promise((resolve, reject) => {
 				fs.unlink(keyConfigPath, (err) => {
 					if (err) {
@@ -68,33 +63,23 @@ class EchoNode {
 
 		}
 
-		console.log(4, keyConfigPath, dirname(keyConfigPath));
-		// await mkdirp(dirname(keyConfigPath));
 		const oldMask = process.umask(0);
 		await new Promise((resolve, reject) => {
 			mkdirp(dirname(keyConfigPath), '0777', (err) => {
-				console.log('TUT4343', err);
 				process.umask(oldMask);
-				console.log(1122);
 				if (err) {
 					return reject(err);
 				}
 				return resolve();
 			});
 		});
-		console.log('existsSync11es1', fs.existsSync(dirname(keyConfigPath)));
 
-		console.log(5);
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
-			console.log(6, keyConfigPath);
 			if (bytes !== fileHex) {
 				await new Promise((resolve, reject) => {
-					console.log(66, keyConfigPath);
-					console.log(6321, Buffer.from(fileHex, 'hex'));
 					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), (err) => {
-						console.log('TUT1111', err);
 						if (err) {
 							return reject(err);
 						}
@@ -103,13 +88,10 @@ class EchoNode {
 				});
 			}
 		}
-		console.log(7);
 
 		params['data-dir'] = `"${params['data-dir']}"`;
 		const child = this.spawn(binPath, params, chainToken, stopSyncing);
-		console.log('existsSync33', fs.existsSync(keyConfigPath));
 
-		console.log(8);
 		this.child = child;
 
 		return child;
