@@ -485,7 +485,7 @@
             }
         },
         "key_warning": {
-            "text": "Total weight of all the keys won&rsquo;t be enough to sign a transaction.",
+            "text": "Total weight of all the keys won't be enough to sign a transaction.",
             "button_text": "Keys Parameters"
         },
         "connection_error": {

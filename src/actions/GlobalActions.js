@@ -61,6 +61,7 @@ import {
 
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('is_first_launch');
+	// const isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
 
@@ -91,11 +92,11 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		await userStorage.setScheme(USER_STORAGE_SCHEMES.AUTO, pass);
 	}
 
-	const chainToken = await userStorage.getChainToken();
+	const chainToken = await userStorage.getChainToken({ password: pass });
 
 	const keyPromises = accounts.map((account) => new Promise(async (resolve) => {
 
-		const keys = await userStorage.getAllWIFKeysForAccount(account.id);
+		const keys = await userStorage.getAllWIFKeysForAccount(account.id, { password: pass });
 
 		return resolve(keys.map((key) => ({
 			id: account.id,

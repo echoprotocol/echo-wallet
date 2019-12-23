@@ -146,7 +146,7 @@ export default class ProgressBar extends PureComponent {
 	render() {
 		return (
 			<React.Fragment>
-				<ModalAcceptRunningNode />
+				{ isPlatformSupportNode() && <ModalAcceptRunningNode /> }
 				{ isPlatformSupportNode() && <ModalAcceptIncomingConnections /> }
 				{
 					isPlatformSupportNode() && (

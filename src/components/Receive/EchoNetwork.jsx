@@ -24,7 +24,7 @@ class EchoNetwork extends React.Component {
 
 		this.state = {
 			addresses: new List([]),
-			receiver: '',
+			receiver: props.accountName,
 			searchText: '',
 			open: false,
 			timeout: null,
@@ -340,7 +340,7 @@ class EchoNetwork extends React.Component {
 						selectOnNavigation={false}
 						selectOnBlur={false}
 						open={open}
-						text={(receiver || this.props.accountName) || 'Choose account or address'}
+						text={(receiver || 'Choose account or address')}
 					/>
 				</div>
 
