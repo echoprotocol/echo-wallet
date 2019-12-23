@@ -2,7 +2,7 @@
 	"SOLC_LIST_URL": "https://echoprotocol.github.io/solc-bin/bin/list.json",
 	"SOLC_BIN_URL": "https://echoprotocol.github.io/solc-bin/bin/",
 	"DOWNLOAD_ECHO_NODE_URLS": {
-		"MAC": "https://d14s13k07yt1gw.cloudfront.net/echo-mac.0.13.9.tar",
-		"LINUX": "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.9.tar"
+		"MAC": "https://d14s13k07yt1gw.cloudfront.net/echo-mac.0.13.9-rc.0.tar",
+		"LINUX": "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.9-rc.0.tar"
 	}
 }
