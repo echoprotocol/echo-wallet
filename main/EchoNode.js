@@ -22,7 +22,8 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		const execPath = joinPath(process.cwd(), 'resources', 'bin');
+		console.log(process.env.NODE_ENV);
+		const execPath = process.env.NODE_ENV === 'production' ? joinPath(process.cwd(), 'resources', 'bin') : joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -67,16 +68,45 @@ class EchoNode {
 
 		}
 
-		console.log(4);
-		await mkdirp(dirname(keyConfigPath));
+		console.log(4, keyConfigPath, dirname(keyConfigPath));
+		// await mkdirp(dirname(keyConfigPath));
+		const oldMask = process.umask(0);
+		await new Promise((resolve, reject) => {
+			mkdirp(dirname(keyConfigPath), '0777', (err) => {
+				console.log('TUT4343', err);
+				process.umask(oldMask);
+				console.log(1122);
+				if (err) {
+					return reject(err);
+				}
+				return resolve();
+			});
+		});
+		console.log('existsSync11es1', fs.existsSync(dirname(keyConfigPath)));
+		// if (!fs.existsSync(dirname(keyConfigPath))) {
+		// 	console.log('UUUUUUUUUUSUKA');
+		// 	await new Promise((resolve, reject) => {
+		// 		console.log('UUUUUUUUUUSUKA22222');
+		// 		fs.mkdir(dirname(keyConfigPath), { recursive: true }, (err) => {
+		// 			console.log('TUT322', err);
+		// 			if (err) {
+		// 				return reject(err);
+		// 			}
+		// 			return resolve();
+		// 		});
+		// 	});
+		// }
+		console.log('existsSync11es2', fs.existsSync(dirname(keyConfigPath)));
 
 		console.log(5);
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
-			console.log(6);
+			console.log(6, keyConfigPath);
 			if (bytes !== fileHex) {
 				await new Promise((resolve, reject) => {
+					console.log(66, keyConfigPath);
+					console.log(6321, Buffer.from(fileHex, 'hex'));
 					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), (err) => {
 						console.log('TUT1111', err);
 						if (err) {
@@ -91,6 +121,7 @@ class EchoNode {
 
 		params['data-dir'] = `"${params['data-dir']}"`;
 		const child = this.spawn(binPath, params, chainToken, stopSyncing);
+		console.log('existsSync33', fs.existsSync(keyConfigPath));
 
 		console.log(8);
 		this.child = child;
