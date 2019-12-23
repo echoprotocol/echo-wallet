@@ -11,10 +11,12 @@ RUN npm i
 COPY config ./config
 COPY resources ./resources
 COPY src ./src
-COPY .babelrc ./
-COPY webpack.config.js ./
+COPY scripts ./scripts
+COPY main ./main
+COPY babel.config.js ./
+COPY webpack-configs/webpack.config.web.babel.js ./webpack-configs/webpack.config.web.babel.js
 
-RUN npm run build
+RUN npm run build-web
 
 FROM nginx:alpine
 

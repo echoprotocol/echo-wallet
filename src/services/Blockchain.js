@@ -161,8 +161,8 @@ class Blockchain {
 					this.networkId = data.networkId;
 				});
 
-				ipcRenderer.on('pauseNodeSync', () => {
-					this.emitter.emit('setSyncOnPause', true);
+				ipcRenderer.on('pauseNodeSync', (_, data) => {
+					this.emitter.emit('setSyncOnPause', data);
 				});
 			}
 
