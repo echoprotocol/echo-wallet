@@ -30,7 +30,6 @@ class Ethereum extends React.Component {
 		if (!address) {
 			return '';
 		}
-		// const addressWithPrefix = `0x${address}`;
 		const ethLink = `ethereum:${address}`;
 		const link = `${BRIDGE_RECEIVE_URL}${ethLink}/asset-1/${amount.value || null}/widget`;
 
