@@ -80,7 +80,6 @@ export default class PasswordInput extends React.Component {
 				</div>
 				<React.Fragment>
 					<ErrorMessage
-						show={!!errorMessage}
 						value={errorMessage}
 						intl={intl}
 					/>

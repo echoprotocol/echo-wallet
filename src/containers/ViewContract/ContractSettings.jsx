@@ -143,7 +143,7 @@ class ContractSettings extends React.Component {
 		return (
 
 			<div
-				className={classnames('error-wrap', { error: newName.error })}
+				className={classnames('field', { error: newName.error })}
 				onBlur={() => this.onBlurBlock(contractId)}
 				onFocus={() => this.onFocusBlock()}
 			>
@@ -167,11 +167,10 @@ class ContractSettings extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 				</Input>
-				{/* <ErrorMessage
-					show={!!newName.error}
+				<ErrorMessage
 					value={newName.error}
 					intl={intl}
-				/> */}
+				/>
 			</div>
 		);
 	}

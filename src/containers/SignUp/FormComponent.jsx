@@ -114,7 +114,6 @@ class FormComponent extends React.Component {
 						disabled={loading}
 					/>
 					<ErrorMessage
-						show={!!confirmWIF.error}
 						value={confirmWIF.error}
 						intl={intl}
 					/>
@@ -154,7 +153,6 @@ class FormComponent extends React.Component {
 						}}
 					/>
 					<ErrorMessage
-						show={!!userWIF.error}
 						value={userWIF.error}
 						intl={intl}
 					/>
@@ -174,7 +172,6 @@ class FormComponent extends React.Component {
 						}}
 					/>
 					<ErrorMessage
-						show={!!userPublicKey.error}
 						value={userPublicKey.error}
 						intl={intl}
 					/>
@@ -204,7 +201,6 @@ class FormComponent extends React.Component {
 						autoFocus
 					/>
 					<ErrorMessage
-						show={!!accountName.error}
 						value={accountName.error}
 						intl={intl}
 					/>

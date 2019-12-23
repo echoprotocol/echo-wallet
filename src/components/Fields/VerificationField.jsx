@@ -47,7 +47,6 @@ const VerificationField = (props) => {
 				}
 			</div>
 			<ErrorMessage
-				show={!!error}
 				value={error}
 				intl={intl}
 			/>

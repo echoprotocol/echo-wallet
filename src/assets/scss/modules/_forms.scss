@@ -343,10 +343,6 @@
 				textarea {
 					border-color: $err-red;
 				}
-
-				// .error-message {
-				// 	top: 99%;
-				// }
 			}
 
 			input {
@@ -551,7 +547,6 @@
 }
 
 
-// .error-wrap {
 .field {
 	position: relative;
 	margin-bottom: 25px;
@@ -576,7 +571,7 @@
 	display: flex;
 	align-items: center;
 	width: 25px;
-	z-index: 3;
+	z-index: 12;
 
 	&.icon-error {
 		color: $err-red;

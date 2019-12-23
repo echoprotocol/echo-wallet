@@ -323,49 +323,51 @@ class EchoNetwork extends React.Component {
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.echo.description_part2" />
 				</p>
-				<div className="field recipient-dropdown-wrap">
-					<div className="dropdown-label">
-						<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
+				<div className="field-wrap">
+					<div className="field recipient-dropdown-wrap">
+						<div className="dropdown-label">
+							<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
+						</div>
+						<Dropdown
+							placeholder={dropdownPlaceholder}
+							options={this.renderOptions()}
+							search={() => this.renderOptions()}
+							searchQuery={searchText}
+							onChange={(e, { value }) => this.onDropdownChange(e, value)}
+							onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
+							onFocus={() => this.initDropdown()}
+							onClose={() => this.setState({ open: false })}
+							selectOnNavigation={false}
+							selectOnBlur={false}
+							open={open}
+							text={(receiver || this.props.accountName) || 'Choose account or address'}
+						/>
 					</div>
-					<Dropdown
-						placeholder={dropdownPlaceholder}
-						options={this.renderOptions()}
-						search={() => this.renderOptions()}
-						searchQuery={searchText}
-						onChange={(e, { value }) => this.onDropdownChange(e, value)}
-						onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
-						onFocus={() => this.initDropdown()}
-						onClose={() => this.setState({ open: false })}
-						selectOnNavigation={false}
-						selectOnBlur={false}
-						open={open}
-						text={(receiver || this.props.accountName) || 'Choose account or address'}
-					/>
-				</div>
 
-				<AmountField
-					fees={fees}
-					form={FORM_TRANSFER}
-					fee={fee}
-					assets={assets}
-					tokens={tokens}
-					amount={amount}
-					currency={currency}
-					isAvailableBalance={isAvailableBalance}
-					amountInput={this.props.amountInput}
-					setFormError={this.props.setFormError}
-					setFormValue={this.props.setFormValue}
-					setValue={this.props.setValue}
-					setDefaultAsset={this.props.setDefaultAsset}
-					getTransferFee={this.props.getTransferFee}
-					setContractFees={this.props.setContractFees}
-					assetDropdown
-					receive
-					intl={intl}
-				/>
-				{
-					receiverValue ? <QrCode link={link} /> : null
-				}
+					<AmountField
+						fees={fees}
+						form={FORM_TRANSFER}
+						fee={fee}
+						assets={assets}
+						tokens={tokens}
+						amount={amount}
+						currency={currency}
+						isAvailableBalance={isAvailableBalance}
+						amountInput={this.props.amountInput}
+						setFormError={this.props.setFormError}
+						setFormValue={this.props.setFormValue}
+						setValue={this.props.setValue}
+						setDefaultAsset={this.props.setDefaultAsset}
+						getTransferFee={this.props.getTransferFee}
+						setContractFees={this.props.setContractFees}
+						assetDropdown
+						receive
+						intl={intl}
+					/>
+					{
+						receiverValue ? <QrCode link={link} /> : null
+					}
+				</div>
 			</div>
 		);
 	}

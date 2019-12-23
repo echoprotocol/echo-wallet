@@ -54,7 +54,7 @@ class AddContractComponent extends React.Component {
 					</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: name.error })}>
+					<div className={classnames('field', { error: name.error })}>
 						<label htmlFor="name">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_name.title" />
 						</label>
@@ -66,13 +66,12 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						{/* <ErrorMessage
-							show={!!name.error}
+						<ErrorMessage
 							value={name.error}
 							intl={intl}
-						/> */}
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: id.error })}>
+						/>
+					</div>
+					<div className={classnames('field', { error: id.error })}>
 						<label htmlFor="id">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_id.title" />
 						</label>
@@ -83,12 +82,12 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{/* <ErrorMessage
-							show={!!id.error}
+						<ErrorMessage
 							value={id.error}
-						/> */}
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
+							intl={intl}
+						/>
+					</div>
+					<div className={classnames('field', { error: abi.error })}>
 						<label htmlFor="abi">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_abi.title" />
 						</label>
@@ -99,12 +98,11 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{/* <ErrorMessage
-							show={!!abi.error}
+						<ErrorMessage
 							value={abi.error}
 							intl={intl}
-						/> */}
-					</Form.Field>
+						/>
+					</div>
 					<div className="form-panel">
 						<Button
 							basic

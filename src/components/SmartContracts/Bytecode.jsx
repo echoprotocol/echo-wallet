@@ -47,7 +47,6 @@ class Bytecode extends React.Component {
 						autoFocus
 					/>
 					<ErrorMessage
-						show={!!bytecode.error}
 						value={bytecode.error}
 						intl={intl}
 					/>
@@ -71,7 +70,6 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e, true)}
 					/>
 					<ErrorMessage
-						show={!!abi.error}
 						value={abi.error}
 						intl={intl}
 					/>
@@ -88,7 +86,6 @@ class Bytecode extends React.Component {
 						/>
 					</div>
 					<ErrorMessage
-						show={!!name.error}
 						value={name.error}
 						intl={intl}
 					/>

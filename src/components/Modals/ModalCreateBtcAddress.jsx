@@ -70,26 +70,28 @@ class ModalCreateBtcAddress extends React.Component {
 									<div className="info-text">
 										{intl.formatMessage({ id: 'modals.modal_create_btc_address.text' })}
 									</div>
-
-									<div className={classnames('field', { error: !!error })}>
-										<label htmlFor="address">
-											{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
-										</label>
-										<input
-											type="text"
-											placeholder={intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.placeholder' })}
-											name="address"
-											onChange={(e) => this.onChange(e)}
-											autoFocus
-										/>
-										<ErrorMessage
-											show={!!error}
-											value="modals.modal_create_btc_address.warning"
-											intl={intl}
-										/>
-										<span className="warning-message">
-											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
-										</span>
+									<div className="field-wrap">
+										<div className={classnames('field', { error: !!error })}>
+											<label htmlFor="address">
+												{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
+											</label>
+											<div className="action-wrap">
+												<input
+													type="text"
+													placeholder={intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.placeholder' })}
+													name="address"
+													onChange={(e) => this.onChange(e)}
+													autoFocus
+												/>
+												<ErrorMessage
+													value={error ? 'modals.modal_create_btc_address.warning' : ''}
+													intl={intl}
+												/>
+											</div>
+											<span className="warning-message">
+												{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
+											</span>
+										</div>
 									</div>
 									<div className="form-panel">
 										<Button

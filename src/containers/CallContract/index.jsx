@@ -47,7 +47,7 @@ class AddContractComponent extends React.Component {
 								</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: id.error })}>
+								<div className={classnames('field', { error: id.error })}>
 									<label htmlFor="id">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_id.title" />
 									</label>
@@ -62,12 +62,11 @@ class AddContractComponent extends React.Component {
 										autoFocus
 									/>
 									<ErrorMessage
-										show={!!id.error}
 										value={id.error}
 										intl={intl}
 									/>
-								</Form.Field>
-								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+								</div>
+								<div className={classnames('field', { error: bytecode.error })}>
 									<label htmlFor="bytecode">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_bytecode.title" />
 									</label>
@@ -79,11 +78,10 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 									/>
 									<ErrorMessage
-										show={!!bytecode.error}
 										value={bytecode.error}
 										intl={intl}
 									/>
-								</Form.Field>
+								</div>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
 									fee={fee}

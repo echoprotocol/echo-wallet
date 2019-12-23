@@ -43,7 +43,6 @@ class BytecodeField extends React.Component {
 					{ field.error && <span className="icon-error value-status" /> }
 				</div>
 				<ErrorMessage
-					show={!!field.error}
 					value={field.error}
 					intl={intl}
 				/>

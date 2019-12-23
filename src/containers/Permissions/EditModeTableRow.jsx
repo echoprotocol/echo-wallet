@@ -1,5 +1,4 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -25,7 +24,7 @@ class EditModeTableRow extends React.Component {
 		const WIFplaceholder = intl.formatMessage({ id: 'backup_and_permissions_page.edit_mode.wif_input.placeholder' });
 		return type === 'keys' ? (
 			<React.Fragment>
-				<div className={classnames('field error-wrap', { error: subject.error })}>
+				<div className={classnames('field', { error: subject.error })}>
 					<label htmlFor="PublicKey">{label}</label>
 					<input
 						type="text"
@@ -36,7 +35,6 @@ class EditModeTableRow extends React.Component {
 						onChange={setPublicKey}
 					/>
 					<ErrorMessage
-						show={!!subject.error}
 						value={subject.error}
 						intl={intl}
 					/>
@@ -54,7 +52,7 @@ class EditModeTableRow extends React.Component {
 
 			</React.Fragment>
 		) : (
-			<div className={classnames('field error-wrap', { error: subject.error })}>
+			<div className={classnames('field', { error: subject.error })}>
 				<label htmlFor="AccountName">
 					<FormattedMessage id="backup_and_permissions_page.edit_mode.account_input.title" />
 				</label>
@@ -66,7 +64,6 @@ class EditModeTableRow extends React.Component {
 					onChange={setAccount}
 				/>
 				<ErrorMessage
-					show={!!subject.error}
 					value={subject.error}
 					intl={intl}
 				/>
@@ -87,7 +84,7 @@ class EditModeTableRow extends React.Component {
 						{this.renderType(type)}
 						{
 							keyRole === 'active' && (
-								<Form.Field className={classnames('error-wrap weight-field', { error: weight.error })}>
+								<div className={classnames('field weight-field', { error: weight.error })}>
 									<label htmlFor="weight">
 										<FormattedMessage id="backup_and_permissions_page.edit_mode.weight_input.title" />
 									</label>
@@ -100,11 +97,10 @@ class EditModeTableRow extends React.Component {
 										onChange={setWeight}
 									/>
 									<ErrorMessage
-										show={!!weight.error}
 										value={weight.error}
 										intl={intl}
 									/>
-								</Form.Field>
+								</div>
 							)
 						}
 					</div>

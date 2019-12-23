@@ -68,7 +68,6 @@ class ModalTokens extends React.Component {
 									/>
 
 									<ErrorMessage
-										show={!!contractId.error}
 										value={contractId.error}
 										intl={intl}
 									/>

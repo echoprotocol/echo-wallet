@@ -129,7 +129,7 @@ export const validateAndSetIpOrUrl = (ipOrUrl) => async (dispatch, getState) => 
 		return;
 	}
 
-	dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Invalid address format'));
+	dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'errors.address_errors.invalid_address_format'));
 	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'ipOrUrlStatus', CHECK_URI_ADDRESS_TYPES.ERROR));
 	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', false));
 };
