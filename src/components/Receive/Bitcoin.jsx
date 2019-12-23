@@ -36,7 +36,7 @@ class Bitcoin extends React.Component {
 		return { address, account };
 	}
 
-	getQrData() {
+	getQrLink() {
 		const {
 			amount, btcAddress,
 		} = this.props;
@@ -49,14 +49,22 @@ class Bitcoin extends React.Component {
 
 		return link;
 	}
+	getQrData() {
+		const {
+			amount, btcAddress,
+		} = this.props;
+		const address = btcAddress.getIn(['deposit_address', 'address']);
 
+		return amount.value ? `bitcoin:${address}?amount=${amount.value}` : `bitcoin:${address}`;
+	}
 	renderPayment() {
 
 		const {
 			amount, accountName, btcAddress, intl,
 		} = this.props;
 
-		const link = this.getQrData();
+		const link = this.getQrLink();
+		const qrData = this.getQrData();
 		const address = btcAddress.getIn(['deposit_address', 'address']);
 
 		return (
@@ -117,6 +125,7 @@ class Bitcoin extends React.Component {
 					accountName && address && amount ?
 						<QrCode
 							link={link}
+							qrData={qrData}
 						/> : null
 				}
 			</React.Fragment>

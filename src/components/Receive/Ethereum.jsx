@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import BN from 'bignumber.js';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
@@ -22,7 +23,7 @@ class Ethereum extends React.Component {
 		this.props.clearForm();
 	}
 
-	getQrData() {
+	getQrLink() {
 		const {
 			amount, ethAddress,
 		} = this.props;
@@ -35,6 +36,16 @@ class Ethereum extends React.Component {
 
 		return link;
 	}
+	getQrData() {
+		const { ethAddress, amount } = this.props;
+		const tmpValue = new BN(amount.value || 0);
+		const address = `0x${ethAddress.get('eth_addr')}`;
+
+		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
+			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
+
+		return +value ? `ethereum:${address}?value=${value}` : `ethereum:${address}`;
+	}
 
 	renderPayment() {
 		const { ethAddress, amount, intl } = this.props;
@@ -46,7 +57,8 @@ class Ethereum extends React.Component {
 
 		const addressWithPrefix = `0x${address}`;
 
-		const qrText = this.getQrData();
+		const link = this.getQrLink();
+		const qrData = this.getQrData();
 
 		return (
 			<React.Fragment>
@@ -77,11 +89,11 @@ class Ethereum extends React.Component {
 					amount={amount}
 					isAvailableBalance={false}
 					amountInput={this.props.amountInput}
-					setFormError={() => {}}
-					setFormValue={() => {}}
-					setValue={() => {}}
+					setFormError={() => { }}
+					setFormValue={() => { }}
+					setValue={() => { }}
 					currency={ethCurrency}
-					setDefaultAsset={() => {}}
+					setDefaultAsset={() => { }}
 					assetDropdown={false}
 					showAvailable={false}
 					receive
@@ -96,7 +108,10 @@ class Ethereum extends React.Component {
 					}
 					intl={intl}
 				/>
-				<QrCode link={qrText} />
+				<QrCode
+					link={link}
+					qrData={qrData}
+				/>
 			</React.Fragment>
 		);
 	}
