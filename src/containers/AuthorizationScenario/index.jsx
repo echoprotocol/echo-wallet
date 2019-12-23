@@ -31,6 +31,7 @@ class AuthorizationScenario extends React.Component {
 	}
 
 	clear() {
+		this.props.clear(MODAL_UNLOCK);
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
@@ -51,13 +52,20 @@ class AuthorizationScenario extends React.Component {
 
 		this.setState({ unlockLoading: true });
 		this.props.unlock(password, this.props.authorize)
-			.then(() => this.setState({ unlock: false }))
-			.finally(() => this.setState({ unlockLoading: false }));
+			.then((err) => {
+				if (!err) {
+					this.setState({ unlock: false });
+				}
+				this.setState({ unlockLoading: false });
+			})
+			.catch(() => this.setState({ unlockLoading: false }));
 	}
 
-	close() {
+	close(modal) {
 		this.clear();
-		this.setState({ unlock: false });
+		if (modal) {
+			this.props.closeModal(modal);
+		}
 	}
 
 	forgot() {
