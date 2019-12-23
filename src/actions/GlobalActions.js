@@ -78,7 +78,6 @@ export const incomingConnectionsRequest = () => (dispatch) => {
  * @returns {Function}
  */
 export const startLocalNode = (pass) => (async (dispatch) => {
-	console.log('DASUKA', pass);
 
 	const userStorage = Services.getUserStorage();
 	const networkId = await userStorage.getNetworkId();
