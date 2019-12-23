@@ -493,6 +493,11 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const currentAccount = getState().global.get('activeUser');
 		const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
 		const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
+
+		if (!permissionForm.get('isChanged') && !permissionForm.get('isOnlyWIFChanged')) {
+			dispatch(setFormValue(FORM_PERMISSION_KEY, 'isEditMode', false));
+		}
+
 		const permissionTable = getState().table.get(PERMISSION_TABLE);
 
 		const roles = ['active', 'echoRand'];
