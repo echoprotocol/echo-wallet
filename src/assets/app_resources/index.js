@@ -216,8 +216,8 @@ function createWindow() {
 				return;
 			}
 
-			const pauseNodeSync = () => {
-				mainWindow.webContents.send('pauseNodeSync');
+			const pauseNodeSync = (value) => {
+				mainWindow.webContents.send('pauseNodeSync', { error: value });
 			};
 
 			lastNode = new EchoNode();

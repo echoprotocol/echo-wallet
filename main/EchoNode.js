@@ -4,7 +4,6 @@ import _spawn from 'cross-spawn';
 import mkdirp from 'mkdirp';
 import fs from 'fs';
 
-import getPlatform from './GetPlatform';
 import NodeFileEncryptor from '../src/services/node.file.encryptor';
 
 class EchoNode {
@@ -22,7 +21,7 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		const execPath = joinPath(process.cwd(), 'resources', 'bin');
+		const execPath = joinPath(dirname(appRootDir.get()), '..', 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -67,8 +66,21 @@ class EchoNode {
 
 		}
 
+<<<<<<< HEAD
 		console.log(4);
 		await mkdirp(dirname(keyConfigPath));
+=======
+		const oldMask = process.umask(0);
+		await new Promise((resolve, reject) => {
+			mkdirp(dirname(keyConfigPath), '0777', (err) => {
+				process.umask(oldMask);
+				if (err) {
+					return reject(err);
+				}
+				return resolve();
+			});
+		});
+>>>>>>> 4b540ab6ed1656390fde95631574276cf65cf507
 
 		console.log(5);
 		if (chainToken && chainToken.token) {
@@ -211,9 +223,9 @@ class EchoNode {
 				return resolve();
 			});
 
-			child.once('error', () => {
+			child.once('error', (err) => {
 				child.started = false;
-				stopSyncing();
+				stopSyncing(err);
 				return reject();
 			});
 		});
