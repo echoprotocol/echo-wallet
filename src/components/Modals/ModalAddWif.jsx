@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { injectIntl } from 'react-intl';
@@ -72,7 +72,6 @@ class ModalAddWIF extends React.Component {
 							value={publicKey}
 						/>
 						<ErrorMessage
-							show={!!error}
 							value={error ? error.message : ''}
 							intl={intl}
 						/>
