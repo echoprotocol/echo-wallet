@@ -481,7 +481,8 @@
             "block": "Block",
             "choose_network_dropdown": {
                 "title": "Choose network",
-                "add_custom_network_buttom": "+ Add custom Network"
+                "add_custom_network_buttom": "+ Add custom Network",
+                "local_node": "Local Node"
             }
         },
         "key_warning": {
