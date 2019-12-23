@@ -186,7 +186,9 @@ class Network extends React.PureComponent {
 							/>
 						</React.Fragment> :
 						<span className="status connected">
-							<div className="ellipsis">Local node</div>
+							<div className="ellipsis">
+								<FormattedMessage id="footer.local_node.title" />
+							</div>
 						</span>
 					}
 
