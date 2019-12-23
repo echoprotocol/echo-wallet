@@ -4,7 +4,6 @@ import _spawn from 'cross-spawn';
 import mkdirp from 'mkdirp';
 import fs from 'fs';
 
-import getPlatform from './GetPlatform';
 import NodeFileEncryptor from '../src/services/node.file.encryptor';
 
 class EchoNode {
@@ -22,7 +21,7 @@ class EchoNode {
 	 */
 	async start(params, accounts = [], chainToken, stopSyncing) {
 
-		const execPath = joinPath(process.cwd(), 'resources', getPlatform(), 'bin');
+		const execPath = joinPath(dirname(appRootDir.get()), '..', 'bin');
 
 		const binPath = `${joinPath(execPath, 'echo_node')}`;
 
@@ -64,7 +63,16 @@ class EchoNode {
 
 		}
 
-		await mkdirp(dirname(keyConfigPath));
+		const oldMask = process.umask(0);
+		await new Promise((resolve, reject) => {
+			mkdirp(dirname(keyConfigPath), '0777', (err) => {
+				process.umask(oldMask);
+				if (err) {
+					return reject(err);
+				}
+				return resolve();
+			});
+		});
 
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
@@ -81,6 +89,7 @@ class EchoNode {
 			}
 		}
 
+		params['data-dir'] = `"${params['data-dir']}"`;
 		const child = this.spawn(binPath, params, chainToken, stopSyncing);
 
 		this.child = child;
@@ -201,9 +210,9 @@ class EchoNode {
 				return resolve();
 			});
 
-			child.once('error', () => {
+			child.once('error', (err) => {
 				child.started = false;
-				stopSyncing();
+				stopSyncing(err);
 				return reject();
 			});
 		});
