@@ -7,12 +7,13 @@
   },
   "description": "Echo Wallet: Cryptocurrency wallet for Echo platform",
   "homepage": "https://github.com/echoprotocol/echo-wallet",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "license": "MIT",
   "main": "build/electron/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=local node --trace-warnings -r @babel/register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack-configs/webpack.config.web.babel.js --mode development --progress --colors --history-api-fallback --hot --inline",
     "prebuild": "rm -rf build/",
+    "build-web": "cross-env NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js ---display-error-details --colors --mode production",
     "build": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --env.prod --env.electron --env.hash",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
@@ -168,6 +169,22 @@
   "build": {
     "productName": "Echo Wallet",
     "appId": "org.echo",
+    "extraFiles": [
+      {
+        "from": "resources/${os}/bin",
+        "to": "resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/icons",
+        "to": "resources/icons",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "*.js",
       "build",
@@ -176,7 +193,7 @@
       "build/electron/index.js.map"
     ],
     "directories": {
-      "buildResources": "src/assets/app_resources",
+      "buildResources": "resources/icons",
       "output": "build/binaries"
     },
     "dmg": {

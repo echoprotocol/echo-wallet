@@ -3,15 +3,26 @@ import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import FocusLock from 'react-focus-lock';
+import _ from 'lodash';
+
 import PasswordInput from '../PasswordInput';
 
 class ModalUnlockWallet extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
+
+		this.DEFAULT_STATE = {
 			password: '',
 		};
+
+		this.state = _.cloneDeep(this.DEFAULT_STATE);
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.show !== this.props.show) {
+			this.clear();
+		}
 	}
 
 	onForgot(e) {
@@ -32,6 +43,10 @@ class ModalUnlockWallet extends React.Component {
 	onChange(e) {
 		this.setState({ password: e.target.value.trim() });
 		this.props.change(e.target.value.trim());
+	}
+
+	clear() {
+		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 	}
 
 	render() {

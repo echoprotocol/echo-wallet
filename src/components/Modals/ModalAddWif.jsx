@@ -72,7 +72,7 @@ class ModalAddWIF extends React.Component {
 							value={publicKey}
 						/>
 						<ErrorMessage
-							value={error ? error.message : ''}
+							value={error}
 							intl={intl}
 						/>
 					</div>
@@ -84,7 +84,7 @@ class ModalAddWIF extends React.Component {
 						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"
 						warningMessage={wifWarning}
-						errorMessage={error}
+						errorMessage={error ? intl.formatMessage({ id: error }) : null}
 						onChange={(e) => this.onChange(e)}
 						value={wif}
 						autoFocus

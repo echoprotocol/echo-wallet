@@ -432,7 +432,7 @@ export const authUser = ({
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 
-		dispatch(startLocalNode());
+		// dispatch(startLocalNode());
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));
@@ -603,7 +603,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 
 			if (!doesDBExist) {
 				dispatch(setError(modal, 'errors.db_errors.db_doesnt_exist'));
-				return;
+				return 'errors.db_errors.db_doesnt_exist';
 			}
 
 			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
@@ -611,7 +611,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 
 			if (!correctPassword) {
 				dispatch(setError(modal, 'errors.passowd_errors.invalid_password_error'));
-				return;
+				return 'errors.passowd_errors.invalid_password_error';
 			}
 
 			dispatch(closeModal(modal));
@@ -619,10 +619,12 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 			callback(password);
 		} catch (err) {
 			dispatch(setError(modal, err.message));
+			return err;
 		} finally {
 			dispatch(toggleModalLoading(modal, false));
 		}
 
+		return null;
 	};
 
 export const asyncUnlock = (
