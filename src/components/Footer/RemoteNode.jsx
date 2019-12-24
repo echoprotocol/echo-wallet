@@ -31,15 +31,15 @@ function RemoteNode(props) {
 			</div>
 			{(!props.isNodePaused && !props.isNodeSyncing) ?
 				<div className="sync-progress">
-					<div className="sync-label">
-						<button onClick={(e) => {
+					<button
+						className="incoming-connections"
+						onClick={(e) => {
 							e.preventDefault();
 							props.openModal(MODAL_ACCEPT_RUNNING_NODE);
 						}}
-						>
-							<FormattedMessage id="footer.remote_node.incoming_connections" />
-						</button>
-					</div>
+					>
+						<FormattedMessage id="footer.remote_node.incoming_connections" />
+					</button>
 				</div> :
 				<div className="sync-progress">
 					<div className="sync-label">

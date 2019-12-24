@@ -169,17 +169,13 @@ class Network extends React.PureComponent {
 			>
 				<div className="trigger" >
 					<span className="description">
-						{ disconnected ?
-							<FormattedMessage id="footer.network_section.disconnected" /> :
-							<FormattedMessage id="footer.network_section.title" />
-						}
+						<FormattedMessage id="footer.network_section.title" />
 					</span>
 					{percent < 100 ?
 						<React.Fragment>
 							<span className="status connected">
 								<div className="ellipsis">{network.name}</div>
 							</span>
-
 							<ProgressBar
 								size={20}
 								value={percent}
