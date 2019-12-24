@@ -192,12 +192,14 @@ export const initAfterConnection = (network) => async (dispatch) => {
 			history.push(CREATE_PASSWORD_PATH);
 		}
 
-		await Services.getEcho().api.getDynamicGlobalProperties(true);
+		const echoInstance = Services.getEcho().getEchoInstance();
+		if (echoInstance && echoInstance.isConnected && Services.getEcho().api) {
+			await Services.getEcho().api.getDynamicGlobalProperties(true);
+			await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+		}
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
 		accounts = accounts ? JSON.parse(accounts) : [];
-
-		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
@@ -298,7 +300,11 @@ export const initApp = (store) => async (dispatch, getState) => {
  * @returns {function(dispatch): Promise<undefined>}
  */
 export const disconnection = () => async (dispatch) => {
-	Services.getEcho().getEchoInstance().subscriber.reset();
+	const echoInstance = Services.getEcho().getEchoInstance();
+	if (echoInstance) {
+		echoInstance.subscriber.reset();
+	}
+
 	dispatch(clearTable(HISTORY_TABLE));
 	dispatch(resetBalance());
 	dispatch(GlobalReducer.actions.disconnect());

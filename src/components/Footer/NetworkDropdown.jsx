@@ -45,6 +45,7 @@ class Network extends React.PureComponent {
 
 	onDeleteNetwork(network, e) {
 		e.preventDefault();
+		e.stopPropagation();
 		this.setState({ open: false });
 		this.props.deleteNetwork(network);
 	}
