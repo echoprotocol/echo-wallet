@@ -27,7 +27,7 @@
 
 		&>.menu {
 			display: inline-block;
-			margin: 0px 8px 0 0;
+			margin: 0 0 0 -30px;
 			bottom: calc(100% + 8px);
 			opacity: 0;
 			transform: translateY(100%);
@@ -309,6 +309,10 @@
 					color: rgba(#fff, .6);
 				}
 
+				.incoming-connections {
+					color: rgba(#FFF9B5, 1);
+				}
+
 				.progress-line {
 					background-color: rgba(#fff, .5);
 
@@ -381,7 +385,7 @@
 		min-height: 33px;
 
 		.text {
-			color: #5C637D;
+			color: rgba(#5C637D, .5);
 			font-size: 14px;
 			font-weight: 600;
 			text-transform: uppercase;
@@ -484,6 +488,14 @@
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
+	}
+
+	.incoming-connections {
+		font-size: 12px;
+		line-height: 16px;
+		color: rgba(#4C64CA, .8);
+		border-bottom: 1px dashed;
+		transition: color $speed;
 	}
 
 	.sync-label {

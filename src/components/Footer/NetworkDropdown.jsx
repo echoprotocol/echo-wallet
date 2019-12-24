@@ -89,13 +89,18 @@ class Network extends React.PureComponent {
 							}
 						</div>
 						{
-							(i.name === 'testnet' && isPlatformSupportNode() && this.props.isNodeSyncing) && (
+							(i.name === 'testnet' && isPlatformSupportNode()) && (
 								<div className="node-info">
 									{
 										percent < 100 ? (
-											<RemoteNode value={percent} isNodePaused={this.props.isNodePaused} />
+											<RemoteNode
+												value={percent}
+												isNodePaused={this.props.isNodePaused}
+												isNodeSyncing={this.props.isNodeSyncing}
+												openModal={this.props.openModal}
+											/>
 										) : (
-											<LocalNode />
+											this.props.isNodeSyncing && <LocalNode />
 										)
 									}
 								</div>
@@ -164,17 +169,13 @@ class Network extends React.PureComponent {
 			>
 				<div className="trigger" >
 					<span className="description">
-						{ disconnected ?
-							<FormattedMessage id="footer.network_section.disconnected" /> :
-							<FormattedMessage id="footer.network_section.title" />
-						}
+						<FormattedMessage id="footer.network_section.title" />
 					</span>
 					{percent < 100 ?
 						<React.Fragment>
 							<span className="status connected">
 								<div className="ellipsis">{network.name}</div>
 							</span>
-
 							<ProgressBar
 								size={20}
 								value={percent}
