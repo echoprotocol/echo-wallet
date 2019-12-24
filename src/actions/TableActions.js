@@ -531,7 +531,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const errors = await Promise.all(validateFields);
 
 		if (errors.includes(true)) {
-			return { validation: false, isWifChangingOnly: false };
+			return { validation: false, isWifChangingOnly: false, editMode: true };
 		}
 
 		const permissionData = {
@@ -592,8 +592,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				|| dataChanged.echoRand.wif
 			)
 		) {
-			dispatch(setFormValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-			return { validation: false, isWifChangingOnly: false };
+			return { validation: false, isWifChangingOnly: false, editMode: false };
 		}
 
 		await Services.getEcho().api.getGlobalProperties(true);
@@ -694,7 +693,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			showOptions,
 		}));
 
-		return { validation: true, isWifChangingOnly };
+		return { validation: true, isWifChangingOnly, editMode: true };
 	};
 
 export const isOnlyWifChanged = (privateKeys, basePrivateKeys) => (dispatch, getState) => {
