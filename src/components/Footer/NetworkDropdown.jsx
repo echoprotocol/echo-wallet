@@ -45,6 +45,7 @@ class Network extends React.PureComponent {
 
 	onDeleteNetwork(network, e) {
 		e.preventDefault();
+		e.stopPropagation();
 		this.setState({ open: false });
 		this.props.deleteNetwork(network);
 	}
@@ -121,12 +122,50 @@ class Network extends React.PureComponent {
 		if (!open) { this.setState({ open: true }); }
 	}
 
+	renderNode() {
+		const { network, disconnected, warning } = this.props;
+		const percent = parseInt(this.props.localNodePercent, 10);
+		const nodeFragment = percent < 100 ?
+			(
+				<React.Fragment>
+					<span className="status connected">
+						<div className="ellipsis">{network.name}</div>
+					</span>
+					<ProgressBar
+						size={20}
+						value={percent}
+						disconnected={disconnected}
+						warning={warning}
+						openModal={this.props.openModal}
+						isNodeSyncing={this.props.isNodeSyncing}
+						isNodePaused={this.props.isNodePaused}
+						platform={this.props.platform}
+					/>
+				</React.Fragment>
+			) :
+			(
+				<span className="status connected">
+					<div className="ellipsis">
+						<FormattedMessage id="footer.network_section.choose_network_dropdown.local_node" />
+					</div>
+				</span>
+			);
+		if (network.name === 'testnet') {
+			return nodeFragment;
+		}
+
+		return (
+			<span className="status connected">
+				<div className="ellipsis">{network.name}</div>
+			</span>
+		);
+	}
+
 	render() {
 		const { open } = this.state;
 		const {
-			networks, network, loading, disconnected, warning, intl,
+			networks, loading, disconnected, warning, intl,
 		} = this.props;
-		const percent = parseInt(this.props.localNodePercent, 10);
 		const dropdownPlaceholder = intl.formatMessage({ id: 'footer.network_section.choose_network_dropdown.title' });
 		let options = [
 			{
@@ -171,32 +210,10 @@ class Network extends React.PureComponent {
 					<span className="description">
 						<FormattedMessage id="footer.network_section.title" />
 					</span>
-					{percent < 100 ?
-						<React.Fragment>
-							<span className="status connected">
-								<div className="ellipsis">{network.name}</div>
-							</span>
-							<ProgressBar
-								size={20}
-								value={percent}
-								disconnected={disconnected}
-								warning={warning}
-								openModal={this.props.openModal}
-								isNodeSyncing={this.props.isNodeSyncing}
-								isNodePaused={this.props.isNodePaused}
-								platform={this.props.platform}
-							/>
-						</React.Fragment> :
-						<span className="status connected">
-							<div className="ellipsis">
-								<FormattedMessage id="footer.network_section.choose_network_dropdown.local_node" />
-							</div>
-						</span>
-					}
-
+					{this.renderNode()}
 					<span className="pipeline-block">
 						<FormattedMessage id="footer.network_section.block" />
-						<span>{this.props.lastBlock}</span>
+						{this.props.lastBlock ? <span>{this.props.lastBlock}</span> : null}
 					</span>
 					<span className="icon dropdown" />
 				</div>
