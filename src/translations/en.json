@@ -500,7 +500,9 @@
         "remote_node": {
             "title": "Remote Node",
             "synchronization": "Network synchronization",
-            "popup_info": "Node accessible remotely on the Web. Insufficient for participation in consensus."
+            "synchronization_paused": "Sync is paused",
+            "popup_info": "Node accessible remotely on the Web. Insufficient for participation in consensus.",
+            "incoming_connections": "Incoming connections"
         }
     },
     "modals": {

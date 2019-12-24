@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
-
 import { Popup } from 'semantic-ui-react';
 
+import { MODAL_ACCEPT_RUNNING_NODE } from '../../constants/ModalConstants';
 import ProgressLine from '../ProgressLine';
 
 function RemoteNode(props) {
@@ -15,10 +15,11 @@ function RemoteNode(props) {
 					<FormattedMessage id="footer.remote_node.title" />
 				</div>
 				<div className="sync">
-					<div className="percent">
-						{props.value}
-						<span className="symbol">%</span>
-					</div>
+					{(props.isNodePaused || props.isNodeSyncing) &&
+						<div className="percent">
+							{props.value}
+							<span className="symbol">%</span>
+						</div>}
 					<Popup
 						trigger={<span className="icon-info" />}
 						content={popupText}
@@ -28,12 +29,26 @@ function RemoteNode(props) {
 					/>
 				</div>
 			</div>
-			<div className="sync-progress">
-				<div className="sync-label">
-					{props.isNodePaused ? 'Sync is paused' : <FormattedMessage id="footer.remote_node.synchronization" />}
-				</div>
-				<ProgressLine value={props.value} />
-			</div>
+			{(!props.isNodePaused && !props.isNodeSyncing) ?
+				<div className="sync-progress">
+					<button
+						className="incoming-connections"
+						onClick={(e) => {
+							e.preventDefault();
+							props.openModal(MODAL_ACCEPT_RUNNING_NODE);
+						}}
+					>
+						<FormattedMessage id="footer.remote_node.incoming_connections" />
+					</button>
+				</div> :
+				<div className="sync-progress">
+					<div className="sync-label">
+						{props.isNodePaused ?
+							<FormattedMessage id="footer.remote_node.synchronization_paused" /> :
+							<FormattedMessage id="footer.remote_node.synchronization" />}
+					</div>
+					<ProgressLine value={props.value} />
+				</div>}
 		</React.Fragment>
 	);
 }
@@ -41,12 +56,15 @@ function RemoteNode(props) {
 RemoteNode.propTypes = {
 	value: PropTypes.number,
 	isNodePaused: PropTypes.bool,
+	isNodeSyncing: PropTypes.bool,
 	intl: PropTypes.any.isRequired,
+	openModal: PropTypes.func.isRequired,
 };
 
 RemoteNode.defaultProps = {
 	value: 0,
 	isNodePaused: false,
+	isNodeSyncing: false,
 };
 
 export default injectIntl(RemoteNode);
