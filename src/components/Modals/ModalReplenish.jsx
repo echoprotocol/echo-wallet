@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import FocusLock from 'react-focus-lock';
 import { injectIntl } from 'react-intl';
 
-import { closeModal, setError } from '../../actions/ModalActions';
+import { closeModal } from '../../actions/ModalActions';
 import { MODAL_REPLENISH } from '../../constants/ModalConstants';
 import AccountField from '../Fields/AccountField';
 import AmountField from '../Fields/AmountField';
@@ -38,9 +38,6 @@ class ModalToWhitelist extends React.Component {
 
 	onChangeFeePoolValue(val, cur, name) {
 		this.props.amountInput(val, cur, name);
-		if (val && this.props.error) {
-			this.props.setModalError('');
-		}
 	}
 
 	render() {
@@ -135,7 +132,6 @@ class ModalToWhitelist extends React.Component {
 ModalToWhitelist.propTypes = {
 	activeAccount: PropTypes.object,
 	show: PropTypes.bool,
-	error: PropTypes.string,
 	closeModal: PropTypes.func.isRequired,
 	fees: PropTypes.array.isRequired,
 	fee: PropTypes.object.isRequired,
@@ -146,7 +142,6 @@ ModalToWhitelist.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	setFormValue: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
-	setModalError: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
 	getTransactionFee: PropTypes.func.isRequired,
@@ -157,7 +152,6 @@ ModalToWhitelist.propTypes = {
 ModalToWhitelist.defaultProps = {
 	activeAccount: null,
 	show: false,
-	error: null,
 	currency: null,
 };
 
@@ -178,7 +172,6 @@ export default injectIntl(connect(
 		setValue: (field, value) => dispatch(setValue(FORM_REPLENISH, field, value)),
 		setFormValue: (field, value) => dispatch(setFormValue(FORM_REPLENISH, field, value)),
 		setFormError: (field, error) => dispatch(setFormError(FORM_REPLENISH, field, error)),
-		setModalError: (err) => dispatch(setError(MODAL_REPLENISH, err)),
 		amountInput: (value, currency, name) =>
 			dispatch(amountInput(FORM_REPLENISH, value, currency, name)),
 		setDefaultAsset: () => dispatch(setDefaultAsset(FORM_REPLENISH)),
