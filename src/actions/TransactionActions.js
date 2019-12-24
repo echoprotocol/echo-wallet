@@ -1413,7 +1413,6 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 	try {
 		const tr = Services.getEcho().api.createTransaction();
 		tr.addOperation(operationId, options);
-		tr.addOperation(operationId, options);
 		const signer = options[operations[operation].signer];
 		await signTransaction(signer, tr, password);
 
