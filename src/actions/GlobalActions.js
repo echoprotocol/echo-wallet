@@ -116,6 +116,7 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
+	localStorage.setItem('isNodeSyncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
 });
