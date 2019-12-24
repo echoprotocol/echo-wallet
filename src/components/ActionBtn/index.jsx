@@ -57,7 +57,7 @@ class actionBtn extends React.Component {
 				>
 					<span className="copy-label-wrap">
 						<span className="copy-label-content">
-							{labelText && labelText}
+							{labelText}
 						</span>
 					</span>
 				</CSSTransition>
