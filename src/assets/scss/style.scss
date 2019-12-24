@@ -32,6 +32,7 @@
 @import "components/table-key-value";
 @import "components/action-tooltip";
 @import "components/copy-label";
+@import "components/error-message";
 
 @import "components/dropdowns/dropdowns";
 @import "components/dropdowns/fee-dropdown";
@@ -60,6 +61,8 @@
 @import "components/modals/accept-connections";
 @import "components/modals/confirm-transaction";
 @import "components/modals/accept-running-node";
+@import "components/modals/info";
+
 
 @import "components/progress";
 @import "components/input-password";

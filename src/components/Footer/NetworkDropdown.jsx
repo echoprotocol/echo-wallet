@@ -166,8 +166,8 @@ class Network extends React.PureComponent {
 				<div className="trigger" >
 					<span className="description">
 						{ disconnected ?
-							<FormattedMessage id="footer.network_section.title" /> :
-							<FormattedMessage id="footer.network_section.disconnected" />
+							<FormattedMessage id="footer.network_section.disconnected" /> :
+							<FormattedMessage id="footer.network_section.title" />
 						}
 					</span>
 					{percent < 100 ?

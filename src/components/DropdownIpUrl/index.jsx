@@ -109,6 +109,7 @@ class DropdownIpUrl extends React.Component {
 					onBlur={() => this.closeDropdown()}
 					onFocus={() => this.onFocus(ipOrUrl.value)}
 					noResultsMessage={null}
+					placeholder="Enter Ip or Url"
 				/>
 				{
 					status &&
