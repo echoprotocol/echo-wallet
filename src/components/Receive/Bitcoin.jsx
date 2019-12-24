@@ -88,6 +88,7 @@ class Bitcoin extends React.Component {
 							<ActionBtn
 								icon="icon-copy"
 								copy={address}
+								labelText={intl.formatMessage({ id: 'copied_text' })}
 							/>
 						</div>
 					</div>
