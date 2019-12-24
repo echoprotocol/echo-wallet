@@ -89,13 +89,18 @@ class Network extends React.PureComponent {
 							}
 						</div>
 						{
-							(i.name === 'testnet' && isPlatformSupportNode() && this.props.isNodeSyncing) && (
+							(i.name === 'testnet' && isPlatformSupportNode()) && (
 								<div className="node-info">
 									{
 										percent < 100 ? (
-											<RemoteNode value={percent} isNodePaused={this.props.isNodePaused} />
+											<RemoteNode
+												value={percent}
+												isNodePaused={this.props.isNodePaused}
+												isNodeSyncing={this.props.isNodeSyncing}
+												openModal={this.props.openModal}
+											/>
 										) : (
-											<LocalNode />
+											this.props.isNodeSyncing && <LocalNode />
 										)
 									}
 								</div>
