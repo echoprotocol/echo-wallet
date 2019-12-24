@@ -9,7 +9,12 @@ class Listeners {
 
 
 	initListeners(dispatch, getState) {
-		this.setIsConnected = (status) => dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: status }));
+		this.setIsConnected = (status) => {
+			dispatch(GlobalReducer.actions.set({ field: 'isConnected', value: status }));
+			if (status) {
+				Services.getEcho().api.getDynamicGlobalProperties(true);
+			}
+		};
 		this.setCurrentNode = (value) => dispatch(GlobalReducer.actions.set({ field: 'currentNode', value }));
 		this.setLocalNodePercent = (value) => {
 

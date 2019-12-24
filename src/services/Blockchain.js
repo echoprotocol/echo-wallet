@@ -48,6 +48,8 @@ class Blockchain {
 		this.store = null;
 		this.localNodePercent = 0;
 		this.localNodeDiffSyncTime = 10e9;
+		this.timeoutRemoteRecconect = null;
+		this.timeoutLocalRecconect = null;
 
 
 		this.localBlockNumber = 0;
@@ -199,7 +201,6 @@ class Blockchain {
 	}
 
 	async checkNodeSync() {
-
 		if (!this.local || !this.remote) {
 			return;
 		}
@@ -319,11 +320,15 @@ class Blockchain {
 
 		try {
 
+			if (this.timeoutRemoteRecconect) {
+				clearTimeout(this.timeoutRemoteRecconect);
+			}
+
 			await this._remoteStart();
 
 		} catch (e) {
 			console.warn('[REMOTE NODE] Error ', e);
-			setTimeout(() => {
+			this.timeoutRemoteRecconect = setTimeout(() => {
 				this.startCheckingRemote();
 			}, RESTART_TIME_CHECKING_NODE_MS);
 		}
@@ -362,6 +367,10 @@ class Blockchain {
 
 		try {
 
+			if (this.timeoutLocalRecconect) {
+				clearTimeout(this.timeoutLocalRecconect);
+			}
+
 			await this._localStart();
 
 			this.startSyncMonitor();
@@ -370,7 +379,7 @@ class Blockchain {
 
 			console.warn(e);
 
-			setTimeout(() => {
+			this.timeoutLocalRecconect = setTimeout(() => {
 				this.startCheckingLocalNode(url);
 			}, RESTART_TIME_CHECKING_NODE_MS);
 		}
