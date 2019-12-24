@@ -104,7 +104,7 @@ class PrivateKeysScenario extends React.Component {
 					unlock={() => this.unlock()}
 					forgot={() => this.forgot()}
 					close={() => this.close(MODAL_UNLOCK_PERMISSION)}
-					warningTime={7}
+					warningTime={2}
 				/>
 			</React.Fragment>
 		);

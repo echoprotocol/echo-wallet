@@ -492,12 +492,8 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 	async (dispatch, getState) => {
 		const currentAccount = getState().global.get('activeUser');
 		const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
+
 		const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
-
-		if (!permissionForm.get('isChanged') && !permissionForm.get('isOnlyWIFChanged')) {
-			dispatch(setFormValue(FORM_PERMISSION_KEY, 'isEditMode', false));
-		}
-
 		const permissionTable = getState().table.get(PERMISSION_TABLE);
 
 		const roles = ['active', 'echoRand'];
@@ -596,6 +592,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				|| dataChanged.echoRand.wif
 			)
 		) {
+			dispatch(setFormValue(FORM_PERMISSION_KEY, 'isEditMode', false));
 			return { validation: false, isWifChangingOnly: false };
 		}
 
