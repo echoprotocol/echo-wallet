@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CSSTransition } from 'react-transition-group';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { CSS_TRANSITION_SPEED } from '../../constants/GlobalConstants';
 
@@ -35,10 +35,10 @@ class DropdownActionBtn extends React.Component {
 	render() {
 		const {
 			copy, show, size,
-			icon, text,
+			icon, text, intl,
 		} = this.props;
 		const { copied, copiedAnimation } = this.state;
-
+		const copiedText = intl.formatMessage({ id: 'copied_text' });
 		return (
 			<Popup
 				open={copied && show}
@@ -57,6 +57,7 @@ class DropdownActionBtn extends React.Component {
 						</button>
 					</CopyToClipboard>
 				}
+
 				content={
 					<CSSTransition
 						in={copiedAnimation}
@@ -68,7 +69,7 @@ class DropdownActionBtn extends React.Component {
 					>
 						<span className="copy-label-wrap">
 							<span className="copy-label-content">
-								<FormattedMessage id="copied_text" />
+								{copiedText}
 							</span>
 						</span>
 					</CSSTransition>
@@ -87,6 +88,7 @@ DropdownActionBtn.propTypes = {
 	icon: PropTypes.string,
 	text: PropTypes.string,
 	size: PropTypes.string,
+	intl: PropTypes.any.isRequired,
 };
 
 DropdownActionBtn.defaultProps = {
@@ -98,4 +100,4 @@ DropdownActionBtn.defaultProps = {
 };
 
 
-export default DropdownActionBtn;
+export default injectIntl(DropdownActionBtn);

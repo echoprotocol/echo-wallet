@@ -10,6 +10,7 @@ import { setValue } from '../../actions/FormActions';
 
 import { KEY_CODE_ENTER } from '../../constants/GlobalConstants';
 import { FORM_PASSWORD_CREATE } from '../../constants/FormConstants';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class Password extends React.Component {
 
@@ -75,24 +76,25 @@ class Password extends React.Component {
 				</div>
 				<div className="form-info-description">{intl.formatMessage({ id: 'create_password_page.text' })}</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error })}>
+					<div className={classnames('field', { error })}>
 						<label htmlFor="password">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
 
 						<input
 							type="password"
 							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' })}
 							name="password"
-							className="ui input"
+							className="input"
 							autoFocus
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">{error}</span>
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
+						<ErrorMessage
+							value={error}
+							intl={intl}
+						/>
+					</div>
+					<div className={classnames('field', { error: repeatError })}>
 						<label htmlFor="repeatPassword">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
-
 						<input
 							type="password"
 							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_2.placeholder' })}
@@ -102,9 +104,12 @@ class Password extends React.Component {
 							onChange={(e) => this.onChange(e)}
 							onKeyDown={(e) => this.onKeyDown(e)}
 						/>
-						<span className="error-message">{intl.formatMessage({ id: 'create_password_page.repeat_error' })}</span>
+						<ErrorMessage
+							value={repeatError ? 'create_password_page.repeat_error' : ''}
+							intl={intl}
+						/>
 
-					</Form.Field>
+					</div>
 				</div>
 				<div className="form-panel">
 					<Button

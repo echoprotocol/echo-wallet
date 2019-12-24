@@ -54,6 +54,7 @@ class ModalViewWIF extends React.Component {
 								<ActionBtn
 									icon="icon-copy"
 									copy={keys.publicKey}
+									key={keys.publicKey}
 								/>
 							</div>
 						</Form.Field>

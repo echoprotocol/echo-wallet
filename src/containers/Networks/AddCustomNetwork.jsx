@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { injectIntl } from 'react-intl';
 
+import ErrorMessage from '../../components/ErrorMessage';
 
 class AddCustomNetwork extends React.Component {
 
@@ -16,19 +16,21 @@ class AddCustomNetwork extends React.Component {
 		const { intl } = this.props;
 		const text = intl.formatMessage({ id: `add_connection_page.${name}_input.title` });
 		return (
-			<Form.Field className={classnames('error-wrap', { error })}>
+			<div className={classnames('field', { error })}>
 				<label htmlFor="address">{name}</label>
 				<input
-					className="ui input"
+					className="input"
 					placeholder={text}
 					name={text}
 					value={value}
 					onChange={(e) => this.onChange(e)}
 					autoFocus={isFocus}
 				/>
-				{ error &&
-				<span className="error-message">{intl.formatMessage({ id: error })}</span>}
-			</Form.Field>
+				<ErrorMessage
+					value={error}
+					intl={intl}
+				/>
+			</div>
 		);
 	}
 

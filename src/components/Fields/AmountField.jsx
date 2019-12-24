@@ -13,6 +13,7 @@ import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 import { formatAmount } from '../../helpers/FormatHelper';
 
 import FeeField from './FeeField';
+import ErrorMessage from '../ErrorMessage';
 
 class AmountField extends React.Component {
 
@@ -302,7 +303,7 @@ class AmountField extends React.Component {
 						className={classnames(
 							'amount-wrap',
 							'action-wrap',
-							{ 'without-dropdown': !assetDropdown }, // TODO: empty
+							{ 'without-dropdown': !assetDropdown },
 						)}
 					>
 						<input
@@ -320,15 +321,11 @@ class AmountField extends React.Component {
 							this.renderErrorStaus(assetDropdown, amount.error, fee.error)
 						}
 					</div>
-					{
-						amount.error || fee.error ?
-							<span className="error-message">
-								{
-									intl.formatMessage({ id: amount.error }) ||
-									intl.formatMessage({ id: fee.error })
-								}
-							</span> : null
-					}
+
+					<ErrorMessage
+						value={amount.error || fee.error}
+						intl={intl}
+					/>
 
 					{
 						assetDropdown ? <Dropdown

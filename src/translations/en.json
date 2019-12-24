@@ -1018,7 +1018,8 @@
             "invalid_priv_error": "Invalid private key",
             "user_invalid_priv_error": "You have an invalid private key",
             "invalid_pub_error": "Invalid public key",
-            "keys_dont_match_error": "Invalide private key for current public key"
+			"keys_dont_match_error": "Invalide private key for current public key",
+			"wif_dont_match_error": "WIFs do not match"
         },
         "network_errors": {
             "network_already_exist_error": "Network already exists",
