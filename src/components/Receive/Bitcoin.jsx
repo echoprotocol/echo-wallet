@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import { FORM_BTC_RECEIVE } from '../../constants/FormConstants';
 
@@ -35,12 +36,35 @@ class Bitcoin extends React.Component {
 		return { address, account };
 	}
 
+	getQrLink() {
+		const {
+			amount, btcAddress,
+		} = this.props;
+		const address = btcAddress.getIn(['deposit_address', 'address']);
+		if (!address) {
+			return '';
+		}
+		const btcLink = `bitcoin:${address}`;
+		const link = `${BRIDGE_RECEIVE_URL}${btcLink}/asset-2/${amount.value || null}/widget`;
+
+		return link;
+	}
+	getQrData() {
+		const {
+			amount, btcAddress,
+		} = this.props;
+		const address = btcAddress.getIn(['deposit_address', 'address']);
+
+		return amount.value ? `bitcoin:${address}?amount=${amount.value}` : `bitcoin:${address}`;
+	}
 	renderPayment() {
 
 		const {
 			amount, accountName, btcAddress, intl,
 		} = this.props;
 
+		const link = this.getQrLink();
+		const qrData = this.getQrData();
 		const address = btcAddress.getIn(['deposit_address', 'address']);
 
 		return (
@@ -100,7 +124,8 @@ class Bitcoin extends React.Component {
 				{
 					accountName && address && amount ?
 						<QrCode
-							link={`bitcoin:${address}?amount=${amount.value}`}
+							link={link}
+							qrData={qrData}
 						/> : null
 				}
 			</React.Fragment>

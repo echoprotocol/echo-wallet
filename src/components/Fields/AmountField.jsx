@@ -303,7 +303,7 @@ class AmountField extends React.Component {
 						className={classnames(
 							'amount-wrap',
 							'action-wrap',
-							{ 'without-dropdown': !assetDropdown }, // TODO: empty
+							{ 'without-dropdown': !assetDropdown },
 						)}
 					>
 						<input

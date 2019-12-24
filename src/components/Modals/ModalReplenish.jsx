@@ -91,26 +91,6 @@ class ModalToWhitelist extends React.Component {
 													}}
 												/> : null
 										}
-
-										<AmountField
-											fees={fees}
-											form={FORM_REPLENISH}
-											fee={fee}
-											assets={assets}
-											amount={{
-												...amount,
-												error: error ? intl.formatMessage({ id: error }) : '',
-											}}
-											setContractFees={() => {}}
-											setFormError={this.props.setFormError}
-											setFormValue={this.props.setFormValue}
-											setValue={this.props.setValue}
-											setDefaultAsset={this.props.setDefaultAsset}
-											getTransferFee={this.props.getTransactionFee}
-											autoFocus
-											intl={intl}
-										/>
-
 										<AmountField
 											fees={fees}
 											form={FORM_REPLENISH}
@@ -128,6 +108,8 @@ class ModalToWhitelist extends React.Component {
 											setDefaultAsset={this.props.setDefaultAsset}
 											getTransferFee={this.props.getTransactionFee}
 											setContractFees={() => {}}
+											autoFocus
+											intl={intl}
 										/>
 									</div>
 
