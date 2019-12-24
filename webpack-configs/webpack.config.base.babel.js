@@ -6,8 +6,6 @@ import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 
 import { dependencies } from '../package.json';
 
-const { default: getPlatform } = require('../main/GetPlatform');
-
 const gitRevisionPlugin = new GitRevisionPlugin();
 
 const config = {
@@ -49,7 +47,6 @@ const config = {
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
 			COMMITHASH: fs.existsSync('./.git') ? JSON.stringify(gitRevisionPlugin.commithash()) : '',
-			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 		new webpack.NamedModulesPlugin(),
 	],

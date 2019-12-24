@@ -90,7 +90,7 @@ class Network extends React.PureComponent {
 							}
 						</div>
 						{
-							(i.name === 'testnet' && isPlatformSupportNode()) && (
+							(i.name === 'testnet' && isPlatformSupportNode(this.props.platform)) && (
 								<div className="node-info">
 									{
 										percent < 100 ? (
@@ -139,6 +139,7 @@ class Network extends React.PureComponent {
 						openModal={this.props.openModal}
 						isNodeSyncing={this.props.isNodeSyncing}
 						isNodePaused={this.props.isNodePaused}
+						platform={this.props.platform}
 					/>
 				</React.Fragment>
 			) :
@@ -250,6 +251,7 @@ Network.propTypes = {
 	intl: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
+	platform: PropTypes.string.isRequired,
 };
 
 Network.defaultProps = {
@@ -266,6 +268,7 @@ export default injectIntl(withRouter(connect(
 		isNodeSyncing: state.global.get('isNodeSyncing'),
 		isNodePaused: state.global.get('isNodePaused'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+		platform: state.global.get('platform'),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),
