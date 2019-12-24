@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { injectIntl } from 'react-intl';
+import ErrorMessage from '../ErrorMessage';
 
 class BytecodeField extends React.Component {
 
@@ -23,7 +23,7 @@ class BytecodeField extends React.Component {
 		} = this.props;
 
 		return (
-			<Form.Field className={classnames('error-wrap', { error: field.error })}>
+			<div className={classnames('field', { error: field.error })}>
 
 				<label htmlFor="bytecode">
 					{intl.formatMessage({ id: 'smart_contract_page.create_contract_page.bytecode.title' })}
@@ -42,9 +42,12 @@ class BytecodeField extends React.Component {
 					/>
 					{ field.error && <span className="icon-error value-status" /> }
 				</div>
-				{ field.error &&
-				<span className="error-message">{intl.formatMessage({ id: field.error })}</span>}
-			</Form.Field>
+				<ErrorMessage
+					value={field.error}
+					intl={intl}
+				/>
+
+			</div>
 		);
 	}
 

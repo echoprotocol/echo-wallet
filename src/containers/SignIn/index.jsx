@@ -77,7 +77,7 @@ class SignIn extends React.Component {
 
 			<Form className="main-form">
 				<div className="form-info">
-					{ isAddAccount ?
+					{ isAddAccount &&
 						<button
 							type="button"
 							className="back-link"
@@ -86,12 +86,12 @@ class SignIn extends React.Component {
 						>
 							<span className="icon-back" />
 							<FormattedMessage id="sign_page.back_button_text" />
-						</button> : null
+						</button>
 					}
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>
 				<div className="field-wrap">
-					<div className={classnames('field error-wrap', { error: accountName.error })}>
+					<div className={classnames('field', { error: accountName.error })}>
 						<label htmlFor="AccountName">
 							<FormattedMessage id="sign_page.import_account_page.name_input.title" />
 						</label>
@@ -104,17 +104,22 @@ class SignIn extends React.Component {
 						/>
 						{
 							accountName.error &&
-								<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>
+								<span className="error-message">
+									{intl.formatMessage({ id: accountName.error })}
+								</span>
 						}
 
 					</div>
 					<PasswordInput
+						key="sign-password"
+						unique="unique-sign-password"
 						inputLabel={WIFTtitle}
 						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
-						errorMessage={wif.error && intl.formatMessage({ id: wif.error })}
+						errorMessage={wif.error}
 						onChange={(e) => this.onChange(e)}
 						value={wif.value}
+						intl={intl}
 					/>
 				</div>
 				<div className="form-panel">

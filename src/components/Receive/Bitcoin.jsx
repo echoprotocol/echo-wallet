@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
@@ -72,55 +72,55 @@ class Bitcoin extends React.Component {
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.info" />
 				</p>
-
-				<Form.Field>
-					<label htmlFor="public-key">
-						<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.input_title" />
-					</label>
-					<div className="ui action input">
-						<input
-							type="text"
-							placeholder="Public Key"
-							readOnly
-							name="public-key"
-							value={address}
-						/>
-						<ActionBtn
-							icon="icon-copy"
-							copy={address}
-						/>
+				<div className="field-wrap">
+					<div className="field">
+						<label htmlFor="public-key">
+							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.input_title" />
+						</label>
+						<div className="action input">
+							<input
+								type="text"
+								placeholder="Public Key"
+								readOnly
+								name="public-key"
+								value={address}
+							/>
+							<ActionBtn
+								icon="icon-copy"
+								copy={address}
+							/>
+						</div>
 					</div>
-				</Form.Field>
-
-				<AmountField
-					fees={[]}
-					form={FORM_BTC_RECEIVE}
-					tokens={{ size: 0 }}
-					amount={amount}
-					isAvailableBalance={false}
-					amountInput={this.props.amountInput}
-					setFormError={() => { }}
-					setFormValue={() => { }}
-					setValue={() => { }}
-					currency={{
-						precision: 8, id: '', symbol: 'BTC', balance: 0,
-					}}
-					setDefaultAsset={() => { }}
-					getTransferFee={() => Promise.resolve()}
-					setContractFees={() => { }}
-					assetDropdown={false}
-					showAvailable={false}
-					warningMessage={
-						<span className="warning-message">
-							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt1" />
-							<span className="special">
-								<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt2" />
+					<AmountField
+						fees={[]}
+						form={FORM_BTC_RECEIVE}
+						tokens={{ size: 0 }}
+						amount={amount}
+						isAvailableBalance={false}
+						amountInput={this.props.amountInput}
+						setFormError={() => { }}
+						setFormValue={() => { }}
+						setValue={() => { }}
+						currency={{
+							precision: 8, id: '', symbol: 'BTC', balance: 0,
+						}}
+						setDefaultAsset={() => { }}
+						getTransferFee={() => Promise.resolve()}
+						setContractFees={() => { }}
+						assetDropdown={false}
+						showAvailable={false}
+						warningMessage={
+							<span className="warning-message">
+								<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt1" />
+								<span className="special">
+									<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt2" />
+								</span>
+								<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt3" />
 							</span>
-							<FormattedMessage id="wallet_page.receive_payment.btc.complete_address_page.warning_message_pt3" />
-						</span>
-					}
-					intl={intl}
-				/>
+						}
+						intl={intl}
+					/>
+				</div>
 				{
 					accountName && address && amount ?
 						<QrCode

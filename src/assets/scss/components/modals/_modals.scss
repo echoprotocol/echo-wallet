@@ -175,59 +175,6 @@
 	}
 }
 
-// style for info modal window
-.modal.small .modal-content.info {
-	min-height: 200px;
-	padding: 20px 0 26px;
-
-	.modal-header {
-		margin: 0;
-		margin-top: 21px;
-		font-size: 20px;
-		text-align: center;
-		font-weight: 600;
-	}
-
-	.modal-body {
-		margin: 33px 61px 0;
-
-		.info-row {
-			display: flex;
-			font-size: 14px;
-			margin-bottom: 17px;
-
-			.info-title {
-				font-family: proxima;
-				font-weight: 600;
-				min-width: 140px;
-				color: #5D637B;
-				opacity: 0.5;
-			}
-
-			.info-value {
-				color: #3B3B3B;
-				font-family: proxima;
-				font-weight: 600;
-
-				a {
-					color: #4D66CD;
-				}
-
-				.icon-commit {
-					font-size: 12px;
-					margin-right: 5px;
-				}
-			}
-
-			&:nth-child(1) {
-				.info-value a {
-					margin-left: 13px;
-				}
-			}
-		}
-	}
-}
-
 .modal.small .modal-content.add-key {
 	min-height: 230px;
 	padding: 38px 0 0;
@@ -262,7 +209,6 @@
 		}
 	}
 }
-
 
 .modal-wrap {
 	@include modal-wrap();

@@ -3,14 +3,14 @@
 	display: flex;
 	flex-direction: column;
 	margin: 0;
-	height: calc(100vh - 190px);
+	height: calc(100vh - 200px);
 	overflow-x: hidden;
 	border: 0;
 	border-radius: 0;
 
 	@media (min-width: 1060px) {
 		margin: 31px 0 0 0;
-		height: calc(100vh - 244px)
+		height: calc(100vh - 230px)
 	}
 
 	thead {
