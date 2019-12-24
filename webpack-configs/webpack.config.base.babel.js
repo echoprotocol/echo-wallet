@@ -49,7 +49,6 @@ const config = {
 			SOLC_BIN_URL: JSON.stringify(SOLC_BIN_URL),
 			ELECTRON: !!process.env.ELECTRON,
 			COMMITHASH: fs.existsSync('./.git') ? JSON.stringify(gitRevisionPlugin.commithash()) : '',
-			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 		new webpack.NamedModulesPlugin(),
 	],

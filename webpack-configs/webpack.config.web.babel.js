@@ -150,7 +150,6 @@ const config = {
 					},
 				},
 			},
-			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 	],
 	node: {

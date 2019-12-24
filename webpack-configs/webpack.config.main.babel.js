@@ -75,7 +75,6 @@ export default merge.smart(baseConfig, {
 					},
 				},
 			},
-			PLATFORM: JSON.stringify(getPlatform()),
 		}),
 	],
 	node: {

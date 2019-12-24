@@ -50,6 +50,8 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import LanguageService from '../services/language';
+
 import Listeners from '../services/Listeners';
 import {
 	FORM_ADD_CUSTOM_NETWORK,
@@ -58,6 +60,14 @@ import {
 	FORM_SIGN_UP_OPTIONS,
 	URI_TYPES,
 } from '../constants/FormConstants';
+
+let ipcRenderer;
+
+try {
+	({ ipcRenderer } = window);
+} catch (e) {
+	console.log('Err electron import');
+}
 
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('is_first_launch');
@@ -279,12 +289,26 @@ export const initApp = (store) => async (dispatch, getState) => {
 	const listeners = new Listeners();
 	listeners.initListeners(dispatch, getState);
 
+	const language = LanguageService.getCurrentLanguage();
+
 	try {
 		const userStorage = Services.getUserStorage();
 		await userStorage.init();
 
+		if (ipcRenderer) {
+
+			ipcRenderer.send('setLanguage', language);
+
+			const platform = await Services.getMainProcessAPIService().getPlatform();
+
+			dispatch(GlobalReducer.actions.set({ field: 'platform', value: platform }));
+		}
+
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
+
+		ipcRenderer.send('setLanguage', language);
+
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {
