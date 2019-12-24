@@ -237,7 +237,7 @@ class EchoNetwork extends React.Component {
 			address: a.address,
 		}));
 
-
+		const { intl } = this.props;
 		const options = users.map(({
 			name, address,
 		}, index) => {
@@ -251,6 +251,7 @@ class EchoNetwork extends React.Component {
 							size="mini"
 							copy={address}
 							action={(e) => e.stopPropagation()}
+							labelText={intl.formatMessage({ id: 'copied_text' })}
 						/>
 					</div>
 					<div className="name">{name}</div>
