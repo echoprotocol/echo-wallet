@@ -45,7 +45,7 @@ class ModalToWhitelist extends React.Component {
 
 	render() {
 		const {
-			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl, error,
+			show, activeAccount, isAvailableBalance, currency, amount, assets, fee, fees, intl,
 		} = this.props;
 
 		return (
