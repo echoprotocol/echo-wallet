@@ -195,8 +195,6 @@ class Blockchain {
 	}
 
 	async checkNodeSync() {
-		console.info('local', this.local)
-		console.info('remote', this.remote)
 		if (!this.local || !this.remote) {
 			return;
 		}
