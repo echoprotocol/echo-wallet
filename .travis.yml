@@ -18,7 +18,7 @@ jobs:
     - stage: build
       name: "Build Linux App"
       env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.9-rc.0.tar"zzz
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.13.9-rc.0.tar"
       if: tag IS present
       script:
         - rm -rf node_modules
