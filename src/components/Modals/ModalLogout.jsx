@@ -65,60 +65,68 @@ class ModalLogout extends React.Component {
 		const { password } = this.state;
 
 		return (
-			<Modal className="small" open={show}>
+			<Modal className="modal-wrap" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-body">
-							<Form className="main-form">
-								<div className="form-info">
-									<h3>{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}</h3>
-								</div>
-								{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
-								<div className="field-wrap">
-									<PasswordInput
-										errorMessage={error ? intl.formatMessage({ id: error }) : ''}
-										inputLabel={
-											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
-										}
-										inputPlaceholder={
-											intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.placeholder' })
-										}
-										inputName="password"
-										value={password}
-										onChange={(e) => this.onChange(e)}
-										autoFocus
-									/>
-								</div>
-								<div className="form-panel">
-									<a
-										className="action-link"
-										role="button"
-										onClick={(e) => this.onForgot(e)}
-										onKeyPress={(e) => this.onForgot(e)}
-										tabIndex="0"
-									>
-										{intl.formatMessage({ id: 'modals.modal_confirm_logout.forgot_password_link' })}
-									</a>
-									<Button
-										className="main-btn"
-										type="button"
-										onClick={() => this.onClose()}
-										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.close_button_text' })}
-									/>
-									<Button
-										type="submit"
-										className="main-btn"
-										onClick={() => this.onConfirm()}
-										content={intl.formatMessage({ id: 'modals.modal_confirm_logout.confirm_button_text' })}
-									/>
-								</div>
-							</Form>
-						</div>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">
+							{intl.formatMessage({ id: 'modals.modal_confirm_logout.title' })}
+						</h2>
 					</div>
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<Form className="main-form">
+						<div className="info-text">
+							{intl.formatMessage({ id: 'modals.modal_confirm_logout.subtitle' })}
+						</div>
+
+						<div className="field-wrap">
+							<PasswordInput
+								key="modal-logout-password"
+								unique="unique-modal-logout-password"
+								errorMessage={error}
+								inputLabel={
+									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.title' })
+								}
+								inputPlaceholder={
+									intl.formatMessage({ id: 'modals.modal_confirm_logout.password_input.placeholder' })
+								}
+								inputName="password"
+								value={password}
+								onChange={(e) => this.onChange(e)}
+								autoFocus
+								intl={intl}
+							/>
+						</div>
+						<div className="form-panel">
+							<a
+								className="action-link"
+								role="button"
+								onClick={(e) => this.onForgot(e)}
+								onKeyPress={(e) => this.onForgot(e)}
+								tabIndex="0"
+							>
+								{intl.formatMessage({ id: 'modals.modal_confirm_logout.forgot_password_link' })}
+							</a>
+							<Button
+								className="main-btn"
+								type="button"
+								onClick={() => this.onClose()}
+								content={intl.formatMessage({ id: 'modals.modal_confirm_logout.close_button_text' })}
+							/>
+							<Button
+								type="submit"
+								className="main-btn"
+								onClick={() => this.onConfirm()}
+								content={intl.formatMessage({ id: 'modals.modal_confirm_logout.confirm_button_text' })}
+							/>
+						</div>
+					</Form>
 				</FocusLock>
 			</Modal>
 		);
