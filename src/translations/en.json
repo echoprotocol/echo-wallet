@@ -481,7 +481,8 @@
             "block": "Block",
             "choose_network_dropdown": {
                 "title": "Choose network",
-                "add_custom_network_buttom": "+ Add custom Network"
+                "add_custom_network_buttom": "+ Add custom Network",
+                "local_node": "Local Node"
             }
         },
         "key_warning": {
@@ -499,7 +500,9 @@
         "remote_node": {
             "title": "Remote Node",
             "synchronization": "Network synchronization",
-            "popup_info": "Node accessible remotely on the Web. Insufficient for participation in consensus."
+            "synchronization_paused": "Sync is paused",
+            "popup_info": "Node accessible remotely on the Web. Insufficient for participation in consensus.",
+            "incoming_connections": "Incoming connections"
         }
     },
     "modals": {
@@ -817,6 +820,10 @@
             "text": "You can clear your account data from Echo Desktop and set a new password. If you do, you wil lose access to the accounts you’ve logged into. You will need to log into them again, after you have set a new password.",
             "checkbox_text": "I understand the Echo Desktop does not store backups of my account keys, and I will lose access to them  by clearing my account data",
             "confirm_button_text": "Clear data"
+        },
+        "modal_node_coming_soon": {
+            "title": "Local node",
+            "text": "Local node will be available in future releases."
         }
     },
     "toasts": {
@@ -968,7 +975,9 @@
             "negative_amount_error": "Amount should be positive number",
             "incorrect_input_error": "Amount must contain only digits and dot",
             "cant_calculate_fee_error": "Fee can't be calculated",
-            "insufficient_funds": "Insufficient funds for fee"
+            "insufficient_funds": "Insufficient funds for fee",
+            "send_to_yourself_error": "You can not send funds to yourself",
+            "send_from_inactive_error": "You can not send funds from inactive account"
         },
         "contract_errors": {
             "empty_contract_error": "Contract id should not be empty",
