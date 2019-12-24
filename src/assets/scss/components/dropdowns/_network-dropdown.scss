@@ -27,12 +27,14 @@
 
 		&>.menu {
 			display: inline-block;
-			margin: 0 0 0 -30px;
+			margin: 0;
 			bottom: calc(100% + 8px);
 			opacity: 0;
 			transform: translateY(100%);
 			transition: transform 120ms ease-in-out, opacity 100ms ease-out;
 			min-width: 294px;
+			left: auto;
+			right: 10px;
 
 			&.visible {
 				transform: translateY(0);

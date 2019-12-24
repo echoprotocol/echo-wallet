@@ -278,8 +278,10 @@ export const initApp = (store) => async (dispatch, getState) => {
 		window.ipcRenderer.send('showWindow');
 	}
 
-	const listeners = new Listeners();
-	listeners.initListeners(dispatch, getState);
+	if (store) {
+		const listeners = new Listeners();
+		listeners.initListeners(dispatch, getState);
+	}
 
 	try {
 		const userStorage = Services.getUserStorage();
