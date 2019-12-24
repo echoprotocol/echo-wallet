@@ -14,14 +14,14 @@ class QrCode extends React.PureComponent {
 	}
 
 	render() {
-		const { link } = this.props;
+		const { link, qrData } = this.props;
 
 		return (
 			<div className="qr-section">
 				<div className="qr-wrap">
 					<QRCode
 						bgColor="#fff"
-						value={link}
+						value={qrData}
 						size={134}
 					/>
 				</div>
@@ -52,10 +52,12 @@ class QrCode extends React.PureComponent {
 
 QrCode.propTypes = {
 	link: PropTypes.string,
+	qrData: PropTypes.string,
 };
 
 QrCode.defaultProps = {
 	link: '',
+	qrData: '',
 };
 
 export default QrCode;

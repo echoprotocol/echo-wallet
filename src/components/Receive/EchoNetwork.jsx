@@ -364,7 +364,7 @@ class EchoNetwork extends React.Component {
 					intl={intl}
 				/>
 				{
-					receiverValue ? <QrCode link={link} /> : null
+					receiverValue ? <QrCode link={link} qrData={link} /> : null
 				}
 			</div>
 		);
