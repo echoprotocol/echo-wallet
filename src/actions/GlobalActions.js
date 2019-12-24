@@ -15,6 +15,7 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_ACCEPT_INCOMING_CONNECTIONS,
+	MODAL_AUTO_LAUNCH_NODE,
 } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import {
@@ -61,12 +62,17 @@ import {
 
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('is_first_launch');
-	// const isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
+	let isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
+	isAgreedWithNodeLaunch = isAgreedWithNodeLaunch ? JSON.parse(isAgreedWithNodeLaunch) : false;
 
 	if (isFirst) {
 		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
+	}
+
+	if (isAgreedWithNodeLaunch) {
+		dispatch(openModal(MODAL_AUTO_LAUNCH_NODE));
 	}
 
 	localStorage.setItem('is_first_launch', JSON.stringify(false));
