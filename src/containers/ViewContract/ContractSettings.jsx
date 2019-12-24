@@ -13,6 +13,7 @@ import { FORM_VIEW_CONTRACT } from '../../constants/FormConstants';
 import { ECHO_ASSET_ID } from '../../constants/GlobalConstants';
 import { validateContractName } from '../../helpers/ValidateHelper';
 import ActionBtn from '../../components/ActionBtn';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class ContractSettings extends React.Component {
 
@@ -142,7 +143,7 @@ class ContractSettings extends React.Component {
 		return (
 
 			<div
-				className={classnames('error-wrap', { error: newName.error })}
+				className={classnames('field', { error: newName.error })}
 				onBlur={() => this.onBlurBlock(contractId)}
 				onFocus={() => this.onFocusBlock()}
 			>
@@ -166,9 +167,10 @@ class ContractSettings extends React.Component {
 						onClick={(e) => this.onClose(e)}
 					/>
 				</Input>
-
-				{newName.error &&
-				<span className="error-message">{intl.formatMessage({ id: newName.error })}</span>}
+				<ErrorMessage
+					value={newName.error}
+					intl={intl}
+				/>
 			</div>
 		);
 	}

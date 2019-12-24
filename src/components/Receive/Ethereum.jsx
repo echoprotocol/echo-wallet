@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'semantic-ui-react';
-import BN from 'bignumber.js';
+import { Button } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import BN from 'bignumber.js';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
+import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
 
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
@@ -22,6 +23,30 @@ class Ethereum extends React.Component {
 		this.props.clearForm();
 	}
 
+	getQrLink() {
+		const {
+			amount, ethAddress,
+		} = this.props;
+		const address = ethAddress.get('eth_addr');
+		if (!address) {
+			return '';
+		}
+		const ethLink = `ethereum:${address}`;
+		const link = `${BRIDGE_RECEIVE_URL}${ethLink}/asset-1/${amount.value || null}/widget`;
+
+		return link;
+	}
+	getQrData() {
+		const { ethAddress, amount } = this.props;
+		const tmpValue = new BN(amount.value || 0);
+		const address = `0x${ethAddress.get('eth_addr')}`;
+
+		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
+			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
+
+		return +value ? `ethereum:${address}?value=${value}` : `ethereum:${address}`;
+	}
+
 	renderPayment() {
 		const { ethAddress, amount, intl } = this.props;
 
@@ -30,65 +55,66 @@ class Ethereum extends React.Component {
 		};
 		const address = ethAddress.get('eth_addr');
 
-		const tmpValue = new BN(amount.value || 0);
-
-		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
-			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
-
 		const addressWithPrefix = `0x${address}`;
 
-		const qrText = `ethereum:${addressWithPrefix}?value=${value}`;
+		const link = this.getQrLink();
+		const qrData = this.getQrData();
 
 		return (
 			<React.Fragment>
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.info" />
 				</p>
-				<Form.Field>
-					<label htmlFor="public-key">
-						<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
-					</label>
-					<div className="ui action input">
-						<input
-							type="text"
-							placeholder="Public Key"
-							readOnly
-							name="public-key"
-							value={addressWithPrefix}
-						/>
-						<ActionBtn
-							icon="icon-copy"
-							copy={addressWithPrefix}
-							labelText={intl.formatMessage({ id: 'copied_text' })}
-						/>
+				<div className="field-wrap">
+					<div className="field">
+						<label htmlFor="public-key">
+							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
+						</label>
+						<div className="action input">
+							<input
+								type="text"
+								placeholder="Public Key"
+								readOnly
+								name="public-key"
+								value={addressWithPrefix}
+							/>
+							<ActionBtn
+								icon="icon-copy"
+								copy={addressWithPrefix}
+								labelText={intl.formatMessage({ id: 'copied_text' })}
+							/>
+						</div>
 					</div>
-				</Form.Field>
-				<AmountField
-					fees={[]}
-					form={FORM_ETH_RECEIVE}
-					amount={amount}
-					isAvailableBalance={false}
-					amountInput={this.props.amountInput}
-					setFormError={() => {}}
-					setFormValue={() => {}}
-					setValue={() => {}}
-					currency={ethCurrency}
-					setDefaultAsset={() => {}}
-					assetDropdown={false}
-					showAvailable={false}
-					receive
-					warningMessage={
-						<span className="warning-message">
-							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt1" />
-							<span className="special">
-								<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt2" />
+					<AmountField
+						fees={[]}
+						form={FORM_ETH_RECEIVE}
+						amount={amount}
+						isAvailableBalance={false}
+						amountInput={this.props.amountInput}
+						setFormError={() => { }}
+						setFormValue={() => { }}
+						setValue={() => { }}
+						currency={ethCurrency}
+						setDefaultAsset={() => { }}
+						assetDropdown={false}
+						showAvailable={false}
+						receive
+						warningMessage={
+							<span className="warning-message">
+								<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt1" />
+								<span className="special">
+									<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt2" />
+								</span>
+								<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt3" />
 							</span>
-							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.warning_message_pt3" />
-						</span>
-					}
-					intl={intl}
+						}
+						intl={intl}
+					/>
+				</div>
+				<QrCode
+					link={link}
+					qrData={qrData}
 				/>
-				<QrCode link={qrText} />
 			</React.Fragment>
 		);
 	}

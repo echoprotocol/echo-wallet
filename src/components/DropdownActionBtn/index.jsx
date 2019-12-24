@@ -37,7 +37,6 @@ class DropdownActionBtn extends React.Component {
 			icon, text, labelText,
 		} = this.props;
 		const { copied, copiedAnimation } = this.state;
-
 		return (
 			<Popup
 				open={copied && show}
@@ -56,6 +55,7 @@ class DropdownActionBtn extends React.Component {
 						</button>
 					</CopyToClipboard>
 				}
+
 				content={
 					<CSSTransition
 						in={copiedAnimation}

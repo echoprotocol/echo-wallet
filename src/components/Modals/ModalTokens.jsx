@@ -12,6 +12,7 @@ import { addToken } from '../../actions/BalanceActions';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 
 import { contractIdRegex } from '../../helpers/ValidateHelper';
+import ErrorMessage from '../ErrorMessage';
 
 
 class ModalTokens extends React.Component {
@@ -52,7 +53,7 @@ class ModalTokens extends React.Component {
 					<div className="modal-body">
 						<Form className="main-form">
 							<div className="field-wrap">
-								<div className={classnames('field error-wrap', { error: contractId.error })}>
+								<div className={classnames('field', { error: contractId.error })}>
 									<label htmlFor="tokens">
 										{intl.formatMessage({ id: 'modals.modal_tokens.contract_id_input.title' })}
 									</label>
@@ -65,10 +66,11 @@ class ModalTokens extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									{
-										contractId.error &&
-										<span className="error-message">{intl.formatMessage({ id: contractId.error })}</span>
-									}
+
+									<ErrorMessage
+										value={contractId.error}
+										intl={intl}
+									/>
 								</div>
 							</div>
 							<div className="form-panel">

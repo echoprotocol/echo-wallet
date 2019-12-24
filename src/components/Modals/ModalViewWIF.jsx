@@ -55,6 +55,7 @@ class ModalViewWIF extends React.Component {
 									icon="icon-copy"
 									copy={keys.publicKey}
 									labelText={intl.formatMessage({ id: 'copied_text' })}
+									key={keys.publicKey}
 								/>
 							</div>
 						</Form.Field>

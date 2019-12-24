@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -9,8 +8,9 @@ import { FORM_CALL_CONTRACT } from '../../../constants/FormConstants';
 import { setInFormValue, setValue } from '../../../actions/FormActions';
 import { formatCallContractField } from '../../../helpers/FormatHelper';
 import { setContractFees } from '../../../actions/ContractActions';
+import ErrorMessage from '../../../components/ErrorMessage';
 
-class TabCallContracts extends React.Component {
+class FieldComponent extends React.Component {
 
 	onChange(e) {
 		const { field } = this.props;
@@ -37,7 +37,7 @@ class TabCallContracts extends React.Component {
 		const tag = formatedField.trim().toLowerCase().replace(' ', '_').concat('_field');
 		return (
 
-			<Form.Field className={classnames('error-wrap', { error: data.error })}>
+			<div className={classnames('field', { error: data.error })}>
 				<label htmlFor={formatedField}>
 					<FormattedMessage id={`smart_contract_page.contract_info.call_contract_tab.form.${tag}`} />
 				</label>
@@ -45,18 +45,21 @@ class TabCallContracts extends React.Component {
 				<input
 					placeholder={`${type.replace(/address/g, 'id')}`}
 					name={field}
-					className="ui input"
+					className="input"
 					value={data.value}
 					onChange={(e) => this.onChange(e)}
 				/>
-				{data.error && <span className="error-message">{intl.formatMessage({ id: data.error })}</span>}
-			</Form.Field>
+				<ErrorMessage
+					value={data.error}
+					intl={intl}
+				/>
+			</div>
 		);
 	}
 
 }
 
-TabCallContracts.propTypes = {
+FieldComponent.propTypes = {
 	field: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
 	data: PropTypes.object.isRequired,
@@ -77,4 +80,4 @@ export default injectIntl(connect(
 		setValue: (field, value) => dispatch(setValue(FORM_CALL_CONTRACT, field, value)),
 		setContractFees: () => dispatch(setContractFees(FORM_CALL_CONTRACT)),
 	}),
-)(TabCallContracts));
+)(FieldComponent));
