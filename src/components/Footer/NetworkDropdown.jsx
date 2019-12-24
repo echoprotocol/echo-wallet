@@ -251,7 +251,7 @@ export default injectIntl(withRouter(connect(
 		isNodeSyncing: state.global.get('isNodeSyncing'),
 		isNodePaused: state.global.get('isNodePaused'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
-		platform: state.global.get('loading'),
+		platform: state.global.get('platform'),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),

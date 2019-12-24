@@ -61,14 +61,6 @@ import {
 	URI_TYPES,
 } from '../constants/FormConstants';
 
-let ipcRenderer;
-
-try {
-	({ ipcRenderer } = window);
-} catch (e) {
-	console.log('Err electron import');
-}
-
 export const incomingConnectionsRequest = () => (dispatch) => {
 	let isFirst = localStorage.getItem('is_first_launch');
 	// const isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
@@ -295,19 +287,19 @@ export const initApp = (store) => async (dispatch, getState) => {
 		const userStorage = Services.getUserStorage();
 		await userStorage.init();
 
-		if (ipcRenderer) {
+		if (window.ipcRenderer) {
 
-			ipcRenderer.send('setLanguage', language);
+			window.ipcRenderer.send('setLanguage', language);
 
 			const platform = await Services.getMainProcessAPIService().getPlatform();
+			console.log('platform', platform);
 
 			dispatch(GlobalReducer.actions.set({ field: 'platform', value: platform }));
+			console.log('getState', getState);
 		}
 
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
-
-		ipcRenderer.send('setLanguage', language);
 
 	} catch (err) {
 		console.warn(err.message || err);

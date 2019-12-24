@@ -6,8 +6,6 @@ import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 
 import { dependencies } from '../package.json';
 
-const { default: getPlatform } = require('../main/GetPlatform');
-
 const gitRevisionPlugin = new GitRevisionPlugin();
 
 const config = {

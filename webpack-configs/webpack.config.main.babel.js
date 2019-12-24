@@ -8,7 +8,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { SOLC_LIST_URL, SOLC_BIN_URL } from 'config';
 import baseConfig from './webpack.config.base.babel';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
-import getPlatform from '../main/GetPlatform';
 
 CheckNodeEnv('production');
 export default merge.smart(baseConfig, {
