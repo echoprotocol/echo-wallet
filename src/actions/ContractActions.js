@@ -823,5 +823,5 @@ export const updateGeneralContractInfo = async (contract) => {
  */
 export const resetGeneralContractInfo = () => (dispatch, getState) => {
 	const subscribeCallback = getState().contract.get('subscribeCallback');
-	Services.getEcho().subscriber.removeContractSubscribe(subscribeCallback);
+	Services.getEcho().getEchoInstance().subscriber.removeContractSubscribe(subscribeCallback);
 };
