@@ -51,6 +51,8 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import LanguageService from '../services/language';
+
 import Listeners from '../services/Listeners';
 import {
 	FORM_ADD_CUSTOM_NETWORK,
@@ -69,9 +71,7 @@ export const incomingConnectionsRequest = () => (dispatch) => {
 
 	if (isFirst) {
 		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
-	}
-
-	if (isAgreedWithNodeLaunch) {
+	} else if (isAgreedWithNodeLaunch) {
 		dispatch(openModal(MODAL_AUTO_LAUNCH_NODE));
 	}
 
@@ -84,6 +84,8 @@ export const incomingConnectionsRequest = () => (dispatch) => {
  * @returns {Function}
  */
 export const startLocalNode = (pass) => (async (dispatch) => {
+
+	localStorage.setItem('is_agreed_with_node_launch', JSON.stringify(true));
 
 	const userStorage = Services.getUserStorage();
 	const networkId = await userStorage.getNetworkId();
@@ -124,6 +126,8 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
+
+
 });
 
 /**
@@ -289,12 +293,24 @@ export const initApp = (store) => async (dispatch, getState) => {
 		listeners.initListeners(dispatch, getState);
 	}
 
+	const language = LanguageService.getCurrentLanguage();
+
 	try {
 		const userStorage = Services.getUserStorage();
 		await userStorage.init();
 
+		if (window.ipcRenderer) {
+
+			window.ipcRenderer.send('setLanguage', language);
+
+			const platform = await Services.getMainProcessAPIService().getPlatform();
+
+			dispatch(GlobalReducer.actions.set({ field: 'platform', value: platform }));
+		}
+
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
+
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {

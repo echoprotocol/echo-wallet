@@ -820,6 +820,19 @@
             "text": "You can clear your account data from Echo Desktop and set a new password. If you do, you wil lose access to the accounts you’ve logged into. You will need to log into them again, after you have set a new password.",
             "checkbox_text": "I understand the Echo Desktop does not store backups of my account keys, and I will lose access to them  by clearing my account data",
             "confirm_button_text": "Clear data"
+        },
+        "modal_node_coming_soon": {
+            "title": "Local node",
+            "text": "Local node will be available in future releases."
+        },
+        "modal_auto_run_local_node": {
+            "title": "Unlock Wallet to run local",
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Unlock Wallet",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            }
         }
     },
     "toasts": {

@@ -31,6 +31,7 @@ import {
 	MODAL_ACCEPT_INCOMING_CONNECTIONS,
 	MODAL_ACCEPT_RUNNING_NODE,
 	MODAL_AUTO_LAUNCH_NODE,
+	MODAL_NODE_COMING_SOON,
 } from './../constants/ModalConstants';
 
 const DEFAULT_FIELDS = Map({
@@ -79,6 +80,7 @@ const DEFAULT_MODAL_FIELDS = {
 	[MODAL_ACCEPT_INCOMING_CONNECTIONS]: Map({}),
 	[MODAL_ACCEPT_RUNNING_NODE]: Map({}),
 	[MODAL_AUTO_LAUNCH_NODE]: Map({}),
+	[MODAL_NODE_COMING_SOON]: Map({}),
 };
 
 export default createModule({
@@ -131,6 +133,8 @@ export default createModule({
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_ACCEPT_RUNNING_NODE]),
 		[MODAL_AUTO_LAUNCH_NODE]:
 			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_AUTO_LAUNCH_NODE]),
+		[MODAL_NODE_COMING_SOON]:
+			_.cloneDeep(DEFAULT_FIELDS).merge(DEFAULT_MODAL_FIELDS[MODAL_NODE_COMING_SOON]),
 	}),
 	transformations: {
 		open: {

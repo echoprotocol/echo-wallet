@@ -5,39 +5,72 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import FocusLock from 'react-focus-lock';
 
-import { closeModal, openModal, setError } from '../../actions/ModalActions';
+import { closeModal, setError, openModal } from '../../actions/ModalActions';
+import { startLocalNode } from '../../actions/GlobalActions';
+import { unlock } from '../../actions/AuthActions';
 
-import { MODAL_AUTO_LAUNCH_NODE } from '../../constants/ModalConstants';
-import { removeAccount } from '../../actions/GlobalActions';
+import { MODAL_AUTO_LAUNCH_NODE, MODAL_WIPE } from '../../constants/ModalConstants';
 import PasswordInput from '../PasswordInput';
 
 class ModalNodeAutoLaunch extends React.Component {
 
-	onForgot(e) {
-		e.preventDefault();
-		this.props.forgot();
+	constructor(props) {
+		super(props);
+
+		this.DEFAULT_STATE = {
+			password: '',
+		};
+
+		this.state = _.cloneDeep(this.DEFAULT_STATE);
+	}
+
+	componentWillUnmount() {
+		this.clear();
 	}
 
 	onSuccess() {
-		this.props.unlock();
+		const { password } = this.state;
+
+		this.props.unlock(password, () => {
+			this.props.startLocalNode(password);
+			this.clear();
+		});
 	}
 
 	onClose(e) {
 		e.preventDefault();
-		this.props.close();
+		this.clear();
+	}
+
+	onForgot(e) {
+		e.preventDefault();
+		this.clear();
+		this.props.openModal(MODAL_WIPE);
 	}
 
 	onChange(e) {
-		this.props.change(e.target.value.trim());
+		const password = e.target.value.trim();
+
+		this.setState({ password });
+
+		if (this.props.error) {
+			this.props.clearError();
+		}
+	}
+
+	clear() {
+		this.setState(_.cloneDeep(this.DEFAULT_STATE));
+		this.props.clearError();
+		this.props.close();
 	}
 
 	render() {
 		const {
-			show, error, disabled, password, intl,
+			show, error, disabled, intl,
 		} = this.props;
 
-		const btnWaitText = intl.formatMessage({ id: 'modals.modal_edit_permissions.button_text.wait_mode' });
-		const btnReadyText = intl.formatMessage({ id: 'modals.modal_edit_permissions.button_text.ready_mode' });
+		const { password } = this.state;
+
 		return (
 			<Modal className="edit-permissions-modal" open={show}>
 				<FocusLock autoFocus={false}>
@@ -47,20 +80,17 @@ class ModalNodeAutoLaunch extends React.Component {
 					/>
 					<div className="modal-header">
 						<h3 className="modal-header-title">
-							{intl.formatMessage({ id: 'modals.modal_edit_permissions.title' })}
+							{intl.formatMessage({ id: 'modals.modal_auto_run_local_node.title' })}
 						</h3>
 					</div>
 					<Form className="modal-body">
-						<div className="info-text">
-							{intl.formatMessage({ id: 'modals.modal_edit_permissions.text' })}
-						</div>
 						<div className="field-wrap">
 							<PasswordInput
 								key="modal-permission-password"
 								unique="unique-modal-permission-password"
 								errorMessage={error}
-								inputLabel={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.title' })}
-								inputPlaceholder={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.placeholder' })}
+								inputLabel={intl.formatMessage({ id: 'modals.modal_auto_run_local_node.password_input.title' })}
+								inputPlaceholder={intl.formatMessage({ id: 'modals.modal_auto_run_local_node.password_input.placeholder' })}
 								inputName="password"
 								value={password}
 								onChange={(e) => this.onChange(e)}
@@ -75,14 +105,15 @@ class ModalNodeAutoLaunch extends React.Component {
 								onKeyPress={(e) => this.onForgot(e)}
 								tabIndex="0"
 							>
-								{intl.formatMessage({ id: 'modals.modal_edit_permissions.forgot_password_link' })}
+								{intl.formatMessage({ id: 'modals.modal_auto_run_local_node.forgot_password_link' })}
 							</a>
 							<Button
 								type="submit"
 								className="main-btn countdown-wrap"
 								onClick={(e) => this.onSuccess(e)}
 								disabled={disabled}
-							>aaaa
+							>
+								{intl.formatMessage({ id: 'modals.modal_auto_run_local_node.confirm_button_text' })}
 							</Button>
 						</div>
 					</Form>
@@ -97,11 +128,11 @@ ModalNodeAutoLaunch.propTypes = {
 	show: PropTypes.bool,
 	disabled: PropTypes.bool,
 	error: PropTypes.string,
-	password: PropTypes.string.isRequired,
-	change: PropTypes.func.isRequired,
 	unlock: PropTypes.func.isRequired,
-	forgot: PropTypes.func.isRequired,
 	close: PropTypes.func.isRequired,
+	openModal: PropTypes.func.isRequired,
+	startLocalNode: PropTypes.func.isRequired,
+	clearError: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
 };
 
@@ -118,9 +149,10 @@ export default injectIntl(connect(
 		accountName: state.modal.getIn([MODAL_AUTO_LAUNCH_NODE, 'accountName']),
 	}),
 	(dispatch) => ({
-		logout: (accountName, password) => dispatch(removeAccount(accountName, password)),
-		closeModal: (modal) => dispatch(closeModal(modal)),
-		openModal: (modal) => dispatch(openModal(modal)),
-		clear: () => dispatch(setError(MODAL_AUTO_LAUNCH_NODE, null)),
+		close: () => dispatch(closeModal(MODAL_AUTO_LAUNCH_NODE)),
+		openModal: (value) => dispatch(openModal(value)),
+		startLocalNode: (password) => dispatch(startLocalNode(password)),
+		unlock: (password, callback) => dispatch(unlock(password, callback, MODAL_AUTO_LAUNCH_NODE)),
+		clearError: () => dispatch(setError(MODAL_AUTO_LAUNCH_NODE, null)),
 	}),
 )(ModalNodeAutoLaunch));
