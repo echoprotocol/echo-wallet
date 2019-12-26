@@ -5,3 +5,6 @@ export const SYNC_MONITOR_MS = 2000;
 export const RESTART_TIME_CHECKING_NODE_MS = 5000;
 export const CHAIN_MIN_RANGE_PORT = 3000;
 export const CHAIN_MAX_RANGE_PORT = 5000;
+export const SUPPORTED_LOCAL_NODE_NETWORKS = [
+	'testnet',
+];

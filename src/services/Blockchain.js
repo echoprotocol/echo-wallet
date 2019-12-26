@@ -12,7 +12,11 @@ import {
 	CONNECT_STATUS,
 	REGISTRATION,
 } from '../constants/GlobalConstants';
-import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/ChainConstants';
+import {
+	SYNC_MONITOR_MS,
+	RESTART_TIME_CHECKING_NODE_MS,
+	SUPPORTED_LOCAL_NODE_NETWORKS,
+} from '../constants/ChainConstants';
 
 let ipcRenderer;
 
@@ -415,6 +419,10 @@ class Blockchain {
 	}
 
 	async _localStart() {
+		if (!SUPPORTED_LOCAL_NODE_NETWORKS.some((n) => n === this.network) ||
+			!JSON.parse(localStorage.getItem('is_node_syncing'))) {
+			throw new Error('Local node not allow to connect now');
+		}
 		// TODO:: local switch  unsubscribe previous!!
 		this.local = await this._createConnection(this.localNodeUrl);
 
