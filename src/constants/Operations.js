@@ -441,7 +441,7 @@ export default {
 		name: 'Sidechain eth send deposit',
 		options: {
 			from: 'committee_member_id',
-			subject: ['account', 'name'],
+			subject: ['deposit_id'],
 			asset: null,
 		},
 	},
@@ -461,7 +461,7 @@ export default {
 		name: 'Sidechain eth send withdraw',
 		options: {
 			from: 'committee_member_id',
-			subject: ['eth_addr'],
+			subject: ['withdraw_id'],
 			asset: null,
 		},
 	},
@@ -530,7 +530,7 @@ export default {
 		name: 'Sidechain erc20 send deposit',
 		options: {
 			from: 'committee_member_id',
-			subject: ['account', 'name'],
+			subject: ['deposit_id'],
 			asset: null,
 		},
 	},
@@ -549,7 +549,7 @@ export default {
 		name: 'Sidechain erc20 send withdraw',
 		options: {
 			from: 'committee_member_id',
-			subject: ['to'],
+			subject: ['withdraw_id'],
 			asset: null,
 		},
 	},
