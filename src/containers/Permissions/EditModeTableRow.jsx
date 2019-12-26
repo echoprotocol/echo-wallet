@@ -48,6 +48,7 @@ class EditModeTableRow extends React.Component {
 					inputName={name}
 					value={wif.value}
 					onChange={setWif}
+					intl={intl}
 				/>
 
 			</React.Fragment>
