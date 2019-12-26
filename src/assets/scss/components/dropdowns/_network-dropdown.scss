@@ -307,6 +307,11 @@
 					color: #FFF9B5;
 				}
 
+				.node-title+.icon-info {
+					@include icon-info(0, auto);
+
+				}
+
 				.sync-label {
 					color: rgba(#fff, .6);
 				}
