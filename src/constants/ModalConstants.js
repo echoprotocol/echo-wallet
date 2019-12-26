@@ -26,5 +26,6 @@ export const MODAL_WHITELIST = 'modal_whitelist';
 export const MODAL_REPLENISH = 'modal_replenish';
 export const MODAL_ACCEPT_INCOMING_CONNECTIONS = 'modal_accept_incoming_connections';
 export const MODAL_ACCEPT_RUNNING_NODE = 'modal_accept_running_node';
+export const MODAL_AUTO_LAUNCH_NODE = 'modal_auto_launch_node';
 export const MODAL_NODE_COMING_SOON = 'modal_node_coming_soon';
 

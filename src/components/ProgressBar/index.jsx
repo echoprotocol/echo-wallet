@@ -15,6 +15,7 @@ import RadialSeparators from './RadialSeparators';
 import { MODAL_ACCEPT_RUNNING_NODE, MODAL_NODE_COMING_SOON } from '../../constants/ModalConstants';
 import ModalAcceptRunningNode from '../Modals/ModalAcceptRunningNode';
 import ModalAcceptIncomingConnections from '../Modals/ModalAcceptIncomingConnections';
+import ModalNodeAutoLaunch from '../Modals/ModalNodeAutoLaunch';
 import { isPlatformSupportNode } from '../../helpers/utils';
 
 
@@ -165,6 +166,7 @@ export default class ProgressBar extends PureComponent {
 			<React.Fragment>
 				{ isPlatformSupportNode(platform) && <ModalAcceptRunningNode /> }
 				{ isPlatformSupportNode(platform) && <ModalAcceptIncomingConnections /> }
+				{ isPlatformSupportNode(platform) && <ModalNodeAutoLaunch /> }
 				{
 					<div className="progress-wrap">
 						{

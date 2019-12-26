@@ -824,6 +824,15 @@
         "modal_node_coming_soon": {
             "title": "Local node",
             "text": "Local node will be available in future releases."
+        },
+        "modal_auto_run_local_node": {
+            "title": "Unlock Wallet to run local node",
+            "forgot_password_link": "Forgot password?",
+            "confirm_button_text": "Unlock Wallet",
+            "password_input": {
+                "title": "Password",
+                "placeholder": "Password"
+            }
         }
     },
     "toasts": {

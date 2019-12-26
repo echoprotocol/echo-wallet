@@ -125,12 +125,12 @@ class Ethereum extends React.Component {
 		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
-					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt1" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt1" />
 					<br />
-					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt2" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt2" />
 				</h2>
 				<p className="payment-description t-center">
-					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.description" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.description" />
 				</p>
 				<TransactionScenario
 					handleTransaction={() => generateEthAddress()}
@@ -156,12 +156,12 @@ class Ethereum extends React.Component {
 		return (
 			<React.Fragment>
 				<h2 className="payment-header t-center">
-					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt1" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt1" />
 					<br />
-					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.title_pt2" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.title_pt2" />
 				</h2>
 				<p className="payment-description t-center">
-					<FormattedMessage id="wallet_page.receive_payment.eth.no_address_page.description" />
+					<FormattedMessage id="wallet_page.receive_payment.eth.wait_address_page.description" />
 				</p>
 			</React.Fragment>
 		);

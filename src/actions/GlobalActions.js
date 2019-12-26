@@ -15,6 +15,7 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_ACCEPT_INCOMING_CONNECTIONS,
+	MODAL_AUTO_LAUNCH_NODE,
 } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import {
@@ -61,14 +62,19 @@ import {
 	URI_TYPES,
 } from '../constants/FormConstants';
 
-export const incomingConnectionsRequest = () => (dispatch) => {
+export const incomingConnectionsRequest = (isAddAccount = false) => (dispatch, getState) => {
 	let isFirst = localStorage.getItem('is_first_launch');
-	// const isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
+	let isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
+	isAgreedWithNodeLaunch = isAgreedWithNodeLaunch ? JSON.parse(isAgreedWithNodeLaunch) : false;
+
+	const isNodeSyncing = getState().global.get('isNodeSyncing');
 
 	if (isFirst) {
 		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
+	} else if (isAgreedWithNodeLaunch && !isAddAccount && !isNodeSyncing) {
+		dispatch(openModal(MODAL_AUTO_LAUNCH_NODE));
 	}
 
 	localStorage.setItem('is_first_launch', JSON.stringify(false));
@@ -80,6 +86,8 @@ export const incomingConnectionsRequest = () => (dispatch) => {
  * @returns {Function}
  */
 export const startLocalNode = (pass) => (async (dispatch) => {
+
+	localStorage.setItem('is_agreed_with_node_launch', JSON.stringify(true));
 
 	const userStorage = Services.getUserStorage();
 	const networkId = await userStorage.getNetworkId();
@@ -170,7 +178,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
 		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
-		dispatch(incomingConnectionsRequest());
+		dispatch(incomingConnectionsRequest(false));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
@@ -487,7 +495,7 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(resetBalance());
 
 	dispatch(initAccount(accountName, networkName));
-	dispatch(incomingConnectionsRequest());
+	dispatch(incomingConnectionsRequest(true));
 };
 
 /**
