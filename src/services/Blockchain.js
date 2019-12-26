@@ -419,7 +419,8 @@ class Blockchain {
 	}
 
 	async _localStart() {
-		if (!SUPPORTED_LOCAL_NODE_NETWORKS.some((n) => n === this.network) || !localStorage.getItem('isNodeSyncing')) {
+		if (!SUPPORTED_LOCAL_NODE_NETWORKS.some((n) => n === this.network) ||
+			!JSON.parse(localStorage.getItem('isNodeSyncing'))) {
 			throw new Error('Local node not allow to connect now');
 		}
 		// TODO:: local switch  unsubscribe previous!!
