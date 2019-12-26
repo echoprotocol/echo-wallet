@@ -50,6 +50,8 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import LanguageService from '../services/language';
+
 import Listeners from '../services/Listeners';
 import {
 	FORM_ADD_CUSTOM_NETWORK,
@@ -284,12 +286,24 @@ export const initApp = (store) => async (dispatch, getState) => {
 		listeners.initListeners(dispatch, getState);
 	}
 
+	const language = LanguageService.getCurrentLanguage();
+
 	try {
 		const userStorage = Services.getUserStorage();
 		await userStorage.init();
 
+		if (window.ipcRenderer) {
+
+			window.ipcRenderer.send('setLanguage', language);
+
+			const platform = await Services.getMainProcessAPIService().getPlatform();
+
+			dispatch(GlobalReducer.actions.set({ field: 'platform', value: platform }));
+		}
+
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
+
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {
