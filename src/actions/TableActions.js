@@ -492,6 +492,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 	async (dispatch, getState) => {
 		const currentAccount = getState().global.get('activeUser');
 		const currentFullAccount = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, currentAccount.get('id')]);
+
 		const permissionForm = getState().form.get(FORM_PERMISSION_KEY);
 		const permissionTable = getState().table.get(PERMISSION_TABLE);
 
@@ -530,7 +531,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 		const errors = await Promise.all(validateFields);
 
 		if (errors.includes(true)) {
-			return { validation: false, isWifChangingOnly: false };
+			return { validation: false, isWifChangingOnly: false, editMode: true };
 		}
 
 		const permissionData = {
@@ -591,7 +592,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 				|| dataChanged.echoRand.wif
 			)
 		) {
-			return { validation: false, isWifChangingOnly: false };
+			return { validation: false, isWifChangingOnly: false, editMode: false };
 		}
 
 		await Services.getEcho().api.getGlobalProperties(true);
@@ -692,7 +693,7 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			showOptions,
 		}));
 
-		return { validation: true, isWifChangingOnly };
+		return { validation: true, isWifChangingOnly, editMode: true };
 	};
 
 export const isOnlyWifChanged = (privateKeys, basePrivateKeys) => (dispatch, getState) => {

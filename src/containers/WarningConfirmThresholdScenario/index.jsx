@@ -80,7 +80,11 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 	async submit(onFinish) {
 		try {
-			const { validation, isWifChangingOnly } = await this.props.handleTransaction();
+			const { validation, isWifChangingOnly, editMode } = await this.props.handleTransaction();
+			if (!editMode) {
+				this.props.setValue('isEditMode', false);
+				return;
+			}
 			if (!validation) {
 				return;
 			}
