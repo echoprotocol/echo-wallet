@@ -68,7 +68,7 @@ class SignIn extends React.Component {
 		const { isAddAccount } = qs.parse(location.search);
 		const accPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.name_input.placeholder' });
 		const WIFPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.placeholder' });
-		const WIFTtitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
+		const WIFTitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
 		const addMsg = intl.formatMessage({ id: 'sign_page.add_account_button' });
 		const loginMsg = intl.formatMessage({ id: 'sign_page.login_button' });
 		const loadingMsg = intl.formatMessage({ id: 'sign_page.account_button_loading' });
@@ -113,7 +113,7 @@ class SignIn extends React.Component {
 					<PasswordInput
 						key="sign-password"
 						unique="unique-sign-password"
-						inputLabel={WIFTtitle}
+						inputLabel={WIFTitle}
 						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
 						errorMessage={wif.error}

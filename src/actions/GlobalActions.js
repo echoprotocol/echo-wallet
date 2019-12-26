@@ -15,6 +15,7 @@ import {
 	MODAL_WIPE,
 	MODAL_LOGOUT,
 	MODAL_ACCEPT_INCOMING_CONNECTIONS,
+	MODAL_AUTO_LAUNCH_NODE,
 } from '../constants/ModalConstants';
 import { HISTORY_TABLE } from '../constants/TableConstants';
 import {
@@ -50,6 +51,8 @@ import { setFormError, clearForm, toggleLoading, setValue } from './FormActions'
 import { closeModal, openModal, setError } from './ModalActions';
 
 import Services from '../services';
+import LanguageService from '../services/language';
+
 import Listeners from '../services/Listeners';
 import {
 	FORM_ADD_CUSTOM_NETWORK,
@@ -59,14 +62,19 @@ import {
 	URI_TYPES,
 } from '../constants/FormConstants';
 
-export const incomingConnectionsRequest = () => (dispatch) => {
+export const incomingConnectionsRequest = (isAddAccount = false) => (dispatch, getState) => {
 	let isFirst = localStorage.getItem('is_first_launch');
-	// const isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
+	let isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
 
 	isFirst = isFirst ? JSON.parse(isFirst) : true;
+	isAgreedWithNodeLaunch = isAgreedWithNodeLaunch ? JSON.parse(isAgreedWithNodeLaunch) : false;
+
+	const isNodeSyncing = getState().global.get('isNodeSyncing');
 
 	if (isFirst) {
 		dispatch(openModal(MODAL_ACCEPT_INCOMING_CONNECTIONS));
+	} else if (isAgreedWithNodeLaunch && !isAddAccount && !isNodeSyncing) {
+		dispatch(openModal(MODAL_AUTO_LAUNCH_NODE));
 	}
 
 	localStorage.setItem('is_first_launch', JSON.stringify(false));
@@ -78,6 +86,8 @@ export const incomingConnectionsRequest = () => (dispatch) => {
  * @returns {Function}
  */
 export const startLocalNode = (pass) => (async (dispatch) => {
+
+	localStorage.setItem('is_agreed_with_node_launch', JSON.stringify(true));
 
 	const userStorage = Services.getUserStorage();
 	const networkId = await userStorage.getNetworkId();
@@ -116,7 +126,7 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
-	localStorage.setItem('isNodeSyncing', true);
+	localStorage.setItem('is_node_syncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
 });
@@ -168,7 +178,7 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		const keyWeightWarn = await dispatch(checkKeyWeightWarning(networkName, id));
 		dispatch(GlobalReducer.actions.set({ field: 'keyWeightWarn', value: keyWeightWarn }));
 
-		dispatch(incomingConnectionsRequest());
+		dispatch(incomingConnectionsRequest(false));
 
 	} catch (err) {
 		dispatch(GlobalReducer.actions.set({ field: 'error', value: formatError(err) }));
@@ -284,12 +294,24 @@ export const initApp = (store) => async (dispatch, getState) => {
 		listeners.initListeners(dispatch, getState);
 	}
 
+	const language = LanguageService.getCurrentLanguage();
+
 	try {
 		const userStorage = Services.getUserStorage();
 		await userStorage.init();
 
+		if (window.ipcRenderer) {
+
+			window.ipcRenderer.send('setLanguage', language);
+
+			const platform = await Services.getMainProcessAPIService().getPlatform();
+
+			dispatch(GlobalReducer.actions.set({ field: 'platform', value: platform }));
+		}
+
 		const network = await dispatch(initNetworks(store));
 		await dispatch(initAfterConnection(network));
+
 	} catch (err) {
 		console.warn(err.message || err);
 	} finally {
@@ -473,7 +495,7 @@ export const addAccount = (accountName, networkName, addedWifsToPubKeys = []) =>
 	dispatch(resetBalance());
 
 	dispatch(initAccount(accountName, networkName));
-	dispatch(incomingConnectionsRequest());
+	dispatch(incomingConnectionsRequest(true));
 };
 
 /**
