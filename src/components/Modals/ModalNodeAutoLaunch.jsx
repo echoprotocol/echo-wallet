@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import FocusLock from 'react-focus-lock';
+import _ from 'lodash';
 
 import { closeModal, setError, openModal } from '../../actions/ModalActions';
 import { startLocalNode } from '../../actions/GlobalActions';
