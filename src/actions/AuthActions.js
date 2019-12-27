@@ -309,7 +309,10 @@ export const saveWIFAfterCreateAccount = ({
 			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
 
-		dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -433,7 +436,10 @@ export const authUser = ({
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 
-		// dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));

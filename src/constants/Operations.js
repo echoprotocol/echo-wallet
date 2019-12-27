@@ -436,15 +436,6 @@ export default {
 		},
 		signer: 'account',
 	},
-	sidechain_eth_send_deposit: {
-		value: OPERATIONS_IDS.SIDECHAIN_ETH_SEND_DEPOSIT,
-		name: 'Sidechain eth send deposit',
-		options: {
-			from: 'committee_member_id',
-			subject: ['deposit_id'],
-			asset: null,
-		},
-	},
 	sidechain_eth_withdraw: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_WITHDRAW,
 		name: 'Sidechain withdraw eth',
@@ -456,15 +447,6 @@ export default {
 		},
 		signer: 'account',
 	},
-	sidechain_eth_send_withdraw: {
-		value: OPERATIONS_IDS.SIDECHAIN_ETH_SEND_WITHDRAW,
-		name: 'Sidechain eth send withdraw',
-		options: {
-			from: 'committee_member_id',
-			subject: ['withdraw_id'],
-			asset: null,
-		},
-	},
 	sidechain_eth_approve_withdraw: {
 		value: OPERATIONS_IDS.SIDECHAIN_ETH_APPROVE_WITHDRAW,
 		name: 'Sidechain eth approve withdraw',
@@ -472,16 +454,6 @@ export default {
 			from: null,
 			subject: ['committee_member_id'],
 			value: null,
-			asset: null,
-		},
-	},
-	sidechain_eth_update_contract_address: {
-		value: OPERATIONS_IDS.SIDECHAIN_ETH_UPDATE_CONTRACT_ADDRESS,
-		name: 'Sidechain eth update contract address',
-		options: {
-			from: 'account',
-			subject: ['new_addr'],
-			amount: null,
 			asset: null,
 		},
 	},
@@ -525,15 +497,6 @@ export default {
 			asset: null,
 		},
 	},
-	sidechain_erc20_send_deposit: {
-		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_DEPOSIT,
-		name: 'Sidechain erc20 send deposit',
-		options: {
-			from: 'committee_member_id',
-			subject: ['deposit_id'],
-			asset: null,
-		},
-	},
 	sidechain_erc20_withdraw_token: {
 		value: OPERATIONS_IDS.SIDECHAIN_ERC20_WITHDRAW_TOKEN,
 		name: 'Withdraw ERC20 token',
@@ -541,15 +504,6 @@ export default {
 			from: 'committee_member_id',
 			subject: ['to'],
 			amount: 'value',
-			asset: null,
-		},
-	},
-	sidechain_erc20_send_withdraw: {
-		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_WITHDRAW,
-		name: 'Sidechain erc20 send withdraw',
-		options: {
-			from: 'committee_member_id',
-			subject: ['withdraw_id'],
 			asset: null,
 		},
 	},

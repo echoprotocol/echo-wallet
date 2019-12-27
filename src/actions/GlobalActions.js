@@ -455,7 +455,10 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		dispatch(getPreviewBalances(networkName));
 	}
 
-	dispatch(startLocalNode());
+	const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+	if (isNodeAgreed) {
+		dispatch(startLocalNode(password));
+	}
 };
 
 /**
