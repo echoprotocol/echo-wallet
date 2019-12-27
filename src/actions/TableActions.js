@@ -15,7 +15,6 @@ import { setInFormError, setInFormValue, setValue as setFormValue } from './Form
 import { MODAL_UNLOCK } from '../constants/ModalConstants';
 import { getOperationFee } from '../api/TransactionApi';
 import { ECHO_ASSET_ID } from '../constants/GlobalConstants';
-import { startLocalNode } from './GlobalActions';
 
 const zeroPrivateKey = '0000000000000000000000000000000000000000000000000000000000000000';
 
