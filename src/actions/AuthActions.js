@@ -10,7 +10,8 @@ import {
 	setGlobalError,
 	saveWifToStorage,
 	updateStorage,
-	customNodeConnect, startLocalNode,
+	customNodeConnect,
+	startLocalNode,
 } from './GlobalActions';
 
 import {
@@ -175,7 +176,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-			return AuthApi.registerAccount(Services.getEcho().api, accountName, pubKey);
+			return AuthApi.registerAccount(Services.getEcho().remote.api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
