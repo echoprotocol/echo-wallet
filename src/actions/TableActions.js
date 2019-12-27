@@ -681,10 +681,6 @@ export const permissionTransaction = (privateKeys, basePrivateKeys) =>
 			showOptions.fee = `${feeValue / (10 ** feeAsset.precision)} ${feeAsset.symbol}`;
 		}
 
-		if (dataChanged.active.wif || dataChanged.echoRand.wif) {
-			dispatch(startLocalNode());
-		}
-
 		dispatch(resetTransaction());
 
 		dispatch(TransactionReducer.actions.setOperation({
