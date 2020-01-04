@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React from 'react';
+import React, { createRef } from 'react';
 import { Dropdown, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -27,8 +27,9 @@ class Network extends React.PureComponent {
 
 		this.state = {
 			open: false,
+			focusable: true,
 		};
-
+		this.dropDownTrigger = createRef();
 	}
 
 	onDropdownChange(e, value) {
@@ -106,7 +107,6 @@ class Network extends React.PureComponent {
 			}
 		));
 	}
-
 	openDropdown(e) {
 		if (e.target.className === 'action-node') {
 			return;
@@ -116,8 +116,17 @@ class Network extends React.PureComponent {
 		if (!open) { this.setState({ open: true }); }
 	}
 
+	toggleDropDown(e) {
+		if (e.target.className === 'action-node') {
+			return;
+		}
+		this.setState({
+			open: !this.state.open,
+		});
+	}
+
 	render() {
-		const { open } = this.state;
+		const { open, focusable } = this.state;
 		const {
 			networks, network, loading, disconnected, warning, intl,
 		} = this.props;
@@ -153,61 +162,76 @@ class Network extends React.PureComponent {
 
 		return (
 			<div
-				onFocus={(e) => this.openDropdown(e)}
-				onBlur={() => this.setState({ open: false })}
+				onMouseDown={(e) => {
+					this.setState({ focusable: false });
+					this.toggleDropDown(e);
+				}}
+				onMouseUp={() => {
+					setTimeout(() => {
+						this.setState({ focusable: true });
+						this.dropDownTrigger.current.focus();
+					}, 100);
+				}}
 				role="button"
-				tabIndex="0"
+				tabIndex="-1"
 				className={classnames('network-dropdown', {
 					disconnected,
 					warning,
 				})}
 			>
-				<div className="trigger" >
-					<span className="description">
-						{ disconnected ?
-							<FormattedMessage id="footer.network_section.title" /> :
-							<FormattedMessage id="footer.network_section.disconnected" />
-						}
-					</span>
-					{percent < 100 ?
-						<React.Fragment>
-							<span className="status connected">
-								<div className="ellipsis">{network.name}</div>
-							</span>
-
-							<ProgressBar
-								size={20}
-								value={percent}
-								disconnected={disconnected}
-								warning={warning}
-								openModal={this.props.openModal}
-								isNodeSyncing={this.props.isNodeSyncing}
-								isNodePaused={this.props.isNodePaused}
-							/>
-						</React.Fragment> :
-						<span className="status connected">
-							<div className="ellipsis">Local node</div>
+				<div
+					role="button"
+					ref={this.dropDownTrigger}
+					tabIndex={focusable ? '0' : '-1'}
+					onFocus={(e) => this.openDropdown(e)}
+					onBlur={() => this.setState({ open: false })}
+					className="network-dropdown-wrap"
+				>
+					<div className="trigger">
+						<span className="description">
+							{ disconnected ?
+								<FormattedMessage id="footer.network_section.title" /> :
+								<FormattedMessage id="footer.network_section.disconnected" />
+							}
 						</span>
-					}
+						{percent < 100 ?
+							<React.Fragment>
+								<span className="status connected">
+									<div className="ellipsis">{network.name}</div>
+								</span>
 
-					<span className="pipeline-block">
-						<FormattedMessage id="footer.network_section.block" />
-						<span>{this.props.lastBlock}</span>
-					</span>
-					<span className="icon dropdown" />
+								<ProgressBar
+									size={20}
+									value={percent}
+									disconnected={disconnected}
+									warning={warning}
+									openModal={this.props.openModal}
+									isNodeSyncing={this.props.isNodeSyncing}
+									isNodePaused={this.props.isNodePaused}
+								/>
+							</React.Fragment> :
+							<span className="status connected">
+								<div className="ellipsis">Local node</div>
+							</span>
+						}
+
+						<span className="pipeline-block">
+							<FormattedMessage id="footer.network_section.block" />
+							<span>{this.props.lastBlock}</span>
+						</span>
+						<span className={classnames('icon dropdown', { active: open })} />
+					</div>
+					<Dropdown
+						open={open}
+						options={options}
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
+						icon={false}
+						selectOnBlur={false}
+						upward
+						tabIndex="-1"
+						disabled={loading}
+					/>
 				</div>
-				<Dropdown
-					open={open}
-					options={options}
-					onChange={(e, { value }) => this.onDropdownChange(e, value)}
-					icon={false}
-					selectOnBlur={false}
-					upward
-					tabIndex="-1"
-					disabled={loading}
-
-				/>
-
 			</div>
 
 		);
