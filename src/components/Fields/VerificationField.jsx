@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
+import ErrorMessage from '../ErrorMessage';
+
 
 const VerificationField = (props) => {
 	const {
@@ -13,7 +15,7 @@ const VerificationField = (props) => {
 	} = props;
 
 	return (
-		<div className={classnames('field error-wrap', { error: !!error })}>
+		<div className={classnames('field', { error: !!error })}>
 			{label &&
 				<label htmlFor={name}>
 					{label}
@@ -21,7 +23,13 @@ const VerificationField = (props) => {
 				</label>
 			}
 
-			<div className={classnames('action-wrap', { loading, icon: !!icon })}>
+			<div className={
+				classnames(
+					'action-wrap',
+					{ loading, icon: !!icon },
+					{ disabled },
+				)}
+			>
 				{icon}
 				<input
 					type="text"
@@ -38,11 +46,10 @@ const VerificationField = (props) => {
 				<span className={classnames('value-status', `icon-${status}`)} />
 				}
 			</div>
-
-			{
-				!!error && intl.formatMessage &&
-				<span className="error-message">{intl.formatMessage({ id: error })}</span>
-			}
+			<ErrorMessage
+				value={error}
+				intl={intl}
+			/>
 		</div>
 	);
 };
@@ -77,7 +84,7 @@ VerificationField.defaultProps = {
 	status: '',
 	additionalLabel: null,
 	icon: null,
-	intl: {},
+	intl: null,
 };
 
 export default VerificationField;

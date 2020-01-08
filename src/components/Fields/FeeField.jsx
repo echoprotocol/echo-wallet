@@ -137,7 +137,10 @@ class FeeComponent extends React.Component {
 					noResultsMessage={null}
 					onChange={(e, { value }) => this.onFee(JSON.parse(value))}
 				/>
-				<span className="error-message">{this.props.feeError}</span>
+				{
+					this.props.feeError &&
+					<span className="error-message">{this.props.feeError}</span>
+				}
 			</Form.Field>
 		);
 	}

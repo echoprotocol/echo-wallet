@@ -10,6 +10,7 @@ import { setValue } from '../../actions/FormActions';
 
 import { KEY_CODE_ENTER } from '../../constants/GlobalConstants';
 import { FORM_PASSWORD_CREATE } from '../../constants/FormConstants';
+import PasswordInput from '../../components/PasswordInput';
 
 class Password extends React.Component {
 
@@ -19,7 +20,7 @@ class Password extends React.Component {
 		this.state = {
 			password: '',
 			repeatPassword: '',
-			repeatError: false,
+			repeatError: '',
 		};
 	}
 
@@ -32,7 +33,7 @@ class Password extends React.Component {
 
 		this.setState({
 			[name]: value,
-			repeatError: false,
+			repeatError: '',
 		});
 
 	}
@@ -41,7 +42,7 @@ class Password extends React.Component {
 		const { password, repeatPassword } = this.state;
 
 		if (password !== repeatPassword) {
-			this.setState({ repeatError: true });
+			this.setState({ repeatError: 'create_password_page.repeat_error' });
 			return;
 		}
 
@@ -68,6 +69,12 @@ class Password extends React.Component {
 		const { repeatError, password, repeatPassword } = this.state;
 		const { loading, error, intl } = this.props;
 
+		const PasswordTitle = intl.formatMessage({ id: 'create_password_page.password_input_1.title' });
+		const PasswordPlaceholder = intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' });
+		const RepeatPasswordTitle = intl.formatMessage({ id: 'create_password_page.password_input_2.title' });
+		const RepeatPasswordPlaceholder = intl.formatMessage({ id: 'create_password_page.password_input_2.placeholder' });
+
+
 		return (
 			<Form className="main-form pin-form">
 				<div className="form-info">
@@ -75,36 +82,29 @@ class Password extends React.Component {
 				</div>
 				<div className="form-info-description">{intl.formatMessage({ id: 'create_password_page.text' })}</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error })}>
-						<label htmlFor="password">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
-
-						<input
-							type="password"
-							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_1.placeholder' })}
-							name="password"
-							className="ui input"
-							autoFocus
-							onChange={(e) => this.onChange(e)}
-							onKeyDown={(e) => this.onKeyDown(e)}
-						/>
-						<span className="error-message">{error}</span>
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: repeatError })}>
-						<label htmlFor="repeatPassword">{intl.formatMessage({ id: 'create_password_page.password_input_1.title' })}</label>
-
-						<input
-							type="password"
-							placeholder={intl.formatMessage({ id: 'create_password_page.password_input_2.placeholder' })}
-							name="repeatPassword"
-							className="ui input"
-							autoFocus
-							onChange={(e) => this.onChange(e)}
-							onKeyDown={(e) => this.onKeyDown(e)}
-						/>
-						<span className="error-message">{intl.formatMessage({ id: 'create_password_page.repeat_error' })}</span>
-
-					</Form.Field>
+					<PasswordInput
+						key="create-password"
+						unique="unique-create-password"
+						inputLabel={PasswordTitle}
+						inputPlaceholder={PasswordPlaceholder}
+						inputName="password"
+						errorMessage={error}
+						onChange={(value) => this.onChange(value)}
+						value={password}
+						intl={intl}
+						autoFocus
+					/>
+					<PasswordInput
+						key="repeat-password"
+						unique="unique-repeat-password"
+						inputLabel={RepeatPasswordTitle}
+						inputPlaceholder={RepeatPasswordPlaceholder}
+						inputName="repeatPassword"
+						errorMessage={repeatError}
+						onChange={(value) => this.onChange(value)}
+						value={repeatPassword}
+						intl={intl}
+					/>
 				</div>
 				<div className="form-panel">
 					<Button
