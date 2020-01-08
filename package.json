@@ -13,6 +13,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=local node --trace-warnings -r @babel/register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack-configs/webpack.config.web.babel.js --mode development --progress --colors --history-api-fallback --hot --inline",
     "prebuild": "rm -rf build/",
+    "build-web": "cross-env NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js ---display-error-details --colors --mode production",
     "build": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --env.prod --env.electron --env.hash",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors",
     "lint": "node_modules/.bin/eslint 'src/**/*.jsx' 'src/**/*.js'",
