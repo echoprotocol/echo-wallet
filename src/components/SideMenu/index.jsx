@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, Sidebar, Popup } from 'semantic-ui-react';
+import { Menu, Sidebar } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -26,8 +26,6 @@ import contracts from '../../assets/animations/contract.json';
 import permissions from '../../assets/animations/permissions.json';
 import AnimatedIcon from '../AnimatedIcon';
 
-import { stat } from 'fs';
-
 class SidebarMenu extends React.Component {
 
 	constructor(props) {
@@ -35,10 +33,10 @@ class SidebarMenu extends React.Component {
 		this.state = {
 			prevLink: null,
 			currentLink: null,
-			wallet: true,
-			activity: true,
-			contracts: true,
-			permissions: true,
+			walletStopped: true,
+			activityStopped: true,
+			contractsStopped: true,
+			permissionsStopped: true,
 		};
 		this.navList = React.createRef();
 	}
@@ -95,15 +93,15 @@ class SidebarMenu extends React.Component {
 	}
 
 	playIconAnimation(iconName) {
-		if (this.state[iconName] === false) {
+		if (this.state[`${iconName}Stopped`] === false) {
 			return false;
 		}
 		this.setState({
-			[iconName]: false,
+			[`${iconName}Stopped`]: false,
 		});
 		setTimeout(() => {
 			this.setState({
-				[iconName]: true,
+				[`${iconName}Stopped`]: true,
 			});
 		}, 1000);
 		return false;
@@ -166,6 +164,7 @@ class SidebarMenu extends React.Component {
 	}
 
 	renderMenuWalet(parsedLocation) {
+		const { visibleBar } = this.props;
 		return (
 			<li>
 				<NavLink
@@ -179,7 +178,7 @@ class SidebarMenu extends React.Component {
 				>
 					<AnimatedIcon
 						data={wallet}
-						isStopped={this.state.wallet}
+						isStopped={this.state.walletStopped}
 						width={25}
 						height={35}
 					/>
@@ -187,12 +186,13 @@ class SidebarMenu extends React.Component {
 						<FormattedMessage id="wallet_page.title" />
 					</span>
 				</NavLink>
-				<NavPopup value="Wallet" visible={!this.props.visibleBar} wait={500} />
+				<NavPopup value="Wallet" visible={!visibleBar} wait={500} />
 			</li>
 		);
 	}
 
 	renderRecentActivity(parsedLocation) {
+		const { visibleBar } = this.props;
 		return (
 			<li>
 				<NavLink
@@ -206,7 +206,7 @@ class SidebarMenu extends React.Component {
 				>
 					<AnimatedIcon
 						data={activity}
-						isStopped={this.state.activity}
+						isStopped={this.state.activityStopped}
 						width={25}
 						height={35}
 					/>
@@ -214,12 +214,13 @@ class SidebarMenu extends React.Component {
 						<FormattedMessage id="recent_activity_page.title" />
 					</span>
 				</NavLink>
-				<NavPopup value="Recent Activity" visible={!this.props.visibleBar} wait={500} />
+				<NavPopup value="Recent Activity" visible={!visibleBar} wait={500} />
 			</li>
 		);
 	}
 
 	renderSmartContracts(parsedLocation) {
+		const { visibleBar } = this.props;
 		return (
 			<li>
 				<NavLink
@@ -237,7 +238,7 @@ class SidebarMenu extends React.Component {
 				>
 					<AnimatedIcon
 						data={contracts}
-						isStopped={this.state.contracts}
+						isStopped={this.state.contractsStopped}
 						width={25}
 						height={35}
 					/>
@@ -245,12 +246,13 @@ class SidebarMenu extends React.Component {
 						<FormattedMessage id="smart_contract_page.title" />
 					</span>
 				</NavLink>
-				<NavPopup value="Smart Contracts" visible={!this.props.visibleBar} wait={500} />
+				<NavPopup value="Smart Contracts" visible={!visibleBar} wait={500} />
 			</li>
 		);
 	}
 
 	renderPermissions(parsedLocation) {
+		const { visibleBar } = this.props;
 		return (
 			<li>
 				<NavLink
@@ -262,7 +264,7 @@ class SidebarMenu extends React.Component {
 				>
 					<AnimatedIcon
 						data={permissions}
-						isStopped={this.state.permissions}
+						isStopped={this.state.permissionsStopped}
 						width={25}
 						height={40}
 					/>
@@ -270,7 +272,7 @@ class SidebarMenu extends React.Component {
 						<FormattedMessage id="backup_and_permissions_page.title" />
 					</span>
 				</NavLink>
-				<NavPopup value="Backup and Permissions" visible={!this.props.visibleBar} wait={500} />
+				<NavPopup value="Backup and Permissions" visible={!visibleBar} wait={500} />
 			</li>
 		);
 	}

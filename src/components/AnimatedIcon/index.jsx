@@ -2,7 +2,7 @@ import React from 'react';
 import Lottie from 'react-lottie';
 import PropTypes from 'prop-types';
 
-const LottieControl = ({
+const AnimatedIcon = ({
 	data, isStopped, width, height,
 }) => {
 
@@ -27,16 +27,16 @@ const LottieControl = ({
 	);
 };
 
-LottieControl.defaultProps = {
+AnimatedIcon.defaultProps = {
 	width: null,
 	height: null,
 };
 
-LottieControl.propTypes = {
+AnimatedIcon.propTypes = {
 	data: PropTypes.string.isRequired,
 	isStopped: PropTypes.string.isRequired,
 	width: PropTypes.string,
 	height: PropTypes.string,
 };
 
-export default LottieControl;
+export default AnimatedIcon;
