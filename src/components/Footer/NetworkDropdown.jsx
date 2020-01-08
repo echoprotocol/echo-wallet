@@ -170,7 +170,7 @@ class Network extends React.PureComponent {
 					setTimeout(() => {
 						this.setState({ focusable: true });
 						this.dropDownTrigger.current.focus();
-					}, 100);
+					}, 0);
 				}}
 				role="button"
 				tabIndex="-1"
