@@ -19,8 +19,11 @@ class NavPopup extends React.Component {
 				this.setState({ visible: this.props.visible });
 			}, wait);
 		} else {
-			this.setState({ visible: this.props.visible });
+			setTimeout(() => {
+				this.setState({ visible: this.props.visible });
+			}, 0);
 		}
+		return false;
 	}
 
 	render() {

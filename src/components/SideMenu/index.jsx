@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
-import NavPopup from './NavPopup';
 import classnames from 'classnames';
+import NavPopup from './NavPopup';
 
 import { toggleBar } from '../../actions/GlobalActions';
 import {
