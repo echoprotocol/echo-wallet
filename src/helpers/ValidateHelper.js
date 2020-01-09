@@ -26,7 +26,7 @@ const validateUrlMode = 'i';
 
 const ipRegExp = new RegExp(`^${protocolRegExpString}${ipRegExpString}${pathRegExpString}`, validateUrlMode);
 const domainRegExp = new RegExp(`^${protocolRegExpString}${domainRegExpString}${pathRegExpString}`, validateUrlMode);
-const urlRegex = new RegExp(`^(${protocolRegExpString}${domainRegExpString}|${ipRegExpString})${pathRegExpString}`, validateUrlMode);
+const urlRegex = new RegExp(`^(${protocolRegExpString}(${domainRegExpString}|${ipRegExpString}))${pathRegExpString}`, validateUrlMode);
 
 export const contractIdRegex = /^[0-9.]*$/;
 export const accountIdRegex = /^1\.2\.(0|[1-9]\d*)$/;

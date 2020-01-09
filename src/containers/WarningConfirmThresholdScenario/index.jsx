@@ -23,6 +23,7 @@ import { setInFormError, setValue } from '../../actions/FormActions';
 import { setValue as setTableValue } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import GlobalReducer from '../../reducers/GlobalReducer';
+import { startLocalNode } from '../../actions/GlobalActions';
 
 
 class WarningConfirmThresholdScenario extends React.Component {
@@ -191,6 +192,10 @@ class WarningConfirmThresholdScenario extends React.Component {
 			this.props.sendTransaction(password, () => onUnlock(password));
 			this.props.setPermissionLoading(true);
 		}
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			this.props.startLocalNode(password);
+		}
 		this.props.setTableValue('loading', true);
 		this.clear();
 	}
@@ -273,6 +278,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
+	startLocalNode: PropTypes.func.isRequired,
 };
 
 WarningConfirmThresholdScenario.defaultProps = {
@@ -304,5 +310,6 @@ export default connect(
 		setPermissionLoading: (value) => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value })),
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		startLocalNode: (pass) => dispatch(startLocalNode(pass)),
 	}),
 )(WarningConfirmThresholdScenario);

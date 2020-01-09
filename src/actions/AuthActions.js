@@ -10,7 +10,8 @@ import {
 	setGlobalError,
 	saveWifToStorage,
 	updateStorage,
-	customNodeConnect, startLocalNode,
+	customNodeConnect,
+	startLocalNode,
 } from './GlobalActions';
 
 import {
@@ -175,7 +176,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-			return AuthApi.registerAccount(Services.getEcho().api, accountName, pubKey);
+			return AuthApi.registerAccount(Services.getEcho().remote.api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
@@ -308,7 +309,10 @@ export const saveWIFAfterCreateAccount = ({
 			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
 
-		dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -432,7 +436,10 @@ export const authUser = ({
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 
-		// dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));
