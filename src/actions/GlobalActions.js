@@ -198,6 +198,13 @@ export const initAfterConnection = (network) => async (dispatch) => {
 
 		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 
+		const existedAccounts = (await Services.getEcho().api
+			.lookupAccountNames(accounts.map(({ name }) => name))).filter((a) => a);
+
+		accounts = accounts.filter(({ name }) => existedAccounts.find((a) => a.name === name));
+
+		localStorage.setItem(`accounts_${network.name}`, JSON.stringify(accounts));
+
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
