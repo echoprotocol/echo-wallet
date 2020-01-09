@@ -10,7 +10,8 @@ import {
 	setGlobalError,
 	saveWifToStorage,
 	updateStorage,
-	customNodeConnect, startLocalNode,
+	customNodeConnect,
+	startLocalNode,
 } from './GlobalActions';
 
 import {
@@ -129,7 +130,7 @@ export const validateAndSetIpOrUrl = (ipOrUrl) => async (dispatch, getState) => 
 		return;
 	}
 
-	dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'Invalid address format'));
+	dispatch(setFormError(FORM_SIGN_UP_OPTIONS, 'ipOrUrl', 'errors.address_errors.invalid_address_format'));
 	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'ipOrUrlStatus', CHECK_URI_ADDRESS_TYPES.ERROR));
 	dispatch(setValue(FORM_SIGN_UP_OPTIONS, 'showSaveAddressTooltip', false));
 };
@@ -175,7 +176,7 @@ export const registerAccountByType = (accountName, pubKey) => async (dispatch, g
 	const options = getState().form.get(FORM_SIGN_UP_OPTIONS);
 	switch (options.get('optionType')) {
 		case SIGN_UP_OPTIONS_TYPES.DEFAULT:
-			return AuthApi.registerAccount(Services.getEcho().api, accountName, pubKey);
+			return AuthApi.registerAccount(Services.getEcho().remote.api, accountName, pubKey);
 		case SIGN_UP_OPTIONS_TYPES.PARENT:
 			return dispatch(customParentAccount());
 		case SIGN_UP_OPTIONS_TYPES.IP_URL: {
@@ -233,7 +234,7 @@ export const validateCreateAccount = ({
 	} else {
 		let confirmWIFError = validateWIF(confirmWIF);
 		if (generatedWIF !== confirmWIF) {
-			confirmWIFError = 'WIFs do not match';
+			confirmWIFError = 'errors.keys_errors.wif_dont_match_error';
 		}
 		if (confirmWIFError) {
 			dispatch(setFormError(FORM_SIGN_UP, 'confirmWIF', confirmWIFError));
@@ -308,7 +309,10 @@ export const saveWIFAfterCreateAccount = ({
 			[[publicKey, { active: !isWithoutWIFRegistr, echoRand: !isWithoutWIFRegistr }]],
 		));
 
-		dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
 	}
@@ -432,7 +436,10 @@ export const authUser = ({
 			dispatch(openModal(PROPOSAL_ADD_WIF));
 		}
 
-		dispatch(startLocalNode());
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			dispatch(startLocalNode(password));
+		}
 		return false;
 	} catch (err) {
 		dispatch(setGlobalError(formatError(err) || 'errors.account_errors.account_import_error'));
@@ -603,7 +610,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 
 			if (!doesDBExist) {
 				dispatch(setError(modal, 'errors.db_errors.db_doesnt_exist'));
-				return;
+				return 'errors.db_errors.db_doesnt_exist';
 			}
 
 			await userStorage.setScheme(USER_STORAGE_SCHEMES.MANUAL, password);
@@ -611,7 +618,7 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 
 			if (!correctPassword) {
 				dispatch(setError(modal, 'errors.passowd_errors.invalid_password_error'));
-				return;
+				return 'errors.passowd_errors.invalid_password_error';
 			}
 
 			dispatch(closeModal(modal));
@@ -619,10 +626,12 @@ export const unlock = (password, callback = () => { }, modal = MODAL_UNLOCK) =>
 			callback(password);
 		} catch (err) {
 			dispatch(setError(modal, err.message));
+			return err;
 		} finally {
 			dispatch(toggleModalLoading(modal, false));
 		}
 
+		return null;
 	};
 
 export const asyncUnlock = (

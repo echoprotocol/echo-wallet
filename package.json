@@ -44,7 +44,7 @@
     "classnames": "^2.2.6",
     "config": "^3.2.4",
     "crypto-random-string": "^3.0.1",
-    "echojs-lib": "1.10.0-rc.1",
+    "echojs-lib": "1.10.0-rc.2",
     "echojs-ping": "^0.1.5",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
@@ -169,6 +169,22 @@
   "build": {
     "productName": "Echo Wallet",
     "appId": "org.echo",
+    "extraFiles": [
+      {
+        "from": "resources/${os}/bin",
+        "to": "resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/icons",
+        "to": "resources/icons",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "*.js",
       "build",
@@ -177,7 +193,7 @@
       "build/electron/index.js.map"
     ],
     "directories": {
-      "buildResources": "src/assets/app_resources",
+      "buildResources": "resources/icons",
       "output": "build/binaries"
     },
     "dmg": {

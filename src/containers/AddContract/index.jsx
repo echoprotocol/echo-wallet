@@ -11,6 +11,7 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 import { addContract } from '../../actions/ContractActions';
 import { version } from '../../../package.json';
 import { contractIdRegex } from '../../helpers/ValidateHelper';
+import ErrorMessage from '../../components/ErrorMessage';
 
 
 class AddContractComponent extends React.Component {
@@ -53,7 +54,7 @@ class AddContractComponent extends React.Component {
 					</h3>
 				</div>
 				<div className="field-wrap">
-					<Form.Field className={classnames('error-wrap', { error: name.error })}>
+					<div className={classnames('field', { error: name.error })}>
 						<label htmlFor="name">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_name.title" />
 						</label>
@@ -65,12 +66,12 @@ class AddContractComponent extends React.Component {
 							onChange={(e) => this.onInput(e)}
 							autoFocus
 						/>
-						{
-							name.error &&
-								<span className="error-message">{intl.formatMessage({ id: name.error })}</span>
-						}
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: id.error })}>
+						<ErrorMessage
+							value={name.error}
+							intl={intl}
+						/>
+					</div>
+					<div className={classnames('field', { error: id.error })}>
 						<label htmlFor="id">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_id.title" />
 						</label>
@@ -81,13 +82,12 @@ class AddContractComponent extends React.Component {
 							value={id.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{
-							id.error &&
-								<span className="error-message">{id.error}</span>
-						}
-
-					</Form.Field>
-					<Form.Field className={classnames('error-wrap', { error: abi.error })}>
+						<ErrorMessage
+							value={id.error}
+							intl={intl}
+						/>
+					</div>
+					<div className={classnames('field', { error: abi.error })}>
 						<label htmlFor="abi">
 							<FormattedMessage id="smart_contract_page.watch_contract_page.input_abi.title" />
 						</label>
@@ -98,11 +98,11 @@ class AddContractComponent extends React.Component {
 							value={abi.value}
 							onChange={(e) => this.onInput(e)}
 						/>
-						{
-							abi.error &&
-								<span className="error-message">{intl.formatMessage({ id: abi.error })}</span>
-						}
-					</Form.Field>
+						<ErrorMessage
+							value={abi.error}
+							intl={intl}
+						/>
+					</div>
 					<div className="form-panel">
 						<Button
 							basic
