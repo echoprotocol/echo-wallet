@@ -212,6 +212,15 @@ export const initAfterConnection = (network) => async (dispatch) => {
 
 		accounts = accounts ? JSON.parse(accounts) : [];
 
+		await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+
+		const existedAccounts = (await Services.getEcho().api
+			.lookupAccountNames(accounts.map(({ name }) => name))).filter((a) => a);
+
+		accounts = accounts.filter(({ name }) => existedAccounts.find((a) => a.name === name));
+
+		localStorage.setItem(`accounts_${network.name}`, JSON.stringify(accounts));
+
 		if (!accounts.length) {
 			if (!AUTH_ROUTES.includes(history.location.pathname) && doesDBExist) {
 				history.push(SIGN_IN_PATH);
@@ -455,7 +464,10 @@ export const removeAccount = (accountName, password) => async (dispatch, getStat
 		dispatch(getPreviewBalances(networkName));
 	}
 
-	dispatch(startLocalNode());
+	const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+	if (isNodeAgreed) {
+		dispatch(startLocalNode(password));
+	}
 };
 
 /**
