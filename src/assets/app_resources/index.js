@@ -345,11 +345,13 @@ app.on('activate', () => {
 });
 
 ipcMain.on('close-app', (event) => {
-	event.preventDefault();
-	if (!app.isQuiting && getPlatform() === MAC_PLATFORM) {
-		mainWindow.hide();
-	} else {
-		mainWindow.close();
+	if (!app.isQuiting) {
+		event.preventDefault();
+		if (getPlatform() === MAC_PLATFORM) {
+			mainWindow.hide();
+		} else {
+			mainWindow.close();
+		}
 	}
 });
 
