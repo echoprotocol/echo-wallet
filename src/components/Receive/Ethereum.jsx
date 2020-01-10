@@ -19,6 +19,10 @@ class Ethereum extends React.Component {
 		this.props.getEthAddress();
 	}
 
+	componentDidUpdate() {
+		this.props.getEthAddress();
+	}
+
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
