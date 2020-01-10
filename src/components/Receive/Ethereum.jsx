@@ -169,8 +169,7 @@ class Ethereum extends React.Component {
 
 	render() {
 		const { ethAddress, fullCurrentAccount } = this.props;
-
-		if (!fullCurrentAccount.getIn(['statistics', 'generated_eth_address'])) {
+		if (!fullCurrentAccount.getIn(['statistics', 'created_eth_address'])) {
 			return (
 				<div className="payment-wrap" >
 					{this.renderGenerateAddressProcess()}
