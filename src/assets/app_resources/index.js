@@ -345,7 +345,6 @@ app.on('activate', () => {
 });
 
 ipcMain.on('close-app', (event) => {
-	mainWindow.close();
 	event.preventDefault();
 	if (!app.isQuiting && getPlatform() === MAC_PLATFORM) {
 		mainWindow.hide();
