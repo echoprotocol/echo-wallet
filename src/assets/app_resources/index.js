@@ -16,7 +16,7 @@ import { Subject, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import path from 'path';
 
-import { WIN_PLATFORM } from '../../constants/PlatformConstants';
+import { WIN_PLATFORM, MAC_PLATFORM } from '../../constants/PlatformConstants';
 
 import {
 	TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS,
@@ -345,9 +345,12 @@ app.on('activate', () => {
 });
 
 ipcMain.on('close-app', (event) => {
-	if (!app.isQuiting) {
-		event.preventDefault();
+	mainWindow.close();
+	event.preventDefault();
+	if (!app.isQuiting && getPlatform() === MAC_PLATFORM) {
 		mainWindow.hide();
+	} else {
+		mainWindow.close();
 	}
 });
 
