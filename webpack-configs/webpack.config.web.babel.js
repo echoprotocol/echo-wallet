@@ -149,6 +149,8 @@ const config = {
 					},
 				},
 			},
+			CRYPTO_API_KEY: JSON.stringify(process.env.CRYPTO_API_KEY),
+			CRYPTO_API_URL: JSON.stringify(process.env.CRYPTO_API_URL),
 		}),
 	],
 	node: {
