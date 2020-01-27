@@ -77,7 +77,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		value: {},
 	};
 
-	if (options.fee) {
+	if (operation.fee) {
 		const feeAsset = await Services.getEcho().api.getObject(operation.fee.asset_id);
 		result.fee = {
 			amount: operation.fee.amount,
@@ -205,6 +205,7 @@ export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }
 
 	try {
+		console.log(activity)
 		let rows = activity.map((h) => dispatch(formatOperation(h)));
 		rows = await Promise.all(rows);
 		dispatch(setValue(HISTORY_TABLE, 'data', rows));
