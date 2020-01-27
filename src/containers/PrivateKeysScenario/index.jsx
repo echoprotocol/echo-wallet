@@ -67,8 +67,8 @@ class PrivateKeysScenario extends React.Component {
 
 		this.props.unlock(password, async () => {
 			await this.fetchWIFs(password);
+			this.clear();
 		}, MODAL_UNLOCK_PERMISSION);
-		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 
 	}
 

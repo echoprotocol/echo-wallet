@@ -148,7 +148,7 @@ class ContractBar extends React.Component {
 							</div>
 							{
 								form.get('supportedAssetRadio') === SUPPORTED_ASSET_CUSTOM &&
-									<div className={classnames('error-wrap ', { error: form.get('supportedAsset').error })}>
+									<div className={classnames('field', { error: form.get('supportedAsset').error })}>
 										<Dropdown
 											icon={false}
 											className={classnames({ empty: !searchText || loading })}

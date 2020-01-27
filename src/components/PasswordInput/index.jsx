@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ActionBtn from '../ActionBtn';
+import ErrorMessage from '../ErrorMessage';
 
-export default class PasswordInput extends React.PureComponent {
+export default class PasswordInput extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -43,17 +44,25 @@ export default class PasswordInput extends React.PureComponent {
 			inputPlaceholder,
 			inputName,
 			onChange,
-			value,
+			value, intl,
 			autoFocus,
+			unique,
 		} = this.props;
 
 		return (
-			<div className={classnames('field input-password error-wrap', { error: !!errorMessage })}>
+			<div
+				className={
+					classnames(
+						'field input-password',
+						{ error: !!errorMessage },
+					)}
+			>
 				{
 					inputLabel && <label htmlFor="WIF">{ inputLabel }</label>
 				}
 				<div className="action-input">
 					<input
+						key={`input-${unique}`}
 						type={show ? 'text' : 'password'}
 						placeholder={inputPlaceholder}
 						name={inputName}
@@ -63,16 +72,20 @@ export default class PasswordInput extends React.PureComponent {
 						ref={this.input}
 					/>
 					<ActionBtn
+						key={`action-${unique}`}
 						icon={show ? 'icon-e-show' : 'icon-e-hide'}
 						focus={(e) => this.focus(e)}
 						blur={(e) => this.blur(e)}
 					/>
 				</div>
 				<React.Fragment>
-					{errorMessage && <span className="error-message">{ errorMessage }</span>}
+					<ErrorMessage
+						value={errorMessage}
+						intl={intl}
+					/>
 					{
 						warningMessage &&
-						<span className="warning-message">{ warningMessage }</span>
+							<span className="warning-message">{ warningMessage }</span>
 					}
 				</React.Fragment>
 			</div>
@@ -82,6 +95,7 @@ export default class PasswordInput extends React.PureComponent {
 }
 
 PasswordInput.propTypes = {
+	unique: PropTypes.string.isRequired,
 	errorMessage: PropTypes.string,
 	warningMessage: PropTypes.string,
 	inputLabel: PropTypes.string,
@@ -90,6 +104,7 @@ PasswordInput.propTypes = {
 	onChange: PropTypes.func,
 	value: PropTypes.string,
 	autoFocus: PropTypes.bool,
+	intl: PropTypes.any,
 };
 
 PasswordInput.defaultProps = {
@@ -101,4 +116,5 @@ PasswordInput.defaultProps = {
 	value: '',
 	onChange: () => {},
 	autoFocus: false,
+	intl: {},
 };

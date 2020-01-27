@@ -14,6 +14,7 @@ import { setFormValue, clearForm, setFormError, setValue } from '../../actions/F
 import { callContractViaId } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class AddContractComponent extends React.Component {
 
@@ -46,7 +47,7 @@ class AddContractComponent extends React.Component {
 								</h3>
 							</div>
 							<div className="field-wrap">
-								<Form.Field className={classnames('error-wrap', { error: id.error })}>
+								<div className={classnames('field', { error: id.error })}>
 									<label htmlFor="id">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_id.title" />
 									</label>
@@ -60,15 +61,12 @@ class AddContractComponent extends React.Component {
 										onChange={(e) => this.onInput(e)}
 										autoFocus
 									/>
-									{
-										id.error && (
-											<span className="error-message">
-												{intl.formatMessage({ id: id.error })}
-											</span>
-										)
-									}
-								</Form.Field>
-								<Form.Field className={classnames('error-wrap', { error: bytecode.error })}>
+									<ErrorMessage
+										value={id.error}
+										intl={intl}
+									/>
+								</div>
+								<div className={classnames('field', { error: bytecode.error })}>
 									<label htmlFor="bytecode">
 										<FormattedMessage id="smart_contract_page.call_contract_page.input_bytecode.title" />
 									</label>
@@ -79,14 +77,11 @@ class AddContractComponent extends React.Component {
 										value={bytecode.value}
 										onChange={(e) => this.onInput(e)}
 									/>
-									{
-										bytecode.error && (
-											<span className="error-message">
-												{intl.formatMessage({ id: bytecode.error })}
-											</span>
-										)
-									}
-								</Form.Field>
+									<ErrorMessage
+										value={bytecode.error}
+										intl={intl}
+									/>
+								</div>
 								<AmountField
 									form={FORM_CALL_CONTRACT_VIA_ID}
 									fee={fee}

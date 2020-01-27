@@ -16,7 +16,7 @@ import { Subject, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import path from 'path';
 
-import { WIN_PLATFORM } from '../../constants/PlatformConstants';
+import { WIN_PLATFORM, MAC_PLATFORM } from '../../constants/PlatformConstants';
 
 import {
 	TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS,
@@ -216,8 +216,8 @@ function createWindow() {
 				return;
 			}
 
-			const pauseNodeSync = () => {
-				mainWindow.webContents.send('pauseNodeSync');
+			const pauseNodeSync = (value) => {
+				mainWindow.webContents.send('pauseNodeSync', { error: value });
 			};
 
 			lastNode = new EchoNode();
@@ -243,7 +243,7 @@ function createWindow() {
 			const chainToken = args && args.chainToken ? args.chainToken : null;
 
 			const networkOptions = {
-				'data-dir': `"${app.getPath('userData')}/${DATA_DIR}/${NETWORK_ID}"`.replace(/(\s+)/g, '%20'),
+				'data-dir': `${app.getPath('userData')}/${DATA_DIR}/${NETWORK_ID}`.replace(/(\s+)/g, '%20'),
 				'rpc-endpoint': `127.0.0.1:${port}`,
 				// testnet: null,
 				// 'replay-blockchain': null,
@@ -347,7 +347,11 @@ app.on('activate', () => {
 ipcMain.on('close-app', (event) => {
 	if (!app.isQuiting) {
 		event.preventDefault();
-		mainWindow.hide();
+		if (getPlatform() === MAC_PLATFORM) {
+			mainWindow.hide();
+		} else {
+			mainWindow.close();
+		}
 	}
 });
 
