@@ -1,16 +1,25 @@
 .sign-up {
 	.register-info {
-		font-size: 14px;
 		margin: -10px 0 0;
-		line-height: 20px;
-		p + p {
+
+		p {
+			font-size: 14px;
+			color: #3B3B3B;
+			line-height: 20px;
+		}
+
+		p+p {
 			margin: 12px 0 0 0;
 		}
+
+
 	}
-	.field-wrap + .accordion {
+
+	.field-wrap+.accordion {
 		margin: 21px 0 0;
 	}
-	.register-info + .field-wrap {
+
+	.register-info+.field-wrap {
 		margin: 15px 0 0;
 	}
 
@@ -22,6 +31,7 @@
 		.menu {
 			.user-item {
 				display: flex;
+
 				.name {
 					margin-left: 6px;
 				}

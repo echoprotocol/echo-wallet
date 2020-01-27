@@ -29,52 +29,52 @@ class ModalInfoWallet extends React.Component {
 		const { show, intl } = this.props;
 		const commithash = ''.concat(COMMITHASH);
 		return (
-			<Modal className="small" open={show}>
+			<Modal className="modal-info" open={show}>
 				<FocusLock autoFocus={false}>
-					<div className="modal-content info">
-						<button
-							className="icon-close"
-							onClick={(e) => this.onClose(e)}
-						/>
-						<div className="modal-header">
+					<button
+						className="icon-close"
+						onClick={(e) => this.onClose(e)}
+					/>
+					<div className="modal-header">
+						<h2 className="modal-header-title">
 							{intl.formatMessage({ id: 'modals.modal_info.title' })}
-						</div>
-						<div className="modal-body">
-							<div className="info-row">
-								<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.version' })}</div>
-								<div className="info-value">{version}
-									{
-										commithash &&
-											<a
-												href={`${GIT_REF}${commithash}`}
-												target="_blank"
-												rel="noreferrer noopener"
-												onClick={(e) => this.goToExternalLink(e, `${GIT_REF}${commithash}`)}
-											>
-												<span className="icon-commit" />
-												<span>{commithash.substring(0, 7)}</span>
-											</a>
-									}
-								</div>
-							</div>
-							<div className="info-row">
-								<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.website' })}</div>
-								<div className="info-value">
+						</h2>
+					</div>
+					<div className="modal-body">
+						<div className="info-row">
+							<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.version' })}</div>
+							<div className="info-value">{version}
+								{
+									commithash &&
 									<a
-										href={ECHO_REF}
+										href={`${GIT_REF}${commithash}`}
 										target="_blank"
 										rel="noreferrer noopener"
-										onClick={(e) => this.goToExternalLink(e, ECHO_REF)}
+										onClick={(e) => this.goToExternalLink(e, `${GIT_REF}${commithash}`)}
 									>
-										{intl.formatMessage({ id: 'modals.modal_info.link' })}
+										<span className="icon-commit" />
+										<span>{commithash.substring(0, 7)}</span>
 									</a>
-								</div>
+								}
 							</div>
-							<div className="info-row">
-								<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.privacy' })}</div>
-								<div className="info-value">&#169; {(new Date()).getFullYear()}
-									{intl.formatMessage({ id: 'modals.modal_info.pixelplex_rights' })}
-								</div>
+						</div>
+						<div className="info-row">
+							<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.website' })}</div>
+							<div className="info-value">
+								<a
+									href={ECHO_REF}
+									target="_blank"
+									rel="noreferrer noopener"
+									onClick={(e) => this.goToExternalLink(e, ECHO_REF)}
+								>
+									{intl.formatMessage({ id: 'modals.modal_info.link' })}
+								</a>
+							</div>
+						</div>
+						<div className="info-row">
+							<div className="info-title">{intl.formatMessage({ id: 'modals.modal_info.privacy' })}</div>
+							<div className="info-value">&#169; {(new Date()).getFullYear()}
+								{intl.formatMessage({ id: 'modals.modal_info.pixelplex_rights' })}
 							</div>
 						</div>
 					</div>

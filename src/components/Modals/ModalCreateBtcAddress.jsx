@@ -12,6 +12,7 @@ import { MODAL_GENERATE_BTC_ADDRESS } from '../../constants/ModalConstants';
 import { generateBtcAddress } from '../../actions/TransactionActions';
 import TransactionScenario from '../../containers/TransactionScenario';
 import { isBackupAddress } from '../../helpers/SidechainHelper';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class ModalCreateBtcAddress extends React.Component {
 
@@ -69,28 +70,28 @@ class ModalCreateBtcAddress extends React.Component {
 									<div className="info-text">
 										{intl.formatMessage({ id: 'modals.modal_create_btc_address.text' })}
 									</div>
-
-									<div className={classnames('field error-wrap', { error: !!error })}>
-										<label htmlFor="address">
-											{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
-										</label>
-										<input
-											type="text"
-											placeholder={intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.placeholder' })}
-											name="address"
-											onChange={(e) => this.onChange(e)}
-											autoFocus
-										/>
-										{
-											<span className="error-message">
-												{
-													error ? intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' }) : null
-												}
+									<div className="field-wrap">
+										<div className={classnames('field', { error: !!error })}>
+											<label htmlFor="address">
+												{intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.title' })}
+											</label>
+											<div className="action-wrap">
+												<input
+													type="text"
+													placeholder={intl.formatMessage({ id: 'modals.modal_create_btc_address.backup_address_input.placeholder' })}
+													name="address"
+													onChange={(e) => this.onChange(e)}
+													autoFocus
+												/>
+												<ErrorMessage
+													value={error ? 'modals.modal_create_btc_address.warning' : ''}
+													intl={intl}
+												/>
+											</div>
+											<span className="warning-message">
+												{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
 											</span>
-										}
-										<span className="warning-message">
-											{intl.formatMessage({ id: 'modals.modal_create_btc_address.warning' })}
-										</span>
+										</div>
 									</div>
 									<div className="form-panel">
 										<Button

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Avatar from '../../components/Avatar';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class PartnerAccountPanel extends React.Component {
 
@@ -86,8 +87,8 @@ class PartnerAccountPanel extends React.Component {
 						<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.text" />
 					</p>
 				</div>
-				<div className={classnames('field-wrap error-wrap', { error: registrarAccount.error })}>
-					<div className="field ">
+				<div className="field-wrap">
+					<div className={classnames('field', { error: registrarAccount.error })}>
 						<label htmlFor="parentAccount" className="field-label">
 							<FormattedMessage id="sign_page.register_account_page.more_options_section.parent_account_section.dropdown.title" />
 						</label>
@@ -110,8 +111,10 @@ class PartnerAccountPanel extends React.Component {
 								onChange={(e, { value }) => this.onChangeAccount(value)}
 							/>
 						</div>
-						{registrarAccount.error &&
-						<span className="error-message">{intl.formatMessage({ id: registrarAccount.error })}</span>}
+						<ErrorMessage
+							value={registrarAccount.error}
+							intl={intl}
+						/>
 					</div>
 				</div>
 			</React.Fragment>

@@ -1,14 +1,14 @@
 import React from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { injectIntl } from 'react-intl';
 
 import PasswordInput from '../PasswordInput';
+import ErrorMessage from '../ErrorMessage';
 
 
 class ModalAddWIF extends React.Component {
-
 
 	constructor(props) {
 		super(props);
@@ -34,11 +34,13 @@ class ModalAddWIF extends React.Component {
 		this.props.saveWif(wif);
 	}
 
+
 	render() {
 		const { wif } = this.state;
 		const {
 			show, error, disabled, publicKey, intl,
 		} = this.props;
+
 		const wifTitle = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.title' });
 		const wifPlaceholder = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.placeholder' });
 		const wifWarning = intl.formatMessage({ id: 'modals.modal_add_wif.wif_input.warnig' });
@@ -57,7 +59,7 @@ class ModalAddWIF extends React.Component {
 				</div>
 				<div className="modal-body">
 
-					<Form.Field className={classnames('error-wrap', { error: !!error })}>
+					<div className={classnames('field', { error: !!error })}>
 						<label htmlFor="public-key">
 							{intl.formatMessage({ id: 'modals.modal_add_wif.public_key_input.title' })}
 						</label>
@@ -69,23 +71,24 @@ class ModalAddWIF extends React.Component {
 							onChange={() => {}}
 							value={publicKey}
 						/>
-						{
-							error &&
-							<span className="error-message">
-								{intl.formatMessage({ id: error.message })}
-							</span>
-						}
-					</Form.Field>
+						<ErrorMessage
+							value={error}
+							intl={intl}
+						/>
+					</div>
 
 					<PasswordInput
+						key="modal-new-wif"
+						unique="unique-modal-new-wif"
 						inputLabel={wifTitle}
 						inputPlaceholder={wifPlaceholder}
 						inputName="WIF"
 						warningMessage={wifWarning}
-						errorMessage={error}
+						errorMessage={error ? intl.formatMessage({ id: error }) : null}
 						onChange={(e) => this.onChange(e)}
 						value={wif}
 						autoFocus
+						intl={intl}
 					/>
 
 					<div className="form-panel">
@@ -103,15 +106,6 @@ class ModalAddWIF extends React.Component {
 	}
 
 }
-
-ModalAddWIF.propTypes = {
-	show: PropTypes.bool,
-	close: PropTypes.func.isRequired,
-};
-
-ModalAddWIF.defaultProps = {
-	show: false,
-};
 
 ModalAddWIF.propTypes = {
 	show: PropTypes.bool,
