@@ -27,12 +27,14 @@
 
 		&>.menu {
 			display: inline-block;
-			margin: 0px 8px 0 0;
+			margin: 0;
 			bottom: calc(100% + 8px);
 			opacity: 0;
 			transform: translateY(100%);
 			transition: transform 120ms ease-in-out, opacity 100ms ease-out;
 			min-width: 294px;
+			left: auto;
+			right: 10px;
 
 			&.visible {
 				transform: translateY(0);
@@ -310,8 +312,17 @@
 					color: #FFF9B5;
 				}
 
+				.node-title+.icon-info {
+					@include icon-info(0, auto);
+
+				}
+
 				.sync-label {
 					color: rgba(#fff, .6);
+				}
+
+				.incoming-connections {
+					color: rgba(#FFF9B5, 1);
 				}
 
 				.progress-line {
@@ -371,12 +382,10 @@
 			max-width: 225px;
 		}
 
-		.error-wrap {
+		.field {
 			margin: 0;
 			padding-bottom: 20px;
-		}
 
-		.field {
 			label {
 				padding: 19px 19px 5px;
 			}
@@ -388,7 +397,7 @@
 		min-height: 33px;
 
 		.text {
-			color: #5C637D;
+			color: rgba(#5C637D, .5);
 			font-size: 14px;
 			font-weight: 600;
 			text-transform: uppercase;
@@ -491,6 +500,14 @@
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
+	}
+
+	.incoming-connections {
+		font-size: 12px;
+		line-height: 16px;
+		color: rgba(#4C64CA, .8);
+		border-bottom: 1px dashed;
+		transition: color $speed;
 	}
 
 	.sync-label {

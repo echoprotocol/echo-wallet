@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { FORM_CREATE_CONTRACT_BYTECODE } from '../../constants/FormConstants';
+import ErrorMessage from '../ErrorMessage';
 
 class Bytecode extends React.Component {
 
@@ -32,7 +33,7 @@ class Bytecode extends React.Component {
 
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: !!bytecode.error })}>
+				<div className={classnames('field', { error: !!bytecode.error })}>
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_bytecode.title" />
 					</label>
@@ -45,10 +46,12 @@ class Bytecode extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						autoFocus
 					/>
-					{ bytecode.error &&
-					<span className="error-message">{intl.formatMessage({ id: bytecode.error })}</span> }
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: !!abi.error })}>
+					<ErrorMessage
+						value={bytecode.error}
+						intl={intl}
+					/>
+				</div>
+				<div className={classnames('field', { error: !!abi.error })}>
 					<label htmlFor="bytecode">
 						<FormattedMessage id="smart_contract_page.create_contract_page.bytecode.input_abi.title_pt1" />
 						<span className="label-info">
@@ -66,10 +69,12 @@ class Bytecode extends React.Component {
 						value={abi.value}
 						onChange={(e) => this.onChange(e, true)}
 					/>
-					{ abi.error &&
-					<span className="error-message">{intl.formatMessage({ id: abi.error })}</span> }
-				</Form.Field>
-				<div className={classnames('error-wrap', { error: !!name.error })}>
+					<ErrorMessage
+						value={abi.error}
+						intl={intl}
+					/>
+				</div>
+				<div className={classnames('field', { error: !!name.error })}>
 					<div className="action-wrap">
 						<Form.Field
 							label="Contract Name"
@@ -80,8 +85,10 @@ class Bytecode extends React.Component {
 							onChange={(e) => this.onChange(e, true)}
 						/>
 					</div>
-					{ name.error &&
-					<span className="error-message">{intl.formatMessage({ id: name.error })}</span> }
+					<ErrorMessage
+						value={name.error}
+						intl={intl}
+					/>
 				</div>
 			</React.Fragment>
 		);

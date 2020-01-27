@@ -104,12 +104,15 @@ class ModalEditPermissions extends React.Component {
 						</div>
 						<div className="field-wrap">
 							<PasswordInput
-								errorMessage={error ? intl.formatMessage({ id: error }) : ''}
+								key="modal-permission-password"
+								unique="unique-modal-permission-password"
+								errorMessage={error}
 								inputLabel={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.title' })}
 								inputPlaceholder={intl.formatMessage({ id: 'modals.modal_edit_permissions.password_input.placeholder' })}
 								inputName="password"
 								value={password}
 								onChange={(e) => this.onChange(e)}
+								intl={intl}
 							/>
 						</div>
 						<div className="form-panel">
