@@ -205,7 +205,6 @@ export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }
 
 	try {
-		console.log(activity)
 		let rows = activity.map((h) => dispatch(formatOperation(h)));
 		rows = await Promise.all(rows);
 		dispatch(setValue(HISTORY_TABLE, 'data', rows));
