@@ -115,6 +115,7 @@ class ModalBackup extends React.Component {
 								icon="icon-copy"
 								copy={activeKeysString}
 								text={copyBtnTxt}
+								labelText={intl.formatMessage({ id: 'copied_text' })}
 							/>
 
 							<Button

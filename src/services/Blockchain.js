@@ -12,7 +12,11 @@ import {
 	CONNECT_STATUS,
 	REGISTRATION,
 } from '../constants/GlobalConstants';
-import { SYNC_MONITOR_MS, RESTART_TIME_CHECKING_NODE_MS } from '../constants/ChainConstants';
+import {
+	SYNC_MONITOR_MS,
+	RESTART_TIME_CHECKING_NODE_MS,
+	SUPPORTED_LOCAL_NODE_NETWORKS,
+} from '../constants/ChainConstants';
 
 let ipcRenderer;
 
@@ -44,6 +48,8 @@ class Blockchain {
 		this.store = null;
 		this.localNodePercent = 0;
 		this.localNodeDiffSyncTime = 10e9;
+		this.timeoutRemoteRecconect = null;
+		this.timeoutLocalRecconect = null;
 
 
 		this.localBlockNumber = 0;
@@ -161,8 +167,8 @@ class Blockchain {
 					this.networkId = data.networkId;
 				});
 
-				ipcRenderer.on('pauseNodeSync', () => {
-					this.emitter.emit('setSyncOnPause', true);
+				ipcRenderer.on('pauseNodeSync', (_, data) => {
+					this.emitter.emit('setSyncOnPause', data);
 				});
 			}
 
@@ -195,7 +201,6 @@ class Blockchain {
 	}
 
 	async checkNodeSync() {
-
 		if (!this.local || !this.remote) {
 			return;
 		}
@@ -315,11 +320,15 @@ class Blockchain {
 
 		try {
 
+			if (this.timeoutRemoteRecconect) {
+				clearTimeout(this.timeoutRemoteRecconect);
+			}
+
 			await this._remoteStart();
 
 		} catch (e) {
 			console.warn('[REMOTE NODE] Error ', e);
-			setTimeout(() => {
+			this.timeoutRemoteRecconect = setTimeout(() => {
 				this.startCheckingRemote();
 			}, RESTART_TIME_CHECKING_NODE_MS);
 		}
@@ -358,6 +367,10 @@ class Blockchain {
 
 		try {
 
+			if (this.timeoutLocalRecconect) {
+				clearTimeout(this.timeoutLocalRecconect);
+			}
+
 			await this._localStart();
 
 			this.startSyncMonitor();
@@ -366,7 +379,7 @@ class Blockchain {
 
 			console.warn(e);
 
-			setTimeout(() => {
+			this.timeoutLocalRecconect = setTimeout(() => {
 				this.startCheckingLocalNode(url);
 			}, RESTART_TIME_CHECKING_NODE_MS);
 		}
@@ -406,6 +419,10 @@ class Blockchain {
 	}
 
 	async _localStart() {
+		if (!SUPPORTED_LOCAL_NODE_NETWORKS.some((n) => n === this.network) ||
+			!JSON.parse(localStorage.getItem('is_node_syncing'))) {
+			throw new Error('Local node not allow to connect now');
+		}
 		// TODO:: local switch  unsubscribe previous!!
 		this.local = await this._createConnection(this.localNodeUrl);
 

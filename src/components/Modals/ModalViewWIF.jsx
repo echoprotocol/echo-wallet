@@ -54,6 +54,8 @@ class ModalViewWIF extends React.Component {
 								<ActionBtn
 									icon="icon-copy"
 									copy={keys.publicKey}
+									labelText={intl.formatMessage({ id: 'copied_text' })}
+									key={keys.publicKey}
 								/>
 							</div>
 						</Form.Field>
@@ -73,6 +75,7 @@ class ModalViewWIF extends React.Component {
 								<ActionBtn
 									icon="icon-copy"
 									copy={keys.wif}
+									labelText={intl.formatMessage({ id: 'copied_text' })}
 								/>
 							</div>
 							<span className="warning-message">

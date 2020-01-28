@@ -68,7 +68,7 @@ class SignIn extends React.Component {
 		const { isAddAccount } = qs.parse(location.search);
 		const accPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.name_input.placeholder' });
 		const WIFPlaceholder = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.placeholder' });
-		const WIFTtitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
+		const WIFTitle = intl.formatMessage({ id: 'sign_page.import_account_page.wif_input.title' });
 		const addMsg = intl.formatMessage({ id: 'sign_page.add_account_button' });
 		const loginMsg = intl.formatMessage({ id: 'sign_page.login_button' });
 		const loadingMsg = intl.formatMessage({ id: 'sign_page.account_button_loading' });
@@ -77,7 +77,7 @@ class SignIn extends React.Component {
 
 			<Form className="main-form">
 				<div className="form-info">
-					{ isAddAccount ?
+					{ isAddAccount &&
 						<button
 							type="button"
 							className="back-link"
@@ -86,12 +86,12 @@ class SignIn extends React.Component {
 						>
 							<span className="icon-back" />
 							<FormattedMessage id="sign_page.back_button_text" />
-						</button> : null
+						</button>
 					}
 					<h3>{isAddAccount ? 'Add Account' : 'Welcome to Echo'}</h3>
 				</div>
 				<div className="field-wrap">
-					<div className={classnames('field error-wrap', { error: accountName.error })}>
+					<div className={classnames('field', { error: accountName.error })}>
 						<label htmlFor="AccountName">
 							<FormattedMessage id="sign_page.import_account_page.name_input.title" />
 						</label>
@@ -104,17 +104,22 @@ class SignIn extends React.Component {
 						/>
 						{
 							accountName.error &&
-								<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>
+								<span className="error-message">
+									{intl.formatMessage({ id: accountName.error })}
+								</span>
 						}
 
 					</div>
 					<PasswordInput
-						inputLabel={WIFTtitle}
+						key="sign-password"
+						unique="unique-sign-password"
+						inputLabel={WIFTitle}
 						inputPlaceholder={WIFPlaceholder}
 						inputName="wif"
-						errorMessage={wif.error && intl.formatMessage({ id: wif.error })}
+						errorMessage={wif.error}
 						onChange={(e) => this.onChange(e)}
 						value={wif.value}
+						intl={intl}
 					/>
 				</div>
 				<div className="form-panel">
