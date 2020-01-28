@@ -104,6 +104,22 @@ class ModalChangeDelegate extends React.Component {
 		});
 	}
 
+	renderUserAccounts() {
+		const {
+			preview, currentAccountName,
+		} = this.props;
+		const formattedPreview = preview.filter((el) => el.name !== currentAccountName).toJS();
+		if (!formattedPreview.length) {
+			return [];
+		}
+		const options = formattedPreview.map(({ accountId, name }) => ({
+			key: accountId,
+			text: name,
+			value: accountId,
+		}));
+		return this.renderList(options);
+	}
+
 	render() {
 		const {
 			show, currentAccountName, delegateObject, intl, keyWeightWarn,
@@ -157,8 +173,11 @@ class ModalChangeDelegate extends React.Component {
 												delegate ? <Avatar accountName={searchText} /> : <Avatar />
 											}
 											<Dropdown
-												className={classnames({ empty: !searchText || loading })}
-												options={(searchText && !loading) ? this.renderList(options) : []}
+												className={classnames({ empty: loading })}
+												options={(searchText && !loading) ?
+													this.renderList(options) :
+													this.renderUserAccounts()
+												}
 												searchQuery={searchText}
 												search
 												selection
@@ -211,6 +230,7 @@ ModalChangeDelegate.propTypes = {
 	delegateObject: PropTypes.object.isRequired,
 	intl: PropTypes.any.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
+	preview: PropTypes.array.isRequired,
 };
 
 ModalChangeDelegate.defaultProps = {
@@ -223,6 +243,7 @@ export default injectIntl(connect(
 		currentAccountName: state.global.getIn(['activeUser', 'name']),
 		delegateObject: state.form.getIn([FORM_CHANGE_DELEGATE, 'delegate']),
 		keyWeightWarn: state.global.get('keyWeightWarn'),
+		preview: state.balance.get('preview'),
 	}),
 	(dispatch) => ({
 		closeModal: (modal) => dispatch(closeModal(modal)),
