@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { ACCOUNT_ID_PREFIX } from '../../constants/GlobalConstants';
 
@@ -67,7 +67,7 @@ class TabOverview extends React.Component {
 
 	renderContractOptions() {
 		const { details, contract, bytecode } = this.props.data;
-
+		const { intl } = this.props;
 		return (
 			<React.Fragment>
 				{
@@ -112,9 +112,11 @@ class TabOverview extends React.Component {
 									{this.renderBytecode()}
 								</div>
 								<ActionBtn
+									key={bytecode}
 									copy={bytecode}
 									icon="copy"
 									text="Copy"
+									labelText={intl.formatMessage({ id: 'copied_text' })}
 								/>
 							</div>
 						</li>
@@ -229,7 +231,8 @@ TabOverview.propTypes = {
 	bytecodeArgs: PropTypes.object.isRequired,
 	data: PropTypes.object.isRequired,
 	network: PropTypes.object.isRequired,
+	intl: PropTypes.any.isRequired,
 };
 
 
-export default TabOverview;
+export default injectIntl(TabOverview);

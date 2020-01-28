@@ -12,6 +12,7 @@ import { formatCallContractField } from '../../../helpers/FormatHelper';
 import { FORM_VIEW_CONTRACT } from '../../../constants/FormConstants';
 
 import InputComponent from './InputComponent';
+import ErrorMessage from '../../../components/ErrorMessage';
 import Dropdown from '../../../components/Dropdown';
 
 class LineComponent extends React.Component {
@@ -65,8 +66,11 @@ class LineComponent extends React.Component {
 									inputData={input}
 									onKeyDown={(e) => this.onKeyDown(e)}
 								/>
-								{errorValue &&
-								<span className="error-message">{intl.formatMessage({ id: errorValue })}</span>}
+								<ErrorMessage
+									value={errorValue}
+									intl={intl}
+								/>
+
 							</Form.Field>
 						);
 					})

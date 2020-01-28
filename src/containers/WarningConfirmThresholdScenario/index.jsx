@@ -23,6 +23,7 @@ import { setInFormError, setValue } from '../../actions/FormActions';
 import { setValue as setTableValue } from '../../actions/TableActions';
 import { PERMISSION_TABLE } from '../../constants/TableConstants';
 import GlobalReducer from '../../reducers/GlobalReducer';
+import { startLocalNode } from '../../actions/GlobalActions';
 
 
 class WarningConfirmThresholdScenario extends React.Component {
@@ -35,6 +36,9 @@ class WarningConfirmThresholdScenario extends React.Component {
 			warningMessage: '',
 			echoRandMessage: '',
 			isWifChangingOnly: false,
+			modalConfirmShow: false,
+			modalDetailsShow: false,
+			modalUnlockShow: false,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -77,7 +81,11 @@ class WarningConfirmThresholdScenario extends React.Component {
 	}
 	async submit(onFinish) {
 		try {
-			const { validation, isWifChangingOnly } = await this.props.handleTransaction();
+			const { validation, isWifChangingOnly, editMode } = await this.props.handleTransaction();
+			if (!editMode) {
+				this.props.setValue('isEditMode', false);
+				return;
+			}
 			if (!validation) {
 				return;
 			}
@@ -138,9 +146,9 @@ class WarningConfirmThresholdScenario extends React.Component {
 			});
 		}
 		if (this.state.warningMessage || this.state.echoRandMessage) {
-			this.props.openModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
+			this.setState({ modalConfirmShow: true });
 		} else {
-			this.props.openModal(MODAL_UNLOCK);
+			this.setState({ modalUnlockShow: true });
 		}
 
 		if (typeof onFinish === 'function') {
@@ -163,7 +171,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 			if (this.state.isWifChangingOnly) {
 				this.send();
 			} else {
-				this.props.openModal(MODAL_DETAILS);
+				this.setState({ modalDetailsShow: true });
 			}
 		});
 
@@ -184,6 +192,10 @@ class WarningConfirmThresholdScenario extends React.Component {
 			this.props.sendTransaction(password, () => onUnlock(password));
 			this.props.setPermissionLoading(true);
 		}
+		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
+		if (isNodeAgreed) {
+			this.props.startLocalNode(password);
+		}
 		this.props.setTableValue('loading', true);
 		this.clear();
 	}
@@ -199,27 +211,28 @@ class WarningConfirmThresholdScenario extends React.Component {
 		this.props.openModal(MODAL_WIPE);
 	}
 
+	confirmEditWarning() {
+		this.setState({ modalUnlockShow: true });
+		this.setState({ modalConfirmShow: false });
+	}
+
 	render() {
 		const {
 			[MODAL_UNLOCK]: modalUnlock,
 			[MODAL_DETAILS]: modalDetails,
-			[MODAL_CONFIRM_EDITING_OF_PERMISSIONS]: modalConfirmEditingOfPermissions,
 		} = this.props;
 		return (
 			<React.Fragment>
 				{this.props.children(this.submit.bind(this))}
 				<ModalConfirmEditingOfPermissions
-					show={modalConfirmEditingOfPermissions.get('show')}
-					confirm={() => {
-						this.open(MODAL_UNLOCK);
-						this.props.closeModal(MODAL_CONFIRM_EDITING_OF_PERMISSIONS);
-					}}
+					show={this.state.modalConfirmShow}
+					confirm={() => this.confirmEditWarning()}
 					close={() => this.close(MODAL_CONFIRM_EDITING_OF_PERMISSIONS)}
 					warningMessage={this.state.warningMessage}
 					echoRandMessage={this.state.echoRandMessage}
 				/>
 				<ModalUnlock
-					show={modalUnlock.get('show')}
+					show={this.state.modalUnlockShow}
 					disabled={modalUnlock.get('loading')}
 					error={modalUnlock.get('error')}
 					password={this.state.password}
@@ -229,7 +242,7 @@ class WarningConfirmThresholdScenario extends React.Component {
 					close={() => this.close(MODAL_UNLOCK)}
 				/>
 				<ModalApprove
-					show={modalDetails.get('show')}
+					show={this.state.modalDetailsShow}
 					disabled={modalDetails.get('loading')}
 					operation={this.props.operation}
 					showOptions={this.props.showOptions}
@@ -265,6 +278,7 @@ WarningConfirmThresholdScenario.propTypes = {
 	treshold: PropTypes.object.isRequired,
 	form: PropTypes.object.isRequired,
 	onUnlock: PropTypes.func,
+	startLocalNode: PropTypes.func.isRequired,
 };
 
 WarningConfirmThresholdScenario.defaultProps = {
@@ -296,5 +310,6 @@ export default connect(
 		setPermissionLoading: (value) => dispatch(GlobalReducer.actions.set({ field: 'permissionLoading', value })),
 		sendTransaction: (keys, callback) => dispatch(sendTransaction(keys, callback)),
 		resetTransaction: () => dispatch(resetTransaction()),
+		startLocalNode: (pass) => dispatch(startLocalNode(pass)),
 	}),
 )(WarningConfirmThresholdScenario);

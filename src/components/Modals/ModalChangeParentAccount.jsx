@@ -14,6 +14,7 @@ import { setFormValue, clearForm } from '../../actions/FormActions';
 import { MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { FORM_CHANGE_DELEGATE } from '../../constants/FormConstants';
 import Avatar from '../Avatar';
+import ErrorMessage from '../../components/ErrorMessage';
 
 import TransactionScenario from '../../containers/TransactionScenario';
 
@@ -132,9 +133,9 @@ class ModalChangeDelegate extends React.Component {
 									{intl.formatMessage({ id: 'modals.modal_change_parent_account.title' })}
 								</h2>
 							</div>
-							<div className="modal-body">
+							<Form className="modal-body">
 								<div className="field-wrap">
-									<Form.Field>
+									<div className="field">
 										<label htmlFor="current-account">
 											{intl.formatMessage({ id: 'modals.modal_change_parent_account.current_acc' })}
 										</label>
@@ -148,34 +149,34 @@ class ModalChangeDelegate extends React.Component {
 												value={currentAccountName}
 											/>
 										</div>
-									</Form.Field>
-									<div className={classnames('field-wrap error-wrap', { error: delegateObject.error })}>
-
-										<div className="field">
-											<label htmlFor="parentAccount" className="field-label">{delegateTitle}</label>
-											<div className="account-dropdown-wrap">
-												{
-													delegate ? <Avatar accountName={searchText} /> : <Avatar />
-												}
-												<Dropdown
-													className={classnames({ empty: !searchText || loading })}
-													options={(searchText && !loading) ? this.renderList(options) : []}
-													searchQuery={searchText}
-													search
-													selection
-													fluid
-													name="parentAccount"
-													text={searchText || 'Delegated to'}
-													onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
-													placeholder={delegatePlaceholder}
-													selectOnNavigation={false}
-													minCharacters={0}
-													noResultsMessage={searchText ? 'No results are found' : null}
-													onChange={(e, { value }) => this.onChangeAccount(value)}
-												/>
-											</div>
-											{delegateObject.error && <span className="error-message">{delegateObject.error}</span>}
+									</div>
+									<div className={classnames('field', { error: delegateObject.error })}>
+										<label htmlFor="parentAccount" className="field-label">{delegateTitle}</label>
+										<div className="account-dropdown-wrap">
+											{
+												delegate ? <Avatar accountName={searchText} /> : <Avatar />
+											}
+											<Dropdown
+												className={classnames({ empty: !searchText || loading })}
+												options={(searchText && !loading) ? this.renderList(options) : []}
+												searchQuery={searchText}
+												search
+												selection
+												fluid
+												name="parentAccount"
+												text={searchText || 'Delegated to'}
+												onSearchChange={(e, data) => this.accountSearchHandler(e, data)}
+												placeholder={delegatePlaceholder}
+												selectOnNavigation={false}
+												minCharacters={0}
+												noResultsMessage={searchText ? 'No results are found' : null}
+												onChange={(e, { value }) => this.onChangeAccount(value)}
+											/>
 										</div>
+										<ErrorMessage
+											value={delegateObject.error}
+											intl={intl}
+										/>
 									</div>
 								</div>
 								<div className="form-panel">
@@ -191,7 +192,7 @@ class ModalChangeDelegate extends React.Component {
 									}
 
 								</div>
-							</div>
+							</Form>
 						</Modal>)
 				}
 			</TransactionScenario>

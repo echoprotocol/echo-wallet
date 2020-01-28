@@ -46,6 +46,7 @@ class Network extends React.PureComponent {
 
 	onDeleteNetwork(network, e) {
 		e.preventDefault();
+		e.stopPropagation();
 		this.setState({ open: false });
 		this.props.deleteNetwork(network);
 	}
@@ -90,13 +91,18 @@ class Network extends React.PureComponent {
 							}
 						</div>
 						{
-							(i.name === 'testnet' && isPlatformSupportNode() && this.props.isNodeSyncing) && (
+							(i.name === 'testnet' && isPlatformSupportNode(this.props.platform)) && (
 								<div className="node-info">
 									{
 										percent < 100 ? (
-											<RemoteNode value={percent} isNodePaused={this.props.isNodePaused} />
+											<RemoteNode
+												value={percent}
+												isNodePaused={this.props.isNodePaused}
+												isNodeSyncing={this.props.isNodeSyncing}
+												openModal={this.props.openModal}
+											/>
 										) : (
-											<LocalNode />
+											this.props.isNodeSyncing && <LocalNode />
 										)
 									}
 								</div>
@@ -125,12 +131,50 @@ class Network extends React.PureComponent {
 		});
 	}
 
+	renderNode() {
+		const { network, disconnected, warning } = this.props;
+		const percent = parseInt(this.props.localNodePercent, 10);
+		const nodeFragment = percent < 100 ?
+			(
+				<React.Fragment>
+					<span className="status connected">
+						<div className="ellipsis">{network.name}</div>
+					</span>
+					<ProgressBar
+						size={20}
+						value={percent}
+						disconnected={disconnected}
+						warning={warning}
+						openModal={this.props.openModal}
+						isNodeSyncing={this.props.isNodeSyncing}
+						isNodePaused={this.props.isNodePaused}
+						platform={this.props.platform}
+					/>
+				</React.Fragment>
+			) :
+			(
+				<span className="status connected">
+					<div className="ellipsis">
+						<FormattedMessage id="footer.network_section.choose_network_dropdown.local_node" />
+					</div>
+				</span>
+			);
+		if (network.name === 'testnet') {
+			return nodeFragment;
+		}
+
+		return (
+			<span className="status connected">
+				<div className="ellipsis">{network.name}</div>
+			</span>
+		);
+	}
+
 	render() {
 		const { open, focusable } = this.state;
 		const {
-			networks, network, loading, disconnected, warning, intl,
+			networks, loading, disconnected, warning, intl,
 		} = this.props;
-		const percent = parseInt(this.props.localNodePercent, 10);
 		const dropdownPlaceholder = intl.formatMessage({ id: 'footer.network_section.choose_network_dropdown.title' });
 		let options = [
 			{
@@ -194,30 +238,10 @@ class Network extends React.PureComponent {
 								<FormattedMessage id="footer.network_section.disconnected" />
 							}
 						</span>
-						{percent < 100 ?
-							<React.Fragment>
-								<span className="status connected">
-									<div className="ellipsis">{network.name}</div>
-								</span>
-
-								<ProgressBar
-									size={20}
-									value={percent}
-									disconnected={disconnected}
-									warning={warning}
-									openModal={this.props.openModal}
-									isNodeSyncing={this.props.isNodeSyncing}
-									isNodePaused={this.props.isNodePaused}
-								/>
-							</React.Fragment> :
-							<span className="status connected">
-								<div className="ellipsis">Local node</div>
-							</span>
-						}
-
+						{this.renderNode()}
 						<span className="pipeline-block">
 							<FormattedMessage id="footer.network_section.block" />
-							<span>{this.props.lastBlock}</span>
+							{this.props.lastBlock ? <span>{this.props.lastBlock}</span> : null}
 						</span>
 						<span className={classnames('icon dropdown', { active: open })} />
 					</div>
@@ -254,6 +278,7 @@ Network.propTypes = {
 	intl: PropTypes.any.isRequired,
 	disconnected: PropTypes.bool,
 	warning: PropTypes.bool,
+	platform: PropTypes.string.isRequired,
 };
 
 Network.defaultProps = {
@@ -270,6 +295,7 @@ export default injectIntl(withRouter(connect(
 		isNodeSyncing: state.global.get('isNodeSyncing'),
 		isNodePaused: state.global.get('isNodePaused'),
 		loading: state.form.getIn([FORM_SIGN_UP, 'loading']),
+		platform: state.global.get('platform'),
 	}),
 	(dispatch) => ({
 		saveNetwork: (network) => dispatch(saveNetwork(network)),

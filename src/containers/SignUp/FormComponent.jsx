@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
 import classnames from 'classnames';
 import { PrivateKey } from 'echojs-lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import ActionBtn from '../../components/ActionBtn';
+import ErrorMessage from '../../components/ErrorMessage';
 
 class FormComponent extends React.Component {
 
@@ -70,11 +70,12 @@ class FormComponent extends React.Component {
 		const {
 			generatedWIF, confirmWIF, loading, intl,
 		} = this.props;
+
 		const confirmWIFPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.default_settings_page.confirm_wif_input.title' });
 
 		return (
 			<React.Fragment>
-				<Form.Field>
+				<div className="field">
 					<div className="label-wrap">
 						<label htmlFor="generatedWIF">
 							<FormattedMessage id="sign_page.register_account_page.default_settings_page.generated_wif_input.title" />
@@ -90,7 +91,7 @@ class FormComponent extends React.Component {
 					<div className="action input">
 						<input
 							name="generatedWIF"
-							className="ui input"
+							className="input"
 							placeholder="Genereted WIF"
 							value={generatedWIF.value}
 							readOnly
@@ -98,10 +99,11 @@ class FormComponent extends React.Component {
 						<ActionBtn
 							icon="icon-copy"
 							copy={generatedWIF.value}
+							labelText={intl.formatMessage({ id: 'copied_text' })}
 						/>
 					</div>
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: confirmWIF.error })}>
+				</div>
+				<div className={classnames('field', { error: confirmWIF.error })}>
 					<label htmlFor="confirmWIF">
 						<FormattedMessage id="sign_page.register_account_page.default_settings_page.confirm_wif_input.title" />
 					</label>
@@ -112,9 +114,11 @@ class FormComponent extends React.Component {
 						onChange={(e) => this.onChange(e)}
 						disabled={loading}
 					/>
-					{confirmWIF.error &&
-					<span className="error-message">{intl.formatMessage({ id: confirmWIF.error })}</span>}
-				</Form.Field>
+					<ErrorMessage
+						value={confirmWIF.error}
+						intl={intl}
+					/>
+				</div>
 			</React.Fragment>
 		);
 	}
@@ -127,7 +131,7 @@ class FormComponent extends React.Component {
 		const pubKeyPlaceholder = intl.formatMessage({ id: 'sign_page.register_account_page.custom_settings_page.pub_key_input.placeholder' });
 		return (
 			<React.Fragment>
-				<Form.Field className={classnames('error-wrap', { error: userWIF.error })}>
+				<div className={classnames('field', { error: userWIF.error })}>
 					<h3 className="field-title">
 						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.text" />
 					</h3>
@@ -149,9 +153,12 @@ class FormComponent extends React.Component {
 							this.validateWIFAfterChange(e);
 						}}
 					/>
-					{userWIF.error && <span className="error-message">{intl.formatMessage({ id: userWIF.error })}</span>}
-				</Form.Field>
-				<Form.Field className={classnames('error-wrap', { error: userPublicKey.error })}>
+					<ErrorMessage
+						value={userWIF.error}
+						intl={intl}
+					/>
+				</div>
+				<div className={classnames('field', { error: userPublicKey.error })}>
 					<label htmlFor="confirmWIF">
 						<FormattedMessage id="sign_page.register_account_page.custom_settings_page.pub_key_input.title" />
 					</label>
@@ -165,9 +172,11 @@ class FormComponent extends React.Component {
 							this.validatePubAfterChange(e);
 						}}
 					/>
-					{userPublicKey.error &&
-					<span className="error-message">{intl.formatMessage({ id: userPublicKey.error })}</span>}
-				</Form.Field>
+					<ErrorMessage
+						value={userPublicKey.error}
+						intl={intl}
+					/>
+				</div>
 			</React.Fragment>
 		);
 	}
@@ -180,7 +189,7 @@ class FormComponent extends React.Component {
 
 		return (
 			<div className="field-wrap">
-				<Form.Field className={classnames('error-wrap', { error: accountName.error })}>
+				<div className={classnames('field', { error: accountName.error })}>
 					<label htmlFor="accountName">
 						<FormattedMessage id="sign_page.register_account_page.default_settings_page.name_input.title" />
 					</label>
@@ -192,11 +201,12 @@ class FormComponent extends React.Component {
 						disabled={loading}
 						autoFocus
 					/>
-					{accountName.error &&
-					<span className="error-message">{intl.formatMessage({ id: accountName.error })}</span>}
-				</Form.Field>
+					<ErrorMessage
+						value={accountName.error}
+						intl={intl}
+					/>
+				</div>
 				{isCustomWIF ? this.renderUserWIF() : this.renderGeneratedWIF()}
-
 			</div>
 		);
 	}
