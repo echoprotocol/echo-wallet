@@ -47,7 +47,7 @@ class Assets extends React.Component {
 							<span>
 								<FormattedMessage id="wallet_page.frozen_funds.frozen_funds_list.coefficient_text" />
 							</span>
-							<span>{freezeParam.coefficientText}</span>
+							<span>&nbsp;{freezeParam.coefficientText}</span>
 							<Popup
 								trigger={<span className="inner-tooltip-trigger icon-info" />}
 								content={popupMsg}
