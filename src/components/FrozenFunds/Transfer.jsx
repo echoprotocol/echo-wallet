@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import classnames from 'classnames';
 
 import { Dropdown, Button, Popup, Form } from 'semantic-ui-react';
 
@@ -51,6 +52,7 @@ class Transfer extends React.Component {
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.freezeBalance()}
+				onUnlock={() => this.props.clearForm()}
 			>
 				{
 					(submit) => (
@@ -85,8 +87,9 @@ class Transfer extends React.Component {
 										<FormattedMessage id="wallet_page.frozen_funds.period_input_title" />
 									</label>
 									<Dropdown
+										className={classnames('frozen-period-dropdown', { pl: !duration.isSelected })}
 										onChange={(e, { value }) => this.onDropdownChange(e, value)}
-										placeholder={dropdownPlaceholder}
+										text={duration.isSelected ? duration.text : dropdownPlaceholder}
 										selection
 										options={dateOptions}
 										noResultsMessage="No results are found"
