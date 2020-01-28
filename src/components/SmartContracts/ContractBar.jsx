@@ -71,9 +71,12 @@ class ContractBar extends React.Component {
 	}
 
 	renderAccuracyTrigger() {
+		const {
+			intl,
+		} = this.props;
 		return (
 			<div className="tooltip">
-				<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_text" />
+				{intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_text' })}
 				<a
 					href={ECHO_DOCS_LINK}
 					className="link"
@@ -81,7 +84,7 @@ class ContractBar extends React.Component {
 					rel="noopener noreferrer"
 					onClick={(e) => this.goToExternalLink(e, ECHO_DOCS_LINK)}
 				>
-					<FormattedMessage id="smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_link" />
+					{intl.formatMessage({ id: 'smart_contract_page.create_contract_page.contract_deploy.eth_accuracy.popup_link' })}
 				</a>
 			</div>
 		);
@@ -148,26 +151,26 @@ class ContractBar extends React.Component {
 							</div>
 							{
 								form.get('supportedAssetRadio') === SUPPORTED_ASSET_CUSTOM &&
-									<div className={classnames('field', { error: form.get('supportedAsset').error })}>
-										<Dropdown
-											icon={false}
-											className={classnames({ empty: !searchText || loading })}
-											options={(searchText && !loading) ? options : []}
-											searchQuery={searchText}
-											search
-											selection
-											fluid
-											text={searchText || 'Asset name'}
-											onSearchChange={(e, data) => this.assetSearchHandler(e, data)}
-											placeholder="Asset name"
-											selectOnNavigation={false}
-											minCharacters={0}
-											noResultsMessage={searchText ? 'No results are found' : null}
-											onChange={(e, { value }) => this.onChangeAsset(value)}
-										/>
-										{form.get('supportedAsset').error &&
+								<div className={classnames('field', { error: form.get('supportedAsset').error })}>
+									<Dropdown
+										icon={false}
+										className={classnames({ empty: !searchText || loading })}
+										options={(searchText && !loading) ? options : []}
+										searchQuery={searchText}
+										search
+										selection
+										fluid
+										text={searchText || 'Asset name'}
+										onSearchChange={(e, data) => this.assetSearchHandler(e, data)}
+										placeholder="Asset name"
+										selectOnNavigation={false}
+										minCharacters={0}
+										noResultsMessage={searchText ? 'No results are found' : null}
+										onChange={(e, { value }) => this.onChangeAsset(value)}
+									/>
+									{form.get('supportedAsset').error &&
 										<span className="error-message">{intl.formatMessage({ id: form.get('supportedAsset').error })}</span>}
-									</div>
+								</div>
 							}
 						</div>
 					</li>
