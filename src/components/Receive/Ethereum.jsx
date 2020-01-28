@@ -176,7 +176,7 @@ class Ethereum extends React.Component {
 
 		console.log('eth_addr: ', ethAddress.get('eth_addr'));
 		console.log('is_approved: ', ethAddress.get('is_approved'));
-		console.log('eth_addr: ', JSON.stringify(fullCurrentAccount.getIn(['statistics']).toJS()));
+		// console.log('eth_addr: ', JSON.stringify(fullCurrentAccount.getIn(['statistics']).toJS()));
 
 		if (!fullCurrentAccount.getIn(['statistics', 'created_eth_address'])) {
 			return (

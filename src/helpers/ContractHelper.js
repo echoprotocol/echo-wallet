@@ -8,6 +8,21 @@ const zero64String = '0000000000000000000000000000000000000000000000000000000000
 export const getHash = (str) => keccak256(str);
 
 /**
+ * @method getUintFromDecimal
+ * @param {string|number|BigNumber} val
+ * @returns {String}
+ */
+export const getUintFromDecimal = (val) => new BigNumber(val, 10).toString(16).padStart(64, '0');
+
+
+/**
+ * @method getUintFromDecimal
+ * @param {string|number|BigNumber} val
+ * @returns {String}
+ */
+export const getAddressFromDecimal = (val, bytecode = false) =>
+	new BigNumber(val, 10).toString(16).padStart(bytecode ? 64 : 40, '0');
+/**
  * @method trim0xFomCode
  * @param {String} code
  * @returns {String}

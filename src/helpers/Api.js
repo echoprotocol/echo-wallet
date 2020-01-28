@@ -21,10 +21,10 @@ const parseServerError = (error) => {
 	return { status: error.status, message: error.message };
 };
 
-export function get(url, params, headersParams = {}) {
+export function get(url, params) {
 	const query = qs.stringify(params);
 
-	const headers = new Headers(headersParams);
+	const headers = new Headers();
 	const options = {
 		method: 'GET',
 		headers,
@@ -55,18 +55,15 @@ export function get(url, params, headersParams = {}) {
 	});
 }
 
-export function post(url, params, headers = {}) {
+export function post(url, params) {
 	const options = {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json, text/plain, */*',
 			'Content-Type': 'application/json',
-			...headers,
 		},
 		cache: 'default',
-		mode: 'cors',
 		body: JSON.stringify(params),
-
 	};
 
 	return new Promise((resolve, reject) => {

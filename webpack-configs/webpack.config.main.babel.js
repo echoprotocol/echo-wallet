@@ -75,7 +75,7 @@ export default merge.smart(baseConfig, {
 				},
 			},
 			CRYPTO_API_KEY: JSON.stringify(process.env.CRYPTO_API_KEY),
-			CRYPTO_API_URL: JSON.stringify(process.env.CRYPTO_API_URL),
+			CRYPTO_API_URL: JSON.stringify(CRYPTO_API_URL),
 		}),
 	],
 	node: {

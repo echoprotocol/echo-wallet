@@ -12,6 +12,7 @@ const DEFAULT_FIELDS = Map({
 	activeUser: new Map({
 		id: '',
 		name: '',
+		ethereumSidechainAddress: '',
 	}),
 	visibleBar: false,
 	contracts: new Map({}),
