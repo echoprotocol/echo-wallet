@@ -47,6 +47,7 @@ export default class PasswordInput extends React.Component {
 			value, intl,
 			autoFocus,
 			unique,
+			isPasswordVisible,
 		} = this.props;
 
 		return (
@@ -63,7 +64,7 @@ export default class PasswordInput extends React.Component {
 				<div className="action-input">
 					<input
 						key={`input-${unique}`}
-						type={show ? 'text' : 'password'}
+						type={(show || isPasswordVisible) ? 'text' : 'password'}
 						placeholder={inputPlaceholder}
 						name={inputName}
 						onChange={(e) => onChange(e)}
@@ -73,9 +74,10 @@ export default class PasswordInput extends React.Component {
 					/>
 					<ActionBtn
 						key={`action-${unique}`}
-						icon={show ? 'icon-e-show' : 'icon-e-hide'}
+						icon={(show || isPasswordVisible) ? 'icon-e-show' : 'icon-e-hide'}
 						focus={(e) => this.focus(e)}
 						blur={(e) => this.blur(e)}
+						action={() => this.props.actionBtnHandler()}
 					/>
 				</div>
 				<React.Fragment>
@@ -105,6 +107,8 @@ PasswordInput.propTypes = {
 	value: PropTypes.string,
 	autoFocus: PropTypes.bool,
 	intl: PropTypes.any,
+	actionBtnHandler: PropTypes.func,
+	isPasswordVisible: PropTypes.bool,
 };
 
 PasswordInput.defaultProps = {
@@ -114,7 +118,9 @@ PasswordInput.defaultProps = {
 	inputPlaceholder: '',
 	inputName: '',
 	value: '',
-	onChange: () => {},
+	onChange: () => { },
+	actionBtnHandler: () => { },
+	isPasswordVisible: false,
 	autoFocus: false,
 	intl: {},
 };
