@@ -108,16 +108,18 @@ class EchoNetwork extends React.Component {
 	}
 
 	getReceiver() {
-		const { accountName } = this.props;
+		const { accountNames } = this.props;
 		const { addresses, receiver } = this.state;
 
-		if (accountName === receiver) {
-			return accountName;
-		}
-
+		console.log(accountNames)
+		console.log(addresses)
+		console.log(receiver)
+		const account = accountNames.find((a) => a === receiver);
 		const address = addresses.find((a) => a.get('address') === receiver);
 
-		return address ? address.get('address') : null;
+		console.log(account, address)
+		console.log('a', address || account)
+		return address || account;
 	}
 
 	getQrData() {
