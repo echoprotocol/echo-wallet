@@ -111,14 +111,9 @@ class EchoNetwork extends React.Component {
 		const { accountNames } = this.props;
 		const { addresses, receiver } = this.state;
 
-		console.log(accountNames)
-		console.log(addresses)
-		console.log(receiver)
 		const account = accountNames.find((a) => a === receiver);
 		const address = addresses.find((a) => a.get('address') === receiver);
 
-		console.log(account, address)
-		console.log('a', address || account)
 		return address || account;
 	}
 
