@@ -355,7 +355,7 @@ class AmountField extends React.Component {
 					&& activeCoinTypeTab && (!amount.error || !fee.error) ?
 						<span className="warning-message">
 							{intl.formatMessage({ id: 'amount_input.warning_message_pt1' })}
-							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo}
+							{SIDECHAIN_DISPLAY_NAMES[activeCoinTypeTab].echo}&nbsp;
 							{intl.formatMessage({ id: 'amount_input.warning_message_pt2' })}
 							<span className="special">
 								{intl.formatMessage({ id: 'amount_input.warning_message_pt3' })}
