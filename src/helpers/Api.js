@@ -62,6 +62,7 @@ export function post(url, params) {
 			Accept: 'application/json, text/plain, */*',
 			'Content-Type': 'application/json',
 		},
+		mode: 'cors',
 		cache: 'default',
 		body: JSON.stringify(params),
 	};

@@ -35,7 +35,7 @@ class Receive extends React.Component {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
 			getEthAddress, ethAddress, clearForm, keyWeightWarn,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
-			btcAddress, accountId,
+			btcAddress, accountId, ethSidechain,
 		} = this.props;
 
 		const internalTabs = [
@@ -124,6 +124,7 @@ class Receive extends React.Component {
 						fullCurrentAccount={fullCurrentAccount}
 						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
 						keyWeightWarn={keyWeightWarn}
+						ethSidechain={ethSidechain}
 					/>
 				),
 			},
@@ -177,6 +178,7 @@ Receive.propTypes = {
 	fullCurrentAccount: PropTypes.object.isRequired,
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
+	ethSidechain: PropTypes.object.isRequired,
 	accountId: PropTypes.string.isRequired,
 	setGlobalValue: PropTypes.func.isRequired,
 	activeCoinTypeTab: PropTypes.number.isRequired,

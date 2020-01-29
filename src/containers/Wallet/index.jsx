@@ -50,6 +50,7 @@ export default connect(
 		activePaymentTypeTab: state.global.get('activePaymentTypeTab'),
 		activeCoinTypeTab: state.global.get('activeCoinTypeTab'),
 		keyWeightWarn: state.global.get('keyWeightWarn'),
+		ethSidechain: state.global.get('ethSidechain'),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),

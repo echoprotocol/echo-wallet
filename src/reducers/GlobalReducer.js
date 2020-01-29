@@ -9,10 +9,13 @@ const DEFAULT_FIELDS = Map({
 	globalError: null,
 	error: null,
 	keyWeightWarn: false,
+	ethSidechain: new Map({
+		address: '',
+		confirmed: false,
+	}),
 	activeUser: new Map({
 		id: '',
 		name: '',
-		ethereumSidechainAddress: '',
 	}),
 	visibleBar: false,
 	contracts: new Map({}),

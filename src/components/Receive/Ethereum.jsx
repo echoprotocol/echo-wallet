@@ -12,18 +12,22 @@ import QrCode from '../QrCode';
 import TransactionScenario from '../../containers/TransactionScenario';
 import ActionBtn from '../ActionBtn';
 
-
+let interval = null;
 class Ethereum extends React.Component {
 
 	componentDidMount() {
-		this.props.getEthAddress();
+		this.checkConfirmation();
 	}
 
 	componentDidUpdate() {
-		this.props.getEthAddress();
+		this.checkConfirmation();
 	}
 
 	componentWillUnmount() {
+		if (interval) {
+			clearInterval(interval);
+			interval = null;
+		}
 		this.props.clearForm();
 	}
 
@@ -51,13 +55,35 @@ class Ethereum extends React.Component {
 		return +value ? `ethereum:${address}?value=${value}` : `ethereum:${address}`;
 	}
 
-	renderPayment() {
+	checkConfirmation() {
+		const { ethSidechain } = this.props;
+		this.props.getEthAddress();
+
+		if (ethSidechain.get('confirmed')) {
+			if (interval) {
+				clearInterval(interval);
+				interval = null;
+			}
+			return;
+		}
+
+		if (interval) {
+			return;
+		}
+
+
+		if (ethSidechain.get('address')) {
+			interval = setInterval(() => this.props.getEthAddress(), 4000);
+		}
+	}
+
+	renderPayment(address, warning) {
 		const { ethAddress, amount, intl } = this.props;
 
 		const ethCurrency = {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
 		};
-		const address = ethAddress.get('eth_addr');
+		// const address = ethAddress.get('eth_addr');
 
 		const addressWithPrefix = `0x${address}`;
 
@@ -74,6 +100,13 @@ class Ethereum extends React.Component {
 						<label htmlFor="public-key">
 							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
 						</label>
+						{
+							warning && (
+								<label htmlFor="public-key">
+									Your address is yet not fully confirmed. Wait up to 5 minutes
+								</label>
+							)
+						}
 						<div className="action input">
 							<input
 								type="text"
@@ -172,10 +205,11 @@ class Ethereum extends React.Component {
 	}
 
 	render() {
-		const { ethAddress, fullCurrentAccount } = this.props;
+		const { ethAddress, fullCurrentAccount, ethSidechain } = this.props;
 
 		console.log('eth_addr: ', ethAddress.get('eth_addr'));
 		console.log('is_approved: ', ethAddress.get('is_approved'));
+		console.log('ethSidechain: ', ethSidechain.toJS());
 		// console.log('eth_addr: ', JSON.stringify(fullCurrentAccount.getIn(['statistics']).toJS()));
 
 		if (!fullCurrentAccount.getIn(['statistics', 'created_eth_address'])) {
@@ -189,7 +223,15 @@ class Ethereum extends React.Component {
 		if (ethAddress.get('eth_addr') && ethAddress.get('is_approved')) {
 			return (
 				<div className="payment-wrap" >
-					{this.renderPayment()}
+					{this.renderPayment(ethAddress.get('eth_addr'))}
+				</div>
+			);
+		}
+
+		if (ethSidechain.get('address')) {
+			return (
+				<div className="payment-wrap" >
+					{this.renderPayment(ethSidechain.get('address'), !ethSidechain.get('confirmed'))}
 				</div>
 			);
 		}
@@ -211,6 +253,7 @@ Ethereum.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	ethSidechain: PropTypes.object.isRequired,
 	intl: PropTypes.any.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 };

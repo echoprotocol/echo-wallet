@@ -34,7 +34,7 @@ const getSidechainEthereumAddress = () => async (dispatch, getState) => {
 		const response = await getSidechainEthAddress(activeUserId);
 		const zeroAddress = `0x${getAddressFromDecimal(0, true)}`;
 
-		return response === zeroAddress ? '' : response;
+		return response === zeroAddress ? '' : `0x${response.slice(26)}`;
 	} catch (error) {
 		return '';
 	}
@@ -56,21 +56,23 @@ const getEthSidechainGenerateAddressLogs = async ({
 	topics = [],
 }) => {
 	try {
-		const logs = await getEthContractLogs({
-			from_block: fromBlock,
-			to_block: toBlock,
-			topics,
-			addresses,
-		});
+		// const logs = await getEthContractLogs({
+		// 	from_block: fromBlock,
+		// 	to_block: toBlock,
+		// 	topics,
+		// 	addresses,
+		// });
 
-		return logs;
+		// return logs;
+
+		return [];
 	} catch (error) {
 		return [];
 	}
 
 };
 
-const isAddressCreationConfirmed = async (blocksToConfirm = 20, idToSearch) => {
+const checkAddressCreationConfirm = async (blocksToConfirm = 20, idToSearch) => {
 	const lastEthSidechainBlock = await getCurrentSidechainEthBlock();
 
 	if (!lastEthSidechainBlock) {
@@ -93,13 +95,11 @@ const isAddressCreationConfirmed = async (blocksToConfirm = 20, idToSearch) => {
 		toBlock: new BN(lastEthSidechainBlock).toNumber(),
 		addresses: [sidechainContractAddress],
 		topics: [sidechainGenerateAddressTopic],
-		idToSearch,
 	});
-
-	// TODO: try to find exactly idToSearch in logs and return bool if it was success
-
-	console.log('logs: ', logs);
-
+	const userIdWithoutPrefix = idToSearch.split('.')[2];
+	const userIdInUint = getUintFromDecimal(userIdWithoutPrefix);
+	return false;
+	return !logs.find(({ data }) => data.slice(0, 64) === userIdInUint);
 };
 
 export const getEthAddress = () => async (dispatch, getState) => {
@@ -114,8 +114,6 @@ export const getEthAddress = () => async (dispatch, getState) => {
 
 	const [fullCurrentAccount] = await Services.getEcho().api.getFullAccounts([activeUserId]);
 
-	const a = await isAddressCreationConfirmed(300000);
-
 	if (!fullCurrentAccount) {
 		return true;
 	}
@@ -129,19 +127,22 @@ export const getEthAddress = () => async (dispatch, getState) => {
 	}
 
 	const ethereumSidechainAddress = await dispatch(getSidechainEthereumAddress());
-
-	if (ethereumSidechainAddress) {
-		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { ethereumSidechainAddress } }));
-	}
-
-	if (ethereumSidechainAddress) {
-		// const isLogWasNear = await isAddressCreationConfirmed(20);
-		// if log found create setInterval to check this method again until page was closed or method return false
-		// this will be mean that in close range blocks (default if 20) transactions not exist and address was created
-		// earle
-	}
-
 	console.log('ethereumSidechainAddress ', ethereumSidechainAddress);
+	
+	if (!ethereumSidechainAddress) {
+		return true;
+	}
+
+	const isAddressConfirmed = await checkAddressCreationConfirm(20, activeUserId);
+
+	const params = { address: ethereumSidechainAddress, confirmed: isAddressConfirmed };
+	dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params }));
+
+
+	// if log found create setInterval to check this method again until page was closed or method return false
+	// this will be mean that in close range blocks (default if 20) transactions not exist and address was created
+	// earle
+
 
 	return true;
 };
