@@ -85,7 +85,6 @@
     "redux-modules": "^1.1.1",
     "redux-thunk": "^2.3.0",
     "rlp": "^2.1.0",
-    "rpc-websockets": "^5.0.14",
     "rxjs": "^6.5.3",
     "scrypt-js": "^2.0.4",
     "semantic-ui-react": "^0.88.2",
