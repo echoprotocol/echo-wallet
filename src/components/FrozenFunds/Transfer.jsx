@@ -30,11 +30,6 @@ class Transfer extends React.Component {
 		this.props.setAssets();
 	}
 
-	// onDropdownChange(e, value) {
-	// 	console.log(value)
-	// 	const currentDuration = dateOptions.find((d) => d.value === value);
-	// 	this.props.setValue('duration', Object.assign({}, currentDuration, { isSelected: true }));
-	// }
 
 	resetForm() {
 		this.props.clearForm();
