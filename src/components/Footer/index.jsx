@@ -28,7 +28,7 @@ class Footer extends React.PureComponent {
 	}
 	render() {
 		const {
-			isConnect, latency, lastBlock, error, keyWeightWarn,
+			isConnect, latency, lastBlock, error, keyWeightWarn, ethSidechain,
 		} = this.props;
 		const connected = (
 			<div className="footer">
@@ -59,6 +59,19 @@ class Footer extends React.PureComponent {
 						>
 							<FormattedMessage id="footer.key_warning.button_text" />
 						</Button>
+					</li>
+					<li>
+						<NetworkDropdown lastBlock={lastBlock} warning />
+					</li>
+				</ul>
+			</div>
+		);
+
+		const warningAddressNotConfirmed = (
+			<div className="footer warning">
+				<ul>
+					<li>
+						<FormattedMessage id="footer.eth_warning.text" />
 					</li>
 					<li>
 						<NetworkDropdown lastBlock={lastBlock} warning />
@@ -110,6 +123,10 @@ class Footer extends React.PureComponent {
 				return errored;
 			}
 
+			if (ethSidechain.get('address') && !ethSidechain.get('confirmed')) {
+				return warningAddressNotConfirmed;
+			}
+
 			if (keyWeightWarn) {
 				return warning;
 			}
@@ -130,6 +147,7 @@ Footer.propTypes = {
 	connection: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	history: PropTypes.object.isRequired,
+	ethSidechain: PropTypes.object.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 };
 
@@ -151,6 +169,7 @@ export default withRouter(connect(
 		isConnect: state.global.get('isConnected'),
 		error: state.global.get('globalError'),
 		keyWeightWarn: state.global.get('keyWeightWarn'),
+		ethSidechain: state.global.get('ethSidechain'),
 	}),
 	(dispatch) => ({
 		openModal: () => dispatch(openModal(MODAL_INFO)),

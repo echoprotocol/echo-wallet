@@ -22,12 +22,20 @@ export const getUintFromDecimal = (val) => new BigNumber(val, 10).toString(16).p
  */
 export const getAddressFromDecimal = (val, bytecode = false) =>
 	new BigNumber(val, 10).toString(16).padStart(bytecode ? 64 : 40, '0');
+
 /**
  * @method trim0xFomCode
  * @param {String} code
  * @returns {String}
  */
 export const trim0xFomCode = (code) => (code.startsWith('0x') ? code.slice(2) : code);
+
+/**
+ * @method add0x
+ * @param {String} code
+ * @returns {String}
+ */
+export const add0x = (...code) => `0x${code.join('')}`;
 
 /**
  * @method getMethodId

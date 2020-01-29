@@ -36,6 +36,7 @@ import {
 } from '../helpers/ValidateHelper';
 import { toastSuccess, toastInfo } from '../helpers/ToastHelper';
 import { formatError } from '../helpers/FormatHelper';
+import Interval from '../helpers/Interval';
 
 import {
 	initBalances,
@@ -171,6 +172,9 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		}
 		await dispatch(initBalances(id, networkName));
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
+		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
+		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: '', confirmed: false } }));
+		Interval.stopInterval();
 		dispatch(initSorts(networkName));
 		await dispatch(loadContracts(id, networkName));
 		dispatch(clearForm(FORM_PERMISSION_KEY));

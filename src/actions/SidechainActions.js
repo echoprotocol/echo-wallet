@@ -1,20 +1,25 @@
-import GlobalReducer from '../reducers/GlobalReducer';
 import BN from 'bignumber.js';
+
+import GlobalReducer from '../reducers/GlobalReducer';
 
 import Services from '../services';
 import { callContract, getEthContractLogs, getEthNetworkInformation } from '../services/ApiService';
-import { getUintFromDecimal, getAddressFromDecimal } from '../helpers/ContractHelper';
+
+import { getUintFromDecimal, getAddressFromDecimal, add0x, trim0xFomCode } from '../helpers/ContractHelper';
+import Interval from '../helpers/Interval';
+
 import { SIDE_CHAIN_HASHES } from '../constants/GlobalConstants';
+import { BLOCKS_TO_CONFIRM } from '../constants/SidechainConstants';
 
 const getSidechainEthAddress = async (activeUserId) => {
 	const globalParameters = await Services.getEcho().api.getGlobalProperties();
 
 	const { sidechain_config: sidechainConfig } = globalParameters.parameters;
 
-	const sidechainContractAddress = `0x${sidechainConfig.eth_contract_address}`;
+	const sidechainContractAddress = add0x(sidechainConfig.eth_contract_address);
 	const userIdWithoutPrefix = activeUserId.split('.')[2];
-	const bytecode = `0x${SIDE_CHAIN_HASHES['recipientAddress(uint64)']}${getUintFromDecimal(userIdWithoutPrefix)}`;
-	const zeroAddress = `0x${getAddressFromDecimal(0)}`;
+	const bytecode = add0x(SIDE_CHAIN_HASHES['recipientAddress(uint64)'], getUintFromDecimal(userIdWithoutPrefix));
+	const zeroAddress = add0x(getAddressFromDecimal(0));
 	const params = { sender: zeroAddress, amount: 0, bytecode };
 
 	const response = await callContract(sidechainContractAddress, params);
@@ -32,9 +37,9 @@ const getSidechainEthereumAddress = () => async (dispatch, getState) => {
 
 	try {
 		const response = await getSidechainEthAddress(activeUserId);
-		const zeroAddress = `0x${getAddressFromDecimal(0, true)}`;
+		const zeroAddress = add0x(getAddressFromDecimal(0, true));
 
-		return response === zeroAddress ? '' : `0x${response.slice(26)}`;
+		return response === zeroAddress ? '' : add0x(response.slice(26));
 	} catch (error) {
 		return '';
 	}
@@ -56,16 +61,17 @@ const getEthSidechainGenerateAddressLogs = async ({
 	topics = [],
 }) => {
 	try {
-		// const logs = await getEthContractLogs({
-		// 	from_block: fromBlock,
-		// 	to_block: toBlock,
-		// 	topics,
-		// 	addresses,
-		// });
+		const requestAddresses = addresses.map((a) => a.toLowerCase()).join(',');
+		const requestTopics = topics.map((a) => a.toLowerCase()).join(',');
 
-		// return logs;
+		const logs = await getEthContractLogs({
+			from_block: fromBlock,
+			to_block: toBlock,
+			addresses: requestAddresses,
+			topics: requestTopics,
+		});
 
-		return [];
+		return logs;
 	} catch (error) {
 		return [];
 	}
@@ -87,8 +93,8 @@ const checkAddressCreationConfirm = async (blocksToConfirm = 20, idToSearch) => 
 
 	const { sidechain_config: sidechainConfig } = globalParameters.parameters;
 
-	const sidechainGenerateAddressTopic = `0x${sidechainConfig.eth_gen_address_topic}`;
-	const sidechainContractAddress = `0x${sidechainConfig.eth_contract_address}`;
+	const sidechainGenerateAddressTopic = add0x(sidechainConfig.eth_gen_address_topic);
+	const sidechainContractAddress = add0x(sidechainConfig.eth_contract_address);
 
 	const logs = await getEthSidechainGenerateAddressLogs({
 		fromBlock: new BN(lastEthSidechainBlock).minus(blocksToConfirm).toNumber(),
@@ -96,10 +102,11 @@ const checkAddressCreationConfirm = async (blocksToConfirm = 20, idToSearch) => 
 		addresses: [sidechainContractAddress],
 		topics: [sidechainGenerateAddressTopic],
 	});
+
 	const userIdWithoutPrefix = idToSearch.split('.')[2];
 	const userIdInUint = getUintFromDecimal(userIdWithoutPrefix);
-	return false;
-	return !logs.find(({ data }) => data.slice(0, 64) === userIdInUint);
+
+	return !logs.find(({ data }) => trim0xFomCode(data).slice(0, 64) === userIdInUint);
 };
 
 export const getEthAddress = () => async (dispatch, getState) => {
@@ -123,26 +130,21 @@ export const getEthAddress = () => async (dispatch, getState) => {
 	}
 
 	if (ethAddress && ethAddress.eth_addr && ethAddress.is_approved) {
+		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: '', confirmed: false } }));
+		Interval.stopInterval();
 		return true;
 	}
 
 	const ethereumSidechainAddress = await dispatch(getSidechainEthereumAddress());
-	console.log('ethereumSidechainAddress ', ethereumSidechainAddress);
-	
+
 	if (!ethereumSidechainAddress) {
 		return true;
 	}
 
-	const isAddressConfirmed = await checkAddressCreationConfirm(20, activeUserId);
+	const isAddressConfirmed = await checkAddressCreationConfirm(BLOCKS_TO_CONFIRM, activeUserId);
 
 	const params = { address: ethereumSidechainAddress, confirmed: isAddressConfirmed };
 	dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params }));
-
-
-	// if log found create setInterval to check this method again until page was closed or method return false
-	// this will be mean that in close range blocks (default if 20) transactions not exist and address was created
-	// earle
-
 
 	return true;
 };
