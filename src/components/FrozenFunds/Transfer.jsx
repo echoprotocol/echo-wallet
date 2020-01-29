@@ -11,8 +11,6 @@ import { FREEZE_BALANCE_PARAMS } from '../../constants/GlobalConstants';
 import TransactionScenario from '../../containers/TransactionScenario';
 import AmountField from '../Fields/AmountField';
 
-const dateOptions = FREEZE_BALANCE_PARAMS
-	.map(({ duration, durationText }) => ({ value: duration, text: durationText }));
 
 class Transfer extends React.Component {
 
@@ -32,12 +30,32 @@ class Transfer extends React.Component {
 		this.props.setAssets();
 	}
 
-	onDropdownChange(e, value) {
-		const currentDuration = dateOptions.find((d) => d.value === value);
-		this.props.setValue('duration', Object.assign({}, currentDuration, { isSelected: true }));
+	// onDropdownChange(e, value) {
+	// 	console.log(value)
+	// 	const currentDuration = dateOptions.find((d) => d.value === value);
+	// 	this.props.setValue('duration', Object.assign({}, currentDuration, { isSelected: true }));
+	// }
+
+	resetForm() {
+		this.props.clearForm();
+		this.props.setDefaultAsset();
 	}
 
 	render() {
+		const dateOptions = FREEZE_BALANCE_PARAMS
+			.map(({ duration, durationText }) => ({
+				value: duration,
+				text: durationText,
+				onClick: () => {
+					const currentDuration = {
+						value: duration,
+						text: durationText,
+						isSelected: true,
+					};
+					this.props.setValue('duration', currentDuration);
+				},
+			}));
+
 		const {
 			currency, intl, keyWeightWarn, fee, assets,
 			tokens, amount, isAvailableBalance, fees, duration,
@@ -52,7 +70,7 @@ class Transfer extends React.Component {
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.freezeBalance()}
-				onSend={() => this.props.clearForm()}
+				onSend={() => this.resetForm()}
 			>
 				{
 					(submit) => (
