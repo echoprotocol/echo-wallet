@@ -114,7 +114,7 @@ class EchoNetwork extends React.Component {
 		const account = accountNames.find((a) => a === receiver);
 		const address = addresses.find((a) => a.get('address') === receiver);
 
-		return address || account;
+		return (address && address.get('address')) || account;
 	}
 
 	getQrData() {
