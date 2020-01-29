@@ -52,7 +52,7 @@ class Transfer extends React.Component {
 		return (
 			<TransactionScenario
 				handleTransaction={() => this.props.freezeBalance()}
-				onUnlock={() => this.props.clearForm()}
+				onSend={() => this.props.clearForm()}
 			>
 				{
 					(submit) => (
