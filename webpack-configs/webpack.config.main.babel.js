@@ -5,7 +5,12 @@ import TerserPlugin from 'terser-webpack-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-import { SOLC_LIST_URL, SOLC_BIN_URL, CRYPTO_API_URL } from 'config';
+import {
+	SOLC_LIST_URL,
+	SOLC_BIN_URL,
+	CRYPTO_API_URL,
+	CRYPTO_API_KEY,
+} from 'config';
 import baseConfig from './webpack.config.base.babel';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 
@@ -74,7 +79,7 @@ export default merge.smart(baseConfig, {
 					},
 				},
 			},
-			CRYPTO_API_KEY: JSON.stringify(process.env.CRYPTO_API_KEY),
+			CRYPTO_API_KEY: JSON.stringify(CRYPTO_API_KEY),
 			CRYPTO_API_URL: JSON.stringify(CRYPTO_API_URL),
 		}),
 	],

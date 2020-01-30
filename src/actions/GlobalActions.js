@@ -172,7 +172,6 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 		}
 		await dispatch(initBalances(id, networkName));
 		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
-		dispatch(GlobalReducer.actions.setIn({ field: 'activeUser', params: { id, name } }));
 		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: '', confirmed: false } }));
 		Interval.stopInterval();
 		dispatch(initSorts(networkName));
