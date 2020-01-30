@@ -6,4 +6,6 @@ services:
     image: $CI_FULL_REGISTRY
     ports:
       - 127.0.0.1:${PORT}:80
+    environment:
+      - CRYPTO_API_KEY=$CRYPTO_API_KEY
     restart: always
