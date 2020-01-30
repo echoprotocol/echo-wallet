@@ -16,7 +16,7 @@ import { Subject, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import path from 'path';
 
-import { WIN_PLATFORM } from '../../constants/PlatformConstants';
+import { WIN_PLATFORM, MAC_PLATFORM } from '../../constants/PlatformConstants';
 
 import {
 	TIMEOUT_BEFORE_APP_PROCESS_EXITS_MS,
@@ -297,6 +297,16 @@ function createWindow() {
 
 }
 
+const shouldQuit = app.makeSingleInstance(() => {
+	if (mainWindow) {
+		if (mainWindow.isMinimized()) mainWindow.restore();
+		mainWindow.focus();
+	}
+});
+if (shouldQuit) {
+	app.quit();
+}
+
 app.on('before-quit', (event) => {
 
 	quited = true;
@@ -347,7 +357,11 @@ app.on('activate', () => {
 ipcMain.on('close-app', (event) => {
 	if (!app.isQuiting) {
 		event.preventDefault();
-		mainWindow.hide();
+		if (getPlatform() === MAC_PLATFORM) {
+			mainWindow.hide();
+		} else {
+			mainWindow.close();
+		}
 	}
 });
 

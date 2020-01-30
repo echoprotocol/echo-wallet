@@ -21,7 +21,7 @@ const parseServerError = (error) => {
 	return { status: error.status, message: error.message };
 };
 
-export function get(url, params, credentials) {
+export function get(url, params) {
 	const query = qs.stringify(params);
 
 	const headers = new Headers();
@@ -30,10 +30,6 @@ export function get(url, params, credentials) {
 		headers,
 		cache: 'default',
 	};
-
-	if (credentials) {
-		options.credentials = 'include';
-	}
 
 	return new Promise((resolve, reject) => {
 		fetch(`${url}?${query}`, options).then((response) => {
@@ -55,6 +51,41 @@ export function get(url, params, credentials) {
 			resolve(data);
 		}).catch((error) => {
 			reject(parseServerError(error));
+		});
+	});
+}
+
+export function post(url, params) {
+	const options = {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json, text/plain, */*',
+			'Content-Type': 'application/json',
+		},
+		mode: 'cors',
+		cache: 'default',
+		body: JSON.stringify(params),
+	};
+
+	return new Promise((resolve, reject) => {
+		fetch(url, options).then((response) => {
+			const contentType = response.headers.get('content-type');
+			if (response.ok) {
+				if (contentType && contentType.indexOf('application/json') !== -1) {
+					return response.json();
+				}
+				return response.text();
+
+			}
+			return response.json().then((error) => {
+				// eslint-disable-next-line no-throw-literal
+				throw { status: error.status, message: error.error.message || error.error };
+			});
+
+		}).then((data) => {
+			resolve(data);
+		}).catch((error) => {
+			reject(error);
 		});
 	});
 }

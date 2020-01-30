@@ -135,6 +135,10 @@ export const ERC20_HASHES = {
 	'Transfer(address,address,uint256)': 'ddf252ad',
 };
 
+export const SIDE_CHAIN_HASHES = {
+	'recipientAddress(uint64)': 'e819f257',
+};
+
 export const FREEZE_BALANCE_PARAMS = [
 	{
 		duration: 90,

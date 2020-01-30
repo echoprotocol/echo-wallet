@@ -1,5 +1,8 @@
 FROM node:10.16.1-alpine as builder
 
+ARG CRYPTO_API_KEY=""
+ENV CRYPTO_API_KEY=${CRYPTO_API_KEY}
+
 RUN apk add --update-cache git python make g++ gcc libpng-dev automake libtool
 
 WORKDIR /app/

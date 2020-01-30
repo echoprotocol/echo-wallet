@@ -33,7 +33,6 @@
 	flex: 1;
 	padding: 0;
 	margin: 0 0 30px;
-	overflow: hidden;
 }
 
 .sidebar-footer {
@@ -104,21 +103,6 @@
 		}
 	}
 
-	&-nav {
-		li {
-			font-size: 16px;
-			color: $text-dark;
-			display: block;
-			transition: background-color .3s;
-		}
-
-		&-text {
-			margin-left: 17px;
-			opacity: 0;
-			transition: opacity .3s;
-		}
-	}
-
 	.icon-close {
 		width: 30px;
 		height: 30px;
@@ -129,28 +113,101 @@
 
 }
 
+.sidebar-nav {
+	li {
+		position: relative;
+		font-size: 16px;
+		color: $text-dark;
+		display: block;
+		transition: background-color .3s;
+	}
+}
+
+.sidebar-nav-text {
+	margin-left: 17px;
+	opacity: 0;
+	transition: opacity .3s;
+	pointer-events: none;
+}
+
 .sidebar-nav-link {
+	position: relative;
 	display: flex;
 	min-height: 45px;
-	padding: 8px 15px;
+	padding: 0 15px;
 	color: $text-dark;
 	align-items: center;
 	justify-content: flex-start;
 	white-space: nowrap;
-	border-left: 2px solid transparent;
-	transition: background-color .3s, border .3s, color .3s;
+	transition: background-color .3s, color .3s;
+
+	&:hover {
+		~.nav-popup {
+			visibility: visible;
+		}
+	}
 
 	&:hover,
 	&:focus {
 		background-color: rgba(222, 223, 229, 1);
 		border-color: rgba(222, 223, 229, 1);
+	}
 
+	&:after {
+		content: '';
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 2px;
+		height: 100%;
+		background-color: $main-color;
+		transform: scaleY(0);
+		transition: transform .32s ease-in-out;
+	}
+
+	&.fade-up {
+		&:after {
+			transform-origin: top;
+			transform: scaleY(0);
+		}
+	}
+
+	&.fade-down {
+		&:after {
+			transform-origin: bottom;
+			transform: scaleY(0);
+		}
+	}
+
+	&.show {
+		&:after {
+			transition: none;
+			transform: scaleY(1);
+		}
 	}
 
 	&.active {
-		border-left: 2px solid $main-color;
 		background-color: rgba(215, 217, 223, 1);
+
+		&.show-up {
+			&:after {
+				transform-origin: top;
+				transform: scaleY(1);
+			}
+		}
+
+		&.show-down {
+			&:after {
+				transform-origin: bottom;
+				transform: scaleY(1);
+			}
+		}
 	}
+}
+
+.sidebar-nav-link-icon {
+	min-width: 25px;
 }
 
 .visible.sidebar {
