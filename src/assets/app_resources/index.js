@@ -297,6 +297,16 @@ function createWindow() {
 
 }
 
+const shouldQuit = app.makeSingleInstance(() => {
+	if (mainWindow) {
+		if (mainWindow.isMinimized()) mainWindow.restore();
+		mainWindow.focus();
+	}
+});
+if (shouldQuit) {
+	app.quit();
+}
+
 app.on('before-quit', (event) => {
 
 	quited = true;

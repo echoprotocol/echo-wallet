@@ -77,7 +77,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 		value: {},
 	};
 
-	if (options.fee) {
+	if (operation.fee) {
 		const feeAsset = await Services.getEcho().api.getObject(operation.fee.asset_id);
 		result.fee = {
 			amount: operation.fee.amount,
