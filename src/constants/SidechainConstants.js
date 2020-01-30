@@ -26,4 +26,3 @@ export const SIDECHAIN_DISPLAY_NAMES = {
 };
 
 export const CHECK_BLOCK_INTERVAL = 15 * 1000;
-export const BLOCKS_TO_CONFIRM = 20;

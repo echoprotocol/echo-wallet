@@ -29,23 +29,19 @@ class Ethereum extends React.Component {
 		this.props.clearForm();
 	}
 
-	getQrLink() {
-		const {
-			amount, ethAddress,
-		} = this.props;
-		const address = ethAddress.get('eth_addr');
+	getQrLink(address) {
+		const { amount } = this.props;
+
 		if (!address) {
 			return '';
 		}
-		const ethLink = `ethereum:${address}`;
-		const link = `${BRIDGE_RECEIVE_URL}${ethLink}/asset-1/${amount.value || null}/widget`;
+		const link = `${BRIDGE_RECEIVE_URL}${address}/asset-1/${amount.value || null}/widget`;
 
 		return link;
 	}
-	getQrData() {
-		const { ethAddress, amount } = this.props;
+	getQrData(address) {
+		const { amount } = this.props;
 		const tmpValue = new BN(amount.value || 0);
-		const address = `0x${ethAddress.get('eth_addr')}`;
 
 		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
@@ -83,8 +79,8 @@ class Ethereum extends React.Component {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
 		};
 
-		const link = this.getQrLink();
-		const qrData = this.getQrData();
+		const link = this.getQrLink(address);
+		const qrData = this.getQrData(address);
 
 		return (
 			<React.Fragment>
