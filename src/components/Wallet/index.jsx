@@ -20,7 +20,7 @@ class Wallet extends React.Component {
 
 	render() {
 		const {
-			assets, tokens, accountName, from, to, amount, currency, ethAddress, keyWeightWarn,
+			assets, tokens, accountName, from, to, amount, currency, ethAddress, keyWeightWarn, preview,
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress, additionalAccountInfo,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses, ethSidechain,
 			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
@@ -128,6 +128,7 @@ class Wallet extends React.Component {
 							fullCurrentAccount={fullCurrentAccount}
 							keyWeightWarn={keyWeightWarn}
 							ethSidechain={ethSidechain}
+							accounts={preview}
 						/>
 					</div>),
 			},
@@ -257,6 +258,7 @@ Wallet.propTypes = {
 	fullCurrentAccount: PropTypes.object.isRequired,
 	ethSidechain: PropTypes.object.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
+	preview: PropTypes.array.isRequired,
 };
 
 Wallet.defaultProps = {

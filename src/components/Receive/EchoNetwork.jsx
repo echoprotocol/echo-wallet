@@ -91,14 +91,14 @@ class EchoNetwork extends React.Component {
 		this.setState({ searchText: e ? e.target.value : '' });
 		const addresses = this.props.accountAddresses.toJS();
 
-		const users = this.props.accountName;
+		const users = this.props.accountNames;
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
 		}
 		this.setState({
 			timeout: setTimeout(() => {
 				const filteredAddresses = addresses.filter(({ address }) => address.match(value));
-				const filteredAccs = [users].filter((user) => user.match(value));
+				const filteredAccs = users.filter((user) => user.match(value));
 				this.setState({
 					searchAddr: filteredAddresses,
 					searchAccs: filteredAccs,
@@ -108,16 +108,13 @@ class EchoNetwork extends React.Component {
 	}
 
 	getReceiver() {
-		const { accountName } = this.props;
+		const { accountNames } = this.props;
 		const { addresses, receiver } = this.state;
 
-		if (accountName === receiver) {
-			return accountName;
-		}
-
+		const account = accountNames.find((a) => a === receiver);
 		const address = addresses.find((a) => a.get('address') === receiver);
 
-		return address ? address.get('address') : null;
+		return (address && address.get('address')) || account;
 	}
 
 	getQrData() {
@@ -155,9 +152,9 @@ class EchoNetwork extends React.Component {
 	initDropdown() {
 		const { searchText } = this.state;
 		const addresses = this.props.accountAddresses.toJS();
-		const users = this.props.accountName;
+		const users = this.props.accountNames;
 		const filteredAddresses = addresses.filter(({ address }) => address.match(searchText));
-		const filteredAccs = [users].filter((user) => user.match(searchText));
+		const filteredAccs = users.filter((user) => user.match(searchText));
 
 		this.setState({
 			searchAddr: filteredAddresses,
@@ -293,9 +290,9 @@ class EchoNetwork extends React.Component {
 		const renderAccSection = searchAccs.length;
 		const renderAdrSection = searchAddr.length;
 		const AccSection = renderAccSection ?
-			this.renderAccountHeader().concat(this.renderAccountsList(searchAccs)) : [];
+			this.renderAccountHeader().concat(this.renderAccountsList()) : [];
 		const AdrSection = renderAdrSection ?
-			this.renderAddressesHeader().concat(this.renderAddressesList(searchAddr)) : [];
+			this.renderAddressesHeader().concat(this.renderAddressesList()) : [];
 		return [].concat(AccSection).concat(AdrSection).concat(this.renderGenerateAddressButton())
 			.filter((el) => el !== null);
 	}
@@ -366,7 +363,7 @@ class EchoNetwork extends React.Component {
 						intl={intl}
 					/>
 					{
-						receiverValue ? <QrCode link={link} /> : null
+						receiverValue ? <QrCode link={link} qrData={link} /> : null
 					}
 				</div>
 			</div>
@@ -382,7 +379,6 @@ EchoNetwork.propTypes = {
 	tokens: PropTypes.any.isRequired,
 	amount: PropTypes.object.isRequired,
 	fee: PropTypes.object.isRequired,
-	// eslint-disable-next-line react/no-unused-prop-types
 	accountAddresses: PropTypes.object.isRequired,
 	accountName: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
@@ -396,6 +392,7 @@ EchoNetwork.propTypes = {
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
+	accountNames: PropTypes.array.isRequired,
 };
 
 EchoNetwork.defaultProps = {

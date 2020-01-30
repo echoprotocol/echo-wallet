@@ -51,6 +51,7 @@ export default connect(
 		activeCoinTypeTab: state.global.get('activeCoinTypeTab'),
 		keyWeightWarn: state.global.get('keyWeightWarn'),
 		ethSidechain: state.global.get('ethSidechain'),
+		preview: state.balance.get('preview').toJS(),
 	}),
 	(dispatch) => ({
 		openModal: (value) => dispatch(openModal(value)),
@@ -80,4 +81,3 @@ export default connect(
 		setGlobalValue: (field, value) => dispatch(GlobalReducer.actions.set({ field, value })),
 	}),
 )(Wallet);
-
