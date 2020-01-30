@@ -24,3 +24,5 @@ export const SIDECHAIN_DISPLAY_NAMES = {
 		original: 'BTC',
 	},
 };
+
+export const CHECK_BLOCK_INTERVAL = 15 * 1000;

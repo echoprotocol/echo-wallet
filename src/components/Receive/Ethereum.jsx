@@ -6,44 +6,42 @@ import BN from 'bignumber.js';
 
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
+import { CHECK_BLOCK_INTERVAL } from '../../constants/SidechainConstants';
 
 import AmountField from '../Fields/AmountField';
 import QrCode from '../QrCode';
 import TransactionScenario from '../../containers/TransactionScenario';
 import ActionBtn from '../ActionBtn';
 
+import Interval from '../../helpers/Interval';
 
 class Ethereum extends React.Component {
 
 	componentDidMount() {
-		this.props.getEthAddress();
+		this.checkConfirmation();
 	}
 
 	componentDidUpdate() {
-		this.props.getEthAddress();
+		this.checkConfirmation();
 	}
 
 	componentWillUnmount() {
 		this.props.clearForm();
 	}
 
-	getQrLink() {
-		const {
-			amount, ethAddress,
-		} = this.props;
-		const address = ethAddress.get('eth_addr');
+	getQrLink(address) {
+		const { amount } = this.props;
+
 		if (!address) {
 			return '';
 		}
-		const ethLink = `ethereum:${address}`;
-		const link = `${BRIDGE_RECEIVE_URL}${ethLink}/asset-1/${amount.value || null}/widget`;
+		const link = `${BRIDGE_RECEIVE_URL}${address}/asset-1/${amount.value || null}/widget`;
 
 		return link;
 	}
-	getQrData() {
-		const { ethAddress, amount } = this.props;
+	getQrData(address) {
+		const { amount } = this.props;
 		const tmpValue = new BN(amount.value || 0);
-		const address = `0x${ethAddress.get('eth_addr')}`;
 
 		const value = tmpValue.isInteger() && !tmpValue.eq(0) ?
 			tmpValue.toFixed(1).toString(10) : tmpValue.toString(10);
@@ -51,18 +49,38 @@ class Ethereum extends React.Component {
 		return +value ? `ethereum:${address}?value=${value}` : `ethereum:${address}`;
 	}
 
-	renderPayment() {
-		const { ethAddress, amount, intl } = this.props;
+	checkConfirmation() {
+		const { ethSidechain, ethAddress, fullCurrentAccount } = this.props;
+		this.props.getEthAddress();
+
+		if (ethAddress.get('eth_addr') && ethAddress.get('is_approved')) {
+			Interval.stopInterval();
+			return;
+		}
+
+		if (ethSidechain.get('confirmed')) {
+			Interval.stopInterval();
+			return;
+		}
+
+		if (Interval.instance) {
+			return;
+		}
+
+		if (fullCurrentAccount.getIn(['statistics', 'created_eth_address'])) {
+			Interval.makeInterval(() => this.props.getEthAddress(), CHECK_BLOCK_INTERVAL);
+		}
+	}
+
+	renderPayment(address) {
+		const { amount, intl } = this.props;
 
 		const ethCurrency = {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
 		};
-		const address = ethAddress.get('eth_addr');
 
-		const addressWithPrefix = `0x${address}`;
-
-		const link = this.getQrLink();
-		const qrData = this.getQrData();
+		const link = this.getQrLink(address);
+		const qrData = this.getQrData(address);
 
 		return (
 			<React.Fragment>
@@ -80,11 +98,11 @@ class Ethereum extends React.Component {
 								placeholder="Public Key"
 								readOnly
 								name="public-key"
-								value={addressWithPrefix}
+								value={address}
 							/>
 							<ActionBtn
 								icon="icon-copy"
-								copy={addressWithPrefix}
+								copy={address}
 								labelText={intl.formatMessage({ id: 'copied_text' })}
 							/>
 						</div>
@@ -172,7 +190,8 @@ class Ethereum extends React.Component {
 	}
 
 	render() {
-		const { ethAddress, fullCurrentAccount } = this.props;
+		const { ethAddress, fullCurrentAccount, ethSidechain } = this.props;
+
 		if (!fullCurrentAccount.getIn(['statistics', 'created_eth_address'])) {
 			return (
 				<div className="payment-wrap" >
@@ -184,7 +203,15 @@ class Ethereum extends React.Component {
 		if (ethAddress.get('eth_addr') && ethAddress.get('is_approved')) {
 			return (
 				<div className="payment-wrap" >
-					{this.renderPayment()}
+					{this.renderPayment(`0x${ethAddress.get('eth_addr')}`)}
+				</div>
+			);
+		}
+
+		if (ethSidechain.get('address')) {
+			return (
+				<div className="payment-wrap" >
+					{this.renderPayment(ethSidechain.get('address'))}
 				</div>
 			);
 		}
@@ -206,6 +233,7 @@ Ethereum.propTypes = {
 	clearForm: PropTypes.func.isRequired,
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
+	ethSidechain: PropTypes.object.isRequired,
 	intl: PropTypes.any.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 };

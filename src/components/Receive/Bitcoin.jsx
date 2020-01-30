@@ -44,8 +44,7 @@ class Bitcoin extends React.Component {
 		if (!address) {
 			return '';
 		}
-		const btcLink = `bitcoin:${address}`;
-		const link = `${BRIDGE_RECEIVE_URL}${btcLink}/asset-2/${amount.value || null}/widget`;
+		const link = `${BRIDGE_RECEIVE_URL}${address}/asset-2/${amount.value || null}/widget`;
 
 		return link;
 	}

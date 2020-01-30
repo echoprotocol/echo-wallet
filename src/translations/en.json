@@ -105,8 +105,8 @@
         }
     },
     "account_dropdown": {
-        "add_account_button": "ADD_ACCOUNT",
-        "delegated_to": "(delegated_to)",
+        "add_account_button": "ADD ACCOUNT",
+        "delegated_to": "(delegated to)",
         "change_delegate_button": "Change"
     },
     "wallet_page": {
@@ -488,6 +488,9 @@
         "key_warning": {
             "text": "Total weight of all the keys won't be enough to sign a transaction.",
             "button_text": "Keys Parameters"
+        },
+        "eth_warning": {
+            "text": "Your ethereum address is yet not fully confirmed. Wait up to 5 minutes"
         },
         "connection_error": {
             "text": "Check Your Connection",

@@ -33,11 +33,12 @@ class Receive extends React.Component {
 
 		const {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
-			getEthAddress, ethAddress, clearForm, keyWeightWarn,
+			getEthAddress, ethAddress, clearForm, keyWeightWarn, accounts,
 			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
-			btcAddress, accountId,
+			btcAddress, accountId, ethSidechain,
 		} = this.props;
 
+		const accountNames = accounts.map((el) => el.name);
 		const internalTabs = [
 			{
 				menuItem: <Button
@@ -61,6 +62,7 @@ class Receive extends React.Component {
 						currency={currency}
 						isAvailableBalance={isAvailableBalance}
 						accountAddresses={accountAddresses}
+						accountNames={accountNames}
 						accountName={accountName}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
@@ -124,6 +126,7 @@ class Receive extends React.Component {
 						fullCurrentAccount={fullCurrentAccount}
 						clearForm={() => clearForm(FORM_ETH_RECEIVE)}
 						keyWeightWarn={keyWeightWarn}
+						ethSidechain={ethSidechain}
 					/>
 				),
 			},
@@ -177,10 +180,12 @@ Receive.propTypes = {
 	fullCurrentAccount: PropTypes.object.isRequired,
 	getBtcAddress: PropTypes.func.isRequired,
 	btcAddress: PropTypes.object,
+	ethSidechain: PropTypes.object.isRequired,
 	accountId: PropTypes.string.isRequired,
 	setGlobalValue: PropTypes.func.isRequired,
 	activeCoinTypeTab: PropTypes.number.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
+	accounts: PropTypes.array.isRequired,
 };
 
 Receive.defaultProps = {

@@ -59,10 +59,15 @@
 		&:hover {
 			background-color: #f7f7f7;
 		}
+	}
 
-		.icon.dropdown {
-			right: 0;
-			margin: auto 10px auto 0;
+	.icon.dropdown {
+		right: 0;
+		margin: auto 10px auto 0;
+
+		&.active {
+			transform: rotate(180deg);
+			height: 4px;
 		}
 	}
 
