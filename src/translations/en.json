@@ -105,8 +105,8 @@
         }
     },
     "account_dropdown": {
-        "add_account_button": "ADD_ACCOUNT",
-        "delegated_to": "(delegated_to)",
+        "add_account_button": "ADD ACCOUNT",
+        "delegated_to": "(delegated to)",
         "change_delegate_button": "Change"
     },
     "wallet_page": {
