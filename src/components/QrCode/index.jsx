@@ -53,8 +53,8 @@ class QrCode extends React.PureComponent {
 
 QrCode.propTypes = {
 	link: PropTypes.string,
-	qrData: PropTypes.string,
 	intl: PropTypes.any.isRequired,
+	qrData: PropTypes.string,
 };
 
 QrCode.defaultProps = {
