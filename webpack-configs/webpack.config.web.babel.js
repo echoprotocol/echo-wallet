@@ -10,6 +10,8 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const {
 	SOLC_LIST_URL,
 	SOLC_BIN_URL,
+	CRYPTO_API_URL,
+	CRYPTO_API_KEY,
 } = require('config');
 
 
@@ -149,6 +151,8 @@ const config = {
 					},
 				},
 			},
+			CRYPTO_API_KEY: JSON.stringify(CRYPTO_API_KEY),
+			CRYPTO_API_URL: JSON.stringify(CRYPTO_API_URL),
 		}),
 	],
 	node: {

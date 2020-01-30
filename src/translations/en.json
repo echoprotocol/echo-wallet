@@ -489,6 +489,9 @@
             "text": "Total weight of all the keys won't be enough to sign a transaction.",
             "button_text": "Keys Parameters"
         },
+        "eth_warning": {
+            "text": "Your ethereum address is yet not fully confirmed. Wait up to 5 minutes"
+        },
         "connection_error": {
             "text": "Check Your Connection",
             "button_text": "Try again"
