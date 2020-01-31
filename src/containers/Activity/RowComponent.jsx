@@ -90,7 +90,13 @@ class RowComponent extends React.Component {
 								{
 									typeof fee.amount === 'number' &&
 									<React.Fragment>
-										<span className="text-bold">{formatAmount(fee.amount, fee.precision)}</span>
+										<span className="text-bold">
+											{
+												fee.amount === 0 ?
+													<React.Fragment>0.0000000</React.Fragment> :
+													formatAmount(fee.amount, fee.precision)
+											}
+										</span>
 										<span>{fee.symbol}</span>
 									</React.Fragment>
 								}
