@@ -87,6 +87,9 @@ class Ethereum extends React.Component {
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.info" />
 				</p>
+				<p className="payment-description">
+					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.wait_text" />
+				</p>
 				<div className="field-wrap">
 					<div className="field">
 						<label htmlFor="public-key">
