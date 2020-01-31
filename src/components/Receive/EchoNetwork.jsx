@@ -334,6 +334,7 @@ class EchoNetwork extends React.Component {
 							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 							onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 							onFocus={() => this.initDropdown()}
+							onClick={() => this.setState({ open: true })}
 							onClose={() => this.setState({ open: false })}
 							selectOnNavigation={false}
 							selectOnBlur={false}
