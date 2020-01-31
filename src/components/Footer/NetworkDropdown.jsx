@@ -204,7 +204,6 @@ class Network extends React.PureComponent {
 				</div>),
 		});
 
-		console.log(disconnected)
 		return (
 			<div
 				onMouseDown={(e) => {
