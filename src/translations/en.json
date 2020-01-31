@@ -194,6 +194,7 @@
                 "complete_address_page": {
                     "input_title": "ADDRESS",
                     "info": "Fill in payment information to get a unique QR code.",
+                    "wait_text": " However, we strongly recommend that you wait up to 5 minutes to eliminate potential Ethereum's fork.",
                     "warning_message_pt1": "Send eETH to ",
                     "warning_message_pt2": "Original Blockchain",
                     "warning_message_pt3": " to get ETH or send it within ECHO Network."
