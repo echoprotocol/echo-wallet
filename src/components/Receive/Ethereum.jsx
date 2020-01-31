@@ -79,8 +79,8 @@ class Ethereum extends React.Component {
 			precision: 18, id: '', symbol: 'ETH', balance: 0,
 		};
 
-		const isAproved = !ethAddress.get('is_approved');
-		const isAddressExist = !ethAddress.get('eth_addr');
+		const isNotAproved = !ethAddress.get('is_approved');
+		const isAddressNotExist = !ethAddress.get('eth_addr');
 		const link = this.getQrLink(address);
 		const qrData = this.getQrData(address);
 
@@ -89,7 +89,7 @@ class Ethereum extends React.Component {
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.info" />
 				</p>
-				{isAproved && isAddressExist &&
+				{isNotAproved && isAddressNotExist &&
 				<p className="payment-description">
 					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.wait_text" />
 				</p>}
