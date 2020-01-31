@@ -87,8 +87,13 @@ class RowComponent extends React.Component {
 					{
 						fee ? (
 							<span className="ellips">
-								<span className="text-bold">{fee.amount && formatAmount(fee.amount, fee.precision)}</span>
-								<span>{fee.amount && fee.symbol}</span>
+								{
+									typeof fee.amount === 'number' &&
+									<React.Fragment>
+										<span className="text-bold">{formatAmount(fee.amount, fee.precision)}</span>
+										<span>{fee.symbol}</span>
+									</React.Fragment>
+								}
 							</span>
 						) : null
 					}
