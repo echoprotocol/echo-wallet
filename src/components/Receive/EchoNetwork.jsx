@@ -56,10 +56,8 @@ class EchoNetwork extends React.Component {
 	}
 
 	onDropdownChange(e, value) {
-		if (value === 'address-header' || value === 'accounts-header') {
-			return;
-		}
 		if (e.type === 'click' || e.keyCode === 13) {
+
 
 			if (value === 'generate-address') {
 				this.setState({
@@ -70,8 +68,9 @@ class EchoNetwork extends React.Component {
 			}
 
 			this.setState({
-				searchText: '',
+				searchText: value,
 				receiver: value,
+				open: false,
 			});
 
 			if (e.target.className === 'search') {
@@ -80,10 +79,8 @@ class EchoNetwork extends React.Component {
 					e.target.blur();
 				}, 0);
 			}
-
-
 		}
-
+		this.resetDropdownSearch();
 	}
 
 	onChange(e, value) {
@@ -164,6 +161,14 @@ class EchoNetwork extends React.Component {
 		const { open } = this.state;
 		if (!open) { this.setState({ open: true }); }
 	}
+
+	resetDropdownSearch() {
+		this.setState({
+			searchAddr: this.props.accountAddresses.toJS(),
+			searchAccs: this.props.accountNames,
+		});
+	}
+
 	renderAccountHeader() {
 		const acconutHeaderTitle = (
 			<div className="title">
@@ -201,6 +206,10 @@ class EchoNetwork extends React.Component {
 				value: name,
 				text: name,
 				content,
+				onClick: (e, value) => {
+					e.stopPropagation();
+					this.onDropdownChange(e, value.value);
+				},
 			});
 		});
 
@@ -261,6 +270,10 @@ class EchoNetwork extends React.Component {
 				key: index.toString(),
 				text: address,
 				content,
+				onClick: (e, value) => {
+					e.stopPropagation();
+					this.onDropdownChange(e, value.value);
+				},
 			});
 		});
 
@@ -304,7 +317,7 @@ class EchoNetwork extends React.Component {
 		} = this.props;
 
 
-		const { receiver, open, searchText } = this.state;
+		const { open, searchText } = this.state;
 		const receiverValue = this.getReceiver();
 		const dropdownPlaceholder =
 			intl.formatMessage({ id: 'wallet_page.receive_payment.echo.generate_address_dropdown.placeholder' });
@@ -327,18 +340,17 @@ class EchoNetwork extends React.Component {
 							<FormattedMessage id="wallet_page.receive_payment.echo.generate_address_dropdown.title" />
 						</div>
 						<Dropdown
-							placeholder={dropdownPlaceholder}
+							placeholder={this.props.accountName || dropdownPlaceholder}
 							options={this.renderOptions()}
 							search={() => this.renderOptions()}
 							searchQuery={searchText}
-							onChange={(e, { value }) => this.onDropdownChange(e, value)}
 							onSearchChange={(e, { searchQuery }) => this.onChange(e, searchQuery)}
 							onFocus={() => this.initDropdown()}
+							onClick={() => this.setState({ open: true })}
 							onClose={() => this.setState({ open: false })}
 							selectOnNavigation={false}
 							selectOnBlur={false}
 							open={open}
-							text={(receiver || this.props.accountName) || 'Choose account or address'}
 						/>
 					</div>
 
