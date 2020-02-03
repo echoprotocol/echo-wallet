@@ -47,6 +47,20 @@ class ModalChangeDelegate extends React.Component {
 		this.clear();
 	}
 
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (!prevState.searchText) {
+			const options = nextProps.preview
+				.filter((el) => el.name !== nextProps.currentAccountName).toJS()
+				.map(({ accountId, name }) => ({
+					key: accountId,
+					text: name,
+					value: accountId,
+				}));
+			return { options };
+		}
+		return {};
+	}
+
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
 		this.setState({ searchText: accountName.text });
