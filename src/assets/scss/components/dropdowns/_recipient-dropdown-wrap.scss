@@ -5,7 +5,9 @@
 	}
 
 	.dropdown-label {
-		@include label() line-height: 20px;
+		line-height: 20px;
+
+		@include label();
 	}
 
 	&>.dropdown {
@@ -15,6 +17,7 @@
 		border: 1px solid #DDDDDD;
 		border-radius: 4px;
 		transition: border-color $speed;
+
 
 		&:hover {
 			border-color: #BABCCB;
@@ -130,7 +133,6 @@
 			font-size: 15px;
 			font-family: proxima;
 			font-weight: 400;
-			color: rgba(#3B3B3B, 1);
 		}
 
 		.dropdown-header {
