@@ -183,13 +183,13 @@
                 "no_address_page": {
                     "title_pt1": "You should generate address",
                     "title_pt2": " to receive payment.",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "description": "Please, allow some time for address generation as it may take up to 5 minutes. It will appear on this page when generated.",
                     "button_text": "GENERATE ADDRESS"
                 },
                 "wait_address_page": {
                     "title_pt1": "Wait please, ",
                     "title_pt2": "address is not ready yet",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                    "description": "Please, allow some time for address generation as it may take up to 5 minutes. It will appear on this page when generated."
                 },
                 "complete_address_page": {
                     "input_title": "ADDRESS",
