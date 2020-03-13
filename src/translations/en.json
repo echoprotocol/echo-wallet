@@ -183,17 +183,18 @@
                 "no_address_page": {
                     "title_pt1": "You should generate address",
                     "title_pt2": " to receive payment.",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated.",
+                    "description": "Please, allow some time for address generation as it may take up to 5 minutes. It will appear on this page when generated.",
                     "button_text": "GENERATE ADDRESS"
                 },
                 "wait_address_page": {
                     "title_pt1": "Wait please, ",
                     "title_pt2": "address is not ready yet",
-                    "description": "Please, allow some time for address generation as it may take up to one hour. It will appear on this page when generated."
+                    "description": "Please, allow some time for address generation as it may take up to 5 minutes. It will appear on this page when generated."
                 },
                 "complete_address_page": {
                     "input_title": "ADDRESS",
                     "info": "Fill in payment information to get a unique QR code.",
+                    "wait_text": " However, we strongly recommend that you wait up to 5 minutes to eliminate potential Ethereum's fork.",
                     "warning_message_pt1": "Send eETH to ",
                     "warning_message_pt2": "Original Blockchain",
                     "warning_message_pt3": " to get ETH or send it within ECHO Network."
