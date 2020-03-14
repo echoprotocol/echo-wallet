@@ -578,17 +578,18 @@ export const importAccount = ({ accountName, wif, password }) =>
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
-
-	accounts.forEach((account) => {
-		if (account.checked) {
-			dispatch(authUser({
-				accountName: account.name,
+	const accs = accounts.toJS();
+	for (let i = 0; i < accs.length; i += 1) {
+		if (accs[i].checked) {
+			// eslint-disable-next-line no-await-in-loop
+			await dispatch(authUser({
+				accountName: accs[i].name,
 				wif,
 				password,
 				allowExpensive: true,
 			}));
 		}
-	});
+	}
 
 	dispatch(closeModal(MODAL_CHOOSE_ACCOUNT));
 };
