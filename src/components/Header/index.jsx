@@ -199,8 +199,6 @@ class Header extends React.Component {
 						<FormattedMessage id="account_dropdown.change_delegate_button" />
 					</a>
 				</div>
-				{/* </button> */}
-
 			</div>
 		);
 	}
