@@ -175,10 +175,6 @@ class Header extends React.Component {
 			<div key={name} className="parent-user-wrap">
 				{this.renderUser(name, accountId, amount, precision, symbol)}
 				<div className="divider" />
-				{/* <button
-					className="user-item"
-					onClick={() => {}}
-				> */}
 				<div className="user-item">
 					<span>
 						Parent Account:
