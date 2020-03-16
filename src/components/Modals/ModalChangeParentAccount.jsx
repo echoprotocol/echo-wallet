@@ -63,7 +63,7 @@ class ModalChangeDelegate extends React.Component {
 
 	onChangeAccount(accountId) {
 		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
-		this.setState({ searchText: accountName.text });
+		this.setState({ searchText: '' });
 		this.props.setFormValue('delegate', accountName.text);
 	}
 
@@ -192,8 +192,10 @@ class ModalChangeDelegate extends React.Component {
 													this.renderList(options) :
 													this.renderUserAccounts()
 												}
-												searchQuery={searchText}
-												search
+												searchQuery={searchText || (delegateObject && delegateObject.value)}
+												search={(!searchText && (delegateObject && delegateObject.value)) ?
+													() => this.renderList(options) : true
+												}
 												selection
 												fluid
 												name="parentAccount"
