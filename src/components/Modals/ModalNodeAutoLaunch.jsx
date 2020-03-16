@@ -59,6 +59,12 @@ class ModalNodeAutoLaunch extends React.Component {
 		}
 	}
 
+	onKeyDown(e) {
+		if (e.key === 'Enter') {
+			this.props.unlock();
+		}
+	}
+
 	clear() {
 		this.setState(_.cloneDeep(this.DEFAULT_STATE));
 		this.props.clearError();
@@ -73,7 +79,7 @@ class ModalNodeAutoLaunch extends React.Component {
 		const { password } = this.state;
 
 		return (
-			<Modal className="edit-permissions-modal" open={show}>
+			<Modal className="edit-permissions-modal" open={show} onKeyDown={(e) => this.onKeyDown(e)}>
 				<FocusLock autoFocus={false}>
 					<button
 						className="icon-close"
@@ -109,7 +115,6 @@ class ModalNodeAutoLaunch extends React.Component {
 								{intl.formatMessage({ id: 'modals.modal_auto_run_local_node.forgot_password_link' })}
 							</a>
 							<Button
-								type="submit"
 								className="main-btn countdown-wrap"
 								onClick={(e) => this.onSuccess(e)}
 								disabled={disabled}
