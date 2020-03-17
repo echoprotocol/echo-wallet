@@ -36,12 +36,14 @@
 			padding: 0;
 			color: #6d7178;
 			font-size: 13px;
-
+			&:hover {
+				& > div {
+					background-color: $main-color;
+				}
+			}
 			&:not(.add-account) {
-				transition: background-color $speed;
 
 				&:hover {
-					background-color: $main-color;
 
 					.name {
 						color: #fff;
@@ -165,6 +167,7 @@
 			}
 
 			&.add-account {
+				margin-top: 4px;
 				text-transform: uppercase;
 				display: flex;
 				align-items: center;
@@ -250,20 +253,34 @@
 				font-weight: 400;
 				transition: color $speed;
 				margin-right: 4px;
+
+				& + .avatar-wrap + .user-base-info {
+					margin-right: 4px;
+				}
+				& + .avatar-wrap + .user-base-info + .id {
+					margin-right: auto;
+					padding-right: 4px;
+				}
 			}
 			.parent-user-wrap,
 			.user-item-wrap {
+				margin: 0 4px;
+				transition: background-color $speed;
 				display: flex;
 				width: 100%;
 			}
 
 			.parent-user-wrap {
+				&:not(:hover) {
+					background-color: rgb(247, 247, 247);
+				}
+				
 				flex-direction: column;
 			}
 
 			.divider {
 				height: 1px;
-				width: 100%;
+				width: 95%;
 				background-color: #E5E6EB;
 				margin: 0 0 0 17px;
 				transition: background-color $speed;
