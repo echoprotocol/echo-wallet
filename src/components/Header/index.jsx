@@ -176,7 +176,7 @@ class Header extends React.Component {
 				{this.renderUser(name, accountId, amount, precision, symbol)}
 				<div className="divider" />
 				<div className="user-item">
-					<span>
+					<span className="parent-hint">
 						Parent Account:
 					</span>
 					<div className="avatar-wrap">

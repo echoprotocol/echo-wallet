@@ -47,7 +47,8 @@
 						color: #fff;
 					}
 
-					.parent-label {
+					.parent-label,
+					.parent-hint {
 						color: rgba(#fff, .5);
 					}
 
@@ -83,6 +84,9 @@
 				margin: 0 auto 0 9px;
 				text-align: left;
 				font-family: $font-family;
+				& + .id {
+					margin-right: 4px;
+				}
 			}
 
 			.parent-link {
@@ -238,7 +242,15 @@
 				transition: background-color $speed, color $speed;
 				padding: 7px 18px 7px 16px;
 			}
-
+			.parent-hint {
+				color: rgba(59, 59, 59, 0.6);
+				line-height: 13px;
+				font-family: proxima;
+				font-size: 13px;
+				font-weight: 400;
+				transition: color $speed;
+				margin-right: 4px;
+			}
 			.parent-user-wrap,
 			.user-item-wrap {
 				display: flex;
