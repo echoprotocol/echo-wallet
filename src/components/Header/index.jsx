@@ -170,26 +170,26 @@ class Header extends React.Component {
 
 	renderUserWithParent(name, accountId, amount, precision, symbol) {
 		const { delegate } = this.props;
+		const delegateName = delegate.get('name');
 		return (
 			<div key={name} className="parent-user-wrap">
 				{this.renderUser(name, accountId, amount, precision, symbol)}
 				<div className="divider" />
-				<button
-					className="user-item"
-					onClick={() => {}}
-				>
+				<div className="user-item">
+					<span className="parent-hint">
+						Parent Account:
+					</span>
 					<div className="avatar-wrap">
-						<Avatar accountName={delegate.get('name')} />
+						<Avatar accountName={delegateName} />
 					</div>
 					<div className="user-base-info">
 						<div className="name-wrap">
-							<div className="name">{delegate.get('name')}</div>
-							<div className="parent-label">
-								<FormattedMessage id="account_dropdown.delegated_to" />
+							<div className="name">
+								{delegateName.length > 8 ? delegateName.substring(0, 7).concat('...') : delegateName}
 							</div>
 						</div>
-						<div className="id">{delegate.get('id')}</div>
 					</div>
+					<div className="id">ID:&nbsp;{delegate.get('id')}</div>
 					<a
 						href=""
 						className="parent-link"
@@ -198,8 +198,7 @@ class Header extends React.Component {
 					>
 						<FormattedMessage id="account_dropdown.change_delegate_button" />
 					</a>
-				</button>
-
+				</div>
 			</div>
 		);
 	}
