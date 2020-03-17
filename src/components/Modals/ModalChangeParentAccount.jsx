@@ -29,6 +29,8 @@ class ModalChangeDelegate extends React.Component {
 			loading: false,
 			options: [],
 			timeout: null,
+			isDropdownOpen: false,
+			isDelegateSelected: false,
 		};
 
 		this.state = _.cloneDeep(this.DEFAULT_STATE);
@@ -62,8 +64,23 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	onChangeAccount(accountId) {
-		const accountName = this.state.options.find(({ value }) => value === accountId) || {};
-		this.setState({ searchText: '' });
+		const { options } = this.state;
+
+		this.setState({ isDropdownOpen: false });
+		const {
+			preview, currentAccountName,
+		} = this.props;
+		const formattedPreview = preview.filter((el) => el.name !== currentAccountName).toJS();
+		const userAccounts = formattedPreview.map(({ accountId: id, name }) => ({
+			key: id,
+			text: name,
+			value: id,
+		}));
+
+		const accountName = options.find(({ value }) => value === accountId) ||
+			userAccounts.find(({ value }) => value === accountId) ||
+			{};
+		this.setState({ searchText: accountName.text, isDelegateSelected: true });
 		this.props.setFormValue('delegate', accountName.text);
 	}
 
@@ -73,11 +90,11 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	async accountSearchHandler(e, data) {
-
 		const searchText = data.searchQuery;
 		this.setState({
 			searchText,
 			loading: true,
+			isDelegateSelected: false,
 		});
 		if (this.state.timeout) {
 			clearTimeout(this.state.timeout);
@@ -89,6 +106,10 @@ class ModalChangeDelegate extends React.Component {
 						key: id,
 						text: name,
 						value: id,
+						onClick: (event) => {
+							event.stopPropagation();
+							this.onChangeAccount(id);
+						},
 					})) : [];
 				this.setState({
 					options,
@@ -99,12 +120,16 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	renderList(options) {
-		return options.map(({ key, text, value }) => {
+		return options.map(({
+			key,
+			text,
+			value,
+			onClick,
+		}) => {
 			const content = (
 				<button
 					key={key}
 					className="user-item"
-					onClick={() => this.onChangeAccount(value)}
 				>
 					<div className="avatar-wrap">
 						<Avatar accountName={text} />
@@ -113,7 +138,7 @@ class ModalChangeDelegate extends React.Component {
 				</button>
 			);
 			return ({
-				value, key, text, content,
+				value, key, text, content, onClick,
 			});
 		});
 	}
@@ -130,6 +155,10 @@ class ModalChangeDelegate extends React.Component {
 			key: accountId,
 			text: name,
 			value: accountId,
+			onClick: (e) => {
+				e.stopPropagation();
+				this.onChangeAccount(accountId);
+			},
 		}));
 		return this.renderList(options);
 	}
@@ -138,11 +167,17 @@ class ModalChangeDelegate extends React.Component {
 		const {
 			show, currentAccountName, delegateObject, intl, keyWeightWarn,
 		} = this.props;
-		const { searchText, loading, options } = this.state;
+		const {
+			searchText,
+			loading,
+			options,
+			isDropdownOpen,
+		} = this.state;
 
 		const delegate = options.find(({ text }) => text === searchText);
 		const delegateTitle = intl.formatMessage({ id: 'modals.modal_change_parent_account.delegated_to_dropdown.title' });
 		const delegatePlaceholder = intl.formatMessage({ id: 'modals.modal_change_parent_account.delegated_to_dropdown.placeholder' });
+		const { isDelegateSelected } = this.state;
 
 		return (
 			<TransactionScenario
@@ -184,7 +219,9 @@ class ModalChangeDelegate extends React.Component {
 										<label htmlFor="parentAccount" className="field-label">{delegateTitle}</label>
 										<div className="account-dropdown-wrap">
 											{
-												delegate ? <Avatar accountName={searchText} /> : <Avatar />
+												isDelegateSelected ?
+													<Avatar accountName={delegateObject.value} /> :
+													<Avatar />
 											}
 											<Dropdown
 												className={classnames({ empty: loading })}
@@ -192,9 +229,9 @@ class ModalChangeDelegate extends React.Component {
 													this.renderList(options) :
 													this.renderUserAccounts()
 												}
-												searchQuery={searchText || (delegateObject && delegateObject.value)}
-												search={(!searchText && (delegateObject && delegateObject.value)) ?
-													() => this.renderList(options) : true
+												searchQuery={searchText}
+												search={isDelegateSelected ?
+													() => this.renderUserAccounts() : true
 												}
 												selection
 												fluid
@@ -205,7 +242,9 @@ class ModalChangeDelegate extends React.Component {
 												selectOnNavigation={false}
 												minCharacters={0}
 												noResultsMessage={searchText ? 'No results are found' : null}
-												onChange={(e, { value }) => this.onChangeAccount(value)}
+												open={isDropdownOpen}
+												onClick={() => this.setState({ isDropdownOpen: true })}
+												onClose={() => this.setState({ isDropdownOpen: false })}
 											/>
 										</div>
 										<ErrorMessage
