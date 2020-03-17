@@ -31,6 +31,11 @@ class ModalUnlockWallet extends React.Component {
 		this.props.forgot();
 	}
 
+	onKeyDown(e) {
+		if (e.key === 'Enter') {
+			this.props.unlock();
+		}
+	}
 	onSuccess() {
 		this.props.unlock();
 	}
@@ -55,7 +60,7 @@ class ModalUnlockWallet extends React.Component {
 		} = this.props;
 		const { password } = this.state;
 		return (
-			<Modal className="modal-wrap" open={show}>
+			<Modal className="modal-wrap" open={show} onKeyDown={(e) => this.onKeyDown(e)}>
 				<FocusLock autoFocus={false}>
 					<button
 						className="icon-close"
@@ -92,7 +97,6 @@ class ModalUnlockWallet extends React.Component {
 								{intl.formatMessage({ id: 'modals.modal_unlock.forgot_password_link' })}
 							</a>
 							<Button
-								type="submit"
 								className="main-btn"
 								onClick={(e) => this.onSuccess(e)}
 								disabled={disabled}
