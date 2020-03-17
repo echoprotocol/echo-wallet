@@ -1,5 +1,6 @@
 import Services from '.';
 import GlobalReducer from '../reducers/GlobalReducer';
+import { LOCAL_NODE } from '../constants/GlobalConstants';
 
 class Listeners {
 
@@ -15,7 +16,11 @@ class Listeners {
 				Services.getEcho().api.getDynamicGlobalProperties(true);
 			}
 		};
-		this.setCurrentNode = (value) => dispatch(GlobalReducer.actions.set({ field: 'currentNode', value }));
+		this.setCurrentNode = (value) => {
+			const localNodeSyncing = value === LOCAL_NODE;
+			dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: localNodeSyncing }));
+			dispatch(GlobalReducer.actions.set({ field: 'currentNode', value }));
+		};
 		this.setLocalNodePercent = (value) => {
 
 			const state = getState();
