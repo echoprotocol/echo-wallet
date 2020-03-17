@@ -126,6 +126,15 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 	});
 
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+	let current = localStorage.getItem('current_network');
+	if (!current) {
+		current = DEFAULT_NETWORK;
+		localStorage.setItem('current_network', JSON.stringify(current));
+	} else {
+		current = JSON.parse(current);
+	}
+
+	await Services.getEcho().changeConnection(current.name);
 
 	localStorage.setItem('is_node_syncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
