@@ -104,7 +104,7 @@ class Password extends React.Component {
 						intl={intl}
 						autoFocus
 						visibility={passwordVisibility}
-						buttonAciotn={() => this.onInputVisibilityChange()}
+						buttonAction={() => this.onInputVisibilityChange()}
 					/>
 					<PasswordInput
 						key="repeat-password"
