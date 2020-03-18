@@ -21,6 +21,7 @@ class Password extends React.Component {
 			password: '',
 			repeatPassword: '',
 			repeatError: '',
+			passwordVisibility: false,
 		};
 	}
 
@@ -65,8 +66,17 @@ class Password extends React.Component {
 
 	}
 
+	onInputVisibilityChange() {
+		this.setState({ passwordVisibility: !this.state.passwordVisibility });
+	}
+
 	render() {
-		const { repeatError, password, repeatPassword } = this.state;
+		const {
+			repeatError,
+			password,
+			repeatPassword,
+			passwordVisibility,
+		} = this.state;
 		const { loading, error, intl } = this.props;
 
 		const PasswordTitle = intl.formatMessage({ id: 'create_password_page.password_input_1.title' });
@@ -93,6 +103,8 @@ class Password extends React.Component {
 						value={password}
 						intl={intl}
 						autoFocus
+						visibility={passwordVisibility}
+						buttonAciotn={() => this.onInputVisibilityChange()}
 					/>
 					<PasswordInput
 						key="repeat-password"
@@ -104,6 +116,8 @@ class Password extends React.Component {
 						onChange={(value) => this.onChange(value)}
 						value={repeatPassword}
 						intl={intl}
+						visibility={passwordVisibility}
+						buttonAction={() => this.onInputVisibilityChange()}
 					/>
 				</div>
 				<div className="form-panel">
