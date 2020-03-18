@@ -578,7 +578,7 @@ export const importAccount = ({ accountName, wif, password }) =>
  */
 export const importSelectedAccounts = (password, accounts) => async (dispatch, getState) => {
 	const wif = getState().form.getIn([FORM_SIGN_IN, 'wif']).value;
-	const accs = accounts.toJS().filter(ac => ac.checked);
+	const accs = accounts.toJS().filter((ac) => ac.checked);
 	for (let i = 0; i < accs.length; i += 1) {
 		// eslint-disable-next-line no-await-in-loop
 		await dispatch(authUser({
