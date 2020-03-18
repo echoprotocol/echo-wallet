@@ -1454,8 +1454,8 @@ export const sendTransaction = (password, onSuccess = () => { }) => async (dispa
 				text: '',
 				postfix: 'toasts.errors.trx_dont_complete_postfix',
 			}, {
-				text: error.message,
-				postfix: '',
+				text: '',
+				postfix: error.message,
 			}]);
 			dispatch(contractSet('loading', false));
 			dispatch(setError(PERMISSION_TABLE, message));
