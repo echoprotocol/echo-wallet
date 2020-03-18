@@ -175,30 +175,33 @@ class Header extends React.Component {
 			<div key={name} className="parent-user-wrap">
 				{this.renderUser(name, accountId, amount, precision, symbol)}
 				<div className="divider" />
-				<div className="user-item">
-					<span className="parent-hint">
-						Parent Account:
-					</span>
-					<div className="avatar-wrap">
-						<Avatar accountName={delegateName} />
-					</div>
-					<div className="user-base-info">
-						<div className="name-wrap">
-							<div className="name">
-								{delegateName.length > 8 ? delegateName.substring(0, 7).concat('...') : delegateName}
+				<a
+					href=""
+					tabIndex="-1"
+					onClick={(e) => this.onChangeParentAccount(e)}
+				>
+					<div className="user-item">
+						<span className="parent-hint">
+							Parent Account:
+						</span>
+						<div className="avatar-wrap">
+							<Avatar accountName={delegateName} />
+						</div>
+						<div className="user-base-info">
+							<div className="name-wrap">
+								<div className="name">
+									{delegateName.length > 8 ? delegateName.substring(0, 7).concat('...') : delegateName}
+								</div>
 							</div>
 						</div>
+						<div className="id">ID:&nbsp;{delegate.get('id')}</div>
+						<p
+							className="parent-link"
+						>
+							<FormattedMessage id="account_dropdown.change_delegate_button" />
+						</p>
 					</div>
-					<div className="id">ID:&nbsp;{delegate.get('id')}</div>
-					<a
-						href=""
-						className="parent-link"
-						tabIndex="-1"
-						onClick={(e) => this.onChangeParentAccount(e)}
-					>
-						<FormattedMessage id="account_dropdown.change_delegate_button" />
-					</a>
-				</div>
+				</a>
 			</div>
 		);
 	}
