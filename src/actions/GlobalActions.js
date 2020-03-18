@@ -86,7 +86,7 @@ export const incomingConnectionsRequest = (isAddAccount = false) => (dispatch, g
  * @param pass
  * @returns {Function}
  */
-export const startLocalNode = (pass, repeat = true) => (async (dispatch) => {
+export const startLocalNode = (pass) => (async (dispatch) => {
 
 	localStorage.setItem('is_agreed_with_node_launch', JSON.stringify(true));
 
@@ -134,16 +134,12 @@ export const startLocalNode = (pass, repeat = true) => (async (dispatch) => {
 	}
 	await Services.getUserStorage().setNetworkId(current.name);
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
-
 	await Services.getEcho().changeConnection(current.name);
 
 	localStorage.setItem('is_node_syncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
-
-	if (repeat) {
-		Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
-	}
+	setTimeout(() => Services.getEcho().setOptions(accountsKeys, networkId, chainToken), 2000);
 });
 
 /**
