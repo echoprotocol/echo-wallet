@@ -311,7 +311,7 @@ export const saveWIFAfterCreateAccount = ({
 
 		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
 		if (isNodeAgreed) {
-			dispatch(startLocalNode(password));
+			await dispatch(startLocalNode(password));
 		}
 	} catch (_) {
 		dispatch(toggleLoading(FORM_SIGN_UP, false));
@@ -438,7 +438,7 @@ export const authUser = ({
 
 		const isNodeAgreed = JSON.parse(localStorage.getItem('is_agreed_with_node_launch'));
 		if (isNodeAgreed) {
-			dispatch(startLocalNode(password));
+			await dispatch(startLocalNode(password));
 		}
 		return false;
 	} catch (err) {

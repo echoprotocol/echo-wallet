@@ -86,7 +86,7 @@ export const incomingConnectionsRequest = (isAddAccount = false) => (dispatch, g
  * @param pass
  * @returns {Function}
  */
-export const startLocalNode = (pass) => (async (dispatch) => {
+export const startLocalNode = (pass, repeat = true) => (async (dispatch) => {
 
 	localStorage.setItem('is_agreed_with_node_launch', JSON.stringify(true));
 
@@ -125,7 +125,6 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		});
 	});
 
-	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 	let current = localStorage.getItem('current_network');
 	if (!current) {
 		current = DEFAULT_NETWORK;
@@ -133,12 +132,18 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 	} else {
 		current = JSON.parse(current);
 	}
+	await Services.getUserStorage().setNetworkId(current.name);
+	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 
 	await Services.getEcho().changeConnection(current.name);
 
 	localStorage.setItem('is_node_syncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
+
+	if (repeat) {
+		Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+	}
 });
 
 /**
