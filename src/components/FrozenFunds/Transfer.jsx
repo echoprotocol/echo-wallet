@@ -101,7 +101,6 @@ class Transfer extends React.Component {
 									</label>
 									<Dropdown
 										className={classnames('frozen-period-dropdown', { pl: !duration.isSelected })}
-										onChange={(e, { value }) => this.onDropdownChange(e, value)}
 										text={duration.isSelected ? duration.text : dropdownPlaceholder}
 										selection
 										options={dateOptions}
