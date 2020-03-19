@@ -34,25 +34,6 @@ jobs:
         on:
           tags: true
 
-      - stage: build
-      name: "Build Linux App"
-      env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.14.1.tar"
-        - CRYPTO_API_KEY=$CRYPTO_API_KEY
-      if: tag IS present
-      script:
-        - rm -rf node_modules
-        - npm i
-        - npm run package-snap-with-download-build
-      deploy:
-        provider: releases
-        api_key: $GITHUB_OAUTH_TOKEN
-        file_glob: true
-        file: build/binaries/echo-wallet*
-        skip_cleanup: true
-        on:
-          tags: true
-
     - stage: build
       name: "Build Win App"
       if: tag IS present
