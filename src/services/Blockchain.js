@@ -428,7 +428,7 @@ class Blockchain {
 
 		console.info('[LOCAL NODE] Connected');
 
-		// this.local.cache.setStore(this.store);
+		this.local.cache.redux.store = this.store.store ? this.store.store : this.store;
 
 		this.local.subscriber.setStatusSubscribe(DISCONNECT_STATUS, () => {
 			this.emitter.emit('setIsConnected', false);
@@ -456,7 +456,7 @@ class Blockchain {
 			{ pingInterval: PING_INTERVAL, pingTimeout: PING_TIMEOUT },
 		);
 
-		this.remote.cache.setStore(this.store);
+		this.remote.cache.redux.store = this.store.store ? this.store.store : this.store;
 
 		console.info('[REMOTE NODE] Connected');
 
@@ -556,7 +556,7 @@ class Blockchain {
 	*/
 	async changeConnection(network) {
 		if (this.remote) {
-			this.remote.disconnect();
+			// this.remote.disconnect();
 		}
 		try {
 
