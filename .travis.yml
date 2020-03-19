@@ -34,6 +34,25 @@ jobs:
         on:
           tags: true
 
+      - stage: build
+      name: "Build Linux App"
+      env:
+        - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.14.1.tar"
+        - CRYPTO_API_KEY=$CRYPTO_API_KEY
+      if: tag IS present
+      script:
+        - rm -rf node_modules
+        - npm i
+        - npm run package-snap-with-download-build
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        file_glob: true
+        file: build/binaries/echo-wallet*
+        skip_cleanup: true
+        on:
+          tags: true
+
     - stage: build
       name: "Build Win App"
       if: tag IS present
@@ -47,6 +66,40 @@ jobs:
         api_key: $GITHUB_OAUTH_TOKEN
         file_glob: true
         file: build/binaries/Echo*.exe
+        skip_cleanup: true
+        on:
+          tags: true
+
+    - stage: build
+      name: "Build Win Portable App"
+      if: tag IS present
+      env:
+        - CRYPTO_API_KEY=$CRYPTO_API_KEY
+      script:
+        - rm -rf node_modules
+        - "docker run -e CRYPTO_API_KEY=$CRYPTO_API_KEY --rm -v ${PWD}:/project -v ${PWD}/.cache/electron:/root/.cache/electron -v ${PWD}/.cache/electron-builder:/root/.cache/electron-builder electronuserland/builder:wine /bin/bash -c \"npm install && npm run package-win-portable\""
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        file_glob: true
+        file: build/binaries/Echo*.exe
+        skip_cleanup: true
+        on:
+          tags: true
+
+    - stage: build
+      name: "Build Win MSI App"
+      if: tag IS present
+      env:
+        - CRYPTO_API_KEY=$CRYPTO_API_KEY
+      script:
+        - rm -rf node_modules
+        - "docker run -e CRYPTO_API_KEY=$CRYPTO_API_KEY --rm -v ${PWD}:/project -v ${PWD}/.cache/electron:/root/.cache/electron -v ${PWD}/.cache/electron-builder:/root/.cache/electron-builder electronuserland/builder:wine /bin/bash -c \"npm install && npm run package-win-msi\""
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        file_glob: true
+        file: build/binaries/Echo*.msi
         skip_cleanup: true
         on:
           tags: true
