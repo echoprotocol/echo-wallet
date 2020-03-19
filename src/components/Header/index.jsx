@@ -190,7 +190,7 @@ class Header extends React.Component {
 						<div className="user-base-info">
 							<div className="name-wrap">
 								<div className="name">
-									{delegateName && delegateName.length > 8 ? delegateName.substring(0, 7).concat('...') : delegateName}
+									{delegateName.length > 8 ? delegateName.substring(0, 7).concat('...') : delegateName}
 								</div>
 							</div>
 						</div>
