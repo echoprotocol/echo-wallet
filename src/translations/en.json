@@ -869,7 +869,7 @@
             },
             "remove_name": {
                 "pt1": "You have removed ",
-                "pt2": " from watch list"
+                "pt2:": " from watch list"
             }
         }
     },
