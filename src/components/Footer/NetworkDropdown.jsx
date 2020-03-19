@@ -92,20 +92,27 @@ class Network extends React.PureComponent {
 						</div>
 						{
 							(i.name === 'testnet' && isPlatformSupportNode(this.props.platform)) && (
-								<div className="node-info">
+								<React.Fragment>
 									{
 										percent < 100 ? (
-											<RemoteNode
-												value={percent}
-												isNodePaused={this.props.isNodePaused}
-												isNodeSyncing={this.props.isNodeSyncing}
-												openModal={this.props.openModal}
-											/>
+											<div className="node-info">
+												<RemoteNode
+													value={percent}
+													isNodePaused={this.props.isNodePaused}
+													isNodeSyncing={this.props.isNodeSyncing}
+													openModal={this.props.openModal}
+												/>
+											</div>
+
 										) : (
-											this.props.isNodeSyncing && <LocalNode />
+											this.props.isNodeSyncing && (
+												<div className="node-info">
+													<LocalNode />
+												</div>
+											)
 										)
 									}
-								</div>
+								</React.Fragment>
 							)
 						}
 					</div>

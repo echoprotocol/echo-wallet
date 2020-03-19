@@ -23,8 +23,8 @@ import { toastSuccess, toastInfo, toastError } from '../helpers/ToastHelper';
 import { checkErc20Contract } from '../helpers/ValidateHelper';
 
 import { MODAL_TOKENS, MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
-import { FORM_TRANSFER } from '../constants/FormConstants';
-import { INDEX_PATH } from '../constants/RouterConstants';
+import { FORM_TRANSFER, FORM_FREEZE } from '../constants/FormConstants';
+import { INDEX_PATH, FROZEN_FUNDS_PATH } from '../constants/RouterConstants';
 import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT, SIDECHAIN_ASSETS_SYMBOLS } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
@@ -514,6 +514,12 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 };
 
 /**
+ * @method isUserOnFreezePage
+ * @@returns {boolean}
+ */
+const isUserOnFreezePage = () => history.location.pathname === FROZEN_FUNDS_PATH;
+
+/**
  * @method checkKeyWeightWarning
  *
  * @param {String} networkName
@@ -617,6 +623,12 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 		await dispatch(getAssetsBalances(balances, true));
 		await dispatch(getPreviewBalances(networkName));
 		await dispatch(getFrozenBalances(accountId));
+	}
+
+	if (balances && isBalanceUpdated && isUserOnFreezePage()) {
+		const form = getState().form.getIn([FORM_FREEZE]);
+		const stats = await Services.getEcho().api.getObject(balances[form.get('currency').id]);
+		dispatch(setValue(FORM_FREEZE, 'currency', { ...form.get('currency'), balance: stats.balance }));
 	}
 
 	if (isCurrentTransferBalanceUpdated) {
