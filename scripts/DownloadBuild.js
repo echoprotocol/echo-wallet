@@ -70,8 +70,7 @@ const downloadBuild = async (url, os, filename) => {
 
 
 	} catch (e) {
-		console.log(e);
-		process.exit(1);
+		console.warn('Unable to download Echo node build', e);
 	}
 
 
