@@ -22,13 +22,8 @@
     "package-win-portable": "npm run build && build -p never --windows portable",
     "package-win-msi": "npm run build && build -p never --windows msi",
     "package-deb": "npm run build && build -p never --linux deb",
-    "package-snap": "npm run build && build -p never --linux snap",
-    "package-rpm": "npm run build && build -p never --linux rpm",
-    "package-apk": "npm run build && build -p never --linux apk",
-    "package-app-image": "npm run build && build -p never --linux app-image",
     "package-mac": "npm run build && build -p never --mac dmg",
     "package-deb-with-download-build": "npm run download-linux-build && npm run package-deb",
-    "package-snap-with-download-build": "npm run download-linux-build && npm run package-snap",
     "package-mac-with-download-build": "npm run download-mac-build && npm run package-mac",
     "download-linux-build": "DOWNLOAD_ECHO_NODE_OS=linux node -r @babel/register ./scripts/DownloadBuild.js",
     "download-mac-build": "DOWNLOAD_ECHO_NODE_OS=mac node -r @babel/register ./scripts/DownloadBuild.js",
@@ -261,11 +256,7 @@
     "linux": {
       "category": "Finance",
       "target": [
-        "deb",
-        "snap",
-        "rpm",
-        "AppImage",
-        "apk"
+        "deb"
       ],
       "executableName": "Echo Wallet",
       "desktop": "Echo Wallet",
