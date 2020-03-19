@@ -125,11 +125,21 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		});
 	});
 
+	let current = localStorage.getItem('current_network');
+	if (!current) {
+		current = DEFAULT_NETWORK;
+		localStorage.setItem('current_network', JSON.stringify(current));
+	} else {
+		current = JSON.parse(current);
+	}
+	await Services.getUserStorage().setNetworkId(current.name);
 	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
+	await Services.getEcho().changeConnection(current.name);
 
 	localStorage.setItem('is_node_syncing', true);
 	dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: true }));
 	dispatch(GlobalReducer.actions.set({ field: 'isNodePaused', value: false }));
+	setTimeout(() => Services.getEcho().setOptions(accountsKeys, networkId, chainToken), 2000);
 });
 
 /**
