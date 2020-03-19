@@ -60,8 +60,13 @@ class ModalNodeAutoLaunch extends React.Component {
 	}
 
 	onKeyDown(e) {
+		const { password } = this.state;
+
 		if (e.key === 'Enter') {
-			this.props.unlock();
+			this.props.unlock(password, () => {
+				this.props.startLocalNode(password);
+				this.clear();
+			});
 		}
 	}
 
