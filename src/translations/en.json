@@ -1006,6 +1006,8 @@
             "contract_id_exist_error": "This contract ID already exists",
             "empty_id_error": "Contract ID should not be empty",
             "empty_name_error": "Contract name should not be empty",
+            "empty_symbol_error": "Contract symbol should exist and not be empty",
+            "invalid_precision_error": "Contract precision should exist and being bigger or equal than zero",
             "name_to_short_error": "Contract name must be 2 characters or more",
             "name_to_large_error": "Contract name must be 16 characters or less",
             "invalid_symbols_error": "Invalid symbols",

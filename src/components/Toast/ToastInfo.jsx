@@ -6,12 +6,15 @@ const ToastInfo = (text, onUndo) => (
 	<React.Fragment>
 		<span className="toast-text">
 			{
-				text.map((t) => (
-					<React.Fragment>
-						{t.text}
-						{t.postfix && <FormattedMessage id={t.postfix} />}
-					</React.Fragment>
-				))
+				text.map((t) => {
+					console.log('text', t);
+					return (
+						<React.Fragment>
+							{t.text}
+							{t.postfix && <FormattedMessage id={t.postfix} />}
+						</React.Fragment>
+					);
+				})
 			}
 		</span>
 		<Button

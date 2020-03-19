@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { validators } from 'echojs-lib';
+
 
 import { formatAmount } from '../../helpers/FormatHelper';
 
@@ -34,7 +36,7 @@ class Tokens extends React.Component {
 	renderRow({
 		id, symbol, precision, balance, disabled,
 	}) {
-		if (disabled || !precision) return null;
+		if (disabled || !validators.isUInt64(precision)) return null;
 
 		return (
 			<li
