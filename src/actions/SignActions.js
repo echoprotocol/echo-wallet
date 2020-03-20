@@ -1,4 +1,4 @@
-import { PrivateKey } from 'echojs-lib';
+import { PrivateKey, constants } from 'echojs-lib';
 
 import Services from '../services';
 
@@ -71,7 +71,7 @@ export const signTransaction = async (accountId, tr, password) => {
 	const transaction = {
 		ref_block_num: 0,
 		ref_block_prefix: 0,
-		expiration: 0,
+		expiration: Math.ceil(Date.now() / 1e3) + constants.API_CONFIG.EXPIRATION_SECONDS,
 		operations: tr.operations,
 		extensions: [],
 	};
