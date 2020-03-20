@@ -368,8 +368,13 @@ export const addToken = (contractId) => async (dispatch, getState) => {
 		const symbol = await getTokenSymbol(accountId, contractId);
 		const precision = await getTokenPrecision(accountId, contractId);
 
-		if (!symbol || !Number.isInteger(precision)) {
-			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_token_error'));
+		if (!symbol) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.empty_symbol_error'));
+			return;
+		}
+
+		if (!validators.isUInt64(precision)) {
+			dispatch(setParamError(MODAL_TOKENS, 'contractId', 'errors.contract_errors.invalid_precision_error'));
 			return;
 		}
 
