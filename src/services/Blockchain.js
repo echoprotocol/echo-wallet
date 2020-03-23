@@ -83,7 +83,7 @@ class Blockchain {
 			this.isOnline &&
 			this.isLocalConnected &&
 			this.remoteBlockNumber > 0 &&
-			this.localBlockNumber >= this.remoteBlockNumber - 1
+			this.localBlockNumber >= this.remoteBlockNumber
 		) {
 
 			if (this.isLocalConnected) {
@@ -177,7 +177,7 @@ class Blockchain {
 			this.emitter.emit('setIsConnected', this.isConnected);
 
 		} catch (e) {
-			console.error('init error', e);
+			console.warn('init error', e);
 		}
 
 	}
@@ -376,8 +376,7 @@ class Blockchain {
 			this.startSyncMonitor();
 
 		} catch (e) {
-
-			console.warn(e);
+			console.warn('[LOCAL NODE] Error ', e);
 
 			this.timeoutLocalRecconect = setTimeout(() => {
 				this.startCheckingLocalNode(url);
@@ -573,7 +572,7 @@ class Blockchain {
 			await this.startCheckingRemote();
 			this.emitter.emit('setIsConnected', this.isConnected);
 		} catch (e) {
-			console.error('change connection error', e);
+			console.warn('change connection error', e);
 		}
 	}
 

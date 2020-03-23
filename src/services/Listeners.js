@@ -1,6 +1,7 @@
 import Services from '.';
 import GlobalReducer from '../reducers/GlobalReducer';
 import { LOCAL_NODE } from '../constants/GlobalConstants';
+import { requestActiveAccountAndDelegate } from '../actions/GlobalActions';
 
 class Listeners {
 
@@ -20,6 +21,7 @@ class Listeners {
 			const localNodeSyncing = value === LOCAL_NODE;
 			dispatch(GlobalReducer.actions.set({ field: 'isNodeSyncing', value: localNodeSyncing }));
 			dispatch(GlobalReducer.actions.set({ field: 'currentNode', value }));
+			dispatch(requestActiveAccountAndDelegate());
 		};
 		this.setLocalNodePercent = (value) => {
 

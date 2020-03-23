@@ -9,7 +9,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 import { CACHE_MAPS } from 'echojs-lib';
 
-import { initAccount } from '../../actions/GlobalActions';
+import { initAccount, requestActiveAccountAndDelegate } from '../../actions/GlobalActions';
 import { setValue } from '../../actions/TableActions';
 import { MODAL_LOGOUT, MODAL_CHANGE_PARENT_ACCOUNT } from '../../constants/ModalConstants';
 import { openModal } from '../../actions/ModalActions';
@@ -53,6 +53,10 @@ const secondaryContractPaths = [
 ];
 
 class Header extends React.Component {
+
+	componentDidMount() {
+		this.props.requestActiveAccountAndDelegate();
+	}
 
 	onAddAccount(e) {
 		e.preventDefault();
@@ -170,7 +174,7 @@ class Header extends React.Component {
 
 	renderUserWithParent(name, accountId, amount, precision, symbol) {
 		const { delegate } = this.props;
-		const delegateName = delegate.get('name');
+		const delegateName = delegate.get('name') || '';
 		return (
 			<div key={name} className="parent-user-wrap">
 				{this.renderUser(name, accountId, amount, precision, symbol)}
@@ -338,6 +342,7 @@ Header.propTypes = {
 	setValue: PropTypes.func.isRequired,
 	delegate: PropTypes.object.isRequired,
 	intl: PropTypes.any.isRequired,
+	requestActiveAccountAndDelegate: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
@@ -365,5 +370,6 @@ export default injectIntl(withRouter(connect(
 		openModal: (type, accountName) => dispatch(openModal(type, accountName)),
 		initAccount: (name, network) => dispatch(initAccount(name, network)),
 		setValue: (field, value) => dispatch(setValue(HISTORY_TABLE, field, value)),
+		requestActiveAccountAndDelegate: () => dispatch(requestActiveAccountAndDelegate()),
 	}),
 )(Header)));
