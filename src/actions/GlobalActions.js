@@ -63,6 +63,32 @@ import {
 	URI_TYPES,
 } from '../constants/FormConstants';
 
+
+export const requestActiveAccountAndDelegate = () => async (dispatch, getState) => {
+
+	const accountName = getState().global.getIn(['activeUser', 'name']);
+
+	if (!accountName) {
+		return;
+	}
+
+	let account;
+
+	try {
+		account = await Services.getEcho().api.getAccountByName(accountName);
+	} catch (error) {
+		return;
+	}
+
+	if (!account) {
+		return;
+	}
+
+	const { id, options } = account;
+
+	await Services.getEcho().api.getFullAccounts([id, options.delegating_account]);
+};
+
 export const incomingConnectionsRequest = (isAddAccount = false) => (dispatch, getState) => {
 	let isFirst = localStorage.getItem('is_first_launch');
 	let isAgreedWithNodeLaunch = localStorage.getItem('is_agreed_with_node_launch');
