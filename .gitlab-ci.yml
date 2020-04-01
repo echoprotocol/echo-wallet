@@ -3,13 +3,14 @@ stages:
   - build
   - deploy
 
-eslint:
+test:
   image: node:10
   stage: test
   cache:
     paths:
       - node_modules/
   script:
+    - npm i
     - npm run lint
   tags:
     - docker
