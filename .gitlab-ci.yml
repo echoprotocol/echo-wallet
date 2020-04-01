@@ -17,8 +17,6 @@ test:
   only:
     - merge_requests
 
-
-
 build:
   stage: build
   variables:
