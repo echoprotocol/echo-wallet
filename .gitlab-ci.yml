@@ -1,6 +1,21 @@
 stages:
+  - test
   - build
   - deploy
+
+eslint:
+  image: node:10
+  stage: test
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - npm run lint
+  tags:
+    - docker
+  only:
+    - merge_requests
+
 
 
 build:
