@@ -3,7 +3,7 @@
 	"SOLC_BIN_URL": "https://echoprotocol.github.io/solc-bin/bin/",
 	"CRYPTO_API_URL": "https://697-crypto-api-api.pixelplex-test.by/api/v1/",
 	"DOWNLOAD_ECHO_NODE_URLS": {
-		"MAC": "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-mac.0.14.1.tar",
-		"LINUX": "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-linux.0.14.1.tar"
+		"MAC": "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-mac.0.18.0-rc.7.tar",
+		"LINUX": "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-linux.0.18.0-rc.7.tar"
 	}
 }
