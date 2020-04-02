@@ -665,4 +665,14 @@ export default {
 			asset: null,
 		},
 	},
+	evm_address_register: {
+		value: OPERATIONS_IDS.EVM_ADDRESS_REGISTER,
+		name: 'EVM address register',
+		options: {
+			from: 'owner',
+			subject: ['evm_address'],
+			value: null,
+			asset: null,
+		},
+	},
 };

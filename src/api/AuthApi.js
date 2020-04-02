@@ -27,7 +27,7 @@ class AuthApi {
 	 */
 	static async registerAccount(echoInstanceApi, accountName, publicKey) {
 		try {
-			await echoInstanceApi.registerAccount(accountName, publicKey, publicKey);
+			await echoInstanceApi.registerAccount(accountName, publicKey, publicKey, null);
 			return true;
 		} catch (error) {
 			throw new Error(error.message);
