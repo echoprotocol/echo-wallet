@@ -20,7 +20,8 @@ jobs:
       env:
         - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.14.1.tar"
         - CRYPTO_API_KEY=$CRYPTO_API_KEY
-      if: tag IS present
+      if: type = push
+      # if: tag IS present
       script:
         - rm -rf node_modules
         - npm i
