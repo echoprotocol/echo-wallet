@@ -32,8 +32,9 @@ jobs:
         file_glob: true
         file: echo-wallet*.zip
         skip_cleanup: true
-        on:
-          tags: true
+        if: type = push
+        # on:
+        #   tags: true
 
     - stage: build
       name: "Build Win App"
