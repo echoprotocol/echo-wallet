@@ -25,11 +25,12 @@ jobs:
         - rm -rf node_modules
         - npm i
         - npm run package-deb-with-download-build
+        - ls build/binaries/
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         file_glob: true
-        file: build/binaries/echo-wallet*.zip
+        file: echo-wallet*.zip
         skip_cleanup: true
         on:
           tags: true
