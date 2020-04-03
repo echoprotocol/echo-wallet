@@ -3,25 +3,25 @@ node_js:
   - "10"
 
 stages:
-  - test
+  # - test
   - build
 
 jobs:
   include:
 
-    - stage: test
-      name: "Lint"
-      if: type = push
-      script:
-        - npm run lint
+    # - stage: test
+    #   name: "Lint"
+    #   if: type = push
+    #   script:
+    #     - npm run lint
 
     - stage: build
       name: "Build Linux App"
       env:
         - DOWNLOAD_ECHO_NODE_URL= "https://d14s13k07yt1gw.cloudfront.net/echo-linux.0.14.1.tar"
         - CRYPTO_API_KEY=$CRYPTO_API_KEY
-      if: type = push
-      # if: tag IS present
+      # if: type = push
+      if: tag IS present
       script:
         - rm -rf node_modules
         - npm i
@@ -33,9 +33,9 @@ jobs:
         file_glob: true
         file: echo-wallet*.zip
         skip_cleanup: true
-        if: type = push
-        # on:
-        #   tags: true
+        # if: type = push
+        on:
+          tags: true
 
     - stage: build
       name: "Build Win App"
