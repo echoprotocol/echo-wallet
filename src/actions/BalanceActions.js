@@ -509,7 +509,11 @@ const getAccountFromTransferFrom = () => async (dispatch, getState) => {
 		return undefined;
 	}
 
-	const isFormBalance = fullAccount.balances[form.get('currency').id];
+	const currency = fullAccount.balances[form.get('currency')];
+	let isFormBalance;
+	if (currency) {
+		isFormBalance = fullAccount.balances[form.get('currency').id];
+	}
 
 	if (!isFormBalance) {
 		return undefined;

@@ -77,7 +77,7 @@ export default class PasswordInput extends React.Component {
 					/>
 					<ActionBtn
 						key={`action-${unique}`}
-						icon={show ? 'icon-e-show' : 'icon-e-hide'}
+						icon={passwordVisibility ? 'icon-e-show' : 'icon-e-hide'}
 						focus={(e) => this.focus(e)}
 						blur={(e) => this.blur(e)}
 						action={(e) => buttonAction(e)}

@@ -1,7 +1,21 @@
 stages:
+  - test
   - build
   - deploy
 
+test:
+  image: node:10
+  stage: test
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - npm i
+    - npm run lint
+  tags:
+    - docker
+  only:
+    - merge_requests
 
 build:
   stage: build
