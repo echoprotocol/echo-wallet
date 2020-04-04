@@ -23,20 +23,34 @@ class Assets extends React.Component {
 		this.setState({ focusedId: null });
 	}
 
-	setAsset(symbol) {
+	setAsset(asset) {
 		this.props.setGlobalValue('activeCoinTypeTab', 0);
-		this.props.setAsset(symbol);
+		this.props.setAsset(asset);
 	}
 
-	renderEmpty() {
+	renderItem(asset, id) {
 		return (
-			<li>
-				<button onClick={() => this.props.setAsset('ECHO')}>
-					<span className="currency-symbol">ECHO</span>
-					<span className="currency-amount">0</span>
+			<li
+				key={id}
+				className={classnames({ focused: id === this.state.focusedId })}
+			>
+				<button
+					className="balance-item"
+					onFocus={() => this.onFocus(id)}
+					onBlur={() => this.onBlur()}
+					onClick={() => this.setAsset(asset)}
+				>
+					<span className="currency-symbol">{asset.symbol}</span>
+					<span className="currency-amount">
+						{formatAmount(asset.balance, asset.precision, '')}
+					</span>
 				</button>
 			</li>
 		);
+	}
+
+	renderEmpty() {
+		return this.renderItem({ symbol: 'ECHO', balance: '0', precision: 8 }, 0);
 	}
 
 	renderList() {
@@ -44,25 +58,7 @@ class Assets extends React.Component {
 		return (
 			this.props.assets.map((asset, i) => {
 				const id = i;
-				return (
-					<li
-						key={id}
-						className={classnames({ focused: id === this.state.focusedId })}
-					>
-						<button
-							className="balance-item"
-							onFocus={() => this.onFocus(id)}
-							onBlur={() => this.onBlur()}
-							onClick={() => this.setAsset(asset)}
-						>
-							<span className="currency-symbol">{asset.symbol}</span>
-							<span className="currency-amount">
-								{formatAmount(asset.balance, asset.precision, '')}
-							</span>
-						</button>
-					</li>
-				);
-
+				return this.renderItem(asset, id);
 			})
 		);
 	}
