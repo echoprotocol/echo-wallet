@@ -1,7 +1,10 @@
 /* eslint-disable */
-import isPromise from 'is-promise';
 
 const TYPE_KEYNAME = typeof Symbol === 'function' ? Symbol('--[[await-event-emitter]]--') : '--[[await-event-emitter]]--';
+
+function isPromise(obj) {
+	return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+}
 
 function assertType(type) {
 	if (typeof type !== 'string' && typeof type !== 'symbol') {
