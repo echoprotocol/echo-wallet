@@ -17,7 +17,9 @@ import ActionBtn from '../../components/ActionBtn';
 class TabOverview extends React.Component {
 
 	format(value) {
-		return formatAmount(value.amount, value.precision, value.symbol);
+		return value.assets instanceof Array ?
+			value.assets.map((v) => formatAmount(v.amount, v.precision, v.symbol)).join(', ')
+			: formatAmount(value.amount, value.precision, value.symbol);
 	}
 
 	goToTransaction(e, link) {
@@ -184,7 +186,7 @@ class TabOverview extends React.Component {
 									<FormattedMessage id="recent_activity_page.transaction.keys.amount" />
 								</div>
 								<div className="col">
-									{data.value.amount ? this.format(data.value) : '0 ECHO'}
+									{data.value.amount || data.value.assets ? this.format(data.value) : '0 ECHO'}
 								</div>
 							</li> : null
 					}

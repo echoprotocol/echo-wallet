@@ -660,8 +660,8 @@ export default {
 		name: 'Block reward',
 		options: {
 			from: null,
-			subject: ['reciever', 'name'],
-			value: 'amount',
+			subject: ['receiver', 'name'],
+			value: 'assets',
 			asset: null,
 		},
 	},
