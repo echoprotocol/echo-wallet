@@ -1,4 +1,4 @@
-import { constants, validators } from 'echojs-lib';
+import { constants, validators, OPERATIONS_IDS } from 'echojs-lib';
 import _ from 'lodash';
 
 import operations from '../constants/Operations';
@@ -215,8 +215,14 @@ const formatOperation = (data) => async (dispatch, getState) => {
 export const formatHistory = (activity) => async (dispatch) => {
 	if (!activity.length) { return; }
 
+	const DID_OPERATIONS = [
+		OPERATIONS_IDS.DID_CREATE_OPERATION,
+		OPERATIONS_IDS.DID_UPDATE_OPERATION,
+		OPERATIONS_IDS.DID_DELETE_OPERATION,
+	];
+	const activityWithoutDIDOps = activity.filter((el) => !DID_OPERATIONS.includes(el.op[0]));
 	try {
-		let rows = activity.map((h) => dispatch(formatOperation(h)));
+		let rows = activityWithoutDIDOps.map((h) => dispatch(formatOperation(h)));
 		rows = await Promise.all(rows);
 		dispatch(setValue(HISTORY_TABLE, 'data', rows));
 	} catch (err) {
