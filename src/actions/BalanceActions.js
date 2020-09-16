@@ -572,8 +572,13 @@ export const handleSubscriber = (subscribeObjects = []) => async (dispatch, getS
 	const accountId = getState().global.getIn(['activeUser', 'id']);
 	if (!accountId || !Services.getEcho().isConnected) return;
 
-	const balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']).toJS();
-	const tokens = getState().balance.get('tokens').toJS();
+	let balances = getState().echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, accountId, 'balances']);
+	let tokens = getState().balance.get('tokens');
+	balances = balances && balances.toJS();
+	tokens = tokens && tokens.toJS();
+	if (!(balances && tokens)) {
+		return;
+	}
 	const networkName = getState().global.getIn(['network', 'name']);
 
 	let isBalanceUpdated = false;
