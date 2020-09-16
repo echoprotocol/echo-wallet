@@ -329,6 +329,17 @@ export default {
 		},
 		signer: 'account',
 	},
+	request_balance_unfreeze: {
+		value: OPERATIONS_IDS.REQUEST_BALANCE_UNFREEZE,
+		name: 'Request balance unfreeze',
+		options: {
+			from: 'account',
+			subject: ['objects_to_unfreeze'],
+			value: null,
+			asset: null,
+		},
+		signer: 'account',
+	},
 	contract_create: {
 		value: OPERATIONS_IDS.CONTRACT_CREATE,
 		name: 'Contract create',
