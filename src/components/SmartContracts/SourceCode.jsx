@@ -18,6 +18,7 @@ class SourceCode extends React.Component {
 			timeout: null,
 			isDropdownUpdward: false,
 			isAceError: false,
+			useWorker: false,
 		};
 	}
 
@@ -32,7 +33,7 @@ class SourceCode extends React.Component {
 	}
 
 	onEditorLoad(editor) {
-
+		editor.getSession().setUseWorker(false);
 		editor.renderer.setScrollMargin(16, 14);
 		editor.renderer.setPadding(22);
 	}
@@ -71,6 +72,7 @@ class SourceCode extends React.Component {
 
 		this.props.setValue(FORM_CREATE_CONTRACT_SOURCE_CODE, 'compileLoading', true);
 		this.setState({
+			useWorker: true,
 			timeout: setTimeout(async () => {
 				await this.props.contractCodeCompile(value);
 				setTimeout(() => {
@@ -139,7 +141,7 @@ class SourceCode extends React.Component {
 	render() {
 
 		const { form, intl } = this.props;
-		const { isDropdownUpdward, isAceError } = this.state;
+		const { isDropdownUpdward, isAceError, useWorker } = this.state;
 		const dropdwnPlaceholder = intl.formatMessage({ id: 'smart_contract_page.create_contract_page.source_code.contract_complete_dropdown.placeholder' });
 
 		return (
@@ -184,6 +186,7 @@ class SourceCode extends React.Component {
 							form.get('editorWorker') && !form.get('compileLoading')
 								? form.get('annotations') : null
 						}
+						setOptions={{ useWorker }}
 					/>
 					{
 						isAceError && form.get('code').error &&
