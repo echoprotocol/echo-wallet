@@ -25,7 +25,7 @@ class Assets extends React.Component {
 
 		return frozenFunds.map((item) => {
 			const {
-				balance: { amount }, unfreeze_time: unfreezeTime, multiplier, id,
+				balance: { amount }, unfreeze_availability_time: unfreezeTime, multiplier, id,
 			} = item;
 			const freezeParam = FREEZE_BALANCE_PARAMS.find((param) => param.multiplier === multiplier);
 
