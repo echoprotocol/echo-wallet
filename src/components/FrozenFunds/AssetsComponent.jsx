@@ -14,8 +14,8 @@ class Assets extends React.Component {
 		const popupMsg = intl.formatMessage({ id: 'wallet_page.frozen_funds.frozen_funds_list.popup_text' });
 
 		frozenFunds.sort((a, b) => {
-			const { unfreeze_time: unfreezeTimeA } = a;
-			const { unfreeze_time: unfreezeTimeB } = b;
+			const { unfreeze_availability_time: unfreezeTimeA } = a;
+			const { unfreeze_availability_time: unfreezeTimeB } = b;
 			const dateA = new Date(unfreezeTimeA);
 			const dateB = new Date(unfreezeTimeB);
 
