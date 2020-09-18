@@ -323,7 +323,7 @@ export default {
 		name: 'Request balance unfreeze',
 		options: {
 			from: 'account',
-			subject: ['objects_to_unfreeze'],
+			subject: null,
 			value: null,
 			asset: null,
 		},
