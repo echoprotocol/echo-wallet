@@ -123,6 +123,14 @@ const formatOperation = (data) => async (dispatch, getState) => {
 				symbol: coreAsset.symbol,
 				amount: _.get(operation, options.value),
 			};
+		} else if (operation[options.value] instanceof Array) {
+			const assetIds = operation[options.value].map((el) => el.asset_id);
+			const assets = await Services.getEcho().api.getAssets(assetIds);
+			result.value = operation[options.value].map((el, i) => ({
+				...el,
+				precision: assets[i].precision,
+				symbol: assets[i].symbol,
+			}));
 		} else {
 			result.value = {
 				...result.value,
@@ -137,7 +145,10 @@ const formatOperation = (data) => async (dispatch, getState) => {
 			}
 		}
 		const sidechainAsset = getSidechainTrxAsset(type);
-		result.value = {
+		result.value = result.value instanceof Array ? {
+			assets: result.value,
+			...sidechainAsset,
+		} : {
 			...result.value,
 			...sidechainAsset,
 		};
