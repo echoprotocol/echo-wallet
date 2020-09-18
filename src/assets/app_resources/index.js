@@ -212,6 +212,8 @@ function createWindow() {
 
 			mainWindow.webContents.send('startEchoNode', { networkId: data.networkId });
 
+			const exePath = app.getPath('exe') || process.env.PORTABLE_EXECUTABLE_DIR;
+			const binDirectory = path.join(exePath, '..', '/resources/bin');
 			if (data.networkId === 'devnet') {
 				return;
 			}
@@ -226,6 +228,7 @@ function createWindow() {
 				data.accounts,
 				data.chainToken,
 				pauseNodeSync,
+				binDirectory,
 			).then(() => {
 				if (!quited && !lastNode.stopInProcess) {
 					removeBeforeStart = true;

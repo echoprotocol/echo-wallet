@@ -1,5 +1,4 @@
-import appRootDir from 'app-root-dir';
-import { join as joinPath, dirname } from 'path';
+import { dirname } from 'path';
 import _spawn from 'cross-spawn';
 import mkdirp from 'mkdirp';
 import fs from 'fs';
@@ -19,73 +18,33 @@ class EchoNode {
 	 * @param {Array} accounts
 	 * @return {Promise.<*>}
 	 */
-	async start(params, accounts = [], chainToken, stopSyncing) {
+	async start(params, accounts = [], chainToken, stopSyncing, execPath) {
 
-		const execPath = joinPath(dirname(appRootDir.get()), '..', 'bin');
-
-		const binPath = `${joinPath(execPath, 'echo_node')}`;
-
+		const binPath = `${execPath}/echo_node`;
 		const keyConfigPath = `${params['data-dir']}/.key.config`;
 
 		const fileExists = await new Promise((resolve) => {
-			fs.stat(keyConfigPath, (err) => {
-				if (err) {
-					return resolve(false);
-				}
-
-				return resolve(true);
-
-			});
+			fs.exists(keyConfigPath, resolve);
 		});
 
 		let bytes = null;
 
 		if (fileExists) {
-			bytes = await new Promise((resolve, reject) => {
-				fs.readFile(keyConfigPath, (err, data) => {
-					if (err) {
-						return reject(err);
-					}
-
-					return resolve(data.toString('hex'));
-				});
-			});
-
-			await new Promise((resolve, reject) => {
-				fs.unlink(keyConfigPath, (err) => {
-					if (err) {
-						return reject(err);
-					}
-
-					return resolve();
-				});
-			});
-
+			bytes = fs.readFileSync(keyConfigPath).toString('hex');
+			fs.unlinkSync(keyConfigPath);
 		}
 
 		const oldMask = process.umask(0);
-		await new Promise((resolve, reject) => {
-			mkdirp(dirname(keyConfigPath), '0777', (err) => {
-				process.umask(oldMask);
-				if (err) {
-					return reject(err);
-				}
-				return resolve();
-			});
-		});
+		await mkdirp(dirname(keyConfigPath), '0777');
+		process.umask(oldMask);
 
 		if (chainToken && chainToken.token) {
 			const fileHex = NodeFileEncryptor.getFileBytes(chainToken.token, accounts);
 
 			if (bytes !== fileHex) {
-				await new Promise((resolve, reject) => {
-					fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), (err) => {
-						if (err) {
-							return reject(err);
-						}
-						return resolve();
-					});
-				});
+				try {
+					await fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), () => {});
+				} catch (e) { /* eslint-disable-next-line no-empty */ }
 			}
 		}
 
@@ -200,7 +159,9 @@ class EchoNode {
 						const read = child.stderr.read();
 
 						const stderr = read ? read.toString() : read;
-						err = Error(stderr);
+						if (stderr) {
+							err = Error(stderr);
+						}
 					} else {
 						err = Error(`echo_node exited with code ${code}`);
 					}
