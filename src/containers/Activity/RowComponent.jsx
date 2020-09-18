@@ -16,6 +16,15 @@ class RowComponent extends React.Component {
 		this.props.viewTransaction(this.props.data);
 	}
 
+	format(value) {
+		if (value.assets instanceof Array) {
+			return value.assets.map((v) => (v.amount && v.precision ?
+				formatAmount(v.amount, v.precision, v.symbol) : v.amount)).join(', ');
+		}
+		return value.amount && value.precision ?
+			formatAmount(value.amount, value.precision) : value.amount;
+	}
+
 	render() {
 		const {
 			id,
@@ -72,11 +81,10 @@ class RowComponent extends React.Component {
 				</Table.Cell>
 				<Table.Cell>
 					{
-						value.amount ? (
+						value.amount || value.assets ? (
 							<span className="ellips">
 								<span className="text-bold">
-									{value.amount && value.precision ?
-										formatAmount(value.amount, value.precision) : value.amount}
+									{this.format(value)}
 								</span>
 								<span>{Number.isInteger(Number(value.amount)) && value.symbol}</span>
 							</span>

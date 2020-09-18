@@ -318,6 +318,17 @@ export default {
 		},
 		signer: 'account',
 	},
+	request_balance_unfreeze: {
+		value: OPERATIONS_IDS.REQUEST_BALANCE_UNFREEZE,
+		name: 'Request balance unfreeze',
+		options: {
+			from: 'account',
+			subject: null,
+			value: null,
+			asset: null,
+		},
+		signer: 'account',
+	},
 	contract_create: {
 		value: OPERATIONS_IDS.CONTRACT_CREATE,
 		name: 'Contract create',
@@ -660,8 +671,8 @@ export default {
 		name: 'Block reward',
 		options: {
 			from: null,
-			subject: ['reciever', 'name'],
-			value: 'amount',
+			subject: ['receiver', 'name'],
+			value: 'assets',
 			asset: null,
 		},
 	},
