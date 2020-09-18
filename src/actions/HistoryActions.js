@@ -108,7 +108,7 @@ const formatOperation = (data) => async (dispatch, getState) => {
 			}
 		} else {
 			result.subject = {
-				value: operation[options.subject[0]] instanceof Array ? operation[options.subject[0]].join(', ') : operation[options.subject[0]],
+				value: operation[options.subject[0]],
 				id: options.subject[0] === 'name' ? '1.2.0' : null,
 			};
 		}
