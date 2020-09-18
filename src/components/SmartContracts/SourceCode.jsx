@@ -33,6 +33,9 @@ class SourceCode extends React.Component {
 	}
 
 	onEditorLoad(editor) {
+		const { form } = this.props;
+		const annotations = form.get('editorWorker') && !form.get('compileLoading') ? form.get('annotations') : [];
+		editor.getSession().setAnnotations(annotations);
 		editor.getSession().setUseWorker(false);
 		editor.renderer.setScrollMargin(16, 14);
 		editor.renderer.setPadding(22);
