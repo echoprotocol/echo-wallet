@@ -33,15 +33,11 @@ class Network extends React.PureComponent {
 	}
 
 	onDropdownChange(e, value) {
-		if ((e.type !== 'click' && e.keyCode !== 13)) {
+		if ((e.type !== 'click' && e.keyCode !== 13) || value === 'custom') {
 			return;
 		}
 
-		if (value === 'custom') {
-			this.props.history.push(NETWORKS_PATH);
-		} else {
-			this.onSaveNetwork(value);
-		}
+		this.onSaveNetwork(value);
 	}
 
 	onDeleteNetwork(network, e) {
@@ -203,6 +199,9 @@ class Network extends React.PureComponent {
 			key: 'custom',
 			className: 'item-footer',
 			selected: false,
+			onClick: () => {
+				this.props.history.push(NETWORKS_PATH);
+			},
 			content: (
 				<div className="network-link">
 					<span className="network-link-content">
