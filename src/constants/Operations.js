@@ -675,7 +675,7 @@ export default {
 			value: null,
 			asset: null,
 		},
-		signer: 'fee_payer',
+		signer: 'committee_member_id',
 	},
 	block_reward: {
 		value: OPERATIONS_IDS.BLOCK_REWARD,
