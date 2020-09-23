@@ -18,7 +18,7 @@ jobs:
     - stage: build
       name: "Build Linux App"
       env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-linux.0.22-rc.1.tar"
+        - DOWNLOAD_ECHO_NODE_URL= "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-linux.0.22.2-rc.0.tar"
         - CRYPTO_API_KEY=$CRYPTO_API_KEY
       if: tag IS present
       script:
@@ -55,7 +55,7 @@ jobs:
       os: osx
       name: "Build macOS App"
       env:
-        - DOWNLOAD_ECHO_NODE_URL= "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-macos.0.22.1-rc.0.tar"
+        - DOWNLOAD_ECHO_NODE_URL= "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-macos.0.22.2-rc.0.tar"
         - CRYPTO_API_KEY=$CRYPTO_API_KEY
       if: tag IS present
       script:
