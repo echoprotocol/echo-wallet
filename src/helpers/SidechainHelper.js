@@ -34,9 +34,7 @@ export const isBtcAddress = (hex) => {
 	try {
 		const validationData = validate(hex);
 
-		return validationData &&
-			!validationData.testnet &&
-			validationData.address;
+		return validationData && validationData.address;
 	} catch (e) {
 		return false;
 	}
@@ -50,12 +48,7 @@ export const isBtcAddress = (hex) => {
 export const isBackupAddress = (hex) => {
 	try {
 		const validationData = validate(hex);
-
-		return validationData &&
-			!validationData.bech32 &&
-			!validationData.testnet &&
-			validationData.address &&
-			validationData.type === 'p2pkh';
+		return validationData && validationData.address && validationData.type === 'p2pkh';
 	} catch (e) {
 		return false;
 	}

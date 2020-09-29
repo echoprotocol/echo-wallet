@@ -115,8 +115,8 @@
             "title": "Balances",
             "add_erc20_token_text": "Watch Tokens",
             "stable_coins": {
-                "title": "Stable Coins",
-                "popup_info": "Coins from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain.",
+                "title": "Pegged Assets",
+                "popup_info": "Assets from Sidechains, e.g. Bitcoin or Ethereum, converted to eBTC and eETH and burned back to BTC and ETH when withdrawing to an original sidechain.",
                 "deposit": "Deposit",
                 "withdrawal": "Withdrawal"
             },
