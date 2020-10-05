@@ -111,6 +111,16 @@
 	.inner-tooltip-trigger {
 		margin: 0 0 0 6px;
 	}
+
+	.icon-info {
+		@include icon-info();
+		color: #AEB4C0;
+		margin-left: 6px;
+
+		&:hover {
+			color: #5C637D;
+		}
+	}
 }
 
 .currency-symbol {
