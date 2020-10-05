@@ -1004,7 +1004,7 @@
             "token_already_exist_error": "Token already exists",
             "contract_name_exist_error": "This contract name already exists",
             "contract_id_exist_error": "This contract ID already exists",
-            "empty_id_error": "Contract ID should not be empty",
+            "empty_id_error": "Account ID field shouldn't be empty",
             "empty_name_error": "Contract name should not be empty",
             "empty_symbol_error": "Contract symbol should exist and not be empty",
             "invalid_precision_error": "Contract precision should exist and being bigger or equal than zero",
