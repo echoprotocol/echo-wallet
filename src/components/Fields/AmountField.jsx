@@ -14,6 +14,7 @@ import { formatAmount } from '../../helpers/FormatHelper';
 
 import FeeField from './FeeField';
 import ErrorMessage from '../ErrorMessage';
+import Services from "../../services";
 
 class AmountField extends React.Component {
 
@@ -24,6 +25,8 @@ class AmountField extends React.Component {
 			searchText: '',
 			amountFocus: false,
 			timeout: null,
+			options: [],
+			loading: false,
 		};
 	}
 
@@ -33,6 +36,9 @@ class AmountField extends React.Component {
 			this.props.getTransferFee()
 				.then((fee) => fee && this.onFee(fee));
 		}
+		// this.setState({
+		// 	options: this.renderList('assets').concat(this.renderList('tokens')),
+		// });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -45,9 +51,55 @@ class AmountField extends React.Component {
 		}
 	}
 
-	onSearch(e) {
-		this.setState({ searchText: e.target.value });
+	onSearch(e, data) {
+		const searchText = data.searchQuery;
+		this.setState({
+			searchText,
+			loading: true,
+		});
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+		this.setState({
+			timeout: setTimeout(async () => {
+				const assets = await Services.getEcho().api.listAssets(searchText);
+				const options = searchText ? assets
+					.map(({ symbol, id }) => ({
+						key: id,
+						text: symbol,
+						value: id,
+						// onClick: (event) => {
+						// 	event.stopPropagation();
+						// 	this.onChangeAccount(id);
+						// },
+					})) : [];
+				this.setState({
+					options,
+					loading: false,
+				});
+			}, 300),
+		});
 	}
+
+	// onSearch(e) {
+	// 	this.setState({ searchText: e.target.value });
+	// }
+
+	// renderAssets(e, data) {
+	// 	const { searchText } = this.state;
+	// 	let assets = null;
+	//  	Services.getEcho().api.listAssets(searchText).then();
+	// 	return searchText ? assets
+	// 		.map(({ symbol, id }) => ({
+	// 			key: id,
+	// 			text: symbol,
+	// 			value: id,
+	// 			// onClick: (event) => {
+	// 			// 	event.stopPropagation();
+	// 			// 	this.onChangeAccount(id);
+	// 			// },
+	// 		})) : [];
+	// }
 
 	onChangeAmount(e) {
 		const { currency, form, receive } = this.props;
@@ -76,7 +128,7 @@ class AmountField extends React.Component {
 	}
 
 	onChangeCurrency(e, value) {
-		const {
+		let {
 			tokens, assets, form, receive,
 		} = this.props;
 
@@ -94,7 +146,10 @@ class AmountField extends React.Component {
 			}
 		}
 
-		target = assets.find((el) => el.id === value);
+		assets = assets.toJS();
+		console.log('assets', assets.concat(this.state.options))
+		target = assets.concat(this.state.options).find((el) => el.id === value);
+		console.log('target', target)
 		if (!target) return;
 		this.setCurrency(target, 'assets');
 		if (receive) {
@@ -191,6 +246,7 @@ class AmountField extends React.Component {
 		this.props.amountInput(value, currency, name);
 	}
 
+	// !!!!
 	renderList(type) {
 		const { searchText } = this.state;
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
@@ -247,7 +303,7 @@ class AmountField extends React.Component {
 			activeCoinTypeTab,
 		} = this.props;
 
-		const { searchText } = this.state;
+		const { searchText, options, loading } = this.state;
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
 			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
@@ -335,11 +391,14 @@ class AmountField extends React.Component {
 							searchQuery={searchText}
 							closeOnChange
 							icon={(this.props.tokens.size + assets.size) <= 1 ? null : 'dropdown'}
-							onSearchChange={(e) => this.onSearch(e)}
+							onSearchChange={(e, data) => this.onSearch(e, data)}
 							text={currency ? currency.symbol : ''}
 							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
-							options={this.renderList('assets').concat(this.renderList('tokens'))}
+							options={(searchText && !loading) ?
+								options :
+								this.renderList('assets').concat(this.renderList('tokens'))
+							}
 							noResultsMessage={
 								intl.formatMessage ?
 									intl.formatMessage({ id: 'amount_input.no_result_message' }) :
