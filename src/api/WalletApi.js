@@ -33,7 +33,7 @@ export const validateAccountExist = (account, shouldExist, limit = 50) => (
 				return 'errors.account_errors.account_not_found_error';
 			}
 
-			if (result.find((i) => i[0] === accountName) && !shouldExist) {
+			if (result.find((i) => i[0] === account) && !shouldExist) {
 				return 'errors.account_errors.name_already_taken_error';
 			}
 
