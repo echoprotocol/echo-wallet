@@ -11,10 +11,9 @@ import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
 import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
-
 import FeeField from './FeeField';
 import ErrorMessage from '../ErrorMessage';
-import EchoNetwork from "../Receive/EchoNetwork";
+import Services from '../../services';
 
 class AmountField extends React.Component {
 
@@ -25,6 +24,7 @@ class AmountField extends React.Component {
 			searchText: '',
 			amountFocus: false,
 			timeout: null,
+			options: this.renderList('assets').concat(this.renderList('tokens')),
 		};
 	}
 
@@ -34,6 +34,10 @@ class AmountField extends React.Component {
 			this.props.getTransferFee()
 				.then((fee) => fee && this.onFee(fee));
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.clearForm(FORM_TRANSFER);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -46,8 +50,27 @@ class AmountField extends React.Component {
 		}
 	}
 
-	onSearch(e) {
-		this.setState({ searchText: e.target.value });
+	onSearch(e, data) {
+		const searchText = data.searchQuery;
+		this.setState({
+			searchText,
+		});
+		if (this.state.timeout) {
+			clearTimeout(this.state.timeout);
+		}
+
+		(async () => {
+			const assets = await Services.getEcho().api.listAssets(searchText);
+			const options = searchText ? assets.map(({ symbol, id, precision }) => ({
+				key: id,
+				text: symbol,
+				value: id,
+				precision,
+			})) : [];
+			this.setState({
+				options: this.renderList('tokens').concat(options),
+			});
+		})();
 	}
 
 	onChangeAmount(e) {
@@ -76,33 +99,23 @@ class AmountField extends React.Component {
 		});
 	}
 
-	onChangeCurrency(e, value) {
-		const {
-			tokens, assets, form, receive,
-		} = this.props;
-
-		let target = null;
+	onChangeCurrency(e, currency) {
+		const { tokens, assets, form } = this.props;
+		this.props.setFormError('amount', null);
+		this.props.setFormError('tokens', null);
+		const { value, text, precision } = this.state.options.find(({ value }) => value === currency);
 
 		if (form === FORM_TRANSFER) {
-			target = tokens.find((el) => el.id === value);
-
-			if (target) {
-				this.setCurrency(target, 'tokens');
-				if (!receive) {
-					this.props.setContractFees();
-				}
-				return;
-			}
+			const type = text === 'ECHO' ? undefined : 'tokens';
+			this.props.setValue('currency', {
+				id: value, symbol: text, precision, type,
+			});
+		} else {
+			this.props.setValue('currency', {
+				id: value, symbol: text, precision, type: 'assets',
+			});
 		}
-
-		target = assets.find((el) => el.id === value);
-		if (!target) return;
-		this.setCurrency(target, 'assets');
-		if (receive) {
-			return;
-		}
-		this.props.getTransferFee()
-			.then((fee) => fee && this.onFee(fee));
+		this.clearSearchText();
 	}
 
 	onDropdownChange(e, value) {
@@ -130,12 +143,12 @@ class AmountField extends React.Component {
 		this.onChangeAmount({ target: { value: value.toString() }, name: 'amount' });
 	}
 
-	setCurrency(currency, type) {
-		this.props.setFormError('amount', null);
-		this.props.setFormError('tokens', null);
-		this.props.setValue('currency', { ...currency, type });
-		this.setState({ searchText: '' });
-	}
+	// setCurrency(currency, type) {
+	// 	this.props.setFormError('amount', null);
+	// 	this.props.setFormError('tokens', null);
+	// 	this.props.setValue('currency', { ...currency, type });
+	// 	this.setState({ searchText: '' });
+	// }
 
 	getAvailableAmount(currency) {
 		if (!currency) {
@@ -157,24 +170,26 @@ class AmountField extends React.Component {
 		return amount.isNegative() ? 0 : amount;
 	}
 
-	getAvailableBalance(currency) {
-		if (currency) {
-			return (
-				currency.symbol === ADDRESS_PREFIX ?
-					formatAmount(currency.balance, currency.precision, currency.symbol) :
-					<React.Fragment>
-						{formatAmount(currency.balance, currency.precision)}
-						<Popup
-							trigger={<span className="inner-tooltip-trigger icon-coin" />}
-							content={currency.symbol}
-							className="asset-tooltip"
-							inverted
-						/>
-					</React.Fragment>
-			);
-		}
-		return '0 ECHO';
-	}
+	// getAvailableBalance(currency) {
+	// 	const currencies = this.props.assets.toJS().concat(this.props.tokens.toJS());
+	// 	console.log('currencies', currencies)
+	// 	if (currency || currencies.some(({ symbol }) => symbol === currency)) {
+	// 		return (
+	// 			currency.symbol === ADDRESS_PREFIX ?
+	// 				formatAmount(currency.balance, currency.precision, currency.symbol) :
+	// 				<React.Fragment>
+	// 					{formatAmount(currency.balance, currency.precision)}
+	// 					<Popup
+	// 						trigger={<span className="inner-tooltip-trigger icon-coin" />}
+	// 						content={currency.symbol}
+	// 						className="asset-tooltip"
+	// 						inverted
+	// 					/>
+	// 				</React.Fragment>
+	// 		);
+	// 	}
+	// 	return '0 ECHO';
+	// }
 
 	clearSearchText() {
 		this.setState({ searchText: '' });
@@ -193,7 +208,7 @@ class AmountField extends React.Component {
 	}
 
 	renderList(type) {
-		const { searchText } = this.state;
+		const { searchText } = this.state || '';
 		const search = searchText ? new RegExp(searchText.toLowerCase(), 'gi') : null;
 
 		const list = (
@@ -202,14 +217,14 @@ class AmountField extends React.Component {
 			|| !this.props[type].length
 			|| this.props[type].filter((i) => i.disabled).length === this.props[type].length
 		) ? [] : [
-			{
-				key: `${type}_header`,
-				text: '',
-				value: type.toUpperCase(),
-				className: `${type}_header header`,
-				disabled: true,
-			},
-		];
+				{
+					key: `${type}_header`,
+					text: '',
+					value: type.toUpperCase(),
+					className: `${type}_header header`,
+					disabled: true,
+				},
+			];
 		return this.props[type].reduce((arr, a, i) => {
 			if ((!search || a.symbol.toLowerCase().match(search)) && !a.disabled) {
 				const id = i;
@@ -248,49 +263,50 @@ class AmountField extends React.Component {
 			activeCoinTypeTab,
 		} = this.props;
 
-		const { searchText } = this.state;
+		const { searchText, options } = this.state;
 		const currency = this.props.currency || assets[0];
 		const type = [FORM_TRANSFER, FORM_FREEZE]
 			.includes(form) && currency && currency.id && !currency.id.startsWith(PREFIX_ASSET) ? 'contract_call' : 'transfer';
+		const text = searchText ? searchText : currency?.symbol || '';
 		return (
 			<Form.Field>
 				<label htmlFor="amount">
 					{intl.formatMessage && intl.formatMessage({ id: 'amount_input.title' })}
 					<ul className="list-amount">
 						{fee && fee.value && amount.value &&
-						<li>
-							{fee && fee.value && 'Fee:'}
-							<FeeField
-								currency={currency}
-								fees={fees}
-								form={form}
-								type={type}
-								fee={fee}
-								assets={assets.toJS()}
-								setValue={this.props.setValue}
-								setFormValue={this.props.setFormValue}
-								getTransferFee={this.props.getTransferFee}
-							/>
-						</li>
+							<li>
+								{fee && fee.value && 'Fee:'}
+								<FeeField
+									currency={currency}
+									fees={fees}
+									form={form}
+									type={type}
+									fee={fee}
+									assets={assets.toJS()}
+									setValue={this.props.setValue}
+									setFormValue={this.props.setFormValue}
+									getTransferFee={this.props.getTransferFee}
+								/>
+							</li>
 						}
-						{
-							showAvailable && (
-								<li>
-									{intl.formatMessage ? intl.formatMessage({ id: 'amount_input.available' }) : 'Available: '}
-									<span
-										className={classnames({ disabled: !isAvailableBalance || !fee.value })}
-										role="button"
-										onClick={(e) => this.setAvailableAmount(currency, e)}
-										onKeyPress={(e) => this.setAvailableAmount(currency, e)}
-										tabIndex={!isAvailableBalance || !fee.value ? '-1' : '0'}
-									>
-										{
-											this.getAvailableBalance(currency)
-										}
-									</span>
-								</li>
-							)
-						}
+						{/* { */}
+						{/*	showAvailable && ( */}
+						{/*		<li> */}
+						{/*			{intl.formatMessage ? intl.formatMessage({ id: 'amount_input.available' }) : 'Available: '} */}
+						{/*			<span */}
+						{/*				className={classnames({ disabled: !isAvailableBalance || !fee.value })} */}
+						{/*				role="button" */}
+						{/*				onClick={(e) => this.setAvailableAmount(currency, e)} */}
+						{/*				onKeyPress={(e) => this.setAvailableAmount(currency, e)} */}
+						{/*				tabIndex={!isAvailableBalance || !fee.value ? '-1' : '0'} */}
+						{/*			> */}
+						{/*				{ */}
+						{/*					this.getAvailableBalance(searchText) */}
+						{/*				} */}
+						{/*			</span> */}
+						{/*		</li> */}
+						{/*	) */}
+						{/* } */}
 					</ul>
 				</label>
 				<Input
@@ -336,11 +352,11 @@ class AmountField extends React.Component {
 							searchQuery={searchText}
 							closeOnChange
 							icon={(this.props.tokens.size + assets.size) <= 1 ? null : 'dropdown'}
-							onSearchChange={(e) => this.onSearch(e)}
-							text={currency ? currency.symbol : ''}
+							onSearchChange={(e, data) => this.onSearch(e, data)}
+							text={text}
 							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
-							options={this.renderList('assets').concat(this.renderList('tokens'))}
+							options={options}
 							noResultsMessage={
 								intl.formatMessage ?
 									intl.formatMessage({ id: 'amount_input.no_result_message' }) :
