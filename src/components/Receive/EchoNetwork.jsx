@@ -11,7 +11,7 @@ import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
 
 import Avatar from '../Avatar';
-import AmountField from '../Fields/AmountField';
+import AmountFieldWithAssets from '../Fields/AmountFieldWithAssets';
 import QrCode from '../QrCode';
 import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
 import DropdownActionBtn from '../DropdownActionBtn';
@@ -313,7 +313,7 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl,
+			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl, clearForm,
 		} = this.props;
 
 
@@ -353,8 +353,7 @@ class EchoNetwork extends React.Component {
 							open={open}
 						/>
 					</div>
-
-					<AmountField
+					<AmountFieldWithAssets
 						fees={fees}
 						form={FORM_TRANSFER}
 						fee={fee}
@@ -373,6 +372,7 @@ class EchoNetwork extends React.Component {
 						assetDropdown
 						receive
 						intl={intl}
+						clearForm={clearForm}
 					/>
 					{
 						receiverValue ? <QrCode link={link} qrData={link} /> : null

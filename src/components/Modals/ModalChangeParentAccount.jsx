@@ -120,7 +120,7 @@ class ModalChangeDelegate extends React.Component {
 	}
 
 	renderList(options) {
-		console.log('options', options)
+		console.log('options', options);
 		return options.map(({
 			key,
 			text,
