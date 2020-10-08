@@ -257,12 +257,6 @@ class AmountFieldWithAssets extends React.Component {
 			<span className="icon-error value-status" />;
 	}
 
-	renderCurrencyLabel(currency) {
-		if (currency) {
-			return <div className="currency-label">{currency.symbol}</div>;
-		}
-		return null;
-	}
 	render() {
 		const {
 			assets, amount, form,
@@ -349,34 +343,30 @@ class AmountFieldWithAssets extends React.Component {
 							this.renderErrorStatus(assetDropdown, amount.error, fee.error)
 						}
 					</div>
-
 					<ErrorMessage
 						value={amount.error || fee.error}
 						intl={intl}
 					/>
-
-					{
-						assetDropdown ? <Dropdown
-							search
-							disabled={(this.props.tokens.size + assets.size) <= 1}
-							onChange={(e, { value }) => this.onDropdownChange(e, value)}
-							searchQuery={searchText}
-							closeOnChange
-							icon={(this.props.tokens.size + assets.size) <= 1 ? null : 'dropdown'}
-							onSearchChange={(e, data) => this.onSearch(e, data)}
-							text={text}
-							selection={!(this.props.tokens.size + assets.size) <= 1}
-							onBlur={() => this.clearSearchText()}
-							options={options}
-							noResultsMessage={
-								intl.formatMessage ?
-									intl.formatMessage({ id: 'amount_input.no_result_message' }) :
-									'No results are found'
-							}
-							className="assets-tokens-dropdown"
-							onClose={() => this.clearSearchText()}
-						/> : this.renderCurrencyLabel(currency)
-					}
+					<Dropdown
+						search
+						disabled={(this.props.tokens.size + assets.size) <= 1}
+						onChange={(e, { value }) => this.onDropdownChange(e, value)}
+						searchQuery={searchText}
+						closeOnChange
+						icon={(this.props.tokens.size + assets.size) <= 1 ? null : 'dropdown'}
+						onSearchChange={(e, data) => this.onSearch(e, data)}
+						text={text}
+						selection={!(this.props.tokens.size + assets.size) <= 1}
+						onBlur={() => this.clearSearchText()}
+						options={options}
+						noResultsMessage={
+							intl.formatMessage ?
+								intl.formatMessage({ id: 'amount_input.no_result_message' }) :
+								'No results are found'
+						}
+						className="assets-tokens-dropdown"
+						onClose={() => this.clearSearchText()}
+					/>
 				</Input>
 				{
 					intl.formatMessage && isDisplaySidechainNotification
@@ -394,8 +384,6 @@ class AmountFieldWithAssets extends React.Component {
 						</span>
 						: null
 				}
-
-
 			</Form.Field>
 		);
 	}
@@ -427,7 +415,6 @@ AmountFieldWithAssets.propTypes = {
 	activeCoinTypeTab: PropTypes.any,
 	clearForm: PropTypes.func.isRequired,
 };
-
 
 AmountFieldWithAssets.defaultProps = {
 	currency: null,
