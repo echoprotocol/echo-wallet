@@ -51,7 +51,7 @@ class Ethereum extends React.Component {
 
 	checkConfirmation() {
 		const { ethSidechain, ethAddress, fullCurrentAccount } = this.props;
-		this.props.getEthAddress();
+		// this.props.getEthAddress();
 
 		if (ethAddress.get('eth_addr') && ethAddress.get('is_approved')) {
 			Interval.stopInterval();
