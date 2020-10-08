@@ -405,6 +405,7 @@ EchoNetwork.propTypes = {
 	updateAccountAddresses: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
 	accountNames: PropTypes.array.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 EchoNetwork.defaultProps = {

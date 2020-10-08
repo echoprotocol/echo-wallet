@@ -8,10 +8,8 @@ import EchoNetwork from './EchoNetwork';
 import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
 
-import { FORM_ETH_RECEIVE, FORM_TRANSFER } from '../../constants/FormConstants';
+import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import { STABLE_COINS } from '../../constants/SidechainConstants';
-import AmountFieldWithAssets from "../Fields/AmountFieldWithAssets";
-
 
 class Receive extends React.Component {
 
