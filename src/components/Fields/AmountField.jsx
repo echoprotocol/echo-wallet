@@ -14,7 +14,6 @@ import { formatAmount } from '../../helpers/FormatHelper';
 
 import FeeField from './FeeField';
 import ErrorMessage from '../ErrorMessage';
-import EchoNetwork from "../Receive/EchoNetwork";
 
 class AmountField extends React.Component {
 
@@ -202,14 +201,14 @@ class AmountField extends React.Component {
 			|| !this.props[type].length
 			|| this.props[type].filter((i) => i.disabled).length === this.props[type].length
 		) ? [] : [
-			{
-				key: `${type}_header`,
-				text: '',
-				value: type.toUpperCase(),
-				className: `${type}_header header`,
-				disabled: true,
-			},
-		];
+				{
+					key: `${type}_header`,
+					text: '',
+					value: type.toUpperCase(),
+					className: `${type}_header header`,
+					disabled: true,
+				},
+			];
 		return this.props[type].reduce((arr, a, i) => {
 			if ((!search || a.symbol.toLowerCase().match(search)) && !a.disabled) {
 				const id = i;
