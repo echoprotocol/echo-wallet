@@ -140,7 +140,6 @@ class Ethereum extends React.Component {
 					/>
 				</div>
 				<QrCode
-					link={link}
 					qrData={qrData}
 				/>
 			</React.Fragment>
