@@ -349,7 +349,6 @@ class AmountFieldWithAssets extends React.Component {
 					/>
 					<Dropdown
 						search
-						disabled={(this.props.tokens.size + assets.size) <= 1}
 						onChange={(e, { value }) => this.onDropdownChange(e, value)}
 						searchQuery={searchText}
 						closeOnChange
