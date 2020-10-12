@@ -691,7 +691,7 @@ export default {
 		value: OPERATIONS_IDS.EVM_ADDRESS_REGISTER,
 		name: 'EVM address register',
 		options: {
-			from: 'owner',
+			from: 'receiver',
 			subject: ['evm_address'],
 			value: null,
 			asset: null,
