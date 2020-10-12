@@ -49,7 +49,9 @@ export const getEthAddress = () => async (dispatch, getState) => {
 		return false;
 	}
 
-	const { eth_addr: ethAddress, is_approved: isApproved } = await Services.getEcho().api.getEthAddress(activeUserId) || {};
+	const {
+		eth_addr: ethAddress, is_approved: isApproved,
+	} = await Services.getEcho().api.getEthAddress(activeUserId) || {};
 
 	const [fullCurrentAccount] = await Services.getEcho().api.getFullAccounts([activeUserId]);
 
