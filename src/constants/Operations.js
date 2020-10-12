@@ -399,7 +399,7 @@ export default {
 		options: {
 			from: 'sender',
 			subject: ['contract'],
-			amount: 'value.amount',
+			value: 'value.amount',
 			asset: 'value.asset_id',
 		},
 		signer: 'sender',
