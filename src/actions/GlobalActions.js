@@ -312,7 +312,7 @@ export const initNetworks = (store) => async (dispatch) => {
 	try {
 		await Services.getUserStorage().setNetworkId(current.name);
 		if (store) {
-			await Services.getEcho().(current.name, { store });
+			await Services.getEcho().init(current.name, { store });
 		} else {
 			await Services.getEcho().changeConnection(current.name);
 		}

@@ -4,6 +4,7 @@ import Services from '../services';
 import { callContract } from '../services/ApiService';
 
 import { getUintFromDecimal, getAddressFromDecimal, add0x } from '../helpers/ContractHelper';
+import Interval from '../helpers/Interval';
 
 import { SIDE_CHAIN_HASHES } from '../constants/GlobalConstants';
 
@@ -76,35 +77,3 @@ export const getEthAddress = () => async (dispatch, getState) => {
 
 	return true;
 };
-
-// export const getEthAddress = () => async (dispatch, getState) => {
-// 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
-//
-// 	if (!activeUserId) {
-// 		return;
-// 	}
-//
-// 	const { eth_addr: ethAddress, is_approved: isApproved } = await Services.getEcho().api.getEthAddress(activeUserId) || {};
-//
-// 	if (ethAddress && isApproved) {
-// 		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: ethAddress, confirmed: true } }));
-// 		return;
-// 	}
-//
-// 	if (ethAddress) {
-// 		dispatch(GlobalReducer.actions.setIn({
-// 			field: 'ethSidechain', params: { address: ethAddress, confirmed: false }
-// 		}));
-// 		return;
-// 	}
-//
-// 	// const ethereumSidechainAddress = await dispatch(getSidechainEthereumAddress());
-// 	// if (!ethereumSidechainAddress) {
-// 	// 	return true;
-// 	// }
-// 	//
-// 	// const params = { address: ethereumSidechainAddress, confirmed: isApproved };
-// 	// dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params }));
-//
-// 	return true;
-// };
