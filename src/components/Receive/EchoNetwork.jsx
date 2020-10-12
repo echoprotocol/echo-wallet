@@ -313,7 +313,7 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl, clearForm,
+			currency, fee, assets, tokens, amount, isAvailableBalance, intl, clearForm,
 		} = this.props;
 
 
@@ -354,7 +354,6 @@ class EchoNetwork extends React.Component {
 						/>
 					</div>
 					<AmountFieldWithAssets
-						fees={fees}
 						form={FORM_TRANSFER}
 						fee={fee}
 						assets={assets}
@@ -364,13 +363,9 @@ class EchoNetwork extends React.Component {
 						isAvailableBalance={isAvailableBalance}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
 						setValue={this.props.setValue}
 						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
 						assetDropdown
-						receive
 						intl={intl}
 						clearForm={clearForm}
 					/>
@@ -385,7 +380,6 @@ class EchoNetwork extends React.Component {
 }
 
 EchoNetwork.propTypes = {
-	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
@@ -395,12 +389,9 @@ EchoNetwork.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
