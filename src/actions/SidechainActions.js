@@ -43,14 +43,13 @@ const getSidechainEthereumAddress = () => async (dispatch, getState) => {
 };
 
 export const getEthAddress = () => async (dispatch, getState) => {
-
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
 
 	if (!activeUserId) {
 		return false;
 	}
 
-	const ethAddress = await Services.getEcho().api.getEthAddress(activeUserId) || {};
+	const { eth_addr: ethAddress, is_approved: isApproved } = await Services.getEcho().api.getEthAddress(activeUserId) || {};
 
 	const [fullCurrentAccount] = await Services.getEcho().api.getFullAccounts([activeUserId]);
 
@@ -62,8 +61,8 @@ export const getEthAddress = () => async (dispatch, getState) => {
 		return true;
 	}
 
-	if (ethAddress.eth_addr && ethAddress.is_approved) {
-		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: '', confirmed: false } }));
+	if (ethAddress && isApproved) {
+		dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params: { address: ethAddress, confirmed: true } }));
 		Interval.stopInterval();
 		return true;
 	}
@@ -73,7 +72,7 @@ export const getEthAddress = () => async (dispatch, getState) => {
 		return true;
 	}
 
-	const params = { address: ethereumSidechainAddress, confirmed: ethAddress.is_approved };
+	const params = { address: ethereumSidechainAddress, confirmed: isApproved };
 	dispatch(GlobalReducer.actions.setIn({ field: 'ethSidechain', params }));
 
 	return true;
