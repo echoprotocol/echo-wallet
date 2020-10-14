@@ -1123,7 +1123,6 @@ export const freezeBalance = () => async (dispatch, getState) => {
 	const showOptions = {
 		amount: `${amount} ${currency.symbol}`,
 		from: getState().global.getIn(['activeUser', 'name']),
-		account: getState().global.getIn(['activeUser', 'name']),
 		duration: durationObject.durationText,
 		fee: `${new BN(fee.value).div(precision).toString(10)} ${fee.asset.symbol}`,
 	};
