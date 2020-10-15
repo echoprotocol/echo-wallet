@@ -124,7 +124,6 @@ class Bitcoin extends React.Component {
 				{
 					accountName && address && amount ?
 						<QrCode
-							link={link}
 							qrData={qrData}
 						/> : null
 				}
