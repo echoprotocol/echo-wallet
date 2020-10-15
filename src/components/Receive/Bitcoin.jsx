@@ -48,6 +48,7 @@ class Bitcoin extends React.Component {
 
 		return link;
 	}
+
 	getQrData() {
 		const {
 			amount, btcAddress,
@@ -56,13 +57,13 @@ class Bitcoin extends React.Component {
 
 		return amount.value ? `bitcoin:${address}?amount=${amount.value}` : `bitcoin:${address}`;
 	}
+
 	renderPayment() {
 
 		const {
 			amount, accountName, btcAddress, intl,
 		} = this.props;
 
-		const link = this.getQrLink();
 		const qrData = this.getQrData();
 		const address = btcAddress.getIn(['deposit_address', 'address']);
 

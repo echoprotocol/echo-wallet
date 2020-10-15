@@ -81,7 +81,6 @@ class Ethereum extends React.Component {
 
 		const isNotAproved = !ethAddress.get('is_approved');
 		const isAddressNotExist = !ethAddress.get('eth_addr');
-		const link = this.getQrLink(address);
 		const qrData = this.getQrData(address);
 
 		return (
