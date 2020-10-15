@@ -40,7 +40,7 @@ class AmountFieldWithAssets extends React.Component {
 		this.props.clearForm(FORM_TRANSFER);
 	}
 
-	onSearch(e, data) {
+	onSearch(_e, data) {
 		const searchText = data.searchQuery;
 		this.setState({
 			searchText,
@@ -73,23 +73,17 @@ class AmountFieldWithAssets extends React.Component {
 		this.props.amountInput(value, currency, name);
 	}
 
-	onChangeCurrency(e, currency) {
-		const { form } = this.props;
+	onChangeCurrency(_e, currency) {
 		this.props.setFormError('amount', null);
 		this.props.setFormError('tokens', null);
 		const { value, text, precision } = this.state.options.find((el) => el.value === currency);
-		const balance = this.getBalance(e, currency);
+		const balance = this.getBalance(currency);
 
-		if (form === FORM_TRANSFER) {
-			const type = text === 'ECHO' ? undefined : 'tokens';
-			this.props.setValue('currency', {
-				id: value, symbol: text, balance, precision, type,
-			});
-		} else {
-			this.props.setValue('currency', {
-				id: value, symbol: text, balance, precision, type: 'assets',
-			});
-		}
+		const type = text === 'ECHO' ? undefined : 'tokens';
+		this.props.setValue('currency', {
+			id: value, symbol: text, balance, precision, type,
+		});
+
 		this.clearSearchText();
 	}
 
@@ -102,14 +96,9 @@ class AmountFieldWithAssets extends React.Component {
 		}
 	}
 
-	getBalance(e, value) {
-		const { tokens, assets, form } = this.props;
-		let target = null;
-
-		if (form === FORM_TRANSFER) {
-			target = tokens.find((el) => el.id === value);
-		}
-		target = assets.find((el) => el.id === value);
+	getBalance(value) {
+		const { tokens, assets } = this.props;
+		const target = [...tokens, ...assets].find((el) => el.id === value);
 
 		if (!target) {
 			return '0';
