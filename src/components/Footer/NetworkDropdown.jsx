@@ -218,6 +218,9 @@ class Network extends React.PureComponent {
 				}}
 				onMouseUp={() => {
 					setTimeout(() => {
+						if (!this.dropDownTrigger.current) {
+							return;
+						}
 						this.setState({ focusable: true });
 						this.dropDownTrigger.current.focus();
 					}, 0);
