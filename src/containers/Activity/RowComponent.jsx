@@ -18,7 +18,7 @@ class RowComponent extends React.Component {
 
 	format(value) {
 		if (value.assets instanceof Array) {
-			return value.assets.map((v) => (v.amount && v.precision ?
+			return value.assets.map((v) => (v.amount !== undefined && v.precision ?
 				formatAmount(v.amount, v.precision, v.symbol) : v.amount)).join(', ');
 		}
 		return value.amount && value.precision ?
