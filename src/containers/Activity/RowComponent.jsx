@@ -17,8 +17,13 @@ class RowComponent extends React.Component {
 	}
 
 	format(value) {
+		if (value.assets) {
+			console.log('RowComponent');
+			console.log('value.assets', value.assets);
+			console.log('instanceof value.assets', value.assets instanceof Array);
+		}
 		if (value.assets instanceof Array) {
-			return value.assets.map((v) => (v.amount && v.precision ?
+			return value.assets.map((v) => (v.amount !== undefined && v.precision ?
 				formatAmount(v.amount, v.precision, v.symbol) : v.amount)).join(', ');
 		}
 		return value.amount && value.precision ?
