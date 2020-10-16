@@ -171,6 +171,6 @@ export default injectIntl(connect(
 		addToBlackList: (accId) =>
 			dispatch(contractChangeWhiteAndBlackLists(accId, MODAL_TO_BLACKLIST, FORM_BLACKLIST, 'account')),
 		setIn: (field, param) => dispatch(setIn(FORM_BLACKLIST, field, param)),
-		checkAccount: (value, subject) => dispatch(checkAccount(FORM_BLACKLIST, value, subject)),
+		checkAccount: (value, subject) => dispatch(checkAccount(FORM_BLACKLIST, value, subject, true)),
 	}),
 )(ModalToBlacklist));

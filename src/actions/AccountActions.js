@@ -48,10 +48,10 @@ export const lookupAccountsList = async (name, limit = 15) => {
  * @param {String} accountName
  * @returns {function(dispatch, getState): Promise<Boolean>}
  */
-export const checkAccount = (form, account, subject) => async (dispatch) => {
+export const checkAccount = (form, account, subject, byId) => async (dispatch) => {
 	try {
 		if (!account) return false;
-		const accountError = await validateAccountExist(account, true);
+		const accountError = await validateAccountExist(account, true, 50, byId);
 
 		if (accountError) {
 			dispatch(setFormError(form, subject, accountError));
