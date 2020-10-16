@@ -94,7 +94,6 @@ class Wallet extends React.Component {
 				render: () => (
 					<div className="send-wrap">
 						<Receive
-							fees={fees}
 							tokens={tokens}
 							assets={assets}
 							amount={amount}
@@ -107,9 +106,6 @@ class Wallet extends React.Component {
 							setFormError={this.props.setFormError}
 							setDefaultAsset={this.props.setDefaultAsset}
 							setValue={this.props.setValue}
-							setFormValue={this.props.setFormValue}
-							getTransferFee={this.props.getTransferFee}
-							setContractFees={this.props.setContractFees}
 							updateAccountAddresses={this.props.updateAccountAddresses}
 							setGlobalValue={this.props.setGlobalValue}
 							getBtcAddress={this.props.getBtcAddress}

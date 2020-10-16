@@ -7,11 +7,10 @@ import BN from 'bignumber.js';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
-import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
 
 import Avatar from '../Avatar';
-import AmountField from '../Fields/AmountField';
+import AmountFieldWithAssets from '../Fields/AmountFieldWithAssets';
 import QrCode from '../QrCode';
 import ModalCreateEchoAddress from '../Modals/ModalCreateEchoAddress';
 import DropdownActionBtn from '../DropdownActionBtn';
@@ -313,7 +312,7 @@ class EchoNetwork extends React.Component {
 	render() {
 
 		const {
-			currency, fee, assets, tokens, amount, isAvailableBalance, fees, intl,
+			currency, fee, assets, tokens, amount, isAvailableBalance, intl, clearForm,
 		} = this.props;
 
 
@@ -353,10 +352,7 @@ class EchoNetwork extends React.Component {
 							open={open}
 						/>
 					</div>
-
-					<AmountField
-						fees={fees}
-						form={FORM_TRANSFER}
+					<AmountFieldWithAssets
 						fee={fee}
 						assets={assets}
 						tokens={tokens}
@@ -365,14 +361,11 @@ class EchoNetwork extends React.Component {
 						isAvailableBalance={isAvailableBalance}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
 						setValue={this.props.setValue}
 						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
 						assetDropdown
-						receive
 						intl={intl}
+						clearForm={clearForm}
 					/>
 					{
 						receiverValue ? <QrCode link={link} qrData={link} /> : null
@@ -385,7 +378,6 @@ class EchoNetwork extends React.Component {
 }
 
 EchoNetwork.propTypes = {
-	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
@@ -395,16 +387,14 @@ EchoNetwork.propTypes = {
 	accountName: PropTypes.string.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	openModal: PropTypes.func.isRequired,
 	updateAccountAddresses: PropTypes.func.isRequired,
 	intl: PropTypes.any.isRequired,
 	accountNames: PropTypes.array.isRequired,
+	clearForm: PropTypes.func.isRequired,
 };
 
 EchoNetwork.defaultProps = {
