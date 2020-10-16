@@ -7,7 +7,6 @@ import BN from 'bignumber.js';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { BRIDGE_RECEIVE_URL } from '../../constants/GlobalConstants';
-import { FORM_TRANSFER } from '../../constants/FormConstants';
 import { MODAL_GENERATE_ECHO_ADDRESS } from '../../constants/ModalConstants';
 
 import Avatar from '../Avatar';
@@ -354,7 +353,6 @@ class EchoNetwork extends React.Component {
 						/>
 					</div>
 					<AmountFieldWithAssets
-						form={FORM_TRANSFER}
 						fee={fee}
 						assets={assets}
 						tokens={tokens}

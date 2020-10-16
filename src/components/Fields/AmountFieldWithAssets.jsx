@@ -301,7 +301,6 @@ class AmountFieldWithAssets extends React.Component {
 }
 
 AmountFieldWithAssets.propTypes = {
-	form: PropTypes.string.isRequired,
 	fee: PropTypes.object,
 	assets: PropTypes.object,
 	tokens: PropTypes.object,
