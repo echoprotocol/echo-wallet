@@ -11,7 +11,6 @@ import Ethereum from './Ethereum';
 import { FORM_ETH_RECEIVE } from '../../constants/FormConstants';
 import { STABLE_COINS } from '../../constants/SidechainConstants';
 
-
 class Receive extends React.Component {
 
 	componentDidMount() {
@@ -34,7 +33,7 @@ class Receive extends React.Component {
 		const {
 			currency, checkAccount, generateEthAddress, fullCurrentAccount,
 			getEthAddress, ethAddress, clearForm, keyWeightWarn, accounts,
-			fee, assets, tokens, amount, isAvailableBalance, fees, accountAddresses, accountName,
+			fee, assets, tokens, amount, isAvailableBalance, accountAddresses, accountName,
 			btcAddress, accountId, ethSidechain,
 		} = this.props;
 
@@ -54,7 +53,6 @@ class Receive extends React.Component {
 				/>,
 				render: () => (
 					<EchoNetwork
-						fees={fees}
 						fee={fee}
 						assets={assets}
 						tokens={tokens}
@@ -66,13 +64,11 @@ class Receive extends React.Component {
 						accountName={accountName}
 						amountInput={this.props.amountInput}
 						setFormError={this.props.setFormError}
-						setFormValue={this.props.setFormValue}
 						setValue={this.props.setValue}
 						setDefaultAsset={this.props.setDefaultAsset}
-						getTransferFee={this.props.getTransferFee}
-						setContractFees={this.props.setContractFees}
 						openModal={(value) => this.props.openModal(value)}
 						updateAccountAddresses={this.props.updateAccountAddresses}
+						clearForm={clearForm}
 					/>),
 			},
 			{
@@ -152,7 +148,6 @@ class Receive extends React.Component {
 }
 
 Receive.propTypes = {
-	fees: PropTypes.array.isRequired,
 	currency: PropTypes.object,
 	assets: PropTypes.object.isRequired,
 	tokens: PropTypes.any.isRequired,
@@ -161,12 +156,9 @@ Receive.propTypes = {
 	accountAddresses: PropTypes.object.isRequired,
 	isAvailableBalance: PropTypes.bool.isRequired,
 	setValue: PropTypes.func.isRequired,
-	setFormValue: PropTypes.func.isRequired,
 	amountInput: PropTypes.func.isRequired,
 	setFormError: PropTypes.func.isRequired,
 	setDefaultAsset: PropTypes.func.isRequired,
-	getTransferFee: PropTypes.func.isRequired,
-	setContractFees: PropTypes.func.isRequired,
 	setIn: PropTypes.func.isRequired,
 	checkAccount: PropTypes.func.isRequired,
 	accountName: PropTypes.string.isRequired,

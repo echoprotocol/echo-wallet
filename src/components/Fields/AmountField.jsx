@@ -257,20 +257,20 @@ class AmountField extends React.Component {
 					{intl.formatMessage && intl.formatMessage({ id: 'amount_input.title' })}
 					<ul className="list-amount">
 						{fee && fee.value && amount.value &&
-							<li>
-								{fee && fee.value && 'Fee:'}
-								<FeeField
-									currency={currency}
-									fees={fees}
-									form={form}
-									type={type}
-									fee={fee}
-									assets={assets.toJS()}
-									setValue={this.props.setValue}
-									setFormValue={this.props.setFormValue}
-									getTransferFee={this.props.getTransferFee}
-								/>
-							</li>
+						<li>
+							{fee && fee.value && 'Fee:'}
+							<FeeField
+								currency={currency}
+								fees={fees}
+								form={form}
+								type={type}
+								fee={fee}
+								assets={assets.toJS()}
+								setValue={this.props.setValue}
+								setFormValue={this.props.setFormValue}
+								getTransferFee={this.props.getTransferFee}
+							/>
+						</li>
 						}
 						{
 							showAvailable && (
