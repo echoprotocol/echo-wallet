@@ -26,10 +26,10 @@ export const getKeyFromWif = (wif) => {
  * @param {Number} limit
  * @returns {(null | String)}
  */
-export const validateAccountExist = (account, shouldExist, limit = 50) => (
+export const validateAccountExist = (account, shouldExist, limit = 50, byId) => (
 	Services.getEcho().api.lookupAccounts(account, limit)
 		.then((result) => {
-			if (!result.find((i) => i[0] === account || i[1] === account) && shouldExist) {
+			if (!result.find((i) => i[0] === account || (byId && i[1] === account)) && shouldExist) {
 				return 'errors.account_errors.account_not_found_error';
 			}
 
