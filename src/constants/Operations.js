@@ -537,7 +537,7 @@ export default {
 		},
 	},
 	sidechain_erc20_send_deposit: {
-		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_DEPOSIT,
+		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_DEPOSIT_TOKEN,
 		name: 'Sidechain erc20 send deposit',
 		options: {
 			from: 'committee_member_id',
@@ -549,14 +549,14 @@ export default {
 		value: OPERATIONS_IDS.SIDECHAIN_ERC20_WITHDRAW_TOKEN,
 		name: 'Withdraw ERC20 token',
 		options: {
-			from: 'committee_member_id',
+			from: null,
 			subject: ['to'],
 			amount: 'value',
 			asset: null,
 		},
 	},
 	sidechain_erc20_send_withdraw: {
-		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_WITHDRAW,
+		value: OPERATIONS_IDS.SIDECHAIN_ERC20_SEND_WITHDRAW_TOKEN,
 		name: 'Sidechain erc20 send withdraw',
 		options: {
 			from: 'committee_member_id',
@@ -691,7 +691,7 @@ export default {
 		value: OPERATIONS_IDS.EVM_ADDRESS_REGISTER,
 		name: 'EVM address register',
 		options: {
-			from: 'owner',
+			from: 'receiver',
 			subject: ['evm_address'],
 			value: null,
 			asset: null,
