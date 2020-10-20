@@ -67,7 +67,7 @@ class AmountField extends React.Component {
 		this.setState({
 			timeout: setTimeout(() => {
 				if ([FORM_FREEZE, FORM_TRANSFER].includes(form) && currency
-					&& currency.id.startsWith(PREFIX_ASSET)) {
+					&& currency.id.startsWith(PREFIX_ASSET) && !new BN(value).isEqualTo(new BN(0))) {
 					this.props.getTransferFee()
 						.then((fee) => fee && this.onFee(fee));
 				}
