@@ -295,7 +295,7 @@ export const setTransferFee = (assetId) => async (dispatch, getState) => {
 	const currency = form.get('currency');
 
 	let amountValue = 0;
-	if (amount) {
+	if (+amount) {
 		const amountError = validateAmount(amount, currency);
 		if (!amountError) {
 			amountValue = new BN(amount).times(new BN(10).pow(currency.precision))

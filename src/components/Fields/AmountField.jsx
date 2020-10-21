@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Dropdown, Popup } from 'semantic-ui-react';
+import _ from 'lodash';
 import BN from 'bignumber.js';
 import classnames from 'classnames';
 import { List } from 'immutable';
@@ -33,6 +34,13 @@ class AmountField extends React.Component {
 			this.props.getTransferFee()
 				.then((fee) => fee && this.onFee(fee));
 		}
+	}
+
+	shouldComponentUpdate(nextProps) {
+		let isNeedUpdate = false;
+		if (!_.isEqual(nextProps.amount, this.props.amount)) isNeedUpdate = true;
+		if (!_.isEqual(nextProps.fee, this.props.fee)) isNeedUpdate = true;
+		return isNeedUpdate;
 	}
 
 	componentDidUpdate(prevProps) {
