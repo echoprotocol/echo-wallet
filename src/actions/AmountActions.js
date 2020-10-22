@@ -36,7 +36,6 @@ export const amountInput = (form, value, currency, name) => (dispatch) => {
 		value = value ? new BN(value).toString(10) : value;
 	}
 
-	dispatch(setFormError(form, 'fee', null));
 	dispatch(setFormValue(form, name, value));
 };
 
