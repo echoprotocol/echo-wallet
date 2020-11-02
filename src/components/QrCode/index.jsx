@@ -26,21 +26,23 @@ class QrCode extends React.PureComponent {
 					/>
 				</div>
 				<div className="qr-info-wrap">
-					<div className="qr-link">
-						<a
-							href={link}
-							target="_blank"
-							rel="noreferrer noopener"
-							onClick={(e) => this.goToExternalLink(e, link)}
-						>
-							{link}
-						</a>
-						<ActionBtn
-							copy={link}
-							icon="icon-icopy-tiny"
-							labelText={intl.formatMessage({ id: 'copied_text' })}
-						/>
-					</div>
+					{link &&
+						<div className="qr-link">
+							<a
+								href={link}
+								target="_blank"
+								rel="noreferrer noopener"
+								onClick={(e) => this.goToExternalLink(e, link)}
+							>
+								{link}
+							</a>
+							<ActionBtn
+								copy={link}
+								icon="icon-icopy-tiny"
+								labelText={intl.formatMessage({ id: 'copied_text' })}
+							/>
+						</div>
+					}
 					<div className="qr-description">
 						<FormattedMessage id="wallet_page.receive_payment.qr_description" />
 					</div>
