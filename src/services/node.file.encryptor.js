@@ -40,30 +40,36 @@ class NodeFileEncryptor {
 	 */
 	static getSerializedKeysHex(echornadKeys, sidechainKeys) {
 
-		const sidechainAccountKey = serializers.collections.struct({
-			account: serializers.chain.ids.protocol.accountId,
-			key: serializers.basic.bytes(32),
+		const sidechainKeyStructure = serializers.collections.struct({
+			btc_key: serializers.basic.bytes(32),
+			eth_key: serializers.basic.bytes(32),
 		});
 
-		const echorandAccountKey = serializers.collections.struct({
-			account: serializers.chain.ids.protocol.accountId,
-			key: serializers.basic.bytes(32),
+		const echorandKeyStructure = serializers.collections.struct({
+			pub: serializers.basic.string,
+			priv: serializers.basic.bytes(32),
 		});
 
 		const echoKeyConfig = serializers.collections.struct({
-			echorand_accounts_keys: serializers.collections.vector(echorandAccountKey),
-			sidechain_accounts_keys: serializers.collections.vector(sidechainAccountKey),
+			echorand_keys: serializers.collections.map(
+				serializers.chain.ids.protocol.accountId,
+				echorandKeyStructure,
+			),
+			sidechain_keys: serializers.collections.map(
+				serializers.chain.ids.protocol.accountId,
+				sidechainKeyStructure,
+			),
 		});
 
 		const hex = echoKeyConfig.serialize({
-			echorand_accounts_keys: echornadKeys.map(({ key, id }) => {
+			echorand_keys: echornadKeys.map(({ key, id }) => {
 				const pKey = PrivateKey.fromWif(key);
-				return {
-					account: id,
-					key: pKey.toHex(),
-				};
+				return [id, {
+					pub: key,
+					priv: pKey.toHex(),
+				}];
 			}),
-			sidechain_accounts_keys: sidechainKeys,
+			sidechain_keys: sidechainKeys,
 		}).toString('hex');
 
 		return hex;
