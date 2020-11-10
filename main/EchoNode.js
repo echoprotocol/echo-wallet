@@ -43,7 +43,7 @@ class EchoNode {
 
 			if (bytes !== fileHex) {
 				try {
-					await fs.writeFile(keyConfigPath, Buffer.from(fileHex, 'hex'), () => {});
+					fs.writeFileSync(keyConfigPath, Buffer.from(fileHex, 'hex'));
 				} catch (e) { /* eslint-disable-next-line no-empty */ }
 			}
 		}

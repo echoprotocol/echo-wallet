@@ -11,6 +11,7 @@ import getPort from 'get-port';
 import { xor } from 'lodash';
 import notifier from 'node-notifier';
 import rimraf from 'rimraf';
+import AppRootDir from 'app-root-dir';
 import { PrivateKey } from 'echojs-lib';
 import { Subject, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -212,8 +213,8 @@ function createWindow() {
 
 			mainWindow.webContents.send('startEchoNode', { networkId: data.networkId });
 
-			const exePath = app.getPath('exe') || process.env.PORTABLE_EXECUTABLE_DIR;
-			const binDirectory = path.join(exePath, '..', '/resources/bin');
+			const exePath = AppRootDir.get();
+			const binDirectory = path.join(exePath, '..', '..', '/bin');
 			if (data.networkId === 'devnet') {
 				return;
 			}

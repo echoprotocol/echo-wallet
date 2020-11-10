@@ -159,7 +159,6 @@ export const startLocalNode = (pass) => (async (dispatch) => {
 		current = JSON.parse(current);
 	}
 	await Services.getUserStorage().setNetworkId(current.name);
-	Services.getEcho().setOptions(accountsKeys, networkId, chainToken);
 	await Services.getEcho().changeConnection(current.name);
 
 	localStorage.setItem('is_node_syncing', true);
