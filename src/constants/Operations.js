@@ -666,6 +666,36 @@ export default {
 			asset: null,
 		},
 	},
+	sidechain_stake_eth_update: {
+		value: OPERATIONS_IDS.SIDECHAIN_STAKE_ETH_UPDATE,
+		name: 'ETH stake update',
+		options: {
+			from: 'committee_member_id',
+			subject: ['transaction_hash'],
+			amount: null,
+			asset: 'asset_id',
+		},
+	},
+	sidechain_stake_btc_create_script: {
+		value: OPERATIONS_IDS.SIDECHAIN_BTC_CREATE_STAKE_SCRIPT,
+		name: 'BTC stake create script',
+		options: {
+			from: 'account',
+			subject: null,
+			amount: null,
+			asset: null,
+		},
+	},
+	sidechain_stake_btc_update: {
+		value: OPERATIONS_IDS.SIDECHAIN_STAKE_BTC_UPDATE,
+		name: 'BTC stake update',
+		options: {
+			from: 'committee_member_id',
+			subject: null,
+			amount: null,
+			asset: null,
+		},
+	},
 	block_reward: {
 		value: OPERATIONS_IDS.BLOCK_REWARD,
 		name: 'Block reward',
