@@ -23,12 +23,12 @@ class Ethereum extends React.Component {
 		return (
 			<React.Fragment>
 				<p className="payment-description">
-					<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.info" />
+					<FormattedMessage id="wallet_page.stake.eth.complete_address_page.info" />
 				</p>
 				<div className="field-wrap">
 					<div className="field">
 						<label htmlFor="public-key">
-							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
+							<FormattedMessage id="wallet_page.stake.eth.complete_address_page.contract_title" />
 						</label>
 						<div className="action input">
 							<input
@@ -45,11 +45,9 @@ class Ethereum extends React.Component {
 							/>
 						</div>
 					</div>
-				</div>
-				<div className="field-wrap">
 					<div className="field">
 						<label htmlFor="public-key">
-							<FormattedMessage id="wallet_page.receive_payment.eth.complete_address_page.input_title" />
+							<FormattedMessage id="wallet_page.stake.eth.complete_address_page.data_title" />
 						</label>
 						<div className="action input">
 							<input
