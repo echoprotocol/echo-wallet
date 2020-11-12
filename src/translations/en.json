@@ -954,6 +954,9 @@
         "sidechain_btc_withdraw": "BTC withdraw",
         "sidechain_btc_aggregate": "Aggregate BTC",
         "sidechain_btc_approve_aggregate": "Approve aggregate BTC",
+        "sidechain_stake_eth_update": "ETH stake update",
+        "sidechain_stake_btc_create_script": "BTC stake create script",
+        "sidechain_stake_btc_update": "BTC stake update",
         "block_reward": "Block reward"
     },
     "errors": {
