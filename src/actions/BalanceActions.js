@@ -137,29 +137,23 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch, ge
 			dispatch(diffBalanceChecker('assets', balances));
 		}
 	}
-	const sidechainAssetSymbols = Object.values(SIDECHAIN_ASSETS_SYMBOLS);
-	const sidechainAssets = [];
-	const echoAssets = balances.filter((b) => {
-		let isSidechainAsset = false;
-		if (sidechainAssetSymbols.some((a) => b.symbol === a.toUpperCase())) {
-			b.notEmpty = true;
-			sidechainAssets.push(b);
-			isSidechainAsset = true;
-		}
-		return !isSidechainAsset;
-	});
-	if (sidechainAssets.length !== sidechainAssetSymbols.length) {
-		for (let i = 0; i < sidechainAssetSymbols.length; i += 1) {
-			if (!sidechainAssets.find((sa) => sa.symbol === sidechainAssetSymbols[i].toUpperCase())) {
-				sidechainAssets.push({
-					balance: 0,
-					precision: 8,
-					symbol: sidechainAssetSymbols[i].toUpperCase(),
-					notEmpty: false,
-				});
-			}
+	const sidechainAssetConstants = Object.values(SIDECHAIN_ASSETS_SYMBOLS);
+	const sidechainAssets = sidechainAssetConstants
+		.map((b) => ({ ...b, balance: 0, notEmpty: false }));
+	const echoAssets = balances
+		.filter((b) => !sidechainAssetConstants.find((a) => b.symbol === a.symbol));
+
+	for (let i = 0; i < balances.length; i += 1) {
+		const sidechainAssetIndex = sidechainAssets.findIndex((sa) => sa.symbol === balances[i].symbol);
+		if (sidechainAssetIndex !== -1) {
+			sidechainAssets[sidechainAssetIndex] = {
+				...sidechainAssets[sidechainAssetIndex],
+				...balances[i],
+				notEmpty: true,
+			};
 		}
 	}
+
 	sidechainAssets.sort((a, b) => (a.symbol > b.symbol ? 1 : -1));
 	dispatch(BalanceReducer.actions.set({ field: 'echoAssets', value: new List(echoAssets) }));
 	dispatch(BalanceReducer.actions.set({ field: 'sidechainAssets', value: new List(sidechainAssets) }));

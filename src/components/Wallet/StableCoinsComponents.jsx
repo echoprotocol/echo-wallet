@@ -70,32 +70,40 @@ class StableCoins extends React.Component {
 									{formatAmount(asset.balance, asset.precision)}
 								</span>
 								<div className="balance-tags">
-									<a
-										href=""
-										onClick={(e) => this.onStableClick(e, 1, asset.symbol)}
-										className={classnames('tag', {
-											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
-										})}
-										content={
-											<FormattedMessage id="wallet_page.balances.stable_coins.deposit" />
-										}
-									>Deposit
-									</a>
-									<a
-										href=""
-										onClick={(e) => {
-											this.onStableClick(e, 0, asset.symbol);
-											this.props.setAsset(asset);
-										}}
-										className={classnames('tag', {
-											active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
-										})}
-										content={
-											<FormattedMessage id="wallet_page.balances.stable_coins.withdrawal" />
-										}
-										disabled={!asset.notEmpty}
-									>Withdrawal
-									</a>
+									{
+										asset.deposit && (
+											<a
+												href=""
+												onClick={(e) => this.onStableClick(e, 1, asset.symbol)}
+												className={classnames('tag', {
+													active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
+												})}
+												content={
+													<FormattedMessage id="wallet_page.balances.stable_coins.deposit" />
+												}
+											>Deposit
+											</a>
+										)
+									}
+									{
+										asset.withdraw && (
+											<a
+												href=""
+												onClick={(e) => {
+													this.onStableClick(e, 0, asset.symbol);
+													this.props.setAsset(asset);
+												}}
+												className={classnames('tag', {
+													active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
+												})}
+												content={
+													<FormattedMessage id="wallet_page.balances.stable_coins.withdrawal" />
+												}
+												disabled={!asset.notEmpty}
+											>Withdrawal
+											</a>
+										)
+									}
 								</div>
 							</div>
 						</button>
