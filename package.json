@@ -13,6 +13,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=local node --trace-warnings -r @babel/register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack-configs/webpack.config.web.babel.js --mode development --progress --colors --history-api-fallback --hot --inline",
     "prebuild": "rm -rf build/",
+    "preinstall": "npx npm-force-resolutions",
     "build-web": "cross-env NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js ---display-error-details --colors --mode production",
     "build": "cross-env ELECTRON=TRUE NODE_ENV=production webpack --config webpack-configs/webpack.config.web.babel.js --env.prod --env.electron --env.hash",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack-configs/webpack.config.main.babel.js --colors",
@@ -53,7 +54,7 @@
     "history": "^4.7.2",
     "idb": "^4.0.4",
     "immutable": "^3.8.2",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "js-sha3": "^0.7.0",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.7.0",
@@ -120,15 +121,15 @@
     "app-root-dir": "^1.0.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^26.6.3",
     "babel-loader": "^8.0.4",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.21",
     "babel-preset-env": "^1.7.0",
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
-    "concurrently": "^4.1.0",
-    "copy-webpack-plugin": "^4.5.2",
+    "concurrently": "^5.3.0",
+    "copy-webpack-plugin": "^6.3.0",
     "copyfiles": "^2.1.0",
     "cross-env": "^5.1.4",
     "cross-spawn": "^6.0.5",
@@ -158,6 +159,9 @@
     "webpack-dev-middleware": "^3.4.0",
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.5"
+  },
+  "resolutions": {
+    "serialize-javascript": "3.1.0"
   },
   "repository": {
     "type": "git",
