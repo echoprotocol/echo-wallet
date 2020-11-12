@@ -191,8 +191,30 @@ export const REGISTRATION = {
 
 export const CUSTOM_NODE_BLOCKS_MAX_DIFF = 2;
 export const SIDECHAIN_ASSETS_SYMBOLS = {
-	1: 'eBTC',
-	2: 'eETH',
+	1: {
+		symbol: 'EBTC',
+		precision: 8,
+		deposit: true,
+		withdraw: true,
+	},
+	2: {
+		symbol: 'EETH',
+		precision: 8,
+		deposit: true,
+		withdraw: true,
+	},
+	3: {
+		symbol: 'SETH',
+		precision: 8,
+		deposit: true,
+		withdraw: false,
+	},
+	4: {
+		symbol: 'SBTC',
+		precision: 8,
+		deposit: true,
+		withdraw: false,
+	},
 };
 
 export const EN_LOCALE = 'en';

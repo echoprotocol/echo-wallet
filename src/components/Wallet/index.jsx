@@ -128,6 +128,55 @@ class Wallet extends React.Component {
 						/>
 					</div>),
 			},
+			{
+				menuItem: <Button
+					className="tab-btn"
+					key="2"
+					onClick={(e) => {
+						this.props.setGlobalValue('activePaymentTypeTab', 2);
+						e.target.blur();
+					}}
+					content={
+						<FormattedMessage id="wallet_page.receive_payment.title" />
+					}
+				/>,
+				render: () => (
+					<div className="send-wrap">
+						<Receive
+							tokens={tokens}
+							assets={assets}
+							amount={amount}
+							fee={fee}
+							currency={currency}
+							activeCoinTypeTab={activeCoinTypeTab}
+							isAvailableBalance={isAvailableBalance}
+							accountAddresses={accountAddresses}
+							amountInput={this.props.amountInput}
+							setFormError={this.props.setFormError}
+							setDefaultAsset={this.props.setDefaultAsset}
+							setValue={this.props.setValue}
+							updateAccountAddresses={this.props.updateAccountAddresses}
+							setGlobalValue={this.props.setGlobalValue}
+							getBtcAddress={this.props.getBtcAddress}
+							btcAddress={btcAddress}
+							accountName={accountName}
+							accountId={accountId}
+							setIn={this.props.setIn}
+							checkAccount={this.props.checkAccount}
+							from={from}
+							clearForm={this.props.clearForm}
+							openModal={(value) => this.props.openModal(value)}
+							getAssetsBalances={this.props.getAssetsBalances}
+							generateEthAddress={generateEthAddress}
+							getEthAddress={getEthAddress}
+							ethAddress={ethAddress}
+							fullCurrentAccount={fullCurrentAccount}
+							keyWeightWarn={keyWeightWarn}
+							ethSidechain={ethSidechain}
+							accounts={preview}
+						/>
+					</div>),
+			},
 		];
 
 		return (
