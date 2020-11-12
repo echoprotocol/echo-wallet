@@ -685,6 +685,7 @@ export default {
 			amount: null,
 			asset: null,
 		},
+		signer: 'account',
 	},
 	sidechain_stake_btc_update: {
 		value: OPERATIONS_IDS.SIDECHAIN_STAKE_BTC_UPDATE,

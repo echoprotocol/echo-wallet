@@ -1,4 +1,5 @@
 import BN from 'bignumber.js';
+import RIPEMD160 from 'ripemd160';
 import { List } from 'immutable';
 
 import { CACHE_MAPS, validators, constants } from 'echojs-lib';
@@ -1840,6 +1841,44 @@ export const generateBtcAddress = (address) => async (dispatch, getState) => {
 			backup_address: address,
 			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
 		};
+		dispatch(TransactionReducer.actions.setOperation({
+			operation,
+			options,
+			showOptions,
+		}));
+
+		return true;
+	} catch (error) {
+		return null;
+	}
+};
+
+export const generateStakeBtcAddress = (address) => async (dispatch, getState) => {
+	try {
+		const pubkeyHash = new RIPEMD160().update(address).digest('hex');
+		const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+		const feeAsset = await Services.getEcho().api.getObject(ECHO_ASSET_ID);
+
+		const operation = 'sidechain_stake_btc_create_script';
+
+		const options = {
+			fee: {
+				asset_id: feeAsset.id,
+			},
+			account: activeUserId,
+			pubkey_hash: pubkeyHash,
+		};
+
+		options.fee.amount = await getOperationFee(operation, options);
+
+		const precision = new BN(10).pow(feeAsset.precision);
+
+		const showOptions = {
+			from: getState().global.getIn(['activeUser', 'name']),
+			fee: `${new BN(options.fee.amount).div(precision).toString(10)} ${feeAsset.symbol}`,
+		};
+
 		dispatch(TransactionReducer.actions.setOperation({
 			operation,
 			options,

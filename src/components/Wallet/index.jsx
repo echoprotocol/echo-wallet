@@ -9,6 +9,7 @@ import StableCoins from './StableCoinsComponents';
 
 import Transfer from '../Transfer';
 import Receive from '../Receive';
+import ReceiveStake from '../ReceiveStake';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
 
@@ -137,43 +138,23 @@ class Wallet extends React.Component {
 						e.target.blur();
 					}}
 					content={
-						<FormattedMessage id="wallet_page.receive_payment.title" />
+						<FormattedMessage id="wallet_page.stake.title" />
 					}
 				/>,
 				render: () => (
 					<div className="send-wrap">
-						<Receive
-							tokens={tokens}
-							assets={assets}
-							amount={amount}
-							fee={fee}
-							currency={currency}
+						<ReceiveStake
 							activeCoinTypeTab={activeCoinTypeTab}
-							isAvailableBalance={isAvailableBalance}
-							accountAddresses={accountAddresses}
-							amountInput={this.props.amountInput}
-							setFormError={this.props.setFormError}
-							setDefaultAsset={this.props.setDefaultAsset}
-							setValue={this.props.setValue}
-							updateAccountAddresses={this.props.updateAccountAddresses}
 							setGlobalValue={this.props.setGlobalValue}
-							getBtcAddress={this.props.getBtcAddress}
 							btcAddress={btcAddress}
 							accountName={accountName}
 							accountId={accountId}
 							setIn={this.props.setIn}
 							checkAccount={this.props.checkAccount}
-							from={from}
-							clearForm={this.props.clearForm}
-							openModal={(value) => this.props.openModal(value)}
-							getAssetsBalances={this.props.getAssetsBalances}
-							generateEthAddress={generateEthAddress}
-							getEthAddress={getEthAddress}
-							ethAddress={ethAddress}
-							fullCurrentAccount={fullCurrentAccount}
-							keyWeightWarn={keyWeightWarn}
-							ethSidechain={ethSidechain}
-							accounts={preview}
+							openModal={this.props.openModal}
+							getStakeBtcAddress={this.props.getStakeBtcAddress}
+							globalProperties={this.props.globalProperties}
+							stakeBtcAddress={this.props.btcAddress} // TODO
 						/>
 					</div>),
 			},
@@ -302,8 +283,10 @@ Wallet.propTypes = {
 	ethAddress: PropTypes.object.isRequired,
 	fullCurrentAccount: PropTypes.object.isRequired,
 	ethSidechain: PropTypes.object.isRequired,
+	globalProperties: PropTypes.object.isRequired,
 	keyWeightWarn: PropTypes.bool.isRequired,
 	preview: PropTypes.array.isRequired,
+	getStakeBtcAddress: PropTypes.func.isRequired,
 };
 
 Wallet.defaultProps = {
