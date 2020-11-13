@@ -45,7 +45,7 @@
     "classnames": "^2.2.6",
     "config": "^3.2.4",
     "crypto-random-string": "^3.0.1",
-    "echojs-lib": "^1.13.0",
+    "echojs-lib": "^1.13.1",
     "echojs-ping": "^0.1.5",
     "electron-context-menu": "^0.10.0",
     "electron-winstaller": "^2.7.0",
