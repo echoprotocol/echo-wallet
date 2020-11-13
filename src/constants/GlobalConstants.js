@@ -203,13 +203,15 @@ export const SIDECHAIN_ASSETS_SYMBOLS = {
 		deposit: true,
 		withdraw: true,
 	},
-	3: {
+};
+export const STAKE_ASSET_SYMBOLS = {
+	1: {
 		symbol: 'SETH',
 		precision: 8,
 		deposit: true,
 		withdraw: false,
 	},
-	4: {
+	2: {
 		symbol: 'SBTC',
 		precision: 8,
 		deposit: true,

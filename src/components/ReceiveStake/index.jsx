@@ -46,6 +46,7 @@ class ReceiveStake extends React.Component {
 				/>,
 				render: () => (
 					<Bitcoin
+						accountId={accountId}
 						checkAccount={this.props.checkAccount}
 						openModal={this.props.openModal}
 						getStakeBtcAddress={this.props.getStakeBtcAddress}
@@ -108,6 +109,7 @@ ReceiveStake.propTypes = {
 };
 
 ReceiveStake.defaultProps = {
+	globalProperties: null,
 	stakeBtcAddress: null,
 };
 

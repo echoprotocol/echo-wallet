@@ -1,3 +1,4 @@
+import { Map } from 'immutable';
 import Services from '../services';
 import { validateAccountExist } from '../api/WalletApi';
 import {
@@ -6,6 +7,7 @@ import {
 	setIn,
 } from './FormActions';
 import { formatError } from '../helpers/FormatHelper';
+import GlobalReducer from '../reducers/GlobalReducer';
 
 export const updateAccountAddresses = () => async (dispatch, getState) => {
 	const activeUserId = getState().global.getIn(['activeUser', 'id']);
@@ -39,6 +41,7 @@ export const getStakeBtcAddress = () => async (dispatch, getState) => {
 	}
 
 	const addr = await Services.getEcho().api.getBtcStakeAddress(activeUserId);
+	dispatch(GlobalReducer.actions.set({ field: 'btcStakeAddress', value: new Map(addr) }));
 
 	return true;
 };

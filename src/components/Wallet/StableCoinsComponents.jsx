@@ -49,7 +49,7 @@ class StableCoins extends React.Component {
 	}
 
 	renderList() {
-		const { activeCoinTypeTab, activePaymentTypeTab } = this.props;
+		const { activeCoinTypeTab, activePaymentTypeTab, paymentsTabNumbers } = this.props;
 		return (
 			this.props.assets.map((asset, i) => {
 				const id = i;
@@ -74,7 +74,9 @@ class StableCoins extends React.Component {
 										asset.deposit && (
 											<a
 												href=""
-												onClick={(e) => this.onStableClick(e, 1, asset.symbol)}
+												onClick={
+													(e) => this.onStableClick(e, paymentsTabNumbers.deposit, asset.symbol)
+												}
 												className={classnames('tag', {
 													active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
 												})}
@@ -90,7 +92,7 @@ class StableCoins extends React.Component {
 											<a
 												href=""
 												onClick={(e) => {
-													this.onStableClick(e, 0, asset.symbol);
+													this.onStableClick(e, paymentsTabNumbers.withdraw, asset.symbol);
 													this.props.setAsset(asset);
 												}}
 												className={classnames('tag', {
@@ -115,19 +117,29 @@ class StableCoins extends React.Component {
 	}
 
 	render() {
-		const { intl } = this.props;
-		const popupMsg = intl.formatMessage({ id: 'wallet_page.balances.stable_coins.popup_info' });
+		const { popupText, popupHref, title } = this.props;
 		return (
 			<React.Fragment>
 				<h3 className="currency-title">
-					<FormattedMessage id="wallet_page.balances.stable_coins.title" />
-					<Popup
-						trigger={<span className="inner-tooltip-trigger icon-info" />}
-						content={popupMsg}
-						className="inner-tooltip"
-						style={{ width: 373 }}
-						inverted
-					/>
+					{title}
+					{popupHref ?
+						<a href={popupHref} target="_blank" rel="noopener noreferrer">
+							<Popup
+								trigger={<span className="inner-tooltip-trigger icon-info" />}
+								content={popupText}
+								className="inner-tooltip"
+								style={{ width: 373 }}
+								inverted
+							/>
+						</a> :
+						<Popup
+							trigger={<span className="inner-tooltip-trigger icon-info" />}
+							content={popupText}
+							className="inner-tooltip"
+							style={{ width: 373 }}
+							inverted
+						/>
+					}
 				</h3>
 				<ul className="currency-list stable-coins">
 					{ this.renderList() }
@@ -140,11 +152,21 @@ class StableCoins extends React.Component {
 
 StableCoins.propTypes = {
 	setAsset: PropTypes.func.isRequired,
+	title: PropTypes.string,
+	popupText: PropTypes.string,
+	popupHref: PropTypes.string,
 	setGlobalValue: PropTypes.func.isRequired,
 	activePaymentTypeTab: PropTypes.number.isRequired,
 	activeCoinTypeTab: PropTypes.any.isRequired,
 	assets: PropTypes.object.isRequired,
-	intl: PropTypes.any.isRequired,
+	paymentsTabNumbers: PropTypes.object,
+};
+
+StableCoins.defaultProps = {
+	title: '',
+	popupText: '',
+	popupHref: null,
+	paymentsTabNumbers: { },
 };
 
 export default injectIntl(StableCoins);
