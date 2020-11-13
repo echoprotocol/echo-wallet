@@ -66,7 +66,7 @@ export const ECHO_ASSET_ID = '1.3.0';
 export const ECHO_ASSET_PRECISION = 8;
 export const CONTRACT_ID_PREFIX = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.CONTRACT}`;
 export const ECHO_PROXY_TO_SELF_ACCOUNT = '1.2.5';
-export const PREFIX_ASSET = '1.3.';
+export const PREFIX_ASSET = `1.${constants.PROTOCOL_OBJECT_TYPE_ID.ASSET}.`;
 export const ACCOUNT_ID_PREFIX = '1.2.';
 export const GLOBAL_ERROR_TIMEOUT = 10 * 1000;
 export const APPLY_CHANGES_TIMEOUT = 20 * 1000;
@@ -204,6 +204,7 @@ export const SIDECHAIN_ASSETS_SYMBOLS = {
 		withdraw: true,
 	},
 };
+export const STAKE_ASSET_IDS = [`${PREFIX_ASSET}3`, `${PREFIX_ASSET}4`];
 export const STAKE_ASSET_SYMBOLS = {
 	1: {
 		symbol: 'SETH',

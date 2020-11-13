@@ -195,6 +195,7 @@ class Wallet extends React.Component {
 							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 						<StableCoins
+							isAvailableToTransfer
 							assets={sidechainAssets}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');

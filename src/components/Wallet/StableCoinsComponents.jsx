@@ -33,7 +33,10 @@ class StableCoins extends React.Component {
 	}
 
 	onClickAsset(e, symbol) {
-		this.selectAsset(symbol);
+		const { isAvailableToTransfer } = this.props;
+		if (isAvailableToTransfer) {
+			this.selectAsset(symbol);
+		}
 	}
 
 	onPressAsset(e, symbol) {
@@ -49,7 +52,9 @@ class StableCoins extends React.Component {
 	}
 
 	renderList() {
-		const { activeCoinTypeTab, activePaymentTypeTab, paymentsTabNumbers } = this.props;
+		const {
+			activeCoinTypeTab, activePaymentTypeTab, paymentsTabNumbers,
+		} = this.props;
 		return (
 			this.props.assets.map((asset, i) => {
 				const id = i;
@@ -159,6 +164,7 @@ StableCoins.propTypes = {
 	activePaymentTypeTab: PropTypes.number.isRequired,
 	activeCoinTypeTab: PropTypes.any.isRequired,
 	assets: PropTypes.object.isRequired,
+	isAvailableToTransfer: PropTypes.bool,
 	paymentsTabNumbers: PropTypes.object,
 };
 
@@ -167,6 +173,7 @@ StableCoins.defaultProps = {
 	popupText: '',
 	popupHref: null,
 	paymentsTabNumbers: { },
+	isAvailableToTransfer: false,
 };
 
 export default injectIntl(StableCoins);
