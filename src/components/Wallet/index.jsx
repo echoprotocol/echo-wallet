@@ -12,11 +12,12 @@ import Receive from '../Receive';
 import ReceiveStake from '../ReceiveStake';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { SIDECHAIN_ASSETS_SYMBOLS } from '../../constants/GlobalConstants';
 
 class Wallet extends React.Component {
 
 	componentWillUnmount() {
-		this.props.setGlobalValue('activeCoinTypeTab', 0);
+		this.props.setGlobalValue('activeCoinTypeTab', 'ECHO');
 	}
 
 	render() {
@@ -31,6 +32,12 @@ class Wallet extends React.Component {
 		const isDisplaySidechainNotification = !!((fee.asset && !!sidechainAssets
 			.find((sa) => sa.symbol === fee.asset.symbol))
 			|| (currency && sidechainAssets.find((sa) => sa.symbol === currency.symbol))) || false;
+
+		let currencyAsset = Object.values(SIDECHAIN_ASSETS_SYMBOLS)
+			.find((s) => s.symbol === activeCoinTypeTab);
+		if (!currencyAsset) {
+			currencyAsset = currency;
+		}
 		const externalTabs = [
 			{
 				menuItem: <Button
@@ -57,7 +64,7 @@ class Wallet extends React.Component {
 							bytecode={bytecode}
 							amount={amount}
 							fee={fee}
-							currency={currency}
+							currency={currencyAsset}
 							isAvailableBalance={isAvailableBalance}
 							additionalAccountInfo={additionalAccountInfo}
 							subjectTransferType={subjectTransferType}

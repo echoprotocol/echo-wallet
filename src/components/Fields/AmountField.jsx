@@ -160,9 +160,9 @@ class AmountField extends React.Component {
 		if (currency) {
 			return (
 				currency.symbol === ADDRESS_PREFIX ?
-					formatAmount(currency.balance, currency.precision, currency.symbol) :
+					formatAmount(currency.balance || 0, currency.precision, currency.symbol) :
 					<React.Fragment>
-						{formatAmount(currency.balance, currency.precision)}
+						{formatAmount(currency.balance || 0, currency.precision)}
 						<Popup
 							trigger={<span className="inner-tooltip-trigger icon-coin" />}
 							content={currency.symbol}

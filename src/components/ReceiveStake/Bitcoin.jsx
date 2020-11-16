@@ -37,7 +37,7 @@ class Bitcoin extends React.Component {
 			stakeBtcAddress, intl,
 		} = this.props;
 
-		const address = stakeBtcAddress.getIn(['deposit_address', 'address']);
+		const address = stakeBtcAddress.get('address');
 
 		return (
 			<React.Fragment>
@@ -56,6 +56,7 @@ class Bitcoin extends React.Component {
 								readOnly
 								name="public-key"
 								value={address}
+								disabled
 							/>
 							<ActionBtn
 								icon="icon-copy"

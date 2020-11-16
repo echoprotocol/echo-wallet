@@ -17,6 +17,13 @@ class StableCoins extends React.Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		const { assets, activePaymentTypeTab } = this.props;
+		const { activePaymentTypeTab: prevActivePaymentTypeTab } = prevProps;
+		if (activePaymentTypeTab !== prevActivePaymentTypeTab) {
+			this.props.setGlobalValue('activeCoinTypeTab', assets.get(0).symbol);
+		}
+	}
 	onFocus(id) {
 		this.setState({ focusedId: id });
 	}
@@ -83,7 +90,8 @@ class StableCoins extends React.Component {
 													(e) => this.onStableClick(e, paymentsTabNumbers.deposit, asset.symbol)
 												}
 												className={classnames('tag', {
-													active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 1,
+													active: activeCoinTypeTab === asset.symbol
+														&& activePaymentTypeTab === paymentsTabNumbers.deposit,
 												})}
 												content={
 													<FormattedMessage id="wallet_page.balances.stable_coins.deposit" />
@@ -101,7 +109,8 @@ class StableCoins extends React.Component {
 													this.props.setAsset(asset);
 												}}
 												className={classnames('tag', {
-													active: activeCoinTypeTab === asset.symbol && activePaymentTypeTab === 0,
+													active: activeCoinTypeTab === asset.symbol
+														&& activePaymentTypeTab === paymentsTabNumbers.withdraw,
 												})}
 												content={
 													<FormattedMessage id="wallet_page.balances.stable_coins.withdrawal" />

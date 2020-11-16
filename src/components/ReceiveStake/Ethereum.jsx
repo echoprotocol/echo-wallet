@@ -14,11 +14,11 @@ class Ethereum extends React.Component {
 		} = this.props;
 
 		const parameters = globalProperties.getIn(['parameters']) || { stake_sidechain_config: {} };
-		const contractAddress = parameters.stake_sidechain_config.contract_address;
-		const topicMethod = parameters.stake_sidechain_config.balance_updated_topic;
+		const contractAddress = `0x${parameters.stake_sidechain_config.contract_address}`;
+		const topicMethod = parameters.stake_sidechain_config.balance_updated_topic.substring(0, 8);
 
 		const accountIdNumber = new BN(accountId.split('.')[2]).toString(16).padStart(64, '0');
-		const data = `${topicMethod}${accountIdNumber}`;
+		const data = `0x${topicMethod}${accountIdNumber}`;
 
 		return (
 			<React.Fragment>

@@ -754,6 +754,10 @@
                     "account": "account",
                     "fee": "fee"
                 },
+                "sidechain_stake_btc_create_script": {
+                    "from": "from",
+                    "fee": "fee"
+                },
                 "sidechain_eth_withdraw": {
                     "fee": "fee",
                     "account": "account",
