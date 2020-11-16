@@ -502,7 +502,7 @@ export default {
 		options: {
 			from: 'account',
 			subject: ['deposit_id'],
-			amount: 'value.amount',
+			value: 'value.amount',
 			asset: 'value.asset_id',
 		},
 	},
@@ -512,7 +512,7 @@ export default {
 		options: {
 			from: 'account',
 			subject: ['withdraw_id'],
-			amount: 'value.amount',
+			value: 'value.amount',
 			asset: 'value.asset_id',
 		},
 	},
@@ -671,8 +671,8 @@ export default {
 		name: 'ETH stake update',
 		options: {
 			from: 'committee_member_id',
-			subject: ['transaction_hash'],
-			amount: null,
+			subject: null,
+			value: 'current_balance',
 			asset: 'asset_id',
 		},
 	},
@@ -682,7 +682,7 @@ export default {
 		options: {
 			from: 'account',
 			subject: null,
-			amount: null,
+			value: null,
 			asset: null,
 		},
 		signer: 'account',
@@ -693,7 +693,7 @@ export default {
 		options: {
 			from: 'committee_member_id',
 			subject: null,
-			amount: null,
+			value: 'btc_tx_info.out.amount',
 			asset: null,
 		},
 	},
