@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { CACHE_MAPS } from 'echojs-lib';
 import { FormattedMessage } from 'react-intl';
 
 import { version } from '../../../package.json';
@@ -165,7 +164,7 @@ Footer.defaultProps = {
 export default withRouter(connect(
 	(state) => ({
 		latency: state.echojs.getIn(['meta', 'latency']),
-		lastBlock: state.echojs.getIn([CACHE_MAPS.DYNAMIC_GLOBAL_PROPERTIES, 'head_block_number']),
+		lastBlock: state.global.get('headBlockNumber'),
 		isConnect: state.global.get('isConnected'),
 		error: state.global.get('globalError'),
 		keyWeightWarn: state.global.get('keyWeightWarn'),
