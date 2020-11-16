@@ -36,6 +36,7 @@ const DEFAULT_FIELDS = Map({
 	isNodeSyncing: false,
 	isNodePaused: false,
 	platform: '',
+	headBlockNumber: '',
 });
 
 export default createModule({
