@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 import { FormattedMessage } from 'react-intl';
+import { Map } from 'immutable';
 
 import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
@@ -109,6 +110,7 @@ ReceiveStake.propTypes = {
 
 ReceiveStake.defaultProps = {
 	stakeBtcAddress: null,
+	globalProperties: new Map(),
 };
 
 export default ReceiveStake;
