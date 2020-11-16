@@ -18,6 +18,7 @@ class Wallet extends React.Component {
 
 	componentWillUnmount() {
 		this.props.setGlobalValue('activeCoinTypeTab', 'ECHO');
+		this.props.setGlobalValue('activePaymentTypeTab', 0);
 	}
 
 	render() {
@@ -29,6 +30,8 @@ class Wallet extends React.Component {
 			stakeAssets, intl, btcStakeAddress,
 		} = this.props;
 
+		console.log('activeCoinTypeTab', activeCoinTypeTab)
+		console.log('activePaymentTypeTab', activePaymentTypeTab)
 		const isDisplaySidechainNotification = !!((fee.asset && !!sidechainAssets
 			.find((sa) => sa.symbol === fee.asset.symbol))
 			|| (currency && sidechainAssets.find((sa) => sa.symbol === currency.symbol))) || false;
