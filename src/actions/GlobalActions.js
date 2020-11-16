@@ -244,6 +244,7 @@ export const initAfterConnection = (network) => async (dispatch) => {
 		const echoInstance = Services.getEcho().getEchoInstance();
 		if (echoInstance && echoInstance.isConnected && Services.getEcho().api) {
 			const dynamicGlobalProperties = await Services.getEcho().api.getDynamicGlobalProperties(true);
+			await Services.getEcho().api.getGlobalProperties(true);
 			await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 			dispatch(GlobalReducer.actions.set({ field: 'headBlockNumber', value: dynamicGlobalProperties.head_block_number }));
 		}
