@@ -31,6 +31,18 @@ export const getBtcAddress = () => async (dispatch, getState) => {
 	return true;
 };
 
+export const getStakeBtcAddress = () => async (dispatch, getState) => {
+	const activeUserId = getState().global.getIn(['activeUser', 'id']);
+
+	if (!activeUserId) {
+		return false;
+	}
+
+	// const addr = await Services.getEcho().api.getBtcStakeAddress(activeUserId);
+
+	return true;
+};
+
 /**
  *
  * @param name

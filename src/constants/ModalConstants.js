@@ -19,6 +19,7 @@ export const MODAL_ERC20_TO_WATCH_LIST = 'modal_erc20_to_watch_list';
 export const MODAL_CHANGE_PARENT_ACCOUNT = 'modal_change_parent_account';
 export const MODAL_GENERATE_ECHO_ADDRESS = 'modal_generate_echo_address';
 export const MODAL_GENERATE_BTC_ADDRESS = 'modal_generate_btc_address';
+export const MODAL_GENERATE_BTC_STAKE_ADDRESS = 'modal_generate_btc_stake_address';
 export const MODAL_TO_BLACKLIST = 'modal_to_blacklist';
 export const MODAL_BLACKLIST = 'modal_blacklist';
 export const MODAL_TO_WHITELIST = 'modal_to_whitelist';
