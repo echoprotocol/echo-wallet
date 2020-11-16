@@ -135,7 +135,7 @@ const config = {
 				devnet: {
 					remote: {
 						name: JSON.stringify('Remote node'),
-						url: JSON.stringify('ws://devnet.echo-dev.io/ws'),
+						url: JSON.stringify('wss://devnet.echo-dev.io/ws'),
 					},
 					local: {
 						name: JSON.stringify('Local node'),

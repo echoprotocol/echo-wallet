@@ -110,7 +110,7 @@ export const NETWORKS = [
 	},
 	{
 		name: 'devnet',
-		url: 'ws://devnet.echo-dev.io/ws',
+		url: 'wss://devnet.echo-dev.io/ws',
 	},
 ];
 
