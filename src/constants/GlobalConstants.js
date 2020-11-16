@@ -139,6 +139,12 @@ export const SIDE_CHAIN_HASHES = {
 	'recipientAddress(uint64)': 'e819f257',
 };
 
+export const SIDE_CHAIN_STACK_HASHES = {
+	'stake(uint256)': 'a694fc3a',
+	'unstake(uint256,uint256)': '9e2c8a5b',
+	'withdraw()': '3ccfd60b',
+};
+
 export const FREEZE_BALANCE_PARAMS = [
 	{
 		duration: 90,

@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import BN from 'bignumber.js';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import ActionBtn from '../ActionBtn';
+import { SIDE_CHAIN_STACK_HASHES } from '../../constants/GlobalConstants';
+import { add0x } from '../../helpers/ContractHelper';
 
+import ActionBtn from '../ActionBtn';
 
 class Ethereum extends React.Component {
 
@@ -14,11 +16,11 @@ class Ethereum extends React.Component {
 		} = this.props;
 
 		const parameters = globalProperties.getIn(['parameters']) || { stake_sidechain_config: {} };
-		const contractAddress = `0x${parameters.stake_sidechain_config.contract_address}`;
-		const topicMethod = parameters.stake_sidechain_config.balance_updated_topic.substring(0, 8);
+		const contractAddress = add0x(`${parameters.stake_sidechain_config.contract_address}`);
+		const topicMethod = SIDE_CHAIN_STACK_HASHES['stake(uint256)'];
 
 		const accountIdNumber = new BN(accountId.split('.')[2]).toString(16).padStart(64, '0');
-		const data = `0x${topicMethod}${accountIdNumber}`;
+		const data = add0x(`${topicMethod}${accountIdNumber}`);
 
 		return (
 			<React.Fragment>
