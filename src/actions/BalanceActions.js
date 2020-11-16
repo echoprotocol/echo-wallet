@@ -25,7 +25,7 @@ import { checkErc20Contract } from '../helpers/ValidateHelper';
 import { MODAL_TOKENS, MODAL_ERC20_TO_WATCH_LIST } from '../constants/ModalConstants';
 import { FORM_TRANSFER, FORM_FREEZE } from '../constants/FormConstants';
 import { INDEX_PATH, FROZEN_FUNDS_PATH } from '../constants/RouterConstants';
-import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT, SIDECHAIN_ASSETS_SYMBOLS } from '../constants/GlobalConstants';
+import { ECHO_ASSET_ID, TIME_REMOVE_CONTRACT, SIDECHAIN_ASSETS_SYMBOLS, STAKE_ASSET_SYMBOLS } from '../constants/GlobalConstants';
 
 import BalanceReducer from '../reducers/BalanceReducer';
 
@@ -111,6 +111,24 @@ export const getBalanceFromAssets = (assets) => async () => {
 	return balances;
 };
 
+
+const sortAssets = (assetsConstants, balances) => {
+	const assets = assetsConstants
+		.map((b) => ({ ...b, balance: 0, notEmpty: false }));
+
+	for (let i = 0; i < balances.length; i += 1) {
+		const sidechainAssetIndex = assets.findIndex((sa) => sa.symbol === balances[i].symbol);
+		if (sidechainAssetIndex !== -1) {
+			assets[sidechainAssetIndex] = {
+				...assets[sidechainAssetIndex],
+				...balances[i],
+				notEmpty: true,
+			};
+		}
+	}
+	return assets;
+};
+
 /**
  * @method getAssetsBalances
  *
@@ -138,25 +156,19 @@ export const getAssetsBalances = (assets, update = false) => async (dispatch, ge
 		}
 	}
 	const sidechainAssetConstants = Object.values(SIDECHAIN_ASSETS_SYMBOLS);
-	const sidechainAssets = sidechainAssetConstants
-		.map((b) => ({ ...b, balance: 0, notEmpty: false }));
-	const echoAssets = balances
-		.filter((b) => !sidechainAssetConstants.find((a) => b.symbol === a.symbol));
+	const stakeAssetConstants = Object.values(STAKE_ASSET_SYMBOLS);
 
-	for (let i = 0; i < balances.length; i += 1) {
-		const sidechainAssetIndex = sidechainAssets.findIndex((sa) => sa.symbol === balances[i].symbol);
-		if (sidechainAssetIndex !== -1) {
-			sidechainAssets[sidechainAssetIndex] = {
-				...sidechainAssets[sidechainAssetIndex],
-				...balances[i],
-				notEmpty: true,
-			};
-		}
-	}
+	const sidechainAssets = sortAssets(sidechainAssetConstants, balances);
+	const stakeAssets = sortAssets(stakeAssetConstants, balances);
+	const echoAssets = balances
+		.filter((b) =>
+			!sidechainAssetConstants.find((a) => b.symbol === a.symbol) &&
+			!stakeAssetConstants.find((a) => b.symbol === a.symbol));
 
 	sidechainAssets.sort((a, b) => (a.symbol > b.symbol ? 1 : -1));
 	dispatch(BalanceReducer.actions.set({ field: 'echoAssets', value: new List(echoAssets) }));
 	dispatch(BalanceReducer.actions.set({ field: 'sidechainAssets', value: new List(sidechainAssets) }));
+	dispatch(BalanceReducer.actions.set({ field: 'stakeAssets', value: new List(stakeAssets) }));
 	dispatch(BalanceReducer.actions.set({ field: 'assets', value: new List(balances) }));
 	dispatch(setValue(FORM_TRANSFER, 'balance', { assets: new List(balances) }));
 };
