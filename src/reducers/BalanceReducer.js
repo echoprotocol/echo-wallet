@@ -6,6 +6,7 @@ const DEFAULT_FIELDS = Map({
 	assets: new List([]),
 	echoAssets: new List([]),
 	sidechainAssets: new List([]),
+	stakeAssets: new List([]),
 	preview: new List([]),
 	frozenFunds: new List([]),
 	totalFrozenFunds: '0',

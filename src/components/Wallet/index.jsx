@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Tab } from 'semantic-ui-react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Assets from './AssetsComponent';
 import Tokens from './TokensComponents';
@@ -12,11 +12,13 @@ import Receive from '../Receive';
 import ReceiveStake from '../ReceiveStake';
 import { MODAL_TOKENS } from '../../constants/ModalConstants';
 import { FORM_TRANSFER } from '../../constants/FormConstants';
+import { SIDECHAIN_ASSETS_SYMBOLS } from '../../constants/GlobalConstants';
 
 class Wallet extends React.Component {
 
 	componentWillUnmount() {
-		this.props.setGlobalValue('activeCoinTypeTab', 0);
+		this.props.setGlobalValue('activeCoinTypeTab', 'ECHO');
+		this.props.setGlobalValue('activePaymentTypeTab', 0);
 	}
 
 	render() {
@@ -25,11 +27,18 @@ class Wallet extends React.Component {
 			fee, isAvailableBalance, fees, generateEthAddress, getEthAddress, additionalAccountInfo,
 			bytecode, avatarName, subjectTransferType, fullCurrentAccount, accountAddresses, ethSidechain,
 			btcAddress, accountId, activeCoinTypeTab, activePaymentTypeTab, sidechainAssets, echoAssets,
+			stakeAssets, intl, btcStakeAddress,
 		} = this.props;
 
 		const isDisplaySidechainNotification = !!((fee.asset && !!sidechainAssets
 			.find((sa) => sa.symbol === fee.asset.symbol))
 			|| (currency && sidechainAssets.find((sa) => sa.symbol === currency.symbol))) || false;
+
+		let currencyAsset = Object.values(SIDECHAIN_ASSETS_SYMBOLS)
+			.find((s) => s.symbol === activeCoinTypeTab);
+		if (!currencyAsset) {
+			currencyAsset = currency;
+		}
 		const externalTabs = [
 			{
 				menuItem: <Button
@@ -56,7 +65,7 @@ class Wallet extends React.Component {
 							bytecode={bytecode}
 							amount={amount}
 							fee={fee}
-							currency={currency}
+							currency={currencyAsset}
 							isAvailableBalance={isAvailableBalance}
 							additionalAccountInfo={additionalAccountInfo}
 							subjectTransferType={subjectTransferType}
@@ -154,7 +163,7 @@ class Wallet extends React.Component {
 							openModal={this.props.openModal}
 							getStakeBtcAddress={this.props.getStakeBtcAddress}
 							globalProperties={this.props.globalProperties}
-							stakeBtcAddress={this.props.btcAddress} // TODO
+							stakeBtcAddress={btcStakeAddress}
 						/>
 					</div>),
 			},
@@ -194,6 +203,7 @@ class Wallet extends React.Component {
 							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 						/>
 						<StableCoins
+							isAvailableToTransfer
 							assets={sidechainAssets}
 							setAsset={(symbol) => {
 								this.props.setAsset(symbol, 'assets');
@@ -204,9 +214,36 @@ class Wallet extends React.Component {
 									this.props.setFormValue('fee', res.value);
 								});
 							}}
+							title={intl.formatMessage({ id: 'wallet_page.balances.stable_coins.title' })}
+							popupText={intl.formatMessage({ id: 'wallet_page.balances.stable_coins.popup_info' })}
 							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
 							activeCoinTypeTab={activeCoinTypeTab}
 							activePaymentTypeTab={activePaymentTypeTab}
+							paymentsTabNumbers={{
+								withdraw: 0,
+								deposit: 1,
+							}}
+						/>
+						<StableCoins
+							assets={stakeAssets}
+							setAsset={(symbol) => {
+								this.props.setAsset(symbol, 'assets');
+								this.props.getTransferFee().then((res) => {
+									if (!res) {
+										return;
+									}
+									this.props.setFormValue('fee', res.value);
+								});
+							}}
+							title={intl.formatMessage({ id: 'wallet_page.balances.stack_coins.title' })}
+							popupText={intl.formatMessage({ id: 'wallet_page.balances.stack_coins.popup_info' })}
+							popupHref="https://docs.echo.org/how-to/sidechain-and-contract-deploy/how-to-use-eth-stake"
+							setGlobalValue={(field, value) => this.props.setGlobalValue(field, value)}
+							activeCoinTypeTab={activeCoinTypeTab}
+							activePaymentTypeTab={activePaymentTypeTab}
+							paymentsTabNumbers={{
+								deposit: 2,
+							}}
 						/>
 						<Tokens
 							tokens={tokens}
@@ -241,6 +278,7 @@ Wallet.propTypes = {
 	assets: PropTypes.object,
 	echoAssets: PropTypes.object,
 	sidechainAssets: PropTypes.object,
+	stakeAssets: PropTypes.object,
 	currency: PropTypes.object,
 	btcAddress: PropTypes.object,
 	from: PropTypes.object.isRequired,
@@ -287,6 +325,8 @@ Wallet.propTypes = {
 	keyWeightWarn: PropTypes.bool.isRequired,
 	preview: PropTypes.array.isRequired,
 	getStakeBtcAddress: PropTypes.func.isRequired,
+	intl: PropTypes.any.isRequired,
+	btcStakeAddress: PropTypes.object,
 };
 
 Wallet.defaultProps = {
@@ -294,9 +334,11 @@ Wallet.defaultProps = {
 	assets: null,
 	echoAssets: null,
 	sidechainAssets: null,
+	stakeAssets: null,
 	currency: null,
 	btcAddress: null,
 	additionalAccountInfo: null,
+	btcStakeAddress: null,
 };
 
-export default Wallet;
+export default injectIntl(Wallet);

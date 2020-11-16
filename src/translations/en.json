@@ -120,6 +120,12 @@
                 "deposit": "Deposit",
                 "withdrawal": "Withdrawal"
             },
+            "stack_coins": {
+                "title": "Stack Assets",
+                "popup_info": "Click to open docs",
+                "deposit": "Deposit",
+                "withdrawal": "Withdrawal"
+            },
             "assets": {
                 "title": "Assets"
             },
@@ -219,7 +225,7 @@
                 },
                 "complete_address_page": {
                     "input_title": "ADDRESS",
-                    "info": "Fill in payment information to get a unique QR code.",
+                    "info": "To start stake send a transaction to the address",
                     "warning_message_pt1": "Send eBTC to ",
                     "warning_message_pt2": "Original Blockchain",
                     "warning_message_pt3": " to get BTC or send it within ECHO Network."
@@ -230,7 +236,7 @@
                 "complete_address_page": {
                     "contract_title": "ADDRESS",
                     "data_title": "DATA",
-                    "info": "Copy data and send it by contract address with ETH staking."
+                    "info": "To start stake send a transaction to the address with data"
                 }
             }
         },
@@ -646,12 +652,12 @@
         },
         "modal_create_btc_stake_address": {
             "title": "Create stake BTC address",
-            "text": "To create your new BTC Address, please, provide your external backup BTC address. Backup BTC address is needed to be able to withhold a sent transaction to ECHO network during the first 24 hours after the transaction being made.",
+            "text": "To create your new BTC Address, please, provide your BTC public key with which you want to be able to receive funds from the created address.",
             "backup_address_input": {
-                "title": "Backup address",
-                "placeholder": "Backup address"
+                "title": "BTC public key",
+                "placeholder": "BTC public key"
             },
-            "warning": "Submit your backup BTC address above.",
+            "warning": "Submit your BTC public key above.",
             "generate_button_text": "Generate address"
         },
         "modal_create_echo_address": {
@@ -746,6 +752,10 @@
                 "sidechain_eth_create_address": {
                     "from": "from",
                     "account": "account",
+                    "fee": "fee"
+                },
+                "sidechain_stake_btc_create_script": {
+                    "from": "from",
                     "fee": "fee"
                 },
                 "sidechain_eth_withdraw": {

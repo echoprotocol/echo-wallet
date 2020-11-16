@@ -25,6 +25,14 @@ export const SIDECHAIN_DISPLAY_NAMES = {
 		echo: 'eBTC',
 		original: 'BTC',
 	},
+	SETH: {
+		echo: 'SETH',
+		original: 'SETH',
+	},
+	SBTC: {
+		echo: 'SBTC',
+		original: 'SBTC',
+	},
 };
 
 export const CHECK_BLOCK_INTERVAL = 15 * 1000;

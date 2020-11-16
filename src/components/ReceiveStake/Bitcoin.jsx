@@ -21,7 +21,7 @@ class Bitcoin extends React.Component {
 			return null;
 		}
 
-		const address = stakeBtcAddress.getIn(['deposit_address', 'address']);
+		const address = stakeBtcAddress.get('address');
 		const account = stakeBtcAddress.get('account');
 
 		if (!address || !account) {
@@ -37,7 +37,7 @@ class Bitcoin extends React.Component {
 			stakeBtcAddress, intl,
 		} = this.props;
 
-		const address = stakeBtcAddress.getIn(['deposit_address', 'address']);
+		const address = stakeBtcAddress.get('address');
 
 		return (
 			<React.Fragment>
@@ -56,6 +56,7 @@ class Bitcoin extends React.Component {
 								readOnly
 								name="public-key"
 								value={address}
+								disabled
 							/>
 							<ActionBtn
 								icon="icon-copy"
@@ -70,22 +71,7 @@ class Bitcoin extends React.Component {
 	}
 
 	renderGenerateAddressProcess() {
-		const { stakeBtcAddress, keyWeightWarn } = this.props;
-
-		if (stakeBtcAddress && stakeBtcAddress.size && !stakeBtcAddress.getIn(['is_relevant'])) {
-			return (
-				<React.Fragment>
-					<h2 className="payment-header t-center">
-						<FormattedMessage id="wallet_page.stake.btc.wait_address_page.title_pt1" />
-						<br />
-						<FormattedMessage id="wallet_page.stake.btc.wait_address_page.title_pt2" />
-					</h2>
-					<p className="payment-description t-center">
-						<FormattedMessage id="wallet_page.stake.btc.wait_address_page.description" />
-					</p>
-				</React.Fragment>
-			);
-		}
+		const { keyWeightWarn } = this.props;
 
 		return (
 			<React.Fragment>

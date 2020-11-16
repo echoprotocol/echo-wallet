@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import { List } from 'immutable';
 
 import { FORM_TRANSFER, FORM_FREEZE } from '../../constants/FormConstants';
-import { PREFIX_ASSET, ADDRESS_PREFIX } from '../../constants/GlobalConstants';
+import { PREFIX_ASSET, ADDRESS_PREFIX, STAKE_ASSET_IDS } from '../../constants/GlobalConstants';
 import { SIDECHAIN_DISPLAY_NAMES } from '../../constants/SidechainConstants';
 
 import { formatAmount } from '../../helpers/FormatHelper';
@@ -160,9 +160,9 @@ class AmountField extends React.Component {
 		if (currency) {
 			return (
 				currency.symbol === ADDRESS_PREFIX ?
-					formatAmount(currency.balance, currency.precision, currency.symbol) :
+					formatAmount(currency.balance || 0, currency.precision, currency.symbol) :
 					<React.Fragment>
-						{formatAmount(currency.balance, currency.precision)}
+						{formatAmount(currency.balance || 0, currency.precision)}
 						<Popup
 							trigger={<span className="inner-tooltip-trigger icon-coin" />}
 							content={currency.symbol}
@@ -339,7 +339,11 @@ class AmountField extends React.Component {
 							text={currency ? currency.symbol : ''}
 							selection={!(this.props.tokens.size + assets.size) <= 1}
 							onBlur={() => this.clearSearchText()}
-							options={this.renderList('assets').concat(this.renderList('tokens'))}
+							options={
+								this.renderList('assets')
+									.filter(({ key }) => !STAKE_ASSET_IDS.includes(key))
+									.concat(this.renderList('tokens'))
+							}
 							noResultsMessage={
 								intl.formatMessage ?
 									intl.formatMessage({ id: 'amount_input.no_result_message' }) :
