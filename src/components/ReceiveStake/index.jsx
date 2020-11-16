@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Tab, Button } from 'semantic-ui-react';
 import { FormattedMessage } from 'react-intl';
-import { Map } from 'immutable';
 
 import Bitcoin from './Bitcoin';
 import Ethereum from './Ethereum';
@@ -47,6 +46,7 @@ class ReceiveStake extends React.Component {
 				/>,
 				render: () => (
 					<Bitcoin
+						accountId={accountId}
 						checkAccount={this.props.checkAccount}
 						openModal={this.props.openModal}
 						getStakeBtcAddress={this.props.getStakeBtcAddress}
@@ -109,8 +109,8 @@ ReceiveStake.propTypes = {
 };
 
 ReceiveStake.defaultProps = {
+	globalProperties: null,
 	stakeBtcAddress: null,
-	globalProperties: new Map(),
 };
 
 export default ReceiveStake;

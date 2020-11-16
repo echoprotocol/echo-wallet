@@ -13,6 +13,7 @@ const DEFAULT_FIELDS = Map({
 		address: '',
 		confirmed: false,
 	}),
+	btcStakeAddress: new Map({}),
 	activeUser: new Map({
 		id: '',
 		name: '',
