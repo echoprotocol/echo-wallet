@@ -1,3 +1,5 @@
+import { constants } from 'echojs-lib';
+
 export const STABLE_COINS = {
 	EBTC: 'EBTC',
 	EETH: 'EETH',
@@ -7,12 +9,24 @@ export const STABLE_COINS = {
 
 export const SIDECHAIN_ASSETS_DATA = {
 	eETH: {
-		precision: 18,
+		id: `1.${constants.PROTOCOL_OBJECT_TYPE_ID.ASSET}.1`,
+		precision: 8,
 		symbol: STABLE_COINS.EETH,
 	},
 	eBTC: {
+		id: `1.${constants.PROTOCOL_OBJECT_TYPE_ID.ASSET}.2`,
 		precision: 8,
 		symbol: STABLE_COINS.EBTC,
+	},
+	sETH: {
+		id: `1.${constants.PROTOCOL_OBJECT_TYPE_ID.ASSET}.3`,
+		precision: 8,
+		symbol: 'SETH',
+	},
+	sBTC: {
+		id: `1.${constants.PROTOCOL_OBJECT_TYPE_ID.ASSET}.4`,
+		precision: 8,
+		symbol: 'SBTC',
 	},
 };
 
