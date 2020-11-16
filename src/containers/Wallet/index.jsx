@@ -11,14 +11,15 @@ import {
 	checkAccount,
 	getTransferFee,
 	resetTransaction,
-	setAssetActiveAccount, setTransferFee,
+	setAssetActiveAccount,
+	setTransferFee,
 	subjectToSendSwitch,
 	transferSwitch,
 	generateEthAddress,
 } from '../../actions/TransactionActions';
 import { amountInput, setDefaultAsset } from '../../actions/AmountActions';
 import { setContractFees } from '../../actions/ContractActions';
-import { updateAccountAddresses, getBtcAddress } from '../../actions/AccountActions';
+import { updateAccountAddresses, getBtcAddress, getStakeBtcAddress } from '../../actions/AccountActions';
 import Wallet from '../../components/Wallet';
 import { getEthAddress } from '../../actions/SidechainActions';
 import GlobalReducer from '../../reducers/GlobalReducer';
@@ -46,6 +47,7 @@ export default connect(
 		btcAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_BTC_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		ethAddress: state.echojs.getIn([CACHE_MAPS.ACCOUNT_ETH_ADDRESS_BY_ACCOUNT_ID, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
 		fullCurrentAccount: state.echojs.getIn([CACHE_MAPS.FULL_ACCOUNTS, state.global.getIn(['activeUser', 'id'])]) || new Map({}),
+		globalProperties: state.echojs.getIn([CACHE_MAPS.GLOBAL_PROPERTIES]) || new Map({}),
 		subjectTransferType: state.form.getIn([FORM_TRANSFER, 'subjectTransferType']),
 		activePaymentTypeTab: state.global.get('activePaymentTypeTab'),
 		activeCoinTypeTab: state.global.get('activeCoinTypeTab'),
@@ -75,6 +77,7 @@ export default connect(
 			dispatch(amountInput(FORM_TRANSFER, value, currency, name)),
 		updateAccountAddresses: () => dispatch(updateAccountAddresses()),
 		getBtcAddress: () => dispatch(getBtcAddress()),
+		getStakeBtcAddress: () => dispatch(getStakeBtcAddress()),
 		generateEthAddress: () => dispatch(generateEthAddress()),
 		getEthAddress: () => dispatch(getEthAddress()),
 		getAssetsBalances: () => dispatch(getAssetsBalances()),

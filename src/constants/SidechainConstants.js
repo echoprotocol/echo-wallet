@@ -1,6 +1,8 @@
 export const STABLE_COINS = {
 	EBTC: 'EBTC',
 	EETH: 'EETH',
+	SETH: 'SETH',
+	SBTC: 'SBTC',
 };
 
 export const SIDECHAIN_ASSETS_DATA = {

@@ -244,6 +244,7 @@ export const initAfterConnection = (network) => async (dispatch) => {
 		const echoInstance = Services.getEcho().getEchoInstance();
 		if (echoInstance && echoInstance.isConnected && Services.getEcho().api) {
 			await Services.getEcho().api.getDynamicGlobalProperties(true);
+			await Services.getEcho().api.getGlobalProperties(true);
 			await Services.getEcho().api.getObject(ECHO_ASSET_ID);
 		}
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
