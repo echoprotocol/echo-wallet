@@ -1,7 +1,6 @@
 .idea
 dist
 node_modules
-package-lock.json
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
@@ -65,7 +64,6 @@ typings/
 .env
 
 
-package-lock.json
 .migrate
 config/local.json
 apidoc
