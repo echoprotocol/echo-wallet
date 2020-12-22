@@ -59,7 +59,7 @@
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.7.0",
     "moment": "^2.22.2",
-    "node-notifier": "^5.4.0",
+    "node-notifier": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prop-types": "^15.6.1",
     "qrcode.react": "^1.0.0",
