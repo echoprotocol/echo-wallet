@@ -228,6 +228,15 @@ export const initAccount = (accountName, networkName) => async (dispatch) => {
 };
 
 /**
+ * @method updateBlockNumber
+ * @returns {Function}
+ */
+export const updateBlockNumber = () => async (dispatch) => {
+	const dynamicGlobalProperties = await Services.getEcho().api.getDynamicGlobalProperties(true);
+	dispatch(GlobalReducer.actions.set({ field: 'headBlockNumber', value: dynamicGlobalProperties.head_block_number }));
+};
+
+/**
  * @method initAfterConnection
  * @param network
  * @returns {Function}
@@ -243,10 +252,11 @@ export const initAfterConnection = (network) => async (dispatch) => {
 
 		const echoInstance = Services.getEcho().getEchoInstance();
 		if (echoInstance && echoInstance.isConnected && Services.getEcho().api) {
-			const dynamicGlobalProperties = await Services.getEcho().api.getDynamicGlobalProperties(true);
 			await Services.getEcho().api.getGlobalProperties(true);
 			await Services.getEcho().api.getObject(ECHO_ASSET_ID);
-			dispatch(GlobalReducer.actions.set({ field: 'headBlockNumber', value: dynamicGlobalProperties.head_block_number }));
+			await dispatch(updateBlockNumber());
+			Services.getEcho().getEchoInstance().subscriber
+				.setBlockApplySubscribe(() => dispatch(updateBlockNumber()));
 		}
 		let accounts = localStorage.getItem(`accounts_${network.name}`);
 
