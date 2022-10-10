@@ -61,23 +61,23 @@ export default merge.smart(baseConfig, {
 				devnet: {
 					remote: {
 						name: JSON.stringify('Remote node'),
-						url: JSON.stringify('wss://devnet.echo-dev.io/ws'),
+						url: JSON.stringify('wss://echo-devnet.pixelplexlabs.com/ws'),
 					},
 					local: {
 						name: JSON.stringify('Local node'),
 						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
 					},
 				},
-				testnet: {
-					remote: {
-						name: JSON.stringify('Remote node'),
-						url: JSON.stringify('ws://testnet.echo-dev.io/ws'),
-					},
-					local: {
-						name: JSON.stringify('Local node'),
-						seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
-					},
-				},
+				// testnet: {
+				// 	remote: {
+				// 		name: JSON.stringify('Remote node'),
+				// 		url: JSON.stringify('ws://testnet.echo-dev.io/ws'),
+				// 	},
+				// 	local: {
+				// 		name: JSON.stringify('Local node'),
+				// 		seed: JSON.stringify('node1.devnet.echo-dev.io:6310'),
+				// 	},
+				// },
 			},
 			CRYPTO_API_KEY: JSON.stringify(CRYPTO_API_KEY),
 			CRYPTO_API_URL: JSON.stringify(CRYPTO_API_URL),

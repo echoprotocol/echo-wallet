@@ -77,3 +77,4 @@ resources/mac/bin/*
 resources/linux/bin/*
 data
 dll/
+.DS_Store

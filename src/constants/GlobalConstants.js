@@ -96,23 +96,23 @@ export const USER_STORAGE_SCHEMES = {
 
 export const KEY_CODE_ENTER = 13;
 
-export const DEFAULT_NETWORK_ID = 'testnet';
+export const DEFAULT_NETWORK_ID = 'devnet';
 
 export const NETWORKS = [
-	{
-		name: 'testnet',
-		url: 'wss://testnet.echo-dev.io/ws',
-	},
+	// {
+	// 	name: 'testnet',
+	// 	url: 'wss://testnet.echo-dev.io/ws',
+	// },
 	{
 		name: 'devnet',
-		url: 'wss://devnet.echo-dev.io/ws',
+		url: 'wss://echo-devnet.pixelplexlabs.com/ws',
 	},
 ];
 
-export const DEFAULT_NETWORK = NETWORKS[1];
+export const DEFAULT_NETWORK = NETWORKS.find(({ name }) => name === DEFAULT_NETWORK_ID);
 
 export const EXPLORER_URL = {
-	devnet: 'https://656-echo-explorer.pixelplex-test.by',
+	devnet: 'https://echo-explorer.pixelplex-test.by',
 	testnet: 'https://explorer.echo.org',
 };
 

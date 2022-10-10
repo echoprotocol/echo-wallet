@@ -11,7 +11,7 @@ import reducers from './reducers';
 import history from './history';
 import './assets/loader';
 import Root from './root';
-
+console.log('hello!');
 
 // Build the middleware for intercepting and dispatching navigation actions
 const middleware = routerMiddleware(history);
