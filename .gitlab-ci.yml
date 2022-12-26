@@ -32,7 +32,6 @@ build:
   tags:
     - echo-linux
 
-
 deploy:
   stage: deploy
   before_script:
@@ -49,3 +48,22 @@ deploy:
     - master
   tags:
     - echo-linux
+
+build:macos:
+  image: node:10
+  stage: build
+  variables:
+    DOWNLOAD_ECHO_NODE_URL: "https://echo-bin.s3.eu-central-1.amazonaws.com/echo-macos..tar"
+    NODE_APP_INSTANCE: $CI_COMMIT_REF_NAME
+  artifacts:
+    paths:
+      - ./build/binaries/Echo*.dmg
+  script:
+    - rm -rf node_modules
+    - npm i
+    - npm run package-mac-with-download-build
+  only:
+    - master
+    - develop
+  tags:
+    - echo-macos-clean
